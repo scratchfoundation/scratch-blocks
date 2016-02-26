@@ -397,7 +397,7 @@ Blockly.BlockSvg.prototype.renderCompute_ = function() {
     metrics.width = Blockly.BlockSvg.FIELD_WIDTH;
   } else {
     metrics.height = Math.max(
-      Blockly.BlockSvg.SEP_SPACE_Y * 2 + iconSize.height,
+      Blockly.BlockSvg.SEP_SPACE_Y * 3 + iconSize.height,
       Blockly.BlockSvg.NOTCH_HEIGHT + 16 + Blockly.BlockSvg.CORNER_RADIUS * 2,
       metrics.bayHeight + Blockly.BlockSvg.SEP_SPACE_Y
     );
