@@ -84,7 +84,7 @@ Blockly.BlockSvg.CORNER_RADIUS = 4;
  * Rounded corner radius.
  * @const
  */
-Blockly.BlockSvg.HAT_CORNER_RADIUS = 16;
+Blockly.BlockSvg.HAT_CORNER_RADIUS = 32;
 /**
  * Rounded notch radius.
  * @const
@@ -403,6 +403,10 @@ Blockly.BlockSvg.prototype.renderCompute_ = function() {
       metrics.bayHeight + Blockly.BlockSvg.SEP_SPACE_Y
     );
   }
+  if (metrics.startHat) {
+    // Start hats are 1 unit  wider to account for optical effect of curve
+    metrics.width += 4;
+  }
   return metrics;
 };
 
@@ -475,7 +479,6 @@ Blockly.BlockSvg.prototype.renderDrawLeft_ =
     steps.push(Blockly.BlockSvg.HAT_TOP_LEFT_CORNER_START);
     // Top-left rounded corner.
     steps.push(Blockly.BlockSvg.HAT_TOP_LEFT_CORNER);
-    steps.push('V', metrics.height - Blockly.BlockSvg.HAT_CORNER_RADIUS);
   } else if (this.previousConnection) {
     // Regular block
     // Position the cursor at the top-left starting point.
