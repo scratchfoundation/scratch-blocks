@@ -389,7 +389,7 @@ Blockly.BlockSvg.prototype.renderCompute_ = function() {
 
   var iconSize = (metrics.icon) ? metrics.icon.getSize() : new goog.math.Size(0,0);
   metrics.width =
-    Blockly.BlockSvg.SEP_SPACE_X * 2 + iconSize.width + metrics.bayWidth;
+    Blockly.BlockSvg.SEP_SPACE_X * 3 + iconSize.width + metrics.bayWidth;
   if (metrics.statement) {
     metrics.width += 2 * Blockly.BlockSvg.CORNER_RADIUS + 8;
   }
