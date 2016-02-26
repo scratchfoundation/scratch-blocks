@@ -123,19 +123,13 @@ Blockly.BlockSvg.NOTCH_PATH_DOWN =
  * @const
  */
 Blockly.BlockSvg.NOTCH_PATH_UP =
-  'a ' + Blockly.BlockSvg.NOTCH_RADIUS + ',' + -Blockly.BlockSvg.NOTCH_RADIUS + ' ' +
-          '0 0 1 ' + Blockly.BlockSvg.NOTCH_RADIUS/2 + ',' + -Blockly.BlockSvg.NOTCH_RADIUS + ' ' +
-  'l ' + (Blockly.BlockSvg.NOTCH_BASE_HEIGHT/4 - Blockly.BlockSvg.NOTCH_RADIUS) + ',' +
-         -1*(Blockly.BlockSvg.NOTCH_BASE_HEIGHT/4 - Blockly.BlockSvg.NOTCH_RADIUS) + ' ' +
-  'a ' + Blockly.BlockSvg.NOTCH_RADIUS + ',' + -Blockly.BlockSvg.NOTCH_RADIUS + ' ' +
-          '0 0 0 ' + Blockly.BlockSvg.NOTCH_RADIUS/2 + ',' + -Blockly.BlockSvg.NOTCH_RADIUS + ' ' +
-  'v ' + -1*(Blockly.BlockSvg.NOTCH_BASE_HEIGHT/2 - Blockly.BlockSvg.NOTCH_RADIUS) + ' ' +
-  'a ' + Blockly.BlockSvg.NOTCH_RADIUS + ',' + -Blockly.BlockSvg.NOTCH_RADIUS + ' ' +
-          '0 0 0 ' + -Blockly.BlockSvg.NOTCH_RADIUS/2 + ',' + -Blockly.BlockSvg.NOTCH_RADIUS +
-  'l ' + (-Blockly.BlockSvg.NOTCH_BASE_HEIGHT/4 + Blockly.BlockSvg.NOTCH_RADIUS) + ',' +
-         (-Blockly.BlockSvg.NOTCH_BASE_HEIGHT/4 + Blockly.BlockSvg.NOTCH_RADIUS) + ' ' +
-  'a ' + Blockly.BlockSvg.NOTCH_RADIUS + ',' + -Blockly.BlockSvg.NOTCH_RADIUS + ' ' +
-        '0 0 1 ' + -Blockly.BlockSvg.NOTCH_RADIUS/2 + ',' + -Blockly.BlockSvg.NOTCH_RADIUS;
+  'c 0,-2 1,-3 2,-4'+
+  'l 4,-4 ' +
+  'c 1,-1 2,-2 2,-4 ' +
+  'v -12 ' +
+  'c 0,-2 -1,-3 -2,-4 ' +
+  'l -4,-4 ' +
+  'c -1,-1 -2,-2 -2,-4';
 /**
  * SVG start point for drawing the top-left corner.
  * @const
@@ -601,7 +595,7 @@ Blockly.BlockSvg.prototype.renderDrawRight_ =
                Blockly.BlockSvg.CORNER_RADIUS + ' 0 0,0 ' +
                Blockly.BlockSvg.CORNER_RADIUS + ',-' +
                Blockly.BlockSvg.CORNER_RADIUS);
-    steps.push('v', -12);
+    steps.push('v', -10);
   } else {
     // Input
     steps.push(
