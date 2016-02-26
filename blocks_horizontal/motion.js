@@ -49,7 +49,7 @@ Blockly.Blocks['motion_moveright'] = {
       ],
       "previousStatement": null,
       "nextStatement": null,
-      "colour": '#25AFF4',
+      "colour": '#559BF9',
       "tooltip": ""
     });
 
