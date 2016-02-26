@@ -108,20 +108,15 @@ Blockly.BlockSvg.NOTCH_WIDTH = Blockly.BlockSvg.NOTCH_BASE_HEIGHT/4;
  * SVG path for drawing next/previous notch from top to bottom.
  * @const
  */
+
 Blockly.BlockSvg.NOTCH_PATH_DOWN =
-  'a ' + -Blockly.BlockSvg.NOTCH_RADIUS + ',' + Blockly.BlockSvg.NOTCH_RADIUS + ' ' +
-          '0 0 0 ' + Blockly.BlockSvg.NOTCH_RADIUS/2 + ',' + Blockly.BlockSvg.NOTCH_RADIUS + ' ' +
-  'l ' + (Blockly.BlockSvg.NOTCH_BASE_HEIGHT/4 - Blockly.BlockSvg.NOTCH_RADIUS) + ',' +
-         (Blockly.BlockSvg.NOTCH_BASE_HEIGHT/4 - Blockly.BlockSvg.NOTCH_RADIUS) + ' ' +
-  'a ' + -Blockly.BlockSvg.NOTCH_RADIUS + ',' + Blockly.BlockSvg.NOTCH_RADIUS + ' ' +
-          '0 0 1 ' + Blockly.BlockSvg.NOTCH_RADIUS/2 + ',' + Blockly.BlockSvg.NOTCH_RADIUS + ' ' +
-  'v ' + (Blockly.BlockSvg.NOTCH_BASE_HEIGHT/2 - Blockly.BlockSvg.NOTCH_RADIUS) + ' ' +
-  'a ' + -Blockly.BlockSvg.NOTCH_RADIUS + ',' + Blockly.BlockSvg.NOTCH_RADIUS + ' ' +
-          '0 0 1 ' + -Blockly.BlockSvg.NOTCH_RADIUS/2 + ',' + Blockly.BlockSvg.NOTCH_RADIUS + ' ' +
-  'l ' + (-Blockly.BlockSvg.NOTCH_BASE_HEIGHT/4 + Blockly.BlockSvg.NOTCH_RADIUS) + ',' +
-         (Blockly.BlockSvg.NOTCH_BASE_HEIGHT/4 - Blockly.BlockSvg.NOTCH_RADIUS) + ' ' +
-  'a ' + -Blockly.BlockSvg.NOTCH_RADIUS + ',' + Blockly.BlockSvg.NOTCH_RADIUS + ' ' +
-        '0 0 0 ' + -Blockly.BlockSvg.NOTCH_RADIUS/2 + ',' + Blockly.BlockSvg.NOTCH_RADIUS;
+  'c 0,2 1,3 2,4 ' +
+  'l 4,4 ' +
+  'c 1,1 2,2 2,4 ' +
+  'v 12 ' +
+  'c 0,2 -1,3 -2,4 ' +
+  'l -4,4 ' +
+  'c -1,1 -2,2 -2,4';
 /**
  * SVG path for drawing next/previous notch from bottom to top.
  * @const
