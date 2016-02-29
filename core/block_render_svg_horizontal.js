@@ -635,7 +635,6 @@ Blockly.BlockSvg.prototype.renderDrawRight_ =
     if (this.nextConnection.targetConnection) {
       this.nextConnection.tighten_();
     }
-    this.height += 4;  // Height of tab.
     steps.push('V', Blockly.BlockSvg.CORNER_RADIUS);
   }
 };
