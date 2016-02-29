@@ -34,12 +34,12 @@ goog.require('Blockly.BlockSvg');
  * Horizontal space between elements.
  * @const
  */
-Blockly.BlockSvg.SEP_SPACE_X = 8;
+Blockly.BlockSvg.SEP_SPACE_X = 12;
 /**
  * Vertical space between elements.
  * @const
  */
-Blockly.BlockSvg.SEP_SPACE_Y = 8;
+Blockly.BlockSvg.SEP_SPACE_Y = 12;
 /**
  * Vertical padding around inline elements.
  * @const
@@ -381,7 +381,7 @@ Blockly.BlockSvg.prototype.renderCompute_ = function() {
   // Always render icon at 40x40 px
   var iconSize = new goog.math.Size(Blockly.BlockSvg.ICON_WIDTH, Blockly.BlockSvg.ICON_HEIGHT);
   metrics.width =
-    Blockly.BlockSvg.SEP_SPACE_X * 3 + iconSize.width + metrics.bayWidth;
+    Blockly.BlockSvg.SEP_SPACE_X * 2 + iconSize.width + metrics.bayWidth;
   if (metrics.statement) {
     metrics.width += 2 * Blockly.BlockSvg.CORNER_RADIUS + 8;
   }
@@ -390,7 +390,7 @@ Blockly.BlockSvg.prototype.renderCompute_ = function() {
     metrics.width = Blockly.BlockSvg.FIELD_WIDTH;
   } else {
     metrics.height = Math.max(
-      Blockly.BlockSvg.SEP_SPACE_Y * 3 + iconSize.height,
+      Blockly.BlockSvg.SEP_SPACE_Y * 2 + iconSize.height,
       Blockly.BlockSvg.NOTCH_HEIGHT + 16 + Blockly.BlockSvg.CORNER_RADIUS * 2,
       metrics.bayHeight + Blockly.BlockSvg.SEP_SPACE_Y
     );
@@ -438,8 +438,8 @@ Blockly.BlockSvg.prototype.renderDraw_ = function(metrics) {
     var icon = metrics.icon.getSvgRoot();
     var iconSize = metrics.icon.getSize();
     icon.setAttribute('transform',
-      'translate(' + (metrics.width - iconSize.width - Blockly.BlockSvg.SEP_SPACE_X) + ',' +
-      (metrics.height - iconSize.height - Blockly.BlockSvg.SEP_SPACE_Y - 4) + ')');
+      'translate(' + (metrics.width - iconSize.width - Blockly.BlockSvg.SEP_SPACE_X / 1.5) + ',' +
+      (metrics.height - iconSize.height - Blockly.BlockSvg.SEP_SPACE_Y) + ')');
     // @todo RTL
   }
 
