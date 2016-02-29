@@ -542,7 +542,7 @@ Blockly.BlockSvg.prototype.renderDrawBottom_ = function(steps,
 
   // Has statement
   if (metrics.statement) {
-    steps.push('h', 8);
+    steps.push('h', 16);
     steps.push('a', Blockly.BlockSvg.CORNER_RADIUS + ',' +
                Blockly.BlockSvg.CORNER_RADIUS + ' 0 0,0 ' +
                Blockly.BlockSvg.CORNER_RADIUS + ',-' +
