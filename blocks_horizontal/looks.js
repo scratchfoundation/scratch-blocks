@@ -54,7 +54,7 @@ Blockly.Blocks['looks_say'] = {
       "inputsInline": true,
       "previousStatement": null,
       "nextStatement": null,
-      "colour": '#9971F8',
+      "colour": '#6971E7',
       "tooltip": ""
     });
 
