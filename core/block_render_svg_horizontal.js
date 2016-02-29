@@ -448,8 +448,13 @@ Blockly.BlockSvg.prototype.renderDraw_ = function(metrics) {
   if (metrics.icon) {
     var icon = metrics.icon.getSvgRoot();
     var iconSize = metrics.icon.getSize();
+    var iconX = metrics.width - iconSize.width - Blockly.BlockSvg.SEP_SPACE_X / 1.5;
+    if (metrics.endHat > 0) {
+      // Icon positioning bumped to the left
+      iconX -= 4;
+    }
     icon.setAttribute('transform',
-      'translate(' + (metrics.width - iconSize.width - Blockly.BlockSvg.SEP_SPACE_X / 1.5) + ',' +
+      'translate(' + (iconX) + ',' +
       (metrics.height - iconSize.height - Blockly.BlockSvg.SEP_SPACE_Y) + ')');
     // @todo RTL
   }
