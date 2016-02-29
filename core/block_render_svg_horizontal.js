@@ -571,7 +571,7 @@ Blockly.BlockSvg.prototype.renderDrawBottom_ = function(steps,
     // Create statement connection.
     // @todo RTL
     // var connectionX = connectionsXY.x + (this.RTL ? -cursorX : cursorX + 1);
-    var connectionX = connectionsXY.x + Blockly.BlockSvg.CORNER_RADIUS * 2 + 8;
+    var connectionX = connectionsXY.x + Blockly.BlockSvg.CORNER_RADIUS * 2 + 16;
     var connectionY = connectionsXY.y + metrics.height - Blockly.BlockSvg.CORNER_RADIUS * 2;
     metrics.statement.connection.moveTo(connectionX, connectionY);
     if (metrics.statement.connection.targetConnection) {
