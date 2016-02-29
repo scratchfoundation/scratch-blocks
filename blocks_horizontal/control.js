@@ -59,7 +59,7 @@ Blockly.Blocks['control_repeat'] = {
       "inputsInline": true,
       "previousStatement": null,
       "nextStatement": null,
-      "colour": '#F2B827',
+      "colour": '#FBA941',
       "tooltip": "",
       "helpUrl": "http://www.example.com/"
     });
@@ -95,7 +95,7 @@ Blockly.Blocks['control_forever'] = {
       ],
       "inputsInline": true,
       "previousStatement": null,
-      "colour": '#F2B827',
+      "colour": '#FBA941',
       "tooltip": ""
     });
 
