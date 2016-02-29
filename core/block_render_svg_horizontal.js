@@ -120,6 +120,19 @@ Blockly.BlockSvg.NOTCH_PATH_UP =
   'c 0,-2 -1,-3 -2,-4 ' +
   'l -4,-4 ' +
   'c -1,-1 -2,-2 -2,-4';
+
+/**
+* Width of rendered icons in px
+* @const
+*/
+Blockly.BlockSvg.ICON_WIDTH = 40;
+
+/**
+* Height of rendered icons in px
+* @const
+*/
+Blockly.BlockSvg.ICON_HEIGHT = 40;
+
 /**
  * SVG start point for drawing the top-left corner.
  * @const
@@ -365,7 +378,8 @@ Blockly.BlockSvg.prototype.renderCompute_ = function() {
     }
   }
 
-  var iconSize = new goog.math.Size(40, 40); // Always render icon at 40x40 px
+  // Always render icon at 40x40 px
+  var iconSize = new goog.math.Size(Blockly.BlockSvg.ICON_WIDTH, Blockly.BlockSvg.ICON_HEIGHT);
   metrics.width =
     Blockly.BlockSvg.SEP_SPACE_X * 3 + iconSize.width + metrics.bayWidth;
   if (metrics.statement) {
