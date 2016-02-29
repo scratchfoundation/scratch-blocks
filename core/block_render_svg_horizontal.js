@@ -304,7 +304,6 @@ Blockly.BlockSvg.prototype.render = function(opt_bubble) {
 
 /**
  * Computes the height and widths for each row and field.
- * @param {number} iconWidth Offset of first row due to icons.
  * @return {!Array.<!Array.<!Object>>} 2D array of objects, each containing
  *     position information.
  * @private
@@ -351,7 +350,7 @@ Blockly.BlockSvg.prototype.renderCompute_ = function() {
       }
     }
 
-    // Find icon
+    // Find icon, input fields
     for (var j = 0, field; field = input.fieldRow[j]; j++) {
       if (field instanceof Blockly.FieldImage) {
         metrics.icon = field;
@@ -375,7 +374,7 @@ Blockly.BlockSvg.prototype.renderCompute_ = function() {
     }
   }
 
-  var iconSize = (metrics.icon) ? metrics.icon.getSize() : new goog.math.Size(0,0);
+  var iconSize = new goog.math.Size(40, 40); // Always render icon at 40x40 px
   metrics.width =
     Blockly.BlockSvg.SEP_SPACE_X * 3 + iconSize.width + metrics.bayWidth;
   if (metrics.statement) {
@@ -434,8 +433,8 @@ Blockly.BlockSvg.prototype.renderDraw_ = function(metrics) {
     var icon = metrics.icon.getSvgRoot();
     var iconSize = metrics.icon.getSize();
     icon.setAttribute('transform',
-      'translate(' + (metrics.width - iconSize.width - Blockly.BlockSvg.SEP_SPACE_X / 2) + ',' +
-      (metrics.height - iconSize.height - Blockly.BlockSvg.SEP_SPACE_Y) + ')');
+      'translate(' + (metrics.width - iconSize.width - Blockly.BlockSvg.SEP_SPACE_X) + ',' +
+      (metrics.height - iconSize.height - Blockly.BlockSvg.SEP_SPACE_Y - 4) + ')');
     // @todo RTL
   }
 
