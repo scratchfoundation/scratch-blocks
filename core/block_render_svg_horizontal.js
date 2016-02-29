@@ -40,6 +40,13 @@ Blockly.BlockSvg.SEP_SPACE_X = 12;
  * @const
  */
 Blockly.BlockSvg.SEP_SPACE_Y = 12;
+
+/**
+ * Vertical space above blocks with statements.
+ * @const
+ */
+Blockly.BlockSvg.STATEMENT_BLOCK_SPACE = 16;
+
 /**
  * Vertical padding around inline elements.
  * @const
@@ -69,7 +76,14 @@ Blockly.BlockSvg.TEXT_FIELD_CORNER_RADIUS = 4;
  * Minimum width of a block.
  * @const
  */
-Blockly.BlockSvg.MIN_BLOCK_X = 40;
+Blockly.BlockSvg.MIN_BLOCK_X = 64;
+
+/**
+ * Minimum height of a block.
+ * @const
+ */
+Blockly.BlockSvg.MIN_BLOCK_Y = 64;
+
 /**
  * Width of horizontal puzzle tab.
  * @const
@@ -340,11 +354,8 @@ Blockly.BlockSvg.prototype.renderCompute_ = function() {
     if (input.type == Blockly.NEXT_STATEMENT) {
       metrics.statement = input;
       // Compute minimum input size.
-      // @todo Why 3?
-      metrics.bayHeight = Blockly.BlockSvg.NOTCH_HEIGHT + 16 +
-        Blockly.BlockSvg.CORNER_RADIUS * 3;
-      metrics.bayWidth = Blockly.BlockSvg.NOTCH_WIDTH * 2 +
-      Blockly.BlockSvg.MIN_BLOCK_X;
+      metrics.bayHeight = Blockly.BlockSvg.MIN_BLOCK_Y;
+      metrics.bayWidth = Blockly.BlockSvg.MIN_BLOCK_X;
       // Expand input size if there is a connection.
       if (input.connection && input.connection.targetConnection) {
         var linkedBlock = input.connection.targetBlock();
@@ -380,23 +391,23 @@ Blockly.BlockSvg.prototype.renderCompute_ = function() {
 
   // Always render icon at 40x40 px
   var iconSize = new goog.math.Size(Blockly.BlockSvg.ICON_WIDTH, Blockly.BlockSvg.ICON_HEIGHT);
-  metrics.width =
-    Blockly.BlockSvg.SEP_SPACE_X * 2 + iconSize.width + metrics.bayWidth;
-  if (metrics.statement) {
-    metrics.width += 2 * Blockly.BlockSvg.CORNER_RADIUS + 8;
-  }
+
+  // Normal block sizing
+  metrics.width = Blockly.BlockSvg.SEP_SPACE_X * 2 + iconSize.width;
+  metrics.height = Blockly.BlockSvg.SEP_SPACE_Y * 2 + iconSize.height;
+
   if (this.outputConnection) {
+    // Field shadow block
     metrics.height = Blockly.BlockSvg.FIELD_HEIGHT;
     metrics.width = Blockly.BlockSvg.FIELD_WIDTH;
-  } else {
-    metrics.height = Math.max(
-      Blockly.BlockSvg.SEP_SPACE_Y * 2 + iconSize.height,
-      Blockly.BlockSvg.NOTCH_HEIGHT + 16 + Blockly.BlockSvg.CORNER_RADIUS * 2,
-      metrics.bayHeight + Blockly.BlockSvg.SEP_SPACE_Y
-    );
   }
-  if (metrics.startHat) {
-    // Start hats are 1 unit wider to account for optical effect of curve
+  if (metrics.statement) {
+    // Block with statement (e.g., repeat, forever)
+    metrics.width += metrics.bayWidth + 4 * Blockly.BlockSvg.CORNER_RADIUS + 8;
+    metrics.height = metrics.bayHeight + Blockly.BlockSvg.STATEMENT_BLOCK_SPACE;
+  }
+  if (metrics.startHat || metrics.endHat) {
+    // Start and end hats are 1 unit wider to account for optical effect of curve
     metrics.width += 4;
   }
   return metrics;
