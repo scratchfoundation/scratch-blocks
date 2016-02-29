@@ -86,25 +86,15 @@ Blockly.BlockSvg.CORNER_RADIUS = 4;
  */
 Blockly.BlockSvg.HAT_CORNER_RADIUS = 32;
 /**
- * Rounded notch radius.
- * @const
- */
-Blockly.BlockSvg.NOTCH_RADIUS = 2.5;
-/**
- * Height of connector notch, not including rounded corner at top and bottom.
- * @const
- */
-Blockly.BlockSvg.NOTCH_BASE_HEIGHT = 32;
-/**
  * Full height of connector notch including rounded corner.
  * @const
  */
-Blockly.BlockSvg.NOTCH_HEIGHT = Blockly.BlockSvg.NOTCH_BASE_HEIGHT + Blockly.BlockSvg.NOTCH_RADIUS;
+Blockly.BlockSvg.NOTCH_HEIGHT = 34;
 /**
  * Width of connector notch
  * @const
  */
-Blockly.BlockSvg.NOTCH_WIDTH = Blockly.BlockSvg.NOTCH_BASE_HEIGHT/4;
+Blockly.BlockSvg.NOTCH_WIDTH = 8;
 /**
  * SVG path for drawing next/previous notch from top to bottom.
  * @const
