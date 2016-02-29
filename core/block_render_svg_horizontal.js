@@ -123,7 +123,7 @@ Blockly.BlockSvg.NOTCH_PATH_DOWN =
  * @const
  */
 Blockly.BlockSvg.NOTCH_PATH_UP =
-  'c 0,-2 1,-3 2,-4'+
+  'c 0,-2 1,-3 2,-4 '+
   'l 4,-4 ' +
   'c 1,-1 2,-2 2,-4 ' +
   'v -12 ' +
@@ -393,7 +393,7 @@ Blockly.BlockSvg.prototype.renderCompute_ = function() {
     );
   }
   if (metrics.startHat) {
-    // Start hats are 1 unit  wider to account for optical effect of curve
+    // Start hats are 1 unit wider to account for optical effect of curve
     metrics.width += 4;
   }
   return metrics;
