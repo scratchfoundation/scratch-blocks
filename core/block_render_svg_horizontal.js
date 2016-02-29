@@ -613,7 +613,7 @@ Blockly.BlockSvg.prototype.renderDrawRight_ =
     if (this.RTL) {
       connectionX = connectionsXY.x + metrics.width;
     } else {
-      connectionX = connectionsXY.x + metrics.width + 1;
+      connectionX = connectionsXY.x + metrics.width;
     }
     var connectionY = connectionsXY.y + metrics.height - Blockly.BlockSvg.CORNER_RADIUS * 2;
     this.nextConnection.moveTo(connectionX, connectionY);
