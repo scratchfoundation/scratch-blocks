@@ -175,28 +175,6 @@ Blockly.BlockSvg.HAT_TOP_LEFT_CORNER =
     'A ' + Blockly.BlockSvg.HAT_CORNER_RADIUS + ',' +
     Blockly.BlockSvg.HAT_CORNER_RADIUS + ' 0 0,0 ' +
     '0,' + Blockly.BlockSvg.HAT_CORNER_RADIUS;
-/**
- * SVG path for drawing the top-left corner of a statement input.
- * Includes the top notch, a horizontal space, and the rounded inside corner.
- * @const
- */
-Blockly.BlockSvg.INNER_TOP_LEFT_CORNER =
-    Blockly.BlockSvg.NOTCH_PATH_UP + ' h -' +
-    (Blockly.BlockSvg.NOTCH_HEIGHT - 15 - Blockly.BlockSvg.CORNER_RADIUS) +
-    ' h -0.5 a ' + Blockly.BlockSvg.CORNER_RADIUS + ',' +
-    Blockly.BlockSvg.CORNER_RADIUS + ' 0 0,0 -' +
-    Blockly.BlockSvg.CORNER_RADIUS + ',' +
-    Blockly.BlockSvg.CORNER_RADIUS;
-/**
- * SVG path for drawing the bottom-left corner of a statement input.
- * Includes the rounded inside corner.
- * @const
- */
-Blockly.BlockSvg.INNER_BOTTOM_LEFT_CORNER =
-    'a ' + Blockly.BlockSvg.CORNER_RADIUS + ',' +
-    Blockly.BlockSvg.CORNER_RADIUS + ' 0 0,0 ' +
-    Blockly.BlockSvg.CORNER_RADIUS + ',' +
-    Blockly.BlockSvg.CORNER_RADIUS;
 
 
 /**
