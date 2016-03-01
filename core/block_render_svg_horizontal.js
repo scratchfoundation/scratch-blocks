@@ -371,11 +371,9 @@ Blockly.BlockSvg.prototype.renderCompute_ = function() {
   }
 
   // Always render icon at 40x40 px
-  var iconSize = new goog.math.Size(Blockly.BlockSvg.ICON_WIDTH, Blockly.BlockSvg.ICON_HEIGHT);
-
   // Normal block sizing
-  metrics.width = Blockly.BlockSvg.SEP_SPACE_X * 2 + iconSize.width;
-  metrics.height = Blockly.BlockSvg.SEP_SPACE_Y * 2 + iconSize.height;
+  metrics.width = Blockly.BlockSvg.SEP_SPACE_X * 2 + Blockly.BlockSvg.ICON_WIDTH;
+  metrics.height = Blockly.BlockSvg.SEP_SPACE_Y * 2 + Blockly.BlockSvg.ICON_HEIGHT;
 
   if (this.outputConnection) {
     // Field shadow block
