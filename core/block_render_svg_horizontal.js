@@ -384,12 +384,12 @@ Blockly.BlockSvg.prototype.renderCompute_ = function() {
   }
   if (metrics.statement) {
     // Block with statement (e.g., repeat, forever)
-    metrics.width += metrics.bayWidth + 4 * Blockly.BlockSvg.CORNER_RADIUS + 8;
+    metrics.width += metrics.bayWidth + 4 * Blockly.BlockSvg.CORNER_RADIUS + 2 * Blockly.BlockSvg.GRID_UNIT;
     metrics.height = metrics.bayHeight + Blockly.BlockSvg.STATEMENT_BLOCK_SPACE;
   }
   if (metrics.startHat || metrics.endHat) {
     // Start and end hats are 1 unit wider to account for optical effect of curve
-    metrics.width += 4;
+    metrics.width += 1 * Blockly.BlockSvg.GRID_UNIT;
   }
   return metrics;
 };
@@ -432,7 +432,7 @@ Blockly.BlockSvg.prototype.renderDraw_ = function(metrics) {
     var iconX = metrics.width - iconSize.width - Blockly.BlockSvg.SEP_SPACE_X / 1.5;
     if (metrics.endHat > 0) {
       // Icon positioning bumped to the left
-      iconX -= 4;
+      iconX -= 1 * Blockly.BlockSvg.GRID_UNIT;
     }
     icon.setAttribute('transform',
       'translate(' + (iconX) + ',' +
@@ -445,8 +445,10 @@ Blockly.BlockSvg.prototype.renderDraw_ = function(metrics) {
     var input = metrics.valueInput.getSvgRoot();
     var inputBBox = input.getBBox();
     var transformation = 'translate(' +
-      (Blockly.BlockSvg.NOTCH_WIDTH + (metrics.bayWidth ? 8 + Blockly.BlockSvg.NOTCH_WIDTH*2 : 0) + metrics.bayWidth) + ',' +
-      (metrics.height - 8) + ')';
+      (Blockly.BlockSvg.NOTCH_WIDTH +
+        (metrics.bayWidth ? 2 * Blockly.BlockSvg.GRID_UNIT +
+          Blockly.BlockSvg.NOTCH_WIDTH*2 : 0) + metrics.bayWidth) + ',' +
+      (metrics.height - 2 * Blockly.BlockSvg.GRID_UNIT) + ')';
     input.setAttribute('transform', transformation);
   }
 };
@@ -528,7 +530,7 @@ Blockly.BlockSvg.prototype.renderDrawBottom_ = function(steps,
 
   // Has statement
   if (metrics.statement) {
-    steps.push('h', 16);
+    steps.push('h', 4 * Blockly.BlockSvg.GRID_UNIT);
     steps.push('a', Blockly.BlockSvg.CORNER_RADIUS + ',' +
                Blockly.BlockSvg.CORNER_RADIUS + ' 0 0,0 ' +
                Blockly.BlockSvg.CORNER_RADIUS + ',-' +
@@ -536,7 +538,8 @@ Blockly.BlockSvg.prototype.renderDrawBottom_ = function(steps,
     steps.push('v', -10);
     steps.push(Blockly.BlockSvg.NOTCH_PATH_UP);
     // @todo Why 3?
-    steps.push('v', -metrics.bayHeight + (Blockly.BlockSvg.CORNER_RADIUS * 3) + Blockly.BlockSvg.NOTCH_HEIGHT + 8);
+    steps.push('v', -metrics.bayHeight + (Blockly.BlockSvg.CORNER_RADIUS * 3) +
+      Blockly.BlockSvg.NOTCH_HEIGHT + 2 * Blockly.BlockSvg.GRID_UNIT);
     steps.push('a', Blockly.BlockSvg.CORNER_RADIUS + ',' +
                Blockly.BlockSvg.CORNER_RADIUS + ' 0 0,1 ' +
                Blockly.BlockSvg.CORNER_RADIUS + ',-' +
@@ -546,7 +549,8 @@ Blockly.BlockSvg.prototype.renderDrawBottom_ = function(steps,
                Blockly.BlockSvg.CORNER_RADIUS + ' 0 0,1 ' +
                Blockly.BlockSvg.CORNER_RADIUS + ',' +
                Blockly.BlockSvg.CORNER_RADIUS);
-    steps.push('v', metrics.bayHeight - (Blockly.BlockSvg.CORNER_RADIUS * 3) - Blockly.BlockSvg.NOTCH_HEIGHT - 8);
+    steps.push('v', metrics.bayHeight - (Blockly.BlockSvg.CORNER_RADIUS * 3) -
+      Blockly.BlockSvg.NOTCH_HEIGHT - 2 * Blockly.BlockSvg.GRID_UNIT);
     steps.push(Blockly.BlockSvg.NOTCH_PATH_DOWN);
     steps.push('v', 10);
     steps.push('a', Blockly.BlockSvg.CORNER_RADIUS + ',' +
@@ -557,7 +561,7 @@ Blockly.BlockSvg.prototype.renderDrawBottom_ = function(steps,
     // Create statement connection.
     // @todo RTL
     // var connectionX = connectionsXY.x + (this.RTL ? -cursorX : cursorX + 1);
-    var connectionX = connectionsXY.x + Blockly.BlockSvg.CORNER_RADIUS * 2 + 16;
+    var connectionX = connectionsXY.x + Blockly.BlockSvg.CORNER_RADIUS * 2 + 4 * Blockly.BlockSvg.GRID_UNIT;
     var connectionY = connectionsXY.y + metrics.height - Blockly.BlockSvg.CORNER_RADIUS * 2;
     metrics.statement.connection.moveTo(connectionX, connectionY);
     if (metrics.statement.connection.targetConnection) {
@@ -589,7 +593,7 @@ Blockly.BlockSvg.prototype.renderDrawRight_ =
                Blockly.BlockSvg.HAT_CORNER_RADIUS + ' 0 0,0 ' +
                Blockly.BlockSvg.HAT_CORNER_RADIUS + ',-' +
                Blockly.BlockSvg.HAT_CORNER_RADIUS);
-    steps.push('v', -8);
+    steps.push('v', -2 * Blockly.BlockSvg.GRID_UNIT);
   } else if (this.nextConnection) {
     steps.push('a', Blockly.BlockSvg.CORNER_RADIUS + ',' +
                Blockly.BlockSvg.CORNER_RADIUS + ' 0 0,0 ' +
