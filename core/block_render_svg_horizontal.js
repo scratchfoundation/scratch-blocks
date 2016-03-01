@@ -31,27 +31,28 @@ goog.require('Blockly.BlockSvg');
 
 // UI constants for rendering blocks.
 /**
+* Grid unit to pixels conversion
+* @const
+*/
+Blockly.BlockSvg.GRID_UNIT = 4;
+
+/**
  * Horizontal space between elements.
  * @const
  */
-Blockly.BlockSvg.SEP_SPACE_X = 12;
+Blockly.BlockSvg.SEP_SPACE_X = Blockly.BlockSvg.GRID_UNIT * 3;
 /**
  * Vertical space between elements.
  * @const
  */
-Blockly.BlockSvg.SEP_SPACE_Y = 12;
+Blockly.BlockSvg.SEP_SPACE_Y = Blockly.BlockSvg.GRID_UNIT * 3;
 
 /**
  * Vertical space above blocks with statements.
  * @const
  */
-Blockly.BlockSvg.STATEMENT_BLOCK_SPACE = 16;
+Blockly.BlockSvg.STATEMENT_BLOCK_SPACE = Blockly.BlockSvg.GRID_UNIT * 4;
 
-/**
- * Vertical padding around inline elements.
- * @const
- */
-Blockly.BlockSvg.INLINE_PADDING_Y = 5;
 /**
  * Height of user inputs
  * @const
