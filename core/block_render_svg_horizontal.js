@@ -530,7 +530,7 @@ Blockly.BlockSvg.prototype.renderDrawBottom_ = function(steps,
                Blockly.BlockSvg.CORNER_RADIUS + ' 0 0,0 ' +
                Blockly.BlockSvg.CORNER_RADIUS + ',-' +
                Blockly.BlockSvg.CORNER_RADIUS);
-    steps.push('v', -10);
+    steps.push('v', -2.5 * Blockly.BlockSvg.GRID_UNIT);
     steps.push(Blockly.BlockSvg.NOTCH_PATH_UP);
     // @todo Why 3?
     steps.push('v', -metrics.bayHeight + (Blockly.BlockSvg.CORNER_RADIUS * 3) +
@@ -547,7 +547,7 @@ Blockly.BlockSvg.prototype.renderDrawBottom_ = function(steps,
     steps.push('v', metrics.bayHeight - (Blockly.BlockSvg.CORNER_RADIUS * 3) -
       Blockly.BlockSvg.NOTCH_HEIGHT - 2 * Blockly.BlockSvg.GRID_UNIT);
     steps.push(Blockly.BlockSvg.NOTCH_PATH_DOWN);
-    steps.push('v', 10);
+    steps.push('v', 2.5 * Blockly.BlockSvg.GRID_UNIT);
     steps.push('a', Blockly.BlockSvg.CORNER_RADIUS + ',' +
                Blockly.BlockSvg.CORNER_RADIUS + ' 0 0,0 ' +
                Blockly.BlockSvg.CORNER_RADIUS + ',' +
@@ -594,7 +594,7 @@ Blockly.BlockSvg.prototype.renderDrawRight_ =
                Blockly.BlockSvg.CORNER_RADIUS + ' 0 0,0 ' +
                Blockly.BlockSvg.CORNER_RADIUS + ',-' +
                Blockly.BlockSvg.CORNER_RADIUS);
-    steps.push('v', -10);
+    steps.push('v', -2.5 * Blockly.BlockSvg.GRID_UNIT);
   } else {
     // Input
     steps.push(
