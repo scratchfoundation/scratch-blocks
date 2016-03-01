@@ -266,9 +266,6 @@ Blockly.BlockSvg.prototype.getHeightWidth = function() {
     var nextHeightWidth = nextBlock.getHeightWidth();
     width += nextHeightWidth.width;
     height = Math.max(height, nextHeightWidth.height);
-  } else if (!this.nextConnection && !this.outputConnection) {
-    // Add a bit of margin under blocks with no bottom tab.
-    height += 2;
   }
   return {height: height, width: width};
 };
