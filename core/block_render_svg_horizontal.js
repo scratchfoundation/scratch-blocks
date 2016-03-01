@@ -425,7 +425,7 @@ Blockly.BlockSvg.prototype.renderDraw_ = function(metrics) {
     var icon = metrics.icon.getSvgRoot();
     var iconSize = metrics.icon.getSize();
     var iconX = metrics.width - iconSize.width - Blockly.BlockSvg.SEP_SPACE_X / 1.5;
-    if (metrics.endHat > 0) {
+    if (metrics.endHat) {
       // Icon positioning bumped to the left
       iconX -= 1 * Blockly.BlockSvg.GRID_UNIT;
     }
