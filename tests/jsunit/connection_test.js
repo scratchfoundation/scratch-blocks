@@ -278,6 +278,24 @@ function test_isConnectionAllowed() {
   assertFalse(one.isConnectionAllowed(two, 1000.0));
 }
 
+function test_isConnectionAllowed_Ghost() {
+  var sharedWorkspace = {};
+  // Two connections of opposite types near each other.
+  var one = helper_createConnection(5 /* x */, 10 /* y */,
+      Blockly.INPUT_VALUE);
+  one.sourceBlock_ = helper_makeSourceBlock(sharedWorkspace);
+
+  // The second one is a ghost.
+  var two = helper_createConnection(10 /* x */, 15 /* y */,
+      Blockly.OUTPUT_VALUE);
+  two.sourceBlock_ = helper_makeSourceBlock(sharedWorkspace);
+  two.sourceBlock_.isGhost = function() {
+      return true;
+    };
+
+  assertFalse(one.isConnectionAllowed(two, 20.0));
+}
+
 function testCheckConnection_Okay() {
   connectionTest_setUp();
   previous.checkConnection_(next);
