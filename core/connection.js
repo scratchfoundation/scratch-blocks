@@ -728,13 +728,13 @@ Blockly.Connection.prototype.bumpAwayFrom_ = function(staticConnection) {
  */
 Blockly.Connection.prototype.moveTo = function(x, y) {
   // Remove it from its old location in the database (if already present)
-  if (this.inDB_) {
+  if (this.inDB_ && !Blockly.connectionsFrozen) {
     this.db_.removeConnection_(this);
   }
   this.x_ = x;
   this.y_ = y;
   // Insert it into its new location in the database.
-  if (!this.hidden_) {
+  if (!this.hidden_ && !Blockly.connectionsFrozen) {
     this.db_.addConnection(this);
   }
 };

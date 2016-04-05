@@ -226,6 +226,7 @@ Blockly.BlockSvg.terminateDrag_ = function() {
         selected.ghostBlock_ = null;
         Blockly.Events.enable();
       }
+      Blockly.connectionsFrozen = false;
       // Update the connection locations.
       var xy = selected.getRelativeToSurfaceXY();
       var dxy = goog.math.Coordinate.difference(xy, selected.dragStartXY_);
@@ -779,6 +780,7 @@ Blockly.BlockSvg.prototype.onMouseMove_ = function(e) {
         this.disconnectUiEffect();
       }
       this.setDragging_(true);
+      Blockly.connectionsFrozen = true;
     }
   }
   if (Blockly.dragMode_ == 2) {

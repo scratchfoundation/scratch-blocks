@@ -263,6 +263,15 @@ Blockly.clipboardSource_ = null;
 Blockly.dragMode_ = 0;
 
 /**
+ * Whether to update the database when moving connections.
+ * Update this at your own risk!  If the database gets out of sync with reality
+ * it won't be possible to find connecitons in this.  This is only intended to
+ * be used when rendering insertion markers causes spurious moves.
+ * @type {boolean}
+ */
+Blockly.connectionsFrozen = false;
+
+/**
  * Wrapper function called when a touch mouseUp occurs during a drag operation.
  * @type {Array.<!Array>}
  * @private
