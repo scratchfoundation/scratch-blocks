@@ -788,7 +788,8 @@ Blockly.Flyout.prototype.onMouseMoveBlock_ = function(e) {
     }
   }
 
-  // Still dragging within the sticky DRAG_RADIUS.
+  // Don't create a block within the sticky drag radius,
+  // or if we failed the direction check.
   if (Math.sqrt(dx * dx + dy * dy) > Blockly.DRAG_RADIUS && directionCheck) {
     // Create the block.
     Blockly.Flyout.startFlyout_.createBlockFunc_(Blockly.Flyout.startBlock_)(
