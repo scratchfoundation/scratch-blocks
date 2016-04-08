@@ -892,7 +892,7 @@ Blockly.BlockSvg.prototype.onMouseMove_ = function(e) {
       group.translate_ = 'transform: translate3d(' + newXY.x + 'px,' + newXY.y + 'px, 0px)';
       group.setAttribute('style', group.translate_ + group.skew_);
     } else {
-      group.translate_ = 'transform: translate(' + newXY.x + ',' + newXY.y + ')';
+      group.translate_ = 'translate(' + newXY.x + ',' + newXY.y + ')';
       group.setAttribute('transform', group.translate_ + group.skew_);
     }
     // Drag all the nested bubbles.
