@@ -141,6 +141,18 @@ Blockly.Flyout.prototype.height_ = 0;
 Blockly.Flyout.prototype.verticalOffset_ = 0;
 
 /**
+ * Minimum angle at which blocks are created from a fixed flyout.
+ * @type {number}
+*/
+Blockly.Flyout.prototype.directionRangeMin = 20;
+
+/**
+ * Maximum angle at which blocks are created from a fixed flyout.
+ * @type {number}
+*/
+Blockly.Flyout.prototype.directionRangeMax = 160;
+
+/**
  * Creates the flyout's DOM.  Only needs to be called once.
  * @return {!Element} The flyout's SVG group.
  */
@@ -671,6 +683,8 @@ Blockly.Flyout.prototype.blockMouseDown_ = function(block) {
       // Left-click (or middle click)
       Blockly.Css.setCursor(Blockly.Css.Cursor.CLOSED);
       // Record the current mouse position.
+      flyout.startDragMouseY_ = e.clientY;
+      flyout.startDragMouseX_ = e.clientX;
       Blockly.Flyout.startDownEvent_ = e;
       Blockly.Flyout.startBlock_ = block;
       Blockly.Flyout.startFlyout_ = flyout;
@@ -751,11 +765,19 @@ Blockly.Flyout.prototype.onMouseMoveBlock_ = function(e) {
   }
   var dx = e.clientX - Blockly.Flyout.startDownEvent_.clientX;
   var dy = e.clientY - Blockly.Flyout.startDownEvent_.clientY;
+
+  var direction = Math.atan2(dy, dx) / Math.PI * 180;
+
   // Still dragging within the sticky DRAG_RADIUS.
-  if (Math.sqrt(dx * dx + dy * dy) > Blockly.DRAG_RADIUS) {
+  if (Math.sqrt(dx * dx + dy * dy) > Blockly.DRAG_RADIUS &&
+      direction > Blockly.Flyout.startFlyout_.directionRangeMin &&
+      direction < Blockly.Flyout.startFlyout_.directionRangeMax) {
     // Create the block.
     Blockly.Flyout.startFlyout_.createBlockFunc_(Blockly.Flyout.startBlock_)(
         Blockly.Flyout.startDownEvent_);
+  } else {
+    // Do a scroll
+    Blockly.Flyout.startFlyout_.onMouseMove_(e);
   }
 };
 
