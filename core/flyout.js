@@ -141,16 +141,11 @@ Blockly.Flyout.prototype.height_ = 0;
 Blockly.Flyout.prototype.verticalOffset_ = 0;
 
 /**
- * Minimum angle at which blocks are created from a fixed flyout.
+ * Angle size at which blocks are created from a fixed flyout on touch.
  * @type {number}
+ * @private
 */
-Blockly.Flyout.prototype.directionRangeMin = 20;
-
-/**
- * Maximum angle at which blocks are created from a fixed flyout.
- * @type {number}
-*/
-Blockly.Flyout.prototype.directionRangeMax = 160;
+Blockly.Flyout.prototype.directionRange_ = 140;
 
 /**
  * Creates the flyout's DOM.  Only needs to be called once.
@@ -313,7 +308,7 @@ Blockly.Flyout.prototype.setMetrics_ = function(xyRatio) {
 
 Blockly.Flyout.prototype.setVerticalOffset = function(verticalOffset) {
   this.verticalOffset_ = verticalOffset;
-}
+};
 
 /**
  * Move the toolbox to the edge of the workspace.
@@ -768,10 +763,33 @@ Blockly.Flyout.prototype.onMouseMoveBlock_ = function(e) {
 
   var direction = Math.atan2(dy, dx) / Math.PI * 180;
 
+  // Do a direction check based on the flyout position
+  var directionCheck = false;
+  var range = Blockly.Flyout.startFlyout_.directionRange_;
+  if (Blockly.Flyout.startFlyout_.horizontalLayout_) {
+    if (Blockly.Flyout.startFlyout_.toolboxPosition_ == Blockly.TOOLBOX_AT_TOP) {
+      if (direction < 90 + range / 2 && direction > 90 - range / 2) {
+        directionCheck = true;
+      }
+    } else {
+      if (direction > -90 - range / 2 && direction < -90 + range / 2) {
+        directionCheck = true;
+      }
+    }
+  } else {
+    if (Blockly.Flyout.startFlyout_.toolboxPosition_ == Blockly.TOOLBOX_AT_LEFT) {
+      if (direction < range / 2 && direction > -range / 2) {
+        directionCheck = true;
+      }
+    } else {
+      if (direction < -180 + range / 2 || direction > 180 - range / 2) {
+        directionCheck = true;
+      }
+    }
+  }
+
   // Still dragging within the sticky DRAG_RADIUS.
-  if (Math.sqrt(dx * dx + dy * dy) > Blockly.DRAG_RADIUS &&
-      direction > Blockly.Flyout.startFlyout_.directionRangeMin &&
-      direction < Blockly.Flyout.startFlyout_.directionRangeMax) {
+  if (Math.sqrt(dx * dx + dy * dy) > Blockly.DRAG_RADIUS && directionCheck) {
     // Create the block.
     Blockly.Flyout.startFlyout_.createBlockFunc_(Blockly.Flyout.startBlock_)(
         Blockly.Flyout.startDownEvent_);
@@ -779,6 +797,7 @@ Blockly.Flyout.prototype.onMouseMoveBlock_ = function(e) {
     // Do a scroll
     Blockly.Flyout.startFlyout_.onMouseMove_(e);
   }
+  e.stopPropagation();
 };
 
 /**
