@@ -362,9 +362,14 @@ Blockly.BlockSvg.prototype.moveBy = function(dx, dy) {
  * Set this block to an absolute translation.
  * @param {number} x Horizontal translation.
  * @param {number} y Vertical translation.
+ * @param {boolean=} opt_use3d If set, use 3d translation.
 */
-Blockly.BlockSvg.prototype.translate = function(x, y) {
-  this.getSvgRoot().setAttribute('transform', 'translate(' + x + ',' + y + ')');
+Blockly.BlockSvg.prototype.translate = function(x, y, opt_use3d) {
+  if (opt_use3d) {
+    this.getSvgRoot().setAttribute('style', 'translate3d(' + x + 'px,' + y + 'px, 0px)');
+  } else {
+    this.getSvgRoot().setAttribute('transform', 'translate(' + x + ',' + y + ')');
+  }
 };
 
 /**
@@ -817,7 +822,11 @@ Blockly.BlockSvg.prototype.moveToDragSurface_ = function() {
   // is equal to the current relative-to-surface position,
   // to keep the position in sync as it move on/off the surface.
   var xy = this.getRelativeToSurfaceXY();
-  this.translate(xy.x, xy.y);
+  if (Blockly.is3dSupported() && this.getSvgRoot().hasAttribute('transform')) {
+    // Existing transform needs to be overwritten by translate3d
+    this.getSvgRoot().removeAttribute('transform');
+  }
+  this.translate(xy.x, xy.y, Blockly.is3dSupported());
   // Execute the move on the top-level SVG component
   this.workspace.dragSurface.setBlocksAndShow(this.getSvgRoot());
 };
@@ -829,6 +838,13 @@ Blockly.BlockSvg.prototype.moveToDragSurface_ = function() {
  */
  Blockly.BlockSvg.prototype.moveOffDragSurface_ = function() {
   this.workspace.dragSurface.clearAndHide(this.workspace.getCanvas());
+  // Translate to current position, turning off 3d.
+  var xy = this.getRelativeToSurfaceXY();
+  if (Blockly.is3dSupported() && this.getSvgRoot().hasAttribute('style')) {
+    // Remove conflicting style attribute before applying translate
+    this.getSvgRoot().removeAttribute('style');
+  }
+  this.translate(xy.x, xy.y, false);
 };
 
 
@@ -872,8 +888,13 @@ Blockly.BlockSvg.prototype.onMouseMove_ = function(e) {
     var dx = oldXY.x - this.dragStartXY_.x;
     var dy = oldXY.y - this.dragStartXY_.y;
     var group = this.getSvgRoot();
-    group.translate_ = 'translate(' + newXY.x + ',' + newXY.y + ')';
-    group.setAttribute('transform', group.translate_ + group.skew_);
+    if (Blockly.is3dSupported()) {
+      group.translate_ = 'transform: translate3d(' + newXY.x + 'px,' + newXY.y + 'px, 0px)';
+      group.setAttribute('style', group.translate_ + group.skew_);
+    } else {
+      group.translate_ = 'transform: translate(' + newXY.x + ',' + newXY.y + ')';
+      group.setAttribute('transform', group.translate_ + group.skew_);
+    }
     // Drag all the nested bubbles.
     for (var i = 0; i < this.draggedBubbles_.length; i++) {
       var commentData = this.draggedBubbles_[i];
