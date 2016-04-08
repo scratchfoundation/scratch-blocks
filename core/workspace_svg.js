@@ -31,9 +31,9 @@ goog.provide('Blockly.WorkspaceSvg');
 goog.require('Blockly.ConnectionDB');
 goog.require('Blockly.ScrollbarPair');
 goog.require('Blockly.Trashcan');
-goog.require('Blockly.ZoomControls');
 goog.require('Blockly.Workspace');
 goog.require('Blockly.Xml');
+goog.require('Blockly.ZoomControls');
 
 goog.require('goog.dom');
 goog.require('goog.math.Coordinate');
@@ -43,7 +43,7 @@ goog.require('goog.userAgent');
 /**
  * Class for a workspace.  This is an onscreen area with optional trashcan,
  * scrollbars, bubbles, and dragging.
- * @param {!Object} options Dictionary of options.
+ * @param {!Blockly.Options} options Dictionary of options.
  * @extends {Blockly.Workspace}
  * @constructor
  */
@@ -426,7 +426,7 @@ Blockly.WorkspaceSvg.prototype.traceOn = function(armed) {
  * @param {?string} id ID of block to find.
  */
 Blockly.WorkspaceSvg.prototype.highlightBlock = function(id) {
-  if (this.traceOn_ && Blockly.dragMode_ != 0) {
+  if (this.traceOn_ && Blockly.dragMode_ != Blockly.DRAG_NONE) {
     // The blocklySelectChange event normally prevents this, but sometimes
     // there is a race condition on fast-executing apps.
     this.traceOn(false);
@@ -585,6 +585,7 @@ Blockly.WorkspaceSvg.prototype.isDeleteArea = function(e) {
  */
 Blockly.WorkspaceSvg.prototype.onMouseDown_ = function(e) {
   this.markFocused();
+  Blockly.setPageSelectable(false);
   if (Blockly.isTargetInput_(e)) {
     return;
   }
@@ -602,7 +603,6 @@ Blockly.WorkspaceSvg.prototype.onMouseDown_ = function(e) {
     // Right-click.
     this.showContextMenu_(e);
   } else if (this.scrollbar) {
-    Blockly.removeAllRanges();
     // If the workspace is editable, only allow scrolling when gripping empty
     // space.  Otherwise, allow scrolling when gripping anywhere.
     this.isScrolling = true;
@@ -668,10 +668,19 @@ Blockly.WorkspaceSvg.prototype.moveDrag = function(e) {
  */
 Blockly.WorkspaceSvg.prototype.onMouseWheel_ = function(e) {
   // TODO: Remove terminateDrag and compensate for coordinate skew during zoom.
-  Blockly.terminateDrag_();
-  var delta = e.deltaY > 0 ? -1 : 1;
-  var position = Blockly.mouseToSvg(e, this.getParentSvg());
-  this.zoom(position.x, position.y, delta);
+  if (e.ctrlKey) {
+    // Pinch-to-zoom in Chrome only
+    Blockly.terminateDrag_();
+    var delta = e.deltaY > 0 ? -1 : 1;
+    var position = Blockly.mouseToSvg(e, this.getParentSvg());
+    this.zoom(position.x, position.y, delta);
+  } else {
+    // This is a regular mouse wheel event - scroll the workspace
+    var x = this.scrollX - e.deltaX;
+    var y = this.scrollY - e.deltaY;
+    this.startDragMetrics = this.getMetrics();
+    this.scroll(x, y);
+  }
   e.preventDefault();
 };
 
@@ -698,7 +707,7 @@ Blockly.WorkspaceSvg.prototype.getBlocksBoundingBox = function() {
       boundary.topLeft.x = blockBoundary.topLeft.x;
     }
     if (blockBoundary.bottomRight.x > boundary.bottomRight.x) {
-      boundary.bottomRight.x = blockBoundary.bottomRight.x
+      boundary.bottomRight.x = blockBoundary.bottomRight.x;
     }
     if (blockBoundary.topLeft.y < boundary.topLeft.y) {
       boundary.topLeft.y = blockBoundary.topLeft.y;
@@ -746,12 +755,28 @@ Blockly.WorkspaceSvg.prototype.showContextMenu_ = function(e) {
   }
   var menuOptions = [];
   var topBlocks = this.getTopBlocks(true);
+  var eventGroup = Blockly.genUid();
+
+  // Options to undo/redo previous action.
+  var undoOption = {};
+  undoOption.text = Blockly.Msg.UNDO;
+  undoOption.enabled = this.undoStack_.length > 0;
+  undoOption.callback = this.undo.bind(this, false);
+  menuOptions.push(undoOption);
+  var redoOption = {};
+  redoOption.text = Blockly.Msg.REDO;
+  redoOption.enabled = this.redoStack_.length > 0;
+  redoOption.callback = this.undo.bind(this, true);
+  menuOptions.push(redoOption);
+
   // Option to clean up blocks.
-  var cleanOption = {};
-  cleanOption.text = Blockly.Msg.CLEAN_UP;
-  cleanOption.enabled = topBlocks.length > 1;
-  cleanOption.callback = this.cleanUp_.bind(this);
-  menuOptions.push(cleanOption);
+  if (this.scrollbar) {
+    var cleanOption = {};
+    cleanOption.text = Blockly.Msg.CLEAN_UP;
+    cleanOption.enabled = topBlocks.length > 1;
+    cleanOption.callback = this.cleanUp_.bind(this);
+    menuOptions.push(cleanOption);
+  }
 
   // Add a little animation to collapsing and expanding.
   var DELAY = 10;
@@ -821,7 +846,7 @@ Blockly.WorkspaceSvg.prototype.showContextMenu_ = function(e) {
     addDeletableBlocks(topBlocks[i]);
   }
   var deleteOption = {
-    text: deleteList.length <= 1 ? Blockly.Msg.DELETE_BLOCK :
+    text: deleteList.length == 1 ? Blockly.Msg.DELETE_BLOCK :
         Blockly.Msg.DELETE_X_BLOCKS.replace('%1', String(deleteList.length)),
     enabled: deleteList.length > 0,
     callback: function() {
@@ -833,6 +858,7 @@ Blockly.WorkspaceSvg.prototype.showContextMenu_ = function(e) {
     }
   };
   function deleteNext() {
+    Blockly.Events.setGroup(eventGroup);
     var block = deleteList.shift();
     if (block) {
       if (block.workspace) {
@@ -842,6 +868,7 @@ Blockly.WorkspaceSvg.prototype.showContextMenu_ = function(e) {
         deleteNext();
       }
     }
+    Blockly.Events.setGroup(false);
   }
   menuOptions.push(deleteOption);
 
@@ -1034,6 +1061,26 @@ Blockly.WorkspaceSvg.prototype.zoomReset = function(e) {
   }
   // This event has been handled.  Don't start a workspace drag.
   e.stopPropagation();
+};
+
+/**
+ * Scroll the workspace by a specified amount, keeping in the bounds.
+ * Be sure to set this.startDragMetrics with cached metrics before calling.
+ * @param {number} x Target X to scroll to
+ * @param {number} y Target Y to scroll to
+ */
+Blockly.WorkspaceSvg.prototype.scroll = function(x, y) {
+  var metrics = this.startDragMetrics; // Cached values
+  x = Math.min(x, -metrics.contentLeft);
+  y = Math.min(y, -metrics.contentTop);
+  x = Math.max(x, metrics.viewWidth - metrics.contentLeft -
+               metrics.contentWidth);
+  y = Math.max(y, metrics.viewHeight - metrics.contentTop -
+               metrics.contentHeight);
+
+  // Move the scrollbars and the page will scroll automatically.
+  this.scrollbar.set(-x - metrics.contentLeft,
+                     -y - metrics.contentTop);
 };
 
 /**
