@@ -761,6 +761,7 @@ Blockly.Flyout.prototype.onMouseMoveBlock_ = function(e) {
   var dx = e.clientX - Blockly.Flyout.startDownEvent_.clientX;
   var dy = e.clientY - Blockly.Flyout.startDownEvent_.clientY;
 
+  // Direction goes from -180 to 180, with 0 toward the right and 90 on top.
   var direction = Math.atan2(dy, dx) / Math.PI * 180;
 
   // Do a direction check based on the flyout position
