@@ -40,7 +40,7 @@ Blockly.Blocks['event_whenflagclicked'] = {
 
 Blockly.Blocks['event_whenbroadcastreceived'] = {
   /**
-   * Block for when flag clicked.
+   * Block for when broadcast received.
    * @this Blockly.Block
    */
   init: function() {
@@ -68,7 +68,7 @@ Blockly.Blocks['event_whenbroadcastreceived'] = {
 
 Blockly.Blocks['event_broadcast'] = {
   /**
-   * Block to set color of LED
+   * Block to send a broadcast.
    * @this Blockly.Block
    */
   init: function() {
