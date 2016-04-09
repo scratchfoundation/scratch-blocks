@@ -264,22 +264,25 @@ Blockly.getRelativeXY_ = function(element) {
   }
   // Second, check for transform="translate(...)" attribute.
   var transform = element.getAttribute('transform');
-  var r = transform && transform.match(Blockly.getRelativeXY_.XY_REGEXP_);
-  if (r) {
-    xy.x += parseFloat(r[1]);
-    if (r[3]) {
-      xy.y += parseFloat(r[3]);
+  if (transform) {
+    var transformComponents = transform.match(Blockly.getRelativeXY_.XY_REGEXP_);
+    if (transformComponents) {
+      xy.x += parseFloat(transformComponents[1]);
+      if (transformComponents[3]) {
+        xy.y += parseFloat(transformComponents[3]);
+      }
     }
   }
 
   // Third, check for style="transform: translate3d(...)".
   var style = element.getAttribute('style');
-  var r3;
-  r3 = style && style.indexOf('translate3d') > -1 && style.match(Blockly.getRelativeXY_.XY_3D_REGEXP_);
-  if (r3) {
-    xy.x += parseFloat(r3[1]);
-    if (r3[3]) {
-      xy.y += parseFloat(r3[3]);
+  if (style && style.indexOf('translate3d') > -1) {
+    var styleComponents = style.match(Blockly.getRelativeXY_.XY_3D_REGEXP_);
+    if (styleComponents) {
+      xy.x += parseFloat(styleComponents[1]);
+      if (styleComponents[3]) {
+        xy.y += parseFloat(styleComponents[3]);
+      }
     }
   }
 
