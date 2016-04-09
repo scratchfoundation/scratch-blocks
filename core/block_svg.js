@@ -819,10 +819,7 @@ Blockly.BlockSvg.prototype.moveToDragSurface_ = function() {
   // is equal to the current relative-to-surface position,
   // to keep the position in sync as it move on/off the surface.
   var xy = this.getRelativeToSurfaceXY();
-  if (Blockly.is3dSupported() && this.getSvgRoot().hasAttribute('transform')) {
-    // Existing transform needs to be overwritten by translate3d
-    this.getSvgRoot().removeAttribute('transform');
-  }
+  this.clearTransformAttributes_();
   this.translate(xy.x, xy.y, Blockly.is3dSupported());
   // Execute the move on the top-level SVG component
   this.workspace.dragSurface.setBlocksAndShow(this.getSvgRoot());
@@ -837,13 +834,23 @@ Blockly.BlockSvg.prototype.moveToDragSurface_ = function() {
   this.workspace.dragSurface.clearAndHide(this.workspace.getCanvas());
   // Translate to current position, turning off 3d.
   var xy = this.getRelativeToSurfaceXY();
-  if (Blockly.is3dSupported() && this.getSvgRoot().hasAttribute('style')) {
-    // Remove conflicting style attribute before applying translate
-    this.getSvgRoot().removeAttribute('style');
-  }
+  this.clearTransformAttributes_();
   this.translate(xy.x, xy.y, false);
 };
 
+/**
+ * Clear the block of style="..." and transform="..." attributes.
+ * Used when the block is switching from 3d to 2d transform or vice versa.
+ * @private
+ */
+Blockly.BlockSvg.prototype.clearTransformAttributes_ = function() {
+  if (this.getSvgRoot().hasAttribute('transform')) {
+    this.getSvgRoot().removeAttribute('transform');
+  }
+  if (this.getSvgRoot().hasAttribute('style')) {
+    this.getSvgRoot().removeAttribute('style');
+  }
+};
 
 /**
  * Drag this block to follow the mouse.
