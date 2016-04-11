@@ -153,7 +153,7 @@ Blockly.Flyout.prototype.verticalOffset_ = 0;
  * @type {number}
  * @private
 */
-Blockly.Flyout.prototype.dragTowardWorkspaceOrthogonalAngleRange_ = 70;
+Blockly.Flyout.prototype.dragAngleRange_ = 70;
 
 /**
  * Creates the flyout's DOM.  Only needs to be called once.
@@ -798,7 +798,7 @@ Blockly.Flyout.prototype.isDragTowardWorkspace_ = function(dx, dy) {
   var dragDirection = Math.atan2(dy, dx) / Math.PI * 180;
 
   var draggingTowardWorkspace = false;
-  var range = Blockly.Flyout.startFlyout_.dragTowardWorkspaceOrthogonalAngleRange_;
+  var range = Blockly.Flyout.startFlyout_.dragAngleRange_;
   if (Blockly.Flyout.startFlyout_.horizontalLayout_) {
     if (Blockly.Flyout.startFlyout_.toolboxPosition_ == Blockly.TOOLBOX_AT_TOP) {
       // Horizontal at top
