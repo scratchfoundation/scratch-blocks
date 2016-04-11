@@ -61,7 +61,7 @@ Blockly.WidgetDiv.dispose_ = null;
  * @type {Function}
  * @private
  */
-Blockly.WidgetDiv.disposeAnimateFinished_ = null;
+Blockly.WidgetDiv.disposeAnimationFinished_ = null;
 
 /**
  * Timer ID for the dispose animation.
@@ -75,7 +75,7 @@ Blockly.WidgetDiv.disposeAnimationTimer_ = null;
  * @type {number}
  * @private
  */
-Blockly.WidgetDiv.disposeAnimateTimerLength_ = 0;
+Blockly.WidgetDiv.disposeAnimationTimerLength_ = 0;
 
 
 /**
@@ -96,18 +96,18 @@ Blockly.WidgetDiv.createDom = function() {
  * @param {boolean} rtl Right-to-left (true) or left-to-right (false).
  * @param {Function=} opt_dispose Optional cleanup function to be run when the widget
  *   is closed. If the dispose is animated, this function must start the animation.
- * @param {Function=} opt_disposeAnimateFinished Optional cleanup function to be run
+ * @param {Function=} opt_disposeAnimationFinished Optional cleanup function to be run
  *   when the widget is done animating and must disappear.
- * @param {number=} opt_disposeAnimateTimerLength Length of animation time in seconds
+ * @param {number=} opt_disposeAnimationTimerLength Length of animation time in seconds
      if a dispose animation is provided.
  */
 Blockly.WidgetDiv.show = function(newOwner, rtl, opt_dispose,
-    opt_disposeAnimateFinished, opt_disposeAnimateTimerLength) {
+    opt_disposeAnimationFinished, opt_disposeAnimationTimerLength) {
   Blockly.WidgetDiv.hide();
   Blockly.WidgetDiv.owner_ = newOwner;
   Blockly.WidgetDiv.dispose_ = opt_dispose;
-  Blockly.WidgetDiv.disposeAnimateFinished_ = opt_disposeAnimateFinished;
-  Blockly.WidgetDiv.disposeAnimateTimerLength_ = opt_disposeAnimateTimerLength;
+  Blockly.WidgetDiv.disposeAnimationFinished_ = opt_disposeAnimationFinished;
+  Blockly.WidgetDiv.disposeAnimationTimerLength_ = opt_disposeAnimationTimerLength;
   // Temporarily move the widget to the top of the screen so that it does not
   // cause a scrollbar jump in Firefox when displayed.
   var xy = goog.style.getViewportPageOffset(document);
@@ -127,8 +127,8 @@ Blockly.WidgetDiv.hide = function() {
     // but Blockly is hiding the widget to create a new one.
     // So, short-circuit the animation and clear the timer.
     window.clearTimeout(Blockly.WidgetDiv.disposeAnimationTimer_);
-    Blockly.WidgetDiv.disposeAnimateFinished_ && Blockly.WidgetDiv.disposeAnimateFinished_();
-    Blockly.WidgetDiv.disposeAnimateFinished_ = null;
+    Blockly.WidgetDiv.disposeAnimationFinished_ && Blockly.WidgetDiv.disposeAnimationFinished_();
+    Blockly.WidgetDiv.disposeAnimationFinished_ = null;
     Blockly.WidgetDiv.disposeAnimationTimer_ = null;
     Blockly.WidgetDiv.owner_ = null;
     Blockly.WidgetDiv.hideAndClearDom_();
@@ -141,10 +141,10 @@ Blockly.WidgetDiv.hide = function() {
     Blockly.WidgetDiv.dispose_ && Blockly.WidgetDiv.dispose_();
     Blockly.WidgetDiv.dispose_ = null;
     // If we want to animate out, set the appropriate timer for final dispose.
-    if (Blockly.WidgetDiv.disposeAnimateFinished_) {
+    if (Blockly.WidgetDiv.disposeAnimationFinished_) {
       Blockly.WidgetDiv.disposeAnimationTimer_ = window.setTimeout(
         Blockly.WidgetDiv.hide, // Come back to hide and take the first branch.
-        Blockly.WidgetDiv.disposeAnimateTimerLength_ * 1000
+        Blockly.WidgetDiv.disposeAnimationTimerLength_ * 1000
       );
     } else {
       // No timer provided - auto-hide the DOM now.
