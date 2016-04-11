@@ -132,11 +132,8 @@ Blockly.WidgetDiv.hide = function() {
     Blockly.WidgetDiv.disposeAnimationTimer_ = null;
     Blockly.WidgetDiv.owner_ = null;
     Blockly.WidgetDiv.hideAndClearDom_();
-    return;
   } else if (Blockly.WidgetDiv.isVisible()) {
     // No animation timer set, but the widget is visible
-    Blockly.WidgetDiv.owner_ = null;
-    Blockly.WidgetDiv.hideAndClearDom_();
     // Start animation out (or immediately hide)
     Blockly.WidgetDiv.dispose_ && Blockly.WidgetDiv.dispose_();
     Blockly.WidgetDiv.dispose_ = null;
@@ -148,6 +145,7 @@ Blockly.WidgetDiv.hide = function() {
       );
     } else {
       // No timer provided - auto-hide the DOM now.
+      Blockly.WidgetDiv.owner_ = null;
       Blockly.WidgetDiv.hideAndClearDom_();
     }
     Blockly.Events.setGroup(false);
