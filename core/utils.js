@@ -35,6 +35,13 @@ goog.require('goog.userAgent');
 
 
 /**
+ * Cached value for whether 3D is supported
+ * @type {boolean}
+ * @private
+ */
+Blockly.cache3dSupported_ = null;
+
+/**
  * Add a CSS class to a element.
  * Similar to Closure's goog.dom.classes.add, except it handles SVG elements.
  * @param {!Element} element DOM element to add class to.
@@ -342,13 +349,6 @@ Blockly.getSvgXY_ = function(element, workspace) {
   } while (element && element != workspace.getParentSvg());
   return new goog.math.Coordinate(x, y);
 };
-
-/**
- * Cached value for whether 3D is supported
- * @type {boolean}
- * @private
- */
-Blockly.cache3dSupported_ = null;
 
 /**
  * Check if 3D transforms are supported by adding an element
