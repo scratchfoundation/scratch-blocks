@@ -100,6 +100,11 @@ Blockly.Css.inject = function(hasCss, pathToMedia) {
  * @param {Blockly.Css.Cursor} cursor Enum.
  */
 Blockly.Css.setCursor = function(cursor) {
+  if (goog.userAgent.MOBILE || goog.userAgent.ANDROID || goog.userAgent.IPAD) {
+    // Don't try to switch the mouse cursor on a mobile device.
+    // This is an optimization - since we almost never have cursors on mobile anyway.
+    return;
+  }
   if (Blockly.Css.currentCursor_ == cursor) {
     return;
   }
