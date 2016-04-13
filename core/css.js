@@ -28,6 +28,7 @@ goog.provide('Blockly.Css');
 
 goog.require('Blockly.Colours');
 
+goog.require('goog.userAgent');
 
 /**
  * List of cursors.
