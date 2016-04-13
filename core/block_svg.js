@@ -903,7 +903,7 @@ Blockly.BlockSvg.prototype.onMouseMove_ = function(e) {
   if (Blockly.dragMode_ == Blockly.DRAG_FREE) {
     var dx = oldXY.x - this.dragStartXY_.x;
     var dy = oldXY.y - this.dragStartXY_.y;
-    this.workspace.dragSurface.translateSurface(newXY.x, newXY.y, Blockly.is3dSupported());
+    this.workspace.dragSurface.translateSurface(newXY.x, newXY.y);
     // Drag all the nested bubbles.
     for (var i = 0; i < this.draggedBubbles_.length; i++) {
       var commentData = this.draggedBubbles_[i];
