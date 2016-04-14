@@ -87,6 +87,12 @@ Blockly.Css.inject = function(hasCss, pathToMedia) {
   // Strip off any trailing slash (either Unix or Windows).
   Blockly.Css.mediaPath_ = pathToMedia.replace(/[\\\/]$/, '');
   text = text.replace(/<<<PATH>>>/g, Blockly.Css.mediaPath_);
+  // Dynamically replace colours in the CSS text, in case they have
+  // been set at run-time injection.
+  for (var colourProperty in Blockly.Colours) {
+    if (!Blockly.Colours.hasOwnProperty(colourProperty)) continue;
+    text = text.replace('$colour_' + colourProperty, Blockly.Colours[colourProperty]);
+  }
   // Inject CSS tag.
   var cssNode = document.createElement('style');
   document.head.appendChild(cssNode);
@@ -140,7 +146,7 @@ Blockly.Css.setCursor = function(cursor) {
  */
 Blockly.Css.CONTENT = [
   '.blocklySvg {',
-    'background-color: ' + Blockly.Colours.workspace + ';',
+    'background-color: $colour_workspace;',
     'outline: none;',
     'overflow: hidden;',  /* IE overflows by default. */
   '}',
@@ -261,7 +267,7 @@ Blockly.Css.CONTENT = [
 
   '.blocklyNonEditableText>text,',
   '.blocklyEditableText>text {',
-    'fill: ' +  Blockly.Colours.text + ';',
+    'fill: $colour_text;',
   '}',
 
   '.blocklyEditableText:hover>rect {',
@@ -270,7 +276,7 @@ Blockly.Css.CONTENT = [
   '}',
 
   '.blocklyBubbleText {',
-    'fill:' + Blockly.Colours.text +';',
+    'fill: $colour_text;',
   '}',
 
   /*
@@ -333,7 +339,7 @@ Blockly.Css.CONTENT = [
     'padding: 2px 0;',
     'width: 100%;',
     'text-align: center;',
-    'color: ' + Blockly.Colours.text + ';',
+    'color: $colour_text;',
   '}',
 
   '.blocklyMainBackground {',
