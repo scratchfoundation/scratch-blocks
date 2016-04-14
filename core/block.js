@@ -564,7 +564,8 @@ Blockly.Block.prototype.setInsertionMarker = function(insertionMarker) {
   }
   this.isInsertionMarker_ = insertionMarker;
   if (this.isInsertionMarker_) {
-    this.setColour("#949494");
+    this.setColour(Blockly.Colours.insertionMarker);
+    this.setOpacity(Blockly.Colours.insertionMarkerOpacity);
   }
 };
 
