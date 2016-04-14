@@ -354,7 +354,7 @@ Blockly.Css.CONTENT = [
   '}',
 
   '.blocklyFlyoutBackground {',
-    'fill: #ddd;',
+    'fill: $colour_flyout;',
     'fill-opacity: .8;',
   '}',
 
@@ -363,12 +363,12 @@ Blockly.Css.CONTENT = [
   '}',
 
   '.blocklyScrollbarKnob {',
-    'fill: #ccc;',
+    'fill: $colour_scrollbar;',
   '}',
 
   '.blocklyScrollbarBackground:hover+.blocklyScrollbarKnob,',
   '.blocklyScrollbarKnob:hover {',
-    'fill: #bbb;',
+    'fill: $colour_scrollbarHover;',
   '}',
 
   '.blocklyZoom>image {',
@@ -437,7 +437,8 @@ Blockly.Css.CONTENT = [
 
   /* Category tree in Toolbox. */
   '.blocklyToolboxDiv {',
-    'background-color: #ddd;',
+    'background-color: $colour_toolbox;',
+    'color: $colour_toolboxText;',
     'overflow-x: visible;',
     'overflow-y: auto;',
     'position: absolute;',
