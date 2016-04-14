@@ -253,7 +253,7 @@ Blockly.Css.CONTENT = [
     'cursor: default;',
     'fill: #fff;',
     'font-family: sans-serif;',
-    'font-size: 11pt;',
+    'font-size: 12pt;',
   '}',
 
   '.blocklyNonEditableText>text {',
@@ -334,6 +334,7 @@ Blockly.Css.CONTENT = [
   '.blocklyHtmlInput {',
     'border: none;',
     'font-family: sans-serif;',
+    'font-size: 12pt;',
     'height: 100%;',
     'margin: 0;',
     'outline: none;',
