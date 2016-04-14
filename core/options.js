@@ -25,6 +25,7 @@
 'use strict';
 
 goog.provide('Blockly.Options');
+goog.require('Blockly.Colours');
 
 
 /**
@@ -105,6 +106,18 @@ Blockly.Options = function(options) {
 
   var enableRealtime = !!options['realtime'];
   var realtimeOptions = enableRealtime ? options['realtimeOptions'] : undefined;
+
+  // Colour overrides provided by the injection
+  var colours = options['colours'];
+  if (colours) {
+    for (var colourProperty in colours) {
+      if (!colours.hasOwnProperty(colourProperty)) continue;
+      if (!Blockly.Colours.hasOwnProperty(colourProperty)) continue;
+      // If a property is in both colours option and Blockly.Colours,
+      // set the Blockly.Colours value to the override.
+      Blockly.Colours[colourProperty] = colours[colourProperty];
+    }
+  }
 
   this.RTL = !!options['rtl'];
   this.collapse = hasCollapse;
