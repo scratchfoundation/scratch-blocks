@@ -113,7 +113,7 @@ Blockly.Flyout.prototype.autoClose = true;
 Blockly.Flyout.prototype.CORNER_RADIUS = 0;
 
 /**
- * Corner radius of the flyout background.
+ * Margin of blocks in the flyout.
  * @type {number}
  * @const
  */
