@@ -111,11 +111,12 @@ Blockly.Options = function(options) {
   var colours = options['colours'];
   if (colours) {
     for (var colourProperty in colours) {
-      if (!colours.hasOwnProperty(colourProperty)) continue;
-      if (!Blockly.Colours.hasOwnProperty(colourProperty)) continue;
-      // If a property is in both colours option and Blockly.Colours,
-      // set the Blockly.Colours value to the override.
-      Blockly.Colours[colourProperty] = colours[colourProperty];
+      if (colours.hasOwnProperty(colourProperty) &&
+          Blockly.Colours.hasOwnProperty(colourProperty)) {
+        // If a property is in both colours option and Blockly.Colours,
+        // set the Blockly.Colours value to the override.
+        Blockly.Colours[colourProperty] = colours[colourProperty];
+      }
     }
   }
 

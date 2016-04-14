@@ -90,8 +90,9 @@ Blockly.Css.inject = function(hasCss, pathToMedia) {
   // Dynamically replace colours in the CSS text, in case they have
   // been set at run-time injection.
   for (var colourProperty in Blockly.Colours) {
-    if (!Blockly.Colours.hasOwnProperty(colourProperty)) continue;
-    text = text.replace('$colour_' + colourProperty, Blockly.Colours[colourProperty]);
+    if (Blockly.Colours.hasOwnProperty(colourProperty)) {
+      text = text.replace('$colour_' + colourProperty, Blockly.Colours[colourProperty]);
+    }
   }
   // Inject CSS tag.
   var cssNode = document.createElement('style');
