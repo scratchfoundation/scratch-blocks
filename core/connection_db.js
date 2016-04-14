@@ -39,6 +39,7 @@ Blockly.ConnectionDB = function() {
 };
 
 Blockly.ConnectionDB.prototype = new Array();
+
 /**
  * Don't inherit the constructor from Array.
  * @type {!Function}
