@@ -261,6 +261,10 @@ Blockly.Css.CONTENT = [
     'font-weight: 600;',
   '}',
 
+  '.blocklyTextTruncated {',
+    'font-size: 11pt;',
+  '}',
+
   '.blocklyNonEditableText>text {',
     'pointer-events: none;',
   '}',

@@ -78,7 +78,7 @@ Blockly.Field.prototype.name = undefined;
  * Maximum characters of text to display before adding an ellipsis.
  * @type {number}
  */
-Blockly.Field.prototype.maxDisplayLength = 5;
+Blockly.Field.prototype.maxDisplayLength = 4;
 
 /**
  * Visible text to display.
@@ -354,6 +354,10 @@ Blockly.Field.prototype.updateTextNode_ = function() {
   if (text.length > this.maxDisplayLength) {
     // Truncate displayed string and add an ellipsis ('...').
     text = text.substring(0, this.maxDisplayLength - 2) + '\u2026';
+    // Add special class for sizing font when truncated
+    this.textElement_.setAttribute('class', 'blocklyText blocklyTextTruncated');
+  } else {
+    this.textElement_.setAttribute('class', 'blocklyText');
   }
   // Empty the text element.
   goog.dom.removeChildren(/** @type {!Element} */ (this.textElement_));
