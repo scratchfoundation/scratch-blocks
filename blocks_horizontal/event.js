@@ -57,7 +57,8 @@ Blockly.Blocks['event_whenbroadcastreceived'] = {
           "flip_rtl": true
         },
         {
-          "type": "field_iconmenu"
+          "type": "input_value",
+          "name": "CHOICE"
         }
       ],
       "inputsInline": true,
