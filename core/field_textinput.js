@@ -27,6 +27,7 @@
 goog.provide('Blockly.FieldTextInput');
 
 goog.require('Blockly.BlockSvg.render');
+goog.require('Blockly.Colours');
 goog.require('Blockly.Field');
 goog.require('Blockly.Msg');
 goog.require('goog.asserts');
@@ -174,10 +175,11 @@ Blockly.FieldTextInput.prototype.showEditor_ = function(opt_quietInput) {
     'width ' + Blockly.FieldTextInput.ANIMATION_TIME + 's,' +
     'height ' + Blockly.FieldTextInput.ANIMATION_TIME + 's,' +
     'margin-left ' + Blockly.FieldTextInput.ANIMATION_TIME + 's,' +
-    'box-shadow ' + Blockly.FieldTextInput.ANIMATION_TIME + '';
+    'box-shadow ' + Blockly.FieldTextInput.ANIMATION_TIME + 's';
   htmlInput.style.transition = 'font-size ' + Blockly.FieldTextInput.ANIMATION_TIME + 's';
   // The animated properties themselves
   htmlInput.style.fontSize = Blockly.FieldTextInput.FONTSIZE_FINAL + 'pt';
+  div.style.boxShadow = '0px 0px 0px 4px ' + Blockly.Colours.fieldShadow;
 };
 
 /**
@@ -310,6 +312,7 @@ Blockly.Field.prototype.getBorderRadius = function() {
 Blockly.FieldTextInput.prototype.widgetDispose_ = function() {
   var thisField = this;
   return function() {
+    var div = Blockly.WidgetDiv.DIV;
     var htmlInput = Blockly.FieldTextInput.htmlInput_;
     // Save the edit (if it validates).
     var text = htmlInput.value;
@@ -333,6 +336,7 @@ Blockly.FieldTextInput.prototype.widgetDispose_ = function() {
 
     // Animation of disposal
     htmlInput.style.fontSize = Blockly.FieldTextInput.FONTSIZE_INITIAL + 'pt';
+    div.style.boxShadow = '';
   };
 };
 
