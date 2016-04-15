@@ -76,6 +76,7 @@ Blockly.FieldIconMenu.prototype.showEditor_ = function() {
   // If we can't fit it, render above the entire block
   var secondaryX = primaryX;
   var secondaryY = position.y - Blockly.BlockSvg.MIN_BLOCK_Y - Blockly.BlockSvg.FIELD_Y_OFFSET;
+  Blockly.DropDownDiv.setColour(this.sourceBlock_.getColour(), this.sourceBlock_.getColourTertiary());
   Blockly.DropDownDiv.setBoundsElement(this.sourceBlock_.workspace.getParentSvg());
   Blockly.DropDownDiv.show(primaryX, primaryY, secondaryX, secondaryY);
 };

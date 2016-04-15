@@ -87,6 +87,18 @@ Blockly.DropDownDiv.getContentDiv = function() {
 };
 
 /**
+ * Set the colour for the drop-down.
+ * @param {string} backgroundColour Any CSS color for the background
+ * @param {string} borderColour Any CSS color for the border
+ */
+Blockly.DropDownDiv.setColour = function(backgroundColour, borderColour) {
+  Blockly.DropDownDiv.DIV_.style.backgroundColor = backgroundColour;
+  Blockly.DropDownDiv.arrow_.style.backgroundColor = backgroundColour;
+  Blockly.DropDownDiv.DIV_.style.borderColor = borderColour;
+  Blockly.DropDownDiv.arrow_.style.borderColor = borderColour;
+};
+
+/**
  * Show and place the drop-down.
  * For descriptions of these points, see getPositionMetrics.
  * @param {number} x Desired origin point x, in absolute px
