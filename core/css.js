@@ -215,6 +215,12 @@ Blockly.Css.CONTENT = [
     'perspective: 1000;',
   '}',
 
+  '.blocklyDropDownDiv {',
+    'width: 100px;',
+    'height: 100px;',
+    'background: #f00;',
+  '}',
+
   '.blocklyResizeSE {',
     'cursor: se-resize;',
     'fill: #aaa;',
