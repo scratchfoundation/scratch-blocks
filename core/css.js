@@ -91,7 +91,11 @@ Blockly.Css.inject = function(hasCss, pathToMedia) {
   // been set at run-time injection.
   for (var colourProperty in Blockly.Colours) {
     if (Blockly.Colours.hasOwnProperty(colourProperty)) {
-      text = text.replace('$colour_' + colourProperty, Blockly.Colours[colourProperty]);
+      // Replace all
+      text = text.replace(
+        new RegExp('\\$colour\\_' + colourProperty, 'g'),
+        Blockly.Colours[colourProperty]
+      );
     }
   }
   // Inject CSS tag.
