@@ -94,11 +94,19 @@ Blockly.BlockSvg.FIELD_TOP_PADDING = 1.5 * Blockly.BlockSvg.GRID_UNIT;
  * @const
  */
 Blockly.BlockSvg.NUMBER_FIELD_CORNER_RADIUS = 4 * Blockly.BlockSvg.GRID_UNIT;
+
 /**
  * Corner radius of text inputs
  * @const
  */
 Blockly.BlockSvg.TEXT_FIELD_CORNER_RADIUS = 1 * Blockly.BlockSvg.GRID_UNIT;
+
+/**
+ * Default radius for a field, in px.
+ * @const
+ */
+Blockly.BlockSvg.FIELD_DEFAULT_CORNER_RADIUS = 4 * Blockly.BlockSvg.GRID_UNIT;
+
 /**
  * Minimum width of a block.
  * @const
@@ -223,17 +231,13 @@ Blockly.BlockSvg.prototype.connectionUiEffect = function() {
  * Change the colour of a block.
  */
 Blockly.BlockSvg.prototype.updateColour = function() {
+  var fillColour = (this.isGlowing_) ? this.getColourSecondary() : this.getColour();
   var strokeColour = this.getColourTertiary();
-  if (this.isShadow() && this.parentBlock_) {
-    // Pull shadow block stroke colour from parent block's tertiary if possible.
-    strokeColour = this.parentBlock_.getColourTertiary();
-  }
 
   // Render block stroke
   this.svgPath_.setAttribute('stroke', strokeColour);
 
   // Render block fill
-  var fillColour = (this.isGlowing_) ? this.getColourSecondary() : this.getColour();
   this.svgPath_.setAttribute('fill', fillColour);
 
   // Render opacity
@@ -345,6 +349,8 @@ Blockly.BlockSvg.prototype.renderCompute_ = function() {
       }
       if (field instanceof Blockly.FieldTextInput) {
         metrics.fieldRadius = field.getBorderRadius();
+      } else {
+        metrics.fieldRadius = Blockly.BlockSvg.FIELD_DEFAULT_CORNER_RADIUS;
       }
     }
   }
@@ -431,6 +437,10 @@ Blockly.BlockSvg.prototype.renderDraw_ = function(metrics) {
     var valueX = (Blockly.BlockSvg.NOTCH_WIDTH +
       (metrics.bayWidth ? 2 * Blockly.BlockSvg.GRID_UNIT +
         Blockly.BlockSvg.NOTCH_WIDTH*2 : 0) + metrics.bayWidth);
+    if (metrics.startHat) {
+      // Start hats add some left margin to field for visual balance
+      valueX += Blockly.BlockSvg.GRID_UNIT * 2;
+    }
     if (this.RTL) {
       valueX = -valueX;
     }

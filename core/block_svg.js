@@ -320,9 +320,15 @@ Blockly.BlockSvg.prototype.setParent = function(newParent) {
     var newXY = this.getRelativeToSurfaceXY();
     // Move the connections to match the child's new position.
     this.moveConnections_(newXY.x - oldXY.x, newXY.y - oldXY.y);
-    // If we are a shadow block, inherit tertiary colour.
+    // If we are a shadow block, inherit colours.
     if (this.isShadow()) {
-      this.setColour(this.getColour(), this.getColourSecondary(),
+      var primaryColour = this.getColour();
+      // Special Scratch case: if colour is unset, also inherit it.
+      // This is for the colouring of drop-downs in particular.
+      if (primaryColour == '#000000') {
+        primaryColour = newParent.getColour();
+      }
+      this.setColour(primaryColour, this.getColourSecondary(),
         newParent.getColourTertiary());
     }
   }
