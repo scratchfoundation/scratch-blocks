@@ -258,6 +258,7 @@ Blockly.Css.CONTENT = [
     'fill: #fff;',
     'font-family: sans-serif;',
     'font-size: 12pt;',
+    'font-weight: 600;',
   '}',
 
   '.blocklyNonEditableText>text {',
@@ -343,10 +344,11 @@ Blockly.Css.CONTENT = [
     'margin: 0;',
     'outline: none;',
     'box-sizing: border-box;',
-    'padding: 2px 4px 0 4px;',
+    'padding: 2px 8px 0 8px;',
     'width: 100%;',
     'text-align: center;',
     'color: $colour_text;',
+    'font-weight: 600;',
   '}',
 
   '.blocklyMainBackground {',
