@@ -269,7 +269,7 @@ Blockly.FieldTextInput.prototype.resizeEditor_ = function() {
   width = Math.min(width, Blockly.BlockSvg.FIELD_WIDTH_MAX_EDIT * scale);
   // Add 1px to width and height to account for border (pre-scale)
   div.style.width = (width / scale + 1) + 'px';
-  div.style.height = (Blockly.BlockSvg.FIELD_HEIGHT / scale + 1) + 'px';
+  div.style.height = (Blockly.BlockSvg.FIELD_HEIGHT + 1) + 'px';
   div.style.transform = 'scale(' + scale + ')';
 
   // Add 0.5px to account for slight difference between SVG and CSS border
