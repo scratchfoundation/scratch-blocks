@@ -275,8 +275,8 @@ Blockly.FieldTextInput.prototype.resizeEditor_ = function() {
   // Use margin-left to animate repositioning of the box (value is unscaled).
   // This is the difference between the default position and the positioning
   // after growing the box.
-  var initialWidth = Blockly.BlockSvg.FIELD_WIDTH;
-  var finalWidth = (width / scale + 1);
+  var initialWidth = Blockly.BlockSvg.FIELD_WIDTH * scale;
+  var finalWidth = width;
   div.style.marginLeft = -0.5 * (finalWidth - initialWidth) + 'px';
 
   // Add 0.5px to account for slight difference between SVG and CSS border
