@@ -76,6 +76,7 @@ Blockly.Field.prototype.name = undefined;
 
 /**
  * Maximum characters of text to display before adding an ellipsis.
+ * Same for strings and numbers.
  * @type {number}
  */
 Blockly.Field.prototype.maxDisplayLength = 4;
