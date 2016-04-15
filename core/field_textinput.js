@@ -30,6 +30,7 @@ goog.require('Blockly.BlockSvg.render');
 goog.require('Blockly.Colours');
 goog.require('Blockly.Field');
 goog.require('Blockly.Msg');
+goog.require('Blockly.utils');
 goog.require('goog.asserts');
 goog.require('goog.dom');
 goog.require('goog.userAgent');
@@ -65,6 +66,11 @@ Blockly.FieldTextInput.FONTSIZE_FINAL = 14;
  * Length of animations in seconds.
  */
 Blockly.FieldTextInput.ANIMATION_TIME = 0.25;
+
+/**
+ * Padding to use for text measurement for the field during editing, in px.
+ */
+Blockly.FieldTextInput.TEXT_MEASURE_PADDING_MAGIC = 35;
 
 /**
  * Mouse cursor style when over the hotspot that initiates the editor.
@@ -250,9 +256,14 @@ Blockly.FieldTextInput.prototype.resizeEditor_ = function() {
   var scale = this.sourceBlock_.workspace.scale;
   var div = Blockly.WidgetDiv.DIV;
   var bBox = this.getScaledBBox_();
-  // The width of this box must be at least FIELD_WIDTH * scale.
-  // It may be smaller as bBox is based on the content size.
-  var width = Math.max(bBox.width, Blockly.BlockSvg.FIELD_WIDTH * scale);
+  var textWidth = Blockly.measureText(
+    Blockly.FieldTextInput.htmlInput_.style.fontSize,
+    Blockly.FieldTextInput.htmlInput_.style.fontFamily,
+    Blockly.FieldTextInput.htmlInput_.value
+  );
+  textWidth += Blockly.FieldTextInput.TEXT_MEASURE_PADDING_MAGIC;
+  textWidth *= scale;
+  var width = Math.max(textWidth, Blockly.BlockSvg.FIELD_WIDTH * scale);
   // Add 1px to width and height to account for border (pre-scale)
   div.style.width = (width / scale + 1) + 'px';
   div.style.height = (bBox.height / scale + 1) + 'px';
