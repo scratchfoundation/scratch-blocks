@@ -78,7 +78,7 @@ Blockly.Blocks['event_broadcast'] = {
   init: function() {
     this.jsonInit({
       "id": "event_broadcast",
-      "message0": "%1",
+      "message0": "%1 %2",
       "args0": [
         {
           "type": "field_image",
@@ -86,6 +86,10 @@ Blockly.Blocks['event_broadcast'] = {
           "width": 40,
           "height": 40,
           "alt": "Broadcast"
+        },
+        {
+          "type": "input_value",
+          "name": "CHOICE"
         }
       ],
       "inputsInline": true,
