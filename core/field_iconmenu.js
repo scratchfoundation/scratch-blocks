@@ -19,6 +19,24 @@ Blockly.FieldIconMenu = function(text) {
 };
 goog.inherits(Blockly.FieldIconMenu, Blockly.Field);
 
+Blockly.FieldIconMenu.prototype.init = function(block) {
+  // Render the arrow icon
+  this.arrowIcon_ = Blockly.createSvgElement('image', {
+    'height': '12px',
+    'width': '12px',
+    'transform': 'translate(18, 10)'
+  });
+  this.arrowIcon_.setAttributeNS('http://www.w3.org/1999/xlink',
+      'xlink:href', Blockly.mainWorkspace.options.pathToMedia + 'dropdown-arrow.svg');
+  block.getSvgRoot().appendChild(this.arrowIcon_);
+  Blockly.FieldIconMenu.superClass_.init.call(this, block);
+};
+
+/**
+ * Mouse cursor style when over the hotspot that initiates the editor.
+ */
+Blockly.FieldIconMenu.prototype.CURSOR = 'default';
+
 /**
  * Close the input widget if this input is being deleted.
  */
