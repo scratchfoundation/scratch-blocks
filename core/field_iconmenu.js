@@ -25,10 +25,16 @@ goog.inherits(Blockly.FieldIconMenu, Blockly.Field);
  */
 Blockly.FieldIconMenu.prototype.init = function(block) {
   // Render the arrow icon
+  var arrowSize = 12;
+  var arrowX = 18;
+  var arrowY = 10;
+  if (block.RTL) {
+    arrowX = -arrowX - arrowSize;
+  }
   this.arrowIcon_ = Blockly.createSvgElement('image', {
-    'height': '12px',
-    'width': '12px',
-    'transform': 'translate(18, 10)'
+    'height': arrowSize + 'px',
+    'width': arrowSize + 'px',
+    'transform': 'translate(' + arrowX + ',' + arrowY + ')'
   });
   this.arrowIcon_.setAttributeNS('http://www.w3.org/1999/xlink',
       'xlink:href', Blockly.mainWorkspace.options.pathToMedia + 'dropdown-arrow.svg');
