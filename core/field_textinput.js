@@ -255,18 +255,21 @@ Blockly.FieldTextInput.prototype.validate_ = function() {
 Blockly.FieldTextInput.prototype.resizeEditor_ = function() {
   var scale = this.sourceBlock_.workspace.scale;
   var div = Blockly.WidgetDiv.DIV;
-  var bBox = this.getScaledBBox_();
+  // Resize the box based on the measured width of the text, pre-truncation
   var textWidth = Blockly.measureText(
     Blockly.FieldTextInput.htmlInput_.style.fontSize,
     Blockly.FieldTextInput.htmlInput_.style.fontFamily,
     Blockly.FieldTextInput.htmlInput_.value
   );
+  // Size drawn in the canvas needs padding and scaling
   textWidth += Blockly.FieldTextInput.TEXT_MEASURE_PADDING_MAGIC;
   textWidth *= scale;
+  // The width must be at least FIELD_WIDTH and at most FIELD_WIDTH_MAX_EDIT
   var width = Math.max(textWidth, Blockly.BlockSvg.FIELD_WIDTH * scale);
+  width = Math.min(width, Blockly.BlockSvg.FIELD_WIDTH_MAX_EDIT * scale);
   // Add 1px to width and height to account for border (pre-scale)
   div.style.width = (width / scale + 1) + 'px';
-  div.style.height = (bBox.height / scale + 1) + 'px';
+  div.style.height = (Blockly.BlockSvg.FIELD_HEIGHT / scale + 1) + 'px';
   div.style.transform = 'scale(' + scale + ')';
 
   // Add 0.5px to account for slight difference between SVG and CSS border

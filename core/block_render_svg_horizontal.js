@@ -58,11 +58,18 @@ Blockly.BlockSvg.STATEMENT_BLOCK_SPACE = 3 * Blockly.BlockSvg.GRID_UNIT;
  * @const
  */
 Blockly.BlockSvg.FIELD_HEIGHT = 8 * Blockly.BlockSvg.GRID_UNIT;
+
 /**
  * Width of user inputs
  * @const
  */
 Blockly.BlockSvg.FIELD_WIDTH = 12 * Blockly.BlockSvg.GRID_UNIT;
+
+/**
+ * Maximum width of user inputs during editing
+ * @const
+ */
+Blockly.BlockSvg.FIELD_WIDTH_MAX_EDIT = 24 * Blockly.BlockSvg.GRID_UNIT;
 
 /**
  * Top padding of user inputs

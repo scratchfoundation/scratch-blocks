@@ -144,11 +144,18 @@ Blockly.BlockSvg.INNER_BOTTOM_LEFT_CORNER =
  * @const
  */
 Blockly.BlockSvg.FIELD_HEIGHT = 8 * Blockly.BlockSvg.GRID_UNIT;
+
 /**
  * Width of user inputs
  * @const
  */
 Blockly.BlockSvg.FIELD_WIDTH = 12 * Blockly.BlockSvg.GRID_UNIT;
+
+/**
+ * Maximum width of user inputs during editing
+ * @const
+ */
+Blockly.BlockSvg.FIELD_WIDTH_MAX_EDIT = Infinity;
 
 /**
  * Play some UI effects (sound, ripple) after a connection has been established.
