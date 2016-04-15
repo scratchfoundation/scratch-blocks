@@ -321,19 +321,16 @@ Blockly.Field.prototype.getText = function() {
 /**
  * Set the text in this field.  Trigger a rerender of the source block.
  * @param {*} text New text.
+ * @param {boolean=} opt_skipTruncation If true, skip truncation of text (for mid-renders).
  */
-Blockly.Field.prototype.setText = function(text) {
+Blockly.Field.prototype.setText = function(text, opt_skipTruncation) {
   if (text === null) {
     // No change if null.
     return;
   }
   text = String(text);
-  if (text === this.text_) {
-    // No change.
-    return;
-  }
   this.text_ = text;
-  this.updateTextNode_();
+  this.updateTextNode_(opt_skipTruncation);
 
   if (this.sourceBlock_ && this.sourceBlock_.rendered) {
     this.sourceBlock_.render();
@@ -343,15 +340,16 @@ Blockly.Field.prototype.setText = function(text) {
 
 /**
  * Update the text node of this field to display the current text.
+ * @param {boolean=} opt_skipTruncation If true, skip truncation of text (for mid-renders).
  * @private
  */
-Blockly.Field.prototype.updateTextNode_ = function() {
+Blockly.Field.prototype.updateTextNode_ = function(opt_skipTruncation) {
   if (!this.textElement_) {
     // Not rendered yet.
     return;
   }
   var text = this.text_;
-  if (text.length > this.maxDisplayLength) {
+  if (!opt_skipTruncation && text.length > this.maxDisplayLength) {
     // Truncate displayed string and add an ellipsis ('...').
     text = text.substring(0, this.maxDisplayLength - 2) + '\u2026';
   }
@@ -387,21 +385,19 @@ Blockly.Field.prototype.getValue = function() {
  * By default there is no difference between the human-readable text and
  * the language-neutral values.  Subclasses (such as dropdown) may define this.
  * @param {string} newText New text.
+ * @param {boolean=} opt_skipTruncation If true, skip truncation of text (for mid-renders).
  */
-Blockly.Field.prototype.setValue = function(newText) {
+Blockly.Field.prototype.setValue = function(newText, opt_skipTruncation) {
   if (newText === null) {
     // No change if null.
     return;
   }
   var oldText = this.getValue();
-  if (oldText == newText) {
-    return;
-  }
-  if (this.sourceBlock_ && Blockly.Events.isEnabled()) {
+  if (oldText != newText && this.sourceBlock_ && Blockly.Events.isEnabled()) {
     Blockly.Events.fire(new Blockly.Events.Change(
         this.sourceBlock_, 'field', this.name, oldText, newText));
   }
-  this.setText(newText);
+  this.setText(newText, opt_skipTruncation);
 };
 
 /**
