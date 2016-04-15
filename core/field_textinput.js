@@ -358,6 +358,9 @@ Blockly.FieldTextInput.prototype.widgetDispose_ = function() {
     // Animation of disposal
     htmlInput.style.fontSize = Blockly.FieldTextInput.FONTSIZE_INITIAL + 'pt';
     div.style.boxShadow = '';
+    div.style.width = Blockly.BlockSvg.FIELD_WIDTH + 'px';
+    div.style.height = Blockly.BlockSvg.FIELD_HEIGHT + 'px';
+    div.style.marginLeft = 0;
   };
 };
 
