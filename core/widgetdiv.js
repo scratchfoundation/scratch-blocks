@@ -127,7 +127,7 @@ Blockly.WidgetDiv.hide = function(opt_noAnimate) {
     // This happens when a previous widget was animating out,
     // but Blockly is hiding the widget to create a new one.
     // So, short-circuit the animation and clear the timer.
-    window.clearTimeout(Blockly.WidgetDiv.disposeAnimationTimer_);
+    Blockly.WidgetDiv.disposeAnimationTimer_ && window.clearTimeout(Blockly.WidgetDiv.disposeAnimationTimer_);
     Blockly.WidgetDiv.disposeAnimationFinished_ && Blockly.WidgetDiv.disposeAnimationFinished_();
     Blockly.WidgetDiv.disposeAnimationFinished_ = null;
     Blockly.WidgetDiv.disposeAnimationTimer_ = null;
