@@ -19,6 +19,10 @@ Blockly.FieldIconMenu = function(text) {
 };
 goog.inherits(Blockly.FieldIconMenu, Blockly.Field);
 
+/**
+ * Called when the field is placed on a block.
+ * @param {Block} block The owning block.
+ */
 Blockly.FieldIconMenu.prototype.init = function(block) {
   // Render the arrow icon
   this.arrowIcon_ = Blockly.createSvgElement('image', {
@@ -61,5 +65,17 @@ Blockly.FieldIconMenu.prototype.setValue = function(text) {
  * @private
  */
 Blockly.FieldIconMenu.prototype.showEditor_ = function() {
-  console.log("show menu");
+  var scale = this.sourceBlock_.workspace.scale;
+  var bBox = this.sourceBlock_.getHeightWidth();
+  bBox.width *= scale;
+  bBox.height *= scale;
+  var position = this.getAbsoluteXY_();
+  // If we can fit it, render below the shadow block
+  var primaryX = position.x + bBox.width / 2;
+  var primaryY = position.y + bBox.height;
+  // If we can't fit it, render above the entire block
+  var secondaryX = primaryX;
+  var secondaryY = position.y - Blockly.BlockSvg.MIN_BLOCK_Y - Blockly.BlockSvg.FIELD_Y_OFFSET;
+  Blockly.DropDownDiv.setBoundsElement(this.sourceBlock_.workspace.getParentSvg());
+  Blockly.DropDownDiv.show(primaryX, primaryY, secondaryX, secondaryY);
 };
