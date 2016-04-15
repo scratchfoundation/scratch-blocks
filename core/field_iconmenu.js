@@ -83,6 +83,6 @@ Blockly.FieldIconMenu.prototype.showEditor_ = function() {
   var secondaryX = primaryX;
   var secondaryY = position.y - Blockly.BlockSvg.MIN_BLOCK_Y * scale - Blockly.BlockSvg.FIELD_Y_OFFSET * scale;
   Blockly.DropDownDiv.setColour(this.sourceBlock_.getColour(), this.sourceBlock_.getColourTertiary());
-  Blockly.DropDownDiv.setBoundsElement(this.sourceBlock_.workspace.getParentSvg());
+  Blockly.DropDownDiv.setBoundsElement(this.sourceBlock_.workspace.getParentSvg().parentNode);
   Blockly.DropDownDiv.show(primaryX, primaryY, secondaryX, secondaryY);
 };
