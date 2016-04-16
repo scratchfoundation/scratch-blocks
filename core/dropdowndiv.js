@@ -202,3 +202,10 @@ Blockly.DropDownDiv.getPositionMetrics = function(x, y, secondaryX, secondaryY) 
     arrowAtTop: !renderedSecondary
   };
 };
+
+/**
+ * Hide the menu, triggering animation
+ */
+Blockly.DropDownDiv.hide = function() {
+  Blockly.DropDownDiv.DIV_.style.display = 'none';
+};
