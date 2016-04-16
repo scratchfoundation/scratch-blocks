@@ -217,6 +217,8 @@ Blockly.Css.CONTENT = [
 
   '.blocklyDropDownDiv {',
     'position: absolute;',
+    'left: 0;',
+    'top: 0;',
     'z-index: 1000;',
     'display: none;',
     'width: 200px;',
@@ -228,9 +230,10 @@ Blockly.Css.CONTENT = [
 
   '.blocklyDropDownArrow {',
     'position: absolute;',
+    'left: 0;',
+    'top: 0;',
     'width: 16px;',
     'height: 16px;',
-    'transform: rotate(45deg);',
     'z-index: -1;',
   '}',
 

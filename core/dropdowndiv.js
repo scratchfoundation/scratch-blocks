@@ -54,6 +54,13 @@ Blockly.DropDownDiv.ARROW_HORIZONTAL_PADDING = 12;
 Blockly.DropDownDiv.PADDING_Y = 20;
 
 /**
+ * Length of animations in seconds.
+ * @type {number}
+ * @constant
+ */
+Blockly.FieldTextInput.ANIMATION_TIME = 0.25;
+
+/**
  * Create and insert the DOM element for this div.
  * @param {Element} container Element that the div should be contained in.
  */
@@ -110,10 +117,9 @@ Blockly.DropDownDiv.show = function(x, y, secondaryX, secondaryY) {
   var div = Blockly.DropDownDiv.DIV_;
   var metrics = Blockly.DropDownDiv.getPositionMetrics(x, y, secondaryX, secondaryY);
   div.style.display = 'block';
-  div.style.left = metrics.finalX + 'px';
-  div.style.top = metrics.finalY + 'px';
-  Blockly.DropDownDiv.arrow_.style.left = metrics.arrowX + 'px';
-  Blockly.DropDownDiv.arrow_.style.top = metrics.arrowY + 'px';
+  div.style.transform = 'translate(' + metrics.initialX + 'px,' + metrics.initialY + 'px)';
+  Blockly.DropDownDiv.arrow_.style.transform = 'translate(' +
+    metrics.arrowX + 'px,' + metrics.arrowY + 'px) rotate(45deg)';
   Blockly.DropDownDiv.arrow_.setAttribute('class',
     metrics.arrowAtTop ? 'blocklyDropDownArrow arrowTop' : 'blocklyDropDownArrow arrowBottom'
   );
