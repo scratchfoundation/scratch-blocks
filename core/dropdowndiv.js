@@ -116,13 +116,20 @@ Blockly.DropDownDiv.setColour = function(backgroundColour, borderColour) {
 Blockly.DropDownDiv.show = function(x, y, secondaryX, secondaryY) {
   var div = Blockly.DropDownDiv.DIV_;
   var metrics = Blockly.DropDownDiv.getPositionMetrics(x, y, secondaryX, secondaryY);
-  div.style.display = 'block';
-  div.style.transform = 'translate(' + metrics.initialX + 'px,' + metrics.initialY + 'px)';
+  // Update arrow
   Blockly.DropDownDiv.arrow_.style.transform = 'translate(' +
     metrics.arrowX + 'px,' + metrics.arrowY + 'px) rotate(45deg)';
   Blockly.DropDownDiv.arrow_.setAttribute('class',
-    metrics.arrowAtTop ? 'blocklyDropDownArrow arrowTop' : 'blocklyDropDownArrow arrowBottom'
-  );
+    metrics.arrowAtTop ? 'blocklyDropDownArrow arrowTop' : 'blocklyDropDownArrow arrowBottom');
+  // First apply initial translation
+  div.style.transform = 'translate(' + metrics.initialX + 'px,' + metrics.initialY + 'px)';
+  // Show the div
+  div.style.display = 'block';
+  // Add transition and apply final translate after a cycle.
+  setTimeout(function() {
+    div.style.transition = 'transform ' + Blockly.FieldTextInput.ANIMATION_TIME + 's';
+    div.style.transform = 'translate(' + metrics.finalX + 'px,' + metrics.finalY + 'px)';
+  }, 1);
 };
 
 /**
@@ -192,9 +199,19 @@ Blockly.DropDownDiv.getPositionMetrics = function(x, y, secondaryX, secondaryY) 
     Math.min(arrowX, divSize.width - Blockly.DropDownDiv.ARROW_HORIZONTAL_PADDING - Blockly.DropDownDiv.ARROW_SIZE)
   );
 
+  // Initial position calculated as if we didn't need to keep within bounds.
+  var initialX, initialY;
+  if (renderedSecondary) {
+    initialX = secondaryX - centerX;
+    initialY = secondaryY; // No padding
+  } else {
+    initialX = x - centerX;
+    initialY = y;
+  }
+
   return {
-    initialX: renderX,
-    initialY : renderY,
+    initialX: initialX,
+    initialY : initialY,
     finalX: renderX,
     finalY: renderY,
     arrowX: arrowX,
@@ -207,5 +224,7 @@ Blockly.DropDownDiv.getPositionMetrics = function(x, y, secondaryX, secondaryY) 
  * Hide the menu, triggering animation
  */
 Blockly.DropDownDiv.hide = function() {
+  Blockly.DropDownDiv.DIV_.style.transition = '';
+  Blockly.DropDownDiv.DIV_.style.transform = '';
   Blockly.DropDownDiv.DIV_.style.display = 'none';
 };
