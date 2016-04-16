@@ -199,14 +199,14 @@ Blockly.DropDownDiv.getPositionMetrics = function(x, y, secondaryX, secondaryY) 
     Math.min(arrowX, divSize.width - Blockly.DropDownDiv.ARROW_HORIZONTAL_PADDING - Blockly.DropDownDiv.ARROW_SIZE)
   );
 
-  // Initial position calculated as if we didn't need to keep within bounds.
+  // Initial position calculated without any padding to provide animation
   var initialX, initialY;
   if (renderedSecondary) {
-    initialX = secondaryX - centerX;
-    initialY = secondaryY; // No padding
+    initialX = renderX;
+    initialY = secondaryY - divSize.height; // No padding on Y
   } else {
-    initialX = x - centerX;
-    initialY = y;
+    initialX = renderX;
+    initialY = y; // No padding on Y
   }
 
   return {

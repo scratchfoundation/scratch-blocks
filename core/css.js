@@ -225,7 +225,7 @@ Blockly.Css.CONTENT = [
     'height: 100px;',
     'border: 1px solid;',
     'border-radius: 8px;',
-    'box-shadow: 0px 0px 8px 2px ' + Blockly.Colours.dropDownShadow + ';',
+    'box-shadow: 0px 0px 8px 1px ' + Blockly.Colours.dropDownShadow + ';',
   '}',
 
   '.blocklyDropDownArrow {',
