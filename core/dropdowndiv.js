@@ -93,6 +93,10 @@ Blockly.DropDownDiv.getContentDiv = function() {
   return Blockly.DropDownDiv.content_;
 };
 
+Blockly.DropDownDiv.clearContent = function() {
+  Blockly.DropDownDiv.content_.innerHTML = '';
+};
+
 /**
  * Set the colour for the drop-down.
  * @param {string} backgroundColour Any CSS color for the background
@@ -123,11 +127,16 @@ Blockly.DropDownDiv.show = function(x, y, secondaryX, secondaryY) {
     metrics.arrowAtTop ? 'blocklyDropDownArrow arrowTop' : 'blocklyDropDownArrow arrowBottom');
   // First apply initial translation
   div.style.transform = 'translate(' + metrics.initialX + 'px,' + metrics.initialY + 'px)';
+  // Save for animate out
+  this.initialX_ = metrics.initialX;
+  this.initialY_ = metrics.initialY;
   // Show the div
   div.style.display = 'block';
+  div.style.opacity = 1;
   // Add transition and apply final translate after a cycle.
   setTimeout(function() {
-    div.style.transition = 'transform ' + Blockly.FieldTextInput.ANIMATION_TIME + 's';
+    div.style.transition = 'transform ' + Blockly.FieldTextInput.ANIMATION_TIME + 's, ' +
+      'opacity ' + Blockly.FieldTextInput.ANIMATION_TIME + 's';
     div.style.transform = 'translate(' + metrics.finalX + 'px,' + metrics.finalY + 'px)';
   }, 1);
 };
@@ -221,11 +230,29 @@ Blockly.DropDownDiv.getPositionMetrics = function(x, y, secondaryX, secondaryY) 
 };
 
 /**
- * Hide the menu, triggering animation
+ * Hide the menu, triggering animation.
  */
 Blockly.DropDownDiv.hide = function() {
-  Blockly.DropDownDiv.content_.innerHTML = '';
-  Blockly.DropDownDiv.DIV_.style.transition = '';
-  Blockly.DropDownDiv.DIV_.style.transform = '';
-  Blockly.DropDownDiv.DIV_.style.display = 'none';
+  var div = Blockly.DropDownDiv.DIV_;
+  div.style.transform = 'translate(' + this.initialX_ + 'px,' + this.initialY_ + 'px)';
+  div.style.opacity = 0;
+  this.animateOutTimer_ = setTimeout(function() {
+    this.animateOutTimer_ = null;
+    // Finish animation
+    Blockly.DropDownDiv.content_.innerHTML = '';
+    div.style.transition = '';
+    div.style.transform = '';
+    div.style.display = 'none';
+  }, Blockly.FieldTextInput.ANIMATION_TIME * 1000);
+};
+
+/**
+ * Hide the menu, without animation.
+ */
+Blockly.DropDownDiv.hideWithoutAnimation = function() {
+  var div = Blockly.DropDownDiv.DIV_;
+  this.animateOutTimer_ && window.clearTimeout(this.animateOutTimer_);
+  div.style.transition = '';
+  div.style.transform = '';
+  div.style.display = 'none';
 };

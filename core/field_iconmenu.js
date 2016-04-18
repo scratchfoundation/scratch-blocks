@@ -106,6 +106,8 @@ Blockly.FieldIconMenu.prototype.getValue = function() {
  */
 Blockly.FieldIconMenu.prototype.showEditor_ = function() {
   // Set up contents of the drop-down
+  Blockly.DropDownDiv.hideWithoutAnimation();
+  Blockly.DropDownDiv.clearContent();
   var contentDiv = Blockly.DropDownDiv.getContentDiv();
   for (var i = 0, icon; icon = this.icons_[i]; i++) {
     var button = document.createElement('button');

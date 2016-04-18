@@ -250,8 +250,9 @@ Blockly.onKeyDown_ = function(e) {
   }
   var deleteBlock = false;
   if (e.keyCode == 27) {
-    // Pressing esc closes the context menu.
+    // Pressing esc closes the context menu and any drop-down
     Blockly.hideChaff();
+    Blockly.DropDownDiv.hide();
   } else if (e.keyCode == 8 || e.keyCode == 46) {
     // Delete or backspace.
     try {
@@ -402,7 +403,6 @@ Blockly.onContextMenu_ = function(e) {
 Blockly.hideChaff = function(opt_allowToolbox) {
   Blockly.Tooltip.hide();
   Blockly.WidgetDiv.hide();
-  Blockly.DropDownDiv.hide();
   if (!opt_allowToolbox) {
     var workspace = Blockly.getMainWorkspace();
     if (workspace.toolbox_ &&
