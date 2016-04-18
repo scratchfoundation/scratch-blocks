@@ -79,19 +79,13 @@ Blockly.FieldIconMenu.prototype.setValue = function(newValue) {
   if (newValue === null || newValue === this.value_) {
     return;  // No change
   }
-  this.value_ = newValue;
   if (this.sourceBlock_ && Blockly.Events.isEnabled()) {
     Blockly.Events.fire(new Blockly.Events.Change(
         this.sourceBlock_, 'field', this.name, this.value_, newValue));
   }
+  this.value_ = newValue;
   // Find the relevant icon in this.icons_ to get the image src.
-  for (var i = 0, icon; icon = this.icons_[i]; i++) {
-    if (icon.value === newValue) {
-      // Update the parent icon to indicate the change.
-      this.setParentFieldImage_(icon.src);
-      return;
-    }
-  }
+  this.setParentFieldImage_(this.getSrcForValue(this.value_));
 };
 
 /**
@@ -121,6 +115,19 @@ Blockly.FieldIconMenu.prototype.setParentFieldImage_ = function(src) {
  */
 Blockly.FieldIconMenu.prototype.getValue = function() {
   return this.value_;
+};
+
+/**
+ * For a language-neutral value, get the src for the image that represents it.
+ * @param {string} value Language-neutral value to look up.
+ * @return {string} Src to image representing value
+ */
+Blockly.FieldIconMenu.prototype.getSrcForValue = function(value) {
+  for (var i = 0, icon; icon = this.icons_[i]; i++) {
+    if (icon.value === value) {
+      return icon.src;
+    }
+  }
 };
 
 /**
