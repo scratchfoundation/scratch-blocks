@@ -215,6 +215,15 @@ Blockly.Css.CONTENT = [
     'perspective: 1000;',
   '}',
 
+  '.blocklyDragSurfaceSvg {',
+    'position: absolute;',
+    'top: 0;',
+    'left: 0;',
+    'right: 0;',
+    'bottom: 0;',
+    'overflow: visible !important;',
+  '}',
+
   '.blocklyResizeSE {',
     'cursor: se-resize;',
     'fill: #aaa;',

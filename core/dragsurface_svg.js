@@ -24,6 +24,20 @@ Blockly.DragSurfaceSvg = function(container) {
   this.container_ = container;
 };
 
+/**
+ * Amount the drag surface should grow the blocks on a drag, relative to 1.
+ * @type {Number}
+ * @const
+ */
+Blockly.DragSurfaceSvg.scaleOnDrag = 1.1;
+
+/**
+ * Length of time for the blocks to grow on a drag, in seconds.
+ * @type {Number}
+ * @const
+ */
+Blockly.DragSurfaceSvg.growAnimationTime = 0.1;
+
  /**
   * The SVG drag surface. Set once by Blockly.DragSurfaceSvg.createDom.
   * @type {Element}
@@ -46,12 +60,35 @@ Blockly.DragSurfaceSvg.prototype.dragGroup_ = null;
 Blockly.DragSurfaceSvg.prototype.container_ = null;
 
 /**
+ * Wrapper element for applying the scale effect with a transition.
+ * @type {Element}
+ * @private
+ */
+Blockly.DragSurfaceSvg.prototype.scaleWrapper_ = null;
+
+/**
  * Cached value for the scale of the drag surface.
  * Used to set/get the correct translation during and after a drag.
  * @type {Number}
  * @private
  */
 Blockly.DragSurfaceSvg.prototype.scale_ = 1;
+
+/**
+ * Stored X value for the transform origin of the drag surface.
+ * Used to adjust the origin as we drag.
+ * @type {Number}
+ * @private
+ */
+Blockly.DragSurfaceSvg.prototype.transformOriginX_ = 0;
+
+/**
+ * Stored Y value for the transform origin of the drag surface.
+ * Used to adjust the origin as we drag.
+ * @type {Number}
+ * @private
+ */
+Blockly.DragSurfaceSvg.prototype.transformOriginY_ = 0;
 
  /**
   * Create the drag surface and inject it into the container.
@@ -60,13 +97,17 @@ Blockly.DragSurfaceSvg.prototype.createDom = function () {
   if (this.SVG_) {
     return;  // Already created.
   }
+  this.scaleWrapper_ = document.createElement('div');
+  this.scaleWrapper_.style.transition = 'transform ' + Blockly.DragSurfaceSvg.growAnimationTime + 's';
+  this.scaleWrapper_.setAttribute('class', 'blocklyDragSurface');
+  this.container_.appendChild(this.scaleWrapper_);
   this.SVG_ = Blockly.createSvgElement('svg', {
     'xmlns': Blockly.SVG_NS,
     'xmlns:html': Blockly.HTML_NS,
     'xmlns:xlink': 'http://www.w3.org/1999/xlink',
     'version': '1.1',
-    'class': 'blocklyDragSurface'
-  }, this.container_);
+    'class': 'blocklyDragSurfaceSvg'
+  }, this.scaleWrapper_);
   Blockly.createSvgElement('defs', {}, this.SVG_);
   this.dragGroup_ = Blockly.createSvgElement('g', {}, this.SVG_);
 };
@@ -75,12 +116,25 @@ Blockly.DragSurfaceSvg.prototype.createDom = function () {
   * Set the SVG blocks on the drag surface's group and show the surface.
   * Only one block should be on the drag surface at a time.
   * @param {!Element} blocks Block or group of blocks to place on the drag surface
+  * @param {Number} transformOriginX X origin of the growth scale in px
+  * @param {Number} transformOriginY Y origin of the growth scale in px
   */
-Blockly.DragSurfaceSvg.prototype.setBlocksAndShow = function (blocks) {
+Blockly.DragSurfaceSvg.prototype.setBlocksAndShow = function (blocks, transformOriginX, transformOriginY) {
   goog.asserts.assert(this.dragGroup_.childNodes.length == 0, 'Already dragging a block.');
   // appendChild removes the blocks from the previous parent
   this.dragGroup_.appendChild(blocks);
-  this.SVG_.style.display = 'block';
+  this.scaleWrapper_.style.display = 'block';
+  // Animate a growth
+  // Store the origin point as we need to adjust it as we drag
+  this.transformOriginX_ = transformOriginX;
+  this.transformOriginY_ = transformOriginY;
+  this.scaleWrapper_.style.transformOrigin = this.transformOriginX_ + 'px ' + this.transformOriginY_ + 'px 0px';
+  // Apply transform after a cycle to allow display: block to take effect first.
+  // If the transform is applied while the element is invisible, no animation happens.
+  setTimeout(function() {
+    this.scaleWrapper_.style.transform = 'scale(' +
+      Blockly.DragSurfaceSvg.scaleOnDrag + ',' + Blockly.DragSurfaceSvg.scaleOnDrag + ')';
+  }.bind(this), 0);
 };
 
 /**
@@ -114,11 +168,16 @@ Blockly.DragSurfaceSvg.prototype.translateSurface = function(x, y) {
   var transform;
   x *= this.scale_;
   y *= this.scale_;
+
+  var originX = this.transformOriginX_ + x;
+  var originY = this.transformOriginY_ + y;
+  this.scaleWrapper_.style.transformOrigin = originX + 'px ' + originY + 'px 0px';
+
   if (Blockly.is3dSupported()) {
     transform = 'transform: translate3d(' + x + 'px, ' + y + 'px, 0px); display: block;';
     this.SVG_.setAttribute('style', transform);
   } else {
-    transform = 'translate(' + x + ', ' + y + ')';
+    transform = 'translate(' + x + ', ' + y + '); display: block;';
     this.SVG_.setAttribute('transform', transform);
   }
 };
@@ -156,6 +215,7 @@ Blockly.DragSurfaceSvg.prototype.getCurrentBlock = function () {
 Blockly.DragSurfaceSvg.prototype.clearAndHide = function (newSurface) {
   // appendChild removes the node from this.dragGroup_
   newSurface.appendChild(this.getCurrentBlock());
-  this.SVG_.style.display = 'none';
+  this.scaleWrapper_.style.display = 'none';
   goog.asserts.assert(this.dragGroup_.childNodes.length == 0, 'Drag group was not cleared.');
+  this.scaleWrapper_.style.transform = '';
 };

@@ -32,6 +32,7 @@ goog.require('goog.Timer');
 goog.require('goog.asserts');
 goog.require('goog.dom');
 goog.require('goog.math.Coordinate');
+goog.require('goog.style');
 goog.require('goog.userAgent');
 
 
@@ -851,9 +852,15 @@ Blockly.BlockSvg.prototype.setDragging_ = function(adding) {
 /**
  * Move this block to its workspace's drag surface, accounting for positioning.
  * Generally should be called at the same time as setDragging_(true).
+ * @param {Event} e Mouse or touch event triggering this move
  * @private
  */
-Blockly.BlockSvg.prototype.moveToDragSurface_ = function() {
+Blockly.BlockSvg.prototype.moveToDragSurface_ = function(e) {
+  // Transform origin for scaling the blocks will be the difference
+  // between the block's absolute position and the click position.
+  var blockPosition = goog.style.getClientPosition(this.getSvgRoot());
+  var originX = e.clientX - blockPosition.x;
+  var originY = e.clientY - blockPosition.y;
   // The translation for drag surface blocks,
   // is equal to the current relative-to-surface position,
   // to keep the position in sync as it move on/off the surface.
@@ -861,7 +868,7 @@ Blockly.BlockSvg.prototype.moveToDragSurface_ = function() {
   this.clearTransformAttributes_();
   this.workspace.dragSurface.translateSurface(xy.x, xy.y);
   // Execute the move on the top-level SVG component
-  this.workspace.dragSurface.setBlocksAndShow(this.getSvgRoot());
+  this.workspace.dragSurface.setBlocksAndShow(this.getSvgRoot(), originX, originY);
 };
 
 /**
@@ -923,7 +930,7 @@ Blockly.BlockSvg.prototype.onMouseMove_ = function(e) {
       // in tighten_(). Then blocks connected to this block move around on the
       // drag surface. By moving to the drag surface before unplug, connection
       // positions will be calculated correctly.
-      this.moveToDragSurface_();
+      this.moveToDragSurface_(e);
       // Clear all WidgetDivs without animating, in case blocks are moved around
       Blockly.WidgetDiv.hide(true);
       if (this.parentBlock_) {
