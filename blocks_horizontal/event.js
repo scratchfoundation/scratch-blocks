@@ -60,6 +60,10 @@ Blockly.Blocks['dropdown_whenbroadcast'] = {
               value: 'yellow', width: 50, height: 50, alt: 'Yellow'}
         ]), 'CHOICE');
     this.setOutput(true);
+    this.setColour(Blockly.Colours.event.primary,
+      Blockly.Colours.event.secondary,
+      Blockly.Colours.event.tertiary
+    );
   }
 };
 
