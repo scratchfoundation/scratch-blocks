@@ -314,6 +314,7 @@ Blockly.BlockSvg.prototype.renderCompute_ = function() {
   var metrics = {
     statement: null,
     imageField: null,
+    iconMenu: null,
     width: 0,
     height: 0,
     bayHeight: 0,
@@ -347,11 +348,22 @@ Blockly.BlockSvg.prototype.renderCompute_ = function() {
       if (field instanceof Blockly.FieldImage) {
         metrics.imageField = field;
       }
+      if (field instanceof Blockly.FieldIconMenu) {
+        metrics.iconMenu = field;
+      }
       if (field instanceof Blockly.FieldTextInput) {
         metrics.fieldRadius = field.getBorderRadius();
       } else {
         metrics.fieldRadius = Blockly.BlockSvg.FIELD_DEFAULT_CORNER_RADIUS;
       }
+    }
+  }
+  // If this block is an icon menu shadow, attempt to set the parent's
+  // ImageField src to the one that represents the current value of the field.
+  if (metrics.iconMenu) {
+    var currentSrc = metrics.iconMenu.getSrcForValue(metrics.iconMenu.getValue());
+    if (currentSrc) {
+      metrics.iconMenu.setParentFieldImage(currentSrc);
     }
   }
 

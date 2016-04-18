@@ -85,15 +85,15 @@ Blockly.FieldIconMenu.prototype.setValue = function(newValue) {
   }
   this.value_ = newValue;
   // Find the relevant icon in this.icons_ to get the image src.
-  this.setParentFieldImage_(this.getSrcForValue(this.value_));
+  this.setParentFieldImage(this.getSrcForValue(this.value_));
 };
 
 /**
-* Helper to find the parent block's FieldImage and set its src.
+* Find the parent block's FieldImage and set its src.
  * @param {?string} src New src for the parent block FieldImage.
  * @private
  */
-Blockly.FieldIconMenu.prototype.setParentFieldImage_ = function(src) {
+Blockly.FieldIconMenu.prototype.setParentFieldImage = function(src) {
   if (this.sourceBlock_) {
     var parentBlock = this.sourceBlock_.parentBlock_;
     // Loop through all inputs' fields to find the first FieldImage
