@@ -82,6 +82,22 @@ Blockly.DragSurfaceSvg.prototype.scaleWrapper_ = null;
 Blockly.DragSurfaceSvg.prototype.scale_ = 1;
 
 /**
+ * Cached X value for the translation of the drag surface.
+ * Used to set the correct scale origin point.
+ * @type {Number}
+ * @private
+ */
+Blockly.DragSurfaceSvg.prototype.translateX_ = 0;
+
+/**
+ * Cached Y value for the translation of the drag surface.
+ * Used to set the correct scale origin point.
+ * @type {Number}
+ * @private
+ */
+Blockly.DragSurfaceSvg.prototype.translateY_ = 0;
+
+/**
  * Stored X value for the transform origin of the drag surface.
  * Used to adjust the origin as we drag.
  * @type {Number}
@@ -154,6 +170,8 @@ Blockly.DragSurfaceSvg.prototype.setBlocksAndShow = function (blocks, transformO
  */
 Blockly.DragSurfaceSvg.prototype.translateAndScaleGroup = function (x, y, scale) {
   var transform;
+  this.translateX_ = x;
+  this.translateY_ = y;
   this.scale_ = scale;
   if (Blockly.is3dSupported()) {
     transform = 'transform: translate3d(' + x + 'px, ' + y + 'px, 0px)' +
@@ -174,14 +192,12 @@ Blockly.DragSurfaceSvg.prototype.translateAndScaleGroup = function (x, y, scale)
  * @param {Number} y Y translation for the entire surface
  */
 Blockly.DragSurfaceSvg.prototype.translateSurface = function(x, y) {
-  var transform;
+  var originX = (this.transformOriginX_ + x) * this.scale_ + this.translateX_;
+  var originY = (this.transformOriginY_ + y) * this.scale_ + this.translateY_;
+  this.scaleWrapper_.style.transformOrigin = originX + 'px ' + originY + 'px 0px';
   x *= this.scale_;
   y *= this.scale_;
-
-  var originX = this.transformOriginX_ + x;
-  var originY = this.transformOriginY_ + y;
-  this.scaleWrapper_.style.transformOrigin = originX + 'px ' + originY + 'px 0px';
-
+  var transform;
   if (Blockly.is3dSupported()) {
     transform = 'transform: translate3d(' + x + 'px, ' + y + 'px, 0px); display: block;';
     this.SVG_.setAttribute('style', transform);

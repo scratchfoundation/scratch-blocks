@@ -864,6 +864,11 @@ Blockly.BlockSvg.prototype.moveToDragSurface_ = function(e) {
   var blockPosition = goog.style.getClientPosition(this.getSvgRoot());
   var originX = e.clientX - blockPosition.x;
   var originY = e.clientY - blockPosition.y;
+  if (this.workspace.RTL) {
+    // Offset scale point by width of stack in RTL
+    var heightWidth = this.getHeightWidth();
+    originX -= heightWidth.width * this.workspace.scale;
+  }
   // The translation for drag surface blocks,
   // is equal to the current relative-to-surface position,
   // to keep the position in sync as it move on/off the surface.
