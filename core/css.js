@@ -243,6 +243,15 @@ Blockly.Css.CONTENT = [
     'border-radius: 8px;',
     'outline: none;',
     'border: 1px solid;',
+    'transition: box-shadow .1s;',
+  '}',
+
+  '.blocklyDropDownButton:hover {',
+    'box-shadow: 0px 0px 0px 4px ' + Blockly.Colours.fieldShadow + ';',
+  '}',
+
+  '.blocklyDropDownButton:active {',
+    'box-shadow: 0px 0px 0px 8px ' + Blockly.Colours.fieldShadow + ';',
   '}',
 
   '.blocklyDropDownButton > img {',
