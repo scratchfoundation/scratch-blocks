@@ -140,8 +140,13 @@ Blockly.FieldIconMenu.prototype.showEditor_ = function() {
   Blockly.DropDownDiv.clearContent();
   // Populate the drop-down with the icons for this field.
   var contentDiv = Blockly.DropDownDiv.getContentDiv();
+  // Accessibility properties
+  contentDiv.setAttribute('role', 'menu');
+  contentDiv.setAttribute('aria-haspopup', 'true');
   for (var i = 0, icon; icon = this.icons_[i]; i++) {
     var button = document.createElement('button');
+    button.setAttribute('id', ':' + i); // For aria-activedescendant
+    button.setAttribute('role', 'menuitem');
     button.setAttribute('class', 'blocklyDropDownButton');
     button.title = icon.alt;
     button.style.width = icon.width + 'px';
@@ -150,11 +155,18 @@ Blockly.FieldIconMenu.prototype.showEditor_ = function() {
     if (icon.value == this.getValue()) {
       // This icon is selected, show it in a different colour
       backgroundColor = this.sourceBlock_.getColourTertiary();
+      button.setAttribute('aria-selected', 'true');
     }
     button.style.backgroundColor = backgroundColor;
     button.style.borderColor = this.sourceBlock_.getColourTertiary();
     button.onclick = this.buttonClick_.bind(this);
     button.ontouchend = this.buttonClick_.bind(this);
+    button.onmouseover = function() {
+      contentDiv.setAttribute('aria-activedescendant', this.id);
+    };
+    button.onmouseout = function() {
+      contentDiv.removeAttribute('aria-activedescendant');
+    };
     var buttonImg = document.createElement('img');
     buttonImg.src = icon.src;
     buttonImg.alt = icon.alt;

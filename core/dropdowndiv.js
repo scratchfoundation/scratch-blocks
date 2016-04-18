@@ -129,6 +129,10 @@ Blockly.DropDownDiv.getContentDiv = function() {
  */
 Blockly.DropDownDiv.clearContent = function() {
   Blockly.DropDownDiv.content_.innerHTML = '';
+  // Clear any accessibility properties set by the owner
+  Blockly.DropDownDiv.content_.removeAttribute('role');
+  Blockly.DropDownDiv.content_.removeAttribute('aria-haspopup');
+  Blockly.DropDownDiv.content_.removeAttribute('aria-activedescendant');
 };
 
 /**
@@ -294,4 +298,5 @@ Blockly.DropDownDiv.hideWithoutAnimation = function() {
   div.style.transition = '';
   div.style.transform = '';
   div.style.display = 'none';
+  Blockly.DropDownDiv.clearContent();
 };
