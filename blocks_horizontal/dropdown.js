@@ -15,7 +15,10 @@ Blockly.Blocks['dropdown_icon'] = {
    */
   init: function() {
     this.appendDummyInput()
-        .appendField(new Blockly.FieldIconMenu([]), 'CHOICE');
+        .appendField(new Blockly.FieldIconMenu([
+          {src: Blockly.mainWorkspace.options.pathToMedia + 'icons/LetterGet_Blue.svg',
+            value: 'blue', width: 50, height: 50, alt: 'Blue'}
+        ]), 'CHOICE');
     this.setOutput(true);
   }
 };
