@@ -69,8 +69,27 @@ Blockly.FieldIconMenu.prototype.setValue = function(newValue) {
     Blockly.Events.fire(new Blockly.Events.Change(
         this.sourceBlock_, 'field', this.name, this.value_, newValue));
   }
-  this.value_ = newValue;
-  Blockly.Field.prototype.setValue.call(this, newValue);
+  for (var i = 0, icon; icon = this.icons_[i]; i++) {
+    if (icon.value === newValue) {
+      this.value_ = newValue;
+      this.setParentImageField_(icon.src);
+      return;
+    }
+  }
+};
+
+Blockly.FieldIconMenu.prototype.setParentImageField_ = function(newSrc) {
+  if (this.sourceBlock_) {
+    var parentBlock = this.sourceBlock_.parentBlock_;
+    for (var i = 0, input; input = parentBlock.inputList[i]; i++) {
+      for (var j = 0, field; field = input.fieldRow[j]; j++) {
+        if (field instanceof Blockly.FieldImage) {
+          field.setValue(newSrc);
+          return;
+        }
+      }
+    }
+  }
 };
 
 /**
