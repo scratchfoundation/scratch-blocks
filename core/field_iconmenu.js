@@ -57,15 +57,28 @@ Blockly.FieldIconMenu.prototype.dispose = function() {
 };
 
 /**
- * Set the text in this field.
- * @param {?string} text New text.
+* Set the language-neutral value for this dropdown menu.
+ * @param {?string} newValue New value.
  * @override
  */
-Blockly.FieldIconMenu.prototype.setValue = function(text) {
-  if (text === null) {
-    return;  // No change if null.
+Blockly.FieldIconMenu.prototype.setValue = function(newValue) {
+  if (newValue === null || newValue === this.value_) {
+    return;  // No change
   }
-  Blockly.Field.prototype.setValue.call(this, text);
+  if (this.sourceBlock_ && Blockly.Events.isEnabled()) {
+    Blockly.Events.fire(new Blockly.Events.Change(
+        this.sourceBlock_, 'field', this.name, this.value_, newValue));
+  }
+  this.value_ = newValue;
+  Blockly.Field.prototype.setValue.call(this, newValue);
+};
+
+/**
+ * Get the language-neutral value from this dropdown menu.
+ * @return {string} Current text.
+ */
+Blockly.FieldIconMenu.prototype.getValue = function() {
+  return this.value_;
 };
 
 /**
@@ -81,11 +94,21 @@ Blockly.FieldIconMenu.prototype.showEditor_ = function() {
     button.title = icon.alt;
     button.style.width = icon.width + 'px';
     button.style.height = icon.height + 'px';
-    button.style.backgroundColor = this.sourceBlock_.getColour();
+    var backgroundColor = this.sourceBlock_.getColour();
+    if (icon.value == this.value_) {
+      // This icon is selected
+      backgroundColor = this.sourceBlock_.getColourTertiary();
+    }
+    button.style.backgroundColor = backgroundColor;
     button.style.borderColor = this.sourceBlock_.getColourTertiary();
+    button.onclick = this.buttonClick_.bind(this);
+    button.ontouchend = this.buttonClick_.bind(this);
     var buttonImg = document.createElement('img');
     buttonImg.src = icon.src;
     buttonImg.alt = icon.alt;
+    // Set data-value on both elements to pick up value regardless of e.target
+    button.setAttribute('data-value', icon.value);
+    buttonImg.setAttribute('data-value', icon.value);
     button.appendChild(buttonImg);
     contentDiv.appendChild(button);
   }
@@ -106,4 +129,10 @@ Blockly.FieldIconMenu.prototype.showEditor_ = function() {
   Blockly.DropDownDiv.setColour(this.sourceBlock_.getColour(), this.sourceBlock_.getColourTertiary());
   Blockly.DropDownDiv.setBoundsElement(this.sourceBlock_.workspace.getParentSvg().parentNode);
   Blockly.DropDownDiv.show(primaryX, primaryY, secondaryX, secondaryY);
+};
+
+Blockly.FieldIconMenu.prototype.buttonClick_ = function(e) {
+  var value = e.target.getAttribute('data-value');
+  this.setValue(value);
+  Blockly.DropDownDiv.hide();
 };
