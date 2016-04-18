@@ -29,14 +29,21 @@ Blockly.DragSurfaceSvg = function(container) {
  * @type {Number}
  * @const
  */
-Blockly.DragSurfaceSvg.scaleOnDrag = 1.1;
+Blockly.DragSurfaceSvg.SCALE_ON_DRAG = 1.1;
 
 /**
  * Length of time for the blocks to grow on a drag, in seconds.
  * @type {Number}
  * @const
  */
-Blockly.DragSurfaceSvg.growAnimationTime = 0.1;
+Blockly.DragSurfaceSvg.GROW_ANIMATION_TIME = 0.1;
+
+/**
+ * Reference to the timer for finishing the scale-down.
+ * Used in case we have to cancel the scale-down early to vacate the drag surface.
+ * @type {Number}
+ */
+Blockly.DragSurfaceSvg.scaleDownTimer = 0;
 
  /**
   * The SVG drag surface. Set once by Blockly.DragSurfaceSvg.createDom.
@@ -98,7 +105,7 @@ Blockly.DragSurfaceSvg.prototype.createDom = function () {
     return;  // Already created.
   }
   this.scaleWrapper_ = document.createElement('div');
-  this.scaleWrapper_.style.transition = 'transform ' + Blockly.DragSurfaceSvg.growAnimationTime + 's';
+  this.scaleWrapper_.style.transition = 'transform ' + Blockly.DragSurfaceSvg.GROW_ANIMATION_TIME + 's';
   this.scaleWrapper_.setAttribute('class', 'blocklyDragSurface');
   this.container_.appendChild(this.scaleWrapper_);
   this.SVG_ = Blockly.createSvgElement('svg', {
@@ -120,6 +127,8 @@ Blockly.DragSurfaceSvg.prototype.createDom = function () {
   * @param {Number} transformOriginY Y origin of the growth scale in px
   */
 Blockly.DragSurfaceSvg.prototype.setBlocksAndShow = function (blocks, transformOriginX, transformOriginY) {
+  // In case there are blocks scaling down, cancel their scaling to move them off the surface.
+  this.cancelScaleDown();
   goog.asserts.assert(this.dragGroup_.childNodes.length == 0, 'Already dragging a block.');
   // appendChild removes the blocks from the previous parent
   this.dragGroup_.appendChild(blocks);
@@ -133,7 +142,7 @@ Blockly.DragSurfaceSvg.prototype.setBlocksAndShow = function (blocks, transformO
   // If the transform is applied while the element is invisible, no animation happens.
   setTimeout(function() {
     this.scaleWrapper_.style.transform = 'scale(' +
-      Blockly.DragSurfaceSvg.scaleOnDrag + ',' + Blockly.DragSurfaceSvg.scaleOnDrag + ')';
+      Blockly.DragSurfaceSvg.SCALE_ON_DRAG + ',' + Blockly.DragSurfaceSvg.SCALE_ON_DRAG + ')';
   }.bind(this), 0);
 };
 
@@ -218,4 +227,30 @@ Blockly.DragSurfaceSvg.prototype.clearAndHide = function (newSurface) {
   this.scaleWrapper_.style.display = 'none';
   goog.asserts.assert(this.dragGroup_.childNodes.length == 0, 'Drag group was not cleared.');
   this.scaleWrapper_.style.transform = '';
+
+};
+
+/**
+ * Start scaling down the blocks on the drag surface. Visible when the blocks
+ * land on the workspace and don't connect to any other blocks.
+ * @param {Function} onDone A callback for when the scale is complete
+ */
+Blockly.DragSurfaceSvg.prototype.scaleDown = function(onDone) {
+  this.scaleWrapper_.style.transform = 'scale(1,1)';
+  this.scaleOnDone_ = onDone;
+  this.scaleDownTimer_ = window.setTimeout(function() {
+    this.scaleOnDone_ && this.scaleOnDone_();
+    this.scaleOnDone_ = null;
+    this.scaleDownTimer_ = null;
+  }.bind(this), Blockly.DragSurfaceSvg.GROW_ANIMATION_TIME * 1000);
+};
+
+/**
+ * Cancel the drag surface scaling down and immediately invoke the callback.
+ */
+Blockly.DragSurfaceSvg.prototype.cancelScaleDown = function() {
+  this.scaleDownTimer_ && window.clearTimeout(this.scaleDownTimer_);
+  this.scaleOnDone_ && this.scaleOnDone_();
+  this.scaleOnDone_ = null;
+  this.scaleDownTimer_ = null;
 };

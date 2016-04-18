@@ -269,7 +269,7 @@ Blockly.BlockSvg.terminateDrag_ = function() {
       selected.moveConnections_(dxy.x, dxy.y);
       delete selected.draggedBubbles_;
       selected.setDragging_(false);
-      selected.moveOffDragSurface_();
+      selected.animateMoveOffDragSurface_();
       selected.render();
       // Ensure that any stap and bump are part of this move's event group.
       var group = Blockly.Events.getGroup();
@@ -658,6 +658,9 @@ Blockly.BlockSvg.prototype.onMouseUp_ = function(e) {
   Blockly.setPageSelectable(true);
   Blockly.terminateDrag_();
   if (Blockly.selected && Blockly.highlightedConnection_) {
+    // Immediately cancel any animation of the drag surface, because we are about to change parent
+    // and need the node to be off the drag surface.
+    this.workspace.dragSurface.cancelScaleDown();
     if (Blockly.localConnection_ ==
         Blockly.selected.getFirstStatementConnection()) {
       // Snap to match the position of the pre-existing stack.  Since this is a
@@ -872,11 +875,25 @@ Blockly.BlockSvg.prototype.moveToDragSurface_ = function(e) {
 };
 
 /**
+ * Start the scale-down animation for a move off of the drag surface.
+ * this.moveOffDragSurface_ will be called either after the scale-down is complete,
+ * or the scale-down needs to be cancelled for some reason.
+ * @private
+ */
+Blockly.BlockSvg.prototype.animateMoveOffDragSurface_ = function() {
+  this.workspace.dragSurface.scaleDown(function() {
+    // When it's finished, return, apply the correct translations,
+    // and clear the drag surface.
+    this.moveOffDragSurface_();
+  }.bind(this));
+};
+
+/**
  * Move this block back to the workspace block canvas.
  * Generally should be called at the same time as setDragging_(false).
  * @private
  */
- Blockly.BlockSvg.prototype.moveOffDragSurface_ = function() {
+Blockly.BlockSvg.prototype.moveOffDragSurface_ = function() {
   // Translate to current position, turning off 3d.
   var xy = this.getRelativeToSurfaceXY();
   this.clearTransformAttributes_();
