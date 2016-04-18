@@ -244,6 +244,7 @@ Blockly.Css.CONTENT = [
     'outline: none;',
     'border: 1px solid;',
     'transition: box-shadow .1s;',
+    'cursor: pointer;',
   '}',
 
   '.blocklyDropDownButton:hover {',
