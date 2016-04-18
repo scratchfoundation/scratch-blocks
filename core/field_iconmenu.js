@@ -16,7 +16,8 @@ goog.require('Blockly.DropDownDiv');
  */
 Blockly.FieldIconMenu = function(icons) {
   this.icons_ = icons;
-  Blockly.FieldIconMenu.superClass_.constructor.call(this);
+  var defaultValue = icons[0].value;
+  Blockly.FieldIconMenu.superClass_.constructor.call(this, defaultValue);
 };
 goog.inherits(Blockly.FieldIconMenu, Blockly.Field);
 
@@ -77,15 +78,15 @@ Blockly.FieldIconMenu.prototype.showEditor_ = function() {
   for (var i = 0, icon; icon = this.icons_[i]; i++) {
     var button = document.createElement('button');
     button.setAttribute('class', 'blocklyDropDownButton');
-    var buttonImg = document.createElement('img');
-    buttonImg.src = icon.src;
-    buttonImg.alt = icon.alt;
     button.title = icon.alt;
     button.style.width = icon.width + 'px';
     button.style.height = icon.height + 'px';
-    button.appendChild(buttonImg);
     button.style.backgroundColor = this.sourceBlock_.getColour();
     button.style.borderColor = this.sourceBlock_.getColourTertiary();
+    var buttonImg = document.createElement('img');
+    buttonImg.src = icon.src;
+    buttonImg.alt = icon.alt;
+    button.appendChild(buttonImg);
     contentDiv.appendChild(button);
   }
   contentDiv.style.width = '180px';
