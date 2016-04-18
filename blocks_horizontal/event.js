@@ -46,12 +46,18 @@ Blockly.Blocks['dropdown_whenbroadcast'] = {
   init: function() {
     this.appendDummyInput()
         .appendField(new Blockly.FieldIconMenu([
-            [Blockly.mainWorkspace.options.pathToMedia + 'icons/LetterGet_Blue.svg', 'blue'],
-            [Blockly.mainWorkspace.options.pathToMedia + 'icons/LetterGet_Green.svg', 'green'],
-            [Blockly.mainWorkspace.options.pathToMedia + 'icons/LetterGet_Orange.svg', 'orange'],
-            [Blockly.mainWorkspace.options.pathToMedia + 'icons/LetterGet_Purple.svg', 'purple'],
-            [Blockly.mainWorkspace.options.pathToMedia + 'icons/LetterGet_Red.svg', 'red'],
-            [Blockly.mainWorkspace.options.pathToMedia + 'icons/LetterGet_Yellow.svg', 'yellow']
+            {src: Blockly.mainWorkspace.options.pathToMedia + 'icons/LetterGet_Blue.svg',
+              value: 'blue', width: 50, height: 50, alt: 'Blue'},
+            {src: Blockly.mainWorkspace.options.pathToMedia + 'icons/LetterGet_Green.svg',
+              value: 'green', width: 50, height: 50, alt: 'Green'},
+            {src: Blockly.mainWorkspace.options.pathToMedia + 'icons/LetterGet_Orange.svg',
+              value: 'orange', width: 50, height: 50, alt: 'Orange'},
+            {src: Blockly.mainWorkspace.options.pathToMedia + 'icons/LetterGet_Purple.svg',
+              value: 'purple', width: 50, height: 50, alt: 'Purple'},
+            {src: Blockly.mainWorkspace.options.pathToMedia + 'icons/LetterGet_Red.svg',
+              value: 'red', width: 50, height: 50, alt: 'Red'},
+            {src: Blockly.mainWorkspace.options.pathToMedia + 'icons/LetterGet_Yellow.svg',
+              value: 'yellow', width: 50, height: 50, alt: 'Yellow'}
         ]), 'CHOICE');
     this.setOutput(true);
   }

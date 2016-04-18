@@ -15,7 +15,7 @@ Blockly.Blocks['dropdown_icon'] = {
    */
   init: function() {
     this.appendDummyInput()
-        .appendField(new Blockly.FieldIconMenu(), 'CHOICE');
+        .appendField(new Blockly.FieldIconMenu([]), 'CHOICE');
     this.setOutput(true);
   }
 };

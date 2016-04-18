@@ -78,7 +78,11 @@ Blockly.FieldIconMenu.prototype.showEditor_ = function() {
     var button = document.createElement('button');
     button.setAttribute('class', 'blocklyDropDownButton');
     var buttonImg = document.createElement('img');
-    buttonImg.src = icon[0];
+    buttonImg.src = icon.src;
+    buttonImg.alt = icon.alt;
+    button.title = icon.alt;
+    button.style.width = icon.width + 'px';
+    button.style.height = icon.height + 'px';
     button.appendChild(buttonImg);
     button.style.backgroundColor = this.sourceBlock_.getColour();
     button.style.borderColor = this.sourceBlock_.getColourTertiary();
