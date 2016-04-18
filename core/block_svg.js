@@ -32,6 +32,7 @@ goog.require('goog.Timer');
 goog.require('goog.asserts');
 goog.require('goog.dom');
 goog.require('goog.math.Coordinate');
+goog.require('goog.style');
 goog.require('goog.userAgent');
 
 
@@ -268,7 +269,7 @@ Blockly.BlockSvg.terminateDrag_ = function() {
       selected.moveConnections_(dxy.x, dxy.y);
       delete selected.draggedBubbles_;
       selected.setDragging_(false);
-      selected.moveOffDragSurface_();
+      selected.animateMoveOffDragSurface_();
       selected.render();
       // Ensure that any stap and bump are part of this move's event group.
       var group = Blockly.Events.getGroup();
@@ -657,6 +658,9 @@ Blockly.BlockSvg.prototype.onMouseUp_ = function(e) {
   Blockly.setPageSelectable(true);
   Blockly.terminateDrag_();
   if (Blockly.selected && Blockly.highlightedConnection_) {
+    // Immediately cancel any animation of the drag surface, because we are about to change parent
+    // and need the node to be off the drag surface.
+    this.workspace.dragSurface.cancelScaleDown();
     if (Blockly.localConnection_ ==
         Blockly.selected.getFirstStatementConnection()) {
       // Snap to match the position of the pre-existing stack.  Since this is a
@@ -851,9 +855,20 @@ Blockly.BlockSvg.prototype.setDragging_ = function(adding) {
 /**
  * Move this block to its workspace's drag surface, accounting for positioning.
  * Generally should be called at the same time as setDragging_(true).
+ * @param {Event} e Mouse or touch event triggering this move
  * @private
  */
-Blockly.BlockSvg.prototype.moveToDragSurface_ = function() {
+Blockly.BlockSvg.prototype.moveToDragSurface_ = function(e) {
+  // Transform origin for scaling the blocks will be the difference
+  // between the block's absolute position and the click position.
+  var blockPosition = goog.style.getClientPosition(this.getSvgRoot());
+  var originX = e.clientX - blockPosition.x;
+  var originY = e.clientY - blockPosition.y;
+  if (this.workspace.RTL) {
+    // Offset scale point by width of stack in RTL
+    var heightWidth = this.getHeightWidth();
+    originX -= heightWidth.width * this.workspace.scale;
+  }
   // The translation for drag surface blocks,
   // is equal to the current relative-to-surface position,
   // to keep the position in sync as it move on/off the surface.
@@ -861,7 +876,21 @@ Blockly.BlockSvg.prototype.moveToDragSurface_ = function() {
   this.clearTransformAttributes_();
   this.workspace.dragSurface.translateSurface(xy.x, xy.y);
   // Execute the move on the top-level SVG component
-  this.workspace.dragSurface.setBlocksAndShow(this.getSvgRoot());
+  this.workspace.dragSurface.setBlocksAndShow(this.getSvgRoot(), originX, originY);
+};
+
+/**
+ * Start the scale-down animation for a move off of the drag surface.
+ * this.moveOffDragSurface_ will be called either after the scale-down is complete,
+ * or the scale-down needs to be cancelled for some reason.
+ * @private
+ */
+Blockly.BlockSvg.prototype.animateMoveOffDragSurface_ = function() {
+  this.workspace.dragSurface.scaleDown(function() {
+    // When it's finished, return, apply the correct translations,
+    // and clear the drag surface.
+    this.moveOffDragSurface_();
+  }.bind(this));
 };
 
 /**
@@ -869,7 +898,7 @@ Blockly.BlockSvg.prototype.moveToDragSurface_ = function() {
  * Generally should be called at the same time as setDragging_(false).
  * @private
  */
- Blockly.BlockSvg.prototype.moveOffDragSurface_ = function() {
+Blockly.BlockSvg.prototype.moveOffDragSurface_ = function() {
   // Translate to current position, turning off 3d.
   var xy = this.getRelativeToSurfaceXY();
   this.clearTransformAttributes_();
@@ -923,7 +952,7 @@ Blockly.BlockSvg.prototype.onMouseMove_ = function(e) {
       // in tighten_(). Then blocks connected to this block move around on the
       // drag surface. By moving to the drag surface before unplug, connection
       // positions will be calculated correctly.
-      this.moveToDragSurface_();
+      this.moveToDragSurface_(e);
       // Clear all WidgetDivs without animating, in case blocks are moved around
       Blockly.WidgetDiv.hide(true);
       if (this.parentBlock_) {
