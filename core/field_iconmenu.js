@@ -10,11 +10,12 @@ goog.require('Blockly.DropDownDiv');
 
 /**
  * Class for an icon menu field.
- * @param {string} text Text representation of initial icon.
+ * @param {Object} icons List of icons and their associated text.
  * @extends {Blockly.Field}
  * @constructor
  */
-Blockly.FieldIconMenu = function(text) {
+Blockly.FieldIconMenu = function(icons) {
+  this.icons_ = icons;
   Blockly.FieldIconMenu.superClass_.constructor.call(this);
 };
 goog.inherits(Blockly.FieldIconMenu, Blockly.Field);
@@ -71,6 +72,20 @@ Blockly.FieldIconMenu.prototype.setValue = function(text) {
  * @private
  */
 Blockly.FieldIconMenu.prototype.showEditor_ = function() {
+  // Set up contents of the drop-down
+  var contentDiv = Blockly.DropDownDiv.getContentDiv();
+  for (var i = 0, icon; icon = this.icons_[i]; i++) {
+    var button = document.createElement('button');
+    button.setAttribute('class', 'blocklyDropDownButton');
+    var buttonImg = document.createElement('img');
+    buttonImg.src = icon[0];
+    button.appendChild(buttonImg);
+    button.style.backgroundColor = this.sourceBlock_.getColour();
+    button.style.borderColor = this.sourceBlock_.getColourTertiary();
+    contentDiv.appendChild(button);
+  }
+  contentDiv.style.width = '180px';
+  // Calculate positioning for the drop-down
   var scale = this.sourceBlock_.workspace.scale;
   var bBox = this.sourceBlock_.getHeightWidth();
   bBox.width *= scale;
@@ -82,6 +97,7 @@ Blockly.FieldIconMenu.prototype.showEditor_ = function() {
   // If we can't fit it, render above the entire block
   var secondaryX = primaryX;
   var secondaryY = position.y - Blockly.BlockSvg.MIN_BLOCK_Y * scale - Blockly.BlockSvg.FIELD_Y_OFFSET * scale;
+
   Blockly.DropDownDiv.setColour(this.sourceBlock_.getColour(), this.sourceBlock_.getColourTertiary());
   Blockly.DropDownDiv.setBoundsElement(this.sourceBlock_.workspace.getParentSvg().parentNode);
   Blockly.DropDownDiv.show(primaryX, primaryY, secondaryX, secondaryY);

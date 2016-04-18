@@ -38,6 +38,25 @@ Blockly.Blocks['event_whenflagclicked'] = {
   }
 };
 
+Blockly.Blocks['dropdown_whenbroadcast'] = {
+  /**
+   * Block for broadcast dropdown (used for shadow).
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.appendDummyInput()
+        .appendField(new Blockly.FieldIconMenu([
+            [Blockly.mainWorkspace.options.pathToMedia + 'icons/LetterGet_Blue.svg', 'blue'],
+            [Blockly.mainWorkspace.options.pathToMedia + 'icons/LetterGet_Green.svg', 'green'],
+            [Blockly.mainWorkspace.options.pathToMedia + 'icons/LetterGet_Orange.svg', 'orange'],
+            [Blockly.mainWorkspace.options.pathToMedia + 'icons/LetterGet_Purple.svg', 'purple'],
+            [Blockly.mainWorkspace.options.pathToMedia + 'icons/LetterGet_Red.svg', 'red'],
+            [Blockly.mainWorkspace.options.pathToMedia + 'icons/LetterGet_Yellow.svg', 'yellow']
+        ]), 'CHOICE');
+    this.setOutput(true);
+  }
+};
+
 Blockly.Blocks['event_whenbroadcastreceived'] = {
   /**
    * Block for when broadcast received.

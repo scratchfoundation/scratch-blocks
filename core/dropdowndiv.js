@@ -224,6 +224,7 @@ Blockly.DropDownDiv.getPositionMetrics = function(x, y, secondaryX, secondaryY) 
  * Hide the menu, triggering animation
  */
 Blockly.DropDownDiv.hide = function() {
+  Blockly.DropDownDiv.content_.innerHTML = '';
   Blockly.DropDownDiv.DIV_.style.transition = '';
   Blockly.DropDownDiv.DIV_.style.transform = '';
   Blockly.DropDownDiv.DIV_.style.display = 'none';
