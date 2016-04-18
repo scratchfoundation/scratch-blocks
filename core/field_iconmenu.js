@@ -207,7 +207,15 @@ Blockly.FieldIconMenu.prototype.showEditor_ = function() {
     this.sourceBlock_.getColourSecondary(), this.sourceBlock_.getColourTertiary());
 
   Blockly.DropDownDiv.setBoundsElement(this.sourceBlock_.workspace.getParentSvg().parentNode);
-  Blockly.DropDownDiv.show(primaryX, primaryY, secondaryX, secondaryY, this.onHide_.bind(this));
+  var renderedPrimary = Blockly.DropDownDiv.show(primaryX, primaryY, secondaryX, secondaryY, this.onHide_.bind(this));
+  if (!renderedPrimary) {
+    // Adjust for rotation
+    var arrowX = this.arrowX_ + Blockly.DropDownDiv.ARROW_SIZE / 1.5;
+    var arrowY = this.arrowY_ + Blockly.DropDownDiv.ARROW_SIZE / 1.5;
+    // Flip the arrow on the button
+    this.arrowIcon_.setAttribute('transform',
+      'translate(' + arrowX + ',' + arrowY + ') rotate(180)');
+  }
 };
 
 /**
@@ -229,4 +237,6 @@ Blockly.FieldIconMenu.prototype.onHide_ = function() {
   Blockly.DropDownDiv.content_.removeAttribute('role');
   Blockly.DropDownDiv.content_.removeAttribute('aria-haspopup');
   Blockly.DropDownDiv.content_.removeAttribute('aria-activedescendant');
+  // Unflip the arrow if appropriate
+  this.arrowIcon_.setAttribute('transform', 'translate(' + this.arrowX_ + ',' + this.arrowY_ + ')');
 };
