@@ -37,6 +37,13 @@ goog.inherits(Blockly.FieldIconMenu, Blockly.Field);
 Blockly.FieldIconMenu.DROPDOWN_WIDTH = 180;
 
 /**
+ * Save the primary colour of the source block while the menu is open, for reset.
+ * @type {number|string}
+ * @private
+ */
+Blockly.FieldIconMenu.savedPrimary_ = null;
+
+/**
  * Called when the field is placed on a block.
  * @param {Block} block The owning block.
  */
@@ -193,8 +200,14 @@ Blockly.FieldIconMenu.prototype.showEditor_ = function() {
   var secondaryY = position.y - (Blockly.BlockSvg.MIN_BLOCK_Y * scale) - (Blockly.BlockSvg.FIELD_Y_OFFSET * scale);
 
   Blockly.DropDownDiv.setColour(this.sourceBlock_.getColour(), this.sourceBlock_.getColourTertiary());
+
+  // Update source block colour to look selected
+  this.savedPrimary_ = this.sourceBlock_.getColour();
+  this.sourceBlock_.setColour(this.sourceBlock_.getColourTertiary(),
+    this.sourceBlock_.getColourSecondary(), this.sourceBlock_.getColourTertiary());
+
   Blockly.DropDownDiv.setBoundsElement(this.sourceBlock_.workspace.getParentSvg().parentNode);
-  Blockly.DropDownDiv.show(primaryX, primaryY, secondaryX, secondaryY);
+  Blockly.DropDownDiv.show(primaryX, primaryY, secondaryX, secondaryY, this.onHide_.bind(this));
 };
 
 /**
@@ -207,4 +220,13 @@ Blockly.FieldIconMenu.prototype.buttonClick_ = function(e) {
   var value = e.target.getAttribute('data-value');
   this.setValue(value);
   Blockly.DropDownDiv.hide();
+};
+
+Blockly.FieldIconMenu.prototype.onHide_ = function() {
+  // Reset the button colour and clear accessibility properties
+  this.sourceBlock_.setColour(this.savedPrimary_,
+    this.sourceBlock_.getColourSecondary(), this.sourceBlock_.getColourTertiary());
+  Blockly.DropDownDiv.content_.removeAttribute('role');
+  Blockly.DropDownDiv.content_.removeAttribute('aria-haspopup');
+  Blockly.DropDownDiv.content_.removeAttribute('aria-activedescendant');
 };

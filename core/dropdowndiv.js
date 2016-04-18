@@ -66,14 +66,14 @@ Blockly.DropDownDiv.PADDING_Y = 20;
  * @type {number}
  * @const
  */
-Blockly.FieldTextInput.ANIMATION_TIME = 0.25;
+Blockly.DropDownDiv.ANIMATION_TIME = 0.25;
 
 /**
  * Timer for animation out, to be cleared if we need to immediately hide
  * without disrupting new shows.
  * @type {number}
  */
-Blockly.FieldTextInput.animateOutTimer_ = null;
+Blockly.DropDownDiv.animateOutTimer_ = null;
 
 /**
  * When the drop-down is opened, we save the position it animated from
@@ -81,7 +81,7 @@ Blockly.FieldTextInput.animateOutTimer_ = null;
  * Absolute X position of that position, in px.
  * @type {number}
  */
-Blockly.FieldTextInput.hideAnimationX_ = 0;
+Blockly.DropDownDiv.hideAnimationX_ = 0;
 
 /**
  * When the drop-down is opened, we save the position it animated from
@@ -89,7 +89,13 @@ Blockly.FieldTextInput.hideAnimationX_ = 0;
  * Absolute Y position of that position, in px.
  * @type {number}
  */
-Blockly.FieldTextInput.hideAnimationY_ = 0;
+Blockly.DropDownDiv.hideAnimationY_ = 0;
+
+/**
+ * Callback for when the drop-down is hidden.
+ * @type {Function}
+ */
+Blockly.DropDownDiv.onHide_ = 0;
 
 /**
  * Create and insert the DOM element for this div.
@@ -129,10 +135,6 @@ Blockly.DropDownDiv.getContentDiv = function() {
  */
 Blockly.DropDownDiv.clearContent = function() {
   Blockly.DropDownDiv.content_.innerHTML = '';
-  // Clear any accessibility properties set by the owner
-  Blockly.DropDownDiv.content_.removeAttribute('role');
-  Blockly.DropDownDiv.content_.removeAttribute('aria-haspopup');
-  Blockly.DropDownDiv.content_.removeAttribute('aria-activedescendant');
 };
 
 /**
@@ -159,9 +161,11 @@ Blockly.DropDownDiv.setColour = function(backgroundColour, borderColour) {
  * @param {number} primaryY Desired origin point y, in absolute px
  * @param {number} secondaryX Secondary/alternative origin point x, in absolute px
  * @param {number} secondaryY Secondary/alternative origin point y, in absolute px
+ * @param {Function=} opt_onHide Optional callback for when the drop-down is hidden
  * @return {boolean} True if the menu rendered at the primary origin point.
  */
-Blockly.DropDownDiv.show = function(primaryX, primaryY, secondaryX, secondaryY) {
+Blockly.DropDownDiv.show = function(primaryX, primaryY, secondaryX, secondaryY, opt_onHide) {
+  Blockly.DropDownDiv.onHide_ = opt_onHide;
   var div = Blockly.DropDownDiv.DIV_;
   var metrics = Blockly.DropDownDiv.getPositionMetrics(primaryX, primaryY, secondaryX, secondaryY);
   // Update arrow CSS
@@ -179,8 +183,8 @@ Blockly.DropDownDiv.show = function(primaryX, primaryY, secondaryX, secondaryY) 
   div.style.opacity = 1;
   // Add transition and apply final translate after a cycle.
   setTimeout(function() {
-    div.style.transition = 'transform ' + Blockly.FieldTextInput.ANIMATION_TIME + 's, ' +
-      'opacity ' + Blockly.FieldTextInput.ANIMATION_TIME + 's';
+    div.style.transition = 'transform ' + Blockly.DropDownDiv.ANIMATION_TIME + 's, ' +
+      'opacity ' + Blockly.DropDownDiv.ANIMATION_TIME + 's';
     div.style.transform = 'translate(' + metrics.finalX + 'px,' + metrics.finalY + 'px)';
   }, 1);
   return metrics.arrowAtTop;
@@ -286,7 +290,11 @@ Blockly.DropDownDiv.hide = function() {
   Blockly.DropDownDiv.animateOutTimer_ = setTimeout(function() {
     // Finish animation - reset all values to default.
     Blockly.DropDownDiv.hideWithoutAnimation();
-  }, Blockly.FieldTextInput.ANIMATION_TIME * 1000);
+  }, Blockly.DropDownDiv.ANIMATION_TIME * 1000);
+  if (Blockly.DropDownDiv.onHide_) {
+    Blockly.DropDownDiv.onHide_();
+    Blockly.DropDownDiv.onHide_ = null;
+  }
 };
 
 /**
@@ -299,4 +307,8 @@ Blockly.DropDownDiv.hideWithoutAnimation = function() {
   div.style.transform = '';
   div.style.display = 'none';
   Blockly.DropDownDiv.clearContent();
+  if (Blockly.DropDownDiv.onHide_) {
+    Blockly.DropDownDiv.onHide_();
+    Blockly.DropDownDiv.onHide_ = null;
+  }
 };
