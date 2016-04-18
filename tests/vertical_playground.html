@@ -11,6 +11,7 @@
 <script src="../generators/javascript/event.js"></script>
 <script src="../msg/messages.js"></script>
 <script src="../blocks/math.js"></script>
+<script src="../blocks/text.js"></script>
 <script src="../blocks_horizontal/control.js"></script>
 <script src="../blocks_horizontal/dropdown.js"></script>
 <script src="../blocks_horizontal/event.js"></script>
@@ -154,17 +155,12 @@ h1 {
       <block type="event_whenflagclicked"></block>
       <block type="event_whenbroadcastreceived">
         <value name="CHOICE">
-          <shadow type="dropdown_icon">
-            <field name="CHOICE"></field>
+          <shadow type="dropdown_whenbroadcast">
+            <field name="CHOICE">blue</field>
           </shadow>
         </value>
       </block>
       <block type="event_broadcast">
-        <value name="CHOICE">
-          <shadow type="dropdown_icon">
-            <field name="CHOICE"></field>
-          </shadow>
-        </value>
       </block>
       <block type="event_broadcast_text">
           <value name="STRING">
@@ -196,11 +192,6 @@ h1 {
 
     <category name="Wedo">
         <block type="wedo_setcolor">
-          <value name="CHOICE">
-            <shadow type="dropdown_icon">
-              <field name="CHOICE"></field>
-            </shadow>
-          </value>
         </block>
         <block type="wedo_motorclockwise">
             <value name="DURATION">
@@ -217,18 +208,8 @@ h1 {
             </value>
         </block>
         <block type="wedo_motorspeed">
-          <value name="CHOICE">
-            <shadow type="dropdown_icon">
-              <field name="CHOICE"></field>
-            </shadow>
-          </value>
         </block>
         <block type="wedo_whentilt">
-          <value name="CHOICE">
-            <shadow type="dropdown_icon">
-              <field name="CHOICE"></field>
-            </shadow>
-          </value>
         </block>
         <block type="wedo_whendistanceclose"></block>
     </category>

@@ -18,7 +18,7 @@ Blockly.Blocks['wedo_setcolor'] = {
   init: function() {
     this.jsonInit({
       "id": "wedo_setcolor",
-      "message0": "%1 %2",
+      "message0": "%1",
       "args0": [
         {
           "type": "field_image",
@@ -26,10 +26,6 @@ Blockly.Blocks['wedo_setcolor'] = {
           "width": 40,
           "height": 40,
           "alt": "Set Color"
-        },
-        {
-          "type": "input_value",
-          "name": "CHOICE"
         }
       ],
       "inputsInline": true,
@@ -116,7 +112,7 @@ Blockly.Blocks['wedo_motorspeed'] = {
   init: function() {
     this.jsonInit({
       "id": "wedo_motorspeed",
-      "message0": "%1 %2",
+      "message0": "%1",
       "args0": [
         {
           "type": "field_image",
@@ -124,10 +120,6 @@ Blockly.Blocks['wedo_motorspeed'] = {
           "width": 40,
           "height": 40,
           "alt": "Motor Speed"
-        },
-        {
-          "type": "input_value",
-          "name": "CHOICE"
         }
       ],
       "inputsInline": true,
@@ -148,7 +140,7 @@ Blockly.Blocks['wedo_whentilt'] = {
   init: function() {
     this.jsonInit({
       "id": "wedo_whentilt",
-      "message0": "%1 %2",
+      "message0": "%1",
       "args0": [
         {
           "type": "field_image",
@@ -156,10 +148,6 @@ Blockly.Blocks['wedo_whentilt'] = {
           "width": 40,
           "height": 40,
           "alt": "When Tilted"
-        },
-        {
-          "type": "input_value",
-          "name": "CHOICE"
         }
       ],
       "inputsInline": true,
