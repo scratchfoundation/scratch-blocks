@@ -98,7 +98,6 @@ Blockly.DragSurfaceSvg.prototype.createDropShadowDom_ = function(defs) {
       {'id': 'blocklyDragShadowFilter', 'height': '140%', 'width': '140%', y: '-20%', x: '-20%'}, defs);
   Blockly.createSvgElement('feGaussianBlur',
       {'in': 'SourceAlpha', 'stdDeviation': Blockly.DragSurfaceSvg.SHADOW_STD_DEVIATION}, dragShadowFilter);
-  Blockly.createSvgElement('feOffset', {'dx': 0, 'dy': 0}, dragShadowFilter);
   var componentTransfer = Blockly.createSvgElement('feComponentTransfer', {'result': 'offsetBlur'}, dragShadowFilter);
   // Shadow opacity is specified in the adjustable colour library,
   // since the darkness of the shadow largely depends on the workspace colour.
