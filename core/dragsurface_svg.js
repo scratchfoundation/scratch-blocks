@@ -86,11 +86,11 @@ Blockly.DragSurfaceSvg.prototype.createDom = function () {
  */
 Blockly.DragSurfaceSvg.prototype.createDropShadowDom_ = function(defs) {
   var dragShadowFilter = Blockly.createSvgElement('filter',
-      {'id': 'blocklyDragShadowFilter', 'height': '140%', 'width': '140%'}, defs);
+      {'id': 'blocklyDragShadowFilter', 'height': '140%', 'width': '140%', y: '-20%', x: '-20%'}, defs);
   Blockly.createSvgElement('feGaussianBlur',
-      {'in': 'SourceAlpha', 'stdDeviation': 5}, dragShadowFilter);
+      {'in': 'SourceAlpha', 'stdDeviation': 6}, dragShadowFilter);
   Blockly.createSvgElement('feOffset',
-      {'dx': 7, 'dy': 7}, dragShadowFilter);
+      {'dx': 0, 'dy': 0}, dragShadowFilter);
   var componentTransfer = Blockly.createSvgElement('feComponentTransfer', {'result': 'offsetBlur'}, dragShadowFilter);
   Blockly.createSvgElement('feFuncA',
       {'type': 'linear', 'slope': 0.6}, componentTransfer);
