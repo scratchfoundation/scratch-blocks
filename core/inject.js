@@ -276,17 +276,9 @@ Blockly.init_ = function(mainWorkspace) {
   // Load the sounds.
   if (options.hasSounds) {
     mainWorkspace.loadAudio_(
-        [options.pathToMedia + 'click.mp3',
-         options.pathToMedia + 'click.wav',
-         options.pathToMedia + 'click.ogg'], 'click');
+        [options.pathToMedia + 'click.wav'], 'click');
     mainWorkspace.loadAudio_(
-        [options.pathToMedia + 'disconnect.wav',
-         options.pathToMedia + 'disconnect.mp3',
-         options.pathToMedia + 'disconnect.ogg'], 'disconnect');
-    mainWorkspace.loadAudio_(
-        [options.pathToMedia + 'delete.mp3',
-         options.pathToMedia + 'delete.ogg',
-         options.pathToMedia + 'delete.wav'], 'delete');
+        [options.pathToMedia + 'delete.wav'], 'delete');
 
     // Bind temporary hooks that preload the sounds.
     var soundBinds = [];
