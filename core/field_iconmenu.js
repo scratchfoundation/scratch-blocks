@@ -172,15 +172,24 @@ Blockly.FieldIconMenu.prototype.showEditor_ = function() {
     button.style.borderColor = this.sourceBlock_.getColourTertiary();
     button.onclick = this.buttonClick_.bind(this);
     button.ontouchend = this.buttonClick_.bind(this);
+    // These are applied manually instead of using the :hover pseudoclass
+    // because Android has a bad long press "helper" menu and green highlight
+    // that we must prevent with ontouchstart preventDefault
+    button.ontouchstart = function(e) {
+      this.setAttribute('class', 'blocklyDropDownButton blocklyDropDownButtonHover');
+      e.preventDefault();
+    };
     button.onmouseover = function() {
+      this.setAttribute('class', 'blocklyDropDownButton blocklyDropDownButtonHover');
       contentDiv.setAttribute('aria-activedescendant', this.id);
     };
     button.onmouseout = function() {
+      this.setAttribute('class', 'blocklyDropDownButton');
       contentDiv.removeAttribute('aria-activedescendant');
     };
     var buttonImg = document.createElement('img');
     buttonImg.src = icon.src;
-    buttonImg.alt = icon.alt;
+    //buttonImg.alt = icon.alt;
     // Upon click/touch, we will be able to get the clicked element as e.target
     // Store a data attribute on all possible click targets so we can match it to the icon.
     button.setAttribute('data-value', icon.value);

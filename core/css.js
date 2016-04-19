@@ -248,7 +248,7 @@ Blockly.Css.CONTENT = [
     'cursor: pointer;',
   '}',
 
-  '.blocklyDropDownButton:hover {',
+  '.blocklyDropDownButtonHover {',
     'box-shadow: 0px 0px 0px 4px ' + Blockly.Colours.fieldShadow + ';',
   '}',
 
