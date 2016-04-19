@@ -53,6 +53,13 @@ Blockly.DragSurfaceSvg.prototype.container_ = null;
  */
 Blockly.DragSurfaceSvg.prototype.scale_ = 1;
 
+/**
+ * ID for the drag shadow filter, set in createDom.
+ * @type {string}
+ * @private
+ */
+Blockly.DragSurfaceSvg.prototype.dragShadowFilterId_ = '';
+
  /**
   * Create the drag surface and inject it into the container.
   */
@@ -67,8 +74,29 @@ Blockly.DragSurfaceSvg.prototype.createDom = function () {
     'version': '1.1',
     'class': 'blocklyDragSurface'
   }, this.container_);
-  Blockly.createSvgElement('defs', {}, this.SVG_);
+  var defs = Blockly.createSvgElement('defs', {}, this.SVG_);
+  this.dragShadowFilterId_ = this.createDropShadowDom_(defs);
   this.dragGroup_ = Blockly.createSvgElement('g', {}, this.SVG_);
+};
+
+/**
+ * Create the SVG def for the drop shadow.
+ * @param {Element} defs Defs element to insert the shadow filter definition
+ * @return {string} ID for the filter element
+ */
+Blockly.DragSurfaceSvg.prototype.createDropShadowDom_ = function(defs) {
+  var dragShadowFilter = Blockly.createSvgElement('filter',
+      {'id': 'blocklyDragShadowFilter', 'height': '140%', 'width': '140%'}, defs);
+  Blockly.createSvgElement('feGaussianBlur',
+      {'in': 'SourceAlpha', 'stdDeviation': 5}, dragShadowFilter);
+  Blockly.createSvgElement('feOffset',
+      {'dx': 7, 'dy': 7}, dragShadowFilter);
+  var componentTransfer = Blockly.createSvgElement('feComponentTransfer', {'result': 'offsetBlur'}, dragShadowFilter);
+  Blockly.createSvgElement('feFuncA',
+      {'type': 'linear', 'slope': 0.6}, componentTransfer);
+  Blockly.createSvgElement('feComposite',
+      {'in': 'SourceGraphic', 'in2': 'offsetBlur', 'operator': 'over'}, dragShadowFilter);
+  return dragShadowFilter.id;
 };
 
  /**
@@ -80,6 +108,7 @@ Blockly.DragSurfaceSvg.prototype.setBlocksAndShow = function (blocks) {
   goog.asserts.assert(this.dragGroup_.childNodes.length == 0, 'Already dragging a block.');
   // appendChild removes the blocks from the previous parent
   this.dragGroup_.appendChild(blocks);
+  blocks.setAttribute('filter', 'url(#' + this.dragShadowFilterId_ + ')');
   this.SVG_.style.display = 'block';
 };
 
@@ -155,6 +184,7 @@ Blockly.DragSurfaceSvg.prototype.getCurrentBlock = function () {
   */
 Blockly.DragSurfaceSvg.prototype.clearAndHide = function (newSurface) {
   // appendChild removes the node from this.dragGroup_
+  this.getCurrentBlock().removeAttribute('filter');
   newSurface.appendChild(this.getCurrentBlock());
   this.SVG_.style.display = 'none';
   goog.asserts.assert(this.dragGroup_.childNodes.length == 0, 'Drag group was not cleared.');
