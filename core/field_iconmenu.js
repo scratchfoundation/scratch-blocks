@@ -216,7 +216,7 @@ Blockly.FieldIconMenu.prototype.showEditor_ = function() {
 
   // Update source block colour to look selected
   this.savedPrimary_ = this.sourceBlock_.getColour();
-  this.sourceBlock_.setColour(this.sourceBlock_.getColourTertiary(),
+  this.sourceBlock_.setColour(this.sourceBlock_.getColourSecondary(),
     this.sourceBlock_.getColourSecondary(), this.sourceBlock_.getColourTertiary());
 
   Blockly.DropDownDiv.setBoundsElement(this.sourceBlock_.workspace.getParentSvg().parentNode);
@@ -224,7 +224,7 @@ Blockly.FieldIconMenu.prototype.showEditor_ = function() {
     secondaryX, secondaryY, this.onHide_.bind(this));
   if (!renderedPrimary) {
     // Adjust for rotation
-    var arrowX = this.arrowX_ + Blockly.DropDownDiv.ARROW_SIZE / 1.5;
+    var arrowX = this.arrowX_ + Blockly.DropDownDiv.ARROW_SIZE / 1.5 + 1;
     var arrowY = this.arrowY_ + Blockly.DropDownDiv.ARROW_SIZE / 1.5;
     // Flip the arrow on the button
     this.arrowIcon_.setAttribute('transform',
