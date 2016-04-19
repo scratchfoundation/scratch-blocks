@@ -11,6 +11,7 @@
 
  goog.require('Blockly.utils');
  goog.require('Blockly.constants');
+ goog.require('Blockly.Colours');
 
  goog.require('goog.asserts');
  goog.require('goog.math.Coordinate');
@@ -60,6 +61,13 @@ Blockly.DragSurfaceSvg.prototype.scale_ = 1;
  */
 Blockly.DragSurfaceSvg.prototype.dragShadowFilterId_ = '';
 
+/**
+ * Standard deviation for gaussian blur on drag shadow, in px.
+ * @type {number}
+ * @const
+ */
+Blockly.DragSurfaceSvg.SHADOW_STD_DEVIATION = 6;
+
  /**
   * Create the drag surface and inject it into the container.
   */
@@ -85,15 +93,17 @@ Blockly.DragSurfaceSvg.prototype.createDom = function () {
  * @return {string} ID for the filter element
  */
 Blockly.DragSurfaceSvg.prototype.createDropShadowDom_ = function(defs) {
+  // Adjust these width/height, x/y properties to prevent the shadow from clipping
   var dragShadowFilter = Blockly.createSvgElement('filter',
       {'id': 'blocklyDragShadowFilter', 'height': '140%', 'width': '140%', y: '-20%', x: '-20%'}, defs);
   Blockly.createSvgElement('feGaussianBlur',
-      {'in': 'SourceAlpha', 'stdDeviation': 6}, dragShadowFilter);
-  Blockly.createSvgElement('feOffset',
-      {'dx': 0, 'dy': 0}, dragShadowFilter);
+      {'in': 'SourceAlpha', 'stdDeviation': Blockly.DragSurfaceSvg.SHADOW_STD_DEVIATION}, dragShadowFilter);
+  Blockly.createSvgElement('feOffset', {'dx': 0, 'dy': 0}, dragShadowFilter);
   var componentTransfer = Blockly.createSvgElement('feComponentTransfer', {'result': 'offsetBlur'}, dragShadowFilter);
+  // Shadow opacity is specified in the adjustable colour library,
+  // since the darkness of the shadow largely depends on the workspace colour.
   Blockly.createSvgElement('feFuncA',
-      {'type': 'linear', 'slope': 0.6}, componentTransfer);
+      {'type': 'linear', 'slope': Blockly.Colours.dragShadowOpacity}, componentTransfer);
   Blockly.createSvgElement('feComposite',
       {'in': 'SourceGraphic', 'in2': 'offsetBlur', 'operator': 'over'}, dragShadowFilter);
   return dragShadowFilter.id;
