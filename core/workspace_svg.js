@@ -29,6 +29,7 @@ goog.provide('Blockly.WorkspaceSvg');
 // TODO(scr): Fix circular dependencies
 // goog.require('Blockly.Block');
 goog.require('Blockly.ConnectionDB');
+goog.require('Blockly.Events');
 goog.require('Blockly.ScrollbarPair');
 goog.require('Blockly.Trashcan');
 goog.require('Blockly.Workspace');
@@ -975,6 +976,10 @@ Blockly.WorkspaceSvg.prototype.preloadAudio_ = function() {
  * @param {number=} opt_volume Volume of sound (0-1).
  */
 Blockly.WorkspaceSvg.prototype.playAudio = function(name, opt_volume) {
+  // Send a UI event in case we wish to play the sound externally
+  var event = new Blockly.Events.Ui(null, 'sound', null, name);
+  event.workspaceId = this.id;
+  Blockly.Events.fire(event);
   var sound = this.SOUNDS_[name];
   if (sound) {
     var mySound;
