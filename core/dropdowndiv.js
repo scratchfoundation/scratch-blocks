@@ -34,6 +34,13 @@ Blockly.DropDownDiv.DIV_ = null;
 Blockly.DropDownDiv.boundsElement_ = null;
 
 /**
+ * The object currently using the drop-down.
+ * @type {Object}
+ * @private
+ */
+Blockly.DropDownDiv.owner_ = null;
+
+/**
  * Arrow size in px. Should match the value in CSS (need to position pre-render).
  * @type {number}
  * @const
@@ -157,6 +164,7 @@ Blockly.DropDownDiv.setColour = function(backgroundColour, borderColour) {
  * point there, and the container will be positioned below it.
  * If we can't maintain the container bounds at the primary point, fall-back to the
  * secondary point and position above.
+ * @param {Object} owner The object showing the drop-down
  * @param {number} primaryX Desired origin point x, in absolute px
  * @param {number} primaryY Desired origin point y, in absolute px
  * @param {number} secondaryX Secondary/alternative origin point x, in absolute px
@@ -164,7 +172,8 @@ Blockly.DropDownDiv.setColour = function(backgroundColour, borderColour) {
  * @param {Function=} opt_onHide Optional callback for when the drop-down is hidden
  * @return {boolean} True if the menu rendered at the primary origin point.
  */
-Blockly.DropDownDiv.show = function(primaryX, primaryY, secondaryX, secondaryY, opt_onHide) {
+Blockly.DropDownDiv.show = function(owner, primaryX, primaryY, secondaryX, secondaryY, opt_onHide) {
+  Blockly.DropDownDiv.owner_ = owner;
   Blockly.DropDownDiv.onHide_ = opt_onHide;
   var div = Blockly.DropDownDiv.DIV_;
   var metrics = Blockly.DropDownDiv.getPositionMetrics(primaryX, primaryY, secondaryX, secondaryY);
@@ -279,6 +288,19 @@ Blockly.DropDownDiv.getPositionMetrics = function(primaryX, primaryY, secondaryX
 };
 
 /**
+ * Hide the menu only if it is owned by the provided object.
+ * @param {Object} owner Object which must be owning the drop-down to hide
+ * @return {Boolean} True if hidden
+ */
+Blockly.DropDownDiv.hideIfOwner = function(owner) {
+  if (Blockly.DropDownDiv.owner_ === owner) {
+    Blockly.DropDownDiv.hide();
+    return true;
+  }
+  return false;
+};
+
+/**
  * Hide the menu, triggering animation.
  */
 Blockly.DropDownDiv.hide = function() {
@@ -307,6 +329,7 @@ Blockly.DropDownDiv.hideWithoutAnimation = function() {
   div.style.transform = '';
   div.style.display = 'none';
   Blockly.DropDownDiv.clearContent();
+  Blockly.DropDownDiv.owner_ = null;
   if (Blockly.DropDownDiv.onHide_) {
     Blockly.DropDownDiv.onHide_();
     Blockly.DropDownDiv.onHide_ = null;

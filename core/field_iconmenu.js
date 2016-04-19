@@ -142,7 +142,11 @@ Blockly.FieldIconMenu.prototype.getSrcForValue = function(value) {
  * @private
  */
 Blockly.FieldIconMenu.prototype.showEditor_ = function() {
-  // If there is an existing drop-down, hide it and clear it.
+  // If there is an existing drop-down we own, this is a request to hide the drop-down.
+  if (Blockly.DropDownDiv.hideIfOwner(this)) {
+    return;
+  }
+  // If there is an existing drop-down someone else owns, hide it immediately and clear it.
   Blockly.DropDownDiv.hideWithoutAnimation();
   Blockly.DropDownDiv.clearContent();
   // Populate the drop-down with the icons for this field.
@@ -207,7 +211,8 @@ Blockly.FieldIconMenu.prototype.showEditor_ = function() {
     this.sourceBlock_.getColourSecondary(), this.sourceBlock_.getColourTertiary());
 
   Blockly.DropDownDiv.setBoundsElement(this.sourceBlock_.workspace.getParentSvg().parentNode);
-  var renderedPrimary = Blockly.DropDownDiv.show(primaryX, primaryY, secondaryX, secondaryY, this.onHide_.bind(this));
+  var renderedPrimary = Blockly.DropDownDiv.show(this, primaryX, primaryY,
+    secondaryX, secondaryY, this.onHide_.bind(this));
   if (!renderedPrimary) {
     // Adjust for rotation
     var arrowX = this.arrowX_ + Blockly.DropDownDiv.ARROW_SIZE / 1.5;
