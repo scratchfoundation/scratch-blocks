@@ -35,6 +35,12 @@ goog.require('goog.dom');
 goog.require('goog.ui.Component');
 goog.require('goog.userAgent');
 
+/**
+ * Radius of stack glow, in px.
+ * @type {number}
+ * @const
+ */
+Blockly.STACK_GLOW_RADIUS = 4;
 
 /**
  * Inject a Blockly editor into the specified container element (usually a div).
@@ -120,9 +126,11 @@ Blockly.createDom_ = function(container, options) {
   var stackGlowFilter = Blockly.createSvgElement('filter',
       {'id': 'blocklyStackGlowFilter' + rnd}, defs);
   Blockly.createSvgElement('feMorphology',
-      {'in': 'SourceAlpha', 'operator': 'dilate', 'radius': 4, 'result': 'outBlur'}, stackGlowFilter);
+      {'in': 'SourceAlpha', 'operator': 'dilate',
+      'radius': Blockly.STACK_GLOW_RADIUS, 'result': 'outBlur'}, stackGlowFilter);
   Blockly.createSvgElement('feFlood',
-      {'flood-color': '#05f', 'flood-opacity': '0.9', 'result': 'outColor'}, stackGlowFilter);
+      {'flood-color': Blockly.Colours.stackGlow,
+       'flood-opacity': Blockly.Colours.stackGlowOpacity, 'result': 'outColor'}, stackGlowFilter);
   Blockly.createSvgElement('feComposite',
       {'in': 'outColor', 'in2': 'outBlur',
        'operator': 'in', 'result': 'outGlow'}, stackGlowFilter);
