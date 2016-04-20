@@ -155,6 +155,16 @@ Blockly.FieldIconMenu.prototype.showEditor_ = function() {
   contentDiv.setAttribute('role', 'menu');
   contentDiv.setAttribute('aria-haspopup', 'true');
   for (var i = 0, icon; icon = this.icons_[i]; i++) {
+    // Icons with the type property placeholder take up space but don't have any functionality
+    // Use for special-case layouts
+    if (icon.type == 'placeholder') {
+      var placeholder = document.createElement('span');
+      placeholder.setAttribute('class', 'blocklyDropDownPlaceholder');
+      placeholder.style.width = icon.width + 'px';
+      placeholder.style.height = icon.height + 'px';
+      contentDiv.appendChild(placeholder);
+      continue;
+    }
     var button = document.createElement('button');
     button.setAttribute('id', ':' + i); // For aria-activedescendant
     button.setAttribute('role', 'menuitem');

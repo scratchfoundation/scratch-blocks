@@ -239,6 +239,7 @@ Blockly.Css.CONTENT = [
 
   '.blocklyDropDownButton {',
     'display: inline-block;',
+    'float: left;',
     'padding: 0;',
     'margin: 5px;',
     'border-radius: 8px;',
@@ -259,6 +260,13 @@ Blockly.Css.CONTENT = [
   '.blocklyDropDownButton > img {',
     'width: 100%;',
     'height: 100%;',
+  '}',
+
+  '.blocklyDropDownPlaceholder {',
+    'display: inline-block;',
+    'float: left;',
+    'padding: 0;',
+    'margin: 5px;',
   '}',
 
   '.arrowTop {',
