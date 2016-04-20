@@ -195,6 +195,13 @@ Blockly.BlockSvg.prototype.setGlowBlock = function(isGlowingBlock) {
  */
 Blockly.BlockSvg.prototype.setGlowStack = function(isGlowingStack) {
   this.isGlowingStack_ = isGlowingStack;
+  // Update the applied SVG filter if the property has changed
+  var svg = this.getSvgRoot();
+  if (this.isGlowingStack_ && !svg.hasAttribute('filter')) {
+    svg.setAttribute('filter', 'url(#' + this.workspace.options.stackGlowFilterId + ')');
+  } else if (!this.isGlowingStack_ && svg.hasAttribute('filter')) {
+    svg.removeAttribute('filter');
+  }
 };
 
 /**
