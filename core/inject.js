@@ -40,7 +40,7 @@ goog.require('goog.userAgent');
  * @type {number}
  * @const
  */
-Blockly.STACK_GLOW_RADIUS = 4;
+Blockly.STACK_GLOW_RADIUS = 1;
 
 /**
  * Inject a Blockly editor into the specified container element (usually a div).
@@ -105,29 +105,19 @@ Blockly.createDom_ = function(container, options) {
   var defs = Blockly.createSvgElement('defs', {}, svg);
   var rnd = String(Math.random()).substring(2);
 
-  var embossFilter = Blockly.createSvgElement('filter',
-      {'id': 'blocklyEmbossFilter' + rnd}, defs);
-  Blockly.createSvgElement('feGaussianBlur',
-      {'in': 'SourceAlpha', 'stdDeviation': 1, 'result': 'blur'}, embossFilter);
-  var feSpecularLighting = Blockly.createSvgElement('feSpecularLighting',
-      {'in': 'blur', 'surfaceScale': 1, 'specularConstant': 0.5,
-       'specularExponent': 10, 'lighting-color': 'white', 'result': 'specOut'},
-      embossFilter);
-  Blockly.createSvgElement('fePointLight',
-      {'x': -5000, 'y': -10000, 'z': 20000}, feSpecularLighting);
-  Blockly.createSvgElement('feComposite',
-      {'in': 'specOut', 'in2': 'SourceAlpha', 'operator': 'in',
-       'result': 'specOut'}, embossFilter);
-  Blockly.createSvgElement('feComposite',
-      {'in': 'SourceGraphic', 'in2': 'specOut', 'operator': 'arithmetic',
-       'k1': 0, 'k2': 1, 'k3': 1, 'k4': 0}, embossFilter);
-  options.embossFilterId = embossFilter.id;
-
+  // Using a dilate distorts the block shape.
+  // Instead use a gaussian blur, and then set all alpha to 1 with a transfer.
   var stackGlowFilter = Blockly.createSvgElement('filter',
-      {'id': 'blocklyStackGlowFilter' + rnd}, defs);
-  Blockly.createSvgElement('feMorphology',
-      {'in': 'SourceAlpha', 'operator': 'dilate',
-      'radius': Blockly.STACK_GLOW_RADIUS, 'result': 'outBlur'}, stackGlowFilter);
+      {'id': 'blocklyStackGlowFilter' + rnd,
+        'height': '160%', 'width': '180%', y: '-30%', x: '-40%'}, defs);
+  Blockly.createSvgElement('feGaussianBlur',
+      {'in': 'SourceGraphic',
+      'stdDeviation': Blockly.STACK_GLOW_RADIUS}, stackGlowFilter);
+  // Make gaussian blur and set all pixels to 1 opacity
+  var componentTransfer = Blockly.createSvgElement('feComponentTransfer', {'result': 'outBlur'}, stackGlowFilter);
+  Blockly.createSvgElement('feFuncA',
+      {'type': 'table', 'tableValues':
+        '0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1'}, componentTransfer);
   Blockly.createSvgElement('feFlood',
       {'flood-color': Blockly.Colours.stackGlow,
        'flood-opacity': Blockly.Colours.stackGlowOpacity, 'result': 'outColor'}, stackGlowFilter);
