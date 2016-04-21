@@ -78,7 +78,7 @@ Blockly.FieldIconMenu.prototype.init = function(block) {
 Blockly.FieldIconMenu.prototype.CURSOR = 'default';
 
 /**
-* Set the language-neutral value for this icon dropdown menu.
+* Set the language-neutral value for this icon drop-down menu.
  * @param {?string} newValue New value.
  * @override
  */
@@ -117,7 +117,7 @@ Blockly.FieldIconMenu.prototype.setParentFieldImage = function(src) {
 };
 
 /**
- * Get the language-neutral value from this dropdown menu.
+ * Get the language-neutral value from this drop-down menu.
  * @return {string} Current language-neutral value.
  */
 Blockly.FieldIconMenu.prototype.getValue = function() {

@@ -200,13 +200,13 @@ Blockly.DropDownDiv.show = function(owner, primaryX, primaryY, secondaryX, secon
 };
 
 /**
- * Helper to position the dropdown and the arrow, maintaining bounds.
+ * Helper to position the drop-down and the arrow, maintaining bounds.
  * See explanation of origin points in Blockly.DropDownDiv.show.
  * @param {number} primaryX Desired origin point x, in absolute px
  * @param {number} primaryY Desired origin point y, in absolute px
  * @param {number} secondaryX Secondary/alternative origin point x, in absolute px
  * @param {number} secondaryY Secondary/alternative origin point y, in absolute px
- * @returns {Object} Various final metrics, including rendered positions for dropdown and arrow.
+ * @returns {Object} Various final metrics, including rendered positions for drop-down and arrow.
  */
 Blockly.DropDownDiv.getPositionMetrics = function(primaryX, primaryY, secondaryX, secondaryY) {
   var div = Blockly.DropDownDiv.DIV_;
