@@ -706,7 +706,7 @@ Blockly.Flyout.prototype.addBlockListeners_ = function(root, block, rect) {
     this.listeners_.push(Blockly.bindEvent_(root, 'mouseout', block,
         block.removeSelect));
     this.listeners_.push(Blockly.bindEvent_(rect, 'mousedown', null,
-        this.createBlockFunc_(block)));
+        this.blockMouseDown_(block)));
     this.listeners_.push(Blockly.bindEvent_(rect, 'mouseover', block,
         block.addSelect));
     this.listeners_.push(Blockly.bindEvent_(rect, 'mouseout', block,
