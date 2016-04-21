@@ -23,6 +23,14 @@ var rtl = (document.location.search == '?rtl');
 var workspace = null;
 
 function start() {
+  // Restore sounds state.
+  var soundsEnabled = sessionStorage.getItem('soundsEnabled');
+  if (soundsEnabled === null) {
+    soundsEnabled = true;
+  } else {
+    soundsEnabled = (soundsEnabled === 'true');
+  }
+  setSoundsEnabled(soundsEnabled);
   var toolbox = document.getElementById('toolbox');
   workspace = Blockly.inject('blocklyDiv', {
     comments: false,
@@ -36,6 +44,7 @@ function start() {
     toolbox: toolbox,
     toolboxPosition: 'start',
     trashcan: true,
+    sounds: soundsEnabled,
     zoom: {
       controls: true,
       wheel: true,
@@ -119,6 +128,12 @@ function logFlyoutEvents(state) {
 
 function logger(e) {
   console.log(e);
+}
+
+function setSoundsEnabled(state) {
+  var checkbox = document.getElementById('soundsEnabled');
+  checkbox.checked = (state) ? 'checked' : '';
+  sessionStorage.setItem('soundsEnabled', state);
 }
 
 </script>
@@ -262,6 +277,10 @@ h1 {
   <p>
     Log flyout events: &nbsp;
     <input type="checkbox" onclick="logFlyoutEvents(this.checked)" id="logFlyoutCheck">
+  </p>
+  <p>
+    Enable sounds (after refresh): &nbsp;
+    <input type="checkbox" onclick="setSoundsEnabled(this.checked)" id="soundsEnabled">
   </p>
   <p>
     <input type="button" value="Undo" onclick="workspace.undo()" />

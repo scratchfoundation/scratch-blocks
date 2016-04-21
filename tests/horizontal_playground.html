@@ -23,6 +23,14 @@ var rtl = (document.location.search == '?rtl');
 var workspace = null;
 
 function start() {
+  // Restore sounds state.
+  var soundsEnabled = sessionStorage.getItem('soundsEnabled');
+  if (soundsEnabled === null) {
+    soundsEnabled = true;
+  } else {
+    soundsEnabled = (soundsEnabled === 'true');
+  }
+  setSoundsEnabled(soundsEnabled);
   var toolbox = document.getElementById('toolbox');
   workspace = Blockly.inject('blocklyDiv', {
     comments: false,
@@ -37,6 +45,7 @@ function start() {
     trashcan: true,
     horizontalLayout: true,
     toolboxPosition: 'start',
+    sounds: soundsEnabled,
     grid: {spacing: 16,
       length: 1,
       colour: '#2C344A',
@@ -178,6 +187,12 @@ var spaghettiXml = [
   '    <statement name="SUBSTACK"></statement>',
   '    <next></next>',
   '  </block>'].join('\n');
+
+  function setSoundsEnabled(state) {
+    var checkbox = document.getElementById('soundsEnabled');
+    checkbox.checked = (state) ? 'checked' : '';
+    sessionStorage.setItem('soundsEnabled', state);
+  }
 </script>
 
 <style>
@@ -315,6 +330,10 @@ h1 {
   <p>
     Log flyout events: &nbsp;
     <input type="checkbox" onclick="logFlyoutEvents(this.checked)" id="logFlyoutCheck">
+  </p>
+  <p>
+    Enable sounds (after refresh): &nbsp;
+    <input type="checkbox" onclick="setSoundsEnabled(this.checked)" id="soundsEnabled">
   </p>
   <p>
     Stress test: &nbsp;
