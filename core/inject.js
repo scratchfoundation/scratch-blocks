@@ -113,11 +113,11 @@ Blockly.createDom_ = function(container, options) {
   Blockly.createSvgElement('feGaussianBlur',
       {'in': 'SourceGraphic',
       'stdDeviation': Blockly.STACK_GLOW_RADIUS}, stackGlowFilter);
-  // Make gaussian blur and set all pixels to 1 opacity
+  // Set all gaussian blur pixels to 1 opacity before applying flood
   var componentTransfer = Blockly.createSvgElement('feComponentTransfer', {'result': 'outBlur'}, stackGlowFilter);
   Blockly.createSvgElement('feFuncA',
-      {'type': 'table', 'tableValues':
-        '0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1'}, componentTransfer);
+      {'type': 'table', 'tableValues': '0' + ' 1'.repeat(16)}, componentTransfer);
+  // Color the highlight
   Blockly.createSvgElement('feFlood',
       {'flood-color': Blockly.Colours.stackGlow,
        'flood-opacity': Blockly.Colours.stackGlowOpacity, 'result': 'outColor'}, stackGlowFilter);
