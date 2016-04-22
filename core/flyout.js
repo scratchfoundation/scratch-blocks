@@ -360,15 +360,16 @@ Blockly.Flyout.prototype.position = function() {
   this.setBackgroundPath_(edgeWidth,
     this.horizontalLayout_ ? this.height_ + this.verticalOffset_ : metrics.viewHeight);
 
-  var x = metrics.absoluteLeft;
+  var x = 0;
+  var svgSize = Blockly.svgSize(this.workspace_.getParentSvg());
   if (this.toolboxPosition_ == Blockly.TOOLBOX_AT_RIGHT) {
-    x += metrics.viewWidth;
+    x += svgSize.width;
     x -= this.width_;
   }
 
-  var y = metrics.absoluteTop;
+  var y = 0;
   if (this.toolboxPosition_ == Blockly.TOOLBOX_AT_BOTTOM) {
-    y += metrics.viewHeight;
+    y += svgSize.height_;
     y -= this.height_;
   }
 

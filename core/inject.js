@@ -261,12 +261,6 @@ Blockly.init_ = function(mainWorkspace) {
       // Build a fixed flyout with the root blocks.
       mainWorkspace.flyout_.init(mainWorkspace);
       mainWorkspace.flyout_.show(options.languageTree.childNodes);
-      // Translate the workspace sideways to avoid the fixed flyout.
-      mainWorkspace.scrollX = mainWorkspace.flyout_.width_;
-      if (options.toolboxPosition == Blockly.TOOLBOX_AT_RIGHT) {
-        mainWorkspace.scrollX *= -1;
-      }
-      mainWorkspace.translate(mainWorkspace.scrollX, 0);
     }
   }
 
