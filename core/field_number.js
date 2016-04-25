@@ -102,10 +102,10 @@ Blockly.FieldNumber.prototype.setValidator = function(handler) {
  * @private
  */
 Blockly.FieldNumber.prototype.showEditor_ = function() {
+  Blockly.FieldNumber.activeField_ = this;
   // Do not focus on mobile devices so we can show the keypad
   var noFocusReadOnly =
       goog.userAgent.MOBILE || goog.userAgent.ANDROID || goog.userAgent.IPAD;
-  noFocusReadOnly = true; // XXX: for testing
   Blockly.FieldNumber.superClass_.showEditor_.call(this, false, noFocusReadOnly);
 
   // Show a numeric keypad in the drop-down on touch
@@ -130,6 +130,7 @@ Blockly.FieldNumber.prototype.showEditor_ = function() {
       button.innerHTML = buttonText;
       button.style.width = '48px';
       button.style.height = '48px';
+      button.ontouchend = Blockly.FieldNumber.buttonClick_;
       contentDiv.appendChild(button);
     }
     Blockly.DropDownDiv.setColour(Blockly.Colours.numPadBackground, Blockly.Colours.numPadBorder);
@@ -152,6 +153,18 @@ Blockly.FieldNumber.prototype.showEditor_ = function() {
     Blockly.DropDownDiv.setBoundsElement(this.sourceBlock_.workspace.getParentSvg().parentNode);
     Blockly.DropDownDiv.show(this, primaryX, primaryY, secondaryX, secondaryY, this.onHide_.bind(this));
   }
+};
+
+Blockly.FieldNumber.buttonClick_ = function() {
+  var spliceValue = this.innerHTML;
+  var oldValue = Blockly.FieldTextInput.htmlInput_.value;
+  var selectionStart = Blockly.FieldTextInput.htmlInput_.selectionStart;
+  var selectionEnd = Blockly.FieldTextInput.htmlInput_.selectionEnd;
+  var newValue = oldValue.slice(0, selectionStart) + spliceValue + oldValue.slice(selectionEnd);
+  Blockly.FieldTextInput.htmlInput_.value = Blockly.FieldTextInput.htmlInput_.defaultValue = newValue;
+  Blockly.FieldTextInput.htmlInput_.setSelectionRange(newValue.length, newValue.length);
+  Blockly.FieldNumber.superClass_.resizeEditor_.call(Blockly.FieldNumber.activeField_);
+  Blockly.FieldTextInput.htmlInput_.scrollLeft = Blockly.FieldTextInput.htmlInput_.scrollWidth;
 };
 
 /**
