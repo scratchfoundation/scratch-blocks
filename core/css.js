@@ -224,7 +224,7 @@ Blockly.Css.CONTENT = [
     'border: 1px solid;',
     'border-radius: 4px;',
     'box-shadow: 0px 0px 8px 1px ' + Blockly.Colours.dropDownShadow + ';',
-    'padding: 5px;',
+    'padding: 4px;',
     '-webkit-user-select: none;',
   '}',
 
@@ -266,7 +266,7 @@ Blockly.Css.CONTENT = [
     'display: inline-block;',
     'float: left;',
     'padding: 0;',
-    'margin: 5px;',
+    'margin: 4px;',
   '}',
 
   '.arrowTop {',
