@@ -58,6 +58,36 @@ Blockly.Blocks['math_number'] = {
   }
 };
 
+Blockly.Blocks['math_whole_number'] = {
+  /**
+   * Block for whole number value, with min of 0 and max Infinity, precision 0.
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.setHelpUrl(Blockly.Msg.MATH_NUMBER_HELPURL);
+    this.setColour(Blockly.Blocks.math.HUE);
+    this.appendDummyInput()
+        .appendField(new Blockly.FieldNumber('0',
+        Blockly.FieldNumber.numberValidator, 0, 0, Infinity), 'NUM');
+    this.setOutput(true, 'Number');
+  }
+};
+
+Blockly.Blocks['math_positive_number'] = {
+  /**
+   * Block for positive number value, with min of 0 and max Infinity, precision 20.
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.setHelpUrl(Blockly.Msg.MATH_NUMBER_HELPURL);
+    this.setColour(Blockly.Blocks.math.HUE);
+    this.appendDummyInput()
+        .appendField(new Blockly.FieldNumber('0',
+        Blockly.FieldNumber.numberValidator, 20, 0, Infinity), 'NUM');
+    this.setOutput(true, 'Number');
+  }
+};
+
 Blockly.Blocks['math_arithmetic'] = {
   /**
    * Block for basic arithmetic operator.
