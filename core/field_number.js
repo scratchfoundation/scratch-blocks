@@ -88,10 +88,8 @@ Blockly.FieldNumber.prototype.setValidator = function(handler) {
  * @private
  */
 Blockly.FieldNumber.prototype.showEditor_ = function() {
-  var noFocus =
-      goog.userAgent.MOBILE || goog.userAgent.ANDROID || goog.userAgent.IPAD;
   // Mobile browsers have issues with in-line textareas (focus & keyboards).
-  Blockly.FieldNumber.superClass_.showEditor_.call(this, noFocus);
+  Blockly.FieldNumber.superClass_.showEditor_.call(this);
 };
 
 /**
