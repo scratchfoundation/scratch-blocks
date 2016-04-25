@@ -53,6 +53,20 @@ Blockly.FieldNumber = function(text, opt_validator, precision, min, max) {
 goog.inherits(Blockly.FieldNumber, Blockly.FieldTextInput);
 
 /**
+ * Fixed width of the numpad drop-down, in px.
+ * @type {number}
+ * @const
+ */
+Blockly.FieldNumber.DROPDOWN_WIDTH = 168;
+
+/**
+ * Extra padding to add between the block and the num-pad drop-down, in px.
+ * @type {number}
+ * @const
+ */
+Blockly.FieldNumber.DROPDOWN_Y_PADDING = 8;
+
+/**
  * Sets a new change handler for angle field.
  * @param {Function} handler New change handler, or null.
  */
@@ -88,8 +102,65 @@ Blockly.FieldNumber.prototype.setValidator = function(handler) {
  * @private
  */
 Blockly.FieldNumber.prototype.showEditor_ = function() {
-  // Mobile browsers have issues with in-line textareas (focus & keyboards).
-  Blockly.FieldNumber.superClass_.showEditor_.call(this);
+  // Do not focus on mobile devices so we can show the keypad
+  var noFocus =
+      goog.userAgent.MOBILE || goog.userAgent.ANDROID || goog.userAgent.IPAD;
+  noFocus = true; // XXX: for testing
+  Blockly.FieldNumber.superClass_.showEditor_.call(this, noFocus);
+
+  // Show a numeric keypad in the drop-down on touch
+  if (noFocus) {
+    // If there is an existing drop-down someone else owns, hide it immediately and clear it.
+    Blockly.DropDownDiv.hideWithoutAnimation();
+    Blockly.DropDownDiv.clearContent();
+
+    var contentDiv = Blockly.DropDownDiv.getContentDiv();
+    // Accessibility properties
+    contentDiv.setAttribute('role', 'menu');
+    contentDiv.setAttribute('aria-haspopup', 'true');
+
+    // Add numeric keypad buttons
+    // Calculator order
+    var buttons = ['7', '8', '9', '4', '5', '6', '1', '2', '3', '.', '0'];
+    for (var i = 0, buttonText; buttonText = buttons[i]; i++) {
+      var button = document.createElement('button');
+      button.setAttribute('role', 'menuitem');
+      button.setAttribute('class', 'blocklyNumPadButton');
+      button.title = buttonText;
+      button.innerHTML = buttonText;
+      button.style.width = '48px';
+      button.style.height = '48px';
+      contentDiv.appendChild(button);
+    }
+    Blockly.DropDownDiv.setColour(Blockly.Colours.numPadBackground, Blockly.Colours.numPadBorder);
+    contentDiv.style.width = Blockly.FieldNumber.DROPDOWN_WIDTH + 'px';
+
+    // Calculate positioning for the drop-down
+    // sourceBlock_ is the rendered shadow field input box
+    var scale = this.sourceBlock_.workspace.scale;
+    var bBox = this.sourceBlock_.getHeightWidth();
+    bBox.width *= scale;
+    bBox.height *= scale;
+    var position = this.getAbsoluteXY_();
+    // If we can fit it, render below the shadow block
+    var primaryX = position.x + bBox.width / 2;
+    var primaryY = position.y + bBox.height + Blockly.FieldNumber.DROPDOWN_Y_PADDING;
+    // If we can't fit it, render above the entire parent block
+    var secondaryX = primaryX;
+    var secondaryY = position.y - (Blockly.BlockSvg.MIN_BLOCK_Y * scale) - (Blockly.BlockSvg.FIELD_Y_OFFSET * scale);
+
+    Blockly.DropDownDiv.setBoundsElement(this.sourceBlock_.workspace.getParentSvg().parentNode);
+    Blockly.DropDownDiv.show(this, primaryX, primaryY, secondaryX, secondaryY, this.onHide_.bind(this));
+  }
+};
+
+/**
+ * Callback for when the drop-down is hidden.
+ */
+Blockly.FieldNumber.prototype.onHide_ = function() {
+  // Clear accessibility properties
+  Blockly.DropDownDiv.content_.removeAttribute('role');
+  Blockly.DropDownDiv.content_.removeAttribute('aria-haspopup');
 };
 
 /**

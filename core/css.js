@@ -269,6 +269,29 @@ Blockly.Css.CONTENT = [
     'margin: 4px;',
   '}',
 
+  '.blocklyNumPadButton {',
+    'display: inline-block;',
+    'float: left;',
+    'padding: 0;',
+    'margin: 4px;',
+    'border-radius: 4px;',
+    'background: $colour_numPadBackground;',
+    'color: $colour_numPadText;',
+    'outline: none;',
+    'border: 1px solid $colour_numPadBorder;',
+    'transition: background .1s;',
+    'cursor: pointer;',
+    'font-weight: 600;',
+    'font-family: sans-serif;',
+    'font-size: 12pt;',
+    '-webkit-tap-highlight-color: rgba(0,0,0,0);',
+  '}',
+
+  '.blocklyNumPadButton:active {',
+    'background: $colour_numPadActiveBackground;',
+    '-webkit-tap-highlight-color: rgba(0,0,0,0);',
+  '}',
+
   '.arrowTop {',
     'border-top: 1px solid;',
     'border-left: 1px solid;',
@@ -506,6 +529,10 @@ Blockly.Css.CONTENT = [
 
   '.blocklyDropdownMenu {',
     'padding: 0 !important;',
+  '}',
+
+  '.blocklyDropDownNumPad {',
+    'background-color: $colour_numPadBackground;',
   '}',
 
   /* Override the default Closure URL. */
