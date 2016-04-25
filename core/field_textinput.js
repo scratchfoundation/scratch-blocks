@@ -123,6 +123,7 @@ Blockly.FieldTextInput.prototype.setSpellcheck = function(check) {
  * Show the inline free-text editor on top of the text.
  * @param {boolean=} opt_quietInput True if editor should be created without
  *     focus.  Defaults to false.
+ * @param {string=} opt_inputType Type of HTML input. Defaults to "text".
  * @private
  */
 Blockly.FieldTextInput.prototype.showEditor_ = function(opt_quietInput) {
@@ -141,7 +142,6 @@ Blockly.FieldTextInput.prototype.showEditor_ = function(opt_quietInput) {
     this.setValue(newValue);
     return;
   }
-
   Blockly.WidgetDiv.show(this, this.sourceBlock_.RTL,
       this.widgetDispose_(), this.widgetDisposeAnimationFinished_(),
       Blockly.FieldTextInput.ANIMATION_TIME);
