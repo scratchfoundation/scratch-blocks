@@ -198,7 +198,7 @@ Blockly.Blocks['wedo_motorspeed'] = {
       "args0": [
         {
           "type": "field_image",
-          "src": Blockly.mainWorkspace.options.pathToMedia + "icons/wedo_motorspeed.svg",
+          "src": Blockly.mainWorkspace.options.pathToMedia + "icons/wedo_motor-speed_fast.svg",
           "width": 40,
           "height": 40,
           "alt": "Motor Speed"
