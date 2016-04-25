@@ -66,21 +66,18 @@ Blockly.Blocks['dropdown_whenbroadcast'] = {
   init: function() {
     this.appendDummyInput()
         .appendField(new Blockly.FieldIconMenu([
-            {type: 'placeholder', width: 50, height: 50},
-            {src: Blockly.mainWorkspace.options.pathToMedia + 'icons/LetterGet_Blue.svg',
-              value: 'blue', width: 50, height: 50, alt: 'Blue'},
-            {type: 'placeholder', width: 50, height: 50},
-            {src: Blockly.mainWorkspace.options.pathToMedia + 'icons/LetterGet_Green.svg',
-              value: 'green', width: 50, height: 50, alt: 'Green'},
-            {src: Blockly.mainWorkspace.options.pathToMedia + 'icons/LetterGet_Orange.svg',
-              value: 'orange', width: 50, height: 50, alt: 'Orange'},
-            {src: Blockly.mainWorkspace.options.pathToMedia + 'icons/LetterGet_Purple.svg',
-              value: 'purple', width: 50, height: 50, alt: 'Purple'},
-            {src: Blockly.mainWorkspace.options.pathToMedia + 'icons/LetterGet_Red.svg',
-              value: 'red', width: 50, height: 50, alt: 'Red'},
-            {type: 'placeholder', width: 50, height: 50},
-            {src: Blockly.mainWorkspace.options.pathToMedia + 'icons/LetterGet_Yellow.svg',
-              value: 'yellow', width: 50, height: 50, alt: 'Yellow'}
+            {src: Blockly.mainWorkspace.options.pathToMedia + 'icons/event_when-broadcast-received_blue.svg',
+              value: 'blue', width: 40, height: 40, alt: 'Blue'},
+            {src: Blockly.mainWorkspace.options.pathToMedia + 'icons/event_when-broadcast-received_green.svg',
+              value: 'green', width: 40, height: 40, alt: 'Green'},
+            {src: Blockly.mainWorkspace.options.pathToMedia + 'icons/event_when-broadcast-received_coral.svg',
+              value: 'coral', width: 40, height: 40, alt: 'Coral'},
+            {src: Blockly.mainWorkspace.options.pathToMedia + 'icons/event_when-broadcast-received_magenta.svg',
+              value: 'magenta', width: 40, height: 40, alt: 'Magenta'},
+            {src: Blockly.mainWorkspace.options.pathToMedia + 'icons/event_when-broadcast-received_orange.svg',
+              value: 'orange', width: 40, height: 40, alt: 'Orange'},
+            {src: Blockly.mainWorkspace.options.pathToMedia + 'icons/event_when-broadcast-received_purple.svg',
+              value: 'purple', width: 40, height: 40, alt: 'Purple'}
         ]), 'CHOICE');
     this.setOutput(true);
     this.setColour(Blockly.Colours.event.primary,
