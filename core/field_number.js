@@ -103,13 +103,13 @@ Blockly.FieldNumber.prototype.setValidator = function(handler) {
  */
 Blockly.FieldNumber.prototype.showEditor_ = function() {
   // Do not focus on mobile devices so we can show the keypad
-  var noFocus =
+  var noFocusReadOnly =
       goog.userAgent.MOBILE || goog.userAgent.ANDROID || goog.userAgent.IPAD;
-  noFocus = true; // XXX: for testing
-  Blockly.FieldNumber.superClass_.showEditor_.call(this, noFocus);
+  noFocusReadOnly = true; // XXX: for testing
+  Blockly.FieldNumber.superClass_.showEditor_.call(this, false, noFocusReadOnly);
 
   // Show a numeric keypad in the drop-down on touch
-  if (noFocus) {
+  if (noFocusReadOnly) {
     // If there is an existing drop-down someone else owns, hide it immediately and clear it.
     Blockly.DropDownDiv.hideWithoutAnimation();
     Blockly.DropDownDiv.clearContent();
