@@ -66,6 +66,18 @@ Blockly.FieldNumber.DROPDOWN_WIDTH = 168;
  */
 Blockly.FieldNumber.DROPDOWN_Y_PADDING = 8;
 
+Blockly.FieldNumber.NUMPAD_DELETE_ICON = 'data:image/svg+xml;utf8,' +
+  '<svg ' +
+  'xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40">' +
+  '<path d="M28.89,11.45H16.79a2.86,2.86,0,0,0-2,.84L9.09,1' +
+  '8a2.85,2.85,0,0,0,0,4l5.69,5.69a2.86,2.86,0,0,0,2,.84h12' +
+  '.1a2.86,2.86,0,0,0,2.86-2.86V14.31A2.86,2.86,0,0,0,28.89' +
+  ',11.45ZM27.15,22.73a1,1,0,0,1,0,1.41,1,1,0,0,1-.71.3,1,1' +
+  ',0,0,1-.71-0.3L23,21.41l-2.73,2.73a1,1,0,0,1-1.41,0,1,1,' +
+  '0,0,1,0-1.41L21.59,20l-2.73-2.73a1,1,0,0,1,0-1.41,1,1,0,' +
+  '0,1,1.41,0L23,18.59l2.73-2.73a1,1,0,1,1,1.42,1.41L24.42,20Z" fill="' +
+  Blockly.Colours.numPadText + '"/></svg>';
+
 /**
  * Sets a new change handler for angle field.
  * @param {Function} handler New change handler, or null.
@@ -128,11 +140,20 @@ Blockly.FieldNumber.prototype.showEditor_ = function() {
       button.setAttribute('class', 'blocklyNumPadButton');
       button.title = buttonText;
       button.innerHTML = buttonText;
-      button.style.width = '48px';
-      button.style.height = '48px';
-      button.ontouchend = Blockly.FieldNumber.buttonClick_;
+      button.ontouchstart = Blockly.FieldNumber.buttonClick_;
       contentDiv.appendChild(button);
     }
+    // Add erase button to the end
+    var eraseButton = document.createElement('button');
+    eraseButton.setAttribute('role', 'menuitem');
+    eraseButton.setAttribute('class', 'blocklyNumPadButton');
+    eraseButton.title = 'Delete';
+    var eraseImage = document.createElement('img');
+    eraseImage.src = Blockly.FieldNumber.NUMPAD_DELETE_ICON;
+    eraseButton.appendChild(eraseImage);
+    eraseButton.ontouchstart = Blockly.FieldNumber.eraseButtonClick_;
+    contentDiv.appendChild(eraseButton);
+    // Set colour and size
     Blockly.DropDownDiv.setColour(Blockly.Colours.numPadBackground, Blockly.Colours.numPadBorder);
     contentDiv.style.width = Blockly.FieldNumber.DROPDOWN_WIDTH + 'px';
 
@@ -161,6 +182,21 @@ Blockly.FieldNumber.buttonClick_ = function() {
   var selectionStart = Blockly.FieldTextInput.htmlInput_.selectionStart;
   var selectionEnd = Blockly.FieldTextInput.htmlInput_.selectionEnd;
   var newValue = oldValue.slice(0, selectionStart) + spliceValue + oldValue.slice(selectionEnd);
+  Blockly.FieldTextInput.htmlInput_.value = Blockly.FieldTextInput.htmlInput_.defaultValue = newValue;
+  Blockly.FieldTextInput.htmlInput_.setSelectionRange(newValue.length, newValue.length);
+  Blockly.FieldNumber.superClass_.resizeEditor_.call(Blockly.FieldNumber.activeField_);
+  Blockly.FieldTextInput.htmlInput_.scrollLeft = Blockly.FieldTextInput.htmlInput_.scrollWidth;
+};
+
+Blockly.FieldNumber.eraseButtonClick_ = function() {
+  var oldValue = Blockly.FieldTextInput.htmlInput_.value;
+  var selectionStart = Blockly.FieldTextInput.htmlInput_.selectionStart;
+  var selectionEnd = Blockly.FieldTextInput.htmlInput_.selectionEnd;
+  var newValue = oldValue.slice(0, selectionStart) + oldValue.slice(selectionEnd);
+  if (selectionEnd - selectionStart == 0) {
+    // Delete the last character at selection
+    newValue = oldValue.slice(0, selectionStart - 1) + oldValue.slice(selectionStart);
+  }
   Blockly.FieldTextInput.htmlInput_.value = Blockly.FieldTextInput.htmlInput_.defaultValue = newValue;
   Blockly.FieldTextInput.htmlInput_.setSelectionRange(newValue.length, newValue.length);
   Blockly.FieldNumber.superClass_.resizeEditor_.call(Blockly.FieldNumber.activeField_);
