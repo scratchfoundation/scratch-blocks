@@ -70,7 +70,7 @@ Blockly.FieldTextInput.ANIMATION_TIME = 0.25;
 /**
  * Padding to use for text measurement for the field during editing, in px.
  */
-Blockly.FieldTextInput.TEXT_MEASURE_PADDING_MAGIC = 35;
+Blockly.FieldTextInput.TEXT_MEASURE_PADDING_MAGIC = 45;
 
 /**
  * Numeric field types.
@@ -259,6 +259,7 @@ Blockly.FieldTextInput.prototype.resizeEditor_ = function() {
   var textWidth = Blockly.measureText(
     Blockly.FieldTextInput.htmlInput_.style.fontSize,
     Blockly.FieldTextInput.htmlInput_.style.fontFamily,
+    Blockly.FieldTextInput.htmlInput_.style.fontWeight,
     Blockly.FieldTextInput.htmlInput_.value
   );
   // Size drawn in the canvas needs padding and scaling
