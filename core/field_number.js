@@ -141,6 +141,10 @@ Blockly.FieldNumber.prototype.showEditor_ = function() {
       button.title = buttonText;
       button.innerHTML = buttonText;
       button.ontouchstart = Blockly.FieldNumber.buttonClick_;
+      if (buttonText == '.' && this.precision_ == 0) {
+        // Don't show the decimal point for inputs that must be round numbers
+        button.setAttribute('style', 'visibility: hidden');
+      }
       contentDiv.appendChild(button);
     }
     // Add erase button to the end
