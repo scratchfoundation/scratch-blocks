@@ -688,10 +688,12 @@ Blockly.BlockSvg.prototype.onMouseUp_ = function(e) {
   var isActualPath = (e.target === this.svgPath_ &&
     e.target.parentNode === this.getSvgRoot());
   var isImageField = false;
-  for (var i = 0, input; input = this.inputList[i]; i++) {
-    for (var j = 0, field; field = input.fieldRow[j]; j++) {
-      if (field.imageElement_ && field.imageElement_ === e.target) {
-        isImageField = true;
+  if (!isActualPath) {
+    for (var i = 0, input; input = this.inputList[i]; i++) {
+      for (var j = 0, field; field = input.fieldRow[j]; j++) {
+        if (field.imageElement_ && field.imageElement_ === e.target) {
+          isImageField = true;
+        }
       }
     }
   }
