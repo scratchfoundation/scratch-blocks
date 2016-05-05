@@ -48,6 +48,16 @@ function start() {
       minScale: 0.25,
       scaleSpeed: 1.1
     },
+    colours: {
+      workspace: '#334771',
+      flyout: '#283856',
+      scrollbar: '#24324D',
+      scrollbarHover: '#0C111A',
+      insertionMarker: '#FFFFFF',
+      insertionMarkerOpacity: 0.3,
+      fieldShadow: 'rgba(255, 255, 255, 0.3)',
+      dragShadowOpacity: 0.6
+    }
   });
   // Restore previously displayed text.
   var text = sessionStorage.getItem('textarea');
@@ -253,6 +263,10 @@ h1 {
 
 
   <h1>Vertical block rendering!</h1>
+
+  <strong style='color:red'>Note: vertical-mode Scratch Blocks rendering is
+    just getting started and we will have many updates for both functionality
+    and visual design in summer 2016.</strong>
 
   <p><a href="javascript:void(workspace.setVisible(true))">Show</a>
    - <a href="javascript:void(workspace.setVisible(false))">Hide</a></p>
