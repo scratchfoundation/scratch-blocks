@@ -170,6 +170,12 @@ Blockly.BlockSvg.FIELD_WIDTH_MAX_EDIT = Infinity;
 Blockly.BlockSvg.FIELD_HEIGHT_MAX_EDIT = Blockly.BlockSvg.FIELD_WIDTH;
 
 /**
+ * Top padding of user inputs
+ * @const
+ */
+Blockly.BlockSvg.FIELD_TOP_PADDING = 0;
+
+/**
  * Change the colour of a block.
  */
 Blockly.BlockSvg.prototype.updateColour = function() {
