@@ -1195,8 +1195,8 @@ Blockly.WorkspaceSvg.prototype.scroll = function(x, y) {
                metrics.contentHeight);
    // When the workspace starts scrolling, hide the WidgetDiv without animation.
    // This is to prevent a dispoal animation from happening in the wrong location.
-   Blockly.WidgetDiv.hide(true);
-   Blockly.DropDownDiv.hideWithoutAnimation();
+  Blockly.WidgetDiv.hide(true);
+  Blockly.DropDownDiv.hideWithoutAnimation();
   // Move the scrollbars and the page will scroll automatically.
   this.scrollbar.set(-x - metrics.contentLeft,
                      -y - metrics.contentTop);
