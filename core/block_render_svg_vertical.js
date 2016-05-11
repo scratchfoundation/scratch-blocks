@@ -116,6 +116,18 @@ Blockly.BlockSvg.TOP_LEFT_CORNER =
     'A ' + Blockly.BlockSvg.CORNER_RADIUS + ',' +
     Blockly.BlockSvg.CORNER_RADIUS + ' 0 0,1 ' +
     Blockly.BlockSvg.CORNER_RADIUS + ',0';
+
+/**
+ * SVG path for drawing the rounded top-right corner.
+ * @const
+ */
+Blockly.BlockSvg.TOP_RIGHT_CORNER =
+  'a ' + Blockly.BlockSvg.CORNER_RADIUS + ',' +
+  Blockly.BlockSvg.CORNER_RADIUS + ' 0 0,1 ' +
+  Blockly.BlockSvg.CORNER_RADIUS + ',' +
+  Blockly.BlockSvg.CORNER_RADIUS;
+
+
 /**
  * SVG path for drawing the top-left corner of a statement input.
  * Includes the top notch, a horizontal space, and the rounded inside corner.
@@ -592,7 +604,8 @@ Blockly.BlockSvg.prototype.renderDrawRight_ = function(steps,
       cursorX = Math.max(cursorX, inputRows.rightEdge);
       this.width = Math.max(this.width, cursorX);
       steps.push('H', cursorX);
-      steps.push('v', row.height);
+      steps.push(Blockly.BlockSvg.TOP_RIGHT_CORNER);
+      steps.push('v', row.height - Blockly.BlockSvg.CORNER_RADIUS);
     } else if (row.type == Blockly.DUMMY_INPUT) {
       // External naked field.
       var input = row[0];
