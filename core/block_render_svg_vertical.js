@@ -559,7 +559,7 @@ Blockly.BlockSvg.prototype.renderDrawTop_ =
 Blockly.BlockSvg.prototype.renderDrawRight_ = function(steps,
     connectionsXY, inputRows, iconWidth) {
   var cursorX;
-  var cursorY = 0;
+  var cursorY = -1; // Blocks overhang their parent by 1px.
   var connectionX, connectionY;
   for (var y = 0, row; row = inputRows[y]; y++) {
     cursorX = Blockly.BlockSvg.SEP_SPACE_X;
