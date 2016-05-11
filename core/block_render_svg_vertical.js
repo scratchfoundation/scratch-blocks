@@ -466,13 +466,7 @@ Blockly.BlockSvg.prototype.renderDraw_ = function(iconWidth, inputRows) {
     this.squareTopLeftCorner_ = true;
   } else {
     this.squareTopLeftCorner_ = false;
-    // If this block is in the middle of a stack, square the corners.
-    if (this.previousConnection) {
-      var prevBlock = this.previousConnection.targetBlock();
-      if (prevBlock && prevBlock.getNextBlock() == this) {
-        this.squareTopLeftCorner_ = true;
-       }
-    } else if (Blockly.BlockSvg.START_HAT) {
+    if (Blockly.BlockSvg.START_HAT && !this.previousConnection) {
       // No output or previous connection.
       this.squareTopLeftCorner_ = true;
       this.startHat_ = true;
