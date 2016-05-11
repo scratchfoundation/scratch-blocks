@@ -464,10 +464,8 @@ Blockly.BlockSvg.prototype.renderDraw_ = function(iconWidth, inputRows) {
   // Should the top and bottom left corners be rounded or square?
   if (this.outputConnection) {
     this.squareTopLeftCorner_ = true;
-    this.squareBottomLeftCorner_ = true;
   } else {
     this.squareTopLeftCorner_ = false;
-    this.squareBottomLeftCorner_ = false;
     // If this block is in the middle of a stack, square the corners.
     if (this.previousConnection) {
       var prevBlock = this.previousConnection.targetBlock();
@@ -479,10 +477,6 @@ Blockly.BlockSvg.prototype.renderDraw_ = function(iconWidth, inputRows) {
       this.squareTopLeftCorner_ = true;
       this.startHat_ = true;
       inputRows.rightEdge = Math.max(inputRows.rightEdge, 100);
-    }
-    var nextBlock = this.getNextBlock();
-    if (nextBlock) {
-      this.squareBottomLeftCorner_ = true;
     }
   }
 
@@ -706,15 +700,11 @@ Blockly.BlockSvg.prototype.renderDrawBottom_ =
   }
 
   // Should the bottom-left corner be rounded or square?
-  if (this.squareBottomLeftCorner_) {
-    steps.push('H 0');
-  } else {
-    steps.push('H', Blockly.BlockSvg.CORNER_RADIUS);
-    steps.push('a', Blockly.BlockSvg.CORNER_RADIUS + ',' +
-               Blockly.BlockSvg.CORNER_RADIUS + ' 0 0,1 -' +
-               Blockly.BlockSvg.CORNER_RADIUS + ',-' +
-               Blockly.BlockSvg.CORNER_RADIUS);
-  }
+  steps.push('H', Blockly.BlockSvg.CORNER_RADIUS);
+  steps.push('a', Blockly.BlockSvg.CORNER_RADIUS + ',' +
+             Blockly.BlockSvg.CORNER_RADIUS + ' 0 0,1 -' +
+             Blockly.BlockSvg.CORNER_RADIUS + ',-' +
+             Blockly.BlockSvg.CORNER_RADIUS);
 };
 
 /**
