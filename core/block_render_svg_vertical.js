@@ -636,11 +636,6 @@ Blockly.BlockSvg.prototype.renderDrawRight_ = function(steps,
     } else if (row.type == Blockly.NEXT_STATEMENT) {
       // Nested statement.
       var input = row[0];
-      if (y == 0) {
-        // If the first input is a statement stack, add a small row on top.
-        steps.push('v', Blockly.BlockSvg.SEP_SPACE_Y);
-        cursorY += Blockly.BlockSvg.SEP_SPACE_Y;
-      }
       var fieldX = cursorX;
       var fieldY = cursorY;
       if (input.align != Blockly.ALIGN_LEFT) {
