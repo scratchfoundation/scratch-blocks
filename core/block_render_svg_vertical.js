@@ -375,15 +375,6 @@ Blockly.BlockSvg.prototype.renderCompute_ = function(iconWidth) {
       input.renderHeight = Math.max(input.renderHeight, bBox.height);
       input.renderWidth = Math.max(input.renderWidth, bBox.width);
     }
-    // Blocks have a one pixel shadow that should sometimes overhang.
-    if (i == inputList.length - 1) {
-      // Last value input should overhang.
-      input.renderHeight--;
-    } else if (input.type == Blockly.INPUT_VALUE &&
-        inputList[i + 1] && inputList[i + 1].type == Blockly.NEXT_STATEMENT) {
-      // Value input above statement input should overhang.
-      input.renderHeight--;
-    }
 
     row.height = Math.max(row.height, input.renderHeight);
     input.fieldWidth = 0;
@@ -695,7 +686,7 @@ Blockly.BlockSvg.prototype.renderDrawRight_ = function(steps,
  */
 Blockly.BlockSvg.prototype.renderDrawBottom_ =
     function(steps, connectionsXY, cursorY) {
-  this.height = cursorY + 1;  // Add one for the shadow.
+  this.height = cursorY;
   if (this.nextConnection) {
     steps.push('H', (Blockly.BlockSvg.NOTCH_WIDTH + (this.RTL ? 0.5 : - 0.5)) +
         ' ' + Blockly.BlockSvg.NOTCH_PATH_RIGHT);
