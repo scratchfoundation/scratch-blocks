@@ -739,13 +739,6 @@ Blockly.BlockSvg.prototype.renderDrawLeft_ =
     // Create output connection.
     this.outputConnection.moveTo(connectionsXY.x, connectionsXY.y);
     // This connection will be tightened when the parent renders.
-    if (this.outputConnection.getOutputShape() === Blockly.Connection.NUMBER) {
-        steps.push('V', Blockly.BlockSvg.TAB_HEIGHT);
-        steps.push('c 0,-10 -' + Blockly.BlockSvg.TAB_WIDTH + ',8 -' +
-            Blockly.BlockSvg.TAB_WIDTH + ',-7.5 s ' + Blockly.BlockSvg.TAB_WIDTH +
-            ',2.5 ' + Blockly.BlockSvg.TAB_WIDTH + ',-7.5');
-        this.width += Blockly.BlockSvg.TAB_WIDTH;
-    }
   }
   steps.push('z');
 };
