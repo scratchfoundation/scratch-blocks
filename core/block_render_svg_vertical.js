@@ -136,6 +136,16 @@ Blockly.BlockSvg.BOTTOM_RIGHT_CORNER =
     Blockly.BlockSvg.CORNER_RADIUS + ' 0 0,1 -' +
     Blockly.BlockSvg.CORNER_RADIUS + ',' +
     Blockly.BlockSvg.CORNER_RADIUS;
+
+/**
+ * SVG path for drawing the rounded bottom-left corner.
+ * @const
+ */
+Blockly.BlockSvg.BOTTOM_LEFT_CORNER =
+    'a ' + Blockly.BlockSvg.CORNER_RADIUS + ',' +
+     Blockly.BlockSvg.CORNER_RADIUS + ' 0 0,1 -' +
+     Blockly.BlockSvg.CORNER_RADIUS + ',-' +
+     Blockly.BlockSvg.CORNER_RADIUS;
 /**
  * SVG path for drawing the top-left corner of a statement input.
  * Includes the top notch, a horizontal space, and the rounded inside corner.
@@ -481,17 +491,16 @@ Blockly.BlockSvg.prototype.renderCompute_ = function(iconWidth) {
  */
 Blockly.BlockSvg.prototype.renderDraw_ = function(iconWidth, inputRows) {
   this.startHat_ = false;
-  // Should the top and bottom left corners be rounded or square?
+  // Should the top left corners be rounded or square?
+  // Currently, it is squared only if it's an output or a hat.
+  this.squareTopLeftCorner_ = false;
   if (this.outputConnection) {
     this.squareTopLeftCorner_ = true;
-  } else {
-    this.squareTopLeftCorner_ = false;
-    if (Blockly.BlockSvg.START_HAT && !this.previousConnection) {
-      // No output or previous connection.
-      this.squareTopLeftCorner_ = true;
-      this.startHat_ = true;
-      inputRows.rightEdge = Math.max(inputRows.rightEdge, 100);
-    }
+  } else if (Blockly.BlockSvg.START_HAT && !this.previousConnection) {
+    // No output or previous connection.
+    this.squareTopLeftCorner_ = true;
+    this.startHat_ = true;
+    inputRows.rightEdge = Math.max(inputRows.rightEdge, 100);
   }
 
   // Fetch the block's coordinates on the surface for use in anchoring
@@ -613,6 +622,8 @@ Blockly.BlockSvg.prototype.renderDrawRight_ = function(steps,
       this.width = Math.max(this.width, cursorX);
       steps.push('H', cursorX);
       steps.push(Blockly.BlockSvg.TOP_RIGHT_CORNER);
+      // Subtract CORNER_RADIUS * 2 to account for the top right corner
+      // and also the bottom right corner. Only move vertically the non-corner length.
       steps.push('v', row.height - Blockly.BlockSvg.CORNER_RADIUS * 2);
     } else if (row.type == Blockly.DUMMY_INPUT) {
       // External naked field.
@@ -709,13 +720,10 @@ Blockly.BlockSvg.prototype.renderDrawBottom_ = function(steps, connectionsXY, cu
     }
     this.height += 4;  // Height of tab.
   }
-
-  // Should the bottom-left corner be rounded or square?
+  // Bottom horizontal line
   steps.push('H', Blockly.BlockSvg.CORNER_RADIUS);
-  steps.push('a', Blockly.BlockSvg.CORNER_RADIUS + ',' +
-             Blockly.BlockSvg.CORNER_RADIUS + ' 0 0,1 -' +
-             Blockly.BlockSvg.CORNER_RADIUS + ',-' +
-             Blockly.BlockSvg.CORNER_RADIUS);
+  // Bottom left corner
+  steps.push(Blockly.BlockSvg.BOTTOM_LEFT_CORNER);
 };
 
 /**
