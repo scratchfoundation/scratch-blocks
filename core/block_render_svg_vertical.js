@@ -492,11 +492,9 @@ Blockly.BlockSvg.prototype.renderCompute_ = function(iconWidth) {
 Blockly.BlockSvg.prototype.renderDraw_ = function(iconWidth, inputRows) {
   this.startHat_ = false;
   // Should the top left corners be rounded or square?
-  // Currently, it is squared only if it's an output or a hat.
+  // Currently, it is squared only if it's a hat.
   this.squareTopLeftCorner_ = false;
-  if (this.outputConnection) {
-    this.squareTopLeftCorner_ = true;
-  } else if (Blockly.BlockSvg.START_HAT && !this.previousConnection) {
+  if (Blockly.BlockSvg.START_HAT && !this.outputConnection && !this.previousConnection) {
     // No output or previous connection.
     this.squareTopLeftCorner_ = true;
     this.startHat_ = true;
