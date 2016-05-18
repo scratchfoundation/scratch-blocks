@@ -168,8 +168,8 @@ Blockly.FieldNumber.prototype.showNumPad_ = function() {
     button.setAttribute('class', 'blocklyNumPadButton');
     button.title = buttonText;
     button.innerHTML = buttonText;
-    // Num-pad only reacts on touch devices
-    button.ontouchstart = Blockly.FieldNumber.numPadButtonTouch_;
+    Blockly.bindEvent_(button, 'mousedown', button,
+	Blockly.FieldNumber.numPadButtonTouch_);
     if (buttonText == '.' && this.precision_ == 0) {
       // Don't show the decimal point for inputs that must be round numbers
       button.setAttribute('style', 'visibility: hidden');
@@ -184,8 +184,8 @@ Blockly.FieldNumber.prototype.showNumPad_ = function() {
   var eraseImage = document.createElement('img');
   eraseImage.src = Blockly.FieldNumber.NUMPAD_DELETE_ICON;
   eraseButton.appendChild(eraseImage);
-  // Num-pad only reacts on touch devices
-  eraseButton.ontouchstart = Blockly.FieldNumber.numPadEraseButtonTouch_;
+  Blockly.bindEvent_(eraseButton, 'mousedown', null,
+      Blockly.FieldNumber.numPadEraseButtonTouch_);
   contentDiv.appendChild(eraseButton);
 
   // Set colour and size of drop-down
