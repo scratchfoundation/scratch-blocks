@@ -376,12 +376,9 @@ Blockly.BlockSvg.prototype.renderCompute_ = function() {
     bayHeight: 0,
     bayWidth: 0,
     fieldRadius: 0,
-    startHat: false
+    startHat: false,
+    endCap: false
   };
-
-  if (this.nextConnection && !this.previousConnection) {
-    metrics.startHat = true;
-  }
 
   // Does block have a statement?
   for (var i = 0, input; input = this.inputList[i]; i++) {
@@ -414,6 +411,18 @@ Blockly.BlockSvg.prototype.renderCompute_ = function() {
       }
     }
   }
+
+  // Determine whether a block is a start hat or end cap by checking connections.
+  if (this.nextConnection && !this.previousConnection) {
+    metrics.startHat = true;
+  }
+
+  // End caps have no bay, a previous, no output, and no next.
+  if (!this.nextConnection && this.previousConnection &&
+     !this.outputConnection && !metrics.statement) {
+    metrics.endCap = true;
+  }
+
   // If this block is an icon menu shadow, attempt to set the parent's
   // ImageField src to the one that represents the current value of the field.
   if (metrics.iconMenu) {
@@ -439,7 +448,11 @@ Blockly.BlockSvg.prototype.renderCompute_ = function() {
     metrics.height = metrics.bayHeight + Blockly.BlockSvg.STATEMENT_BLOCK_SPACE;
   }
   if (metrics.startHat) {
-    // Start hats are 1 unit wider to account for optical effect of curve
+    // Start hats are 1 unit wider to account for optical effect of curve.
+    metrics.width += 1 * Blockly.BlockSvg.GRID_UNIT;
+  }
+  if (metrics.endCap) {
+    // End caps are 1 unit wider to account for optical effect of no notch.
     metrics.width += 1 * Blockly.BlockSvg.GRID_UNIT;
   }
   return metrics;
@@ -484,6 +497,10 @@ Blockly.BlockSvg.prototype.renderDraw_ = function(metrics) {
         Blockly.BlockSvg.SEP_SPACE_X / 1.5;
     var imageFieldY = metrics.height - imageFieldSize.height -
         Blockly.BlockSvg.SEP_SPACE_Y;
+    if (metrics.endCap) {
+      // End-cap image is offset by a grid unit to account for optical effect of no notch.
+      imageFieldX -= Blockly.BlockSvg.GRID_UNIT;
+    }
     var imageFieldScale = "scale(1 1)";
     if (this.RTL) {
       // Do we want to mirror the Image Field left-to-right?
