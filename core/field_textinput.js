@@ -73,12 +73,6 @@ Blockly.FieldTextInput.ANIMATION_TIME = 0.25;
 Blockly.FieldTextInput.TEXT_MEASURE_PADDING_MAGIC = 45;
 
 /**
- * Numeric field types.
- * Scratch-specific property to ensure the border radius is set correctly for these types.
- */
-Blockly.FieldTextInput.NUMERIC_FIELD_TYPES = ['math_number', 'math_positive_number', 'math_whole_number'];
-
-/**
  * Mouse cursor style when over the hotspot that initiates the editor.
  */
 Blockly.FieldTextInput.prototype.CURSOR = 'text';
@@ -315,15 +309,11 @@ Blockly.FieldTextInput.prototype.resizeEditor_ = function() {
 };
 
 /**
- * Determine border radius based on the type of the owning shadow block.
+ * Border radius for drawing this field, called when rendering the owning shadow block.
  * @return {Number} Border radius in px.
 */
-Blockly.Field.prototype.getBorderRadius = function() {
-  if (Blockly.FieldTextInput.NUMERIC_FIELD_TYPES.indexOf(this.sourceBlock_.type) > -1) {
-    return Blockly.BlockSvg.NUMBER_FIELD_CORNER_RADIUS;
-  } else {
-    return Blockly.BlockSvg.TEXT_FIELD_CORNER_RADIUS;
-  }
+Blockly.FieldTextInput.prototype.getBorderRadius = function() {
+  return Blockly.BlockSvg.TEXT_FIELD_CORNER_RADIUS;
 };
 
 /**
