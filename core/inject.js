@@ -262,6 +262,7 @@ Blockly.init_ = function(mainWorkspace) {
       // Build a fixed flyout with the root blocks.
       mainWorkspace.flyout_.init(mainWorkspace);
       mainWorkspace.flyout_.show(options.languageTree.childNodes);
+      mainWorkspace.flyout_.scrollToStart();
       // Translate the workspace to avoid the fixed flyout.
       if (options.horizontalLayout) {
         mainWorkspace.scrollY = mainWorkspace.flyout_.height_;
