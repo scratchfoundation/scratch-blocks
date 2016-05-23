@@ -75,6 +75,13 @@ Blockly.BlockSvg.NOTCH_WIDTH = 30;
  * @const
  */
 Blockly.BlockSvg.CORNER_RADIUS = 4;
+
+/**
+ * Minimum width of statement input edge on the left, in px.
+ * @const
+ */
+Blockly.BlockSvg.STATEMENT_INPUT_EDGE_WIDTH = 4 * Blockly.BlockSvg.GRID_UNIT;
+
 /**
  * Do blocks with no previous or output connections have a 'hat' on top?
  * @const
@@ -465,7 +472,7 @@ Blockly.BlockSvg.prototype.renderCompute_ = function(iconWidth) {
 
   // Compute the statement edge.
   // This is the width of a block where statements are nested.
-  inputRows.statementEdge = 2 * Blockly.BlockSvg.SEP_SPACE_X +
+  inputRows.statementEdge = Blockly.BlockSvg.STATEMENT_INPUT_EDGE_WIDTH +
       fieldStatementWidth;
   // Compute the preferred right edge.  Inline blocks may extend beyond.
   // This is the width of the block where external inputs connect.
