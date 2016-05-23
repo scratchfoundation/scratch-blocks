@@ -673,7 +673,7 @@ Blockly.BlockSvg.prototype.renderDrawRight_ = function(steps,
       steps.push('H', inputRows.rightEdge);
 
       // Create statement connection.
-      connectionX = connectionsXY.x + (this.RTL ? -cursorX : cursorX + 1);
+      connectionX = connectionsXY.x + (this.RTL ? -cursorX : cursorX);
       connectionY = connectionsXY.y + cursorY + 1;
       input.connection.moveTo(connectionX, connectionY);
       if (input.connection.isConnected()) {
