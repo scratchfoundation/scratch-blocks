@@ -103,22 +103,6 @@ Blockly.DropDownDiv.ANIMATION_TIME = 0.25;
 Blockly.DropDownDiv.animateOutTimer_ = null;
 
 /**
- * When the drop-down is opened, we save the position it animated from
- * so that it can animate back to that position on close.
- * Absolute X position of that position, in px.
- * @type {number}
- */
-Blockly.DropDownDiv.hideAnimationX_ = 0;
-
-/**
- * When the drop-down is opened, we save the position it animated from
- * so that it can animate back to that position on close.
- * Absolute Y position of that position, in px.
- * @type {number}
- */
-Blockly.DropDownDiv.hideAnimationY_ = 0;
-
-/**
  * Callback for when the drop-down is hidden.
  * @type {Function}
  */
@@ -138,6 +122,11 @@ Blockly.DropDownDiv.createDom = function() {
   Blockly.DropDownDiv.DIV_.appendChild(Blockly.DropDownDiv.content_);
   Blockly.DropDownDiv.arrow_ = goog.dom.createDom('div', 'blocklyDropDownArrow');
   Blockly.DropDownDiv.DIV_.appendChild(Blockly.DropDownDiv.arrow_);
+
+  // Transition animation for transform: translate() and opacity.
+  Blockly.DropDownDiv.DIV_.style.transition = 'transform ' +
+    Blockly.DropDownDiv.ANIMATION_TIME + 's, ' +
+    'opacity ' + Blockly.DropDownDiv.ANIMATION_TIME + 's';
 };
 
 /**
@@ -202,14 +191,28 @@ Blockly.DropDownDiv.show = function(owner, primaryX, primaryY, secondaryX, secon
     metrics.arrowX + 'px,' + metrics.arrowY + 'px) rotate(45deg)';
   Blockly.DropDownDiv.arrow_.setAttribute('class',
     metrics.arrowAtTop ? 'blocklyDropDownArrow arrowTop' : 'blocklyDropDownArrow arrowBottom');
-  // First apply initial translation
-  div.style.transform = 'translate(' + metrics.finalX + 'px,' + metrics.finalY + 'px)';
-  // Save for animate out
-  Blockly.DropDownDiv.hideAnimationX_ = metrics.initialX;
-  Blockly.DropDownDiv.hideAnimationY_ = metrics.initialY;
-  // Show the div
+
+  // When we change `translate` multiple times in close succession,
+  // Chrome may choose to wait and apply them all at once.
+  // Since we want the translation to initial X, Y to be immediate,
+  // and the translation to final X, Y to be animated,
+  // we saw problems where both would be applied after animation was turned on,
+  // making the dropdown appear to fly in from (0, 0).
+  // Using both `left`, `top` for the initial translation and then `translate`
+  // for the animated transition to final X, Y is a workaround.
+
+  // First apply initial translation.
+  div.style.left = metrics.initialX + 'px';
+  div.style.top = metrics.initialY + 'px';
+  // Show the div.
   div.style.display = 'block';
   div.style.opacity = 1;
+  // Add final translate, animated through `transition`.
+  // Coordinates are relative to (initialX, initialY),
+  // where the drop-down is absolutely positioned.
+  var dx = (metrics.finalX - metrics.initialX);
+  var dy = (metrics.finalY - metrics.initialY);
+  div.style.transform = 'translate(' + dx + 'px,' + dy + 'px)';
   return metrics.arrowAtTop;
 };
 
@@ -320,10 +323,8 @@ Blockly.DropDownDiv.hideIfOwner = function(owner) {
 Blockly.DropDownDiv.hide = function() {
   // Start the animation by setting the translation and fading out.
   var div = Blockly.DropDownDiv.DIV_;
-  div.style.transition = 'transform ' + Blockly.DropDownDiv.ANIMATION_TIME + 's, ' +
-    'opacity ' + Blockly.DropDownDiv.ANIMATION_TIME + 's';
-  div.style.transform = 'translate(' + Blockly.DropDownDiv.hideAnimationX_ +
-    'px,' + Blockly.DropDownDiv.hideAnimationY_ + 'px)';
+  // Reset to (initialX, initialY) - i.e., no translation.
+  div.style.transform = 'translate(0px, 0px)';
   div.style.opacity = 0;
   Blockly.DropDownDiv.animateOutTimer_ = setTimeout(function() {
     // Finish animation - reset all values to default.
@@ -341,8 +342,9 @@ Blockly.DropDownDiv.hide = function() {
 Blockly.DropDownDiv.hideWithoutAnimation = function() {
   var div = Blockly.DropDownDiv.DIV_;
   Blockly.DropDownDiv.animateOutTimer_ && window.clearTimeout(Blockly.DropDownDiv.animateOutTimer_);
-  div.style.transition = '';
   div.style.transform = '';
+  div.style.top = '';
+  div.style.left = '';
   div.style.display = 'none';
   Blockly.DropDownDiv.clearContent();
   Blockly.DropDownDiv.owner_ = null;
