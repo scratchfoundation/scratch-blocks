@@ -140,6 +140,36 @@ Blockly.Blocks['math_arithmetic'] = {
   }
 };
 
+Blockly.Blocks['math_add'] = {
+  /**
+   * Block for adding two numbers.
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.jsonInit(
+      {
+        "message0": "%1 + %2",
+        "args0": [
+          {
+            "type": "input_value",
+            "name": "NUM1",
+            "check": "Number"
+          },
+          {
+            "type": "input_value",
+            "name": "NUM2",
+            "check": "Number"
+          }
+        ],
+        "inputsInline": true,
+        "output": "Number",
+        "colour": Blockly.Colours.operators.primary,
+        "colourSecondary": Blockly.Colours.operators.secondary,
+        "colourTertiary": Blockly.Colours.operators.tertiary
+      });
+  }
+};
+
 Blockly.Blocks['math_single'] = {
   /**
    * Block for advanced math operators with single operand.
