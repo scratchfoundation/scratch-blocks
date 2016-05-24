@@ -884,14 +884,21 @@ Blockly.WorkspaceSvg.prototype.showContextMenu_ = function(e) {
   for (var i = 0; i < topBlocks.length; i++) {
     addDeletableBlocks(topBlocks[i]);
   }
+  // Scratch-specific: don't count shadow blocks in delete count
+  var deleteCount = 0;
+  for (var i = 0; i < deleteList.length; i++) {
+    if (!deleteList[i].isShadow()) {
+      deleteCount++;
+    }
+  }
   var deleteOption = {
-    text: deleteList.length == 1 ? Blockly.Msg.DELETE_BLOCK :
-        Blockly.Msg.DELETE_X_BLOCKS.replace('%1', String(deleteList.length)),
-    enabled: deleteList.length > 0,
+    text: deleteCount == 1 ? Blockly.Msg.DELETE_BLOCK :
+        Blockly.Msg.DELETE_X_BLOCKS.replace('%1', String(deleteCount)),
+    enabled: deleteCount > 0,
     callback: function() {
-      if (deleteList.length < 2 ||
+      if (deleteCount < 2 ||
           window.confirm(Blockly.Msg.DELETE_ALL_BLOCKS.replace('%1',
-          String(deleteList.length)))) {
+          String(deleteCount)))) {
         deleteNext();
       }
     }
