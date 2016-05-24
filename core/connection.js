@@ -244,7 +244,7 @@ Blockly.Connection.prototype.connect_ = function(childConnection) {
   }
 
   if (isSurroundingC && previousParentConnection) {
-      previousParentConnection.connect(parentBlock.previousConnection);
+    previousParentConnection.connect(parentBlock.previousConnection);
   }
 
   var event;
@@ -696,15 +696,15 @@ Blockly.Connection.prototype.setCheck = function(check) {
  * @return {number} Enum representing shape.
  */
 Blockly.Connection.prototype.getOutputShape = function() {
-    if (!this.check_) return Blockly.Connection.NUMBER;
-    if (this.check_.indexOf('Boolean') !== -1) {
-        return Blockly.Connection.BOOLEAN;
-    }
-    if (this.check_.indexOf('String') !== -1) {
-        return Blockly.Connection.STRING;
-    }
+  if (!this.check_) return Blockly.Connection.NUMBER;
+  if (this.check_.indexOf('Boolean') !== -1) {
+    return Blockly.Connection.BOOLEAN;
+  }
+  if (this.check_.indexOf('String') !== -1) {
+    return Blockly.Connection.STRING;
+  }
 
-    return Blockly.Connection.NUMBER;
+  return Blockly.Connection.NUMBER;
 };
 
 /**

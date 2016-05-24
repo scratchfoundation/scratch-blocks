@@ -290,11 +290,12 @@ Blockly.Toolbox.prototype.populate_ = function(newTree) {
       switch (childIn.tagName.toUpperCase()) {
         case 'CATEGORY':
           if (iconic && childIn.getAttribute('icon')) {
-             var childOut = rootOut.createNode(childIn.getAttribute('name'),
-               pathToMedia + childIn.getAttribute('icon'));
-           } else {
-             var childOut = rootOut.createNode(childIn.getAttribute('name'), null);
-           }
+            var childOut = rootOut.createNode(childIn.getAttribute('name'),
+                pathToMedia + childIn.getAttribute('icon'));
+          } else {
+            var childOut = rootOut.createNode(childIn.getAttribute('name'),
+                null);
+          }
           childOut.blocks = [];
           if (that.horizontalLayout_) {
             treeOut.add(childOut);
@@ -491,12 +492,13 @@ Blockly.Toolbox.TreeControl.prototype.handleTouchEvent_ = function(e) {
  * @override
  */
 Blockly.Toolbox.TreeControl.prototype.createNode = function(opt_html, icon) {
-   var icon_html = '<img src=\"' + icon + '\" alt=\"' + opt_html + '\" align=top>';
-   var safe_opt_html = opt_html ?
-       goog.html.SafeHtml.htmlEscape(opt_html) : goog.html.SafeHtml.EMPTY;
-   var label_html = icon ? icon_html + ' ' + opt_html : safe_opt_html;
-   return new Blockly.Toolbox.TreeNode(this.toolbox_, label_html,
-      this.getConfig(), this.getDomHelper());
+  var icon_html =
+      '<img src=\"' + icon + '\" alt=\"' + opt_html + '\" align=top>';
+  var safe_opt_html = opt_html ?
+      goog.html.SafeHtml.htmlEscape(opt_html) : goog.html.SafeHtml.EMPTY;
+  var label_html = icon ? icon_html + ' ' + opt_html : safe_opt_html;
+  return new Blockly.Toolbox.TreeNode(this.toolbox_, label_html,
+    this.getConfig(), this.getDomHelper());
 };
 
 /**
@@ -610,6 +612,9 @@ Blockly.Toolbox.TreeNode.prototype.onDoubleClick_ = function(e) {
 /**
  * A blank separator node in the tree.
  * @constructor
+ * @param {Object=} config The configuration for the tree. See
+ *    goog.ui.tree.TreeControl.DefaultConfig. If not specified, a default config
+ *    will be used.
  * @extends {Blockly.Toolbox.TreeNode}
  */
 Blockly.Toolbox.TreeSeparator = function(config) {

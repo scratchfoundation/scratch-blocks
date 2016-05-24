@@ -1,4 +1,5 @@
-*_compressed_*.js
+*_compressed*.js
 *_uncompressed_*.js
 /msg/*
 /tests/jsunit/*
+/core/css.js

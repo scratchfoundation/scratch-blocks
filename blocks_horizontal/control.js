@@ -64,7 +64,7 @@ Blockly.Blocks['control_repeat'] = {
       "nextStatement": null,
       "colour": Blockly.Colours.control.primary,
       "colourSecondary": Blockly.Colours.control.secondary,
-      "colourTertiary": Blockly.Colours.control.tertiary,
+      "colourTertiary": Blockly.Colours.control.tertiary
     });
   }
 };
@@ -136,7 +136,7 @@ Blockly.Blocks['control_repeat'] = {
       "nextStatement": null,
       "colour": Blockly.Colours.control.primary,
       "colourSecondary": Blockly.Colours.control.secondary,
-      "colourTertiary": Blockly.Colours.control.tertiary,
+      "colourTertiary": Blockly.Colours.control.tertiary
     });
   }
 };
