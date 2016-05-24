@@ -122,6 +122,9 @@ Blockly.Blocks['control_if_else'] = {
       "message0": "if %1 %2 else %3 %4",
       "args0": [
         {
+          "type": "input_dummy"
+        },
+        {
           "type": "input_value",
           "name": "CONDITION",
           "check": "Boolean"
