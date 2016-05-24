@@ -141,8 +141,16 @@ Blockly.WorkspaceSvg.prototype.scrollbar = null;
 /**
  * This workspace's drag surface, if it exists.
  * @type {Blockly.DragSurfaceSvg}
+ * @private
  */
 Blockly.WorkspaceSvg.prototype.dragSurface = null;
+
+/**
+ * Time that the last sound was played.
+ * @type {Date}
+ * @private
+ */
+Blockly.WorkspaceSvg.prototype.lastSound_ = null;
 
 /**
  * Create the workspace DOM elements.
@@ -971,6 +979,12 @@ Blockly.WorkspaceSvg.prototype.playAudio = function(name, opt_volume) {
   Blockly.Events.fire(event);
   var sound = this.SOUNDS_[name];
   if (sound) {
+    // Don't play one sound on top of another.
+    var now = new Date();
+    if (now - this.lastSound_ < Blockly.SOUND_LIMIT) {
+      return;
+    }
+    this.lastSound_ = now;
     var mySound;
     var ie9 = goog.userAgent.DOCUMENT_MODE &&
               goog.userAgent.DOCUMENT_MODE === 9;

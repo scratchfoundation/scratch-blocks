@@ -1244,6 +1244,7 @@ Blockly.BlockSvg.prototype.getSvgRoot = function() {
  * @param {boolean} animate If true, show a disposal animation and sound.
  */
 Blockly.BlockSvg.prototype.dispose = function(healStack, animate) {
+  Blockly.Tooltip.hide();
   Blockly.Field.startCache();
   // If this block is being dragged, unlink the mouse events.
   if (Blockly.selected == this) {
