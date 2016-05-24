@@ -81,6 +81,76 @@ Blockly.Blocks['control_repeat'] = {
   }
 };
 
+Blockly.Blocks['control_if'] = {
+  /**
+   * Block for if-then.
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.jsonInit({
+      "type": "control_if",
+      "message0": "if %1 %2",
+      "args0": [
+        {
+          "type": "input_value",
+          "name": "NAME",
+          "check": "Boolean"
+        },
+        {
+          "type": "input_statement",
+          "name": "NAME"
+        }
+      ],
+      "inputsInline": true,
+      "previousStatement": null,
+      "nextStatement": null,
+      "colour": Blockly.Colours.control.primary,
+      "colourSecondary": Blockly.Colours.control.secondary,
+      "colourTertiary": Blockly.Colours.control.tertiary
+    });
+  }
+};
+
+Blockly.Blocks['control_if_else'] = {
+  /**
+   * Block for if-else.
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.jsonInit({
+      "type": "control_if_else",
+      "message0": "if %1 %2 %3 else %4 %5",
+      "args0": [
+        {
+          "type": "input_dummy"
+        },
+        {
+          "type": "input_value",
+          "name": "NAME",
+          "check": "Boolean"
+        },
+        {
+          "type": "input_statement",
+          "name": "NAME"
+        },
+        {
+          "type": "input_dummy"
+        },
+        {
+          "type": "input_statement",
+          "name": "NAME"
+        }
+      ],
+      "inputsInline": true,
+      "previousStatement": null,
+      "nextStatement": null,
+      "colour": Blockly.Colours.control.primary,
+      "colourSecondary": Blockly.Colours.control.secondary,
+      "colourTertiary": Blockly.Colours.control.tertiary
+    });
+  }
+};
+
 Blockly.Blocks['control_stop'] = {
   /**
    * Block for stop all scripts.

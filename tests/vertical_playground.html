@@ -10,6 +10,7 @@
     <script src="../msg/messages.js"></script>
     <script src="../blocks/math.js"></script>
     <script src="../blocks/text.js"></script>
+    <script src="../blocks/logic.js"></script>
     <script src="../blocks_vertical/control.js"></script>
     <script src="../blocks_vertical/event.js"></script>
     <script src="../blocks_vertical/wedo.js"></script>
@@ -236,6 +237,8 @@
             </shadow>
           </value>
         </block>
+        <block type="control_if"></block>
+        <block type="control_if_else"></block>
         <block type="control_stop"></block>
         <block type="control_wait">
           <value name="DURATION">
@@ -253,6 +256,18 @@
       </category>
       <category name="Operators">
           <block type="math_add">
+            <value name="NUM1">
+              <shadow type="math_number">
+                <field name="NUM">0</field>
+              </shadow>
+            </value>
+            <value name="NUM2">
+              <shadow type="math_number">
+                <field name="NUM">0</field>
+              </shadow>
+            </value>
+          </block>
+          <block type="logic_equals">
             <value name="NUM1">
               <shadow type="math_number">
                 <field name="NUM">0</field>
