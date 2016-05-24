@@ -124,8 +124,9 @@ Blockly.DropDownDiv.createDom = function() {
   Blockly.DropDownDiv.DIV_.appendChild(Blockly.DropDownDiv.arrow_);
 
   // Transition animation for transform: translate() and opacity.
-  Blockly.DropDownDiv.DIV_.style.transition = 'transform ' + Blockly.DropDownDiv.ANIMATION_TIME + 's, ' +
-  'opacity ' + Blockly.DropDownDiv.ANIMATION_TIME + 's';
+  Blockly.DropDownDiv.DIV_.style.transition = 'transform ' +
+    Blockly.DropDownDiv.ANIMATION_TIME + 's, ' +
+    'opacity ' + Blockly.DropDownDiv.ANIMATION_TIME + 's';
 };
 
 /**
@@ -190,8 +191,17 @@ Blockly.DropDownDiv.show = function(owner, primaryX, primaryY, secondaryX, secon
     metrics.arrowX + 'px,' + metrics.arrowY + 'px) rotate(45deg)';
   Blockly.DropDownDiv.arrow_.setAttribute('class',
     metrics.arrowAtTop ? 'blocklyDropDownArrow arrowTop' : 'blocklyDropDownArrow arrowBottom');
+
+  // When we change `translate` multiple times in close succession,
+  // Chrome may choose to wait and apply them all at once.
+  // Since we want the translation to initial X, Y to be immediate,
+  // and the translation to final X, Y to be animated,
+  // we saw problems where both would be applied after animation was turned on,
+  // making the dropdown appear to fly in from (0, 0).
+  // Using both `left`, `top` for the initial translation and then `translate`
+  // for the animated transition to final X, Y is a workaround.
+
   // First apply initial translation.
-  // We put this in the `left` and `top` properties to avoid colliding with `translate`.
   div.style.left = metrics.initialX + 'px';
   div.style.top = metrics.initialY + 'px';
   // Show the div.
