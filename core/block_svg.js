@@ -687,6 +687,11 @@ Blockly.BlockSvg.prototype.onMouseUp_ = function(e) {
   if (Blockly.dragMode_ != Blockly.DRAG_FREE && !Blockly.WidgetDiv.isVisible() && isNotShadowBlock) {
     Blockly.Events.fire(
         new Blockly.Events.Ui(this, 'click', undefined, undefined));
+    // Scratch-specific: also fire a "stack click" event for this stack.
+    // This is used to toggle the stack when any block in the stack is clicked.
+    var rootBlock = this.workspace.getBlockById(this.id).getRootBlock();
+    Blockly.Events.fire(
+      new Blockly.Events.Ui(rootBlock, 'stackclick', undefined, undefined));
   }
   Blockly.terminateDrag_();
   if (Blockly.selected && Blockly.highlightedConnection_) {
