@@ -51,6 +51,11 @@ Blockly.BlockSvg.SEP_SPACE_Y = 2 * Blockly.BlockSvg.GRID_UNIT;
  */
 Blockly.BlockSvg.INLINE_PADDING_Y = 2 * Blockly.BlockSvg.GRID_UNIT;
 /**
+ * Minimum width of a block.
+ * @const
+ */
+Blockly.BlockSvg.MIN_BLOCK_X = 16 * Blockly.BlockSvg.GRID_UNIT;
+/**
  * Minimum height of a block.
  * @const
  */
@@ -394,9 +399,9 @@ Blockly.BlockSvg.prototype.renderFields_ =
 Blockly.BlockSvg.prototype.renderCompute_ = function(iconWidth) {
   var inputList = this.inputList;
   var inputRows = [];
-  inputRows.rightEdge = iconWidth + Blockly.BlockSvg.SEP_SPACE_X * 2;
+  inputRows.rightEdge = 0;
   if (this.previousConnection || this.nextConnection) {
-    inputRows.rightEdge = Math.max(inputRows.rightEdge,
+    inputRows.rightEdge = Math.max(Blockly.BlockSvg.MIN_BLOCK_X,
         Blockly.BlockSvg.NOTCH_WIDTH + Blockly.BlockSvg.SEP_SPACE_X);
   }
   var fieldValueWidth = 0;  // Width of longest external value field.
