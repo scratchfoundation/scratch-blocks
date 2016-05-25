@@ -93,12 +93,12 @@ Blockly.Blocks['control_if'] = {
       "args0": [
         {
           "type": "input_value",
-          "name": "NAME",
+          "name": "CONDITION",
           "check": "Boolean"
         },
         {
           "type": "input_statement",
-          "name": "NAME"
+          "name": "SUBSTACK"
         }
       ],
       "inputsInline": true,
@@ -119,26 +119,23 @@ Blockly.Blocks['control_if_else'] = {
   init: function() {
     this.jsonInit({
       "type": "control_if_else",
-      "message0": "if %1 %2 %3 else %4 %5",
+      "message0": "if %1 %2 else %3 %4",
       "args0": [
         {
-          "type": "input_dummy"
-        },
-        {
           "type": "input_value",
-          "name": "NAME",
+          "name": "CONDITION",
           "check": "Boolean"
         },
         {
           "type": "input_statement",
-          "name": "NAME"
+          "name": "SUBSTACK"
         },
         {
           "type": "input_dummy"
         },
         {
           "type": "input_statement",
-          "name": "NAME"
+          "name": "SUBSTACK2"
         }
       ],
       "inputsInline": true,
