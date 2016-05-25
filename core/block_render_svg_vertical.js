@@ -733,8 +733,8 @@ Blockly.BlockSvg.prototype.renderDrawRight_ = function(steps,
         // If the final input is a statement stack, add a small row underneath.
         // Consecutive statement stacks are also separated by a small divider.
         steps.push(Blockly.BlockSvg.TOP_RIGHT_CORNER);
-        steps.push('v', Blockly.BlockSvg.SEP_SPACE_Y - Blockly.BlockSvg.CORNER_RADIUS);
-        cursorY += Blockly.BlockSvg.SEP_SPACE_Y + Blockly.BlockSvg.CORNER_RADIUS;
+        steps.push('v', Blockly.BlockSvg.MIN_BLOCK_Y - Blockly.BlockSvg.CORNER_RADIUS);
+        cursorY += Blockly.BlockSvg.MIN_BLOCK_Y + Blockly.BlockSvg.CORNER_RADIUS;
       }
     }
     cursorY += row.height;
