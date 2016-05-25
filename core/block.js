@@ -724,7 +724,7 @@ Blockly.Block.prototype.makeColour_ = function(colour) {
   } else {
     throw 'Invalid colour: ' + colour;
   }
-}
+};
 
 /**
  * Change the colour of a block, and optional secondary/teriarty colours.

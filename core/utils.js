@@ -215,7 +215,8 @@ Blockly.getRelativeXY_ = function(element) {
   // Second, check for transform="translate(...)" attribute.
   var transform = element.getAttribute('transform');
   if (transform) {
-    var transformComponents = transform.match(Blockly.getRelativeXY_.XY_REGEXP_);
+    var transformComponents =
+        transform.match(Blockly.getRelativeXY_.XY_REGEXP_);
     if (transformComponents) {
       xy.x += parseFloat(transformComponents[1]);
       if (transformComponents[3]) {
@@ -311,19 +312,19 @@ Blockly.is3dSupported = function() {
   var el = document.createElement('p'),
     has3d,
     transforms = {
-    'webkitTransform':'-webkit-transform',
-    'OTransform':'-o-transform',
-    'msTransform':'-ms-transform',
-    'MozTransform':'-moz-transform',
-    'transform':'transform'
-  };
+      'webkitTransform': '-webkit-transform',
+      'OTransform': '-o-transform',
+      'msTransform': '-ms-transform',
+      'MozTransform': '-moz-transform',
+      'transform': 'transform'
+    };
 
   // Add it to the body to get the computed style.
   document.body.insertBefore(el, null);
 
   for (var t in transforms) {
     if (el.style[t] !== undefined) {
-      el.style[t] = "translate3d(1px,1px,1px)";
+      el.style[t] = 'translate3d(1px,1px,1px)';
       has3d = window.getComputedStyle(el).getPropertyValue(transforms[t]);
     }
   }

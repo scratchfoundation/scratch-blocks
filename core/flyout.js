@@ -477,6 +477,7 @@ Blockly.Flyout.prototype.setBackgroundPathVertical_ = function(width, height) {
  */
 Blockly.Flyout.prototype.setBackgroundPathHorizontal_ =
     function(width, height) {
+  /* eslint-disable indent */
   var atTop = this.toolboxPosition_ == Blockly.TOOLBOX_AT_TOP;
   // Start at top left.
   var path = ['M 0,' + (atTop ? 0 : this.CORNER_RADIUS)];
@@ -509,7 +510,7 @@ Blockly.Flyout.prototype.setBackgroundPathHorizontal_ =
     path.push('z');
   }
   this.svgBackground_.setAttribute('d', path.join(' '));
-};
+}; /* eslint-enable indent */
 
 /**
  * Scroll the flyout to the top.

@@ -330,6 +330,7 @@ Blockly.BlockSvg.prototype.render = function(opt_bubble) {
  */
 Blockly.BlockSvg.prototype.renderFields_ =
     function(fieldList, cursorX, cursorY) {
+  /* eslint-disable indent */
   cursorY += Blockly.BlockSvg.INLINE_PADDING_Y;
   if (this.RTL) {
     cursorX = -cursorX;
@@ -356,7 +357,7 @@ Blockly.BlockSvg.prototype.renderFields_ =
     }
   }
   return this.RTL ? -cursorX : cursorX;
-};
+}; /* eslint-enable indent */
 
 /**
  * Computes the height and widths for each row and field.
@@ -527,7 +528,7 @@ Blockly.BlockSvg.prototype.renderDraw_ = function(iconWidth, inputRows) {
   var cursorY = this.renderDrawRight_(steps,
       connectionsXY, inputRows, iconWidth);
   this.renderDrawBottom_(steps, connectionsXY, cursorY);
-  this.renderDrawLeft_(steps, connectionsXY, cursorY);
+  this.renderDrawLeft_(steps, connectionsXY);
 
   var pathString = steps.join(' ');
   this.svgPath_.setAttribute('d', pathString);
@@ -548,6 +549,7 @@ Blockly.BlockSvg.prototype.renderDraw_ = function(iconWidth, inputRows) {
  */
 Blockly.BlockSvg.prototype.renderDrawTop_ =
     function(steps, connectionsXY, rightEdge) {
+  /* eslint-disable indent */
   // Position the cursor at the top-left starting point.
   if (this.squareTopLeftCorner_) {
     steps.push('m 0,0');
@@ -573,7 +575,7 @@ Blockly.BlockSvg.prototype.renderDrawTop_ =
   }
   steps.push('H', rightEdge);
   this.width = rightEdge;
-};
+};  /* eslint-enable indent */
 
 /**
  * Render the right edge of the block.
@@ -750,8 +752,7 @@ Blockly.BlockSvg.prototype.renderDrawBottom_ = function(steps, connectionsXY,
  * @param {number} cursorY Height of block.
  * @private
  */
-Blockly.BlockSvg.prototype.renderDrawLeft_ =
-    function(steps, connectionsXY, cursorY) {
+Blockly.BlockSvg.prototype.renderDrawLeft_ = function(steps, connectionsXY) {
   if (this.outputConnection) {
     // Create output connection.
     this.outputConnection.moveTo(connectionsXY.x, connectionsXY.y);
@@ -774,6 +775,7 @@ Blockly.BlockSvg.prototype.renderDrawLeft_ =
  */
 Blockly.BlockSvg.prototype.positionNewBlock =
     function(newBlock, newConnection, existingConnection) {
+  /* eslint-disable indent */
   // We only need to position the new block if it's before the existing one,
   // otherwise its position is set by the previous block.
   if (newConnection.type == Blockly.NEXT_STATEMENT) {
@@ -782,4 +784,4 @@ Blockly.BlockSvg.prototype.positionNewBlock =
 
     newBlock.moveBy(dx, dy);
   }
-};
+};  /* eslint-enable indent */
