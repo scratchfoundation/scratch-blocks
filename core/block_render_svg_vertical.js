@@ -39,22 +39,22 @@ Blockly.BlockSvg.GRID_UNIT = 4;
  * Horizontal space between elements.
  * @const
  */
-Blockly.BlockSvg.SEP_SPACE_X = 10;
+Blockly.BlockSvg.SEP_SPACE_X = 2 * Blockly.BlockSvg.GRID_UNIT;
 /**
  * Vertical space between elements.
  * @const
  */
-Blockly.BlockSvg.SEP_SPACE_Y = 10;
+Blockly.BlockSvg.SEP_SPACE_Y = 2 * Blockly.BlockSvg.GRID_UNIT;
 /**
  * Vertical padding around inline elements.
  * @const
  */
-Blockly.BlockSvg.INLINE_PADDING_Y = 5;
+Blockly.BlockSvg.INLINE_PADDING_Y = 2 * Blockly.BlockSvg.GRID_UNIT;
 /**
  * Minimum height of a block.
  * @const
  */
-Blockly.BlockSvg.MIN_BLOCK_Y = 25;
+Blockly.BlockSvg.MIN_BLOCK_Y = 8 * Blockly.BlockSvg.GRID_UNIT;
 /**
  * Height of horizontal puzzle tab.
  * @const
@@ -66,10 +66,15 @@ Blockly.BlockSvg.TAB_HEIGHT = 20;
  */
 Blockly.BlockSvg.TAB_WIDTH = 8;
 /**
- * Width of vertical tab (inc left margin).
+ * Width of vertical notch.
  * @const
  */
-Blockly.BlockSvg.NOTCH_WIDTH = 30;
+Blockly.BlockSvg.NOTCH_WIDTH = 8 * Blockly.BlockSvg.GRID_UNIT;
+/**
+ * Height of vertical notch.
+ * @const
+ */
+Blockly.BlockSvg.NOTCH_HEIGHT = 2 * Blockly.BlockSvg.GRID_UNIT;
 /**
  * Rounded corner radius.
  * @const
@@ -103,12 +108,35 @@ Blockly.BlockSvg.START_HAT_PATH = 'c 30,-' +
  * SVG path for drawing next/previous notch from left to right.
  * @const
  */
-Blockly.BlockSvg.NOTCH_PATH_LEFT = 'l 6,4 3,0 6,-4';
+Blockly.BlockSvg.NOTCH_PATH_LEFT = (
+  'c 2,0 3,1 4,2 ' +
+  'l 4,4 ' +
+  'c 1,1 2,2 4,2 ' +
+  'h 12 ' +
+  'c 2,0 3,-1 4,-2 ' +
+  'l 4,-4 ' +
+  'c 1,-1 2,-2 4,-2'
+);
 /**
  * SVG path for drawing next/previous notch from right to left.
  * @const
  */
-Blockly.BlockSvg.NOTCH_PATH_RIGHT = 'l -6,4 -3,0 -6,-4';
+Blockly.BlockSvg.NOTCH_PATH_RIGHT = (
+  'c -2,0 -3,1 -4,2 '+
+  'l -4,4 ' +
+  'c -1,1 -2,2 -4,2 ' +
+  'h -12 ' +
+  'c -2,0 -3,-1 -4,-2 ' +
+  'l -4,-4 ' +
+  'c -1,-1 -2,-2 -4,-2'
+);
+
+/**
+ * Amount of padding before the notch, on the left (in LTR).
+ * @const
+ */
+Blockly.BlockSvg.NOTCH_LEFT_PADDING = 3 * Blockly.BlockSvg.GRID_UNIT;
+
 /**
  * SVG path for drawing a horizontal puzzle tab from top to bottom.
  * @const
@@ -564,7 +592,8 @@ Blockly.BlockSvg.prototype.renderDrawTop_ =
 
   // Top edge.
   if (this.previousConnection) {
-    steps.push('H', Blockly.BlockSvg.NOTCH_WIDTH - 15);
+    // Space before the notch
+    steps.push('H', Blockly.BlockSvg.NOTCH_LEFT_PADDING);
     steps.push(Blockly.BlockSvg.NOTCH_PATH_LEFT);
     // Create previous block connection.
     var connectionX = connectionsXY.x + (this.RTL ?
@@ -573,7 +602,6 @@ Blockly.BlockSvg.prototype.renderDrawTop_ =
     this.previousConnection.moveTo(connectionX, connectionY);
     // This connection will be tightened when the parent renders.
   }
-  steps.push('H', rightEdge);
   this.width = rightEdge;
 };  /* eslint-enable indent */
 
@@ -723,8 +751,14 @@ Blockly.BlockSvg.prototype.renderDrawBottom_ = function(steps, connectionsXY,
   this.height = cursorY;
   steps.push(Blockly.BlockSvg.BOTTOM_RIGHT_CORNER);
   if (this.nextConnection) {
-    steps.push('H', (Blockly.BlockSvg.NOTCH_WIDTH + (this.RTL ? 0.5 : - 0.5)) +
-        ' ' + Blockly.BlockSvg.NOTCH_PATH_RIGHT);
+    // Move to the right-side of the notch.
+    var notchStart = (
+      Blockly.BlockSvg.NOTCH_WIDTH +
+      Blockly.BlockSvg.NOTCH_LEFT_PADDING +
+      Blockly.BlockSvg.CORNER_RADIUS
+    );
+    steps.push('H', notchStart, ' ');
+    steps.push(Blockly.BlockSvg.NOTCH_PATH_RIGHT);
     // Create next block connection.
     var connectionX;
     if (this.RTL) {
@@ -737,7 +771,7 @@ Blockly.BlockSvg.prototype.renderDrawBottom_ = function(steps, connectionsXY,
     if (this.nextConnection.isConnected()) {
       this.nextConnection.tighten_();
     }
-    this.height += 4;  // Height of tab.
+    this.height += Blockly.BlockSvg.NOTCH_HEIGHT;
   }
   // Bottom horizontal line
   steps.push('H', Blockly.BlockSvg.CORNER_RADIUS);
