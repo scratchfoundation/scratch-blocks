@@ -97,18 +97,18 @@ Blockly.BlockSvg.STATEMENT_INPUT_EDGE_WIDTH = 4 * Blockly.BlockSvg.GRID_UNIT;
  * @const
  */
 Blockly.BlockSvg.START_HAT = true;
+
 /**
  * Height of the top hat.
  * @const
  */
-Blockly.BlockSvg.START_HAT_HEIGHT = 15;
+Blockly.BlockSvg.START_HAT_HEIGHT = 16;
+
 /**
  * Path of the top hat's curve.
  * @const
  */
-Blockly.BlockSvg.START_HAT_PATH = 'c 30,-' +
-    Blockly.BlockSvg.START_HAT_HEIGHT + ' 70,-' +
-    Blockly.BlockSvg.START_HAT_HEIGHT + ' 100,0';
+Blockly.BlockSvg.START_HAT_PATH = 'c 25,-22 71,-22 96,0';
 /**
  * SVG path for drawing next/previous notch from left to right.
  * @const
