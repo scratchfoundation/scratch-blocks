@@ -190,12 +190,9 @@ Blockly.BlockSvg.BOTTOM_LEFT_CORNER =
      Blockly.BlockSvg.CORNER_RADIUS;
 /**
  * SVG path for drawing the top-left corner of a statement input.
- * Includes the top notch, a horizontal space, and the rounded inside corner.
  * @const
  */
 Blockly.BlockSvg.INNER_TOP_LEFT_CORNER =
-    Blockly.BlockSvg.NOTCH_PATH_RIGHT + ' h -' +
-    (Blockly.BlockSvg.NOTCH_WIDTH - 15 - Blockly.BlockSvg.CORNER_RADIUS) +
     ' a ' + Blockly.BlockSvg.CORNER_RADIUS + ',' +
     Blockly.BlockSvg.CORNER_RADIUS + ' 0 0,0 -' +
     Blockly.BlockSvg.CORNER_RADIUS + ',' +
@@ -704,13 +701,23 @@ Blockly.BlockSvg.prototype.renderDrawRight_ = function(steps,
         }
       }
       this.renderFields_(input.fieldRow, fieldX, fieldY);
-      cursorX = inputRows.statementEdge + Blockly.BlockSvg.NOTCH_WIDTH;
+
       steps.push(Blockly.BlockSvg.BOTTOM_RIGHT_CORNER);
-      steps.push('H', cursorX);
+      // Move to the right-side of the notch (in LTR)
+      var innerSpace = 2 * Blockly.BlockSvg.GRID_UNIT;
+      cursorX = inputRows.statementEdge + Blockly.BlockSvg.NOTCH_WIDTH;
+      steps.push('H', cursorX + innerSpace + Blockly.BlockSvg.CORNER_RADIUS);
+      steps.push(Blockly.BlockSvg.NOTCH_PATH_RIGHT);
+      steps.push('h', '-' + innerSpace);
       steps.push(Blockly.BlockSvg.INNER_TOP_LEFT_CORNER);
-      steps.push('v', row.height - 2 * Blockly.BlockSvg.CORNER_RADIUS);
+      steps.push('v', row.height - 2 * Blockly.BlockSvg.CORNER_RADIUS - Blockly.BlockSvg.NOTCH_HEIGHT);
       steps.push(Blockly.BlockSvg.INNER_BOTTOM_LEFT_CORNER);
+      // Bottom notch
+      steps.push('h ', innerSpace);
+      steps.push(Blockly.BlockSvg.NOTCH_PATH_LEFT);
       steps.push('H', inputRows.rightEdge);
+
+      cursorX -= innerSpace - Blockly.BlockSvg.CORNER_RADIUS;
 
       // Create statement connection.
       connectionX = connectionsXY.x + (this.RTL ? -cursorX : cursorX);
