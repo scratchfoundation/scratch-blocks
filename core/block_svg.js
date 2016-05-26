@@ -487,7 +487,7 @@ Blockly.BlockSvg.prototype.getHeightWidth = function() {
  */
 Blockly.BlockSvg.prototype.getBoundingRectangle = function() {
   var blockXY = this.getRelativeToSurfaceXY(this);
-  var tab = this.outputConnection ? Blockly.BlockSvg.TAB_WIDTH : 0;
+  var tab = 0;
   var blockBounds = this.getHeightWidth();
   var topLeft;
   var bottomRight;
