@@ -408,6 +408,8 @@ Blockly.BlockSvg.prototype.renderCompute_ = function(iconWidth) {
   var hasDummy = false;
   var lastType = undefined;
 
+  // Previously created row, for special-casing row heights on C- and E- shaped blocks.
+  var previousRow;
   for (var i = 0, input; input = inputList[i]; i++) {
     if (!input.isVisible()) {
       continue;
@@ -434,6 +436,8 @@ Blockly.BlockSvg.prototype.renderCompute_ = function(iconWidth) {
     // Compute minimum input size.
     if (row.type == Blockly.NEXT_STATEMENT) {
       input.renderHeight = Blockly.BlockSvg.MIN_STATEMENT_INPUT_HEIGHT;
+    } else if (previousRow && previousRow.type == Blockly.NEXT_STATEMENT) {
+      input.renderHeight = Blockly.BlockSvg.EXTRA_STATEMENT_ROW_Y;
     } else {
       input.renderHeight = Blockly.BlockSvg.MIN_BLOCK_Y;
     }
@@ -484,6 +488,7 @@ Blockly.BlockSvg.prototype.renderCompute_ = function(iconWidth) {
         fieldValueWidth = Math.max(fieldValueWidth, input.fieldWidth);
       }
     }
+    previousRow = row;
   }
   // Compute the statement edge.
   // This is the width of a block where statements are nested.
