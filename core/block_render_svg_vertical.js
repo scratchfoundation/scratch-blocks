@@ -642,15 +642,6 @@ Blockly.BlockSvg.prototype.renderDrawRight_ = function(steps,
       var input = row[0];
       var fieldX = cursorX;
       var fieldY = cursorY;
-      if (input.align != Blockly.ALIGN_LEFT) {
-        var fieldRightX = inputRows.statementEdge - input.fieldWidth -
-            2 * Blockly.BlockSvg.SEP_SPACE_X;
-        if (input.align == Blockly.ALIGN_RIGHT) {
-          fieldX += fieldRightX;
-        } else if (input.align == Blockly.ALIGN_CENTRE) {
-          fieldX += fieldRightX / 2;
-        }
-      }
       this.renderFields_(input.fieldRow, fieldX, fieldY);
 
       steps.push(Blockly.BlockSvg.BOTTOM_RIGHT_CORNER);
