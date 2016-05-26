@@ -46,11 +46,6 @@ Blockly.BlockSvg.SEP_SPACE_X = 2 * Blockly.BlockSvg.GRID_UNIT;
  */
 Blockly.BlockSvg.SEP_SPACE_Y = 2 * Blockly.BlockSvg.GRID_UNIT;
 /**
- * Vertical padding around inline elements.
- * @const
- */
-Blockly.BlockSvg.INLINE_PADDING_Y = 2 * Blockly.BlockSvg.GRID_UNIT;
-/**
  * Minimum width of a block.
  * @const
  */
@@ -59,7 +54,7 @@ Blockly.BlockSvg.MIN_BLOCK_X = 24 * Blockly.BlockSvg.GRID_UNIT;
  * Minimum height of a block.
  * @const
  */
-Blockly.BlockSvg.MIN_BLOCK_Y = 8 * Blockly.BlockSvg.GRID_UNIT;
+Blockly.BlockSvg.MIN_BLOCK_Y = 12 * Blockly.BlockSvg.GRID_UNIT;
 /**
  * Height of horizontal puzzle tab.
  * @const
@@ -361,7 +356,6 @@ Blockly.BlockSvg.prototype.render = function(opt_bubble) {
 Blockly.BlockSvg.prototype.renderFields_ =
     function(fieldList, cursorX, cursorY) {
   /* eslint-disable indent */
-  cursorY += Blockly.BlockSvg.INLINE_PADDING_Y;
   if (this.RTL) {
     cursorX = -cursorX;
   }
@@ -483,20 +477,6 @@ Blockly.BlockSvg.prototype.renderCompute_ = function(iconWidth) {
           hasDummy = true;
         }
         fieldValueWidth = Math.max(fieldValueWidth, input.fieldWidth);
-      }
-    }
-  }
-
-  // Make inline rows a bit thicker in order to enclose the values.
-  for (var y = 0, row; row = inputRows[y]; y++) {
-    row.thicker = false;
-    if (row.type == Blockly.BlockSvg.INLINE) {
-      for (var z = 0, input; input = row[z]; z++) {
-        if (input.type == Blockly.INPUT_VALUE) {
-          row.height += 2 * Blockly.BlockSvg.INLINE_PADDING_Y;
-          row.thicker = true;
-          break;
-        }
       }
     }
   }
@@ -633,10 +613,6 @@ Blockly.BlockSvg.prototype.renderDrawRight_ = function(steps,
       for (var x = 0, input; input = row[x]; x++) {
         var fieldX = cursorX;
         var fieldY = cursorY;
-        if (row.thicker) {
-          // Lower the field slightly.
-          fieldY += Blockly.BlockSvg.INLINE_PADDING_Y;
-        }
         // TODO: Align inline field rows (left/right/centre).
         cursorX = this.renderFields_(input.fieldRow, fieldX, fieldY);
         if (input.type != Blockly.DUMMY_INPUT) {
@@ -653,8 +629,7 @@ Blockly.BlockSvg.prototype.renderDrawRight_ = function(steps,
                 Blockly.BlockSvg.TAB_WIDTH - Blockly.BlockSvg.SEP_SPACE_X -
                 input.renderWidth - 1;
           }
-          connectionY = connectionsXY.y + cursorY +
-              Blockly.BlockSvg.INLINE_PADDING_Y + 1;
+          connectionY = connectionsXY.y + cursorY + 1;
           input.connection.moveTo(connectionX, connectionY);
           if (input.connection.isConnected()) {
             input.connection.tighten_();
