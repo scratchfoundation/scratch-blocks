@@ -72,7 +72,7 @@ Blockly.BlockSvg.MIN_BLOCK_X_WITH_STATEMENT = 40 * Blockly.BlockSvg.GRID_UNIT;
  * Minimum space for a statement input height.
  * @const
  */
-Blockly.BlockSvg.MIN_STATEMENT_INPUT_HEIGHT = 8 * Blockly.BlockSvg.GRID_UNIT;
+Blockly.BlockSvg.MIN_STATEMENT_INPUT_HEIGHT = 6 * Blockly.BlockSvg.GRID_UNIT;
 
 /**
  * Width of vertical notch.
@@ -298,7 +298,7 @@ Blockly.BlockSvg.prototype.getHeightWidth = function() {
   var nextBlock = this.getNextBlock();
   if (nextBlock) {
     var nextHeightWidth = nextBlock.getHeightWidth();
-    height += nextHeightWidth.height - Blockly.BlockSvg.NOTCH_HEIGHT;
+    height += nextHeightWidth.height;
     width = Math.max(width, nextHeightWidth.width);
   }
   return {height: height, width: width};
@@ -676,7 +676,7 @@ Blockly.BlockSvg.prototype.renderDrawRight_ = function(steps,
       steps.push('h', '-' + Blockly.BlockSvg.STATEMENT_INPUT_INNER_SPACE);
       steps.push(Blockly.BlockSvg.INNER_TOP_LEFT_CORNER);
 
-      steps.push('v', row.height - 2 * Blockly.BlockSvg.CORNER_RADIUS - Blockly.BlockSvg.NOTCH_HEIGHT);
+      steps.push('v', row.height - 2 * Blockly.BlockSvg.CORNER_RADIUS);
 
       steps.push(Blockly.BlockSvg.INNER_BOTTOM_LEFT_CORNER);
       // Bottom notch
@@ -688,6 +688,7 @@ Blockly.BlockSvg.prototype.renderDrawRight_ = function(steps,
       connectionX = connectionsXY.x + (this.RTL ? -cursorX : cursorX);
       connectionY = connectionsXY.y + cursorY;
       input.connection.moveTo(connectionX, connectionY);
+
       if (input.connection.isConnected()) {
         input.connection.tighten_();
         this.width = Math.max(this.width, inputRows.statementEdge +
@@ -699,7 +700,7 @@ Blockly.BlockSvg.prototype.renderDrawRight_ = function(steps,
         // Consecutive statement stacks are also separated by a small divider.
         steps.push(Blockly.BlockSvg.TOP_RIGHT_CORNER);
         steps.push('v', Blockly.BlockSvg.EXTRA_STATEMENT_ROW_Y - 2 * Blockly.BlockSvg.CORNER_RADIUS);
-        cursorY += Blockly.BlockSvg.EXTRA_STATEMENT_ROW_Y + 2 * Blockly.BlockSvg.CORNER_RADIUS;
+        cursorY += Blockly.BlockSvg.EXTRA_STATEMENT_ROW_Y;
       }
     }
     cursorY += row.height;
@@ -744,11 +745,6 @@ Blockly.BlockSvg.prototype.renderDrawBottom_ = function(steps, connectionsXY,
       this.nextConnection.tighten_();
     }
   }
-  // Always pretend height is extended by NOTCH_HEIGHT, even if there's no next.
-  // This is so blocks with no next connection stretch statement inputs to the
-  // correct size, as if there was a notch. Otherwise the height of a block
-  // with no next doesn't really matter anyway....
-  this.height += Blockly.BlockSvg.NOTCH_HEIGHT;
   // Bottom horizontal line
   steps.push('H', Blockly.BlockSvg.CORNER_RADIUS);
   // Bottom left corner
