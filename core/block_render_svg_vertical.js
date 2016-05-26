@@ -397,10 +397,6 @@ Blockly.BlockSvg.prototype.renderCompute_ = function(iconWidth) {
   var inputRows = [];
   // Block will be drawn from 0 (left edge) to rightEdge, in px.
   inputRows.rightEdge = 0;
-  if (this.previousConnection || this.nextConnection) {
-    // Blocks with notches have a minimum width.
-    inputRows.rightEdge = Blockly.BlockSvg.MIN_BLOCK_X;
-  }
   var fieldValueWidth = 0;  // Width of longest external value field.
   var fieldStatementWidth = 0;  // Width of longest statement field.
   var hasValue = false;
@@ -495,17 +491,15 @@ Blockly.BlockSvg.prototype.renderCompute_ = function(iconWidth) {
   inputRows.statementEdge = Blockly.BlockSvg.STATEMENT_INPUT_EDGE_WIDTH +
       fieldStatementWidth;
   // Compute the preferred right edge.
+  if (this.previousConnection || this.nextConnection) {
+    // Blocks with notches
+    inputRows.rightEdge = Math.max(inputRows.rightEdge,
+      Blockly.BlockSvg.MIN_BLOCK_X);
+  }
   if (hasStatement) {
     // Statement blocks (C- or E- shaped) have a longer minimum width.
     inputRows.rightEdge = Math.max(inputRows.rightEdge,
       Blockly.BlockSvg.MIN_BLOCK_X_WITH_STATEMENT);
-  }
-  if (hasValue) {
-    inputRows.rightEdge = Math.max(inputRows.rightEdge, fieldValueWidth +
-        Blockly.BlockSvg.SEP_SPACE_X * 2);
-  } else if (hasDummy) {
-    inputRows.rightEdge = Math.max(inputRows.rightEdge, fieldValueWidth +
-        Blockly.BlockSvg.SEP_SPACE_X * 2);
   }
 
   inputRows.hasValue = hasValue;
