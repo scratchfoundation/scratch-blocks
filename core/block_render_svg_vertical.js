@@ -591,8 +591,8 @@ Blockly.BlockSvg.prototype.renderDrawTop_ =
  */
 Blockly.BlockSvg.prototype.renderDrawRight_ = function(steps,
     connectionsXY, inputRows, iconWidth) {
-  var cursorX;
-  var cursorY = -1; // Blocks overhang their parent by 1px.
+  var cursorX = 0;
+  var cursorY = 0;
   var connectionX, connectionY;
   for (var y = 0, row; row = inputRows[y]; y++) {
     cursorX = Blockly.BlockSvg.SEP_SPACE_X;
@@ -721,7 +721,7 @@ Blockly.BlockSvg.prototype.renderDrawBottom_ = function(steps, connectionsXY,
     } else {
       connectionX = connectionsXY.x + Blockly.BlockSvg.NOTCH_WIDTH;
     }
-    var connectionY = connectionsXY.y + cursorY + 1;
+    var connectionY = connectionsXY.y + cursorY;
     this.nextConnection.moveTo(connectionX, connectionY);
     if (this.nextConnection.isConnected()) {
       this.nextConnection.tighten_();
