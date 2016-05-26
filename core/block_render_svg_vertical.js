@@ -55,6 +55,13 @@ Blockly.BlockSvg.MIN_BLOCK_X = 24 * Blockly.BlockSvg.GRID_UNIT;
  * @const
  */
 Blockly.BlockSvg.MIN_BLOCK_Y = 12 * Blockly.BlockSvg.GRID_UNIT;
+
+/**
+ * Minimum width of a C- or E-shaped block.
+ * @const
+ */
+Blockly.BlockSvg.MIN_BLOCK_X_WITH_STATEMENT = 40 * Blockly.BlockSvg.GRID_UNIT;
+
 /**
  * Width of vertical notch.
  * @const
@@ -373,10 +380,11 @@ Blockly.BlockSvg.prototype.renderFields_ =
 Blockly.BlockSvg.prototype.renderCompute_ = function(iconWidth) {
   var inputList = this.inputList;
   var inputRows = [];
+  // Block will be drawn from 0 (left edge) to rightEdge, in px.
   inputRows.rightEdge = 0;
   if (this.previousConnection || this.nextConnection) {
-    inputRows.rightEdge = Math.max(Blockly.BlockSvg.MIN_BLOCK_X,
-        Blockly.BlockSvg.NOTCH_WIDTH + Blockly.BlockSvg.SEP_SPACE_X);
+    // Blocks with notches have a minimum width.
+    inputRows.rightEdge = Blockly.BlockSvg.MIN_BLOCK_X;
   }
   var fieldValueWidth = 0;  // Width of longest external value field.
   var fieldStatementWidth = 0;  // Width of longest statement field.
@@ -459,15 +467,15 @@ Blockly.BlockSvg.prototype.renderCompute_ = function(iconWidth) {
       }
     }
   }
-
   // Compute the statement edge.
   // This is the width of a block where statements are nested.
   inputRows.statementEdge = Blockly.BlockSvg.STATEMENT_INPUT_EDGE_WIDTH +
       fieldStatementWidth;
-  // Compute the preferred right edge.  Inline blocks may extend beyond.
+  // Compute the preferred right edge.
   if (hasStatement) {
+    // Statement blocks (C- or E- shaped) have a longer minimum width.
     inputRows.rightEdge = Math.max(inputRows.rightEdge,
-        inputRows.statementEdge + Blockly.BlockSvg.NOTCH_WIDTH);
+      Blockly.BlockSvg.MIN_BLOCK_X_WITH_STATEMENT);
   }
   if (hasValue) {
     inputRows.rightEdge = Math.max(inputRows.rightEdge, fieldValueWidth +
