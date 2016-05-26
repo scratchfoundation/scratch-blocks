@@ -78,12 +78,6 @@ Blockly.BlockSvg.CORNER_RADIUS = 4;
 Blockly.BlockSvg.STATEMENT_INPUT_EDGE_WIDTH = 4 * Blockly.BlockSvg.GRID_UNIT;
 
 /**
- * Do blocks with no previous or output connections have a 'hat' on top?
- * @const
- */
-Blockly.BlockSvg.START_HAT = true;
-
-/**
  * Height of the top hat.
  * @const
  */
@@ -500,7 +494,7 @@ Blockly.BlockSvg.prototype.renderDraw_ = function(iconWidth, inputRows) {
   // Should the top left corners be rounded or square?
   // Currently, it is squared only if it's a hat.
   this.squareTopLeftCorner_ = false;
-  if (Blockly.BlockSvg.START_HAT && !this.outputConnection && !this.previousConnection) {
+  if (!this.outputConnection && !this.previousConnection) {
     // No output or previous connection.
     this.squareTopLeftCorner_ = true;
     this.startHat_ = true;
