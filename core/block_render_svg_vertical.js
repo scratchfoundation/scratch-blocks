@@ -85,6 +85,12 @@ Blockly.BlockSvg.CORNER_RADIUS = 4;
 Blockly.BlockSvg.STATEMENT_INPUT_EDGE_WIDTH = 4 * Blockly.BlockSvg.GRID_UNIT;
 
 /**
+ * Inner space between edge of statement input and notch.
+ * @const
+ */
+Blockly.BlockSvg.STATEMENT_INPUT_INNER_SPACE = 2 * Blockly.BlockSvg.GRID_UNIT;
+
+/**
  * Height of the top hat.
  * @const
  */
@@ -645,21 +651,21 @@ Blockly.BlockSvg.prototype.renderDrawRight_ = function(steps,
       this.renderFields_(input.fieldRow, fieldX, fieldY);
 
       steps.push(Blockly.BlockSvg.BOTTOM_RIGHT_CORNER);
-      // Move to the right-side of the notch (in LTR)
-      var innerSpace = 2 * Blockly.BlockSvg.GRID_UNIT;
+      // Move to the start of the notch.
       cursorX = inputRows.statementEdge + Blockly.BlockSvg.NOTCH_WIDTH;
-      steps.push('H', cursorX + innerSpace + Blockly.BlockSvg.CORNER_RADIUS);
+      steps.push('H', cursorX + Blockly.BlockSvg.STATEMENT_INPUT_INNER_SPACE +
+        2 * Blockly.BlockSvg.CORNER_RADIUS);
       steps.push(Blockly.BlockSvg.NOTCH_PATH_RIGHT);
-      steps.push('h', '-' + innerSpace);
+      steps.push('h', '-' + Blockly.BlockSvg.STATEMENT_INPUT_INNER_SPACE);
       steps.push(Blockly.BlockSvg.INNER_TOP_LEFT_CORNER);
-      steps.push('v', row.height - 2 * Blockly.BlockSvg.CORNER_RADIUS - Blockly.BlockSvg.NOTCH_HEIGHT);
+
+      steps.push('v', row.height - 2 * Blockly.BlockSvg.CORNER_RADIUS);
+
       steps.push(Blockly.BlockSvg.INNER_BOTTOM_LEFT_CORNER);
       // Bottom notch
-      steps.push('h ', innerSpace);
+      steps.push('h ', Blockly.BlockSvg.STATEMENT_INPUT_INNER_SPACE);
       steps.push(Blockly.BlockSvg.NOTCH_PATH_LEFT);
       steps.push('H', inputRows.rightEdge);
-
-      cursorX -= innerSpace - Blockly.BlockSvg.CORNER_RADIUS;
 
       // Create statement connection.
       connectionX = connectionsXY.x + (this.RTL ? -cursorX : cursorX);
