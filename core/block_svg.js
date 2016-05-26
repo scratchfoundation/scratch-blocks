@@ -487,26 +487,20 @@ Blockly.BlockSvg.prototype.getHeightWidth = function() {
  */
 Blockly.BlockSvg.prototype.getBoundingRectangle = function() {
   var blockXY = this.getRelativeToSurfaceXY(this);
-  var tab = 0;
   var blockBounds = this.getHeightWidth();
   var topLeft;
   var bottomRight;
   if (this.RTL) {
-    // Width has the tab built into it already so subtract it here.
-    topLeft = new goog.math.Coordinate(blockXY.x - (blockBounds.width - tab),
+    topLeft = new goog.math.Coordinate(blockXY.x - blockBounds.width,
         blockXY.y);
-    // Add the width of the tab/puzzle piece knob to the x coordinate
-    // since X is the corner of the rectangle, not the whole puzzle piece.
-    bottomRight = new goog.math.Coordinate(blockXY.x + tab,
+    bottomRight = new goog.math.Coordinate(blockXY.x,
         blockXY.y + blockBounds.height);
   } else {
-    // Subtract the width of the tab/puzzle piece knob to the x coordinate
-    // since X is the corner of the rectangle, not the whole puzzle piece.
-    topLeft = new goog.math.Coordinate(blockXY.x - tab, blockXY.y);
-    // Width has the tab built into it already so subtract it here.
-    bottomRight = new goog.math.Coordinate(blockXY.x + blockBounds.width - tab,
+    topLeft = new goog.math.Coordinate(blockXY.x, blockXY.y);
+    bottomRight = new goog.math.Coordinate(blockXY.x + blockBounds.width,
         blockXY.y + blockBounds.height);
   }
+
   return {topLeft: topLeft, bottomRight: bottomRight};
 };
 

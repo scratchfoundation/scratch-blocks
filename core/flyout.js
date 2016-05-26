@@ -666,14 +666,10 @@ Blockly.Flyout.prototype.layoutBlocks_ = function(blocks, gaps) {
     }
     var root = block.getSvgRoot();
     var blockHW = block.getHeightWidth();
-    var tab = 0;
-    if (this.horizontalLayout_) {
-      cursorX += tab;
-    }
     block.moveBy((this.horizontalLayout_ && this.RTL) ? -cursorX : cursorX,
         cursorY);
     if (this.horizontalLayout_) {
-      cursorX += (blockHW.width + gaps[i] - tab);
+      cursorX += blockHW.width + gaps[i];
     } else {
       cursorY += blockHW.height + gaps[i];
     }
@@ -1165,11 +1161,10 @@ Blockly.Flyout.prototype.reflowHorizontal = function(blocks) {
         block.flyoutRect_.setAttribute('width', blockHW.width);
         block.flyoutRect_.setAttribute('height', blockHW.height);
         // Rectangles behind blocks with output tabs are shifted a bit.
-        var tab = 0;
         var blockXY = block.getRelativeToSurfaceXY();
         block.flyoutRect_.setAttribute('y', blockXY.y);
         block.flyoutRect_.setAttribute('x',
-            this.RTL ? blockXY.x - blockHW.width + tab : blockXY.x - tab);
+            this.RTL ? blockXY.x - blockHW.width : blockXY.x);
         // For hat blocks we want to shift them down by the hat height
         // since the y coordinate is the corner, not the top of the hat.
         var hatOffset =
@@ -1215,10 +1210,9 @@ Blockly.Flyout.prototype.reflowVertical = function(blocks) {
         block.flyoutRect_.setAttribute('width', blockHW.width);
         block.flyoutRect_.setAttribute('height', blockHW.height);
         // Blocks with output tabs are shifted a bit.
-        var tab = 0;
         var blockXY = block.getRelativeToSurfaceXY();
         block.flyoutRect_.setAttribute('x',
-            this.RTL ? blockXY.x - blockHW.width + tab : blockXY.x - tab);
+            this.RTL ? blockXY.x - blockHW.width : blockXY.x);
         // For hat blocks we want to shift them down by the hat height
         // since the y coordinate is the corner, not the top of the hat.
         var hatOffset =
