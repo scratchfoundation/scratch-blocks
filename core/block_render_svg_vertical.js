@@ -57,6 +57,12 @@ Blockly.BlockSvg.MIN_BLOCK_X = 24 * Blockly.BlockSvg.GRID_UNIT;
 Blockly.BlockSvg.MIN_BLOCK_Y = 12 * Blockly.BlockSvg.GRID_UNIT;
 
 /**
+ * Height of extra row after a statement input.
+ * @const
+ */
+Blockly.BlockSvg.EXTRA_STATEMENT_ROW_Y = 8 * Blockly.BlockSvg.GRID_UNIT;
+
+/**
  * Minimum width of a C- or E-shaped block.
  * @const
  */
@@ -687,8 +693,8 @@ Blockly.BlockSvg.prototype.renderDrawRight_ = function(steps,
         // If the final input is a statement stack, add a small row underneath.
         // Consecutive statement stacks are also separated by a small divider.
         steps.push(Blockly.BlockSvg.TOP_RIGHT_CORNER);
-        steps.push('v', Blockly.BlockSvg.MIN_BLOCK_Y - Blockly.BlockSvg.CORNER_RADIUS);
-        cursorY += Blockly.BlockSvg.MIN_BLOCK_Y + Blockly.BlockSvg.CORNER_RADIUS;
+        steps.push('v', Blockly.BlockSvg.EXTRA_STATEMENT_ROW_Y - 2 * Blockly.BlockSvg.CORNER_RADIUS);
+        cursorY += Blockly.BlockSvg.EXTRA_STATEMENT_ROW_Y + 2 * Blockly.BlockSvg.CORNER_RADIUS;
       }
     }
     cursorY += row.height;
