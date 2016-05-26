@@ -656,7 +656,7 @@ Blockly.BlockSvg.prototype.renderDrawRight_ = function(steps,
       steps.push('h', '-' + Blockly.BlockSvg.STATEMENT_INPUT_INNER_SPACE);
       steps.push(Blockly.BlockSvg.INNER_TOP_LEFT_CORNER);
 
-      steps.push('v', row.height - 2 * Blockly.BlockSvg.CORNER_RADIUS);
+      steps.push('v', row.height - 2 * Blockly.BlockSvg.CORNER_RADIUS - Blockly.BlockSvg.NOTCH_HEIGHT);
 
       steps.push(Blockly.BlockSvg.INNER_BOTTOM_LEFT_CORNER);
       // Bottom notch
