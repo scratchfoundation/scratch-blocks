@@ -63,6 +63,12 @@ Blockly.BlockSvg.MIN_BLOCK_Y = 12 * Blockly.BlockSvg.GRID_UNIT;
 Blockly.BlockSvg.MIN_BLOCK_X_WITH_STATEMENT = 40 * Blockly.BlockSvg.GRID_UNIT;
 
 /**
+ * Minimum space for a statement input height.
+ * @const
+ */
+Blockly.BlockSvg.MIN_STATEMENT_INPUT_HEIGHT = 8 * Blockly.BlockSvg.GRID_UNIT;
+
+/**
  * Width of vertical notch.
  * @const
  */
@@ -420,7 +426,11 @@ Blockly.BlockSvg.prototype.renderCompute_ = function(iconWidth) {
     row.push(input);
 
     // Compute minimum input size.
-    input.renderHeight = Blockly.BlockSvg.MIN_BLOCK_Y;
+    if (row.type == Blockly.NEXT_STATEMENT) {
+      input.renderHeight = Blockly.BlockSvg.MIN_STATEMENT_INPUT_HEIGHT;
+    } else {
+      input.renderHeight = Blockly.BlockSvg.MIN_BLOCK_Y;
+    }
     // The width is currently only needed for inline value inputs.
     if (input.type == Blockly.INPUT_VALUE) {
       input.renderWidth = Blockly.BlockSvg.SEP_SPACE_X * 1.25;
@@ -434,7 +444,6 @@ Blockly.BlockSvg.prototype.renderCompute_ = function(iconWidth) {
       input.renderHeight = Math.max(input.renderHeight, bBox.height);
       input.renderWidth = Math.max(input.renderWidth, bBox.width);
     }
-
     row.height = Math.max(row.height, input.renderHeight);
     input.fieldWidth = 0;
     if (inputRows.length == 1) {
