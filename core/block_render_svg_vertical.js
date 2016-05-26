@@ -738,8 +738,12 @@ Blockly.BlockSvg.prototype.renderDrawBottom_ = function(steps, connectionsXY,
     if (this.nextConnection.isConnected()) {
       this.nextConnection.tighten_();
     }
-    this.height += Blockly.BlockSvg.NOTCH_HEIGHT;
   }
+  // Always pretend height is extended by NOTCH_HEIGHT, even if there's no next.
+  // This is so blocks with no next connection stretch statement inputs to the
+  // correct size, as if there was a notch. Otherwise the height of a block
+  // with no next doesn't really matter anyway....
+  this.height += Blockly.BlockSvg.NOTCH_HEIGHT;
   // Bottom horizontal line
   steps.push('H', Blockly.BlockSvg.CORNER_RADIUS);
   // Bottom left corner
