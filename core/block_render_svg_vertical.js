@@ -634,19 +634,14 @@ Blockly.BlockSvg.prototype.renderDrawRight_ = function(steps,
         fieldY += input.renderHeight / 2;
         // TODO: Align inline field rows (left/right/centre).
         cursorX = this.renderFields_(input.fieldRow, fieldX, fieldY);
-        if (input.type != Blockly.DUMMY_INPUT) {
-          cursorX += input.renderWidth + Blockly.BlockSvg.SEP_SPACE_X;
-        }
         if (input.type == Blockly.INPUT_VALUE) {
           // Create inline input connection.
           if (this.RTL) {
-            connectionX = connectionsXY.x - cursorX + Blockly.BlockSvg.SEP_SPACE_X +
-                input.renderWidth + 1;
+            connectionX = connectionsXY.x - cursorX;
           } else {
-            connectionX = connectionsXY.x + cursorX + Blockly.BlockSvg.SEP_SPACE_X -
-                input.renderWidth - 1;
+            connectionX = connectionsXY.x + cursorX;
           }
-          connectionY = connectionsXY.y + cursorY + 1;
+          connectionY = connectionsXY.y + cursorY;
           input.connection.moveTo(connectionX, connectionY);
           if (input.connection.isConnected()) {
             input.connection.tighten_();
