@@ -35,21 +35,25 @@ goog.require('Blockly.BlockSvg');
 * @const
 */
 Blockly.BlockSvg.GRID_UNIT = 4;
+
 /**
  * Horizontal space between elements.
  * @const
  */
 Blockly.BlockSvg.SEP_SPACE_X = 2 * Blockly.BlockSvg.GRID_UNIT;
+
 /**
  * Vertical space between elements.
  * @const
  */
 Blockly.BlockSvg.SEP_SPACE_Y = 2 * Blockly.BlockSvg.GRID_UNIT;
+
 /**
  * Minimum width of a block.
  * @const
  */
 Blockly.BlockSvg.MIN_BLOCK_X = 24 * Blockly.BlockSvg.GRID_UNIT;
+
 /**
  * Minimum height of a block.
  * @const
@@ -79,11 +83,13 @@ Blockly.BlockSvg.MIN_STATEMENT_INPUT_HEIGHT = 6 * Blockly.BlockSvg.GRID_UNIT;
  * @const
  */
 Blockly.BlockSvg.NOTCH_WIDTH = 8 * Blockly.BlockSvg.GRID_UNIT;
+
 /**
  * Height of vertical notch.
  * @const
  */
 Blockly.BlockSvg.NOTCH_HEIGHT = 2 * Blockly.BlockSvg.GRID_UNIT;
+
 /**
  * Rounded corner radius.
  * @const
@@ -113,6 +119,7 @@ Blockly.BlockSvg.START_HAT_HEIGHT = 16;
  * @const
  */
 Blockly.BlockSvg.START_HAT_PATH = 'c 25,-22 71,-22 96,0';
+
 /**
  * SVG path for drawing next/previous notch from left to right.
  * @const
@@ -126,6 +133,7 @@ Blockly.BlockSvg.NOTCH_PATH_LEFT = (
   'l 4,-4 ' +
   'c 1,-1 2,-2 4,-2'
 );
+
 /**
  * SVG path for drawing next/previous notch from right to left.
  * @const
@@ -152,6 +160,7 @@ Blockly.BlockSvg.NOTCH_LEFT_PADDING = 3 * Blockly.BlockSvg.GRID_UNIT;
  */
 Blockly.BlockSvg.TOP_LEFT_CORNER_START =
     'm 0,' + Blockly.BlockSvg.CORNER_RADIUS;
+
 /**
  * SVG path for drawing the rounded top-left corner.
  * @const
@@ -190,6 +199,7 @@ Blockly.BlockSvg.BOTTOM_LEFT_CORNER =
      Blockly.BlockSvg.CORNER_RADIUS + ' 0 0,1 -' +
      Blockly.BlockSvg.CORNER_RADIUS + ',-' +
      Blockly.BlockSvg.CORNER_RADIUS;
+
 /**
  * SVG path for drawing the top-left corner of a statement input.
  * @const
@@ -199,6 +209,7 @@ Blockly.BlockSvg.INNER_TOP_LEFT_CORNER =
     Blockly.BlockSvg.CORNER_RADIUS + ' 0 0,0 -' +
     Blockly.BlockSvg.CORNER_RADIUS + ',' +
     Blockly.BlockSvg.CORNER_RADIUS;
+
 /**
  * SVG path for drawing the bottom-left corner of a statement input.
  * Includes the rounded inside corner.
