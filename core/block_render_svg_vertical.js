@@ -149,10 +149,10 @@ Blockly.BlockSvg.NOTCH_PATH_RIGHT = (
 );
 
 /**
- * Amount of padding before the notch, on the left (in LTR).
+ * Amount of padding before the notch.
  * @const
  */
-Blockly.BlockSvg.NOTCH_LEFT_PADDING = 3 * Blockly.BlockSvg.GRID_UNIT;
+Blockly.BlockSvg.NOTCH_START_PADDING = 3 * Blockly.BlockSvg.GRID_UNIT;
 
 /**
  * SVG start point for drawing the top-left corner.
@@ -589,7 +589,7 @@ Blockly.BlockSvg.prototype.renderDrawTop_ =
   // Top edge.
   if (this.previousConnection) {
     // Space before the notch
-    steps.push('H', Blockly.BlockSvg.NOTCH_LEFT_PADDING);
+    steps.push('H', Blockly.BlockSvg.NOTCH_START_PADDING);
     steps.push(Blockly.BlockSvg.NOTCH_PATH_LEFT);
     // Create previous block connection.
     var connectionX = connectionsXY.x + (this.RTL ?
@@ -732,7 +732,7 @@ Blockly.BlockSvg.prototype.renderDrawBottom_ = function(steps, connectionsXY,
     // Move to the right-side of the notch.
     var notchStart = (
       Blockly.BlockSvg.NOTCH_WIDTH +
-      Blockly.BlockSvg.NOTCH_LEFT_PADDING +
+      Blockly.BlockSvg.NOTCH_START_PADDING +
       Blockly.BlockSvg.CORNER_RADIUS
     );
     steps.push('H', notchStart, ' ');
