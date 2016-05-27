@@ -41,6 +41,7 @@ Blockly.BlockSvg.GRID_UNIT = 4;
  * @const
  */
 Blockly.BlockSvg.SEP_SPACE_X = 3 * Blockly.BlockSvg.GRID_UNIT;
+
 /**
  * Vertical space between elements.
  * @const
@@ -124,32 +125,36 @@ Blockly.BlockSvg.MIN_BLOCK_Y = 16 * Blockly.BlockSvg.GRID_UNIT;
  * @const
  */
 Blockly.BlockSvg.TAB_WIDTH = 2 * Blockly.BlockSvg.GRID_UNIT;
+
 /**
  * Rounded corner radius.
  * @const
  */
 Blockly.BlockSvg.CORNER_RADIUS = 1 * Blockly.BlockSvg.GRID_UNIT;
+
 /**
  * Rounded corner radius.
  * @const
  */
 Blockly.BlockSvg.HAT_CORNER_RADIUS = 8 * Blockly.BlockSvg.GRID_UNIT;
+
 /**
  * Full height of connector notch including rounded corner.
  * @const
  */
 Blockly.BlockSvg.NOTCH_HEIGHT = 8 * Blockly.BlockSvg.GRID_UNIT + 2;
+
 /**
  * Width of connector notch
  * @const
  */
 Blockly.BlockSvg.NOTCH_WIDTH = 2 * Blockly.BlockSvg.GRID_UNIT;
+
 /**
  * SVG path for drawing next/previous notch from top to bottom.
  * Drawn in pixel units since Bezier control points are off the grid.
  * @const
  */
-
 Blockly.BlockSvg.NOTCH_PATH_DOWN =
   'c 0,2 1,3 2,4 ' +
   'l 4,4 ' +
@@ -158,6 +163,7 @@ Blockly.BlockSvg.NOTCH_PATH_DOWN =
   'c 0,2 -1,3 -2,4 ' +
   'l -4,4 ' +
   'c -1,1 -2,2 -2,4';
+
 /**
  * SVG path for drawing next/previous notch from bottom to top.
  * Drawn in pixel units since Bezier control points are off the grid.
@@ -196,6 +202,7 @@ Blockly.BlockSvg.FIELD_Y_OFFSET = -2 * Blockly.BlockSvg.GRID_UNIT;
  */
 Blockly.BlockSvg.TOP_LEFT_CORNER_START =
     'm ' + Blockly.BlockSvg.CORNER_RADIUS + ',0';
+
 /**
  * SVG path for drawing the rounded top-left corner.
  * @const
@@ -204,6 +211,7 @@ Blockly.BlockSvg.TOP_LEFT_CORNER =
     'A ' + Blockly.BlockSvg.CORNER_RADIUS + ',' +
     Blockly.BlockSvg.CORNER_RADIUS + ' 0 0,0 ' +
     '0,' + Blockly.BlockSvg.CORNER_RADIUS;
+
 /**
  * SVG start point for drawing the top-left corner.
  * @const

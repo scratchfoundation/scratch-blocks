@@ -49,7 +49,7 @@
           zoom: {
             controls: true,
             wheel: true,
-            startScale: 1.0,
+            startScale: 0.75,
             maxScale: 4,
             minScale: 0.25,
             scaleSpeed: 1.1
@@ -94,7 +94,7 @@
       function fromXml() {
         var input = document.getElementById('importExport');
         var xml = Blockly.Xml.textToDom(input.value);
-        Blockly.Xml.domToWorkspace(workspace, xml);
+        Blockly.Xml.domToWorkspace(xml, workspace);
         taChange();
       }
 
