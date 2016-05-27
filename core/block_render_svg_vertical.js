@@ -377,7 +377,6 @@ Blockly.BlockSvg.prototype.renderFields_ =
     // Offset the field upward by half its height.
     // This vertically centers the fields around cursorY.
     var yOffset = -field.getSize().height / 2;
-    // Baseline for text is special in vertical
     if (this.RTL) {
       cursorX -= field.renderSep + field.renderWidth;
       root.setAttribute('transform',
