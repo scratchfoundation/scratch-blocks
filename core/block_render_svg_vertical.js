@@ -491,7 +491,10 @@ Blockly.BlockSvg.prototype.renderCompute_ = function(iconWidth) {
     if (input.connection && input.connection.isConnected()) {
       var linkedBlock = input.connection.targetBlock();
       var bBox = linkedBlock.getHeightWidth();
-      var paddedHeight = bBox.height + 2 * Blockly.BlockSvg.INLINE_PADDING_Y;
+      var paddedHeight = bBox.height;
+      if (input.connection.type === Blockly.INPUT_VALUE) {
+        paddedHeight += 2 * Blockly.BlockSvg.INLINE_PADDING_Y;
+      }
       input.renderHeight = Math.max(input.renderHeight, paddedHeight);
       input.renderWidth = Math.max(input.renderWidth, bBox.width);
     }
