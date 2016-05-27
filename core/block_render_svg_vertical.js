@@ -680,6 +680,7 @@ Blockly.BlockSvg.prototype.renderDrawRight_ = function(steps,
           if (input.connection.isConnected()) {
             input.connection.tighten_();
           }
+          cursorX += input.renderWidth + Blockly.BlockSvg.SEP_SPACE_X;
         }
       }
       // Update right edge for all inputs, such that all rows
