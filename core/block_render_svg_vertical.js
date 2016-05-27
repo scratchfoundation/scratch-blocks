@@ -359,7 +359,7 @@ Blockly.BlockSvg.prototype.render = function(opt_bubble) {
  * Render a list of fields starting at the specified location.
  * @param {!Array.<!Blockly.Field>} fieldList List of fields.
  * @param {number} cursorX X-coordinate to start the fields.
- * @param {number} cursorY Y-coordinate to start the fields.
+ * @param {number} cursorY Y-coordinate around which fields are centered.
  * @return {number} X-coordinate of the end of the field row (plus a gap).
  * @private
  */
@@ -374,7 +374,8 @@ Blockly.BlockSvg.prototype.renderFields_ =
     if (!root) {
       continue;
     }
-    // Align all fields vertically by their own height.
+    // Offset the field upward by half its height.
+    // This vertically centers the fields around cursorY.
     var yOffset = -field.getSize().height / 2;
     // Baseline for text is special in vertical
     if (this.RTL) {
@@ -629,7 +630,8 @@ Blockly.BlockSvg.prototype.renderDrawRight_ = function(steps,
         var fieldY = cursorY;
         // Align fields vertically within the row.
         // Moves the field to half of the row's height.
-        // In renderFields_, the field is further centered by its own height.
+        // In renderFields_, the field is further centered
+        // by its own rendered height.
         fieldY += input.renderHeight / 2;
         // TODO: Align inline field rows (left/right/centre).
         cursorX = this.renderFields_(input.fieldRow, fieldX, fieldY);
@@ -639,12 +641,10 @@ Blockly.BlockSvg.prototype.renderDrawRight_ = function(steps,
         if (input.type == Blockly.INPUT_VALUE) {
           // Create inline input connection.
           if (this.RTL) {
-            connectionX = connectionsXY.x - cursorX -
-                Blockly.BlockSvg.SEP_SPACE_X +
+            connectionX = connectionsXY.x - cursorX + Blockly.BlockSvg.SEP_SPACE_X +
                 input.renderWidth + 1;
           } else {
-            connectionX = connectionsXY.x + cursorX +
-                Blockly.BlockSvg.SEP_SPACE_X -
+            connectionX = connectionsXY.x + cursorX + Blockly.BlockSvg.SEP_SPACE_X -
                 input.renderWidth - 1;
           }
           connectionY = connectionsXY.y + cursorY + 1;
