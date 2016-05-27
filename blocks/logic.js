@@ -58,7 +58,7 @@ Blockly.Blocks['logic_equals'] = {
         }
       ],
       "inputsInline": true,
-      "output": null,
+      "output": "Boolean",
       "colour": Blockly.Colours.operators.primary,
       "colourSecondary": Blockly.Colours.operators.secondary,
       "colourTertiary": Blockly.Colours.operators.tertiary
