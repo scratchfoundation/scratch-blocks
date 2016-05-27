@@ -666,7 +666,16 @@ Blockly.BlockSvg.prototype.renderDrawRight_ = function(steps,
           } else {
             connectionX = connectionsXY.x + cursorX;
           }
-          connectionY = connectionsXY.y + cursorY;
+          // Attempt to center the connection vertically.
+          var connectionYOffset = input.renderHeight / 2;
+          // Read the block which is connected to subtract half its height.
+          if (input.connection.targetConnection) {
+            var sourceBlock = input.connection.targetConnection.getSourceBlock();
+            if (sourceBlock.rendered) {
+              connectionYOffset -= sourceBlock.getHeightWidth().height / 2;
+            }
+          }
+          connectionY = connectionsXY.y + cursorY + connectionYOffset;
           input.connection.moveTo(connectionX, connectionY);
           if (input.connection.isConnected()) {
             input.connection.tighten_();
