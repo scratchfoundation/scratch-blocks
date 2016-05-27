@@ -284,6 +284,12 @@ Blockly.BlockSvg.MAX_DISPLAY_LENGTH = Infinity;
 Blockly.BlockSvg.NO_PREVIOUS_INPUT_X_MIN = 12 * Blockly.BlockSvg.GRID_UNIT;
 
 /**
+ * Vertical padding around inline elements.
+ * @const
+ */
+Blockly.BlockSvg.INLINE_PADDING_Y = 1 * Blockly.BlockSvg.GRID_UNIT;
+
+/**
  * Change the colour of a block.
  */
 Blockly.BlockSvg.prototype.updateColour = function() {
@@ -485,7 +491,8 @@ Blockly.BlockSvg.prototype.renderCompute_ = function(iconWidth) {
     if (input.connection && input.connection.isConnected()) {
       var linkedBlock = input.connection.targetBlock();
       var bBox = linkedBlock.getHeightWidth();
-      input.renderHeight = Math.max(input.renderHeight, bBox.height);
+      var paddedHeight = bBox.height + 2 * Blockly.BlockSvg.INLINE_PADDING_Y;
+      input.renderHeight = Math.max(input.renderHeight, paddedHeight);
       input.renderWidth = Math.max(input.renderWidth, bBox.width);
     }
     row.height = Math.max(row.height, input.renderHeight);
