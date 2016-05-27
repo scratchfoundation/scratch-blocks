@@ -669,7 +669,7 @@ Blockly.BlockSvg.prototype.renderDrawRight_ = function(steps,
         // Moves the field to half of the row's height.
         // In renderFields_, the field is further centered
         // by its own rendered height.
-        fieldY += input.renderHeight / 2;
+        fieldY += row.height / 2;
         // TODO: Align inline field rows (left/right/centre).
         cursorX = this.renderFields_(input.fieldRow, fieldX, fieldY);
         if (input.type == Blockly.INPUT_VALUE) {
@@ -684,7 +684,7 @@ Blockly.BlockSvg.prototype.renderDrawRight_ = function(steps,
             connectionX = connectionsXY.x + cursorX;
           }
           // Attempt to center the connection vertically.
-          var connectionYOffset = input.renderHeight / 2;
+          var connectionYOffset = row.height / 2;
           // Read the block which is connected to subtract half its height.
           if (input.connection.targetConnection) {
             var sourceBlock = input.connection.targetConnection.getSourceBlock();
