@@ -797,8 +797,8 @@ Blockly.BlockSvg.prototype.renderDrawRight_ = function(steps,
       steps.push('a ' + this.edgeShapeWidth_ + ' ' + this.edgeShapeWidth_ + ' 0 0 1 0 ' + this.edgeShapeWidth_*2);
     } else if (this.edgeShape_ === Blockly.Connection.BOOLEAN) {
       // Draw an angle
-      // @todo
-      console.log("draw an angle");
+      steps.push('l ' + this.edgeShapeWidth_ + ' ' + this.edgeShapeWidth_ +
+        ' l ' + -this.edgeShapeWidth_ + ' ' + this.edgeShapeWidth_);
     }
   }
   if (!inputRows.length) {
@@ -873,8 +873,8 @@ Blockly.BlockSvg.prototype.renderDrawLeft_ = function(steps, connectionsXY) {
       steps.push('a ' + this.edgeShapeWidth_ + ' ' + this.edgeShapeWidth_ + ' 0 0 1 0 -' + this.edgeShapeWidth_*2);
     } else if (this.edgeShape_ === Blockly.Connection.BOOLEAN) {
       // Draw an angle
-      // @todo
-      console.log("draw an angle");
+      steps.push('l ' + -this.edgeShapeWidth_ + ' ' + -this.edgeShapeWidth_ +
+        ' l ' + this.edgeShapeWidth_ + ' ' + -this.edgeShapeWidth_);
     }
   }
   steps.push('z');
