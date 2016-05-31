@@ -619,8 +619,6 @@ Blockly.BlockSvg.prototype.renderDraw_ = function(iconWidth, inputRows) {
       this.squareTopLeftCorner_ = true;
     }
   }
-  console.log(this.edgeShapeWidth_);
-
   // Fetch the block's coordinates on the surface for use in anchoring
   // the connections.
   var connectionsXY = this.getRelativeToSurfaceXY();
