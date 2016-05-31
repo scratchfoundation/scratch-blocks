@@ -262,13 +262,31 @@ Blockly.BlockSvg.FIELD_WIDTH_MAX_EDIT = Infinity;
  * Maximum height of user inputs during editing
  * @const
  */
-Blockly.BlockSvg.FIELD_HEIGHT_MAX_EDIT = Blockly.BlockSvg.FIELD_WIDTH;
+Blockly.BlockSvg.FIELD_HEIGHT_MAX_EDIT = Blockly.BlockSvg.FIELD_HEIGHT;
 
 /**
  * Top padding of user inputs
  * @const
  */
 Blockly.BlockSvg.FIELD_TOP_PADDING = 0;
+
+/**
+ * Corner radius of number inputs
+ * @const
+ */
+Blockly.BlockSvg.NUMBER_FIELD_CORNER_RADIUS = 4 * Blockly.BlockSvg.GRID_UNIT;
+
+/**
+ * Corner radius of text inputs
+ * @const
+ */
+Blockly.BlockSvg.TEXT_FIELD_CORNER_RADIUS = 1 * Blockly.BlockSvg.GRID_UNIT;
+
+/**
+ * Default radius for a field, in px.
+ * @const
+ */
+Blockly.BlockSvg.FIELD_DEFAULT_CORNER_RADIUS = 4 * Blockly.BlockSvg.GRID_UNIT;
 
 /**
  * Max text display length for a field (per-horizontal/vertical)
