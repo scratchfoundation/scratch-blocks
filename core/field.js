@@ -143,12 +143,13 @@ Blockly.Field.prototype.init = function() {
     this.fieldGroup_.style.display = 'none';
   }
   // Adjust X to be flipped for RTL. Position is relative to horizontal start of source block.
-  var fieldX = (this.sourceBlock_.RTL) ? -this.size_.width / 2 : this.size_.width / 2;
+  var size = this.getSize();
+  var fieldX = (this.sourceBlock_.RTL) ? -size.width / 2 : size.width / 2;
   /** @type {!Element} */
   this.textElement_ = Blockly.createSvgElement('text',
       {'class': 'blocklyText',
        'x': fieldX,
-       'y': this.size_.height / 2 + Blockly.BlockSvg.FIELD_TOP_PADDING,
+       'y': size.height / 2 + Blockly.BlockSvg.FIELD_TOP_PADDING,
        'text-anchor': 'middle'},
       this.fieldGroup_);
 
