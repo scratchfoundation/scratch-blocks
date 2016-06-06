@@ -129,7 +129,7 @@ Blockly.ConnectionDB.prototype.findPositionForConnection_ =
     }
   }
   return pointerMin;
-}; /* eslint-enable indent */
+};  /* eslint-enable indent */
 
 /**
  * Remove a connection from the database.  Must already exist in DB.

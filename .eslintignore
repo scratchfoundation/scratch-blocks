@@ -1,5 +1,10 @@
 *_compressed*.js
-*_uncompressed_*.js
+*_uncompressed*.js
 /msg/*
-/tests/jsunit/*
 /core/css.js
+/tests/jsunit/*
+/tests/generators/*
+/generators/*
+/demos/*
+/accessible/*
+/appengine/*
