@@ -121,14 +121,12 @@ Blockly.BlockSvg.INLINE = -1;
  */
 Blockly.BlockSvg.prototype.initSvg = function() {
   goog.asserts.assert(this.workspace.rendered, 'Workspace is headless.');
-  if (!this.isInsertionMarker()) { // Insertion markers not allowed to have inputs or icons
-    for (var i = 0, input; input = this.inputList[i]; i++) {
-      input.init();
-    }
-    var icons = this.getIcons();
-    for (i = 0; i < icons.length; i++) {
-      icons[i].createIcon();
-    }
+  for (var i = 0, input; input = this.inputList[i]; i++) {
+    input.init();
+  }
+  var icons = this.getIcons();
+  for (i = 0; i < icons.length; i++) {
+    icons[i].createIcon();
   }
   this.updateColour();
   this.updateMovable();
