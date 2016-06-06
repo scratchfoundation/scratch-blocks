@@ -891,19 +891,6 @@ Blockly.WorkspaceSvg.prototype.showContextMenu_ = function(e) {
       deleteCount++;
     }
   }
-  var deleteOption = {
-    text: deleteCount == 1 ? Blockly.Msg.DELETE_BLOCK :
-        Blockly.Msg.DELETE_X_BLOCKS.replace('%1', String(deleteCount)),
-    enabled: deleteCount > 0,
-    callback: function() {
-      if (deleteCount < 2 ||
-          window.confirm(Blockly.Msg.DELETE_ALL_BLOCKS.replace('%1',
-          String(deleteCount)))) {
-        deleteNext();
-      }
-    }
-  };
-
   function deleteNext() {
     Blockly.Events.setGroup(eventGroup);
     var block = deleteList.shift();
@@ -919,13 +906,13 @@ Blockly.WorkspaceSvg.prototype.showContextMenu_ = function(e) {
   }
 
   var deleteOption = {
-    text: deleteList.length == 1 ? Blockly.Msg.DELETE_BLOCK :
-        Blockly.Msg.DELETE_X_BLOCKS.replace('%1', String(deleteList.length)),
-    enabled: deleteList.length > 0,
+    text: deleteCount == 1 ? Blockly.Msg.DELETE_BLOCK :
+        Blockly.Msg.DELETE_X_BLOCKS.replace('%1', String(deleteCount)),
+    enabled: deleteCount > 0,
     callback: function() {
-      if (deleteList.length < 2 ||
+      if (deleteCount < 2 ||
           window.confirm(Blockly.Msg.DELETE_ALL_BLOCKS.replace('%1',
-          String(deleteList.length)))) {
+          String(deleteCount)))) {
         deleteNext();
       }
     }
