@@ -522,6 +522,10 @@ Blockly.BlockSvg.prototype.renderDraw_ = function(metrics) {
       }
     }
     if (imageField) {
+      // Fields are invisible on insertion marker.
+      if (this.isInsertionMarker()) {
+        imageField.setAttribute('display', 'none');
+      }
       imageField.setAttribute('transform',
           'translate(' + imageFieldX + ',' + imageFieldY + ') ' +
           imageFieldScale);

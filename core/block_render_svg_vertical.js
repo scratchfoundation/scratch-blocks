@@ -399,6 +399,10 @@ Blockly.BlockSvg.prototype.renderFields_ =
             Blockly.BlockSvg.SEP_SPACE_X;
       }
     }
+    // Fields are invisible on insertion marker.
+    if (this.isInsertionMarker()) {
+      root.setAttribute('display', 'none');
+    }
   }
   return this.RTL ? -cursorX : cursorX;
 }; /* eslint-enable indent */
