@@ -48,13 +48,11 @@ Blockly.Blocks['logic_equals'] = {
       "args0": [
         {
           "type": "input_value",
-          "name": "NUM1",
-          "check": "Number"
+          "name": "VALUE1"
         },
         {
           "type": "input_value",
-          "name": "NUM2",
-          "check": "Number"
+          "name": "VALUE2"
         }
       ],
       "inputsInline": true,
