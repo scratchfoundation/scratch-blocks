@@ -810,11 +810,12 @@ Blockly.BlockSvg.prototype.renderDrawRight_ = function(steps,
     // Draw the right-side edge shape
     if (this.edgeShape_ === Blockly.Connection.NUMBER) {
       // Draw a rounded arc
-      steps.push('a ' + this.edgeShapeWidth_ + ' ' + this.edgeShapeWidth_ + ' 0 0 1 0 ' + this.edgeShapeWidth_*2);
+      steps.push('a ' + this.edgeShapeWidth_ + ' ' + this.edgeShapeWidth_ +
+          ' 0 0 1 0 ' + this.edgeShapeWidth_ * 2);
     } else if (this.edgeShape_ === Blockly.Connection.BOOLEAN) {
       // Draw an angle
       steps.push('l ' + this.edgeShapeWidth_ + ' ' + this.edgeShapeWidth_ +
-        ' l ' + -this.edgeShapeWidth_ + ' ' + this.edgeShapeWidth_);
+          ' l ' + -this.edgeShapeWidth_ + ' ' + this.edgeShapeWidth_);
     }
   }
   if (!inputRows.length) {
