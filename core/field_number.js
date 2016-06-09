@@ -225,11 +225,12 @@ Blockly.FieldNumber.numPadButtonTouch_ = function() {
   // Splice in the new value
   var newValue = oldValue.slice(0, selectionStart) + spliceValue + oldValue.slice(selectionEnd);
   // Updates the display. The actual setValue occurs when the field is stopped editing.
-  Blockly.FieldTextInput.htmlInput_.value = Blockly.FieldTextInput.htmlInput_.defaultValue = newValue;
+  Blockly.FieldTextInput.htmlInput_.value = newValue;
   // Resize and scroll the text field appropriately
   Blockly.FieldNumber.superClass_.resizeEditor_.call(Blockly.FieldNumber.activeField_);
   Blockly.FieldTextInput.htmlInput_.setSelectionRange(newValue.length, newValue.length);
   Blockly.FieldTextInput.htmlInput_.scrollLeft = Blockly.FieldTextInput.htmlInput_.scrollWidth;
+  Blockly.FieldNumber.activeField_.validate_();
 };
 
 /**
@@ -249,11 +250,12 @@ Blockly.FieldNumber.numPadEraseButtonTouch_ = function() {
     newValue = oldValue.slice(0, selectionStart - 1) + oldValue.slice(selectionStart);
   }
   // Update the display to show erased value.
-  Blockly.FieldTextInput.htmlInput_.value = Blockly.FieldTextInput.htmlInput_.defaultValue = newValue;
+  Blockly.FieldTextInput.htmlInput_.value = newValue;
   // Resize and scroll the text field appropriately
   Blockly.FieldNumber.superClass_.resizeEditor_.call(Blockly.FieldNumber.activeField_);
   Blockly.FieldTextInput.htmlInput_.setSelectionRange(newValue.length, newValue.length);
   Blockly.FieldTextInput.htmlInput_.scrollLeft = Blockly.FieldTextInput.htmlInput_.scrollWidth;
+  Blockly.FieldNumber.activeField_.validate_();
 };
 
 /**
