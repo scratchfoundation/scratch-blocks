@@ -88,6 +88,13 @@ Blockly.Flyout = function(workspaceOptions) {
   this.buttons_ = [];
 
   /**
+   * List of checkboxes next to variable blocks.
+   * @type {!Array.<!Element>}
+   * @private
+   */
+  this.checkboxes_ = [];
+
+  /**
    * List of event listeners.
    * @type {!Array.<!Array>}
    * @private
@@ -128,6 +135,29 @@ Blockly.Flyout.prototype.MARGIN = 8;
  * @const
  */
 Blockly.Flyout.prototype.SCROLLBAR_PADDING = 2;
+
+/**
+ * Size of a checkbox next to a variable reporter.
+ * @type {number}
+ * @const
+ */
+Blockly.Flyout.prototype.CHECKBOX_SIZE = 20;
+
+/**
+ * Space above and around the checkbox.
+ * @type {number}
+ * @const
+ */
+Blockly.Flyout.prototype.CHECKBOX_MARGIN = Blockly.Flyout.prototype.MARGIN;
+
+/**
+ * Total additional width of a row that contains a checkbox.
+ * @type {number}
+ * @const
+ */
+Blockly.Flyout.prototype.CHECKBOX_SPACE_X =
+    Blockly.Flyout.prototype.CHECKBOX_SIZE +
+    2 * Blockly.Flyout.prototype.CHECKBOX_MARGIN;
 
 /**
  * Width of flyout.
@@ -669,8 +699,14 @@ Blockly.Flyout.prototype.layoutBlocks_ = function(blocks, gaps) {
     }
     var root = block.getSvgRoot();
     var blockHW = block.getHeightWidth();
-    block.moveBy((this.horizontalLayout_ && this.RTL) ? -cursorX : cursorX,
-        cursorY);
+    if (!this.horizontalLayout_ && block.previousConnection && block.nextConnection) {
+      this.createCheckbox_(block, cursorX, cursorY, blockHW, root);
+      block.moveBy(cursorX + this.CHECKBOX_SIZE + this.CHECKBOX_MARGIN,
+          cursorY);
+    } else {
+      block.moveBy((this.horizontalLayout_ && this.RTL) ?
+          -cursorX : cursorX, cursorY);
+    }
     if (this.horizontalLayout_) {
       cursorX += blockHW.width + gaps[i];
     } else {
@@ -692,6 +728,44 @@ Blockly.Flyout.prototype.layoutBlocks_ = function(blocks, gaps) {
 };
 
 /**
+ * Create and place a checkbox corresponding to the given block.
+ * @param {!Blockly.Block} block The block to associate the checkbox to.
+ * @param {number} cursorX The x position of the cursor during this layout pass.
+ * @param {number} cursorY The y position of the cursor during this layout pass.
+ * @param {!{height: number, width: number}} blockHW The height and width of the
+ *     block.
+ * @param {Element} root The svg root of the block.
+ * @private
+ */
+Blockly.Flyout.prototype.createCheckbox_ =
+    function(block, cursorX, cursorY, blockHW, root) {
+  /* eslint-disable indent */
+  var extraSpace = this.CHECKBOX_SIZE + this.CHECKBOX_MARGIN;
+  var checkboxRect = Blockly.createSvgElement('rect',
+    {
+      'class': 'blocklyFlyoutCheckbox',
+      'height': this.CHECKBOX_SIZE,
+      'width': this.CHECKBOX_SIZE,
+      'x': this.RTL ? cursorX + blockHW.width + extraSpace :
+          cursorX,
+      'y': cursorY + blockHW.height / 2 -
+          this.CHECKBOX_SIZE / 2
+    }, null);
+  block.flyoutCheckbox = checkboxRect;
+  this.workspace_.getCanvas().insertBefore(checkboxRect, root);
+  checkboxRect.block = block;
+  this.checkboxes_.push(checkboxRect);
+}; /* eslint-enable indent */
+
+Blockly.Flyout.prototype.checkboxClicked_ = function(checkboxRect) {
+  return function(e) {
+    console.log("Checkbox clicked for block " + checkboxRect.block.id);
+    // This event has been handled.  No need to bubble up to the document.
+    e.stopPropagation();
+  };
+};
+
+/**
  * Delete blocks and background buttons from a previous showing of the flyout.
  * @private
  */
@@ -708,6 +782,12 @@ Blockly.Flyout.prototype.clearOldBlocks_ = function() {
     goog.dom.removeNode(rect);
   }
   this.buttons_.length = 0;
+
+  // Do the same for checkboxes.
+  for (var i = 0, checkbox; checkbox = this.checkboxes_[i]; i++) {
+    goog.dom.removeNode(checkbox);
+  }
+  this.checkboxes_ = [];
 };
 
 /**
@@ -738,6 +818,11 @@ Blockly.Flyout.prototype.addBlockListeners_ = function(root, block, rect) {
       block.addSelect));
   this.listeners_.push(Blockly.bindEvent_(rect, 'mouseout', block,
       block.removeSelect));
+
+  if (block.flyoutCheckbox) {
+    this.listeners_.push(Blockly.bindEvent_(block.flyoutCheckbox, 'mousedown', null,
+        this.checkboxClicked_(block.flyoutCheckbox)));
+  }
 };
 
 /**
@@ -1194,6 +1279,9 @@ Blockly.Flyout.prototype.reflowVertical = function(blocks) {
   var flyoutWidth = 0;
   for (var i = 0, block; block = blocks[i]; i++) {
     var width = block.getHeightWidth().width;
+    if (block.flyoutCheckbox) {
+      width += this.CHECKBOX_SPACE_X - this.MARGIN;
+    }
     flyoutWidth = Math.max(flyoutWidth, width);
   }
   flyoutWidth += this.MARGIN * 1.5;
@@ -1206,6 +1294,12 @@ Blockly.Flyout.prototype.reflowVertical = function(blocks) {
         // With the flyoutWidth known, right-align the blocks.
         var oldX = block.getRelativeToSurfaceXY().x;
         var dx = flyoutWidth - this.MARGIN;
+        if (block.flyoutCheckbox) {
+          var checkboxDx = (flyoutWidth -
+              this.CHECKBOX_SIZE - this.CHECKBOX_MARGIN) / this.workspace_.scale;
+          block.flyoutCheckbox.setAttribute('x', checkboxDx);
+          dx = flyoutWidth - (this.CHECKBOX_SIZE + this.CHECKBOX_MARGIN);
+        }
         dx /= this.workspace_.scale;
         block.moveBy(dx - oldX, 0);
       }
