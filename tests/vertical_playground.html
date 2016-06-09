@@ -168,6 +168,80 @@
         }
       }
 
+      function sprinkles(n) {
+        var prototypes = [];
+        var toolbox = document.getElementById('toolbox');
+        var blocks = toolbox.getElementsByTagName('block');
+        for (var i = 0, block; block = blocks[i]; i++) {
+          prototypes.push(block.getAttribute('type'));
+        }
+        for (var i = 0; i < n; i++) {
+          var prototype = prototypes[Math.floor(Math.random() * prototypes.length)];
+          var block = workspace.newBlock(prototype);
+          block.initSvg();
+          block.getSvgRoot().setAttribute('transform', 'translate(' +
+          Math.round(Math.random() * 450 + 40) + ', ' +
+          Math.round(Math.random() * 600 + 40) + ')');
+          block.render();
+        }
+      }
+
+      var equalsXml = [
+        '  <shadow type="logic_equals">',
+        '    <value name="VALUE1">',
+        '     <shadow type="text">',
+        '      <field name="TEXT">foo</field>',
+        '     </shadow>',
+        '    </value>',
+        '    <value name="VALUE2">',
+        '      <shadow type="logic_equals"></shadow>',
+        '    </value>',
+        '  </shadow>'
+      ].join('\n');
+
+      var spaghettiXml = [
+        '  <block type="control_if_else">',
+        '    <value name="CONDITION">',
+        '      <shadow type="logic_equals"></shadow>',
+        '    </value>',
+        '    <statement name="SUBSTACK"></statement>',
+        '    <statement name="SUBSTACK2"></statement>',
+        '    <next></next>',
+        '  </block>'
+      ].join('\n');
+
+      function spaghetti(n) {
+        console.log("Starting spaghetti.  This may take some time...");
+        var xml = spaghettiXml;
+        // Nest if/else statements deeply.
+        for(var i = 0; i < 2 * n; i++) {
+          xml = xml.replace(/(<statement name="SUBSTACK2?"?>)<\//g,
+              '$1' + spaghettiXml + '</');
+        }
+        // Stack a bit.
+        for(var i = 0; i < n; i++) {
+          xml = xml.replace(/(<next>)<\//g,
+          '$1' + spaghettiXml + '</');
+        }
+
+        // Nest boolean comparisons.
+        var equalsBlock = equalsXml;
+        for (var i = 0; i < n; i++) {
+          equalsBlock = equalsBlock.replace(
+              /(<shadow( type="logic_equals")?>)<\/shadow>/g, equalsXml);
+        }
+
+        // Put the nested boolean comparisons into if/else statements.
+        xml = xml.replace(/(<shadow( type="logic_equals")?>)<\/shadow>/g,
+            equalsBlock);
+
+        xml = '<xml xmlns="http://www.w3.org/1999/xhtml">' + xml + '</xml>';
+        var dom = Blockly.Xml.textToDom(xml);
+        console.time('Spaghetti domToWorkspace');
+        Blockly.Xml.domToWorkspace(dom, workspace);
+        console.timeEnd('Spaghetti domToWorkspace');
+      }
+
       function setSoundsEnabled(state) {
         var checkbox = document.getElementById('soundsEnabled');
         checkbox.checked = (state) ? 'checked' : '';
@@ -314,6 +388,12 @@
     <p>
       Log events: &nbsp;
       <input type="checkbox" onclick="logEvents(this.checked)" id="logCheck">
+    </p>
+
+    <p>
+      Stress test: &nbsp;
+      <input type="button" value="Sprinkles!" onclick="sprinkles(100)">
+      <input type="button" value="Spaghetti!" onclick="spaghetti(3)">
     </p>
 
     <p>
