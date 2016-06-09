@@ -198,7 +198,6 @@
           '$1' + spaghettiXml + '</');
         }
         xml = '<xml xmlns="http://www.w3.org/1999/xhtml">' + xml + '</xml>';
-        debugger;
         var dom = Blockly.Xml.textToDom(xml);
         console.time('Spaghetti domToWorkspace');
         Blockly.Xml.domToWorkspace(workspace, dom);
