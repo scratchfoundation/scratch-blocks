@@ -514,7 +514,7 @@ Blockly.BlockSvg.prototype.renderCompute_ = function(iconWidth) {
     row.statementNotchAtBottom = true;
     if (input.connection && input.connection.type === Blockly.NEXT_STATEMENT) {
       var linkedBlock = input.connection.targetBlock();
-      if (linkedBlock && !linkedBlock.lastConnectionInStack_()) {
+      if (linkedBlock && !linkedBlock.lastConnectionInStack()) {
         row.statementNotchAtBottom = false;
       }
     }

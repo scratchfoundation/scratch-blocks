@@ -985,7 +985,7 @@ Blockly.BlockSvg.prototype.handleDragFree_ = function(oldXY, newXY, e) {
   // another block's connection.
   var myConnections = this.getConnections_(false);
   // Also check the last connection on this stack
-  var lastOnStack = this.lastConnectionInStack_();
+  var lastOnStack = this.lastConnectionInStack();
   if (lastOnStack && lastOnStack != this.nextConnection) {
     myConnections.push(lastOnStack);
   }
