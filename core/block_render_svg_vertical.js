@@ -511,20 +511,11 @@ Blockly.BlockSvg.prototype.renderCompute_ = function(iconWidth) {
 
     // If the input is a statement input, determine if a notch
     // should be drawn at the inner bottom of the C.
+    row.statementNotchAtBottom = true;
     if (input.connection && input.connection.type === Blockly.NEXT_STATEMENT) {
-      // Walk down linkedBlock's nextConnection to determine if
-      // there's a notch at the bottom of the stack.
-      // Assume there's a notch unless we discover a block with no next at the end.
-      row.statementNotchAtBottom = true;
       var linkedBlock = input.connection.targetBlock();
-      while (linkedBlock) {
-        var linkedNext = linkedBlock.nextConnection;
-        if (!linkedNext) {
-          // No next connection - there's not a notch at the bottom.
-          row.statementNotchAtBottom = false;
-          break;
-        }
-        linkedBlock = linkedNext.targetBlock();
+      if (linkedBlock && !linkedBlock.lastConnectionInStack_()) {
+        row.statementNotchAtBottom = false;
       }
     }
 
