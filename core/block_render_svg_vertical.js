@@ -354,6 +354,7 @@ Blockly.BlockSvg.prototype.getHeightWidth = function() {
   if (nextBlock) {
     var nextHeightWidth = nextBlock.getHeightWidth();
     height += nextHeightWidth.height;
+    height -= Blockly.BlockSvg.NOTCH_HEIGHT; // Exclude height of connected notch.
     width = Math.max(width, nextHeightWidth.width);
   }
   return {height: height, width: width};
@@ -507,6 +508,26 @@ Blockly.BlockSvg.prototype.renderCompute_ = function(iconWidth) {
     } else {
       input.renderWidth = 0;
     }
+
+    // If the input is a statement input, determine if a notch
+    // should be drawn at the inner bottom of the C.
+    if (input.connection && input.connection.type === Blockly.NEXT_STATEMENT) {
+      // Walk down linkedBlock's nextConnection to determine if
+      // there's a notch at the bottom of the stack.
+      // Assume there's a notch unless we discover a block with no next at the end.
+      row.statementNotchAtBottom = true;
+      var linkedBlock = input.connection.targetBlock();
+      while (linkedBlock) {
+        var linkedNext = linkedBlock.nextConnection;
+        if (!linkedNext) {
+          // No next connection - there's not a notch at the bottom.
+          row.statementNotchAtBottom = false;
+          break;
+        }
+        linkedBlock = linkedNext.targetBlock();
+      }
+    }
+
     // Expand input size if there is a connection.
     if (input.connection && input.connection.isConnected()) {
       var linkedBlock = input.connection.targetBlock();
@@ -514,6 +535,12 @@ Blockly.BlockSvg.prototype.renderCompute_ = function(iconWidth) {
       var paddedHeight = bBox.height;
       if (input.connection.type === Blockly.INPUT_VALUE) {
         paddedHeight += 2 * Blockly.BlockSvg.INLINE_PADDING_Y;
+      }
+      if (input.connection.type === Blockly.NEXT_STATEMENT) {
+        // Subtract height of notch, only if the last block in the stack has a next connection.
+        if (row.statementNotchAtBottom) {
+          paddedHeight -= Blockly.BlockSvg.NOTCH_HEIGHT;
+        }
       }
       input.renderHeight = Math.max(input.renderHeight, paddedHeight);
       input.renderWidth = Math.max(input.renderWidth, bBox.width);
@@ -859,6 +886,8 @@ Blockly.BlockSvg.prototype.renderDrawBottom_ = function(steps, connectionsXY,
     if (this.nextConnection.isConnected()) {
       this.nextConnection.tighten_();
     }
+    // Include height of notch in block height.
+    this.height += Blockly.BlockSvg.NOTCH_HEIGHT;
   }
   // Bottom horizontal line
   if (!this.edgeShape_) {
