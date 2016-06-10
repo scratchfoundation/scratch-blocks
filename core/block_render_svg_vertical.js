@@ -716,7 +716,18 @@ Blockly.BlockSvg.prototype.renderDrawRight_ = function(steps,
         // In renderFields_, the field is further centered
         // by its own rendered height.
         fieldY += row.height / 2;
-        // TODO: Align inline field rows (left/right/centre).
+
+        // Align inline field rows (left/right/centre).
+        if (input.align != Blockly.ALIGN_LEFT) {
+          var fieldRightX = inputRows.rightEdge - input.fieldWidth -
+              (2 * Blockly.BlockSvg.SEP_SPACE_X);
+          if (input.align == Blockly.ALIGN_RIGHT) {
+            fieldX += fieldRightX;
+          } else if (input.align == Blockly.ALIGN_CENTRE) {
+            fieldX += fieldRightX / 2;
+          }
+        }
+
         cursorX = this.renderFields_(input.fieldRow, fieldX, fieldY);
         if (input.type == Blockly.INPUT_VALUE) {
           // Create inline input connection.
