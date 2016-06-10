@@ -414,7 +414,7 @@ Blockly.Blocks['operator_length'] = {
         }
       ],
       "inputsInline": true,
-      "output": "String",
+      "output": "Number",
       "colour": Blockly.Colours.operators.primary,
       "colourSecondary": Blockly.Colours.operators.secondary,
       "colourTertiary": Blockly.Colours.operators.tertiary
