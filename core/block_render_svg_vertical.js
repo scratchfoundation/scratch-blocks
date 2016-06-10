@@ -808,8 +808,10 @@ Blockly.BlockSvg.prototype.renderDrawRight_ = function(steps,
 
       steps.push(Blockly.BlockSvg.INNER_BOTTOM_LEFT_CORNER);
       // Bottom notch
-      steps.push('h ', Blockly.BlockSvg.STATEMENT_INPUT_INNER_SPACE);
-      steps.push(Blockly.BlockSvg.NOTCH_PATH_LEFT);
+      if (row.statementNotchAtBottom) {
+        steps.push('h ', Blockly.BlockSvg.STATEMENT_INPUT_INNER_SPACE);
+        steps.push(Blockly.BlockSvg.NOTCH_PATH_LEFT);
+      }
       steps.push('H', inputRows.rightEdge);
 
       // Create statement connection.
