@@ -215,7 +215,7 @@ Blockly.Blocks['operator_equals'] = {
    */
   init: function() {
     this.jsonInit({
-      "message0": "%1 < %2",
+      "message0": "%1 = %2",
       "args0": [
         {
           "type": "input_value",
