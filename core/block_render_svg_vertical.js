@@ -354,6 +354,7 @@ Blockly.BlockSvg.prototype.getHeightWidth = function() {
   if (nextBlock) {
     var nextHeightWidth = nextBlock.getHeightWidth();
     height += nextHeightWidth.height;
+    height -= Blockly.BlockSvg.NOTCH_HEIGHT; // Exclude height of connected notch.
     width = Math.max(width, nextHeightWidth.width);
   }
   return {height: height, width: width};
@@ -507,6 +508,17 @@ Blockly.BlockSvg.prototype.renderCompute_ = function(iconWidth) {
     } else {
       input.renderWidth = 0;
     }
+
+    // If the input is a statement input, determine if a notch
+    // should be drawn at the inner bottom of the C.
+    row.statementNotchAtBottom = true;
+    if (input.connection && input.connection.type === Blockly.NEXT_STATEMENT) {
+      var linkedBlock = input.connection.targetBlock();
+      if (linkedBlock && !linkedBlock.lastConnectionInStack()) {
+        row.statementNotchAtBottom = false;
+      }
+    }
+
     // Expand input size if there is a connection.
     if (input.connection && input.connection.isConnected()) {
       var linkedBlock = input.connection.targetBlock();
@@ -514,6 +526,12 @@ Blockly.BlockSvg.prototype.renderCompute_ = function(iconWidth) {
       var paddedHeight = bBox.height;
       if (input.connection.type === Blockly.INPUT_VALUE) {
         paddedHeight += 2 * Blockly.BlockSvg.INLINE_PADDING_Y;
+      }
+      if (input.connection.type === Blockly.NEXT_STATEMENT) {
+        // Subtract height of notch, only if the last block in the stack has a next connection.
+        if (row.statementNotchAtBottom) {
+          paddedHeight -= Blockly.BlockSvg.NOTCH_HEIGHT;
+        }
       }
       input.renderHeight = Math.max(input.renderHeight, paddedHeight);
       input.renderWidth = Math.max(input.renderWidth, bBox.width);
@@ -792,8 +810,10 @@ Blockly.BlockSvg.prototype.renderDrawRight_ = function(steps,
 
       steps.push(Blockly.BlockSvg.INNER_BOTTOM_LEFT_CORNER);
       // Bottom notch
-      steps.push('h ', Blockly.BlockSvg.STATEMENT_INPUT_INNER_SPACE);
-      steps.push(Blockly.BlockSvg.NOTCH_PATH_LEFT);
+      if (row.statementNotchAtBottom) {
+        steps.push('h ', Blockly.BlockSvg.STATEMENT_INPUT_INNER_SPACE);
+        steps.push(Blockly.BlockSvg.NOTCH_PATH_LEFT);
+      }
       steps.push('H', inputRows.rightEdge);
 
       // Create statement connection.
@@ -870,6 +890,8 @@ Blockly.BlockSvg.prototype.renderDrawBottom_ = function(steps, connectionsXY,
     if (this.nextConnection.isConnected()) {
       this.nextConnection.tighten_();
     }
+    // Include height of notch in block height.
+    this.height += Blockly.BlockSvg.NOTCH_HEIGHT;
   }
   // Bottom horizontal line
   if (!this.edgeShape_) {
