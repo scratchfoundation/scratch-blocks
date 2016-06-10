@@ -10,7 +10,7 @@
     <script src="../msg/messages.js"></script>
     <script src="../blocks/math.js"></script>
     <script src="../blocks/text.js"></script>
-    <script src="../blocks/logic.js"></script>
+    <script src="../blocks_vertical/operators.js"></script>
     <script src="../blocks_vertical/control.js"></script>
     <script src="../blocks_vertical/event.js"></script>
     <script src="../blocks_vertical/wedo.js"></script>
@@ -168,6 +168,80 @@
         }
       }
 
+      function sprinkles(n) {
+        var prototypes = [];
+        var toolbox = document.getElementById('toolbox');
+        var blocks = toolbox.getElementsByTagName('block');
+        for (var i = 0, block; block = blocks[i]; i++) {
+          prototypes.push(block.getAttribute('type'));
+        }
+        for (var i = 0; i < n; i++) {
+          var prototype = prototypes[Math.floor(Math.random() * prototypes.length)];
+          var block = workspace.newBlock(prototype);
+          block.initSvg();
+          block.getSvgRoot().setAttribute('transform', 'translate(' +
+          Math.round(Math.random() * 450 + 40) + ', ' +
+          Math.round(Math.random() * 600 + 40) + ')');
+          block.render();
+        }
+      }
+
+      var equalsXml = [
+        '  <shadow type="operator_equals">',
+        '    <value name="OPERAND1">',
+        '     <shadow type="text">',
+        '      <field name="TEXT">foo</field>',
+        '     </shadow>',
+        '    </value>',
+        '    <value name="OPERAND2">',
+        '      <shadow type="operator_equals"></shadow>',
+        '    </value>',
+        '  </shadow>'
+      ].join('\n');
+
+      var spaghettiXml = [
+        '  <block type="control_if_else">',
+        '    <value name="CONDITION">',
+        '      <shadow type="operator_equals"></shadow>',
+        '    </value>',
+        '    <statement name="SUBSTACK"></statement>',
+        '    <statement name="SUBSTACK2"></statement>',
+        '    <next></next>',
+        '  </block>'
+      ].join('\n');
+
+      function spaghetti(n) {
+        console.log("Starting spaghetti.  This may take some time...");
+        var xml = spaghettiXml;
+        // Nest if/else statements deeply.
+        for(var i = 0; i < 2 * n; i++) {
+          xml = xml.replace(/(<statement name="SUBSTACK2?"?>)<\//g,
+              '$1' + spaghettiXml + '</');
+        }
+        // Stack a bit.
+        for(var i = 0; i < n; i++) {
+          xml = xml.replace(/(<next>)<\//g,
+          '$1' + spaghettiXml + '</');
+        }
+
+        // Nest boolean comparisons.
+        var equalsBlock = equalsXml;
+        for (var i = 0; i < n; i++) {
+          equalsBlock = equalsBlock.replace(
+              /(<shadow( type="operator_equals")?>)<\/shadow>/g, equalsXml);
+        }
+
+        // Put the nested boolean comparisons into if/else statements.
+        xml = xml.replace(/(<shadow( type="operator_equals")?>)<\/shadow>/g,
+            equalsBlock);
+
+        xml = '<xml xmlns="http://www.w3.org/1999/xhtml">' + xml + '</xml>';
+        var dom = Blockly.Xml.textToDom(xml);
+        console.time('Spaghetti domToWorkspace');
+        Blockly.Xml.domToWorkspace(dom, workspace);
+        console.timeEnd('Spaghetti domToWorkspace');
+      }
+
       function setSoundsEnabled(state) {
         var checkbox = document.getElementById('soundsEnabled');
         checkbox.checked = (state) ? 'checked' : '';
@@ -255,27 +329,159 @@
           <block type="wedo_whendistanceclose"></block>
       </category>
       <category name="Operators">
-          <block type="math_add">
+          <block type="operator_add">
             <value name="NUM1">
               <shadow type="math_number">
-                <field name="NUM">0</field>
+                <field name="NUM"></field>
               </shadow>
             </value>
             <value name="NUM2">
               <shadow type="math_number">
-                <field name="NUM">0</field>
+                <field name="NUM"></field>
               </shadow>
             </value>
           </block>
-          <block type="logic_equals">
+          <block type="operator_subtract">
             <value name="NUM1">
               <shadow type="math_number">
-                <field name="NUM">0</field>
+                <field name="NUM"></field>
               </shadow>
             </value>
             <value name="NUM2">
               <shadow type="math_number">
-                <field name="NUM">0</field>
+                <field name="NUM"></field>
+              </shadow>
+            </value>
+          </block>
+          <block type="operator_multiply">
+            <value name="NUM1">
+              <shadow type="math_number">
+                <field name="NUM"></field>
+              </shadow>
+            </value>
+            <value name="NUM2">
+              <shadow type="math_number">
+                <field name="NUM"></field>
+              </shadow>
+            </value>
+          </block>
+          <block type="operator_divide">
+            <value name="NUM1">
+              <shadow type="math_number">
+                <field name="NUM"></field>
+              </shadow>
+            </value>
+            <value name="NUM2">
+              <shadow type="math_number">
+                <field name="NUM"></field>
+              </shadow>
+            </value>
+          </block>
+          <block type="operator_random">
+            <value name="FROM">
+              <shadow type="math_number">
+                <field name="NUM">1</field>
+              </shadow>
+            </value>
+            <value name="TO">
+              <shadow type="math_number">
+                <field name="NUM">10</field>
+              </shadow>
+            </value>
+          </block>
+          <block type="operator_lt">
+            <value name="OPERAND1">
+              <shadow type="text">
+                <field name="TEXT"></field>
+              </shadow>
+            </value>
+            <value name="OPERAND2">
+              <shadow type="text">
+                <field name="TEXT"></field>
+              </shadow>
+            </value>
+          </block>
+          <block type="operator_equals">
+            <value name="OPERAND1">
+              <shadow type="text">
+                <field name="TEXT"></field>
+              </shadow>
+            </value>
+            <value name="OPERAND2">
+              <shadow type="text">
+                <field name="TEXT"></field>
+              </shadow>
+            </value>
+          </block>
+          <block type="operator_gt">
+            <value name="OPERAND1">
+              <shadow type="text">
+                <field name="TEXT"></field>
+              </shadow>
+            </value>
+            <value name="OPERAND2">
+              <shadow type="text">
+                <field name="TEXT"></field>
+              </shadow>
+            </value>
+          </block>
+          <block type="operator_and"></block>
+          <block type="operator_or"></block>
+          <block type="operator_not"></block>
+          <block type="operator_join">
+            <value name="STRING1">
+              <shadow type="text">
+                <field name="TEXT">hello</field>
+              </shadow>
+            </value>
+            <value name="STRING2">
+              <shadow type="text">
+                <field name="TEXT">world</field>
+              </shadow>
+            </value>
+          </block>
+          <block type="operator_letter_of">
+            <value name="LETTER">
+              <shadow type="math_number">
+                <field name="NUM">1</field>
+              </shadow>
+            </value>
+            <value name="STRING">
+              <shadow type="text">
+                <field name="TEXT">world</field>
+              </shadow>
+            </value>
+          </block>
+          <block type="operator_length">
+            <value name="STRING">
+              <shadow type="text">
+                <field name="TEXT">world</field>
+              </shadow>
+            </value>
+          </block>
+          <block type="operator_mod">
+            <value name="NUM1">
+              <shadow type="math_number">
+                <field name="NUM"></field>
+              </shadow>
+            </value>
+            <value name="NUM2">
+              <shadow type="math_number">
+                <field name="NUM"></field>
+              </shadow>
+            </value>
+          </block>
+          <block type="operator_round">
+            <value name="NUM">
+              <shadow type="math_number">
+                <field name="NUM"></field>
+              </shadow>
+            </value>
+          </block>
+          <block type="operator_mathop">
+            <value name="NUM">
+              <shadow type="math_number">
+                <field name="NUM"></field>
               </shadow>
             </value>
           </block>
@@ -314,6 +520,12 @@
     <p>
       Log events: &nbsp;
       <input type="checkbox" onclick="logEvents(this.checked)" id="logCheck">
+    </p>
+
+    <p>
+      Stress test: &nbsp;
+      <input type="button" value="Sprinkles!" onclick="sprinkles(100)">
+      <input type="button" value="Spaghetti!" onclick="spaghetti(3)">
     </p>
 
     <p>

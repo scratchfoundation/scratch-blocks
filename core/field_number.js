@@ -168,8 +168,8 @@ Blockly.FieldNumber.prototype.showNumPad_ = function() {
     button.setAttribute('class', 'blocklyNumPadButton');
     button.title = buttonText;
     button.innerHTML = buttonText;
-    // Num-pad only reacts on touch devices
-    button.ontouchstart = Blockly.FieldNumber.numPadButtonTouch_;
+    Blockly.bindEvent_(button, 'mousedown', button,
+	Blockly.FieldNumber.numPadButtonTouch_);
     if (buttonText == '.' && this.precision_ == 0) {
       // Don't show the decimal point for inputs that must be round numbers
       button.setAttribute('style', 'visibility: hidden');
@@ -184,8 +184,8 @@ Blockly.FieldNumber.prototype.showNumPad_ = function() {
   var eraseImage = document.createElement('img');
   eraseImage.src = Blockly.FieldNumber.NUMPAD_DELETE_ICON;
   eraseButton.appendChild(eraseImage);
-  // Num-pad only reacts on touch devices
-  eraseButton.ontouchstart = Blockly.FieldNumber.numPadEraseButtonTouch_;
+  Blockly.bindEvent_(eraseButton, 'mousedown', null,
+      Blockly.FieldNumber.numPadEraseButtonTouch_);
   contentDiv.appendChild(eraseButton);
 
   // Set colour and size of drop-down
@@ -225,11 +225,12 @@ Blockly.FieldNumber.numPadButtonTouch_ = function() {
   // Splice in the new value
   var newValue = oldValue.slice(0, selectionStart) + spliceValue + oldValue.slice(selectionEnd);
   // Updates the display. The actual setValue occurs when the field is stopped editing.
-  Blockly.FieldTextInput.htmlInput_.value = Blockly.FieldTextInput.htmlInput_.defaultValue = newValue;
+  Blockly.FieldTextInput.htmlInput_.value = newValue;
   // Resize and scroll the text field appropriately
   Blockly.FieldNumber.superClass_.resizeEditor_.call(Blockly.FieldNumber.activeField_);
   Blockly.FieldTextInput.htmlInput_.setSelectionRange(newValue.length, newValue.length);
   Blockly.FieldTextInput.htmlInput_.scrollLeft = Blockly.FieldTextInput.htmlInput_.scrollWidth;
+  Blockly.FieldNumber.activeField_.validate_();
 };
 
 /**
@@ -249,11 +250,12 @@ Blockly.FieldNumber.numPadEraseButtonTouch_ = function() {
     newValue = oldValue.slice(0, selectionStart - 1) + oldValue.slice(selectionStart);
   }
   // Update the display to show erased value.
-  Blockly.FieldTextInput.htmlInput_.value = Blockly.FieldTextInput.htmlInput_.defaultValue = newValue;
+  Blockly.FieldTextInput.htmlInput_.value = newValue;
   // Resize and scroll the text field appropriately
   Blockly.FieldNumber.superClass_.resizeEditor_.call(Blockly.FieldNumber.activeField_);
   Blockly.FieldTextInput.htmlInput_.setSelectionRange(newValue.length, newValue.length);
   Blockly.FieldTextInput.htmlInput_.scrollLeft = Blockly.FieldTextInput.htmlInput_.scrollWidth;
+  Blockly.FieldNumber.activeField_.validate_();
 };
 
 /**
