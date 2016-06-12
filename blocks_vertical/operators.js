@@ -477,15 +477,15 @@ Blockly.Blocks['operator_round'] = {
   }
 };
 
-Blockly.Blocks['operator_mathop'] = {
+Blockly.Blocks['operator_mathop_menu'] = {
   /**
-   * Block for "advanced" math ops on a number.
+   * Math ops drop-down menu.
    * @this Blockly.Block
    */
   init: function() {
     this.jsonInit(
       {
-        "message0": "%1 of %2",
+        "message0": "%1",
         "args0": [
           {
             "type": "field_dropdown",
@@ -506,6 +506,31 @@ Blockly.Blocks['operator_mathop'] = {
               ['e ^', 'E'],
               ['10 ^', '10']
             ]
+          }
+        ],
+        "inputsInline": true,
+        "output": "String",
+        "colour": Blockly.Colours.operators.primary,
+        "colourSecondary": Blockly.Colours.operators.secondary,
+        "colourTertiary": Blockly.Colours.operators.tertiary
+      });
+  }
+};
+
+Blockly.Blocks['operator_mathop'] = {
+  /**
+   * Block for "advanced" math ops on a number.
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.jsonInit(
+      {
+        "message0": "%1 of %2",
+        "args0": [
+          {
+            "type": "input_value",
+            "name": "OPERATOR",
+            "check": "String"
           },
           {
             "type": "input_value",
