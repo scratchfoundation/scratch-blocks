@@ -56,7 +56,8 @@ Blockly.Blocks['control_repeat'] = {
   init: function() {
     this.jsonInit({
       "id": "control_repeat",
-      "message0": "repeat %1 times %2 %3",
+      "message0": "repeat %1 %2 %3",
+      "lastDummyAlign0": "RIGHT",
       "args0": [
         {
           "type": "input_value",
@@ -64,11 +65,16 @@ Blockly.Blocks['control_repeat'] = {
           "check": "Number"
         },
         {
-          "type": "input_dummy"
-        },
-        {
           "type": "input_statement",
           "name": "SUBSTACK"
+        },
+        {
+          "type": "field_image",
+          "src": Blockly.mainWorkspace.options.pathToMedia + "icons/control_forever.svg",
+          "width": 10,
+          "height": 10,
+          "alt": "*",
+          "flip_rtl": true
         }
       ],
       "inputsInline": true,
@@ -122,12 +128,15 @@ Blockly.Blocks['control_if_else'] = {
   init: function() {
     this.jsonInit({
       "type": "control_if_else",
-      "message0": "if %1 %2 else %3 %4",
+      "message0": "if %1 then %2 %3 else %4 %5",
       "args0": [
         {
           "type": "input_value",
           "name": "CONDITION",
           "check": "Boolean"
+        },
+        {
+          "type": "input_dummy"
         },
         {
           "type": "input_statement",
