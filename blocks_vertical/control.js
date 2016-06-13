@@ -89,12 +89,15 @@ Blockly.Blocks['control_if'] = {
   init: function() {
     this.jsonInit({
       "type": "control_if",
-      "message0": "if %1 %2",
+      "message0": "if %1 then %2 %3",
       "args0": [
         {
           "type": "input_value",
           "name": "CONDITION",
           "check": "Boolean"
+        },
+        {
+          "type": "input_dummy"
         },
         {
           "type": "input_statement",
