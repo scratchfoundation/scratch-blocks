@@ -230,3 +230,40 @@ Blockly.Blocks['control_wait_until'] = {
     });
   }
 };
+
+Blockly.Blocks['control_repeat_until'] = {
+  /**
+   * Block for repeat until a condition becomes true.
+   */
+  init: function() {
+    this.jsonInit({
+      "message0": "repeat until %1 %2 %3",
+      "lastDummyAlign0": "RIGHT",
+      "args0": [
+        {
+          "type": "input_value",
+          "name": "CONDITION",
+          "check": "Boolean"
+        },
+        {
+          "type": "input_statement",
+          "name": "SUBSTACK"
+        },
+        {
+          "type": "field_image",
+          "src": Blockly.mainWorkspace.options.pathToMedia + "icons/control_forever.svg",
+          "width": 10,
+          "height": 10,
+          "alt": "*",
+          "flip_rtl": true
+        }
+      ],
+      "inputsInline": true,
+      "previousStatement": null,
+      "nextStatement": null,
+      "colour": Blockly.Colours.control.primary,
+      "colourSecondary": Blockly.Colours.control.secondary,
+      "colourTertiary": Blockly.Colours.control.tertiary
+    });
+  }
+};
