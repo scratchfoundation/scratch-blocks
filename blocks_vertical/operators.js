@@ -510,7 +510,7 @@ Blockly.Blocks['operator_mathop_menu'] = {
         ],
         "inputsInline": true,
         "output": "String",
-        "colour": Blockly.Colours.operators.primary,
+        "colour": Blockly.Colours.operators.secondary,
         "colourSecondary": Blockly.Colours.operators.secondary,
         "colourTertiary": Blockly.Colours.operators.tertiary
       });

@@ -382,6 +382,10 @@ Blockly.Css.CONTENT = [
     'stroke-width: 2;',
   '}',
 
+  '.blocklyDropdownText {',
+    'fill: #fff !important;',
+  '}',
+
   '.blocklyBubbleText {',
     'fill: $colour_text;',
   '}',

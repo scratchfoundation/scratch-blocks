@@ -288,10 +288,6 @@ Blockly.FieldDropdown.prototype.setValue = function(newValue) {
  * @param {?string} text New text.
  */
 Blockly.FieldDropdown.prototype.setText = function(text) {
-  if (this.sourceBlock_ && this.arrow_) {
-    // Update arrow's colour.
-    this.arrow_.style.fill = this.sourceBlock_.getColour();
-  }
   if (text === null || text === this.text_) {
     // No change if null.
     return;
@@ -300,6 +296,11 @@ Blockly.FieldDropdown.prototype.setText = function(text) {
   this.updateTextNode_();
 
   if (this.textElement_) {
+    // Update class for dropdown text.
+    // This class is reset every time updateTextNode_ is called.
+    this.textElement_.setAttribute('class',
+        this.textElement_.getAttribute('class') + ' blocklyDropdownText'
+    );
     // Insert dropdown arrow.
     if (this.sourceBlock_.RTL) {
       this.textElement_.insertBefore(this.arrow_, this.textElement_.firstChild);

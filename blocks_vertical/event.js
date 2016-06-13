@@ -60,7 +60,7 @@ Blockly.Blocks['event_broadcast_menu'] = {
         ],
         "inputsInline": true,
         "output": "String",
-        "colour": Blockly.Colours.event.primary,
+        "colour": Blockly.Colours.event.secondary,
         "colourSecondary": Blockly.Colours.event.secondary,
         "colourTertiary": Blockly.Colours.event.tertiary
       });
