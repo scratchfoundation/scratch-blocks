@@ -946,13 +946,15 @@ Blockly.BlockSvg.prototype.renderDrawRight_ = function(steps,
  * @param {!Blockly.Input} input Input to be rendered.
  * @param {Number} x X offset of input.
  * @param {Number} y Y offset of input.
- * @return {Number} Amount cursor should be offset (depending on width of render)
+ * @return {Number} Width of rendered input shape, or 0 if not rendered.
  */
 Blockly.BlockSvg.prototype.renderInputShape_ = function(input, x, y) {
   var inputShape = this.inputShapes_[input.name];
   var inputShapeWidth = 0;
   // Input shapes are only visibly rendered on non-connected non-insertion-markers.
-  if (!input.connection.targetConnection && !this.isInsertionMarker()) {
+  if (this.isInsertionMarker() || input.connection.targetConnection) {
+    inputShape.setAttribute('style', 'visibility: hidden');
+  } else {
     var inputShapeX = 0, inputShapeY = 0;
     // If the input connection is not connected, draw a "hole" shape.
     var inputShapePath = null;
@@ -982,8 +984,6 @@ Blockly.BlockSvg.prototype.renderInputShape_ = function(input, x, y) {
       'translate(' + inputShapeX + ',' + inputShapeY + ')'
     );
     inputShape.setAttribute('style', 'visibility: visible');
-  } else {
-    inputShape.setAttribute('style', 'visibility: hidden');
   }
   return inputShapeWidth;
 };
