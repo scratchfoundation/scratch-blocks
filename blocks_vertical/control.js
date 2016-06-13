@@ -182,7 +182,7 @@ Blockly.Blocks['control_stop_menu'] = {
         ],
         "inputsInline": true,
         "output": "String",
-        "colour": Blockly.Colours.control.primary,
+        "colour": Blockly.Colours.control.secondary,
         "colourSecondary": Blockly.Colours.control.secondary,
         "colourTertiary": Blockly.Colours.control.tertiary
       });
@@ -342,7 +342,7 @@ Blockly.Blocks['control_create_clone_of_menu'] = {
         ],
         "inputsInline": true,
         "output": "String",
-        "colour": Blockly.Colours.control.primary,
+        "colour": Blockly.Colours.control.secondary,
         "colourSecondary": Blockly.Colours.control.secondary,
         "colourTertiary": Blockly.Colours.control.tertiary
       });
