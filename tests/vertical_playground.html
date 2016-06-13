@@ -303,17 +303,6 @@
         <block type="event_broadcast"></block>
       </category>
       <category name="Control">
-        <block type="control_forever"></block>
-        <block type="control_repeat">
-          <value name="TIMES">
-            <shadow type="math_number">
-              <field name="NUM">4</field>
-            </shadow>
-          </value>
-        </block>
-        <block type="control_if"></block>
-        <block type="control_if_else"></block>
-        <block type="control_stop"></block>
         <block type="control_wait">
           <value name="DURATION">
             <shadow type="math_number">
@@ -321,6 +310,17 @@
             </shadow>
           </value>
         </block>
+        <block type="control_repeat">
+          <value name="TIMES">
+            <shadow type="math_number">
+              <field name="NUM">4</field>
+            </shadow>
+          </value>
+        </block>
+        <block type="control_forever"></block>
+        <block type="control_if"></block>
+        <block type="control_if_else"></block>
+        <block type="control_stop"></block>
       </category>
       <category name="Wedo">
           <block type="wedo_setcolor"></block>
