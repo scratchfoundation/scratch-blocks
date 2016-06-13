@@ -235,7 +235,7 @@ Blockly.BlockSvg.INNER_BOTTOM_LEFT_CORNER =
     Blockly.BlockSvg.CORNER_RADIUS;
 
 /**
- * SVG path for an 'empty' boolean input shape slot.
+ * SVG path for an empty boolean input shape.
  * @const
  */
 Blockly.BlockSvg.INPUT_SHAPE_BOOLEAN =
@@ -249,13 +249,13 @@ Blockly.BlockSvg.INPUT_SHAPE_BOOLEAN =
     ' z';
 
 /**
- * Width of 'empty' boolean input shape slot.
+ * Width of empty boolean input shape.
  * @const
  */
 Blockly.BlockSvg.INPUT_SHAPE_BOOLEAN_WIDTH = 10 * Blockly.BlockSvg.GRID_UNIT;
 
 /**
- * SVG path for an 'empty' string input shape slot.
+ * SVG path for an empty string input shape.
  * @const
  */
 Blockly.BlockSvg.INPUT_SHAPE_STRING =
@@ -270,13 +270,13 @@ Blockly.BlockSvg.INPUT_SHAPE_STRING =
     ' z';
 
 /**
- * Width of 'empty' string input shape slot.
+ * Width of empty string input shape.
  * @const
  */
 Blockly.BlockSvg.INPUT_SHAPE_STRING_WIDTH = 9 * Blockly.BlockSvg.GRID_UNIT;
 
 /**
- * SVG path for an 'empty' string input shape slot.
+ * SVG path for an empty string input shape.
  * @const
  */
 
@@ -291,13 +291,13 @@ Blockly.BlockSvg.INPUT_SHAPE_NUMBER =
   ' z';
 
 /**
- * Width of 'empty' string input shape slot.
+ * Width of empty string input shape.
  * @const
  */
 Blockly.BlockSvg.INPUT_SHAPE_NUMBER_WIDTH = 10 * Blockly.BlockSvg.GRID_UNIT;
 
 /**
- * Height of 'empty' input shape slots.
+ * Height of empty input shape.
  * @const
  */
 Blockly.BlockSvg.INPUT_SHAPE_HEIGHT = 8 * Blockly.BlockSvg.GRID_UNIT;
@@ -603,7 +603,7 @@ Blockly.BlockSvg.prototype.renderCompute_ = function(iconWidth) {
         paddedHeight = bBox.height;
         paddedWidth = bBox.width;
       } else {
-        // No block connected - use the size of "empty" shape.
+        // No block connected - use the size of the rendered empty input shape.
         paddedHeight = Blockly.BlockSvg.INPUT_SHAPE_HEIGHT;
       }
       if (input.connection.type === Blockly.INPUT_VALUE) {
@@ -940,7 +940,7 @@ Blockly.BlockSvg.prototype.renderDrawRight_ = function(steps,
 };
 
 /**
- * Render the shape for an input.
+ * Render the input shapes.
  * If there's a connected block, hide the input shape.
  * Otherwise, draw and set the position of the input shape.
  * @param {!Blockly.Input} input Input to be rendered.
@@ -956,7 +956,7 @@ Blockly.BlockSvg.prototype.renderInputShape_ = function(input, x, y) {
     inputShape.setAttribute('style', 'visibility: hidden');
   } else {
     var inputShapeX = 0, inputShapeY = 0;
-    // If the input connection is not connected, draw a "hole" shape.
+    // If the input connection is not connected, draw a hole shape.
     var inputShapePath = null;
     switch (input.connection.getOutputShape()) {
       case Blockly.Connection.BOOLEAN:

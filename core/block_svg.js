@@ -121,7 +121,7 @@ Blockly.BlockSvg.INLINE = -1;
  */
 Blockly.BlockSvg.prototype.initSvg = function() {
   goog.asserts.assert(this.workspace.rendered, 'Workspace is headless.');
-  // "Input shapes" for each input. Used to draw "holes" for unoccupied value inputs.
+  // Input shapes are empty holes drawn when a value input is not connected.
   this.inputShapes_ = {};
   for (var i = 0, input; input = this.inputList[i]; i++) {
     input.init();
@@ -150,8 +150,8 @@ Blockly.BlockSvg.prototype.initSvg = function() {
 };
 
 /**
- * Create and initialize the SVG element for an input shape hole.
- * @param {!Blockly.Input} input Value input to add a shape for.
+ * Create and initialize the SVG element for an input shape.
+ * @param {!Blockly.Input} input Value input to add a shape SVG element for.
  */
 Blockly.BlockSvg.prototype.initInputShape = function(input) {
   this.inputShapes_[input.name] = Blockly.createSvgElement(
