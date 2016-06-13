@@ -160,6 +160,35 @@ Blockly.Blocks['control_if_else'] = {
   }
 };
 
+Blockly.Blocks['control_stop_menu'] = {
+  /**
+   * Stop drop-down menu.
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.jsonInit(
+      {
+        "message0": "%1",
+        "args0": [
+          {
+            "type": "field_dropdown",
+            "name": "STOP_OPTION",
+            "options": [
+              ['all', 'ALL'],
+              ['this script', 'THIS'],
+              ['other scripts in sprite', 'OTHER']
+            ]
+          }
+        ],
+        "inputsInline": true,
+        "output": "String",
+        "colour": Blockly.Colours.control.primary,
+        "colourSecondary": Blockly.Colours.control.secondary,
+        "colourTertiary": Blockly.Colours.control.tertiary
+      });
+  }
+};
+
 Blockly.Blocks['control_stop'] = {
   /**
    * Block for stop all scripts.
@@ -168,8 +197,13 @@ Blockly.Blocks['control_stop'] = {
   init: function() {
     this.jsonInit({
       "id": "control_stop",
-      "message0": "stop all scripts",
+      "message0": "stop %1",
       "args0": [
+        {
+          "type": "input_value",
+          "name": "STOP_OPTION",
+          "check": "String"
+        }
       ],
       "inputsInline": true,
       "previousStatement": null,
