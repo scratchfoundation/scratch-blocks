@@ -297,6 +297,7 @@ Blockly.FieldDropdown.prototype.setText = function(text) {
 
   if (this.textElement_) {
     // Update class for dropdown text.
+    // This class is reset every time updateTextNode_ is called.
     this.textElement_.setAttribute('class',
         this.textElement_.getAttribute('class') + ' blocklyDropdownText'
     );
