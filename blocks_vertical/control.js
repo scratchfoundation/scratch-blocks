@@ -205,3 +205,28 @@ Blockly.Blocks['control_wait'] = {
     });
   }
 };
+
+Blockly.Blocks['control_wait_until'] = {
+  /**
+   * Block to wait until a condition becomes true.
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.jsonInit({
+      "message0": "wait until %1",
+      "args0": [
+        {
+          "type": "input_value",
+          "name": "CONDITION",
+          "check": "Boolean"
+        }
+      ],
+      "inputsInline": true,
+      "previousStatement": null,
+      "nextStatement": null,
+      "colour": Blockly.Colours.control.primary,
+      "colourSecondary": Blockly.Colours.control.secondary,
+      "colourTertiary": Blockly.Colours.control.tertiary
+    });
+  }
+};
