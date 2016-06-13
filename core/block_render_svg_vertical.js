@@ -951,7 +951,8 @@ Blockly.BlockSvg.prototype.renderDrawRight_ = function(steps,
 Blockly.BlockSvg.prototype.renderInputShape_ = function(input, x, y) {
   var inputShape = this.inputShapes_[input.name];
   var inputShapeWidth = 0;
-  if (!input.connection.targetConnection) {
+  // Input shapes are only visibly rendered on non-connected non-insertion-markers.
+  if (!input.connection.targetConnection && !this.isInsertionMarker()) {
     var inputShapeX = 0, inputShapeY = 0;
     // If the input connection is not connected, draw a "hole" shape.
     var inputShapePath = null;
@@ -980,10 +981,7 @@ Blockly.BlockSvg.prototype.renderInputShape_ = function(input, x, y) {
     inputShape.setAttribute('transform',
       'translate(' + inputShapeX + ',' + inputShapeY + ')'
     );
-    // Input shapes are only visibly rendered on non-insertion-markers.
-    if (!this.isInsertionMarker()) {
-      inputShape.setAttribute('style', 'visibility: visible');
-    }
+    inputShape.setAttribute('style', 'visibility: visible');
   } else {
     inputShape.setAttribute('style', 'visibility: hidden');
   }
