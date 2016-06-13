@@ -121,8 +121,13 @@ Blockly.BlockSvg.INLINE = -1;
  */
 Blockly.BlockSvg.prototype.initSvg = function() {
   goog.asserts.assert(this.workspace.rendered, 'Workspace is headless.');
+  // "Input shapes" for each input. Used to draw "holes" for unoccupied value inputs.
+  this.inputShapes_ = {};
   for (var i = 0, input; input = this.inputList[i]; i++) {
     input.init();
+    if (input.type === Blockly.INPUT_VALUE) {
+      this.initInputShape(input);
+    }
   }
   var icons = this.getIcons();
   for (i = 0; i < icons.length; i++) {
@@ -142,6 +147,21 @@ Blockly.BlockSvg.prototype.initSvg = function() {
   if (!this.getSvgRoot().parentNode) {
     this.workspace.getCanvas().appendChild(this.getSvgRoot());
   }
+};
+
+/**
+ * Create and initialize the SVG element for an input shape hole.
+ * @param {!Blockly.Input} input Value input to add a shape for.
+ */
+Blockly.BlockSvg.prototype.initInputShape = function(input) {
+  this.inputShapes_[input.name] = Blockly.createSvgElement(
+    'path',
+    {
+      'class': 'blocklyPath',
+      'style': 'visibility: hidden' // Hide by default - shown when not connected.
+    },
+    this.svgGroup_
+  );
 };
 
 /**
