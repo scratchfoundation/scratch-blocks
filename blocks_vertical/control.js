@@ -301,3 +301,95 @@ Blockly.Blocks['control_repeat_until'] = {
     });
   }
 };
+
+Blockly.Blocks['control_start_as_clone'] = {
+  /**
+   * Block for "when I start as a clone" hat.
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.jsonInit({
+      "id": "control_start_as_clone",
+      "message0": "when I start as a clone",
+      "args0": [
+      ],
+      "inputsInline": true,
+      "nextStatement": null,
+      "colour": Blockly.Colours.control.primary,
+      "colourSecondary": Blockly.Colours.control.secondary,
+      "colourTertiary": Blockly.Colours.control.tertiary
+    });
+  }
+};
+
+Blockly.Blocks['control_create_clone_of_menu'] = {
+  /**
+   * Create-clone drop-down menu.
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.jsonInit(
+      {
+        "message0": "%1",
+        "args0": [
+          {
+            "type": "field_dropdown",
+            "name": "CLONE_OPTION",
+            "options": [
+              ['myself', 'MYSELF']
+            ]
+          }
+        ],
+        "inputsInline": true,
+        "output": "String",
+        "colour": Blockly.Colours.control.primary,
+        "colourSecondary": Blockly.Colours.control.secondary,
+        "colourTertiary": Blockly.Colours.control.tertiary
+      });
+  }
+};
+
+Blockly.Blocks['control_create_clone_of'] = {
+  /**
+   * Block for "create clone of..."
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.jsonInit({
+      "id": "control_start_as_clone",
+      "message0": "create clone of %1",
+      "args0": [
+        {
+          "type": "input_value",
+          "name": "CLONE_OPTION",
+          "check": "String"
+        }
+      ],
+      "inputsInline": true,
+      "previousStatement": null,
+      "nextStatement": null,
+      "colour": Blockly.Colours.control.primary,
+      "colourSecondary": Blockly.Colours.control.secondary,
+      "colourTertiary": Blockly.Colours.control.tertiary
+    });
+  }
+};
+
+Blockly.Blocks['control_delete_this_clone'] = {
+  /**
+   * Block for "delete this clone."
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.jsonInit({
+      "message0": "delete this clone",
+      "args0": [
+      ],
+      "inputsInline": true,
+      "previousStatement": null,
+      "colour": Blockly.Colours.control.primary,
+      "colourSecondary": Blockly.Colours.control.secondary,
+      "colourTertiary": Blockly.Colours.control.tertiary
+    });
+  }
+};
