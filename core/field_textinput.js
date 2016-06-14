@@ -369,8 +369,8 @@ Blockly.FieldTextInput.prototype.widgetDisposeAnimationFinished_ = function() {
     style.fontSize = '';
     // Reset class
     Blockly.WidgetDiv.DIV.className = 'blocklyWidgetDiv';
-    // Reset transitions
-    Blockly.WidgetDiv.DIV.style.transition = '';
+    // Remove all styles
+    Blockly.WidgetDiv.DIV.removeAttribute('style');
     Blockly.FieldTextInput.htmlInput_.style.transition = '';
     Blockly.FieldTextInput.htmlInput_ = null;
   };
