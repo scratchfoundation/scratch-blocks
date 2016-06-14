@@ -102,10 +102,10 @@ Blockly.FieldDropdown.prototype.init = function() {
  * @private
  */
 Blockly.FieldDropdown.prototype.showEditor_ = function() {
-  // If there is an existing drop-down we own, this is a request to hide the drop-down.
-  if (Blockly.DropDownDiv.hideIfOwner(this)) {
-    return;
-  }
+  // If there is an existing drop-down someone else owns, hide it immediately and clear it.
+  Blockly.DropDownDiv.hideWithoutAnimation();
+  Blockly.DropDownDiv.clearContent();
+
   var contentDiv = Blockly.DropDownDiv.getContentDiv();
 
   var thisField = this;
