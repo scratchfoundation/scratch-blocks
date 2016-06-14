@@ -252,6 +252,18 @@ Blockly.BlockSvg.FONTSIZE_INITIAL = 12;
 Blockly.BlockSvg.FONTSIZE_FINAL = 14;
 
 /**
+ * Whether text fields are allowed to expand past their truncated block size.
+ * @const{boolean}
+ */
+Blockly.BlockSvg.FIELD_TEXTINPUT_EXPAND_PAST_TRUNCATION = true;
+
+/**
+ * Whether text fields should animate their positioning.
+ * @const{boolean}
+ */
+Blockly.BlockSvg.FIELD_TEXTINPUT_ANIMATE_POSITIONING = true;
+
+/**
  * @param {!Object} first An object containing computed measurements of a
  *    block.
  * @param {!Object} second Another object containing computed measurements of a

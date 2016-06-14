@@ -388,6 +388,18 @@ Blockly.BlockSvg.FONTSIZE_INITIAL = 12;
 Blockly.BlockSvg.FONTSIZE_FINAL = 12;
 
 /**
+ * Whether text fields are allowed to expand past their truncated block size.
+ * @const{boolean}
+ */
+Blockly.BlockSvg.FIELD_TEXTINPUT_EXPAND_PAST_TRUNCATION = false;
+
+/**
+ * Whether text fields should animate their positioning.
+ * @const{boolean}
+ */
+Blockly.BlockSvg.FIELD_TEXTINPUT_ANIMATE_POSITIONING = false;
+
+/**
  * Change the colour of a block.
  */
 Blockly.BlockSvg.prototype.updateColour = function() {
