@@ -267,6 +267,16 @@ Blockly.Field.prototype.render_ = function() {
         Blockly.Field.cacheWidths_[key] = width;
       }
     }
+    // Update text centering, based on newly calculated width.
+    var centerTextX = width / 2;
+    // In a text-editing shadow block's field,
+    // if half the text length is not at least center of
+    // visible field (FIELD_WIDTH), center it there instead.
+    if (this.sourceBlock_.isShadow()) {
+      centerTextX = Math.max(centerTextX, Blockly.BlockSvg.FIELD_WIDTH / 2);
+    }
+    this.textElement_.setAttribute('x', centerTextX);
+
   } else {
     var width = 0;
   }
