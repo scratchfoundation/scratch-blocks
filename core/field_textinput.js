@@ -53,16 +53,6 @@ Blockly.FieldTextInput = function(text, opt_validator) {
 goog.inherits(Blockly.FieldTextInput, Blockly.Field);
 
 /**
- * Point size of text before animation. Must match size in CSS.
- */
-Blockly.FieldTextInput.FONTSIZE_INITIAL = 12;
-
-/**
- * Point size of text after animation.
- */
-Blockly.FieldTextInput.FONTSIZE_FINAL = 14;
-
-/**
  * Length of animations in seconds.
  */
 Blockly.FieldTextInput.ANIMATION_TIME = 0.25;
@@ -178,7 +168,7 @@ Blockly.FieldTextInput.prototype.showEditor_ = function(opt_quietInput, opt_read
     'box-shadow ' + Blockly.FieldTextInput.ANIMATION_TIME + 's';
   htmlInput.style.transition = 'font-size ' + Blockly.FieldTextInput.ANIMATION_TIME + 's';
   // The animated properties themselves
-  htmlInput.style.fontSize = Blockly.FieldTextInput.FONTSIZE_FINAL + 'pt';
+  htmlInput.style.fontSize = Blockly.BlockSvg.FONTSIZE_FINAL + 'pt';
   div.style.boxShadow = '0px 0px 0px 4px ' + Blockly.Colours.fieldShadow;
 };
 
@@ -347,7 +337,7 @@ Blockly.FieldTextInput.prototype.widgetDispose_ = function() {
         htmlInput.onWorkspaceChangeWrapper_);
 
     // Animation of disposal
-    htmlInput.style.fontSize = Blockly.FieldTextInput.FONTSIZE_INITIAL + 'pt';
+    htmlInput.style.fontSize = Blockly.BlockSvg.FONTSIZE_INITIAL + 'pt';
     div.style.boxShadow = '';
     div.style.width = Blockly.BlockSvg.FIELD_WIDTH + 'px';
     div.style.height = Blockly.BlockSvg.FIELD_HEIGHT + 'px';

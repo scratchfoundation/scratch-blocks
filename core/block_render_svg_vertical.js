@@ -376,6 +376,18 @@ Blockly.BlockSvg.NO_PREVIOUS_INPUT_X_MIN = 12 * Blockly.BlockSvg.GRID_UNIT;
 Blockly.BlockSvg.INLINE_PADDING_Y = 2 * Blockly.BlockSvg.GRID_UNIT;
 
 /**
+ * Point size of text field before animation. Must match size in CSS.
+ * See implementation in field_textinput.
+ */
+Blockly.BlockSvg.FONTSIZE_INITIAL = 12;
+
+/**
+ * Point size of text field after animation.
+ * See implementation in field_textinput.
+ */
+Blockly.BlockSvg.FONTSIZE_FINAL = 12;
+
+/**
  * Change the colour of a block.
  */
 Blockly.BlockSvg.prototype.updateColour = function() {
