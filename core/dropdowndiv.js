@@ -166,6 +166,38 @@ Blockly.DropDownDiv.setColour = function(backgroundColour, borderColour) {
 };
 
 /**
+ * Shortcut to show and place the drop-down with positioning determined
+ * by a particular block. The primary position will be below the block,
+ * and the secondary position above the block. Drop-down will be
+ * constrained to the block's workspace.
+ * @param {Object} owner The object showing the drop-down
+ * @param {!Blockly.Block} block Block to position the drop-down around.
+ * @param {Function=} opt_onHide Optional callback for when the drop-down is hidden.
+ * @param {Number} opt_secondaryYOffset Optional Y offset for above-block positioning.
+ * @return {boolean} True if the menu rendered below block; false if above.
+ */
+Blockly.DropDownDiv.showPositionedByBlock = function(owner, block,
+      opt_onHide, opt_secondaryYOffset) {
+  var scale = block.workspace.scale;
+  var bBox = block.getHeightWidth();
+  bBox.width *= scale;
+  bBox.height *= scale;
+  var position = goog.style.getPageOffset(block.getSvgRoot());
+  // If we can fit it, render below the block.
+  var primaryX = position.x + bBox.width / 2;
+  var primaryY = position.y + bBox.height;
+  // If we can't fit it, render above the entire parent block.
+  var secondaryX = primaryX;
+  var secondaryY = position.y;
+  if (opt_secondaryYOffset) {
+    secondaryY += opt_secondaryYOffset;
+  }
+  // Set bounds to workspace; show the drop-down.
+  Blockly.DropDownDiv.setBoundsElement(block.workspace.getParentSvg().parentNode);
+  return Blockly.DropDownDiv.show(this, primaryX, primaryY, secondaryX, secondaryY, opt_onHide);
+};
+
+/**
  * Show and place the drop-down.
  * The drop-down is placed with an absolute "origin point" (x, y) - i.e.,
  * the arrow will point at this origin and box will positioned below or above it.
