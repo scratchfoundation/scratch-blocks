@@ -273,7 +273,11 @@ Blockly.Field.prototype.render_ = function() {
     // if half the text length is not at least center of
     // visible field (FIELD_WIDTH), center it there instead.
     if (this.sourceBlock_.isShadow()) {
-      centerTextX = Math.max(centerTextX, Blockly.BlockSvg.FIELD_WIDTH / 2);
+      if (this.sourceBlock_.RTL) {
+        centerTextX = Math.min(centerTextX, width - (Blockly.BlockSvg.FIELD_WIDTH / 2));
+      } else {
+        centerTextX = Math.max(centerTextX, Blockly.BlockSvg.FIELD_WIDTH / 2);
+      }
     }
     this.textElement_.setAttribute('x', centerTextX);
 
