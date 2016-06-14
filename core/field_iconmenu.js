@@ -231,19 +231,6 @@ Blockly.FieldIconMenu.prototype.showEditor_ = function() {
     contentDiv.appendChild(button);
   }
   contentDiv.style.width = Blockly.FieldIconMenu.DROPDOWN_WIDTH + 'px';
-  // Calculate positioning for the drop-down
-  // sourceBlock_ is the rendered shadow field button
-  var scale = this.sourceBlock_.workspace.scale;
-  var bBox = this.sourceBlock_.getHeightWidth();
-  bBox.width *= scale;
-  bBox.height *= scale;
-  var position = this.getAbsoluteXY_();
-  // If we can fit it, render below the shadow block
-  var primaryX = position.x + bBox.width / 2;
-  var primaryY = position.y + bBox.height;
-  // If we can't fit it, render above the entire parent block
-  var secondaryX = primaryX;
-  var secondaryY = position.y - (Blockly.BlockSvg.MIN_BLOCK_Y * scale) - (Blockly.BlockSvg.FIELD_Y_OFFSET * scale);
 
   Blockly.DropDownDiv.setColour(this.sourceBlock_.getColour(), this.sourceBlock_.getColourTertiary());
 
@@ -252,9 +239,13 @@ Blockly.FieldIconMenu.prototype.showEditor_ = function() {
   this.sourceBlock_.setColour(this.sourceBlock_.getColourSecondary(),
     this.sourceBlock_.getColourSecondary(), this.sourceBlock_.getColourTertiary());
 
-  Blockly.DropDownDiv.setBoundsElement(this.sourceBlock_.workspace.getParentSvg().parentNode);
-  var renderedPrimary = Blockly.DropDownDiv.show(this, primaryX, primaryY,
-    secondaryX, secondaryY, this.onHide_.bind(this));
+  var scale = this.sourceBlock_.workspace.scale;
+  // Offset for icon-type horizontal blocks.
+  var secondaryYOffset = (
+    -(Blockly.BlockSvg.MIN_BLOCK_Y * scale) - (Blockly.BlockSvg.FIELD_Y_OFFSET * scale)
+  );
+  var renderedPrimary = Blockly.DropDownDiv.showPositionedByBlock(
+      this, this.sourceBlock_, this.onHide_.bind(this), secondaryYOffset);
   if (!renderedPrimary) {
     // Adjust for rotation
     var arrowX = this.arrowX_ + Blockly.DropDownDiv.ARROW_SIZE / 1.5 + 1;
