@@ -415,6 +415,39 @@ Blockly.BlockSvg.prototype.updateColour = function() {
 };
 
 /**
+ * Visual effect to show that if the dragging block is dropped, this block will
+ * be replaced.  If a shadow block it will disappear.  Otherwise it will bump.
+ * @param {boolean} add True if highlighting should be added.
+ */
+Blockly.BlockSvg.prototype.highlightForReplacement = function(add) {
+  if (add) {
+    this.svgPath_.setAttribute('fill', '#eeff01'); // TODO:#413
+  } else {
+    this.updateColour();
+  }
+};
+
+/**
+ * Visual effect to show that if the dragging block is dropped it will connect
+ * to this input.
+ * @param {Blockly.Connection} conn The connection on the input to highlight.
+ * @param {boolean} add True if highlighting should be added.
+ */
+Blockly.BlockSvg.prototype.highlightShapeForInput = function(conn, add) {
+  var input = this.getInputWithConnection(conn);
+  if (!input) {
+    throw 'No input found for the connection';
+  }
+  var inputShape = this.inputShapes_[input.name];
+  if (add) {
+    inputShape.setAttribute('fill',
+      Math.random() < 0.5 ? '#ff00ff' : '#00ff00');  // TODO:#413
+  } else {
+    inputShape.setAttribute('fill', this.getColourTertiary());
+  }
+};
+
+/**
  * Returns a bounding box describing the dimensions of this block
  * and any blocks stacked below it.
  * @return {!{height: number, width: number}} Object with height and width properties.

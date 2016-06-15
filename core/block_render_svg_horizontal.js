@@ -299,6 +299,19 @@ Blockly.BlockSvg.prototype.updateColour = function() {
 };
 
 /**
+ * Visual effect to show that if the dragging block is dropped, this block will
+ * be replaced.  If a shadow block it will disappear.  Otherwise it will bump.
+ * @param {boolean} add True if highlighting should be added.
+ */
+Blockly.BlockSvg.prototype.highlightForReplacement = function(add) {
+  if (add) {
+    this.svgPath_.setAttribute('fill', '#eeff01'); // TODO:#413
+  } else {
+    this.updateColour();
+  }
+};
+
+/**
  * Returns a bounding box describing the dimensions of this block
  * and any blocks stacked below it.
  * @param {boolean=} opt_ignoreFields True if we should ignore fields in the
