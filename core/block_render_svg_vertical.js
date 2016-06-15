@@ -324,7 +324,7 @@ Blockly.BlockSvg.FIELD_WIDTH_MIN_EDIT = 8 * Blockly.BlockSvg.GRID_UNIT;
  * Maximum width of user inputs during editing
  * @const
  */
-Blockly.BlockSvg.FIELD_WIDTH_MAX_EDIT = Infinity;
+Blockly.BlockSvg.FIELD_WIDTH_MAX_EDIT = 52 * Blockly.BlockSvg.GRID_UNIT;
 
 /**
  * Maximum height of user inputs during editing
@@ -374,6 +374,30 @@ Blockly.BlockSvg.NO_PREVIOUS_INPUT_X_MIN = 12 * Blockly.BlockSvg.GRID_UNIT;
  * @const
  */
 Blockly.BlockSvg.INLINE_PADDING_Y = 2 * Blockly.BlockSvg.GRID_UNIT;
+
+/**
+ * Point size of text field before animation. Must match size in CSS.
+ * See implementation in field_textinput.
+ */
+Blockly.BlockSvg.FIELD_TEXTINPUT_FONTSIZE_INITIAL = 12;
+
+/**
+ * Point size of text field after animation.
+ * See implementation in field_textinput.
+ */
+Blockly.BlockSvg.FIELD_TEXTINPUT_FONTSIZE_FINAL = 12;
+
+/**
+ * Whether text fields are allowed to expand past their truncated block size.
+ * @const{boolean}
+ */
+Blockly.BlockSvg.FIELD_TEXTINPUT_EXPAND_PAST_TRUNCATION = false;
+
+/**
+ * Whether text fields should animate their positioning.
+ * @const{boolean}
+ */
+Blockly.BlockSvg.FIELD_TEXTINPUT_ANIMATE_POSITIONING = false;
 
 /**
  * Change the colour of a block.
