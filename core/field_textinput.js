@@ -171,7 +171,7 @@ Blockly.FieldTextInput.prototype.showEditor_ = function(opt_quietInput, opt_read
   div.style.transition = transitionProperties;
   htmlInput.style.transition = 'font-size ' + Blockly.FieldTextInput.ANIMATION_TIME + 's';
   // The animated properties themselves
-  htmlInput.style.fontSize = Blockly.BlockSvg.FONTSIZE_FINAL + 'pt';
+  htmlInput.style.fontSize = Blockly.BlockSvg.FIELD_TEXTINPUT_FONTSIZE_FINAL + 'pt';
   div.style.boxShadow = '0px 0px 0px 4px ' + Blockly.Colours.fieldShadow;
 };
 
@@ -349,7 +349,7 @@ Blockly.FieldTextInput.prototype.widgetDispose_ = function() {
         htmlInput.onWorkspaceChangeWrapper_);
 
     // Animation of disposal
-    htmlInput.style.fontSize = Blockly.BlockSvg.FONTSIZE_INITIAL + 'pt';
+    htmlInput.style.fontSize = Blockly.BlockSvg.FIELD_TEXTINPUT_FONTSIZE_INITIAL + 'pt';
     div.style.boxShadow = '';
     // Resize to actual size of final source block.
     if (thisField.sourceBlock_) {

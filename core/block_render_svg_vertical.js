@@ -379,13 +379,13 @@ Blockly.BlockSvg.INLINE_PADDING_Y = 2 * Blockly.BlockSvg.GRID_UNIT;
  * Point size of text field before animation. Must match size in CSS.
  * See implementation in field_textinput.
  */
-Blockly.BlockSvg.FONTSIZE_INITIAL = 12;
+Blockly.BlockSvg.FIELD_TEXTINPUT_FONTSIZE_INITIAL = 12;
 
 /**
  * Point size of text field after animation.
  * See implementation in field_textinput.
  */
-Blockly.BlockSvg.FONTSIZE_FINAL = 12;
+Blockly.BlockSvg.FIELD_TEXTINPUT_FONTSIZE_FINAL = 12;
 
 /**
  * Whether text fields are allowed to expand past their truncated block size.
