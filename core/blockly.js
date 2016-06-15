@@ -110,6 +110,14 @@ Blockly.insertionMarkerConnection_ = null;
 Blockly.insertionMarker_ = null;
 
 /**
+ * The block that will be replaced if the drag is released immediately.  Should
+ * be visually highlighted to indicate this to the user.
+ * @type {Blockly.Block}
+ * @private
+ */
+Blockly.replacementMarker_ = null;
+
+/**
  * Connection that was bumped out of the way by an insertion marker, and may
  * need to be put back as the drag continues.
  * @type {Blockly.Connection}

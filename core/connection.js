@@ -439,12 +439,8 @@ Blockly.Connection.prototype.isConnectionAllowed = function(candidate) {
       break;
     }
     case Blockly.OUTPUT_VALUE: {
-      // Don't offer to connect an already connected left (male) value plug to
-      // an available right (female) value plug.
-      if (candidate.targetConnection || this.targetConnection) {
-        return false;
-      }
-      break;
+      // Can't drag an input to an output--you have to move the inferior block.
+      return false;
     }
     case Blockly.INPUT_VALUE: {
       // Offering to connect the left (male) of a value block to an already
@@ -469,9 +465,13 @@ Blockly.Connection.prototype.isConnectionAllowed = function(candidate) {
         return false;
       }
       // Don't let a block with no next connection bump other blocks out of the
-      // stack.
+      // stack.  But covering up a shadow block or stack of shadow blocks is
+      // fine.  Similarly, replacing a terminal statement with another terminal
+      // statement is allowed.
       if (candidate.isConnectedToNonInsertionMarker() &&
-          !this.sourceBlock_.nextConnection) {
+          !this.sourceBlock_.nextConnection &&
+          !candidate.targetBlock().isShadow() &&
+          candidate.targetBlock().nextConnection) {
         return false;
       }
       break;

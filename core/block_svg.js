@@ -296,7 +296,9 @@ Blockly.BlockSvg.terminateDrag_ = function() {
   if (Blockly.dragMode_ == Blockly.DRAG_FREE) {
     // Terminate a drag operation.
     if (selected) {
-      if (Blockly.insertionMarker_) {
+      if (Blockly.replacementMarker_) {
+        Blockly.BlockSvg.removeReplacementMarker();
+      } else if (Blockly.insertionMarker_) {
         Blockly.Events.disable();
         if (Blockly.insertionMarkerConnection_) {
           Blockly.BlockSvg.disconnectInsertionMarker();
@@ -1070,7 +1072,9 @@ Blockly.BlockSvg.prototype.updatePreviews = function(closestConnection,
   // with Web Blockly the name "highlightedConnection" will still be used.
   if (Blockly.highlightedConnection_ &&
       Blockly.highlightedConnection_ != closestConnection) {
-    if (Blockly.insertionMarker_ && Blockly.insertionMarkerConnection_) {
+    if (Blockly.replacementMarker_) {
+      Blockly.BlockSvg.removeReplacementMarker();
+    } else if (Blockly.insertionMarker_ && Blockly.insertionMarkerConnection_) {
       Blockly.BlockSvg.disconnectInsertionMarker();
     }
     // If there's already an insertion marker but it's representing the wrong
@@ -1085,39 +1089,25 @@ Blockly.BlockSvg.prototype.updatePreviews = function(closestConnection,
     Blockly.localConnection_ = null;
   }
 
-  // Add an insertion marker if needed.
+  // Add an insertion marker or replacement marker if needed.
   if (closestConnection &&
       closestConnection != Blockly.highlightedConnection_ &&
       !closestConnection.sourceBlock_.isInsertionMarker()) {
     Blockly.highlightedConnection_ = closestConnection;
     Blockly.localConnection_ = localConnection;
-    if (!Blockly.insertionMarker_) {
-      Blockly.insertionMarker_ =
-          this.workspace.newBlock(Blockly.localConnection_.sourceBlock_.type);
-      Blockly.insertionMarker_.setInsertionMarker(true);
-      Blockly.insertionMarker_.initSvg();
-    }
 
-    var insertionMarker = Blockly.insertionMarker_;
-    var insertionMarkerConnection = insertionMarker.getMatchingConnection(
-        localConnection.sourceBlock_, localConnection);
-    if (insertionMarkerConnection != Blockly.insertionMarkerConnection_) {
-      insertionMarker.rendered = true;
-      // Render disconnected from everything else so that we have a valid
-      // connection location.
-      insertionMarker.render();
-      insertionMarker.getSvgRoot().setAttribute('visibility', 'visible');
+    // Dragging a block over a nexisting block in an input should replace the
+    // existing block and bump it out.  Similarly, dragging a terminal block
+    // over another (connected) terminal block will replace, not insert.
+    var shouldReplace = (localConnection.type == Blockly.OUTPUT_VALUE ||
+        (localConnection.type == Blockly.PREVIOUS_STATEMENT &&
+        closestConnection.isConnected() &&
+        !this.nextConnection));
 
-      this.positionNewBlock(insertionMarker,
-          insertionMarkerConnection, closestConnection);
-
-      if (insertionMarkerConnection.type == Blockly.PREVIOUS_STATEMENT &&
-          !insertionMarker.nextConnection) {
-        Blockly.bumpedConnection_ = closestConnection.targetConnection;
-      }
-      // Renders insertion marker.
-      insertionMarkerConnection.connect(closestConnection);
-      Blockly.insertionMarkerConnection_ = insertionMarkerConnection;
+    if (shouldReplace) {
+      this.addReplacementMarker_(localConnection, closestConnection);
+    } else {  // Should insert
+      this.connectInsertionMarker_(localConnection, closestConnection);
     }
   }
   // Reenable events.
@@ -1127,6 +1117,81 @@ Blockly.BlockSvg.prototype.updatePreviews = function(closestConnection,
   // dropped here.
   if (this.isDeletable()) {
     this.workspace.isDeleteArea(e);
+  }
+};
+
+/**
+ * Add highlighting showing which block will be replaced.
+ * @param {Blockly.Connection} localConnection The connection on the dragging
+ *     block.
+ * @param {Blockly.Connection} closestConnection The connnection to pretend to
+ *     connect to.
+ */
+Blockly.BlockSvg.prototype.addReplacementMarker_ = function(localConnection,
+    closestConnection) {
+  if (closestConnection.targetBlock()) {
+    Blockly.replacementMarker_ = closestConnection.targetBlock();
+    Blockly.replacementMarker_.highlightForReplacement(true);
+  } else if(localConnection.type == Blockly.OUTPUT_VALUE) {
+    Blockly.replacementMarker_ = closestConnection.sourceBlock_;
+    Blockly.replacementMarker_.highlightShapeForInput(closestConnection,
+        true);
+  }
+};
+
+/**
+ * Get rid of the highlighting marking the block that will be replaced.
+ */
+Blockly.BlockSvg.removeReplacementMarker = function() {
+  // If there's no block in place, but we're still connecting to a value input,
+  // then we must be highlighting an input shape.
+  if (Blockly.highlightedConnection_.type == Blockly.INPUT_VALUE &&
+    !Blockly.highlightedConnection_.isConnected()) {
+    Blockly.replacementMarker_.highlightShapeForInput(
+        Blockly.highlightedConnection_, false);
+  } else {
+    Blockly.replacementMarker_.highlightForReplacement(false);
+  }
+  Blockly.replacementMarker_ = null;
+};
+
+/**
+ * Place and render an insertion marker to indicate what would happen if you
+ * release the drag right now.
+ * @param {Blockly.Connection} localConnection The connection on the dragging
+ *     block.
+ * @param {Blockly.Connection} closestConnection The connnection to connect the
+ *     insertion marker to.
+ */
+Blockly.BlockSvg.prototype.connectInsertionMarker_ = function(localConnection,
+    closestConnection) {
+  if (!Blockly.insertionMarker_) {
+    Blockly.insertionMarker_ =
+        this.workspace.newBlock(Blockly.localConnection_.sourceBlock_.type);
+    Blockly.insertionMarker_.setInsertionMarker(true);
+    Blockly.insertionMarker_.initSvg();
+  }
+
+  var insertionMarker = Blockly.insertionMarker_;
+  var insertionMarkerConnection = insertionMarker.getMatchingConnection(
+      localConnection.sourceBlock_, localConnection);
+  if (insertionMarkerConnection != Blockly.insertionMarkerConnection_) {
+    insertionMarker.rendered = true;
+    // Render disconnected from everything else so that we have a valid
+    // connection location.
+    insertionMarker.render();
+    insertionMarker.getSvgRoot().setAttribute('visibility', 'visible');
+
+    this.positionNewBlock(insertionMarker,
+        insertionMarkerConnection, closestConnection);
+
+    if (insertionMarkerConnection.type == Blockly.PREVIOUS_STATEMENT &&
+        !insertionMarker.nextConnection) {
+      Blockly.bumpedConnection_ = closestConnection.targetConnection;
+    }
+    // Renders insertion marker.
+    insertionMarkerConnection.connect(closestConnection);
+    Blockly.insertionMarkerConnection_ = insertionMarkerConnection;
   }
 };
 
