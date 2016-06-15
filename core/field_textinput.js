@@ -302,7 +302,6 @@ Blockly.FieldTextInput.prototype.resizeEditor_ = function() {
     xy.y += 1 * scale;
   }
   if (goog.userAgent.WEBKIT) {
-    xy.x += 0;
     xy.y -= 1 * scale;
   }
   // Finally, set the actual style
