@@ -291,7 +291,7 @@ Blockly.FieldTextInput.prototype.resizeEditor_ = function() {
   // whereas the right edge is fixed.  Reposition the editor.
   if (this.sourceBlock_.RTL) {
     xy.x += width;
-    xy.x -= div.offsetWidth;
+    xy.x -= div.offsetWidth * scale;
   }
   // Shift by a few pixels to line up exactly.
   xy.y += 1 * scale;
@@ -302,7 +302,7 @@ Blockly.FieldTextInput.prototype.resizeEditor_ = function() {
     xy.y += 1 * scale;
   }
   if (goog.userAgent.WEBKIT) {
-    xy.x += 0.5;
+    xy.x += 0;
     xy.y -= 1 * scale;
   }
   // Finally, set the actual style
