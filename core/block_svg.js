@@ -1039,6 +1039,11 @@ Blockly.BlockSvg.prototype.handleDragFree_ = function(oldXY, newXY, e) {
     }
   }
 
+  // Always update previews for output connections.
+  if (localConnection && localConnection.type == Blockly.OUTPUT_VALUE) {
+    updatePreviews = true;
+  }
+
   if (updatePreviews) {
     var candidateIsLast = (localConnection == lastOnStack);
     this.updatePreviews(closestConnection, localConnection, radiusConnection,
