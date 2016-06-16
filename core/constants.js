@@ -35,7 +35,7 @@ Blockly.DRAG_RADIUS = 5;
 /**
  * Maximum misalignment between connections for them to snap together.
  */
-Blockly.SNAP_RADIUS = 30;
+Blockly.SNAP_RADIUS = 72;
 
 /**
  * Maximum misalignment between connections for them to snap together,
