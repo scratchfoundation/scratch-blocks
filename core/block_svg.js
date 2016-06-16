@@ -1014,6 +1014,15 @@ Blockly.BlockSvg.prototype.handleDragFree_ = function(oldXY, newXY, e) {
   var closestConnection = null;
   var localConnection = null;
   var radiusConnection = Blockly.SNAP_RADIUS;
+  // If there is already a connection highlighted,
+  // increase the radius we check for making new connections.
+  // Why? When a connection is highlighted, blocks move around when the insertion
+  // marker is created, which could cause the connection became out of range.
+  // By increasing radiusConnection when a connection already exists,
+  // we never "lose" the connection from the offset.
+  if (Blockly.localConnection_ && Blockly.highlightedConnection_) {
+    radiusConnection = Blockly.CONNECTING_SNAP_RADIUS;
+  }
   for (i = 0; i < myConnections.length; i++) {
     var myConnection = myConnections[i];
     var neighbour = myConnection.closest(radiusConnection, dxy);
