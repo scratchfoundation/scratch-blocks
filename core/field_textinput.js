@@ -215,12 +215,13 @@ Blockly.FieldTextInput.prototype.onHtmlInputChange_ = function(e) {
     htmlInput.oldValue_ = text;
     this.setValue(text);
     this.validate_();
+    this.resizeEditor_();
   } else if (goog.userAgent.WEBKIT) {
     // Cursor key.  Render the source block to show the caret moving.
     // Chrome only (version 26, OS X).
     this.sourceBlock_.render();
+    this.resizeEditor_();
   }
-  this.resizeEditor_();
 };
 
 /**
