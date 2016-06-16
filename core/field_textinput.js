@@ -157,6 +157,13 @@ Blockly.FieldTextInput.prototype.showEditor_ = function(opt_quietInput, opt_read
   // Bind to keyPress -- repeatedly resize when holding down a key.
   htmlInput.onKeyPressWrapper_ =
       Blockly.bindEvent_(htmlInput, 'keypress', this, this.onHtmlInputChange_);
+  // For modern browsers (IE 9+, Chrome, Firefox, etc.) that support the
+  // DOM input event, also trigger onHtmlInputChange_ then. The input event
+  // is triggered on keypress but after the value of the text input
+  // has updated, allowing us to resize the block at that time.
+  htmlInput.onInputWrapper_ =
+      Blockly.bindEvent_(htmlInput, 'input', this, this.onHtmlInputChange_);
+
   htmlInput.onWorkspaceChangeWrapper_ = this.resizeEditor_.bind(this);
   this.workspace_.addChangeListener(htmlInput.onWorkspaceChangeWrapper_);
 
@@ -208,12 +215,13 @@ Blockly.FieldTextInput.prototype.onHtmlInputChange_ = function(e) {
     htmlInput.oldValue_ = text;
     this.setValue(text);
     this.validate_();
+    this.resizeEditor_();
   } else if (goog.userAgent.WEBKIT) {
     // Cursor key.  Render the source block to show the caret moving.
     // Chrome only (version 26, OS X).
     this.sourceBlock_.render();
+    this.resizeEditor_();
   }
-  this.resizeEditor_();
 };
 
 /**
@@ -344,6 +352,7 @@ Blockly.FieldTextInput.prototype.widgetDispose_ = function() {
     Blockly.unbindEvent_(htmlInput.onKeyDownWrapper_);
     Blockly.unbindEvent_(htmlInput.onKeyUpWrapper_);
     Blockly.unbindEvent_(htmlInput.onKeyPressWrapper_);
+    Blockly.unbindEvent_(htmlInput.onInputWrapper_);
     thisField.workspace_.removeChangeListener(
         htmlInput.onWorkspaceChangeWrapper_);
 
