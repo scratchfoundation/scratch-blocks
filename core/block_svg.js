@@ -1025,7 +1025,9 @@ Blockly.BlockSvg.prototype.handleDragFree_ = function(oldXY, newXY, e) {
   }
 
   var updatePreviews = true;
-  if (Blockly.localConnection_ && Blockly.highlightedConnection_) {
+  if (localConnection && localConnection.type == Blockly.OUTPUT_VALUE) {
+    updatePreviews = true; // Always update previews for output connections.
+  } else if (Blockly.localConnection_ && Blockly.highlightedConnection_) {
     var xDiff = Blockly.localConnection_.x_ + dxy.x -
         Blockly.highlightedConnection_.x_;
     var yDiff = Blockly.localConnection_.y_ + dxy.y -
@@ -1037,11 +1039,6 @@ Blockly.BlockSvg.prototype.handleDragFree_ = function(oldXY, newXY, e) {
         Blockly.CURRENT_CONNECTION_PREFERENCE) {
       updatePreviews = false;
     }
-  }
-
-  // Always update previews for output connections.
-  if (localConnection && localConnection.type == Blockly.OUTPUT_VALUE) {
-    updatePreviews = true;
   }
 
   if (updatePreviews) {
