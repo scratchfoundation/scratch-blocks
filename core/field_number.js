@@ -48,7 +48,8 @@ Blockly.FieldNumber = function(text, opt_validator, precision, min, max) {
   this.precision_ = precision;
   this.min_ = min;
   this.max_ = max;
-  Blockly.FieldNumber.superClass_.constructor.call(this, text, opt_validator);
+  var numRestrictor = /[\d]|[e]|[-]/; // From Scratch 2.0: restrict except digits, e, and -.
+  Blockly.FieldNumber.superClass_.constructor.call(this, text, opt_validator, numRestrictor);
 };
 goog.inherits(Blockly.FieldNumber, Blockly.FieldTextInput);
 
