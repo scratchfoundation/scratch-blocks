@@ -899,13 +899,6 @@ Blockly.BlockSvg.prototype.renderDrawRight_ = function(steps,
           }
           // Attempt to center the connection vertically.
           var connectionYOffset = row.height / 2;
-          // Read the block which is connected to subtract half its height.
-          if (input.connection.targetConnection) {
-            var sourceBlock = input.connection.targetConnection.getSourceBlock();
-            if (sourceBlock.rendered) {
-              connectionYOffset -= sourceBlock.getHeightWidth().height / 2;
-            }
-          }
           connectionY = connectionsXY.y + cursorY + connectionYOffset;
           input.connection.moveTo(connectionX, connectionY);
           if (input.connection.isConnected()) {
@@ -1102,7 +1095,8 @@ Blockly.BlockSvg.prototype.renderDrawBottom_ = function(steps, connectionsXY,
 Blockly.BlockSvg.prototype.renderDrawLeft_ = function(steps, connectionsXY) {
   if (this.outputConnection) {
     // Create output connection.
-    this.outputConnection.moveTo(connectionsXY.x, connectionsXY.y);
+    // Scratch-style reporters have output connection y at half block height.
+    this.outputConnection.moveTo(connectionsXY.x, connectionsXY.y + this.height / 2);
     // This connection will be tightened when the parent renders.
   }
   if (this.edgeShape_) {
