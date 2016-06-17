@@ -46,7 +46,6 @@ var getNumRestrictor = function(decimalAllowed, negativeAllowed) {
   if (negativeAllowed) {
     pattern += "|[-]";
   }
-  console.log(pattern);
   return new RegExp(pattern);
 };
 
