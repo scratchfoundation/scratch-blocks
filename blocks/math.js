@@ -38,15 +38,14 @@ Blockly.Blocks.math.HUE = Blockly.Colours.textField;
 
 Blockly.Blocks['math_number'] = {
   /**
-   * Block for numeric value.
+   * Block for generic numeric value.
    * @this Blockly.Block
    */
   init: function() {
     this.setHelpUrl(Blockly.Msg.MATH_NUMBER_HELPURL);
     this.setColour(Blockly.Blocks.math.HUE);
     this.appendDummyInput()
-        .appendField(new Blockly.FieldNumber('0',
-        Blockly.FieldTextInput.numberValidator, 20, -Infinity, Infinity), 'NUM');
+        .appendField(new Blockly.FieldNumber('0', true, true), 'NUM');
     this.setOutput(true, 'Number');
     // Assign 'this' to a variable for use in the tooltip closure below.
     var thisBlock = this;
@@ -61,30 +60,28 @@ Blockly.Blocks['math_number'] = {
 
 Blockly.Blocks['math_whole_number'] = {
   /**
-   * Block for whole number value, with min of 0 and max Infinity, precision 0.
+   * Block for whole number value, no negatives or decimals.
    * @this Blockly.Block
    */
   init: function() {
     this.setHelpUrl(Blockly.Msg.MATH_NUMBER_HELPURL);
     this.setColour(Blockly.Blocks.math.HUE);
     this.appendDummyInput()
-        .appendField(new Blockly.FieldNumber('0',
-        Blockly.FieldNumber.numberValidator, 0, 0, Infinity), 'NUM');
+        .appendField(new Blockly.FieldNumber('0', false, false), 'NUM');
     this.setOutput(true, 'Number');
   }
 };
 
 Blockly.Blocks['math_positive_number'] = {
   /**
-   * Block for positive number value, with min of 0 and max Infinity, precision 20.
+   * Block for positive number value, with decimal.
    * @this Blockly.Block
    */
   init: function() {
     this.setHelpUrl(Blockly.Msg.MATH_NUMBER_HELPURL);
     this.setColour(Blockly.Blocks.math.HUE);
     this.appendDummyInput()
-        .appendField(new Blockly.FieldNumber('0',
-        Blockly.FieldNumber.numberValidator, 20, 0, Infinity), 'NUM');
+        .appendField(new Blockly.FieldNumber('0', true, false), 'NUM');
     this.setOutput(true, 'Number');
   }
 };
