@@ -177,17 +177,14 @@
         var prototypes = [];
         var toolbox = document.getElementById('toolbox');
         var blocks = toolbox.getElementsByTagName('block');
-        for (var i = 0, block; block = blocks[i]; i++) {
-          prototypes.push(block.getAttribute('type'));
-        }
         for (var i = 0; i < n; i++) {
-          var prototype = prototypes[Math.floor(Math.random() * prototypes.length)];
-          var block = workspace.newBlock(prototype);
+          var blockXML = blocks[Math.floor(Math.random() * blocks.length)];
+          var block = Blockly.Xml.domToBlock(blockXML, workspace);
           block.initSvg();
-          block.getSvgRoot().setAttribute('transform', 'translate(' +
-          Math.round(Math.random() * 450 + 40) + ', ' +
-          Math.round(Math.random() * 600 + 40) + ')');
-          block.render();
+          block.moveBy(
+            Math.round(Math.random() * 450 + 40),
+            Math.round(Math.random() * 600 + 40)
+          );
         }
       }
 
