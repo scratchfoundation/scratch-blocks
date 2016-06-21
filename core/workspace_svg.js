@@ -515,8 +515,7 @@ Blockly.WorkspaceSvg.prototype.glowStack = function(id, isGlowingStack) {
  * @param {!Element} xmlBlock XML block element.
  */
 Blockly.WorkspaceSvg.prototype.paste = function(xmlBlock) {
-  if (!this.rendered || xmlBlock.getElementsByTagName('block').length >=
-      this.remainingCapacity()) {
+  if (!this.rendered) {
     return;
   }
   Blockly.terminateDrag_();  // Dragging while pasting?  No.
