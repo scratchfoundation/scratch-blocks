@@ -780,9 +780,6 @@ Blockly.BlockSvg.prototype.showContextMenu_ = function(e) {
         Blockly.duplicate_(block);
       }
     };
-    if (this.getDescendants().length > this.workspace.remainingCapacity()) {
-      duplicateOption.enabled = false;
-    }
     menuOptions.push(duplicateOption);
 
     if (this.isEditable() && this.workspace.options.comments) {

@@ -127,7 +127,6 @@ Blockly.Options = function(options) {
   this.comments = hasComments;
   this.disable = hasDisable;
   this.readOnly = readOnly;
-  this.maxBlocks = options['maxBlocks'] || Infinity;
   this.pathToMedia = pathToMedia;
   this.hasCategories = hasCategories;
   this.hasScrollbars = hasScrollbars;

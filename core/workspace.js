@@ -212,18 +212,6 @@ Blockly.Workspace.prototype.newBlock = function(prototypeName, opt_id) {
 };
 
 /**
- * The number of blocks that may be added to the workspace before reaching
- *     the maxBlocks.
- * @return {number} Number of blocks left.
- */
-Blockly.Workspace.prototype.remainingCapacity = function() {
-  if (isNaN(this.options.maxBlocks)) {
-    return Infinity;
-  }
-  return this.options.maxBlocks - this.getAllBlocks().length;
-};
-
-/**
  * Undo or redo the previous action.
  * @param {boolean} redo False if undo, true if redo.
  */
