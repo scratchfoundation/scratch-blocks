@@ -47,7 +47,7 @@ Blockly.STACK_GLOW_RADIUS = 1;
  * @type {number}
  * @const
  */
-Blockly.REPLACEMENT_GLOW_RADIUS = 3;
+Blockly.REPLACEMENT_GLOW_RADIUS = 2;
 
 /**
  * Inject a Blockly editor into the specified container element (usually a div).
