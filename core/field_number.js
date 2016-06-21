@@ -66,7 +66,7 @@ var getNumRestrictor = function(decimalAllowed, negativeAllowed) {
  * @extends {Blockly.FieldTextInput}
  * @constructor
  */
-Blockly.FieldNumber = function(text, min, max, precision, opt_validator) {
+Blockly.FieldNumber = function(text, opt_validator, min, max, precision) {
   this.decimalAllowed_ = precision < 1;
   this.negativeAllowed_ = min < 0;
   var numRestrictor = getNumRestrictor(this.decimalAllowed_, this.negativeAllowed_);
