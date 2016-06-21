@@ -224,10 +224,6 @@ Blockly.Flyout.prototype.init = function(targetWorkspace) {
 
   Array.prototype.push.apply(this.eventWrappers_,
       Blockly.bindEvent_(this.svgGroup_, 'wheel', this, this.wheel_));
-  if (!this.autoClose) {
-    this.filterWrapper_ = this.filterForCapacity_.bind(this);
-    this.targetWorkspace_.addChangeListener(this.filterWrapper_);
-  }
   // Dragging the flyout up and down (or left and right).
   Array.prototype.push.apply(this.eventWrappers_,
       Blockly.bindEvent_(this.svgGroup_, 'mousedown', this, this.onMouseDown_));
@@ -240,10 +236,6 @@ Blockly.Flyout.prototype.init = function(targetWorkspace) {
 Blockly.Flyout.prototype.dispose = function() {
   this.hide();
   Blockly.unbindEvent_(this.eventWrappers_);
-  if (this.filterWrapper_) {
-    this.targetWorkspace_.removeChangeListener(this.filterWrapper_);
-    this.filterWrapper_ = null;
-  }
   if (this.scrollbar_) {
     this.scrollbar_.dispose();
     this.scrollbar_ = null;
@@ -640,7 +632,6 @@ Blockly.Flyout.prototype.show = function(xmlList) {
   this.reflow();
 
   this.offsetHorizontalRtlBlocks(this.workspace_.getTopBlocks(false));
-  this.filterForCapacity_();
 
   // Fire a resize event to update the flyout's scrollbar.
   Blockly.svgResize(this.workspace_);
@@ -980,8 +971,6 @@ Blockly.Flyout.prototype.createBlockFunc_ = function(originBlock) {
     }
     if (flyout.autoClose) {
       flyout.hide();
-    } else {
-      flyout.filterForCapacity_();
     }
     // Start a dragging operation on the new block.
     block.onMouseDown_(e);
@@ -1064,28 +1053,6 @@ Blockly.Flyout.prototype.placeNewBlock_ = function(originBlock) {
   // Move the new block to where the old block is.
   block.moveBy(xyOld.x - xyNew.x, xyOld.y - xyNew.y);
   return block;
-};
-
-/**
- * Filter the blocks on the flyout to disable the ones that are above the
- * capacity limit.
- * @private
- */
-Blockly.Flyout.prototype.filterForCapacity_ = function() {
-  var filtered = false;
-  var remainingCapacity = this.targetWorkspace_.remainingCapacity();
-  var blocks = this.workspace_.getTopBlocks(false);
-  for (var i = 0, block; block = blocks[i]; i++) {
-    if (this.permanentlyDisabled_.indexOf(block) == -1) {
-      var allBlocks = block.getDescendants();
-      block.setDisabled(allBlocks.length > remainingCapacity);
-      filtered = true;
-    }
-  }
-  if (filtered) {
-    // Top-most block.  Fire an event to allow scrollbars to resize.
-    Blockly.asyncSvgResize(this.workspace);
-  }
 };
 
 /**
