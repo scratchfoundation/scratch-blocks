@@ -324,7 +324,7 @@ Blockly.BlockSvg.FIELD_WIDTH_MIN_EDIT = 8 * Blockly.BlockSvg.GRID_UNIT;
  * Maximum width of user inputs during editing
  * @const
  */
-Blockly.BlockSvg.FIELD_WIDTH_MAX_EDIT = 52 * Blockly.BlockSvg.GRID_UNIT;
+Blockly.BlockSvg.FIELD_WIDTH_MAX_EDIT = Infinity;
 
 /**
  * Maximum height of user inputs during editing
