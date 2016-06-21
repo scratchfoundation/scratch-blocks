@@ -445,9 +445,9 @@ Blockly.BlockSvg.prototype.updateColour = function() {
  */
 Blockly.BlockSvg.prototype.highlightForReplacement = function(add) {
   if (add) {
-    this.svgPath_.setAttribute('fill', '#eeff01'); // TODO:#413
+    this.svgPath_.setAttribute('filter', 'url(#blocklyReplacementGlowFilter)');
   } else {
-    this.updateColour();
+    this.svgPath_.removeAttribute('filter');
   }
 };
 
@@ -464,10 +464,9 @@ Blockly.BlockSvg.prototype.highlightShapeForInput = function(conn, add) {
   }
   var inputShape = this.inputShapes_[input.name];
   if (add) {
-    inputShape.setAttribute('fill',
-      Math.random() < 0.5 ? '#ff00ff' : '#00ff00');  // TODO:#413
+    inputShape.setAttribute('filter', 'url(#blocklyReplacementGlowFilter)');
   } else {
-    inputShape.setAttribute('fill', this.getColourTertiary());
+    inputShape.removeAttribute('filter');
   }
 };
 
