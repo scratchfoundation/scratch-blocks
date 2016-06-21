@@ -329,9 +329,9 @@ Blockly.BlockSvg.prototype.updateColour = function() {
  */
 Blockly.BlockSvg.prototype.highlightForReplacement = function(add) {
   if (add) {
-    this.svgPath_.setAttribute('fill', '#eeff01'); // TODO:#413
+    this.svgPath_.setAttribute('filter', 'url(#blocklyReplacementGlowFilter)');
   } else {
-    this.updateColour();
+    this.svgPath_.removeAttribute('filter');
   }
 };
 

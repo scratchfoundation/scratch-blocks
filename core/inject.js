@@ -43,6 +43,13 @@ goog.require('goog.userAgent');
 Blockly.STACK_GLOW_RADIUS = 1;
 
 /**
+ * Radius of replacement glow, in px.
+ * @type {number}
+ * @const
+ */
+Blockly.REPLACEMENT_GLOW_RADIUS = 2;
+
+/**
  * Inject a Blockly editor into the specified container element (usually a div).
  * @param {!Element|string} container Containing element, or its ID,
  *     or a CSS selector.
@@ -126,6 +133,27 @@ Blockly.createDom_ = function(container, options) {
        'operator': 'in', 'result': 'outGlow'}, stackGlowFilter);
   Blockly.createSvgElement('feComposite',
       {'in': 'SourceGraphic', 'in2': 'outGlow', 'operator': 'over'}, stackGlowFilter);
+
+  // Filter for replacement marker
+  var replacementGlowFilter = Blockly.createSvgElement('filter',
+      {'id': 'blocklyReplacementGlowFilter',
+        'height': '160%', 'width': '180%', y: '-30%', x: '-40%'}, defs);
+  Blockly.createSvgElement('feGaussianBlur',
+      {'in': 'SourceGraphic',
+      'stdDeviation': Blockly.REPLACEMENT_GLOW_RADIUS}, replacementGlowFilter);
+  // Set all gaussian blur pixels to 1 opacity before applying flood
+  var componentTransfer = Blockly.createSvgElement('feComponentTransfer', {'result': 'outBlur'}, replacementGlowFilter);
+  Blockly.createSvgElement('feFuncA',
+      {'type': 'table', 'tableValues': '0' + ' 1'.repeat(16)}, componentTransfer);
+  // Color the highlight
+  Blockly.createSvgElement('feFlood',
+      {'flood-color': Blockly.Colours.replacementGlow,
+       'flood-opacity': Blockly.Colours.replacementGlowOpacity, 'result': 'outColor'}, replacementGlowFilter);
+  Blockly.createSvgElement('feComposite',
+      {'in': 'outColor', 'in2': 'outBlur',
+       'operator': 'in', 'result': 'outGlow'}, replacementGlowFilter);
+  Blockly.createSvgElement('feComposite',
+      {'in': 'SourceGraphic', 'in2': 'outGlow', 'operator': 'over'}, replacementGlowFilter);
 
   var disabledPattern = Blockly.createSvgElement('pattern',
       {'id': 'blocklyDisabledPattern' + rnd,
