@@ -51,9 +51,14 @@ var getNumRestrictor = function(decimalAllowed, negativeAllowed) {
 
 /**
  * Class for an editable number field.
+ * In scratch-blocks, the min/max/precision properties are only used
+ * to construct a restrictor on typable characters, and to inform the pop-up numpad on touch devices.
+ * These properties are included here (i.e. instead of just accepting a decimalAllowed, negativeAllowed)
+ * to maintain API compatibility with Blockly and Blockly for Android.
  * @param {string} text The initial content of the field.
- * @param {boolean} decimalAllowed Whether number may have decimal/float component.
- * @param {boolean} negativeAllowed Whether number may be negative.
+ * @param {number} min Minimum number allowed. NOTE: only used to determine if negatives are allowed.
+ * @param {number} max Maximum number allowed. NOTE: unused in scratch-blocks.
+ * @param {number} precision Step allowed between numbers. NOTE: only used to determine if decimal values are allowed.
  * @param {Function=} opt_validator An optional function that is called
  *     to validate any constraints on what the user entered.  Takes the new
  *     text as an argument and returns the accepted text or null to abort
@@ -61,10 +66,10 @@ var getNumRestrictor = function(decimalAllowed, negativeAllowed) {
  * @extends {Blockly.FieldTextInput}
  * @constructor
  */
-Blockly.FieldNumber = function(text, decimalAllowed, negativeAllowed, opt_validator) {
-  this.decimalAllowed_ = decimalAllowed;
-  this.negativeAllowed_ = negativeAllowed;
-  var numRestrictor = getNumRestrictor(decimalAllowed, negativeAllowed);
+Blockly.FieldNumber = function(text, min, max, precision, opt_validator) {
+  this.decimalAllowed_ = precision < 1;
+  this.negativeAllowed_ = min < 0;
+  var numRestrictor = getNumRestrictor(this.decimalAllowed_, this.negativeAllowed_);
   Blockly.FieldNumber.superClass_.constructor.call(this, text, opt_validator, numRestrictor);
 };
 goog.inherits(Blockly.FieldNumber, Blockly.FieldTextInput);
