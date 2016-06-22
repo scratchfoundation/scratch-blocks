@@ -612,7 +612,7 @@ Blockly.Flyout.prototype.show = function(xmlList) {
 
   this.layoutBlocks_(blocks, gaps);
 
-  // IE 11 is an incompetant browser that fails to fire mouseout events.
+  // IE 11 is an incompetent browser that fails to fire mouseout events.
   // When the mouse is over the background, deselect all blocks.
   var deselectAll = function() {
     var topBlocks = this.workspace_.getTopBlocks(false);
@@ -633,8 +633,9 @@ Blockly.Flyout.prototype.show = function(xmlList) {
 
   this.offsetHorizontalRtlBlocks(this.workspace_.getTopBlocks(false));
 
-  // Fire a resize event to update the flyout's scrollbar.
-  Blockly.svgResize(this.workspace_);
+  // Correctly position the flyout's scrollbar when it opens.
+  this.position();
+
   this.reflowWrapper_ = this.reflow.bind(this);
   this.workspace_.addChangeListener(this.reflowWrapper_);
 
@@ -851,7 +852,7 @@ Blockly.Flyout.prototype.onMouseMoveBlock_ = function(e) {
      Safari Mobile 6.0 and Chrome for Android 18.0 fire rogue mousemove events
      on certain touch actions. Ignore events with these signatures.
      This may result in a one-pixel blind spot in other browsers,
-     but this shouldn't be noticable. */
+     but this shouldn't be noticeable. */
     e.stopPropagation();
     return;
   }
@@ -1060,6 +1061,10 @@ Blockly.Flyout.prototype.placeNewBlock_ = function(originBlock) {
  * @return {goog.math.Rect} Rectangle in which to delete.
  */
 Blockly.Flyout.prototype.getClientRect = function() {
+  if (!this.svgGroup_) {
+    return null;
+  }
+
   var flyoutRect = this.svgGroup_.getBoundingClientRect();
   // BIG_NUM is offscreen padding so that blocks dragged beyond the shown flyout
   // area are still deleted.  Must be larger than the largest screen size,
@@ -1147,7 +1152,9 @@ Blockly.Flyout.prototype.reflowHorizontal = function(blocks) {
     }
     // Record the height for .getMetrics_ and .position.
     this.height_ = flyoutHeight;
-    Blockly.asyncSvgResize(this.workspace_);
+    // Call this since it is possible the trash and zoom buttons need
+    // to move. e.g. on a bottom positioned flyout when zoom is clicked.
+    this.targetWorkspace_.resize();
   }
 };
 
@@ -1195,7 +1202,9 @@ Blockly.Flyout.prototype.reflowVertical = function(blocks) {
     }
     // Record the width for .getMetrics_ and .position.
     this.width_ = flyoutWidth;
-    Blockly.asyncSvgResize(this.workspace_);
+    // Call this since it is possible the trash and zoom buttons need
+    // to move. e.g. on a bottom positioned flyout when zoom is clicked.
+    this.targetWorkspace_.resize();
   }
 };
 

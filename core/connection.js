@@ -208,8 +208,9 @@ Blockly.Connection.prototype.connect_ = function(childConnection) {
       // block.  Since this block may be a stack, walk down to the end.
       var newBlock = childBlock;
       while (newBlock.nextConnection) {
-        if (newBlock.nextConnection.isConnected()) {
-          newBlock = newBlock.getNextBlock();
+        var nextBlock = newBlock.getNextBlock();
+        if (nextBlock && !nextBlock.isShadow()) {
+          newBlock = nextBlock;
         } else {
           if (orphanBlock.previousConnection.checkType_(
               newBlock.nextConnection)) {
@@ -334,7 +335,6 @@ Blockly.Connection.prototype.canConnectWithReason_ = function(target) {
     var blockB = this.sourceBlock_;
     var blockA = target.getSourceBlock();
   }
-
   if (blockA && blockA == blockB) {
     return Blockly.Connection.REASON_SELF_CONNECTION;
   } else if (target.type != Blockly.OPPOSITE_TYPE[this.type]) {
@@ -394,8 +394,7 @@ Blockly.Connection.prototype.isConnectionAllowed = function(candidate) {
 
   // Type checking.
   var canConnect = this.canConnectWithReason_(candidate);
-  if (canConnect != Blockly.Connection.CAN_CONNECT &&
-      canConnect != Blockly.Connection.REASON_MUST_DISCONNECT) {
+  if (canConnect != Blockly.Connection.CAN_CONNECT) {
     return false;
   }
 
@@ -621,8 +620,6 @@ Blockly.Connection.prototype.disconnectInternal_ = function(parentBlock,
 
 /**
  * Respawn the shadow block if there was one connected to the this connection.
- * @return {Blockly.Block} The newly spawned shadow block, or null if none was
- *    spawned.
  * @private
  */
 Blockly.Connection.prototype.respawnShadow_ = function() {
@@ -638,9 +635,7 @@ Blockly.Connection.prototype.respawnShadow_ = function() {
     } else {
       throw 'Child block does not have output or previous statement.';
     }
-    return blockShadow;
   }
-  return null;
 };
 
 /**
