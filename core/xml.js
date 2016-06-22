@@ -358,7 +358,6 @@ Blockly.Xml.domToBlock = function(xmlBlock, workspace) {
     // Allow the scrollbars to resize and move based on the new contents.
     // TODO(@picklesrus): #387. Remove when domToBlock avoids resizing.
     Blockly.resizeSvgContents(workspace);
-    }
   }
   Blockly.Events.enable();
   if (Blockly.Events.isEnabled()) {
