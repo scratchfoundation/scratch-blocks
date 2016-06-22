@@ -589,6 +589,218 @@
           </block>
       </category>
     </xml>
+    <xml id="toolbox-simple" style="display: none">
+        <block type="event_whenflagclicked"></block>
+        <block type="event_whenbroadcastreceived">
+          <value name="BROADCAST_OPTION">
+            <shadow type="event_broadcast_menu"></shadow>
+          </value>
+        </block>
+        <block type="event_broadcast">
+          <value name="BROADCAST_OPTION">
+            <shadow type="event_broadcast_menu"></shadow>
+          </value>
+        </block>
+        <block type="event_broadcastandwait">
+          <value name="BROADCAST_OPTION">
+            <shadow type="event_broadcast_menu"></shadow>
+          </value>
+        </block>
+        <block type="control_wait">
+          <value name="DURATION">
+            <shadow type="math_number">
+              <field name="NUM">1</field>
+            </shadow>
+          </value>
+        </block>
+        <block type="control_repeat">
+          <value name="TIMES">
+            <shadow type="math_number">
+              <field name="NUM">4</field>
+            </shadow>
+          </value>
+        </block>
+        <block type="control_forever"></block>
+        <block type="control_if"></block>
+        <block type="control_if_else"></block>
+        <block type="control_wait_until"></block>
+        <block type="control_repeat_until"></block>
+        <block type="control_stop">
+          <value name="STOP_OPTION">
+            <shadow type="control_stop_menu"></shadow>
+          </value>
+        </block>
+        <block type="control_start_as_clone"></block>
+        <block type="control_create_clone_of">
+          <value name="CLONE_OPTION">
+            <shadow type="control_create_clone_of_menu"></shadow>
+          </value>
+        </block>
+        <block type="control_delete_this_clone"></block>
+          <block type="wedo_setcolor"></block>
+          <block type="wedo_motorspeed"></block>
+          <block type="wedo_whentilt"></block>
+          <block type="wedo_whendistanceclose"></block>
+          <block type="operator_add">
+            <value name="NUM1">
+              <shadow type="math_number">
+                <field name="NUM"></field>
+              </shadow>
+            </value>
+            <value name="NUM2">
+              <shadow type="math_number">
+                <field name="NUM"></field>
+              </shadow>
+            </value>
+          </block>
+          <block type="operator_subtract">
+            <value name="NUM1">
+              <shadow type="math_number">
+                <field name="NUM"></field>
+              </shadow>
+            </value>
+            <value name="NUM2">
+              <shadow type="math_number">
+                <field name="NUM"></field>
+              </shadow>
+            </value>
+          </block>
+          <block type="operator_multiply">
+            <value name="NUM1">
+              <shadow type="math_number">
+                <field name="NUM"></field>
+              </shadow>
+            </value>
+            <value name="NUM2">
+              <shadow type="math_number">
+                <field name="NUM"></field>
+              </shadow>
+            </value>
+          </block>
+          <block type="operator_divide">
+            <value name="NUM1">
+              <shadow type="math_number">
+                <field name="NUM"></field>
+              </shadow>
+            </value>
+            <value name="NUM2">
+              <shadow type="math_number">
+                <field name="NUM"></field>
+              </shadow>
+            </value>
+          </block>
+          <block type="operator_random">
+            <value name="FROM">
+              <shadow type="math_number">
+                <field name="NUM">1</field>
+              </shadow>
+            </value>
+            <value name="TO">
+              <shadow type="math_number">
+                <field name="NUM">10</field>
+              </shadow>
+            </value>
+          </block>
+          <block type="operator_lt">
+            <value name="OPERAND1">
+              <shadow type="text">
+                <field name="TEXT"></field>
+              </shadow>
+            </value>
+            <value name="OPERAND2">
+              <shadow type="text">
+                <field name="TEXT"></field>
+              </shadow>
+            </value>
+          </block>
+          <block type="operator_equals">
+            <value name="OPERAND1">
+              <shadow type="text">
+                <field name="TEXT"></field>
+              </shadow>
+            </value>
+            <value name="OPERAND2">
+              <shadow type="text">
+                <field name="TEXT"></field>
+              </shadow>
+            </value>
+          </block>
+          <block type="operator_gt">
+            <value name="OPERAND1">
+              <shadow type="text">
+                <field name="TEXT"></field>
+              </shadow>
+            </value>
+            <value name="OPERAND2">
+              <shadow type="text">
+                <field name="TEXT"></field>
+              </shadow>
+            </value>
+          </block>
+          <block type="operator_and"></block>
+          <block type="operator_or"></block>
+          <block type="operator_not"></block>
+          <block type="operator_join">
+            <value name="STRING1">
+              <shadow type="text">
+                <field name="TEXT">hello</field>
+              </shadow>
+            </value>
+            <value name="STRING2">
+              <shadow type="text">
+                <field name="TEXT">world</field>
+              </shadow>
+            </value>
+          </block>
+          <block type="operator_letter_of">
+            <value name="LETTER">
+              <shadow type="math_number">
+                <field name="NUM">1</field>
+              </shadow>
+            </value>
+            <value name="STRING">
+              <shadow type="text">
+                <field name="TEXT">world</field>
+              </shadow>
+            </value>
+          </block>
+          <block type="operator_length">
+            <value name="STRING">
+              <shadow type="text">
+                <field name="TEXT">world</field>
+              </shadow>
+            </value>
+          </block>
+          <block type="operator_mod">
+            <value name="NUM1">
+              <shadow type="math_number">
+                <field name="NUM"></field>
+              </shadow>
+            </value>
+            <value name="NUM2">
+              <shadow type="math_number">
+                <field name="NUM"></field>
+              </shadow>
+            </value>
+          </block>
+          <block type="operator_round">
+            <value name="NUM">
+              <shadow type="math_number">
+                <field name="NUM"></field>
+              </shadow>
+            </value>
+          </block>
+          <block type="operator_mathop">
+            <value name="OPERATOR">
+              <shadow type="operator_mathop_menu"></shadow>
+            </value>
+            <value name="NUM">
+              <shadow type="math_number">
+                <field name="NUM"></field>
+              </shadow>
+            </value>
+          </block>
+    </xml>
 
     <!-- Sidebar -->
     <h1>Vertical Blocks</h1>
