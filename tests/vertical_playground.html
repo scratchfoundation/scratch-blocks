@@ -151,10 +151,12 @@
         var checkbox = document.getElementById('logFlyoutCheck');
         checkbox.checked = state;
         sessionStorage.setItem('logFlyoutEvents', state ? 'checked' : '');
+        var flyoutWorkspace = (workspace.flyout_) ? workspace.flyout_.workspace_ :
+          workspace.toolbox_.flyout_.workspace_;
         if (state) {
-          workspace.toolbox_.flyout_.workspace_.addChangeListener(logger);
+          flyoutWorkspace.addChangeListener(logger);
         } else {
-          workspace.toolbox_.flyout_.workspace_.removeChangeListener(logger);
+          flyoutWorkspace.removeChangeListener(logger);
         }
       }
 
