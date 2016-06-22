@@ -281,9 +281,9 @@ Blockly.BlockSvg.onMouseMoveWrapper_ = null;
 
 /**
  * Stop binding to the global mouseup and mousemove events.
- * @private
+ * @package
  */
-Blockly.BlockSvg.terminateDrag_ = function() {
+Blockly.BlockSvg.terminateDrag = function() {
   if (Blockly.BlockSvg.onMouseUpWrapper_) {
     Blockly.unbindEvent_(Blockly.BlockSvg.onMouseUpWrapper_);
     Blockly.BlockSvg.onMouseUpWrapper_ = null;
@@ -332,7 +332,7 @@ Blockly.BlockSvg.terminateDrag_ = function() {
         Blockly.Events.setGroup(false);
       }, Blockly.BUMP_DELAY);
       // Fire an event to allow scrollbars to resize.
-      Blockly.asyncSvgResize(this.workspace);
+      Blockly.resizeSvgContents(selected.workspace);
     }
   }
   Blockly.dragMode_ = Blockly.DRAG_NONE;
@@ -621,12 +621,9 @@ Blockly.BlockSvg.prototype.onMouseDown_ = function(e) {
     return;
   }
   this.workspace.markFocused();
-  // Update Blockly's knowledge of its own location.
-  Blockly.svgResize(this.workspace);
   Blockly.terminateDrag_();
   this.select();
   Blockly.hideChaff();
-  this.workspace.recordDeleteAreas();
   if (Blockly.isRightButton(e)) {
     // Right-click.
     this.showContextMenu_(e);
@@ -709,10 +706,6 @@ Blockly.BlockSvg.prototype.onMouseUp_ = function(e) {
       goog.Timer.callOnce(trashcan.close, 100, trashcan);
     }
     Blockly.selected.dispose(false, true);
-    // Dropping a block on the trash can will usually cause the workspace to
-    // resize to contain the newly positioned block.  Force a second resize
-    // now that the block has been deleted.
-    Blockly.asyncSvgResize(this.workspace);
   }
   if (Blockly.highlightedConnection_) {
     Blockly.highlightedConnection_ = null;
@@ -1314,6 +1307,9 @@ Blockly.BlockSvg.prototype.getSvgRoot = function() {
 Blockly.BlockSvg.prototype.dispose = function(healStack, animate) {
   Blockly.Tooltip.hide();
   Blockly.Field.startCache();
+  // Save the block's workspace temporarily so we can resize the
+  // contents once the block is disposed.
+  var blockWorkspace = this.workspace;
   // If this block is being dragged, unlink the mouse events.
   if (Blockly.selected == this) {
     this.unselect();
@@ -1340,6 +1336,7 @@ Blockly.BlockSvg.prototype.dispose = function(healStack, animate) {
   Blockly.BlockSvg.superClass_.dispose.call(this, healStack);
 
   goog.dom.removeNode(this.svgGroup_);
+  Blockly.resizeSvgContents(blockWorkspace);
   // Sever JavaScript to DOM connections.
   this.svgGroup_ = null;
   this.svgPath_ = null;
@@ -1363,7 +1360,7 @@ Blockly.BlockSvg.prototype.disposeUiEffect = function() {
   this.workspace.getParentSvg().appendChild(clone);
   clone.bBox_ = clone.getBBox();
   // Start the animation.
-  Blockly.BlockSvg.disposeUiStep_(clone, this.RTL, new Date(),
+  Blockly.BlockSvg.disposeUiStep_(clone, this.RTL, new Date,
       this.workspace.scale);
 };
 
@@ -1385,7 +1382,7 @@ Blockly.BlockSvg.prototype.connectionUiEffect = function() {
  * @private
  */
 Blockly.BlockSvg.disposeUiStep_ = function(clone, rtl, start, workspaceScale) {
-  var ms = (new Date()) - start;
+  var ms = new Date - start;
   var percent = ms / 150;
   if (percent > 1) {
     goog.dom.removeNode(clone);
