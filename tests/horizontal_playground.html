@@ -16,8 +16,7 @@
     <script>
       'use strict';
 
-      // Depending on the URL argument, render as LTR or RTL.
-      var rtl = (document.location.search == '?rtl');
+      var fakeDragStack = [];
       var workspace = null;
 
       function start() {
@@ -31,7 +30,20 @@
         setSoundsEnabled(soundsEnabled);
 
         // Setup blocks
-        var toolbox = document.getElementById('toolbox');
+        // Parse the URL arguments.
+        var match = location.search.match(/dir=([^&]+)/);
+        var rtl = match && match[1] == 'rtl';
+        document.forms.options.elements.dir.selectedIndex = Number(rtl);
+        var toolbox = getToolboxElement();
+        document.forms.options.elements.toolbox.selectedIndex =
+          Number(toolbox.getElementsByTagName('category').length == 0);
+
+        match = location.search.match(/side=([^&]+)/);
+
+        var side = match ? match[1] : 'start';
+
+        document.forms.options.elements.side.value = side;
+
         workspace = Blockly.inject('blocklyDiv', {
           comments: false,
           disable: false,
@@ -42,8 +54,8 @@
           scrollbars: true,
           toolbox: toolbox,
           trashcan: true,
-          horizontalLayout: true,
-          toolboxPosition: 'start',
+          horizontalLayout: side == 'top' || side == 'bottom',
+          toolboxPosition: side == 'top' || side == 'start' ? 'start' : 'end',
           sounds: soundsEnabled,
           grid: {spacing: 16,
             length: 1,
@@ -84,6 +96,11 @@
         // Restore flyout event logging state.
         state = sessionStorage.getItem('logFlyoutEvents');
         logFlyoutEvents(Boolean(state));
+      }
+
+      function getToolboxElement() {
+        var match = location.search.match(/toolbox=([^&]+)/);
+        return document.getElementById('toolbox-' + (match ? match[1] : 'categories'));
       }
 
       function toXml() {
@@ -174,7 +191,7 @@
 
       function sprinkles(n) {
         var prototypes = [];
-        var toolbox = document.getElementById('toolbox');
+        var toolbox = getToolboxElement();
         var blocks = toolbox.getElementsByTagName('block');
         for (var i = 0; i < n; i++) {
           var blockXML = blocks[Math.floor(Math.random() * blocks.length)];
@@ -216,6 +233,64 @@
         var checkbox = document.getElementById('soundsEnabled');
         checkbox.checked = (state) ? 'checked' : '';
         sessionStorage.setItem('soundsEnabled', state);
+      }
+      function fakeDrag(id, dx, dy, opt_workspace) {
+        var ws = opt_workspace || Blockly.getMainWorkspace();
+        var blockToDrag = ws.getBlockById(id);
+
+        if (!blockToDrag) {
+          fakeDragWrapper();
+          return;
+        }
+        var blockTop = blockToDrag.svgGroup_.getBoundingClientRect().top;
+        var blockLeft = blockToDrag.svgGroup_.getBoundingClientRect().left;
+
+        // Click somewhere on the block.
+        var mouseDownEvent = new MouseEvent('mousedown',
+            {clientX: blockLeft + 5, clientY: blockTop + 5});
+        blockToDrag.onMouseDown_(mouseDownEvent);
+
+        // Throw in a move for good measure.
+        setTimeout(
+          function() {
+            var mouseMoveEvent = new MouseEvent('mousemove',
+                {clientX: blockLeft + dx,
+                clientY: blockTop + dy});
+            blockToDrag.onMouseMove_(mouseMoveEvent);
+
+            // Drop at dx, dy.
+            setTimeout(
+              function() {
+                var mouseUpEvent = new MouseEvent('mouseup',
+                    {clientX: blockLeft + dx,
+                    clientY: blockTop + dy});
+                blockToDrag.onMouseUp_(mouseUpEvent);
+
+                setTimeout(fakeDragWrapper(), 100);
+              }, 30);
+          }, 30);
+      };
+
+      function fakeDragWrapper() {
+        var dragInfo = fakeDragStack.pop();
+        if (dragInfo) {
+          fakeDrag(dragInfo.id, dragInfo.dx, dragInfo.dy, dragInfo.workspace);
+        }
+      }
+
+      function fakeManyDrags() {
+        var blockList = workspace.getAllBlocks();
+        for (var i = 0; i < 2 * blockList.length; i++) {
+          fakeDragStack.push(
+            {
+              id: blockList[Math.round(Math.random() * (blockList.length - 1))].id,
+              // Move some blocks up and to the left, but mostly down and to the right.
+              dx: Math.round((Math.random() - 0.25) * 200),
+              dy: Math.round((Math.random() - 0.25) * 200),
+              workspace: workspace
+            });
+        }
+        fakeDragWrapper();
       }
     </script>
 
@@ -266,7 +341,7 @@
     <div id="blocklyDiv"></div>
 
     <!-- Toolbox -->
-    <xml id="toolbox" style="display: none">
+    <xml id="toolbox-categories" style="display: none">
       <category name="Events">
         <block type="event_whenflagclicked"></block>
         <block type="event_whenbroadcastreceived">
@@ -351,13 +426,22 @@
       - <a href="javascript:void(workspace.setVisible(false))">Hide</a>
     </p>
 
-    <script>
-      if (rtl) {
-        document.write('[ &larr; RTL. Switch to <A HREF="?ltr">LTR</A>. ]');
-      } else {
-        document.write('[ &rarr; LTR. Switch to <A HREF="?rtl">RTL</A>. ]');
-      }
-    </script>
+    <form id="options">
+        <select name="dir" onchange="document.forms.options.submit()">
+          <option value="ltr">LTR</option>
+          <option value="rtl">RTL</option>
+        </select>
+        <select name="toolbox" onchange="document.forms.options.submit()">
+          <option value="categories">Categories</option>
+          <option value="simple">Simple</option>
+        </select>
+        <select name="side" onchange="document.forms.options.submit()">
+          <option value="start">Start</option>
+          <option value="end">End</option>
+          <option value="top">Top</option>
+          <option value="bottom">Bottom</option>
+        </select>
+      </form>
 
     <p>
       <input type="button" value="Export to XML" onclick="toXml()">
@@ -387,6 +471,7 @@
       Stress test: &nbsp;
       <input type="button" value="Sprinkles!" onclick="sprinkles(100)">
       <input type="button" value="Spaghetti!" onclick="spaghetti(10)">
+      <input type="button" value="Fake some drags!" onclick="fakeManyDrags()">
     </p>
 
     <p>
