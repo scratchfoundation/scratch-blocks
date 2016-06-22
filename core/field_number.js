@@ -56,17 +56,17 @@ var getNumRestrictor = function(decimalAllowed, negativeAllowed) {
  * These properties are included here (i.e. instead of just accepting a decimalAllowed, negativeAllowed)
  * to maintain API compatibility with Blockly and Blockly for Android.
  * @param {string} text The initial content of the field.
+ * @param {number} min Minimum number allowed. NOTE: only used to determine if negatives are allowed.
+ * @param {number} max Maximum number allowed. NOTE: unused in scratch-blocks.
+ * @param {number} precision Step allowed between numbers. NOTE: only used to determine if decimal values are allowed.
  * @param {Function=} opt_validator An optional function that is called
  *     to validate any constraints on what the user entered.  Takes the new
  *     text as an argument and returns the accepted text or null to abort
  *     the change.
- * @param {number} min Minimum number allowed. NOTE: only used to determine if negatives are allowed.
- * @param {number} max Maximum number allowed. NOTE: unused in scratch-blocks.
- * @param {number} precision Step allowed between numbers. NOTE: only used to determine if decimal values are allowed.
  * @extends {Blockly.FieldTextInput}
  * @constructor
  */
-Blockly.FieldNumber = function(text, opt_validator, min, max, precision) {
+Blockly.FieldNumber = function(text, min, max, precision, opt_validator) {
   this.decimalAllowed_ = (precision == 0) || (Math.floor(precision) != precision);
   this.negativeAllowed_ = min < 0;
   var numRestrictor = getNumRestrictor(this.decimalAllowed_, this.negativeAllowed_);

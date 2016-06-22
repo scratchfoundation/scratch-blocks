@@ -45,7 +45,7 @@ Blockly.Blocks['math_number'] = {
     this.setHelpUrl(Blockly.Msg.MATH_NUMBER_HELPURL);
     this.setColour(Blockly.Blocks.math.HUE);
     this.appendDummyInput()
-        .appendField(new Blockly.FieldNumber('0', null, -Infinity, Infinity, 1e-25), 'NUM');
+        .appendField(new Blockly.FieldNumber('0', -Infinity, Infinity, 1e-25), 'NUM');
     this.setOutput(true, 'Number');
     // Assign 'this' to a variable for use in the tooltip closure below.
     var thisBlock = this;
@@ -67,7 +67,7 @@ Blockly.Blocks['math_whole_number'] = {
     this.setHelpUrl(Blockly.Msg.MATH_NUMBER_HELPURL);
     this.setColour(Blockly.Blocks.math.HUE);
     this.appendDummyInput()
-        .appendField(new Blockly.FieldNumber('0', null, 0, Infinity, 1), 'NUM');
+        .appendField(new Blockly.FieldNumber('0', 0, Infinity, 1), 'NUM');
     this.setOutput(true, 'Number');
   }
 };
@@ -81,7 +81,7 @@ Blockly.Blocks['math_positive_number'] = {
     this.setHelpUrl(Blockly.Msg.MATH_NUMBER_HELPURL);
     this.setColour(Blockly.Blocks.math.HUE);
     this.appendDummyInput()
-        .appendField(new Blockly.FieldNumber('0', null, 0, Infinity, 1e-25), 'NUM');
+        .appendField(new Blockly.FieldNumber('0', 0, Infinity, 1e-25), 'NUM');
     this.setOutput(true, 'Number');
   }
 };
