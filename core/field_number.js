@@ -39,7 +39,7 @@ goog.require('goog.userAgent');
  * @return {!RegExp} Regular expression for this FieldNumber's restrictor.
  */
 var getNumRestrictor = function(decimalAllowed, negativeAllowed) {
-  var pattern = "[\\d]|[e]"; // Always allow digits and e, from Scratch 2.0.
+  var pattern = "[\\d]"; // Always allow digits.
   if (decimalAllowed) {
     pattern += "|[\\.]";
   }
