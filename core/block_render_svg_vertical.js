@@ -235,10 +235,10 @@ Blockly.BlockSvg.INNER_BOTTOM_LEFT_CORNER =
     Blockly.BlockSvg.CORNER_RADIUS;
 
 /**
- * SVG path for an empty boolean input shape.
+ * SVG path for an empty hexagonal input shape.
  * @const
  */
-Blockly.BlockSvg.INPUT_SHAPE_BOOLEAN =
+Blockly.BlockSvg.INPUT_SHAPE_HEXAGONAL =
     'M ' + 4 * Blockly.BlockSvg.GRID_UNIT + ',0 ' +
     ' h ' + 4 * Blockly.BlockSvg.GRID_UNIT +
     ' l ' + 4 * Blockly.BlockSvg.GRID_UNIT + ',' + 4 * Blockly.BlockSvg.GRID_UNIT +
@@ -252,13 +252,13 @@ Blockly.BlockSvg.INPUT_SHAPE_BOOLEAN =
  * Width of empty boolean input shape.
  * @const
  */
-Blockly.BlockSvg.INPUT_SHAPE_BOOLEAN_WIDTH = 10 * Blockly.BlockSvg.GRID_UNIT;
+Blockly.BlockSvg.INPUT_SHAPE_HEXAGONAL_WIDTH = 10 * Blockly.BlockSvg.GRID_UNIT;
 
 /**
- * SVG path for an empty string input shape.
+ * SVG path for an empty square input shape.
  * @const
  */
-Blockly.BlockSvg.INPUT_SHAPE_STRING =
+Blockly.BlockSvg.INPUT_SHAPE_SQUARE =
     Blockly.BlockSvg.TOP_LEFT_CORNER_START +
     Blockly.BlockSvg.TOP_LEFT_CORNER +
     ' h ' + (12 * Blockly.BlockSvg.GRID_UNIT - 2 * Blockly.BlockSvg.CORNER_RADIUS) +
@@ -270,17 +270,17 @@ Blockly.BlockSvg.INPUT_SHAPE_STRING =
     ' z';
 
 /**
- * Width of empty string input shape.
+ * Width of empty square input shape.
  * @const
  */
-Blockly.BlockSvg.INPUT_SHAPE_STRING_WIDTH = 9 * Blockly.BlockSvg.GRID_UNIT;
+Blockly.BlockSvg.INPUT_SHAPE_SQUARE_WIDTH = 9 * Blockly.BlockSvg.GRID_UNIT;
 
 /**
- * SVG path for an empty string input shape.
+ * SVG path for an empty round input shape.
  * @const
  */
 
-Blockly.BlockSvg.INPUT_SHAPE_NUMBER =
+Blockly.BlockSvg.INPUT_SHAPE_ROUND =
   'M ' + (4 * Blockly.BlockSvg.GRID_UNIT) + ',0' +
   ' h ' + (4 * Blockly.BlockSvg.GRID_UNIT) +
   ' a ' + (4 * Blockly.BlockSvg.GRID_UNIT) + ' ' +
@@ -291,10 +291,10 @@ Blockly.BlockSvg.INPUT_SHAPE_NUMBER =
   ' z';
 
 /**
- * Width of empty string input shape.
+ * Width of empty round input shape.
  * @const
  */
-Blockly.BlockSvg.INPUT_SHAPE_NUMBER_WIDTH = 10 * Blockly.BlockSvg.GRID_UNIT;
+Blockly.BlockSvg.INPUT_SHAPE_ROUND_WIDTH = 10 * Blockly.BlockSvg.GRID_UNIT;
 
 /**
  * Height of empty input shape.
@@ -768,8 +768,8 @@ Blockly.BlockSvg.prototype.renderDraw_ = function(iconWidth, inputRows) {
   this.edgeShape_ = null;
   if (this.outputConnection) {
     // Width of the curve/pointy-curve
-    var shape = this.outputConnection.getOutputShape();
-    if (shape === Blockly.Connection.BOOLEAN || shape === Blockly.Connection.NUMBER) {
+    var shape = this.getOutputShape();
+    if (shape === Blockly.OUTPUT_SHAPE_HEXAGONAL || shape === Blockly.OUTPUT_SHAPE_ROUND) {
       this.edgeShapeWidth_ = inputRows.bottomEdge / 2;
       this.edgeShape_ = shape;
       this.squareTopLeftCorner_ = true;
@@ -970,13 +970,13 @@ Blockly.BlockSvg.prototype.renderDrawRight_ = function(steps,
     cursorY += row.height;
   }
   if (this.edgeShape_) {
-    // Draw the right-side edge shape
-    if (this.edgeShape_ === Blockly.Connection.NUMBER) {
-      // Draw a rounded arc
+    // Draw the right-side edge shape.
+    if (this.edgeShape_ === Blockly.OUTPUT_SHAPE_ROUND) {
+      // Draw a rounded arc.
       steps.push('a ' + this.edgeShapeWidth_ + ' ' + this.edgeShapeWidth_ +
           ' 0 0 1 0 ' + this.edgeShapeWidth_ * 2);
-    } else if (this.edgeShape_ === Blockly.Connection.BOOLEAN) {
-      // Draw an angle
+    } else if (this.edgeShape_ === Blockly.OUTPUT_SHAPE_HEXAGONAL) {
+      // Draw an half-hexagon.
       steps.push('l ' + this.edgeShapeWidth_ + ' ' + this.edgeShapeWidth_ +
           ' l ' + -this.edgeShapeWidth_ + ' ' + this.edgeShapeWidth_);
     }
@@ -1008,18 +1008,18 @@ Blockly.BlockSvg.prototype.renderInputShape_ = function(input, x, y) {
     // If the input connection is not connected, draw a hole shape.
     var inputShapePath = null;
     switch (input.connection.getOutputShape()) {
-      case Blockly.Connection.BOOLEAN:
-        inputShapePath = Blockly.BlockSvg.INPUT_SHAPE_BOOLEAN;
-        inputShapeWidth = Blockly.BlockSvg.INPUT_SHAPE_BOOLEAN_WIDTH;
+      case Blockly.OUTPUT_SHAPE_HEXAGONAL:
+        inputShapePath = Blockly.BlockSvg.INPUT_SHAPE_HEXAGONAL;
+        inputShapeWidth = Blockly.BlockSvg.INPUT_SHAPE_HEXAGONAL_WIDTH;
         break;
-      case Blockly.Connection.NUMBER:
-        inputShapePath = Blockly.BlockSvg.INPUT_SHAPE_NUMBER;
-        inputShapeWidth = Blockly.BlockSvg.INPUT_SHAPE_NUMBER_WIDTH;
+      case Blockly.OUTPUT_SHAPE_ROUND:
+        inputShapePath = Blockly.BlockSvg.INPUT_SHAPE_ROUND;
+        inputShapeWidth = Blockly.BlockSvg.INPUT_SHAPE_ROUND_WIDTH;
         break;
-      case Blockly.Connection.STRING:
+      case Blockly.OUTPUT_SHAPE_SQUARE:
       default:
-        inputShapePath = Blockly.BlockSvg.INPUT_SHAPE_STRING;
-        inputShapeWidth = Blockly.BlockSvg.INPUT_SHAPE_STRING_WIDTH;
+        inputShapePath = Blockly.BlockSvg.INPUT_SHAPE_SQUARE;
+        inputShapeWidth = Blockly.BlockSvg.INPUT_SHAPE_SQUARE_WIDTH;
         break;
     }
     if (this.RTL) {
@@ -1099,12 +1099,12 @@ Blockly.BlockSvg.prototype.renderDrawLeft_ = function(steps, connectionsXY) {
     // This connection will be tightened when the parent renders.
   }
   if (this.edgeShape_) {
-    // Draw the left-side edge shape
-    if (this.edgeShape_ === Blockly.Connection.NUMBER) {
-      // Draw a rounded arc
+    // Draw the left-side edge shape.
+    if (this.edgeShape_ === Blockly.OUTPUT_SHAPE_ROUND) {
+      // Draw a rounded arc.
       steps.push('a ' + this.edgeShapeWidth_ + ' ' + this.edgeShapeWidth_ + ' 0 0 1 0 -' + this.edgeShapeWidth_*2);
-    } else if (this.edgeShape_ === Blockly.Connection.BOOLEAN) {
-      // Draw an angle
+    } else if (this.edgeShape_ === Blockly.OUTPUT_SHAPE_HEXAGONAL) {
+      // Draw a half-hexagon.
       steps.push('l ' + -this.edgeShapeWidth_ + ' ' + -this.edgeShapeWidth_ +
         ' l ' + this.edgeShapeWidth_ + ' ' + -this.edgeShapeWidth_);
     }

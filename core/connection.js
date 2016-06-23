@@ -54,24 +54,6 @@ Blockly.Connection = function(source, type) {
 };
 
 /**
- * Constant for identifying connections that accept a boolean.
- * @const
- */
-Blockly.Connection.BOOLEAN = 1;
-
-/**
- * Constant for identifying connections that accept a string.
- * @const
- */
-Blockly.Connection.STRING = 2;
-
-/**
- * Constant for identifying connections that accept a number OR null.
- * @const
- */
-Blockly.Connection.NUMBER = 3;
-
-/**
  * Constants for checking whether two connections are compatible.
  */
 Blockly.Connection.CAN_CONNECT = 0;
@@ -700,18 +682,21 @@ Blockly.Connection.prototype.setCheck = function(check) {
 
 /**
  * Returns a shape enum for this connection.
+ * Used in scratch-blocks to draw unoccupied inputs.
  * @return {number} Enum representing shape.
  */
 Blockly.Connection.prototype.getOutputShape = function() {
-  if (!this.check_) return Blockly.Connection.NUMBER;
+  if (!this.check_) return Blockly.OUTPUT_SHAPE_SQUARE;
   if (this.check_.indexOf('Boolean') !== -1) {
-    return Blockly.Connection.BOOLEAN;
+    return Blockly.OUTPUT_SHAPE_HEXAGONAL;
+  }
+  if (this.check_.indexOf('Number') !== -1) {
+    return Blockly.OUTPUT_SHAPE_ROUND;
   }
   if (this.check_.indexOf('String') !== -1) {
-    return Blockly.Connection.STRING;
+    return Blockly.OUTPUT_SHAPE_SQUARE;
   }
-
-  return Blockly.Connection.NUMBER;
+  return Blockly.OUTPUT_SHAPE_SQUARE;
 };
 
 /**

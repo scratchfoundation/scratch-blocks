@@ -30,6 +30,8 @@ goog.require('Blockly.Blocks');
 
 goog.require('Blockly.Colours');
 
+goog.require('Blockly.constants');
+
 
 /**
  * Common HSV hue for all blocks in this category.
@@ -55,6 +57,7 @@ Blockly.Blocks['math_number'] = {
       return (parent && parent.getInputsInline() && parent.tooltip) ||
           Blockly.Msg.MATH_NUMBER_TOOLTIP;
     });
+    this.setOutputShape(Blockly.OUTPUT_SHAPE_ROUND);
   }
 };
 
@@ -69,6 +72,7 @@ Blockly.Blocks['math_whole_number'] = {
     this.appendDummyInput()
         .appendField(new Blockly.FieldNumber('0', 0, Infinity, 1), 'NUM');
     this.setOutput(true, 'Number');
+    this.setOutputShape(Blockly.OUTPUT_SHAPE_ROUND);
   }
 };
 
@@ -83,5 +87,6 @@ Blockly.Blocks['math_positive_number'] = {
     this.appendDummyInput()
         .appendField(new Blockly.FieldNumber('0', 0, Infinity), 'NUM');
     this.setOutput(true, 'Number');
+    this.setOutputShape(Blockly.OUTPUT_SHAPE_ROUND);
   }
 };

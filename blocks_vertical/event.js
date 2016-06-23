@@ -79,8 +79,7 @@ Blockly.Blocks['event_whenbroadcastreceived'] = {
       "args0": [
         {
           "type": "input_value",
-          "name": "BROADCAST_OPTION",
-          "check": "String"
+          "name": "BROADCAST_OPTION"
         }
       ],
       "inputsInline": true,
@@ -104,8 +103,7 @@ Blockly.Blocks['event_broadcast'] = {
       "args0": [
         {
           "type": "input_value",
-          "name": "BROADCAST_OPTION",
-          "check": "String"
+          "name": "BROADCAST_OPTION"
         }
       ],
       "inputsInline": true,
@@ -129,8 +127,7 @@ Blockly.Blocks['event_broadcastandwait'] = {
       "args0": [
         {
           "type": "input_value",
-          "name": "BROADCAST_OPTION",
-          "check": "String"
+          "name": "BROADCAST_OPTION"
         }
       ],
       "inputsInline": true,

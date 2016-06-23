@@ -205,3 +205,21 @@ Blockly.TOOLBOX_AT_LEFT = 2;
  * @const
  */
 Blockly.TOOLBOX_AT_RIGHT = 3;
+
+/**
+ * ENUM for output shape: hexagonal (booleans/predicates).
+ * @const
+ */
+Blockly.OUTPUT_SHAPE_HEXAGONAL = 1;
+
+/**
+ * ENUM for output shape: rounded (numbers).
+ * @const
+ */
+Blockly.OUTPUT_SHAPE_ROUND = 2;
+
+/**
+ * ENUM for output shape: squared (any/all values; strings).
+ * @const
+ */
+Blockly.OUTPUT_SHAPE_SQUARE = 3;
