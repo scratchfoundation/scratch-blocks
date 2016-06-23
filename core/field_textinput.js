@@ -43,12 +43,16 @@ goog.require('goog.userAgent');
  *     to validate any constraints on what the user entered.  Takes the new
  *     text as an argument and returns either the accepted text, a replacement
  *     text, or null to abort the change.
+ * @param {RegExp=} opt_restrictor An optional regular expression to restrict
+ *     typed text to. Text that doesn't match the restrictor will never show
+ *     in the text field.
  * @extends {Blockly.Field}
  * @constructor
  */
-Blockly.FieldTextInput = function(text, opt_validator) {
+Blockly.FieldTextInput = function(text, opt_validator, opt_restrictor) {
   Blockly.FieldTextInput.superClass_.constructor.call(this, text,
       opt_validator);
+  this.setRestrictor(opt_restrictor);
 };
 goog.inherits(Blockly.FieldTextInput, Blockly.Field);
 
@@ -107,6 +111,15 @@ Blockly.FieldTextInput.prototype.setValue = function(text) {
  */
 Blockly.FieldTextInput.prototype.setSpellcheck = function(check) {
   this.spellcheck_ = check;
+};
+
+/**
+ * Set the restrictor regex for this text input.
+ * Text that doesn't match the restrictor will never show in the text field.
+ * @param {?RegExp} restrictor Regular expression to restrict text.
+ */
+Blockly.FieldTextInput.prototype.setRestrictor = function(restrictor) {
+  this.restrictor_ = restrictor;
 };
 
 /**
@@ -208,6 +221,15 @@ Blockly.FieldTextInput.prototype.onHtmlInputKeyDown_ = function(e) {
  * @private
  */
 Blockly.FieldTextInput.prototype.onHtmlInputChange_ = function(e) {
+  // Check if the key matches the restrictor.
+  if (e.type === 'keypress' && this.restrictor_) {
+    var charCode = String.fromCharCode(e.keyCode);
+    if (!this.restrictor_.test(charCode) && e.preventDefault) {
+      // Failed to pass restrictor.
+      e.preventDefault();
+      return;
+    }
+  }
   var htmlInput = Blockly.FieldTextInput.htmlInput_;
   // Update source block.
   var text = htmlInput.value;
