@@ -30,6 +30,8 @@ goog.require('Blockly.Blocks');
 
 goog.require('Blockly.Colours');
 
+goog.require('Blockly.constants');
+
 
 /**
  * Common HSV hue for all blocks in this category.
@@ -55,6 +57,7 @@ Blockly.Blocks['text'] = {
       return (parent && parent.getInputsInline() && parent.tooltip) ||
           Blockly.Msg.TEXT_TEXT_TOOLTIP;
     });
+    this.setOutputShape(Blockly.OUTPUT_SHAPE_SQUARE);
   },
   /**
    * Create an image of an open or closed quote.
