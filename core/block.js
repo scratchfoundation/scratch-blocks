@@ -119,6 +119,12 @@ Blockly.Block = function(workspace, prototypeName, opt_id) {
   this.comment = null;
 
   /**
+   * @type {?number}
+   * @private
+   */
+  this.outputShape_ = null;
+
+  /**
    * @type {!goog.math.Coordinate}
    * @private
    */
@@ -1115,6 +1121,9 @@ Blockly.Block.prototype.jsonInit = function(json) {
   if (json['helpUrl'] !== undefined) {
     this.setHelpUrl(json['helpUrl']);
   }
+  if (json['outputShape'] !== undefined) {
+    this.setOutputShape(json['outputShape']);
+  }
 };
 
 /**
@@ -1406,6 +1415,23 @@ Blockly.Block.prototype.setCommentText = function(text) {
         this, 'comment', null, this.comment, text || ''));
     this.comment = text;
   }
+};
+
+/**
+ * Set this block's output shape.
+ * e.g., null, OUTPUT_SHAPE_HEXAGONAL, OUTPUT_SHAPE_ROUND, OUTPUT_SHAPE_SQUARE.
+ * @param {?number} outputShape Value representing output shape (see constants.js).
+ */
+Blockly.Block.prototype.setOutputShape = function(outputShape) {
+  this.outputShape_ = outputShape;
+};
+
+/**
+ * Get this block's output shape.
+ * @return {?number} Value representing output shape (see constants.js).
+ */
+Blockly.Block.prototype.getOutputShape = function() {
+  return this.outputShape_;
 };
 
 /**
