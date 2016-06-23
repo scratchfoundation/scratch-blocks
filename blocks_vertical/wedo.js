@@ -43,8 +43,7 @@ Blockly.Blocks['wedo_motorclockwise'] = {
       "args0": [
         {
           "type": "input_value",
-          "name": "DURATION",
-          "check": "Number"
+          "name": "DURATION"
         }
       ],
       "inputsInline": true,
@@ -69,8 +68,7 @@ Blockly.Blocks['wedo_motorcounterclockwise'] = {
       "args0": [
         {
           "type": "input_value",
-          "name": "DURATION",
-          "check": "Number"
+          "name": "DURATION"
         }
       ],
       "inputsInline": true,

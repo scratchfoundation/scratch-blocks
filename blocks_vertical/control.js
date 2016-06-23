@@ -61,8 +61,7 @@ Blockly.Blocks['control_repeat'] = {
       "args0": [
         {
           "type": "input_value",
-          "name": "TIMES",
-          "check": "Number"
+          "name": "TIMES"
         },
         {
           "type": "input_statement",
@@ -201,8 +200,7 @@ Blockly.Blocks['control_stop'] = {
       "args0": [
         {
           "type": "input_value",
-          "name": "STOP_OPTION",
-          "check": "String"
+          "name": "STOP_OPTION"
         }
       ],
       "inputsInline": true,
@@ -226,8 +224,7 @@ Blockly.Blocks['control_wait'] = {
       "args0": [
         {
           "type": "input_value",
-          "name": "DURATION",
-          "check": "Number"
+          "name": "DURATION"
         }
       ],
       "inputsInline": true,
@@ -361,8 +358,7 @@ Blockly.Blocks['control_create_clone_of'] = {
       "args0": [
         {
           "type": "input_value",
-          "name": "CLONE_OPTION",
-          "check": "String"
+          "name": "CLONE_OPTION"
         }
       ],
       "inputsInline": true,
