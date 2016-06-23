@@ -67,10 +67,10 @@ var getNumRestrictor = function(decimalAllowed, negativeAllowed) {
  * @constructor
  */
 Blockly.FieldNumber = function(value, opt_min, opt_max, opt_precision, opt_validator) {
-  this.decimalAllowed_ = (typeof opt_min == 'undefined') ||
+  this.decimalAllowed_ = (typeof opt_precision == 'undefined') || isNaN(opt_precision) ||
     (opt_precision == 0) ||
     (Math.floor(opt_precision) != opt_precision);
-  this.negativeAllowed_ = (typeof opt_min == 'undefined') || opt_min < 0;
+  this.negativeAllowed_ = (typeof opt_min == 'undefined') || isNaN(opt_min) || opt_min < 0;
   var numRestrictor = getNumRestrictor(this.decimalAllowed_, this.negativeAllowed_);
   Blockly.FieldNumber.superClass_.constructor.call(this, value, opt_validator, numRestrictor);
 };
@@ -132,10 +132,10 @@ Blockly.FieldNumber.activeField_ = null;
  * @param {?number} opt_precision Step allowed between numbers
  */
 Blockly.FieldNumber.prototype.setConstraints_ = function(opt_min, opt_max, opt_precision) {
-  this.decimalAllowed_ = (typeof opt_min == 'undefined') ||
+  this.decimalAllowed_ = (typeof opt_precision == 'undefined') || isNaN(opt_precision) ||
     (opt_precision == 0) ||
     (Math.floor(opt_precision) != opt_precision);
-  this.negativeAllowed_ = (typeof opt_min == 'undefined') || opt_min < 0;
+  this.negativeAllowed_ = (typeof opt_min == 'undefined') || isNaN(opt_min) || opt_min < 0;
 };
 
 /**
