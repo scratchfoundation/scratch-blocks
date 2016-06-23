@@ -1007,7 +1007,7 @@ Blockly.BlockSvg.prototype.renderInputShape_ = function(input, x, y) {
     var inputShapeX = 0, inputShapeY = 0;
     // If the input connection is not connected, draw a hole shape.
     var inputShapePath = null;
-    switch (input.sourceBlock_.getOutputShape()) {
+    switch (input.connection.getOutputShape()) {
       case Blockly.OUTPUT_SHAPE_HEXAGONAL:
         inputShapePath = Blockly.BlockSvg.INPUT_SHAPE_HEXAGONAL;
         inputShapeWidth = Blockly.BlockSvg.INPUT_SHAPE_HEXAGONAL_WIDTH;
