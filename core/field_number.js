@@ -56,9 +56,9 @@ var getNumRestrictor = function(decimalAllowed, negativeAllowed) {
  * These properties are included here (i.e. instead of just accepting a decimalAllowed, negativeAllowed)
  * to maintain API compatibility with Blockly and Blockly for Android.
  * @param {string} value The initial value of the field.
- * @param {?number} opt_min Minimum number allowed.
- * @param {?number} opt_max Maximum number allowed.
- * @param {?number} opt_precision Step allowed between numbers
+ * @param {number=} opt_min Minimum number allowed.
+ * @param {number=} opt_max Maximum number allowed.
+ * @param {number=} opt_precision Step allowed between numbers
  * @param {Function=} opt_validator An optional function that is called
  *     to validate any constraints on what the user entered.  Takes the new
  *     text as an argument and returns the accepted text or null to abort
@@ -127,9 +127,9 @@ Blockly.FieldNumber.activeField_ = null;
 
 /**
  * Set the constraints for this field.
- * @param {?number} opt_min Minimum number allowed.
- * @param {?number} opt_max Maximum number allowed.
- * @param {?number} opt_precision Step allowed between numbers
+ * @param {number=} opt_min Minimum number allowed.
+ * @param {number=} opt_max Maximum number allowed.
+ * @param {number=} opt_precision Step allowed between numbers
  */
 Blockly.FieldNumber.prototype.setConstraints_ = function(opt_min, opt_max, opt_precision) {
   this.decimalAllowed_ = (typeof opt_precision == 'undefined') || isNaN(opt_precision) ||
