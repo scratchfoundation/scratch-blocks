@@ -211,7 +211,7 @@ Blockly.Blocks['operator_lt'] = {
       "colour": Blockly.Colours.operators.primary,
       "colourSecondary": Blockly.Colours.operators.secondary,
       "colourTertiary": Blockly.Colours.operators.tertiary,
-      "outputShape": Blockly.OUTPUT_SHAPE_ROUND
+      "outputShape": Blockly.OUTPUT_SHAPE_HEXAGONAL
     });
   }
 };
@@ -239,7 +239,7 @@ Blockly.Blocks['operator_equals'] = {
       "colour": Blockly.Colours.operators.primary,
       "colourSecondary": Blockly.Colours.operators.secondary,
       "colourTertiary": Blockly.Colours.operators.tertiary,
-      "outputShape": Blockly.OUTPUT_SHAPE_ROUND
+      "outputShape": Blockly.OUTPUT_SHAPE_HEXAGONAL
     });
   }
 };
@@ -267,7 +267,7 @@ Blockly.Blocks['operator_gt'] = {
       "colour": Blockly.Colours.operators.primary,
       "colourSecondary": Blockly.Colours.operators.secondary,
       "colourTertiary": Blockly.Colours.operators.tertiary,
-      "outputShape": Blockly.OUTPUT_SHAPE_ROUND
+      "outputShape": Blockly.OUTPUT_SHAPE_HEXAGONAL
     });
   }
 };
@@ -297,7 +297,7 @@ Blockly.Blocks['operator_and'] = {
       "colour": Blockly.Colours.operators.primary,
       "colourSecondary": Blockly.Colours.operators.secondary,
       "colourTertiary": Blockly.Colours.operators.tertiary,
-      "outputShape": Blockly.OUTPUT_SHAPE_ROUND
+      "outputShape": Blockly.OUTPUT_SHAPE_HEXAGONAL
     });
   }
 };
@@ -327,7 +327,7 @@ Blockly.Blocks['operator_or'] = {
       "colour": Blockly.Colours.operators.primary,
       "colourSecondary": Blockly.Colours.operators.secondary,
       "colourTertiary": Blockly.Colours.operators.tertiary,
-      "outputShape": Blockly.OUTPUT_SHAPE_ROUND
+      "outputShape": Blockly.OUTPUT_SHAPE_HEXAGONAL
     });
   }
 };
@@ -352,7 +352,7 @@ Blockly.Blocks['operator_not'] = {
       "colour": Blockly.Colours.operators.primary,
       "colourSecondary": Blockly.Colours.operators.secondary,
       "colourTertiary": Blockly.Colours.operators.tertiary,
-      "outputShape": Blockly.OUTPUT_SHAPE_ROUND
+      "outputShape": Blockly.OUTPUT_SHAPE_HEXAGONAL
     });
   }
 };
