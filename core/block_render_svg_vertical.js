@@ -970,13 +970,13 @@ Blockly.BlockSvg.prototype.renderDrawRight_ = function(steps,
     cursorY += row.height;
   }
   if (this.edgeShape_) {
-    // Draw the right-side edge shape
-    if (this.edgeShape_ === Blockly.Connection.NUMBER) {
-      // Draw a rounded arc
+    // Draw the right-side edge shape.
+    if (this.edgeShape_ === Blockly.OUTPUT_SHAPE_ROUND) {
+      // Draw a rounded arc.
       steps.push('a ' + this.edgeShapeWidth_ + ' ' + this.edgeShapeWidth_ +
           ' 0 0 1 0 ' + this.edgeShapeWidth_ * 2);
-    } else if (this.edgeShape_ === Blockly.Connection.BOOLEAN) {
-      // Draw an angle
+    } else if (this.edgeShape_ === Blockly.OUTPUT_SHAPE_HEXAGONAL) {
+      // Draw an half-hexagon.
       steps.push('l ' + this.edgeShapeWidth_ + ' ' + this.edgeShapeWidth_ +
           ' l ' + -this.edgeShapeWidth_ + ' ' + this.edgeShapeWidth_);
     }
@@ -1099,12 +1099,12 @@ Blockly.BlockSvg.prototype.renderDrawLeft_ = function(steps, connectionsXY) {
     // This connection will be tightened when the parent renders.
   }
   if (this.edgeShape_) {
-    // Draw the left-side edge shape
-    if (this.edgeShape_ === Blockly.Connection.NUMBER) {
-      // Draw a rounded arc
+    // Draw the left-side edge shape.
+    if (this.edgeShape_ === Blockly.OUTPUT_SHAPE_ROUND) {
+      // Draw a rounded arc.
       steps.push('a ' + this.edgeShapeWidth_ + ' ' + this.edgeShapeWidth_ + ' 0 0 1 0 -' + this.edgeShapeWidth_*2);
-    } else if (this.edgeShape_ === Blockly.Connection.BOOLEAN) {
-      // Draw an angle
+    } else if (this.edgeShape_ === Blockly.OUTPUT_SHAPE_HEXAGONAL) {
+      // Draw a half-hexagon.
       steps.push('l ' + -this.edgeShapeWidth_ + ' ' + -this.edgeShapeWidth_ +
         ' l ' + this.edgeShapeWidth_ + ' ' + -this.edgeShapeWidth_);
     }
