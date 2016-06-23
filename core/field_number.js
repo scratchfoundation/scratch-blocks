@@ -55,10 +55,10 @@ var getNumRestrictor = function(decimalAllowed, negativeAllowed) {
  * to construct a restrictor on typable characters, and to inform the pop-up numpad on touch devices.
  * These properties are included here (i.e. instead of just accepting a decimalAllowed, negativeAllowed)
  * to maintain API compatibility with Blockly and Blockly for Android.
- * @param {string} text The initial content of the field.
- * @param {number} min Minimum number allowed. NOTE: only used to determine if negatives are allowed.
- * @param {number} max Maximum number allowed. NOTE: unused in scratch-blocks.
- * @param {number} precision Step allowed between numbers. NOTE: only used to determine if decimal values are allowed.
+ * @param {string} value The initial value of the field.
+ * @param {?number} opt_min Minimum number allowed.
+ * @param {?number} opt_max Maximum number allowed.
+ * @param {?number} opt_precision Step allowed between numbers
  * @param {Function=} opt_validator An optional function that is called
  *     to validate any constraints on what the user entered.  Takes the new
  *     text as an argument and returns the accepted text or null to abort
@@ -66,11 +66,13 @@ var getNumRestrictor = function(decimalAllowed, negativeAllowed) {
  * @extends {Blockly.FieldTextInput}
  * @constructor
  */
-Blockly.FieldNumber = function(text, min, max, precision, opt_validator) {
-  this.decimalAllowed_ = (precision == 0) || (Math.floor(precision) != precision);
-  this.negativeAllowed_ = min < 0;
+Blockly.FieldNumber = function(value, opt_min, opt_max, opt_precision, opt_validator) {
+  this.decimalAllowed_ = (typeof opt_min == 'undefined') ||
+    (opt_precision == 0) ||
+    (Math.floor(opt_precision) != opt_precision);
+  this.negativeAllowed_ = (typeof opt_min == 'undefined') || opt_min < 0;
   var numRestrictor = getNumRestrictor(this.decimalAllowed_, this.negativeAllowed_);
-  Blockly.FieldNumber.superClass_.constructor.call(this, text, opt_validator, numRestrictor);
+  Blockly.FieldNumber.superClass_.constructor.call(this, value, opt_validator, numRestrictor);
 };
 goog.inherits(Blockly.FieldNumber, Blockly.FieldTextInput);
 
@@ -122,6 +124,19 @@ Blockly.FieldNumber.NUMPAD_DELETE_ICON = 'data:image/svg+xml;utf8,' +
  * @private
  */
 Blockly.FieldNumber.activeField_ = null;
+
+/**
+ * Set the constraints for this field.
+ * @param {?number} opt_min Minimum number allowed.
+ * @param {?number} opt_max Maximum number allowed.
+ * @param {?number} opt_precision Step allowed between numbers
+ */
+Blockly.FieldNumber.prototype.setConstraints_ = function(opt_min, opt_max, opt_precision) {
+  this.decimalAllowed_ = (typeof opt_min == 'undefined') ||
+    (opt_precision == 0) ||
+    (Math.floor(opt_precision) != opt_precision);
+  this.negativeAllowed_ = (typeof opt_min == 'undefined') || opt_min < 0;
+};
 
 /**
  * Show the inline free-text editor on top of the text and the num-pad if appropriate.
