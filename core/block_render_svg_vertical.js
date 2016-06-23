@@ -235,6 +235,74 @@ Blockly.BlockSvg.INNER_BOTTOM_LEFT_CORNER =
     Blockly.BlockSvg.CORNER_RADIUS;
 
 /**
+ * SVG path for an empty boolean input shape.
+ * @const
+ */
+Blockly.BlockSvg.INPUT_SHAPE_BOOLEAN =
+    'M ' + 4 * Blockly.BlockSvg.GRID_UNIT + ',0 ' +
+    ' h ' + 4 * Blockly.BlockSvg.GRID_UNIT +
+    ' l ' + 4 * Blockly.BlockSvg.GRID_UNIT + ',' + 4 * Blockly.BlockSvg.GRID_UNIT +
+    ' l ' + -4 * Blockly.BlockSvg.GRID_UNIT + ',' + 4 * Blockly.BlockSvg.GRID_UNIT +
+    ' h ' + -4 * Blockly.BlockSvg.GRID_UNIT +
+    ' l ' + -4 * Blockly.BlockSvg.GRID_UNIT + ',' + -4 * Blockly.BlockSvg.GRID_UNIT +
+    ' l ' + 4 * Blockly.BlockSvg.GRID_UNIT + ',' + -4 * Blockly.BlockSvg.GRID_UNIT +
+    ' z';
+
+/**
+ * Width of empty boolean input shape.
+ * @const
+ */
+Blockly.BlockSvg.INPUT_SHAPE_BOOLEAN_WIDTH = 10 * Blockly.BlockSvg.GRID_UNIT;
+
+/**
+ * SVG path for an empty string input shape.
+ * @const
+ */
+Blockly.BlockSvg.INPUT_SHAPE_STRING =
+    Blockly.BlockSvg.TOP_LEFT_CORNER_START +
+    Blockly.BlockSvg.TOP_LEFT_CORNER +
+    ' h ' + (12 * Blockly.BlockSvg.GRID_UNIT - 2 * Blockly.BlockSvg.CORNER_RADIUS) +
+    Blockly.BlockSvg.TOP_RIGHT_CORNER +
+    ' v ' + (8 * Blockly.BlockSvg.GRID_UNIT - 2 * Blockly.BlockSvg.CORNER_RADIUS) +
+    Blockly.BlockSvg.BOTTOM_RIGHT_CORNER +
+    ' h ' + (-12 * Blockly.BlockSvg.GRID_UNIT + 2 * Blockly.BlockSvg.CORNER_RADIUS) +
+    Blockly.BlockSvg.BOTTOM_LEFT_CORNER +
+    ' z';
+
+/**
+ * Width of empty string input shape.
+ * @const
+ */
+Blockly.BlockSvg.INPUT_SHAPE_STRING_WIDTH = 9 * Blockly.BlockSvg.GRID_UNIT;
+
+/**
+ * SVG path for an empty string input shape.
+ * @const
+ */
+
+Blockly.BlockSvg.INPUT_SHAPE_NUMBER =
+  'M ' + (4 * Blockly.BlockSvg.GRID_UNIT) + ',0' +
+  ' h ' + (4 * Blockly.BlockSvg.GRID_UNIT) +
+  ' a ' + (4 * Blockly.BlockSvg.GRID_UNIT) + ' ' +
+      (4 * Blockly.BlockSvg.GRID_UNIT) + ' 0 0 1 0 ' + (8 * Blockly.BlockSvg.GRID_UNIT) +
+  ' h ' + (-4 * Blockly.BlockSvg.GRID_UNIT) +
+  ' a ' + (4 * Blockly.BlockSvg.GRID_UNIT) + ' ' +
+      (4 * Blockly.BlockSvg.GRID_UNIT) + ' 0 0 1 0 -' + (8 * Blockly.BlockSvg.GRID_UNIT) +
+  ' z';
+
+/**
+ * Width of empty string input shape.
+ * @const
+ */
+Blockly.BlockSvg.INPUT_SHAPE_NUMBER_WIDTH = 10 * Blockly.BlockSvg.GRID_UNIT;
+
+/**
+ * Height of empty input shape.
+ * @const
+ */
+Blockly.BlockSvg.INPUT_SHAPE_HEIGHT = 8 * Blockly.BlockSvg.GRID_UNIT;
+
+/**
  * Height of user inputs
  * @const
  */
@@ -308,6 +376,30 @@ Blockly.BlockSvg.NO_PREVIOUS_INPUT_X_MIN = 12 * Blockly.BlockSvg.GRID_UNIT;
 Blockly.BlockSvg.INLINE_PADDING_Y = 2 * Blockly.BlockSvg.GRID_UNIT;
 
 /**
+ * Point size of text field before animation. Must match size in CSS.
+ * See implementation in field_textinput.
+ */
+Blockly.BlockSvg.FIELD_TEXTINPUT_FONTSIZE_INITIAL = 12;
+
+/**
+ * Point size of text field after animation.
+ * See implementation in field_textinput.
+ */
+Blockly.BlockSvg.FIELD_TEXTINPUT_FONTSIZE_FINAL = 12;
+
+/**
+ * Whether text fields are allowed to expand past their truncated block size.
+ * @const{boolean}
+ */
+Blockly.BlockSvg.FIELD_TEXTINPUT_EXPAND_PAST_TRUNCATION = false;
+
+/**
+ * Whether text fields should animate their positioning.
+ * @const{boolean}
+ */
+Blockly.BlockSvg.FIELD_TEXTINPUT_ANIMATE_POSITIONING = false;
+
+/**
  * Change the colour of a block.
  */
 Blockly.BlockSvg.prototype.updateColour = function() {
@@ -327,6 +419,11 @@ Blockly.BlockSvg.prototype.updateColour = function() {
   // Render opacity
   this.svgPath_.setAttribute('fill-opacity', this.getOpacity());
 
+  // Update colours of input shapes.
+  for (var shape in this.inputShapes_) {
+    this.inputShapes_[shape].setAttribute('fill', this.getColourTertiary());
+  }
+
   // Render icon(s) if applicable
   var icons = this.getIcons();
   for (var i = 0; i < icons.length; i++) {
@@ -338,6 +435,38 @@ Blockly.BlockSvg.prototype.updateColour = function() {
     for (var y = 0, field; field = input.fieldRow[y]; y++) {
       field.setText(null);
     }
+  }
+};
+
+/**
+ * Visual effect to show that if the dragging block is dropped, this block will
+ * be replaced.  If a shadow block it will disappear.  Otherwise it will bump.
+ * @param {boolean} add True if highlighting should be added.
+ */
+Blockly.BlockSvg.prototype.highlightForReplacement = function(add) {
+  if (add) {
+    this.svgPath_.setAttribute('filter', 'url(#blocklyReplacementGlowFilter)');
+  } else {
+    this.svgPath_.removeAttribute('filter');
+  }
+};
+
+/**
+ * Visual effect to show that if the dragging block is dropped it will connect
+ * to this input.
+ * @param {Blockly.Connection} conn The connection on the input to highlight.
+ * @param {boolean} add True if highlighting should be added.
+ */
+Blockly.BlockSvg.prototype.highlightShapeForInput = function(conn, add) {
+  var input = this.getInputWithConnection(conn);
+  if (!input) {
+    throw 'No input found for the connection';
+  }
+  var inputShape = this.inputShapes_[input.name];
+  if (add) {
+    inputShape.setAttribute('filter', 'url(#blocklyReplacementGlowFilter)');
+  } else {
+    inputShape.removeAttribute('filter');
   }
 };
 
@@ -394,7 +523,7 @@ Blockly.BlockSvg.prototype.render = function(opt_bubble) {
       parentBlock.render(true);
     } else {
       // Top-most block.  Fire an event to allow scrollbars to resize.
-      Blockly.asyncSvgResize(this.workspace);
+      Blockly.resizeSvgContents(this.workspace);
     }
   }
   Blockly.Field.stopCache();
@@ -519,11 +648,20 @@ Blockly.BlockSvg.prototype.renderCompute_ = function(iconWidth) {
       }
     }
 
-    // Expand input size if there is a connection.
-    if (input.connection && input.connection.isConnected()) {
+    // Expand input size.
+    if (input.connection) {
       var linkedBlock = input.connection.targetBlock();
-      var bBox = linkedBlock.getHeightWidth();
-      var paddedHeight = bBox.height;
+      var paddedHeight = 0;
+      var paddedWidth = 0;
+      if (linkedBlock) {
+        // A block is connected to the input - use its size.
+        var bBox = linkedBlock.getHeightWidth();
+        paddedHeight = bBox.height;
+        paddedWidth = bBox.width;
+      } else {
+        // No block connected - use the size of the rendered empty input shape.
+        paddedHeight = Blockly.BlockSvg.INPUT_SHAPE_HEIGHT;
+      }
       if (input.connection.type === Blockly.INPUT_VALUE) {
         paddedHeight += 2 * Blockly.BlockSvg.INLINE_PADDING_Y;
       }
@@ -534,7 +672,7 @@ Blockly.BlockSvg.prototype.renderCompute_ = function(iconWidth) {
         }
       }
       input.renderHeight = Math.max(input.renderHeight, paddedHeight);
-      input.renderWidth = Math.max(input.renderWidth, bBox.width);
+      input.renderWidth = Math.max(input.renderWidth, paddedWidth);
     }
     row.height = Math.max(row.height, input.renderHeight);
     input.fieldWidth = 0;
@@ -760,18 +898,12 @@ Blockly.BlockSvg.prototype.renderDrawRight_ = function(steps,
           }
           // Attempt to center the connection vertically.
           var connectionYOffset = row.height / 2;
-          // Read the block which is connected to subtract half its height.
-          if (input.connection.targetConnection) {
-            var sourceBlock = input.connection.targetConnection.getSourceBlock();
-            if (sourceBlock.rendered) {
-              connectionYOffset -= sourceBlock.getHeightWidth().height / 2;
-            }
-          }
           connectionY = connectionsXY.y + cursorY + connectionYOffset;
           input.connection.moveTo(connectionX, connectionY);
           if (input.connection.isConnected()) {
             input.connection.tighten_();
           }
+          cursorX += this.renderInputShape_(input, cursorX, cursorY + connectionYOffset);
           cursorX += input.renderWidth + Blockly.BlockSvg.SEP_SPACE_X;
         }
       }
@@ -857,6 +989,55 @@ Blockly.BlockSvg.prototype.renderDrawRight_ = function(steps,
 };
 
 /**
+ * Render the input shapes.
+ * If there's a connected block, hide the input shape.
+ * Otherwise, draw and set the position of the input shape.
+ * @param {!Blockly.Input} input Input to be rendered.
+ * @param {Number} x X offset of input.
+ * @param {Number} y Y offset of input.
+ * @return {Number} Width of rendered input shape, or 0 if not rendered.
+ */
+Blockly.BlockSvg.prototype.renderInputShape_ = function(input, x, y) {
+  var inputShape = this.inputShapes_[input.name];
+  var inputShapeWidth = 0;
+  // Input shapes are only visibly rendered on non-connected non-insertion-markers.
+  if (this.isInsertionMarker() || input.connection.targetConnection) {
+    inputShape.setAttribute('style', 'visibility: hidden');
+  } else {
+    var inputShapeX = 0, inputShapeY = 0;
+    // If the input connection is not connected, draw a hole shape.
+    var inputShapePath = null;
+    switch (input.connection.getOutputShape()) {
+      case Blockly.Connection.BOOLEAN:
+        inputShapePath = Blockly.BlockSvg.INPUT_SHAPE_BOOLEAN;
+        inputShapeWidth = Blockly.BlockSvg.INPUT_SHAPE_BOOLEAN_WIDTH;
+        break;
+      case Blockly.Connection.NUMBER:
+        inputShapePath = Blockly.BlockSvg.INPUT_SHAPE_NUMBER;
+        inputShapeWidth = Blockly.BlockSvg.INPUT_SHAPE_NUMBER_WIDTH;
+        break;
+      case Blockly.Connection.STRING:
+      default:
+        inputShapePath = Blockly.BlockSvg.INPUT_SHAPE_STRING;
+        inputShapeWidth = Blockly.BlockSvg.INPUT_SHAPE_STRING_WIDTH;
+        break;
+    }
+    if (this.RTL) {
+      inputShapeX = -x - inputShapeWidth - Blockly.BlockSvg.SEP_SPACE_X;
+    } else {
+      inputShapeX = x;
+    }
+    inputShapeY = y - (Blockly.BlockSvg.INPUT_SHAPE_HEIGHT / 2);
+    inputShape.setAttribute('d', inputShapePath);
+    inputShape.setAttribute('transform',
+      'translate(' + inputShapeX + ',' + inputShapeY + ')'
+    );
+    inputShape.setAttribute('style', 'visibility: visible');
+  }
+  return inputShapeWidth;
+};
+
+/**
  * Render the bottom edge of the block.
  * @param {!Array.<string>} steps Path of block outline.
  * @param {!Object} connectionsXY Location of block.
@@ -913,7 +1094,8 @@ Blockly.BlockSvg.prototype.renderDrawBottom_ = function(steps, connectionsXY,
 Blockly.BlockSvg.prototype.renderDrawLeft_ = function(steps, connectionsXY) {
   if (this.outputConnection) {
     // Create output connection.
-    this.outputConnection.moveTo(connectionsXY.x, connectionsXY.y);
+    // Scratch-style reporters have output connection y at half block height.
+    this.outputConnection.moveTo(connectionsXY.x, connectionsXY.y + this.height / 2);
     // This connection will be tightened when the parent renders.
   }
   if (this.edgeShape_) {

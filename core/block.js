@@ -390,6 +390,20 @@ Blockly.Block.prototype.getInputWithBlock = function(block) {
 };
 
 /**
+ * Return the input that contains the specified connection
+ * @param {!Blockly.Connection} conn A connection on this block.
+ * @return {Blockly.Input} The input that contains the specified connection.
+ */
+Blockly.Block.prototype.getInputWithConnection = function(conn) {
+  for (var i = 0, input; input = this.inputList[i]; i++) {
+    if (input.connection == conn) {
+      return input;
+    }
+  }
+  return null;
+};
+
+/**
  * Return the parent block that surrounds the current block, or null if this
  * block has no surrounding block.  A parent block might just be the previous
  * statement, whereas the surrounding block is an if statement, while loop, etc.
@@ -1113,7 +1127,7 @@ Blockly.Block.prototype.jsonInit = function(json) {
  * @private
  */
 Blockly.Block.prototype.interpolate_ = function(message, args, lastDummyAlign) {
-  var tokens = Blockly.tokenizeInterpolation(message);
+  var tokens = Blockly.utils.tokenizeInterpolation(message);
   // Interpolate the arguments.  Build a list of elements.
   var indexDup = [];
   var indexCount = 0;

@@ -26,8 +26,6 @@
 
 goog.provide('Blockly.Xml');
 
-// TODO(scr): Fix circular dependencies
-// goog.require('Blockly.Block');
 goog.require('goog.asserts');
 goog.require('goog.dom');
 
@@ -296,7 +294,11 @@ Blockly.Xml.domToWorkspace = function(xml, workspace) {
   for (var i = 0; i < childCount; i++) {
     var xmlChild = xml.childNodes[i];
     var name = xmlChild.nodeName.toLowerCase();
-    if (name == 'block') {
+    if (name == 'block' ||
+        (name == 'shadow' && !Blockly.Events.recordUndo)) {
+      // Allow top-level shadow blocks if recordUndo is disabled since
+      // that means an undo is in progress.  Such a block is expected
+      // to be moved to a nested destination in the next operation.
       var block = Blockly.Xml.domToBlock(xmlChild, workspace);
       var blockX = parseInt(xmlChild.getAttribute('x'), 10);
       var blockY = parseInt(xmlChild.getAttribute('y'), 10);
@@ -353,10 +355,9 @@ Blockly.Xml.domToBlock = function(xmlBlock, workspace) {
       }, 1);
     }
     topBlock.updateDisabled();
-    // Fire an event to allow scrollbars to resize.
-    if (!workspace.isFlyout) {
-      Blockly.asyncSvgResize(workspace);
-    }
+    // Allow the scrollbars to resize and move based on the new contents.
+    // TODO(@picklesrus): #387. Remove when domToBlock avoids resizing.
+    Blockly.resizeSvgContents(workspace);
   }
   Blockly.Events.enable();
   if (Blockly.Events.isEnabled()) {

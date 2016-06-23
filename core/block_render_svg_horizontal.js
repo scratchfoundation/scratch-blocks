@@ -240,6 +240,30 @@ Blockly.BlockSvg.renderingMetrics_ = null;
 Blockly.BlockSvg.MAX_DISPLAY_LENGTH = 4;
 
 /**
+ * Point size of text field before animation. Must match size in CSS.
+ * See implementation in field_textinput.
+ */
+Blockly.BlockSvg.FIELD_TEXTINPUT_FONTSIZE_INITIAL = 12;
+
+/**
+ * Point size of text field after animation.
+ * See implementation in field_textinput.
+ */
+Blockly.BlockSvg.FIELD_TEXTINPUT_FONTSIZE_FINAL = 14;
+
+/**
+ * Whether text fields are allowed to expand past their truncated block size.
+ * @const{boolean}
+ */
+Blockly.BlockSvg.FIELD_TEXTINPUT_EXPAND_PAST_TRUNCATION = true;
+
+/**
+ * Whether text fields should animate their positioning.
+ * @const{boolean}
+ */
+Blockly.BlockSvg.FIELD_TEXTINPUT_ANIMATE_POSITIONING = true;
+
+/**
  * @param {!Object} first An object containing computed measurements of a
  *    block.
  * @param {!Object} second Another object containing computed measurements of a
@@ -299,6 +323,19 @@ Blockly.BlockSvg.prototype.updateColour = function() {
 };
 
 /**
+ * Visual effect to show that if the dragging block is dropped, this block will
+ * be replaced.  If a shadow block it will disappear.  Otherwise it will bump.
+ * @param {boolean} add True if highlighting should be added.
+ */
+Blockly.BlockSvg.prototype.highlightForReplacement = function(add) {
+  if (add) {
+    this.svgPath_.setAttribute('filter', 'url(#blocklyReplacementGlowFilter)');
+  } else {
+    this.svgPath_.removeAttribute('filter');
+  }
+};
+
+/**
  * Returns a bounding box describing the dimensions of this block
  * and any blocks stacked below it.
  * @param {boolean=} opt_ignoreFields True if we should ignore fields in the
@@ -318,6 +355,7 @@ Blockly.BlockSvg.prototype.getHeightWidth = function(opt_ignoreFields) {
   if (nextBlock) {
     var nextHeightWidth = nextBlock.getHeightWidth(opt_ignoreFields);
     width += nextHeightWidth.width;
+    width -= Blockly.BlockSvg.NOTCH_WIDTH; // Exclude width of connected notch.
     height = Math.max(height, nextHeightWidth.height);
   }
   return {height: height, width: width};
@@ -362,7 +400,7 @@ Blockly.BlockSvg.prototype.render = function(opt_bubble) {
       parentBlock.render(true);
     } else {
       // Top-most block.  Fire an event to allow scrollbars to resize.
-      Blockly.asyncSvgResize(this.workspace);
+      Blockly.resizeSvgContents(this.workspace);
     }
   }
   Blockly.Field.stopCache();
@@ -383,6 +421,7 @@ Blockly.BlockSvg.prototype.renderCompute_ = function() {
     height: 0,
     bayHeight: 0,
     bayWidth: 0,
+    bayNotchAtRight: true,
     fieldRadius: 0,
     startHat: false,
     endCap: false
@@ -401,6 +440,12 @@ Blockly.BlockSvg.prototype.renderCompute_ = function() {
         var bBox = linkedBlock.getHeightWidth(true);
         metrics.bayHeight = Math.max(metrics.bayHeight, bBox.height);
         metrics.bayWidth = Math.max(metrics.bayWidth, bBox.width);
+      }
+      var linkedBlock = input.connection.targetBlock();
+      if (linkedBlock && !linkedBlock.lastConnectionInStack()) {
+        metrics.bayNotchAtRight = false;
+      } else {
+        metrics.bayWidth -= Blockly.BlockSvg.NOTCH_WIDTH;
       }
     }
 
@@ -646,10 +691,12 @@ Blockly.BlockSvg.prototype.renderDrawBottom_ = function(steps,
                Blockly.BlockSvg.CORNER_RADIUS + ' 0 0,1 ' +
                Blockly.BlockSvg.CORNER_RADIUS + ',' +
                Blockly.BlockSvg.CORNER_RADIUS);
-    steps.push('v', metrics.bayHeight - (Blockly.BlockSvg.CORNER_RADIUS * 3) -
-      Blockly.BlockSvg.NOTCH_HEIGHT - 2 * Blockly.BlockSvg.GRID_UNIT);
-    steps.push(Blockly.BlockSvg.NOTCH_PATH_DOWN);
-    steps.push('v', 2.5 * Blockly.BlockSvg.GRID_UNIT);
+    if (metrics.bayNotchAtRight) {
+      steps.push('v', metrics.bayHeight - (Blockly.BlockSvg.CORNER_RADIUS * 3) -
+        Blockly.BlockSvg.NOTCH_HEIGHT - 2 * Blockly.BlockSvg.GRID_UNIT);
+      steps.push(Blockly.BlockSvg.NOTCH_PATH_DOWN);
+    }
+    steps.push('V', metrics.bayHeight + 2 * Blockly.BlockSvg.GRID_UNIT);
     steps.push('a', Blockly.BlockSvg.CORNER_RADIUS + ',' +
                Blockly.BlockSvg.CORNER_RADIUS + ' 0 0,0 ' +
                Blockly.BlockSvg.CORNER_RADIUS + ',' +
@@ -703,6 +750,9 @@ Blockly.BlockSvg.prototype.renderDrawRight_ = function(steps, connectionsXY, met
 
   if (this.nextConnection) {
     steps.push(Blockly.BlockSvg.NOTCH_PATH_UP);
+
+    // Include width of notch in block width.
+    this.width += Blockly.BlockSvg.NOTCH_WIDTH;
 
     // Create next block connection.
     var connectionX;

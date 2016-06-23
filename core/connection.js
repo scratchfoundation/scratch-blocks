@@ -208,8 +208,9 @@ Blockly.Connection.prototype.connect_ = function(childConnection) {
       // block.  Since this block may be a stack, walk down to the end.
       var newBlock = childBlock;
       while (newBlock.nextConnection) {
-        if (newBlock.nextConnection.isConnected()) {
-          newBlock = newBlock.getNextBlock();
+        var nextBlock = newBlock.getNextBlock();
+        if (nextBlock && !nextBlock.isShadow()) {
+          newBlock = nextBlock;
         } else {
           if (orphanBlock.previousConnection.checkType_(
               newBlock.nextConnection)) {
@@ -324,6 +325,9 @@ Blockly.Connection.prototype.isConnected = function() {
  * @private
  */
 Blockly.Connection.prototype.canConnectWithReason_ = function(target) {
+  if (!target) {
+    return Blockly.Connection.REASON_TARGET_NULL;
+  }
   if (this.isSuperior()) {
     var blockA = this.sourceBlock_;
     var blockB = target.getSourceBlock();
@@ -331,9 +335,7 @@ Blockly.Connection.prototype.canConnectWithReason_ = function(target) {
     var blockB = this.sourceBlock_;
     var blockA = target.getSourceBlock();
   }
-  if (!target) {
-    return Blockly.Connection.REASON_TARGET_NULL;
-  } else if (blockA && blockA == blockB) {
+  if (blockA && blockA == blockB) {
     return Blockly.Connection.REASON_SELF_CONNECTION;
   } else if (target.type != Blockly.OPPOSITE_TYPE[this.type]) {
     return Blockly.Connection.REASON_WRONG_TYPE;
@@ -392,8 +394,7 @@ Blockly.Connection.prototype.isConnectionAllowed = function(candidate) {
 
   // Type checking.
   var canConnect = this.canConnectWithReason_(candidate);
-  if (canConnect != Blockly.Connection.CAN_CONNECT &&
-      canConnect != Blockly.Connection.REASON_MUST_DISCONNECT) {
+  if (canConnect != Blockly.Connection.CAN_CONNECT) {
     return false;
   }
 
@@ -439,12 +440,8 @@ Blockly.Connection.prototype.isConnectionAllowed = function(candidate) {
       break;
     }
     case Blockly.OUTPUT_VALUE: {
-      // Don't offer to connect an already connected left (male) value plug to
-      // an available right (female) value plug.
-      if (candidate.targetConnection || this.targetConnection) {
-        return false;
-      }
-      break;
+      // Can't drag an input to an output--you have to move the inferior block.
+      return false;
     }
     case Blockly.INPUT_VALUE: {
       // Offering to connect the left (male) of a value block to an already
@@ -469,9 +466,13 @@ Blockly.Connection.prototype.isConnectionAllowed = function(candidate) {
         return false;
       }
       // Don't let a block with no next connection bump other blocks out of the
-      // stack.
+      // stack.  But covering up a shadow block or stack of shadow blocks is
+      // fine.  Similarly, replacing a terminal statement with another terminal
+      // statement is allowed.
       if (candidate.isConnectedToNonInsertionMarker() &&
-          !this.sourceBlock_.nextConnection) {
+          !this.sourceBlock_.nextConnection &&
+          !candidate.targetBlock().isShadow() &&
+          candidate.targetBlock().nextConnection) {
         return false;
       }
       break;
@@ -619,8 +620,6 @@ Blockly.Connection.prototype.disconnectInternal_ = function(parentBlock,
 
 /**
  * Respawn the shadow block if there was one connected to the this connection.
- * @return {Blockly.Block} The newly spawned shadow block, or null if none was
- *    spawned.
  * @private
  */
 Blockly.Connection.prototype.respawnShadow_ = function() {
@@ -636,9 +635,7 @@ Blockly.Connection.prototype.respawnShadow_ = function() {
     } else {
       throw 'Child block does not have output or previous statement.';
     }
-    return blockShadow;
   }
-  return null;
 };
 
 /**

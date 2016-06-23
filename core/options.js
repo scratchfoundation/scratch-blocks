@@ -32,7 +32,7 @@ goog.require('Blockly.Colours');
  * Parse the user-specified options, using reasonable defaults where behaviour
  * is unspecified.
  * @param {!Object} options Dictionary of options.  Specification:
- *   https://developers.google.com/blockly/installation/overview#configuration
+ *   https://developers.google.com/blockly/guides/get-started/web#configuration
  * @constructor
  */
 Blockly.Options = function(options) {
@@ -127,7 +127,6 @@ Blockly.Options = function(options) {
   this.comments = hasComments;
   this.disable = hasDisable;
   this.readOnly = readOnly;
-  this.maxBlocks = options['maxBlocks'] || Infinity;
   this.pathToMedia = pathToMedia;
   this.hasCategories = hasCategories;
   this.hasScrollbars = hasScrollbars;
@@ -165,7 +164,7 @@ Blockly.Options.prototype.getMetrics = function() { return null; };
 /**
  * Parse the user-specified zoom options, using reasonable defaults where
  * behaviour is unspecified.  See zoom documentation:
- *   https://developers.google.com/blockly/installation/zoom
+ *   https://developers.google.com/blockly/guides/configure/web/zoom
  * @param {!Object} options Dictionary of options.
  * @return {!Object} A dictionary of normalized options.
  * @private
@@ -209,7 +208,7 @@ Blockly.Options.parseZoomOptions_ = function(options) {
 /**
  * Parse the user-specified grid options, using reasonable defaults where
  * behaviour is unspecified. See grid documentation:
- *   https://developers.google.com/blockly/installation/grid
+ *   https://developers.google.com/blockly/guides/configure/web/grid
  * @param {!Object} options Dictionary of options.
  * @return {!Object} A dictionary of normalized options.
  * @private

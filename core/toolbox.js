@@ -369,7 +369,7 @@ Blockly.Toolbox.prototype.populate_ = function(newTree) {
   }
 
   // Fire a resize event since the toolbox may have changed width and height.
-  Blockly.asyncSvgResize(this.workspace_);
+  Blockly.resizeSvgContents(this.workspace_);
 };
 
 /**
@@ -411,6 +411,10 @@ Blockly.Toolbox.prototype.clearSelection = function() {
  * @return {goog.math.Rect} Rectangle in which to delete.
  */
 Blockly.Toolbox.prototype.getClientRect = function() {
+  if (!this.HtmlDiv) {
+    return null;
+  }
+
   // BIG_NUM is offscreen padding so that blocks dragged beyond the toolbox
   // area are still deleted.  Must be smaller than Infinity, but larger than
   // the largest screen size.
@@ -559,7 +563,9 @@ Blockly.Toolbox.TreeNode = function(toolbox, html, opt_config, opt_domHelper) {
   goog.ui.tree.TreeNode.call(this, html, opt_config, opt_domHelper);
   if (toolbox) {
     var resize = function() {
-      Blockly.asyncSvgResize(toolbox.workspace_);
+      // Even though the div hasn't changed size, the visible workspace
+      // surface of the workspace has, so we may need to reposition everything.
+      Blockly.svgResize(toolbox.workspace_);
     };
     // Fire a resize event since the toolbox may have changed width.
     goog.events.listen(toolbox.tree_,

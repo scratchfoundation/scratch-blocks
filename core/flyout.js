@@ -254,10 +254,6 @@ Blockly.Flyout.prototype.init = function(targetWorkspace) {
 
   Array.prototype.push.apply(this.eventWrappers_,
       Blockly.bindEvent_(this.svgGroup_, 'wheel', this, this.wheel_));
-  if (!this.autoClose) {
-    this.filterWrapper_ = this.filterForCapacity_.bind(this);
-    this.targetWorkspace_.addChangeListener(this.filterWrapper_);
-  }
   // Dragging the flyout up and down (or left and right).
   Array.prototype.push.apply(this.eventWrappers_,
       Blockly.bindEvent_(this.svgGroup_, 'mousedown', this, this.onMouseDown_));
@@ -270,10 +266,6 @@ Blockly.Flyout.prototype.init = function(targetWorkspace) {
 Blockly.Flyout.prototype.dispose = function() {
   this.hide();
   Blockly.unbindEvent_(this.eventWrappers_);
-  if (this.filterWrapper_) {
-    this.targetWorkspace_.removeChangeListener(this.filterWrapper_);
-    this.filterWrapper_ = null;
-  }
   if (this.scrollbar_) {
     this.scrollbar_.dispose();
     this.scrollbar_ = null;
@@ -650,7 +642,7 @@ Blockly.Flyout.prototype.show = function(xmlList) {
 
   this.layoutBlocks_(blocks, gaps);
 
-  // IE 11 is an incompetant browser that fails to fire mouseout events.
+  // IE 11 is an incompetent browser that fails to fire mouseout events.
   // When the mouse is over the background, deselect all blocks.
   var deselectAll = function() {
     var topBlocks = this.workspace_.getTopBlocks(false);
@@ -670,10 +662,10 @@ Blockly.Flyout.prototype.show = function(xmlList) {
   this.reflow();
 
   this.offsetHorizontalRtlBlocks(this.workspace_.getTopBlocks(false));
-  this.filterForCapacity_();
 
-  // Fire a resize event to update the flyout's scrollbar.
-  Blockly.svgResize(this.workspace_);
+  // Correctly position the flyout's scrollbar when it opens.
+  this.position();
+
   this.reflowWrapper_ = this.reflow.bind(this);
   this.workspace_.addChangeListener(this.reflowWrapper_);
 
@@ -945,7 +937,7 @@ Blockly.Flyout.prototype.onMouseMoveBlock_ = function(e) {
      Safari Mobile 6.0 and Chrome for Android 18.0 fire rogue mousemove events
      on certain touch actions. Ignore events with these signatures.
      This may result in a one-pixel blind spot in other browsers,
-     but this shouldn't be noticable. */
+     but this shouldn't be noticeable. */
     e.stopPropagation();
     return;
   }
@@ -1065,8 +1057,6 @@ Blockly.Flyout.prototype.createBlockFunc_ = function(originBlock) {
     }
     if (flyout.autoClose) {
       flyout.hide();
-    } else {
-      flyout.filterForCapacity_();
     }
     // Start a dragging operation on the new block.
     block.onMouseDown_(e);
@@ -1152,32 +1142,14 @@ Blockly.Flyout.prototype.placeNewBlock_ = function(originBlock) {
 };
 
 /**
- * Filter the blocks on the flyout to disable the ones that are above the
- * capacity limit.
- * @private
- */
-Blockly.Flyout.prototype.filterForCapacity_ = function() {
-  var filtered = false;
-  var remainingCapacity = this.targetWorkspace_.remainingCapacity();
-  var blocks = this.workspace_.getTopBlocks(false);
-  for (var i = 0, block; block = blocks[i]; i++) {
-    if (this.permanentlyDisabled_.indexOf(block) == -1) {
-      var allBlocks = block.getDescendants();
-      block.setDisabled(allBlocks.length > remainingCapacity);
-      filtered = true;
-    }
-  }
-  if (filtered) {
-    // Top-most block.  Fire an event to allow scrollbars to resize.
-    Blockly.asyncSvgResize(this.workspace);
-  }
-};
-
-/**
  * Return the deletion rectangle for this flyout in viewport coordinates.
  * @return {goog.math.Rect} Rectangle in which to delete.
  */
 Blockly.Flyout.prototype.getClientRect = function() {
+  if (!this.svgGroup_) {
+    return null;
+  }
+
   var flyoutRect = this.svgGroup_.getBoundingClientRect();
   // BIG_NUM is offscreen padding so that blocks dragged beyond the shown flyout
   // area are still deleted.  Must be larger than the largest screen size,
@@ -1265,7 +1237,9 @@ Blockly.Flyout.prototype.reflowHorizontal = function(blocks) {
     }
     // Record the height for .getMetrics_ and .position.
     this.height_ = flyoutHeight;
-    Blockly.asyncSvgResize(this.workspace_);
+    // Call this since it is possible the trash and zoom buttons need
+    // to move. e.g. on a bottom positioned flyout when zoom is clicked.
+    this.targetWorkspace_.resize();
   }
 };
 
@@ -1322,7 +1296,9 @@ Blockly.Flyout.prototype.reflowVertical = function(blocks) {
     }
     // Record the width for .getMetrics_ and .position.
     this.width_ = flyoutWidth;
-    Blockly.asyncSvgResize(this.workspace_);
+    // Call this since it is possible the trash and zoom buttons need
+    // to move. e.g. on a bottom positioned flyout when zoom is clicked.
+    this.targetWorkspace_.resize();
   }
 };
 

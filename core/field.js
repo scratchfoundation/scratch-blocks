@@ -160,10 +160,6 @@ Blockly.Field.prototype.init = function() {
           this.onMouseUp_);
   // Force a render.
   this.updateTextNode_();
-  if (Blockly.Events.isEnabled()) {
-    Blockly.Events.fire(new Blockly.Events.Change(
-        this.sourceBlock_, 'field', this.name, '', this.getValue()));
-  }
 };
 
 /**
@@ -236,6 +232,14 @@ Blockly.Field.prototype.setValidator = function(handler) {
 };
 
 /**
+ * Gets the validation function for editable fields.
+ * @return {Function} Validation function, or null.
+ */
+Blockly.Field.prototype.getValidator = function() {
+  return this.validator_;
+};
+
+/**
  * Gets the group element for this editable field.
  * Used for measuring the size and for positioning.
  * @return {!Element} The group element.
@@ -267,6 +271,27 @@ Blockly.Field.prototype.render_ = function() {
         Blockly.Field.cacheWidths_[key] = width;
       }
     }
+    // Update text centering, based on newly calculated width.
+    var centerTextX = width / 2;
+    // In a text-editing shadow block's field,
+    // if half the text length is not at least center of
+    // visible field (FIELD_WIDTH), center it there instead.
+    if (this.sourceBlock_.isShadow()) {
+      var minOffset = Blockly.BlockSvg.FIELD_WIDTH / 2;
+      if (this.sourceBlock_.RTL) {
+        // X position starts at the left edge of the block, in both RTL and LTR.
+        // First offset by the width of the block to move to the right edge,
+        // and then subtract to move to the same position as LTR.
+        var minCenter = width - minOffset;
+        centerTextX = Math.min(minCenter, centerTextX);
+      } else {
+        // (width / 2) should exceed Blockly.BlockSvg.FIELD_WIDTH / 2
+        // if the text is longer.
+        centerTextX = Math.max(minOffset, centerTextX);
+      }
+    }
+    this.textElement_.setAttribute('x', centerTextX);
+
   } else {
     var width = 0;
   }
