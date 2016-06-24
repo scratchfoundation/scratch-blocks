@@ -956,5 +956,9 @@ Blockly.Css.CONTENT = [
     'fill: red',
   '}',
 
+  '.blocklyFlyoutCheckbox.checked {',
+    'fill: blue',
+  '}',
+
   ''
 ];
