@@ -118,6 +118,12 @@ Blockly.Block = function(workspace, prototypeName, opt_id) {
    */
   this.collapsed_ = false;
 
+  /**
+   * @type {boolean}
+   * @private
+   */
+  this.checkboxInFlyout_ = false;
+
   /** @type {string|Blockly.Comment} */
   this.comment = null;
 
@@ -1127,6 +1133,9 @@ Blockly.Block.prototype.jsonInit = function(json) {
   if (json['outputShape'] !== undefined) {
     this.setOutputShape(json['outputShape']);
   }
+  if (json['checkboxInFlyout'] !== undefined) {
+    this.setCheckboxInFlyout(json['checkboxInFlyout']);
+  }
 };
 
 /**
@@ -1423,7 +1432,8 @@ Blockly.Block.prototype.setCommentText = function(text) {
 /**
  * Set this block's output shape.
  * e.g., null, OUTPUT_SHAPE_HEXAGONAL, OUTPUT_SHAPE_ROUND, OUTPUT_SHAPE_SQUARE.
- * @param {?number} outputShape Value representing output shape (see constants.js).
+ * @param {?number} outputShape Value representing output shape
+ *     (see constants.js).
  */
 Blockly.Block.prototype.setOutputShape = function(outputShape) {
   this.outputShape_ = outputShape;
@@ -1435,6 +1445,22 @@ Blockly.Block.prototype.setOutputShape = function(outputShape) {
  */
 Blockly.Block.prototype.getOutputShape = function() {
   return this.outputShape_;
+};
+
+/**
+ * Set whether this block has a checkbox next to it in the flyout.
+ * @param {boolean} hasCheckbox True if this block should have a checkbox.
+ */
+Blockly.Block.prototype.setCheckboxInFlyout = function(hasCheckbox) {
+  this.checkboxInFlyout_ = hasCheckbox;
+};
+
+/**
+ * Get whether this block has a checkbox next to it in the flyout.
+ * @return {boolean} True if this block should have a checkbox.
+ */
+Blockly.Block.prototype.hasCheckboxInFlyout = function() {
+  return this.checkboxInFlyout_;
 };
 
 /**
