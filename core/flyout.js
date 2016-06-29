@@ -769,6 +769,7 @@ Blockly.Flyout.prototype.checkboxClicked_ = function(checkboxObj) {
     }
     // This event has been handled.  No need to bubble up to the document.
     e.stopPropagation();
+    e.preventDefault();
   };
 };
 
