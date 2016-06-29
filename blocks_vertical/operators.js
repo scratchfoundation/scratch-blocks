@@ -86,7 +86,8 @@ Blockly.Blocks['operator_subtract'] = {
         "colour": Blockly.Colours.operators.primary,
         "colourSecondary": Blockly.Colours.operators.secondary,
         "colourTertiary": Blockly.Colours.operators.tertiary,
-        "outputShape": Blockly.OUTPUT_SHAPE_ROUND
+        "outputShape": Blockly.OUTPUT_SHAPE_ROUND,
+        "checkboxInFlyout": true
       });
   }
 };
@@ -201,7 +202,8 @@ Blockly.Blocks['operator_lt'] = {
       "colour": Blockly.Colours.operators.primary,
       "colourSecondary": Blockly.Colours.operators.secondary,
       "colourTertiary": Blockly.Colours.operators.tertiary,
-      "outputShape": Blockly.OUTPUT_SHAPE_HEXAGONAL
+      "outputShape": Blockly.OUTPUT_SHAPE_HEXAGONAL,
+      "checkboxInFlyout": true
     });
   }
 };

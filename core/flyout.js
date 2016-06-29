@@ -701,8 +701,7 @@ Blockly.Flyout.prototype.layoutBlocks_ = function(blocks, gaps) {
     }
     var root = block.getSvgRoot();
     var blockHW = block.getHeightWidth();
-    if (!this.horizontalLayout_ &&
-        block.previousConnection && block.nextConnection) {
+    if (!this.horizontalLayout_ && block.hasCheckboxInFlyout()) {
       this.createCheckbox_(block, cursorX, cursorY, blockHW);
       block.moveBy(cursorX + this.CHECKBOX_SIZE + this.CHECKBOX_MARGIN,
         cursorY);
