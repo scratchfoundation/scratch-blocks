@@ -238,6 +238,7 @@ class Gen_compressed(threading.Thread):
     params.append(("js_code", "goog.provide('Blockly.Blocks');"))
     # Add Blockly.Colours for use of centralized colour bank
     filenames.append(os.path.join("core", "colours.js"))
+    filenames.append(os.path.join("core", "constants.js"))
     for filename in filenames:
       f = open(filename)
       params.append(("js_code", "".join(f.readlines())))
