@@ -153,3 +153,31 @@ Blockly.Blocks['motion_pointtowards'] = {
     });
   }
 };
+
+Blockly.Blocks['motion_gotoxy'] = {
+  /**
+   * Block to go to X, Y.
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.jsonInit({
+      "message0": "go to x: %1 y: %2",
+      "args0": [
+        {
+          "type": "input_value",
+          "name": "X"
+        },
+        {
+          "type": "input_value",
+          "name": "Y"
+        }
+      ],
+      "inputsInline": true,
+      "previousStatement": null,
+      "nextStatement": null,
+      "colour": Blockly.Colours.motion.primary,
+      "colourSecondary": Blockly.Colours.motion.secondary,
+      "colourTertiary": Blockly.Colours.motion.tertiary
+    });
+  }
+};
