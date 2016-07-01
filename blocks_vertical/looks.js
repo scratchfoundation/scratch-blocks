@@ -8,6 +8,42 @@ goog.require('Blockly.Colours');
 
 goog.require('Blockly.constants');
 
+Blockly.Blocks['looks_show'] = {
+  /**
+   * Show block.
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.jsonInit(
+      {
+        "message0": "show",
+        "previousStatement": null,
+        "nextStatement": null,
+        "colour": Blockly.Colours.looks.primary,
+        "colourSecondary": Blockly.Colours.looks.secondary,
+        "colourTertiary": Blockly.Colours.looks.tertiary
+      });
+  }
+};
+
+Blockly.Blocks['looks_hide'] = {
+  /**
+   * Hide block.
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.jsonInit(
+      {
+        "message0": "hide",
+        "previousStatement": null,
+        "nextStatement": null,
+        "colour": Blockly.Colours.looks.primary,
+        "colourSecondary": Blockly.Colours.looks.secondary,
+        "colourTertiary": Blockly.Colours.looks.tertiary
+      });
+  }
+};
+
 Blockly.Blocks['looks_effectmenu'] = {
   /**
    * Graphic effects drop-down menu.

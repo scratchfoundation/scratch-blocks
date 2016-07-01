@@ -315,3 +315,21 @@ Blockly.Blocks['motion_yposition'] = {
     });
   }
 };
+
+Blockly.Blocks['motion_direction'] = {
+  /**
+   * Block to report direction.
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.jsonInit({
+      "message0": "direction",
+      "output": "Number",
+      "outputShape": Blockly.OUTPUT_SHAPE_ROUND,
+      "colour": Blockly.Colours.motion.primary,
+      "colourSecondary": Blockly.Colours.motion.secondary,
+      "colourTertiary": Blockly.Colours.motion.tertiary,
+      "checkboxInFlyout": true
+    });
+  }
+};
