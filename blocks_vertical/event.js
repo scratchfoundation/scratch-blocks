@@ -142,7 +142,7 @@ Blockly.Blocks['event_broadcastandwait'] = {
 
 Blockly.Blocks['event_keyoptions'] = {
   /**
-   * Block for when broadcast received.
+   * Options for Keys
    * @this Blockly.Block
    */
   init: function() {
@@ -222,7 +222,6 @@ Blockly.Blocks['event_whenkeypressed'] = {
         }
       ],
       "inputsInline": true,
-      "previousStatement": null,
       "nextStatement": null,
       "colour": Blockly.Colours.event.primary,
       "colourSecondary": Blockly.Colours.event.secondary,
