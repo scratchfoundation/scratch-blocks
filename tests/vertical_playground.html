@@ -15,7 +15,6 @@
     <script src="../blocks_vertical/motion.js"></script>
     <script src="../blocks_vertical/looks.js"></script>
     <script src="../blocks_vertical/operators.js"></script>
-    <script src="../blocks_vertical/wedo.js"></script>
     <script>
       'use strict';
 
@@ -430,12 +429,6 @@
         </block>
         <block type="control_delete_this_clone"></block>
       </category>
-      <category name="Wedo">
-          <block type="wedo_setcolor"></block>
-          <block type="wedo_motorspeed"></block>
-          <block type="wedo_whentilt"></block>
-          <block type="wedo_whendistanceclose"></block>
-      </category>
       <category name="Operators">
           <block type="operator_add">
             <value name="NUM1">
@@ -598,6 +591,44 @@
           </block>
       </category>
       <category name="Looks">
+        <block type="looks_sayforsecs">
+          <value name="MESSAGE">
+            <shadow type="text">
+              <field name="TEXT">Hello!</field>
+            </shadow>
+          </value>
+          <value name="SECS">
+            <shadow type="math_number">
+              <field name="NUM">2</field>
+            </shadow>
+          </value>
+        </block>
+        <block type="looks_say">
+          <value name="MESSAGE">
+            <shadow type="text">
+              <field name="TEXT">Hello!</field>
+            </shadow>
+          </value>
+        </block>
+        <block type="looks_thinkforsecs">
+          <value name="MESSAGE">
+            <shadow type="text">
+              <field name="TEXT">Hmm...</field>
+            </shadow>
+          </value>
+          <value name="SECS">
+            <shadow type="math_number">
+              <field name="NUM">2</field>
+            </shadow>
+          </value>
+        </block>
+        <block type="looks_think">
+          <value name="MESSAGE">
+            <shadow type="text">
+              <field name="TEXT">Hmm...</field>
+            </shadow>
+          </value>
+        </block>
         <block type="looks_show"></block>
         <block type="looks_hide"></block>
         <block type="looks_changeeffectby">
@@ -794,10 +825,6 @@
           </value>
         </block>
         <block type="control_delete_this_clone"></block>
-          <block type="wedo_setcolor"></block>
-          <block type="wedo_motorspeed"></block>
-          <block type="wedo_whentilt"></block>
-          <block type="wedo_whendistanceclose"></block>
           <block type="operator_add">
             <value name="NUM1">
               <shadow type="math_number">
