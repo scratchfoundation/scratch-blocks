@@ -380,7 +380,7 @@
           <value name="KEY_OPTION">
             <shadow type="event_keyoptions"></shadow>
           </value>
-        </block>		
+        </block>
         <block type="event_whenbroadcastreceived">
           <value name="BROADCAST_OPTION">
             <shadow type="event_broadcast_menu"></shadow>
@@ -684,6 +684,29 @@
             </shadow>
           </value>
         </block>
+        <block type="motion_goto">
+          <value name="TO">
+            <shadow type="motion_goto_menu">
+            </shadow>
+          </value>
+        </block>
+        <block type="motion_glidesecstoxy">
+          <value name="SECS">
+            <shadow type="math_number">
+              <field name="NUM">1</field>
+            </shadow>
+          </value>
+          <value name="X">
+            <shadow type="math_number">
+              <field name="NUM">0</field>
+            </shadow>
+          </value>
+          <value name="Y">
+            <shadow type="math_number">
+              <field name="NUM">0</field>
+            </shadow>
+          </value>
+        </block>
         <block type="motion_changexby">
           <value name="DX">
             <shadow type="math_number">
@@ -710,6 +733,12 @@
             <shadow type="math_number">
               <field name="NUM">0</field>
             </shadow>
+          </value>
+        </block>
+        <block type="motion_ifonedgebounce"></block>
+        <block type="motion_setrotationstyle">
+          <value name="STYLE">
+            <shadow type="motion_setrotationstyle_menu"></shadow>
           </value>
         </block>
         <block type="motion_xposition"></block>
