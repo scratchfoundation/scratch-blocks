@@ -139,3 +139,93 @@ Blockly.Blocks['event_broadcastandwait'] = {
     });
   }
 };
+
+Blockly.Blocks['event_keyoptions'] = {
+  /**
+   * Options for Keys
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.jsonInit({
+      "id": "event_keyoptions",
+      "message0": "%1",
+      "args0": [
+          {
+            "type": "field_dropdown",
+            "name": "KEY_OPTION",
+            "options": [
+              ['space', 'SPACE'],			
+              ['left arrow', 'LEFTARROW'],
+              ['right arrow', 'RIGHTARROW'],
+              ['down arrow', 'DOWNARROW'],
+              ['up arrow', 'UPARROW'],
+              ['any', 'ANY'],			  
+              ['a', 'A'],
+              ['b', 'B'],
+              ['c', 'C'],
+              ['d', 'D'],
+              ['e', 'E'],
+              ['f', 'F'],	
+              ['g', 'G'],	
+              ['h', 'H'],
+              ['i', 'I'],
+              ['j', 'J'],
+              ['k', 'K'],
+              ['m', 'M'],
+              ['n', 'N'],
+              ['o', 'O'],
+              ['p', 'P'],
+              ['q', 'Q'],
+              ['r', 'R'],
+              ['s', 'S'],
+              ['t', 'T'],
+              ['u', 'U'],
+              ['v', 'V'],
+              ['w', 'W'],
+              ['x', 'X'],
+              ['y', 'Y'],
+              ['0', 'ZERO'],
+              ['1', 'ONE'],
+              ['2', 'TWO'],
+              ['3', 'THREE'],
+              ['4', 'FOUR'],
+              ['5', 'FIVE'],
+              ['6', 'SIX'],
+              ['7', 'SEVEN'],
+              ['8', 'EIGHT'],
+              ['9', 'NINE']			  
+            ]
+          }
+        ],
+      "inputsInline": true,
+      "output": "String",
+      "colour": Blockly.Colours.event.primary,
+      "colourSecondary": Blockly.Colours.event.secondary,
+      "colourTertiary": Blockly.Colours.event.tertiary
+    });
+  }
+};
+
+Blockly.Blocks['event_whenkeypressed'] = {
+  /**
+   * Block to send a broadcast.
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.jsonInit({
+      "id": "event_whenkeypressed",
+      "message0": "when %1 key pressed",
+      "args0": [
+        {
+          "type": "input_value",
+          "name": "KEY_OPTION"
+        }
+      ],
+      "inputsInline": true,
+      "nextStatement": null,
+      "colour": Blockly.Colours.event.primary,
+      "colourSecondary": Blockly.Colours.event.secondary,
+      "colourTertiary": Blockly.Colours.event.tertiary
+    });
+  }
+};
