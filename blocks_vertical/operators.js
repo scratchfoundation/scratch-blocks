@@ -517,7 +517,7 @@ Blockly.Blocks['operator_mathop_menu'] = {
         "colour": Blockly.Colours.operators.secondary,
         "colourSecondary": Blockly.Colours.operators.secondary,
         "colourTertiary": Blockly.Colours.operators.tertiary,
-        "outputShape": Blockly.OUTPUT_SHAPE_SQUARE
+        "outputShape": Blockly.OUTPUT_SHAPE_ROUND
       });
   }
 };

@@ -57,7 +57,7 @@ Blockly.Blocks['text'] = {
       return (parent && parent.getInputsInline() && parent.tooltip) ||
           Blockly.Msg.TEXT_TEXT_TOOLTIP;
     });
-    this.setOutputShape(Blockly.OUTPUT_SHAPE_SQUARE);
+    this.setOutputShape(Blockly.OUTPUT_SHAPE_ROUND);
   },
   /**
    * Create an image of an open or closed quote.

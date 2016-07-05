@@ -173,7 +173,7 @@ Blockly.Blocks['looks_effectmenu'] = {
         "colour": Blockly.Colours.looks.secondary,
         "colourSecondary": Blockly.Colours.looks.secondary,
         "colourTertiary": Blockly.Colours.looks.tertiary,
-        "outputShape": Blockly.OUTPUT_SHAPE_SQUARE
+        "outputShape": Blockly.OUTPUT_SHAPE_ROUND
       });
   }
 };

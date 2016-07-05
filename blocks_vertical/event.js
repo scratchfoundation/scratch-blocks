@@ -10,6 +10,9 @@ goog.require('Blockly.Blocks');
 
 goog.require('Blockly.Colours');
 
+goog.require('Blockly.constants');
+
+
 Blockly.Blocks['event_whenflagclicked'] = {
   /**
    * Block for when flag clicked.
@@ -62,7 +65,8 @@ Blockly.Blocks['event_broadcast_menu'] = {
         "output": "String",
         "colour": Blockly.Colours.event.secondary,
         "colourSecondary": Blockly.Colours.event.secondary,
-        "colourTertiary": Blockly.Colours.event.tertiary
+        "colourTertiary": Blockly.Colours.event.tertiary,
+        "outputShape": Blockly.OUTPUT_SHAPE_ROUND
       });
   }
 };
@@ -201,7 +205,8 @@ Blockly.Blocks['event_keyoptions'] = {
       "output": "String",
       "colour": Blockly.Colours.event.secondary,
       "colourSecondary": Blockly.Colours.event.secondary,
-      "colourTertiary": Blockly.Colours.event.tertiary
+      "colourTertiary": Blockly.Colours.event.tertiary,
+      "outputShape": Blockly.OUTPUT_SHAPE_ROUND
     });
   }
 };
