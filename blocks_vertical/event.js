@@ -150,23 +150,23 @@ Blockly.Blocks['event_keyoptions'] = {
       "id": "event_keyoptions",
       "message0": "%1",
       "args0": [
-          {
-            "type": "field_dropdown",
-            "name": "KEY_OPTION",
-            "options": [
-              ['space', 'SPACE'],			
+        {
+          "type": "field_dropdown",
+          "name": "KEY_OPTION",
+          "options": [
+              ['space', 'SPACE'],
               ['left arrow', 'LEFTARROW'],
               ['right arrow', 'RIGHTARROW'],
               ['down arrow', 'DOWNARROW'],
               ['up arrow', 'UPARROW'],
-              ['any', 'ANY'],			  
+              ['any', 'ANY'],
               ['a', 'A'],
               ['b', 'B'],
               ['c', 'C'],
               ['d', 'D'],
               ['e', 'E'],
-              ['f', 'F'],	
-              ['g', 'G'],	
+              ['f', 'F'],
+              ['g', 'G'],
               ['h', 'H'],
               ['i', 'I'],
               ['j', 'J'],
@@ -193,13 +193,13 @@ Blockly.Blocks['event_keyoptions'] = {
               ['6', 'SIX'],
               ['7', 'SEVEN'],
               ['8', 'EIGHT'],
-              ['9', 'NINE']			  
-            ]
-          }
-        ],
+              ['9', 'NINE']
+          ]
+        }
+      ],
       "inputsInline": true,
       "output": "String",
-      "colour": Blockly.Colours.event.primary,
+      "colour": Blockly.Colours.event.secondary,
       "colourSecondary": Blockly.Colours.event.secondary,
       "colourTertiary": Blockly.Colours.event.tertiary
     });

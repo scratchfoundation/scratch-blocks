@@ -15,7 +15,6 @@
     <script src="../blocks_vertical/motion.js"></script>
     <script src="../blocks_vertical/looks.js"></script>
     <script src="../blocks_vertical/operators.js"></script>
-    <script src="../blocks_vertical/wedo.js"></script>
     <script>
       'use strict';
 
@@ -380,7 +379,7 @@
           <value name="KEY_OPTION">
             <shadow type="event_keyoptions"></shadow>
           </value>
-        </block>		
+        </block>
         <block type="event_whenbroadcastreceived">
           <value name="BROADCAST_OPTION">
             <shadow type="event_broadcast_menu"></shadow>
@@ -429,12 +428,6 @@
           </value>
         </block>
         <block type="control_delete_this_clone"></block>
-      </category>
-      <category name="Wedo">
-          <block type="wedo_setcolor"></block>
-          <block type="wedo_motorspeed"></block>
-          <block type="wedo_whentilt"></block>
-          <block type="wedo_whendistanceclose"></block>
       </category>
       <category name="Operators">
           <block type="operator_add">
@@ -598,6 +591,44 @@
           </block>
       </category>
       <category name="Looks">
+        <block type="looks_sayforsecs">
+          <value name="MESSAGE">
+            <shadow type="text">
+              <field name="TEXT">Hello!</field>
+            </shadow>
+          </value>
+          <value name="SECS">
+            <shadow type="math_number">
+              <field name="NUM">2</field>
+            </shadow>
+          </value>
+        </block>
+        <block type="looks_say">
+          <value name="MESSAGE">
+            <shadow type="text">
+              <field name="TEXT">Hello!</field>
+            </shadow>
+          </value>
+        </block>
+        <block type="looks_thinkforsecs">
+          <value name="MESSAGE">
+            <shadow type="text">
+              <field name="TEXT">Hmm...</field>
+            </shadow>
+          </value>
+          <value name="SECS">
+            <shadow type="math_number">
+              <field name="NUM">2</field>
+            </shadow>
+          </value>
+        </block>
+        <block type="looks_think">
+          <value name="MESSAGE">
+            <shadow type="text">
+              <field name="TEXT">Hmm...</field>
+            </shadow>
+          </value>
+        </block>
         <block type="looks_show"></block>
         <block type="looks_hide"></block>
         <block type="looks_changeeffectby">
@@ -684,6 +715,29 @@
             </shadow>
           </value>
         </block>
+        <block type="motion_goto">
+          <value name="TO">
+            <shadow type="motion_goto_menu">
+            </shadow>
+          </value>
+        </block>
+        <block type="motion_glidesecstoxy">
+          <value name="SECS">
+            <shadow type="math_number">
+              <field name="NUM">1</field>
+            </shadow>
+          </value>
+          <value name="X">
+            <shadow type="math_number">
+              <field name="NUM">0</field>
+            </shadow>
+          </value>
+          <value name="Y">
+            <shadow type="math_number">
+              <field name="NUM">0</field>
+            </shadow>
+          </value>
+        </block>
         <block type="motion_changexby">
           <value name="DX">
             <shadow type="math_number">
@@ -710,6 +764,12 @@
             <shadow type="math_number">
               <field name="NUM">0</field>
             </shadow>
+          </value>
+        </block>
+        <block type="motion_ifonedgebounce"></block>
+        <block type="motion_setrotationstyle">
+          <value name="STYLE">
+            <shadow type="motion_setrotationstyle_menu"></shadow>
           </value>
         </block>
         <block type="motion_xposition"></block>
@@ -765,10 +825,6 @@
           </value>
         </block>
         <block type="control_delete_this_clone"></block>
-          <block type="wedo_setcolor"></block>
-          <block type="wedo_motorspeed"></block>
-          <block type="wedo_whentilt"></block>
-          <block type="wedo_whendistanceclose"></block>
           <block type="operator_add">
             <value name="NUM1">
               <shadow type="math_number">

@@ -156,6 +156,35 @@ Blockly.Blocks['motion_pointtowards'] = {
   }
 };
 
+Blockly.Blocks['motion_goto_menu'] = {
+  /**
+   * Go to drop-down menu.
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.jsonInit(
+      {
+        "message0": "%1",
+        "args0": [
+          {
+            "type": "field_dropdown",
+            "name": "TO",
+            "options": [
+              ['mouse pointer', 'MOUSE-POINTER'],
+              ['random position', 'RANDOM-POSITION']
+            ]
+          }
+        ],
+        "inputsInline": true,
+        "output": "String",
+        "colour": Blockly.Colours.motion.secondary,
+        "colourSecondary": Blockly.Colours.motion.secondary,
+        "colourTertiary": Blockly.Colours.motion.tertiary,
+        "outputShape": Blockly.OUTPUT_SHAPE_SQUARE
+      });
+  }
+};
+
 Blockly.Blocks['motion_gotoxy'] = {
   /**
    * Block to go to X, Y.
@@ -165,6 +194,62 @@ Blockly.Blocks['motion_gotoxy'] = {
     this.jsonInit({
       "message0": "go to x: %1 y: %2",
       "args0": [
+        {
+          "type": "input_value",
+          "name": "X"
+        },
+        {
+          "type": "input_value",
+          "name": "Y"
+        }
+      ],
+      "inputsInline": true,
+      "previousStatement": null,
+      "nextStatement": null,
+      "colour": Blockly.Colours.motion.primary,
+      "colourSecondary": Blockly.Colours.motion.secondary,
+      "colourTertiary": Blockly.Colours.motion.tertiary
+    });
+  }
+};
+
+Blockly.Blocks['motion_goto'] = {
+  /**
+   * Block to go to a menu item.
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.jsonInit({
+      "message0": "go to %1",
+      "args0": [
+        {
+          "type": "input_value",
+          "name": "TO"
+        }
+      ],
+      "inputsInline": true,
+      "previousStatement": null,
+      "nextStatement": null,
+      "colour": Blockly.Colours.motion.primary,
+      "colourSecondary": Blockly.Colours.motion.secondary,
+      "colourTertiary": Blockly.Colours.motion.tertiary
+    });
+  }
+};
+
+Blockly.Blocks['motion_glidesecstoxy'] = {
+  /**
+   * Block to glide for a specified time.
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.jsonInit({
+      "message0": "glide %1 secs to x: %2 y: %3",
+      "args0": [
+        {
+          "type": "input_value",
+          "name": "SECS"
+        },
         {
           "type": "input_value",
           "name": "X"
@@ -271,6 +356,76 @@ Blockly.Blocks['motion_sety'] = {
         }
       ],
       "inputsInline": true,
+      "previousStatement": null,
+      "nextStatement": null,
+      "colour": Blockly.Colours.motion.primary,
+      "colourSecondary": Blockly.Colours.motion.secondary,
+      "colourTertiary": Blockly.Colours.motion.tertiary
+    });
+  }
+};
+
+Blockly.Blocks['motion_ifonedgebounce'] = {
+  /**
+   * Block to bounce on edge.
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.jsonInit({
+      "message0": "if on edge, bounce",
+      "previousStatement": null,
+      "nextStatement": null,
+      "colour": Blockly.Colours.motion.primary,
+      "colourSecondary": Blockly.Colours.motion.secondary,
+      "colourTertiary": Blockly.Colours.motion.tertiary
+    });
+  }
+};
+
+Blockly.Blocks['motion_setrotationstyle_menu'] = {
+  /**
+   * Rotation style drop-down menu.
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.jsonInit(
+      {
+        "message0": "%1",
+        "args0": [
+          {
+            "type": "field_dropdown",
+            "name": "STYLE",
+            "options": [
+              ['left-right', 'LEFT-RIGHT'],
+              ['don\'t rotate', 'NONE'],
+              ['all around', 'ALL']
+            ]
+          }
+        ],
+        "inputsInline": true,
+        "output": "String",
+        "colour": Blockly.Colours.motion.secondary,
+        "colourSecondary": Blockly.Colours.motion.secondary,
+        "colourTertiary": Blockly.Colours.motion.tertiary,
+        "outputShape": Blockly.OUTPUT_SHAPE_SQUARE
+      });
+  }
+};
+
+Blockly.Blocks['motion_setrotationstyle'] = {
+  /**
+   * Block to set rotation style.
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.jsonInit({
+      "message0": "set rotation style %1",
+      "args0": [
+        {
+          "type": "input_value",
+          "name": "STYLE"
+        }
+      ],
       "previousStatement": null,
       "nextStatement": null,
       "colour": Blockly.Colours.motion.primary,

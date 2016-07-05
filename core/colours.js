@@ -50,10 +50,30 @@ Blockly.Colours = {
     "secondary": "#DBC200",
     "tertiary": "#CCAA00"
   },
+  "sensing": {
+    "primary": "#4CBFE6",
+    "secondary": "#FF0000", // No spec
+    "tertiary": "#00FF00" // No spec
+  },
+  "pen": {
+    "primary": "#00B295",
+    "secondary": "#FF0000", // No spec
+    "tertiary": "#00FF00" // No spec
+  },
   "operators": {
-    "primary": "#4CBF56",
-    "secondary": "#489D84",
-    "tertiary": "#489D84"
+    "primary": "#40BF4A",
+    "secondary": "#2B7F31", // No spec
+    "tertiary": "#489D84" // No spec
+  },
+  "data": {
+    "primary": "#FF8C1A",
+    "secondary": "#FF0000", // No spec
+    "tertiary": "#00FF00" // No spec
+  },
+  "more": {
+    "primary": "#FF6680",
+    "secondary": "#FF0000", // No spec
+    "tertiary": "#00FF00" // No spec
   },
   "text": "#575E75",
   "workspace": "#F5F8FF",
