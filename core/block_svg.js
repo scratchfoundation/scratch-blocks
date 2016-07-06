@@ -62,6 +62,9 @@ Blockly.BlockSvg = function(workspace, prototypeName, opt_id) {
   /** @type {boolean} */
   this.rendered = false;
 
+  /** @type {Object.<string,Element>} */
+  this.inputShapes_ = {};
+
   Blockly.Tooltip.bindMouseEvents(this.svgPath_);
   Blockly.BlockSvg.superClass_.constructor.call(this,
       workspace, prototypeName, opt_id);
@@ -122,7 +125,6 @@ Blockly.BlockSvg.INLINE = -1;
 Blockly.BlockSvg.prototype.initSvg = function() {
   goog.asserts.assert(this.workspace.rendered, 'Workspace is headless.');
   // Input shapes are empty holes drawn when a value input is not connected.
-  this.inputShapes_ = {};
   for (var i = 0, input; input = this.inputList[i]; i++) {
     input.init();
     if (input.type === Blockly.INPUT_VALUE) {
@@ -151,9 +153,14 @@ Blockly.BlockSvg.prototype.initSvg = function() {
 
 /**
  * Create and initialize the SVG element for an input shape.
+ * May be called more than once for an input.
  * @param {!Blockly.Input} input Value input to add a shape SVG element for.
  */
 Blockly.BlockSvg.prototype.initInputShape = function(input) {
+  if (this.inputShapes_[input.name]) {
+    // Only create the shape elements once.
+    return;
+  }
   this.inputShapes_[input.name] = Blockly.createSvgElement(
     'path',
     {
