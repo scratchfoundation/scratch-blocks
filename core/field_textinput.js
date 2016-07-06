@@ -216,6 +216,20 @@ Blockly.FieldTextInput.prototype.onHtmlInputKeyDown_ = function(e) {
 };
 
 /**
+ * Key codes that are whitelisted from the restrictor.
+ */
+Blockly.FieldTextInput.KEYCODE_WHITELIST = [
+  8, // Backspace
+  37, // Left
+  39, // Right
+  46, // Delete
+  97, // Select all
+  99, // Copy
+  118, // Paste
+  120 // Cut
+];
+
+/**
  * Handle a change to the editor.
  * @param {!Event} e Keyboard event.
  * @private
@@ -223,8 +237,10 @@ Blockly.FieldTextInput.prototype.onHtmlInputKeyDown_ = function(e) {
 Blockly.FieldTextInput.prototype.onHtmlInputChange_ = function(e) {
   // Check if the key matches the restrictor.
   if (e.type === 'keypress' && this.restrictor_) {
-    var charCode = String.fromCharCode(e.keyCode);
-    if (!this.restrictor_.test(charCode) && e.preventDefault) {
+    var keyCode = e.keyCode || e.charCode; // charCode in Firefox.
+    var char = String.fromCharCode(keyCode);
+    var isWhitelisted = Blockly.FieldTextInput.KEYCODE_WHITELIST.indexOf(keyCode) > -1;
+    if (!isWhitelisted && !this.restrictor_.test(char) && e.preventDefault) {
       // Failed to pass restrictor.
       e.preventDefault();
       return;
