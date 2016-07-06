@@ -344,6 +344,9 @@ Blockly.FieldTextInput.prototype.resizeEditor_ = function() {
  * @return {Number} Border radius in px.
 */
 Blockly.FieldTextInput.prototype.getBorderRadius = function() {
+  if (this.sourceBlock_.getOutputShape() == Blockly.OUTPUT_SHAPE_ROUND) {
+    return Blockly.BlockSvg.NUMBER_FIELD_CORNER_RADIUS;
+  }
   return Blockly.BlockSvg.TEXT_FIELD_CORNER_RADIUS;
 };
 
