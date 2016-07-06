@@ -53,7 +53,7 @@ Blockly.CURRENT_CONNECTION_PREFERENCE = 20;
 /**
  * Delay in ms between trigger and bumping unconnected block out of alignment.
  */
-Blockly.BUMP_DELAY = 250;
+Blockly.BUMP_DELAY = 0;
 
 /**
  * Number of characters to truncate a collapsed block to.
