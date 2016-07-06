@@ -677,7 +677,6 @@ Blockly.Css.CONTENT = [
   '}',
 
   '.blocklyWidgetDiv .goog-palette-table {',
-    'border: 1px solid #666;',
     'border-collapse: collapse;',
   '}',
 
@@ -688,7 +687,6 @@ Blockly.Css.CONTENT = [
     'border: 0;',
     'text-align: center;',
     'vertical-align: middle;',
-    'border-right: 1px solid #666;',
     'font-size: 1px;',
   '}',
 
@@ -696,15 +694,16 @@ Blockly.Css.CONTENT = [
     'position: relative;',
     'height: 13px;',
     'width: 15px;',
-    'border: 1px solid #666;',
   '}',
 
   '.blocklyWidgetDiv .goog-palette-cell-hover .goog-palette-colorswatch {',
     'border: 1px solid #FFF;',
+    'box-sizing: border-box;',
   '}',
 
   '.blocklyWidgetDiv .goog-palette-cell-selected .goog-palette-colorswatch {',
     'border: 1px solid #000;',
+    'box-sizing: border-box;',
     'color: #fff;',
   '}',
 
