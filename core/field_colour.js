@@ -46,14 +46,6 @@ goog.require('goog.ui.ColorPicker');
  */
 Blockly.FieldColour = function(colour, opt_validator) {
   Blockly.FieldColour.superClass_.constructor.call(this, colour, opt_validator);
-  // Used to take space for the width of the field.
-  this.setText(Blockly.Field.NBSP +
-    Blockly.Field.NBSP +
-    Blockly.Field.NBSP +
-    Blockly.Field.NBSP +
-    Blockly.Field.NBSP +
-    Blockly.Field.NBSP
-  );
 };
 goog.inherits(Blockly.FieldColour, Blockly.Field);
 
@@ -138,6 +130,14 @@ Blockly.FieldColour.prototype.getText = function() {
     colour = '#' + m[1] + m[2] + m[3];
   }
   return colour;
+};
+
+/**
+ * Returns the fixed height and width.
+ * @return {!goog.math.Size} Height and width.
+ */
+Blockly.FieldColour.prototype.getSize = function() {
+  return new goog.math.Size(Blockly.BlockSvg.FIELD_WIDTH, Blockly.BlockSvg.FIELD_HEIGHT);
 };
 
 /**
