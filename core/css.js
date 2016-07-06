@@ -830,7 +830,7 @@ Blockly.Css.CONTENT = [
 
   /* State: disabled. */
   '.blocklyWidgetDiv .goog-menuitem-disabled .goog-menuitem-accel,',
-  '.blocklyWidgetDiv .goog-menuitem-disabled .goog-menuitem-content ',
+  '.blocklyWidgetDiv .goog-menuitem-disabled .goog-menuitem-content, ',
   '.blocklyDropDownDiv .goog-menuitem-disabled .goog-menuitem-accel,',
   '.blocklyDropDownDiv .goog-menuitem-disabled .goog-menuitem-content {',
     'color: #ccc !important;',
