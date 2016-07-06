@@ -170,15 +170,6 @@ Blockly.Connection.prototype.connect_ = function(childConnection) {
       if (!orphanBlock.outputConnection) {
         throw 'Orphan block does not have an output connection.';
       }
-      // Attempt to reattach the orphan at the end of the newly inserted
-      // block.  Since this block may be a row, walk down to the end
-      // or to the first (and only) shadow block.
-      var connection = Blockly.Connection.lastConnectionInRow_(
-          childBlock, orphanBlock);
-      if (connection) {
-        orphanBlock.outputConnection.connect(connection);
-        orphanBlock = null;
-      }
     } else if (parentConnection.type == Blockly.NEXT_STATEMENT) {
       // Statement connections.
       // Statement blocks may be inserted into the middle of a stack.
@@ -525,32 +516,6 @@ Blockly.Connection.singleConnection_ = function(block, orphanBlock) {
     }
   }
   return connection;
-};
-
-/**
- * Walks down a row a blocks, at each stage checking if there are any
- * connections that will accept the orphaned block.  If at any point there
- * are zero or multiple eligible connections, returns null.  Otherwise
- * returns the only input on the last block in the chain.
- * Terminates early for shadow blocks.
- * @param {!Blockly.Block} startBlock The block on which to start the search.
- * @param {!Blockly.Block} orphanBlock The block that is looking for a home.
- * @return {Blockly.Connection} The suitable connection point on the chain
- *    of blocks, or null.
- * @private
- */
-Blockly.Connection.lastConnectionInRow_ = function(startBlock, orphanBlock) {
-  var newBlock = startBlock;
-  var connection;
-  while (connection = Blockly.Connection.singleConnection_(
-      /** @type {!Blockly.Block} */ (newBlock), orphanBlock)) {
-    // '=' is intentional in line above.
-    newBlock = connection.targetBlock();
-    if (!newBlock || newBlock.isShadow()) {
-      return connection;
-    }
-  }
-  return null;
 };
 
 /**
