@@ -15,6 +15,8 @@
     <script src="../blocks_vertical/motion.js"></script>
     <script src="../blocks_vertical/looks.js"></script>
     <script src="../blocks_vertical/operators.js"></script>
+    <script src="../blocks_vertical/pen.js"></script>	
+    <script src="../blocks_vertical/sound.js"></script>		
     <script>
       'use strict';
 
@@ -265,6 +267,7 @@
         checkbox.checked = (state) ? 'checked' : '';
         sessionStorage.setItem('soundsEnabled', state);
       }
+	  
       function fakeDrag(id, dx, dy, opt_workspace) {
         var ws = opt_workspace || Blockly.getMainWorkspace();
         var blockToDrag = ws.getBlockById(id);
@@ -396,6 +399,54 @@
           </value>
         </block>
       </category>
+      <category name="Pen">
+        <block type="pen_clear"></block>
+        <block type="pen_stamp"></block>
+        <block type="pen_pendown"></block>
+        <block type="pen_penup"></block>        
+        <block type="pen_change_pen_color_by">
+          <value name="COLOR">
+            <shadow type="math_number">
+              <field name="NUM">10</field>
+            </shadow>
+          </value>
+		</block>   
+        <block type="pen_set_pen_color_to">
+          <value name="COLOR">
+            <shadow type="math_number">
+              <field name="NUM">0</field>
+            </shadow>
+          </value>
+		</block>
+        <block type="pen_change_pen_shade_by">
+          <value name="SHADE">
+            <shadow type="math_number">
+              <field name="NUM">10</field>
+            </shadow>
+          </value>
+		</block>   
+        <block type="pen_set_pen_shade_to">
+          <value name="SHADE">
+            <shadow type="math_number">
+              <field name="NUM">50</field>
+            </shadow>
+          </value>
+		</block>
+        <block type="pen_change_pen_size_by">
+          <value name="SIZE">
+            <shadow type="math_number">
+              <field name="NUM">1</field>
+            </shadow>
+          </value>
+		</block>   
+        <block type="pen_set_pen_size_to">
+          <value name="SIZE">
+            <shadow type="math_number">
+              <field name="NUM">1</field>
+            </shadow>
+          </value>
+		</block> 		
+      </category>	  
       <category name="Control">
         <block type="control_wait">
           <value name="DURATION">
@@ -429,6 +480,87 @@
         </block>
         <block type="control_delete_this_clone"></block>
       </category>
+      <category name="Sound">
+        <block type="sound_play">
+          <value name="SOUND_MENU">
+            <shadow type="sound_sounds_option"></shadow>
+          </value>
+        </block>
+        <block type="sound_playuntildone">
+          <value name="SOUND_MENU">
+            <shadow type="sound_sounds_option"></shadow>
+          </value>
+        </block>
+        <block type="sound_stopallsounds"></block>		
+        <block type="sound_playdrumforbeats">
+          <value name="DRUMTYPE">
+            <shadow type="math_number">
+              <field name="NUM">1</field>
+            </shadow>
+          </value>
+          <value name="BEATS">
+            <shadow type="math_number">
+              <field name="NUM">0.25</field>
+            </shadow>
+          </value>
+        </block>
+        <block type="sound_restforbeats">
+          <value name="BEATS">
+            <shadow type="math_number">
+              <field name="NUM">0.25</field>
+            </shadow>
+          </value>
+        </block>
+        <block type="sound_playnoteforbeats">
+          <value name="NOTE">
+            <shadow type="math_number">
+              <field name="NUM">1</field>
+            </shadow>
+          </value>
+          <value name="BEATS">
+            <shadow type="math_number">
+              <field name="NUM">0.5</field>
+            </shadow>
+          </value>
+        </block>
+        <block type="sound_setinstrumentto">
+          <value name="INSTRUMENT">
+            <shadow type="math_number">
+              <field name="NUM">1</field>
+            </shadow>
+          </value>
+        </block>
+        <block type="sound_changevolumeby">
+          <value name="VOLUME">
+            <shadow type="math_number">
+              <field name="NUM">-10</field>
+            </shadow>
+          </value>
+        </block>
+        <block type="sound_setvolumeto">
+          <value name="VOLUME">
+            <shadow type="math_number">
+              <field name="NUM">100</field>
+            </shadow>
+          </value>
+        </block>
+        <block type="sound_volume"></block>
+        <block type="sound_changetempoby">
+          <value name="TEMPO">
+            <shadow type="math_number">
+              <field name="NUM">20</field>
+            </shadow>
+          </value>
+        </block>
+        <block type="sound_settempotobpm">
+          <value name="TEMPO">
+            <shadow type="math_number">
+              <field name="NUM">60</field>
+            </shadow>
+          </value>
+        </block>
+        <block type="sound_tempo"></block>		
+      </category>		
       <category name="Operators">
           <block type="operator_add">
             <value name="NUM1">
