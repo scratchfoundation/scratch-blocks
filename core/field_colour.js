@@ -70,8 +70,8 @@ Blockly.FieldColour.prototype.columns_ = 0;
 Blockly.FieldColour.prototype.init = function(block) {
   Blockly.FieldColour.superClass_.init.call(this, block);
   this.colourRect_ = Blockly.createSvgElement('rect',
-      {'rx': 4,
-       'ry': 4,
+      {'rx': Blockly.BlockSvg.CORNER_RADIUS,
+       'ry': Blockly.BlockSvg.CORNER_RADIUS,
        'x': 0,
        'y': 0,
        'width': Blockly.BlockSvg.FIELD_WIDTH,
