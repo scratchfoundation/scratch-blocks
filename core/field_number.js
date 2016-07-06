@@ -272,11 +272,3 @@ Blockly.FieldNumber.prototype.onHide_ = function() {
   Blockly.DropDownDiv.content_.removeAttribute('role');
   Blockly.DropDownDiv.content_.removeAttribute('aria-haspopup');
 };
-
-/**
- * Border radius for drawing this field, called when rendering the owning shadow block.
- * @return {Number} Border radius in px.
-*/
-Blockly.FieldNumber.prototype.getBorderRadius = function() {
-  return Blockly.BlockSvg.NUMBER_FIELD_CORNER_RADIUS;
-};
