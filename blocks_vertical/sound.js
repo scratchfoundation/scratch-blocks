@@ -110,7 +110,7 @@ Blockly.Blocks['sound_playdrumforbeats'] = {
    */
   init: function() {
     this.jsonInit({
-      "message0": "play drum %1 to %2 beats",
+      "message0": "play drum %1 for %2 beats",
       "args0": [
         {
           "type": "input_value",
