@@ -3,9 +3,7 @@
 goog.provide('Blockly.Blocks.data');
 
 goog.require('Blockly.Blocks');
-
 goog.require('Blockly.Colours');
-
 goog.require('Blockly.constants');
 
 Blockly.Blocks['data_variablemenu'] = {
