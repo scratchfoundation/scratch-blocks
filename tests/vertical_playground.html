@@ -18,6 +18,7 @@
     <script src="../blocks_vertical/operators.js"></script>
     <script src="../blocks_vertical/pen.js"></script>
     <script src="../blocks_vertical/sound.js"></script>
+    <script src="../blocks_vertical/sensing.js"></script>	
     <script>
       'use strict';
 
@@ -538,7 +539,77 @@
           </value>
         </block>
       </category>
-      <category name="Sensing" colour="#4CBFE6"></category>
+      <category name="Sensing" colour="#4CBFE6">
+        <block type="sensing_touchingobject">
+          <value name="TOUCHINGOBJECTMENU">
+            <shadow type="sensing_touchingobjectmenu"></shadow>
+          </value>
+        </block>
+        <block type="sensing_touchingcolor">
+          <value name="COLOR">
+            <shadow type="colour_picker"></shadow>
+          </value>
+        </block>
+        <block type="sensing_coloristouchingcolor">
+          <value name="COLOR">
+            <shadow type="colour_picker"></shadow>
+          </value>
+          <value name="COLOR2">
+            <shadow type="colour_picker"></shadow>
+          </value>		  
+        </block>
+        <block type="sensing_distanceto">
+          <value name="DISTANCETOMENU">
+            <shadow type="sensing_distancetomenu"></shadow>
+          </value>
+        </block>
+        <block type="sensing_askandwait">
+          <value name="QUESTION">
+            <shadow type="text">
+              <field name="TEXT">What's your name?</field>
+            </shadow>
+          </value>
+        </block>
+		<block type="sensing_answer"></block>
+	    <block type="sensing_keypressed">
+          <value name="KEY_OPTIONS">
+            <shadow type="sensing_keyoptions"></shadow>
+          </value>
+        </block>
+		<block type="sensing_mousedown"></block>
+		<block type="sensing_mousex"></block>
+		<block type="sensing_mousey"></block>
+		<block type="sensing_loudness"></block>
+	    <block type="sensing_videoon">
+          <value name="VIDEOONMENU1">
+            <shadow type="sensing_videoonmenuone"></shadow>
+          </value>
+          <value name="VIDEOONMENU2">
+            <shadow type="sensing_videoonmenutwo"></shadow>
+          </value>		  
+        </block>
+	    <block type="sensing_videotoggle">
+          <value name="VIDEOTOGGLEMENU">
+            <shadow type="sensing_videotogglemenu"></shadow>
+          </value>
+        </block>
+        <block type="sensing_setvideotransparency">
+          <value name="TRANSPARENCY">
+            <shadow type="math_number">
+              <field name="NUM">50</field>
+            </shadow>
+          </value>
+		</block>
+		<block type="sensing_timer"></block>
+		<block type="sensing_resettimer"></block>
+	    <block type="sensing_current">
+          <value name="CURRENTMENU">
+            <shadow type="sensing_currentmenu"></shadow>
+          </value>
+        </block>
+		<block type="sensing_dayssince2000"></block>
+		<block type="sensing_username"></block>		
+	  </category>	  
       <category name="Control" colour="#FFAB19">
         <block type="control_wait">
           <value name="DURATION">
