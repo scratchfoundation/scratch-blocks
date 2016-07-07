@@ -121,7 +121,13 @@ Blockly.Css.setCursor = function(cursor) {
     return;
   }
   Blockly.Css.currentCursor_ = cursor;
-  var url = 'url(' + Blockly.Css.mediaPath_ + '/' + cursor + '.cur), auto';
+  var url;
+  if (cursor == Blockly.Css.Cursor.OPEN) {
+    // Scratch-specific: use CSS default cursor instead of "open hand."
+    url = 'default';
+  } else {
+    url = 'url(' + Blockly.Css.mediaPath_ + '/' + cursor + '.cur), auto';
+  }
   // There are potentially hundreds of draggable objects.  Changing their style
   // properties individually is too slow, so change the CSS rule instead.
   var rule = '.blocklyDraggable {\n  cursor: ' + url + ';\n}\n';
@@ -356,7 +362,6 @@ Blockly.Css.CONTENT = [
   '}',
 
   '.blocklyText {',
-    'cursor: default;',
     'fill: #fff;',
     'font-family: sans-serif;',
     'font-size: 12pt;',
