@@ -21,15 +21,6 @@ Blockly.Blocks['data_variablemenu'] = {
           {
             "type": "field_variable",
             "name": "VARIABLE",
-            "options": [
-              ['v', 'V'],
-              ['v2', 'V2'],
-              ['v3', 'V3'],
-              ['v4', 'V4'],
-              ['v5', 'V5'],
-              ['v6', 'V6'],
-              ['v7', 'V7'],			  
-            ]
           }
         ],
         "inputsInline": true,
@@ -59,7 +50,7 @@ Blockly.Blocks['data_variable'] = {
       "colour": Blockly.Colours.data.primary,
       "colourSecondary": Blockly.Colours.data.secondary,
       "colourTertiary": Blockly.Colours.data.tertiary,
-      "output": "Number",
+      "output": "String",
       "outputShape": Blockly.OUTPUT_SHAPE_ROUND,	  
       "checkboxInFlyout": true
     });
@@ -100,7 +91,7 @@ Blockly.Blocks['data_changevariableby'] = {
    */
   init: function() {
     this.jsonInit({
-      "message0": "change %1 to %2",
+      "message0": "change %1 by %2",
       "args0": [
         {
           "type": "input_value",
