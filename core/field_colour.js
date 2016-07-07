@@ -46,7 +46,6 @@ goog.require('goog.ui.ColorPicker');
  */
 Blockly.FieldColour = function(colour, opt_validator) {
   Blockly.FieldColour.superClass_.constructor.call(this, colour, opt_validator);
-  this.setText(Blockly.Field.NBSP + Blockly.Field.NBSP + Blockly.Field.NBSP);
 };
 goog.inherits(Blockly.FieldColour, Blockly.Field);
 
@@ -70,12 +69,15 @@ Blockly.FieldColour.prototype.columns_ = 0;
  */
 Blockly.FieldColour.prototype.init = function(block) {
   Blockly.FieldColour.superClass_.init.call(this, block);
-  // TODO(#163): borderRect_ has been removed from the field.
-  // When fixing field_colour, we should re-color the shadow block instead,
-  // or re-implement a rectangle in the field.
-  if (this.borderRect_) {
-    this.borderRect_.style['fillOpacity'] = 1;
-  }
+  this.colourRect_ = Blockly.createSvgElement('rect',
+      {'rx': Blockly.BlockSvg.CORNER_RADIUS,
+       'ry': Blockly.BlockSvg.CORNER_RADIUS,
+       'x': 0,
+       'y': 0,
+       'width': Blockly.BlockSvg.FIELD_WIDTH,
+       'height': Blockly.BlockSvg.FIELD_HEIGHT
+      }, this.fieldGroup_, this.sourceBlock_.workspace);
+  this.colourRect_.style['fillOpacity'] = 1;
   this.setValue(this.getValue());
 };
 
@@ -111,8 +113,8 @@ Blockly.FieldColour.prototype.setValue = function(colour) {
         this.sourceBlock_, 'field', this.name, this.colour_, colour));
   }
   this.colour_ = colour;
-  if (this.borderRect_) {
-    this.borderRect_.style.fill = colour;
+  if (this.colourRect_) {
+    this.colourRect_.style.fill = colour;
   }
 };
 
@@ -128,6 +130,14 @@ Blockly.FieldColour.prototype.getText = function() {
     colour = '#' + m[1] + m[2] + m[3];
   }
   return colour;
+};
+
+/**
+ * Returns the fixed height and width.
+ * @return {!goog.math.Size} Height and width.
+ */
+Blockly.FieldColour.prototype.getSize = function() {
+  return new goog.math.Size(Blockly.BlockSvg.FIELD_WIDTH, Blockly.BlockSvg.FIELD_HEIGHT);
 };
 
 /**
