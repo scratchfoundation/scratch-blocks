@@ -19,16 +19,17 @@ Blockly.Blocks['control_forever'] = {
   init: function() {
     this.jsonInit({
       "id": "control_forever",
-      "message0": "forever %1 %2 %3",
-      "lastDummyAlign0": "RIGHT",
-      "args0": [
-        {
-          "type": "input_dummy"
-        },
+      "message0": "forever",
+      "message1": "%1", // Statement
+      "message2": "%1", // Icon
+      "lastDummyAlign2": "RIGHT",
+      "args1": [
         {
           "type": "input_statement",
           "name": "SUBSTACK"
-        },
+        }
+      ],
+      "args2": [
         {
           "type": "field_image",
           "src": Blockly.mainWorkspace.options.pathToMedia + "icons/control_forever.svg",
@@ -56,17 +57,23 @@ Blockly.Blocks['control_repeat'] = {
   init: function() {
     this.jsonInit({
       "id": "control_repeat",
-      "message0": "repeat %1 %2 %3",
-      "lastDummyAlign0": "RIGHT",
+      "message0": "repeat %1",
+      "message1": "%1", // Statement
+      "message2": "%1", // Icon
+      "lastDummyAlign2": "RIGHT",
       "args0": [
         {
           "type": "input_value",
           "name": "TIMES"
-        },
+        }
+      ],
+      "args1": [
         {
           "type": "input_statement",
           "name": "SUBSTACK"
-        },
+        }
+      ],
+      "args2": [
         {
           "type": "field_image",
           "src": Blockly.mainWorkspace.options.pathToMedia + "icons/control_forever.svg",
@@ -94,16 +101,16 @@ Blockly.Blocks['control_if'] = {
   init: function() {
     this.jsonInit({
       "type": "control_if",
-      "message0": "if %1 then %2 %3",
+      "message0": "if %1 then",
+      "message1": "%1", // Statement
       "args0": [
         {
           "type": "input_value",
           "name": "CONDITION",
           "check": "Boolean"
-        },
-        {
-          "type": "input_dummy"
-        },
+        }
+      ],
+      "args1": [
         {
           "type": "input_statement",
           "name": "SUBSTACK"
@@ -127,23 +134,24 @@ Blockly.Blocks['control_if_else'] = {
   init: function() {
     this.jsonInit({
       "type": "control_if_else",
-      "message0": "if %1 then %2 %3 else %4 %5",
+      "message0": "if %1 then",
+      "message1": "%1",
+      "message2": "else",
+      "message3": "%1",
       "args0": [
         {
           "type": "input_value",
           "name": "CONDITION",
           "check": "Boolean"
-        },
-        {
-          "type": "input_dummy"
-        },
+        }
+      ],
+      "args1": [
         {
           "type": "input_statement",
           "name": "SUBSTACK"
-        },
-        {
-          "type": "input_dummy"
-        },
+        }
+      ],
+      "args3": [
         {
           "type": "input_statement",
           "name": "SUBSTACK2"
@@ -268,18 +276,24 @@ Blockly.Blocks['control_repeat_until'] = {
    */
   init: function() {
     this.jsonInit({
-      "message0": "repeat until %1 %2 %3",
-      "lastDummyAlign0": "RIGHT",
+      "message0": "repeat until %1",
+      "message1": "%1",
+      "message2": "%1",
+      "lastDummyAlign2": "RIGHT",
       "args0": [
         {
           "type": "input_value",
           "name": "CONDITION",
           "check": "Boolean"
-        },
+        }
+      ],
+      "args1": [
         {
           "type": "input_statement",
           "name": "SUBSTACK"
-        },
+        }
+      ],
+      "args2": [
         {
           "type": "field_image",
           "src": Blockly.mainWorkspace.options.pathToMedia + "icons/control_forever.svg",
