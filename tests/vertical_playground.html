@@ -374,11 +374,10 @@
   <body onload="start()">
     <div id="collaborators"></div>
     <div id="blocklyDiv"></div>
-
     <!-- Toolbox -->
     <xml id="toolbox-categories" style="display: none">
-      <category name="More Blocks"></category>
-      <category name="Operators">
+      <category name="More Blocks" colour="#FF6680"></category>
+      <category name="Operators" colour="#40BF4A">
         <block type="operator_add">
           <value name="NUM1">
             <shadow type="math_number">
@@ -539,7 +538,8 @@
           </value>
         </block>
       </category>
-      <category name="Control">
+      <category name="Sensing" colour="#4CBFE6"></category>
+      <category name="Control" colour="#FFAB19">
         <block type="control_wait">
           <value name="DURATION">
             <shadow type="math_positive_number">
@@ -572,7 +572,7 @@
         </block>
         <block type="control_delete_this_clone"></block>
       </category>
-      <category name="Events">
+      <category name="Events" colour="#FFD500">
         <block type="event_whenflagclicked"></block>
         <block type="event_whenkeypressed">
           <value name="KEY_OPTION">
@@ -595,8 +595,8 @@
           </value>
         </block>
       </category>
-      <category name="Data"></category>
-      <category name="Pen">
+      <category name="Data" colour="#FF8C1A"></category>
+      <category name="Pen" colour="#00B295">
         <block type="pen_clear"></block>
         <block type="pen_stamp"></block>
         <block type="pen_pendown"></block>
@@ -650,7 +650,7 @@
           </value>
 		    </block>
       </category>
-      <category name="Sound">
+      <category name="Sound" colour="#D65CD6">
         <block type="sound_play">
           <value name="SOUND_MENU">
             <shadow type="sound_sounds_option"></shadow>
@@ -731,7 +731,7 @@
         </block>
         <block type="sound_tempo"></block>
       </category>
-      <category name="Looks">
+      <category name="Looks" colour="#9966FF">
         <block type="looks_sayforsecs">
           <value name="MESSAGE">
             <shadow type="text">
@@ -809,7 +809,7 @@
         </block>
         <block type="looks_size"></block>
       </category>
-      <category name="Motion">
+      <category name="Motion" colour="#4C97FF">
         <block type="motion_movesteps">
           <value name="STEPS">
             <shadow type="math_number">
