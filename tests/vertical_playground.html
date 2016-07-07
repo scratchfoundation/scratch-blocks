@@ -10,6 +10,7 @@
     <script src="../msg/messages.js"></script>
     <script src="../blocks/math.js"></script>
     <script src="../blocks/text.js"></script>
+    <script src="../blocks/colour.js"></script>
     <script src="../blocks_vertical/control.js"></script>
     <script src="../blocks_vertical/event.js"></script>
     <script src="../blocks_vertical/motion.js"></script>
@@ -404,6 +405,12 @@
         <block type="pen_stamp"></block>
         <block type="pen_pendown"></block>
         <block type="pen_penup"></block>
+        <block type="pen_setpencolortocolor">
+          <value name="COLOR">
+            <shadow type="colour_picker">
+            </shadow>
+          </value>
+		</block>
         <block type="pen_changepencolorby">
           <value name="COLOR">
             <shadow type="math_number">
@@ -411,7 +418,7 @@
             </shadow>
           </value>
 		</block>
-        <block type="pen_setpencolorto">
+        <block type="pen_setpencolortonum">
           <value name="COLOR">
             <shadow type="math_number">
               <field name="NUM">0</field>

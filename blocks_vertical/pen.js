@@ -76,6 +76,29 @@ Blockly.Blocks['pen_penup'] = {
   }
 };
 
+Blockly.Blocks['pen_setpencolortocolor'] = {
+  /**
+   * Block to set the pen's color to the value.
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.jsonInit({
+      "message0": "set pen color to %1",
+      "args0": [
+        {
+          "type": "input_value",
+          "name": "COLOR"
+        }
+      ],
+      "previousStatement": null,
+      "nextStatement": null,
+      "colour": Blockly.Colours.pen.primary,
+      "colourSecondary": Blockly.Colours.pen.secondary,
+      "colourTertiary": Blockly.Colours.pen.tertiary
+    });
+  }
+};
+
 Blockly.Blocks['pen_changepencolorby'] = {
   /**
    * Block to change the pen's color by the value.
@@ -99,7 +122,7 @@ Blockly.Blocks['pen_changepencolorby'] = {
   }
 };
 
-Blockly.Blocks['pen_setpencolorto'] = {
+Blockly.Blocks['pen_setpencolortonum'] = {
   /**
    * Block to set the pen's color to the value.
    * @this Blockly.Block
