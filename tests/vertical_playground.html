@@ -19,6 +19,7 @@
     <script src="../blocks_vertical/pen.js"></script>
     <script src="../blocks_vertical/sound.js"></script>
     <script src="../blocks_vertical/sensing.js"></script>
+    <script src="../blocks_vertical/data.js"></script>	
     <script>
       'use strict';
 
@@ -666,7 +667,43 @@
           </value>
         </block>
       </category>
-      <category name="Data" colour="#FF8C1A"></category>
+      <category name="Data" colour="#FF8C1A">
+        <block type="data_variable">
+          <value name="VARIABLE">
+            <shadow type="data_variablemenu"></shadow>
+          </value>
+        </block>			  
+        <block type="data_setvariableto">
+          <value name="VARIABLE">
+           <shadow type="data_variablemenu"></shadow>
+          </value>
+          <value name="VALUE">
+            <shadow type="math_number">
+              <field name="NUM">0</field>
+            </shadow>
+          </value>	  
+        </block>
+        <block type="data_changevariableby">
+          <value name="VARIABLE">
+           <shadow type="data_variablemenu"></shadow>
+          </value>
+          <value name="VALUE">
+            <shadow type="math_number">
+              <field name="NUM">0</field>
+            </shadow>
+          </value>	  
+        </block>
+        <block type="data_showvariable">
+          <value name="VARIABLE">
+           <shadow type="data_variablemenu"></shadow>
+          </value>	  
+        </block>
+        <block type="data_hidevariable">
+          <value name="VARIABLE">
+           <shadow type="data_variablemenu"></shadow>
+          </value>	  
+        </block>
+      </category>		
       <category name="Pen" colour="#00B295">
         <block type="pen_clear"></block>
         <block type="pen_stamp"></block>
