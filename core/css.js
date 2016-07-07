@@ -216,7 +216,7 @@ Blockly.Css.CONTENT = [
   '}',
 
   '.blocklyDropDownDiv {',
-    'position: absolute;',
+    'position: fixed;',
     'left: 0;',
     'top: 0;',
     'z-index: 1000;',
@@ -226,6 +226,11 @@ Blockly.Css.CONTENT = [
     'box-shadow: 0px 0px 8px 1px ' + Blockly.Colours.dropDownShadow + ';',
     'padding: 4px;',
     '-webkit-user-select: none;',
+  '}',
+
+  '.blocklyDropDownContent {',
+    'max-height: 300px;', // @todo: spec for maximum height.
+    'overflow: auto;',
   '}',
 
   '.blocklyDropDownArrow {',
