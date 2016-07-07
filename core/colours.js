@@ -96,5 +96,7 @@ Blockly.Colours = {
   "numPadBackground": "#547AB2",
   "numPadBorder": "#435F91",
   "numPadActiveBackground": "#435F91",
-  "numPadText": "#FFFFFF"
+  "numPadText": "#FFFFFF",
+  "valueReportBackground": "#FFFFFF",
+  "valueReportBorder": "#AAAAAA"
 };
