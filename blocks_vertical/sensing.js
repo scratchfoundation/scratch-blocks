@@ -633,7 +633,7 @@ Blockly.Blocks['sensing_dayssince2000'] = {
       "colourSecondary": Blockly.Colours.sensing.secondary,
       "colourTertiary": Blockly.Colours.sensing.tertiary,
       "output": "Number",
-      "outputShape": Blockly.OUTPUT_SHAPE_ROUND,
+      "outputShape": Blockly.OUTPUT_SHAPE_ROUND
     });
   }
 };
