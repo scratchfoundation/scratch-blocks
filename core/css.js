@@ -323,6 +323,16 @@ Blockly.Css.CONTENT = [
     'border-bottom-right-radius: 4px;',
   '}',
 
+  '.valueReportBox {',
+    'min-width: 50px;',
+    'max-width: 300px;',
+    'max-height: 200px;',
+    'overflow: auto;',
+    'word-wrap: break-word;',
+    'text-align: center;',
+    'font-size: .8em;',
+  '}',
+
   '.blocklyResizeSE {',
     'cursor: se-resize;',
     'fill: #aaa;',

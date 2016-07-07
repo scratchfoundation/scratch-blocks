@@ -329,6 +329,15 @@
         }
         fakeDragWrapper();
       }
+
+      function reportDemo() {
+        if (Blockly.selected) {
+          workspace.reportValue(
+            Blockly.selected.id,
+            document.getElementById('reportValue').value
+          );
+        }
+      }
     </script>
 
     <style>
@@ -1306,6 +1315,12 @@
     <p>
       <input type="button" value="Undo" onclick="workspace.undo()" />
       <input type="button" value="Redo" onclick="workspace.undo(true)" />
+    </p>
+
+    <p>
+      Report:
+      <input id="reportValue" type="text" value="123" />
+      <input type="button" value="Report last clicked block" onclick="reportDemo()" />
     </p>
   </body>
 </html>

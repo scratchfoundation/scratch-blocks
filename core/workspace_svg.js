@@ -28,7 +28,9 @@ goog.provide('Blockly.WorkspaceSvg');
 
 // TODO(scr): Fix circular dependencies
 //goog.require('Blockly.BlockSvg');
+goog.require('Blockly.Colours');
 goog.require('Blockly.ConnectionDB');
+goog.require('Blockly.DropDownDiv');
 goog.require('Blockly.Events');
 goog.require('Blockly.Options');
 goog.require('Blockly.ScrollbarPair');
@@ -579,6 +581,31 @@ Blockly.WorkspaceSvg.prototype.glowStack = function(id, isGlowingStack) {
     }
   }
   block.setGlowStack(isGlowingStack);
+};
+
+/**
+ * Visually report a value associated with a block.
+ * In Scratch, appears as a pop-up next to the block when a reporter block is clicked.
+ * @param {?string} id ID of block to report associated value.
+ * @param {?string} value String value to visually report.
+ */
+Blockly.WorkspaceSvg.prototype.reportValue = function(id, value) {
+  var block = this.getBlockById(id);
+  if (!block) {
+    throw 'Tried to report value on block that does not exist.';
+  }
+  Blockly.DropDownDiv.hideWithoutAnimation();
+  Blockly.DropDownDiv.clearContent();
+  var contentDiv = Blockly.DropDownDiv.getContentDiv();
+  var valueReportBox = goog.dom.createElement('div');
+  valueReportBox.setAttribute('class', 'valueReportBox');
+  valueReportBox.innerHTML = Blockly.encodeEntities(value);
+  contentDiv.appendChild(valueReportBox);
+  Blockly.DropDownDiv.setColour(
+    Blockly.Colours.valueReportBackground,
+    Blockly.Colours.valueReportBorder
+  );
+  Blockly.DropDownDiv.showPositionedByBlock(this, block);
 };
 
 /**

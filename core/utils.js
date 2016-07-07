@@ -754,3 +754,15 @@ Blockly.measureText = function(fontSize, fontFamily, fontWeight, text) {
   return context.measureText(text).width;
 };
 
+/**
+ * Encode a string's HTML entities.
+ * E.g., <a> -> &lt;a&gt;
+ * @param {!string} rawStr Unencoded raw string to encode.
+ * @return {string} String with HTML entities encoded.
+ */
+Blockly.encodeEntities = function(rawStr) {
+  // CC-BY-SA https://stackoverflow.com/questions/18749591/encode-html-entities-in-javascript
+  return rawStr.replace(/[\u00A0-\u9999<>\&]/gim, function(i) {
+    return '&#' + i.charCodeAt(0) + ';';
+  });
+};
