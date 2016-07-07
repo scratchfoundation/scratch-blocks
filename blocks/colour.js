@@ -28,6 +28,16 @@ goog.provide('Blockly.Blocks.colour');
 
 goog.require('Blockly.Blocks');
 
+goog.require('Blockly.constants');
+
+/**
+ * Pick a random colour.
+ * @return {!string} #RRGGBB for random colour.
+ */
+function randomColour() {
+  return '#' + Math.floor(Math.random() * 16777215).toString(16);
+}
+
 Blockly.Blocks['colour_picker'] = {
   /**
    * Block for colour picker.
@@ -40,9 +50,10 @@ Blockly.Blocks['colour_picker'] = {
         {
           "type": "field_colour",
           "name": "COLOUR",
-          "colour": "#ff0000"
+          "colour": randomColour()
         }
       ],
+      "outputShape": Blockly.OUTPUT_SHAPE_ROUND,
       "output": "Colour"
     });
   }
