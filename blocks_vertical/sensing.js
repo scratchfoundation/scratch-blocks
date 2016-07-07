@@ -15,7 +15,7 @@ Blockly.Blocks['sensing_touchingobject'] = {
    */
   init: function() {
     this.jsonInit({
-      "message0": "touching %1",
+      "message0": "touching %1?",
       "args0": [
         {
           "type": "input_value",
@@ -68,7 +68,7 @@ Blockly.Blocks['sensing_touchingcolor'] = {
    */
   init: function() {
     this.jsonInit({
-      "message0": "touching color %1",
+      "message0": "touching color %1?",
       "args0": [
         {
           "type": "input_value",
@@ -92,7 +92,7 @@ Blockly.Blocks['sensing_coloristouchingcolor'] = {
    */
   init: function() {
     this.jsonInit({
-      "message0": "color %1 is touching %2",
+      "message0": "color %1 is touching %2?",
       "args0": [
         {
           "type": "input_value",
@@ -101,7 +101,7 @@ Blockly.Blocks['sensing_coloristouchingcolor'] = {
         {
           "type": "input_value",
           "name": "COLOR2"
-        }		
+        }
       ],
       "inputsInline": true,
       "output": "Boolean",
@@ -130,7 +130,7 @@ Blockly.Blocks['sensing_distanceto'] = {
       "colour": Blockly.Colours.sensing.primary,
       "colourSecondary": Blockly.Colours.sensing.secondary,
       "colourTertiary": Blockly.Colours.sensing.tertiary,
-      "output": "Number",	  
+      "output": "Number",
       "outputShape": Blockly.OUTPUT_SHAPE_ROUND
     });
   }
@@ -212,7 +212,7 @@ Blockly.Blocks['sensing_keypressed'] = {
    */
   init: function() {
     this.jsonInit({
-      "message0": "key %1 pressed",
+      "message0": "key %1 pressed?",
       "args0": [
         {
           "type": "input_value",
@@ -303,7 +303,7 @@ Blockly.Blocks['sensing_mousedown'] = {
    */
   init: function() {
     this.jsonInit({
-      "message0": "mouse down",
+      "message0": "mouse down?",
       "inputsInline": true,
       "output": "Boolean",
       "colour": Blockly.Colours.sensing.primary,
@@ -361,7 +361,7 @@ Blockly.Blocks['sensing_loudness'] = {
       "colourTertiary": Blockly.Colours.sensing.tertiary,
       "output": "Number",
       "outputShape": Blockly.OUTPUT_SHAPE_ROUND,
-      "checkboxInFlyout": true	  
+      "checkboxInFlyout": true
     });
   }
 };
@@ -382,7 +382,7 @@ Blockly.Blocks['sensing_videoon'] = {
         {
           "type": "input_value",
           "name": "VIDEOONMENU2"
-        }		
+        }
       ],
       "inputsInline": true,
       "output": "Number",
@@ -390,7 +390,7 @@ Blockly.Blocks['sensing_videoon'] = {
       "colourSecondary": Blockly.Colours.sensing.secondary,
       "colourTertiary": Blockly.Colours.sensing.tertiary,
       "outputShape": Blockly.OUTPUT_SHAPE_ROUND,
-      "checkboxInFlyout": true	  
+      "checkboxInFlyout": true
     });
   }
 };
@@ -490,7 +490,7 @@ Blockly.Blocks['sensing_videotogglemenu'] = {
             "options": [
               ['on', 'ON'],
               ['off', 'OFF'],
-              ['on-flipped', 'ONFLIPPED']			  
+              ['on-flipped', 'ONFLIPPED']
             ]
           }
         ],
@@ -540,7 +540,7 @@ Blockly.Blocks['sensing_timer'] = {
       "colourTertiary": Blockly.Colours.sensing.tertiary,
       "output": "Number",
       "outputShape": Blockly.OUTPUT_SHAPE_ROUND,
-      "checkboxInFlyout": true	  
+      "checkboxInFlyout": true
     });
   }
 };
@@ -574,7 +574,7 @@ Blockly.Blocks['sensing_current'] = {
         {
           "type": "input_value",
           "name": "CURRENTMENU"
-        }	
+        }
       ],
       "inputsInline": true,
       "output": "Number",
@@ -582,7 +582,7 @@ Blockly.Blocks['sensing_current'] = {
       "colourSecondary": Blockly.Colours.sensing.secondary,
       "colourTertiary": Blockly.Colours.sensing.tertiary,
       "outputShape": Blockly.OUTPUT_SHAPE_ROUND,
-      "checkboxInFlyout": true	  
+      "checkboxInFlyout": true
     });
   }
 };
@@ -607,7 +607,7 @@ Blockly.Blocks['sensing_currentmenu'] = {
               ['day of week', 'DAYOFWEEK'],
               ['hour', 'HOUR'],
               ['minute', 'MINUTE'],
-              ['second', 'SECOND']			  
+              ['second', 'SECOND']
             ]
           }
         ],
@@ -633,7 +633,7 @@ Blockly.Blocks['sensing_dayssince2000'] = {
       "colourSecondary": Blockly.Colours.sensing.secondary,
       "colourTertiary": Blockly.Colours.sensing.tertiary,
       "output": "Number",
-      "outputShape": Blockly.OUTPUT_SHAPE_ROUND,  
+      "outputShape": Blockly.OUTPUT_SHAPE_ROUND
     });
   }
 };
@@ -651,7 +651,7 @@ Blockly.Blocks['sensing_username'] = {
       "colourTertiary": Blockly.Colours.sensing.tertiary,
       "output": "Number",
       "outputShape": Blockly.OUTPUT_SHAPE_ROUND,
-      "checkboxInFlyout": true	  
+      "checkboxInFlyout": true
     });
   }
 };
