@@ -90,3 +90,18 @@ Blockly.Blocks['math_positive_number'] = {
     this.setOutputShape(Blockly.OUTPUT_SHAPE_ROUND);
   }
 };
+
+Blockly.Blocks['math_angle'] = {
+  /**
+   * Block for angle picker.
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.setHelpUrl(Blockly.Msg.MATH_NUMBER_HELPURL);
+    this.setColour(Blockly.Blocks.math.HUE);
+    this.appendDummyInput()
+        .appendField(new Blockly.FieldAngle('90'), 'NUM');
+    this.setOutput(true, 'Number');
+    this.setOutputShape(Blockly.OUTPUT_SHAPE_ROUND);
+  }
+};
