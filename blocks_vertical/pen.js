@@ -76,7 +76,7 @@ Blockly.Blocks['pen_penup'] = {
   }
 };
 
-Blockly.Blocks['pen_change_pen_color_by'] = {
+Blockly.Blocks['pen_changepencolorby'] = {
   /**
    * Block to change the pen's color by the value.
    * @this Blockly.Block
@@ -89,7 +89,7 @@ Blockly.Blocks['pen_change_pen_color_by'] = {
           "type": "input_value",
           "name": "COLOR"
         }
-      ],	  
+      ],
       "previousStatement": null,
       "nextStatement": null,
       "colour": Blockly.Colours.pen.primary,
@@ -99,7 +99,7 @@ Blockly.Blocks['pen_change_pen_color_by'] = {
   }
 };
 
-Blockly.Blocks['pen_set_pen_color_to'] = {
+Blockly.Blocks['pen_setpencolorto'] = {
   /**
    * Block to set the pen's color to the value.
    * @this Blockly.Block
@@ -112,7 +112,7 @@ Blockly.Blocks['pen_set_pen_color_to'] = {
           "type": "input_value",
           "name": "COLOR"
         }
-      ],	  
+      ],
       "previousStatement": null,
       "nextStatement": null,
       "colour": Blockly.Colours.pen.primary,
@@ -122,7 +122,7 @@ Blockly.Blocks['pen_set_pen_color_to'] = {
   }
 };
 
-Blockly.Blocks['pen_change_pen_shade_by'] = {
+Blockly.Blocks['pen_changepenshadeby'] = {
   /**
    * Block to change the pen's shade by the value.
    * @this Blockly.Block
@@ -135,7 +135,7 @@ Blockly.Blocks['pen_change_pen_shade_by'] = {
           "type": "input_value",
           "name": "SHADE"
         }
-      ],	  
+      ],
       "previousStatement": null,
       "nextStatement": null,
       "colour": Blockly.Colours.pen.primary,
@@ -145,7 +145,7 @@ Blockly.Blocks['pen_change_pen_shade_by'] = {
   }
 };
 
-Blockly.Blocks['pen_set_pen_shade_to'] = {
+Blockly.Blocks['pen_setpenshadeto'] = {
   /**
    * Block to set the pen's shade to the value.
    * @this Blockly.Block
@@ -158,7 +158,7 @@ Blockly.Blocks['pen_set_pen_shade_to'] = {
           "type": "input_value",
           "name": "SHADE"
         }
-      ],	  
+      ],
       "previousStatement": null,
       "nextStatement": null,
       "colour": Blockly.Colours.pen.primary,
@@ -168,7 +168,7 @@ Blockly.Blocks['pen_set_pen_shade_to'] = {
   }
 };
 
-Blockly.Blocks['pen_change_pen_size_by'] = {
+Blockly.Blocks['pen_changepensizeby'] = {
   /**
    * Block to change the pen's size by the value.
    * @this Blockly.Block
@@ -181,7 +181,7 @@ Blockly.Blocks['pen_change_pen_size_by'] = {
           "type": "input_value",
           "name": "SIZE"
         }
-      ],	  
+      ],
       "previousStatement": null,
       "nextStatement": null,
       "colour": Blockly.Colours.pen.primary,
@@ -191,7 +191,7 @@ Blockly.Blocks['pen_change_pen_size_by'] = {
   }
 };
 
-Blockly.Blocks['pen_set_pen_size_to'] = {
+Blockly.Blocks['pen_setpensizeto'] = {
   /**
    * Block to set the pen's size to the value.
    * @this Blockly.Block
@@ -204,7 +204,7 @@ Blockly.Blocks['pen_set_pen_size_to'] = {
           "type": "input_value",
           "name": "SIZE"
         }
-      ],	  
+      ],
       "previousStatement": null,
       "nextStatement": null,
       "colour": Blockly.Colours.pen.primary,

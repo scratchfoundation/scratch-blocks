@@ -24,7 +24,7 @@ Blockly.Blocks['sound_sounds_option'] = {
             "options": [
               ['meow', 'MEOW'],
               ['meow2', 'MEOW2'],
-              ['pop', 'POP']			  
+              ['pop', 'POP']
             ]
           }
         ],
@@ -119,7 +119,7 @@ Blockly.Blocks['sound_playdrumforbeats'] = {
         {
           "type": "input_value",
           "name": "BEATS"
-        }		
+        }
       ],
       "previousStatement": null,
       "nextStatement": null,
@@ -142,7 +142,7 @@ Blockly.Blocks['sound_restforbeats'] = {
         {
           "type": "input_value",
           "name": "BEATS"
-        }		
+        }
       ],
       "previousStatement": null,
       "nextStatement": null,
@@ -169,7 +169,7 @@ Blockly.Blocks['sound_playnoteforbeats'] = {
         {
           "type": "input_value",
           "name": "BEATS"
-        }		
+        }
       ],
       "previousStatement": null,
       "nextStatement": null,
@@ -192,7 +192,7 @@ Blockly.Blocks['sound_setinstrumentto'] = {
         {
           "type": "input_value",
           "name": "INSTRUMENT"
-        }		
+        }
       ],
       "previousStatement": null,
       "nextStatement": null,
@@ -215,7 +215,7 @@ Blockly.Blocks['sound_changevolumeby'] = {
         {
           "type": "input_value",
           "name": "VOLUME"
-        }		
+        }
       ],
       "previousStatement": null,
       "nextStatement": null,
@@ -238,7 +238,7 @@ Blockly.Blocks['sound_setvolumeto'] = {
         {
           "type": "input_value",
           "name": "VOLUME"
-        }		
+        }
       ],
       "previousStatement": null,
       "nextStatement": null,
@@ -279,7 +279,7 @@ Blockly.Blocks['sound_changetempoby'] = {
         {
           "type": "input_value",
           "name": "TEMPO"
-        }		
+        }
       ],
       "previousStatement": null,
       "nextStatement": null,
@@ -302,7 +302,7 @@ Blockly.Blocks['sound_settempotobpm'] = {
         {
           "type": "input_value",
           "name": "TEMPO"
-        }		
+        }
       ],
       "previousStatement": null,
       "nextStatement": null,

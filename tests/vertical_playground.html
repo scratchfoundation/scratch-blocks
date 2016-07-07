@@ -15,8 +15,8 @@
     <script src="../blocks_vertical/motion.js"></script>
     <script src="../blocks_vertical/looks.js"></script>
     <script src="../blocks_vertical/operators.js"></script>
-    <script src="../blocks_vertical/pen.js"></script>	
-    <script src="../blocks_vertical/sound.js"></script>		
+    <script src="../blocks_vertical/pen.js"></script>
+    <script src="../blocks_vertical/sound.js"></script>
     <script>
       'use strict';
 
@@ -267,7 +267,7 @@
         checkbox.checked = (state) ? 'checked' : '';
         sessionStorage.setItem('soundsEnabled', state);
       }
-	  
+
       function fakeDrag(id, dx, dy, opt_workspace) {
         var ws = opt_workspace || Blockly.getMainWorkspace();
         var blockToDrag = ws.getBlockById(id);
@@ -403,50 +403,50 @@
         <block type="pen_clear"></block>
         <block type="pen_stamp"></block>
         <block type="pen_pendown"></block>
-        <block type="pen_penup"></block>        
-        <block type="pen_change_pen_color_by">
+        <block type="pen_penup"></block>
+        <block type="pen_changepencolorby">
           <value name="COLOR">
             <shadow type="math_number">
               <field name="NUM">10</field>
             </shadow>
           </value>
-		</block>   
-        <block type="pen_set_pen_color_to">
+		</block>
+        <block type="pen_setpencolorto">
           <value name="COLOR">
             <shadow type="math_number">
               <field name="NUM">0</field>
             </shadow>
           </value>
 		</block>
-        <block type="pen_change_pen_shade_by">
+        <block type="pen_changepenshadeby">
           <value name="SHADE">
             <shadow type="math_number">
               <field name="NUM">10</field>
             </shadow>
           </value>
-		</block>   
-        <block type="pen_set_pen_shade_to">
+		</block>
+        <block type="pen_setpenshadeto">
           <value name="SHADE">
             <shadow type="math_number">
               <field name="NUM">50</field>
             </shadow>
           </value>
 		</block>
-        <block type="pen_change_pen_size_by">
+        <block type="pen_changepensizeby">
           <value name="SIZE">
             <shadow type="math_number">
               <field name="NUM">1</field>
             </shadow>
           </value>
-		</block>   
-        <block type="pen_set_pen_size_to">
+		</block>
+        <block type="pen_setpensizeto">
           <value name="SIZE">
             <shadow type="math_number">
               <field name="NUM">1</field>
             </shadow>
           </value>
-		</block> 		
-      </category>	  
+		</block>
+      </category>
       <category name="Control">
         <block type="control_wait">
           <value name="DURATION">
@@ -491,7 +491,7 @@
             <shadow type="sound_sounds_option"></shadow>
           </value>
         </block>
-        <block type="sound_stopallsounds"></block>		
+        <block type="sound_stopallsounds"></block>
         <block type="sound_playdrumforbeats">
           <value name="DRUMTYPE">
             <shadow type="math_number">
@@ -559,8 +559,8 @@
             </shadow>
           </value>
         </block>
-        <block type="sound_tempo"></block>		
-      </category>		
+        <block type="sound_tempo"></block>
+      </category>
       <category name="Operators">
           <block type="operator_add">
             <value name="NUM1">
