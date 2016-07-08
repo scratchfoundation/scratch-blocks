@@ -314,3 +314,204 @@ Blockly.Blocks['looks_size'] = {
     });
   }
 };
+
+Blockly.Blocks['looks_costume'] = {
+  /**
+   * Costumes drop-down menu.
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.jsonInit(
+      {
+        "message0": "%1",
+        "args0": [
+          {
+            "type": "field_dropdown",
+            "name": "EFFECT",
+            "options": [
+              ['costume1', 'COSTUME1'],
+              ['costume2', 'COSTUME2']
+            ]
+          }
+        ],
+        "inputsInline": true,
+        "output": "String",
+        "colour": Blockly.Colours.looks.secondary,
+        "colourSecondary": Blockly.Colours.looks.secondary,
+        "colourTertiary": Blockly.Colours.looks.tertiary,
+        "outputShape": Blockly.OUTPUT_SHAPE_ROUND
+      });
+  }
+};
+
+Blockly.Blocks['looks_switchcostumeto'] = {
+  /**
+   * Block to switch the sprite's costume to the selected one.
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.jsonInit({
+      "message0": "switch costume to %1",
+      "args0": [
+        {
+          "type": "input_value",
+          "name": "COSTUME"
+        }
+      ],
+      "inputsInline": true,
+      "previousStatement": null,
+      "nextStatement": null,
+      "colour": Blockly.Colours.looks.primary,
+      "colourSecondary": Blockly.Colours.looks.secondary,
+      "colourTertiary": Blockly.Colours.looks.tertiary
+    });
+  }
+};
+
+Blockly.Blocks['looks_nextcostume'] = {
+  /**
+   * Block to switch the sprite's costume to the next one.
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.jsonInit(
+      {
+        "message0": "next costume",
+        "previousStatement": null,
+        "nextStatement": null,
+        "colour": Blockly.Colours.looks.primary,
+        "colourSecondary": Blockly.Colours.looks.secondary,
+        "colourTertiary": Blockly.Colours.looks.tertiary
+      });
+  }
+};
+
+Blockly.Blocks['looks_switchbackdropto'] = {
+  /**
+   * Block to switch the backdrop to the selected one.
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.jsonInit({
+      "message0": "switch backdrop to %1",
+      "args0": [
+        {
+          "type": "input_value",
+          "name": "COSTUME"
+        }
+      ],
+      "inputsInline": true,
+      "previousStatement": null,
+      "nextStatement": null,
+      "colour": Blockly.Colours.looks.primary,
+      "colourSecondary": Blockly.Colours.looks.secondary,
+      "colourTertiary": Blockly.Colours.looks.tertiary
+    });
+  }
+};
+
+Blockly.Blocks['looks_backdrops'] = {
+  /**
+   * Backdrop list
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.jsonInit({
+      "id": "looks_backdrops",
+      "message0": "%1",
+      "args0": [
+        {
+          "type": "field_dropdown",
+          "name": "BACKDROP",
+          "options": [
+              ['backdrop1', 'BACKDROP1']
+          ]
+        }
+      ],
+      "inputsInline": true,
+      "output": "String",
+      "colour": Blockly.Colours.looks.secondary,
+      "colourSecondary": Blockly.Colours.looks.secondary,
+      "colourTertiary": Blockly.Colours.looks.tertiary,
+      "outputShape": Blockly.OUTPUT_SHAPE_ROUND
+    });
+  }
+};
+
+Blockly.Blocks['looks_gotofront'] = {
+  /**
+   * "Go to front" Block.
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.jsonInit(
+      {
+        "message0": "go to front",
+        "previousStatement": null,
+        "nextStatement": null,
+        "colour": Blockly.Colours.looks.primary,
+        "colourSecondary": Blockly.Colours.looks.secondary,
+        "colourTertiary": Blockly.Colours.looks.tertiary
+      });
+  }
+};
+
+Blockly.Blocks['looks_gobacklayers'] = {
+  /**
+   * "Go back [Number] Layers" Block.
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.jsonInit({
+      "message0": "go back %1 layers",
+      "args0": [
+        {
+          "type": "input_value",
+          "name": "NUM"
+        }
+      ],
+      "inputsInline": true,
+      "previousStatement": null,
+      "nextStatement": null,
+      "colour": Blockly.Colours.looks.primary,
+      "colourSecondary": Blockly.Colours.looks.secondary,
+      "colourTertiary": Blockly.Colours.looks.tertiary
+    });
+  }
+};
+
+Blockly.Blocks['looks_backdropname'] = {
+  /**
+   * Block to report backdrop's name
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.jsonInit({
+      "message0": "backdrop name",
+      "colour": Blockly.Colours.looks.primary,
+      "colourSecondary": Blockly.Colours.looks.secondary,
+      "colourTertiary": Blockly.Colours.looks.tertiary,
+      "output": "Number",
+      "outputShape": Blockly.OUTPUT_SHAPE_ROUND,
+      "checkboxInFlyout": true
+    });
+  }
+};
+
+Blockly.Blocks['looks_costumeorder'] = {
+  /**
+   * Block to report costume's order
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.jsonInit({
+      "message0": "costume #",
+      "colour": Blockly.Colours.looks.primary,
+      "colourSecondary": Blockly.Colours.looks.secondary,
+      "colourTertiary": Blockly.Colours.looks.tertiary,
+      "output": "Number",
+      "outputShape": Blockly.OUTPUT_SHAPE_ROUND,
+      "checkboxInFlyout": true
+    });
+  }
+};
