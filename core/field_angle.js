@@ -196,7 +196,8 @@ Blockly.FieldAngle.prototype.showEditor_ = function() {
     }, svg);
   }
 
-  Blockly.DropDownDiv.setColour(this.sourceBlock_.parentBlock_.getColour(), this.sourceBlock_.getColourTertiary());
+  Blockly.DropDownDiv.setColour(this.sourceBlock_.parentBlock_.getColour(),
+      this.sourceBlock_.getColourTertiary());
   Blockly.DropDownDiv.showPositionedByBlock(this, this.sourceBlock_);
 
   this.clickWrapper_ =
