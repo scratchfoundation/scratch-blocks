@@ -71,6 +71,23 @@ Blockly.Blocks['event_broadcast_menu'] = {
   }
 };
 
+Blockly.Blocks['event_whenthisspriteclicked'] = {
+  /**
+   * Block for when this sprite clicked.
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.jsonInit({
+      "message0": "when this sprite clicked",
+      "inputsInline": true,
+      "nextStatement": null,
+      "colour": Blockly.Colours.event.primary,
+      "colourSecondary": Blockly.Colours.event.secondary,
+      "colourTertiary": Blockly.Colours.event.tertiary
+    });
+  }
+};
+
 Blockly.Blocks['event_whenbroadcastreceived'] = {
   /**
    * Block for when broadcast received.
@@ -91,6 +108,114 @@ Blockly.Blocks['event_whenbroadcastreceived'] = {
       "colour": Blockly.Colours.event.primary,
       "colourSecondary": Blockly.Colours.event.secondary,
       "colourTertiary": Blockly.Colours.event.tertiary
+    });
+  }
+};
+
+Blockly.Blocks['event_whenbackdropswitchesto'] = {
+  /**
+   * Block for when the current backdrop switched to a selected backdrop.
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.jsonInit({
+      "message0": "when backdrop switches to %1",
+      "args0": [
+        {
+          "type": "input_value",
+          "name": "BACKDROP"
+        }
+      ],	  
+      "inputsInline": true,
+      "nextStatement": null,
+      "colour": Blockly.Colours.event.primary,
+      "colourSecondary": Blockly.Colours.event.secondary,
+      "colourTertiary": Blockly.Colours.event.tertiary
+    });
+  }
+};
+
+Blockly.Blocks['event_backdrops'] = {
+  /**
+   * Backdrop list
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.jsonInit({
+      "id": "event_backdrops",
+      "message0": "%1",
+      "args0": [
+        {
+          "type": "field_dropdown",
+          "name": "BACKDROP",
+          "options": [
+              ['backdrop1', 'BACKDROP1']
+          ]
+        }
+      ],
+      "inputsInline": true,
+      "output": "String",
+      "colour": Blockly.Colours.event.secondary,
+      "colourSecondary": Blockly.Colours.event.secondary,
+      "colourTertiary": Blockly.Colours.event.tertiary,
+      "outputShape": Blockly.OUTPUT_SHAPE_ROUND
+    });
+  }
+};
+
+Blockly.Blocks['event_whengreaterthan'] = {
+  /**
+   * Block for when loudness/timer/video motion is greater than the value.
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.jsonInit({
+      "message0": "when %1 > %2",
+      "args0": [
+        {
+          "type": "input_value",
+          "name": "WHENGREATERTHANMENU"
+        },
+        {
+          "type": "input_value",
+          "name": "VALUE"
+        }		
+      ],	  
+      "inputsInline": true,
+      "nextStatement": null,
+      "colour": Blockly.Colours.event.primary,
+      "colourSecondary": Blockly.Colours.event.secondary,
+      "colourTertiary": Blockly.Colours.event.tertiary
+    });
+  }
+};
+
+Blockly.Blocks['event_whengreaterthanmenu'] = {
+  /**
+   * "When [loudness/timer/video motion] > [Value]" list
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.jsonInit({
+      "id": "event_whengreaterthanmenu",
+      "message0": "%1",
+      "args0": [
+        {
+          "type": "field_dropdown",
+          "name": "WHENGREATERTHANMENU",
+          "options": [
+              ['loudness', 'LOUDNESS'],
+              ['timer', 'TIMER'],
+              ['video motion', 'VIDEOMOTION']			  
+          ]
+        }
+      ],
+      "inputsInline": true,
+      "output": "String",
+      "colour": Blockly.Colours.event.secondary,
+      "colourSecondary": Blockly.Colours.event.secondary,
+      "colourTertiary": Blockly.Colours.event.tertiary,
+      "outputShape": Blockly.OUTPUT_SHAPE_ROUND
     });
   }
 };
