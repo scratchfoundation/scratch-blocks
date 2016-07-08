@@ -142,7 +142,7 @@ Blockly.Blocks['event_backdrops'] = {
    */
   init: function() {
     this.jsonInit({
-      "id": "event_keyoptions",
+      "id": "event_backdrops",
       "message0": "%1",
       "args0": [
         {
