@@ -515,3 +515,63 @@ Blockly.Blocks['looks_costumeorder'] = {
     });
   }
 };
+
+Blockly.Blocks['looks_backdroporder'] = {
+  /**
+   * Block to report backdrop's order
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.jsonInit({
+      "message0": "backdrop #",
+      "colour": Blockly.Colours.looks.primary,
+      "colourSecondary": Blockly.Colours.looks.secondary,
+      "colourTertiary": Blockly.Colours.looks.tertiary,
+      "output": "Number",
+      "outputShape": Blockly.OUTPUT_SHAPE_ROUND,
+      "checkboxInFlyout": true
+    });
+  }
+};
+
+Blockly.Blocks['looks_switchbackdroptoandwait'] = {
+  /**
+   * Block to switch the backdrop to the selected one and wait.
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.jsonInit({
+      "message0": "switch backdrop to %1 and wait",
+      "args0": [
+        {
+          "type": "input_value",
+          "name": "COSTUME"
+        }
+      ],
+      "inputsInline": true,
+      "previousStatement": null,
+      "nextStatement": null,
+      "colour": Blockly.Colours.looks.primary,
+      "colourSecondary": Blockly.Colours.looks.secondary,
+      "colourTertiary": Blockly.Colours.looks.tertiary
+    });
+  }
+};
+
+Blockly.Blocks['looks_nextbackdrop'] = {
+  /**
+   * Block to switch the backdrop to the next one.
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.jsonInit(
+      {
+        "message0": "next backdrop",
+        "previousStatement": null,
+        "nextStatement": null,
+        "colour": Blockly.Colours.looks.primary,
+        "colourSecondary": Blockly.Colours.looks.secondary,
+        "colourTertiary": Blockly.Colours.looks.tertiary
+      });
+  }
+};
