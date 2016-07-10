@@ -246,6 +246,8 @@ Blockly.Css.CONTENT = [
     'width: 16px;',
     'height: 16px;',
     'z-index: -1;',
+    'background-color: inherit;',
+    'border-color: inherit;',
   '}',
 
   '.blocklyDropDownButton {',
