@@ -19,7 +19,7 @@
     <script src="../blocks_vertical/pen.js"></script>
     <script src="../blocks_vertical/sound.js"></script>
     <script src="../blocks_vertical/sensing.js"></script>
-    <script src="../blocks_vertical/data.js"></script>	
+    <script src="../blocks_vertical/data.js"></script>
     <script>
       'use strict';
 
@@ -665,7 +665,7 @@
           <value name="BACKDROP">
             <shadow type="event_backdrops"></shadow>
           </value>
-        </block>	
+        </block>
         <block type="event_whengreaterthan">
           <value name="WHENGREATERTHANMENU">
             <shadow type="event_whengreaterthanmenu"></shadow>
@@ -675,7 +675,7 @@
               <field name="NUM">10</field>
             </shadow>
           </value>
-        </block>		
+        </block>
         <block type="event_whenbroadcastreceived">
           <value name="BROADCAST_OPTION">
             <shadow type="event_broadcast_menu"></shadow>
@@ -697,7 +697,7 @@
           <value name="VARIABLE">
             <shadow type="data_variablemenu"></shadow>
           </value>
-        </block>			  
+        </block>
         <block type="data_setvariableto">
           <value name="VARIABLE">
            <shadow type="data_variablemenu"></shadow>
@@ -706,7 +706,7 @@
             <shadow type="math_number">
               <field name="NUM">0</field>
             </shadow>
-          </value>	  
+          </value>
         </block>
         <block type="data_changevariableby">
           <value name="VARIABLE">
@@ -716,19 +716,19 @@
             <shadow type="math_number">
               <field name="NUM">0</field>
             </shadow>
-          </value>	  
+          </value>
         </block>
         <block type="data_showvariable">
           <value name="VARIABLE">
            <shadow type="data_variablemenu"></shadow>
-          </value>	  
+          </value>
         </block>
         <block type="data_hidevariable">
           <value name="VARIABLE">
            <shadow type="data_variablemenu"></shadow>
-          </value>	  
+          </value>
         </block>
-      </category>		
+      </category>
       <category name="Pen" colour="#00B295">
         <block type="pen_clear"></block>
         <block type="pen_stamp"></block>
@@ -908,20 +908,20 @@
         <block type="looks_switchcostumeto">
           <value name="COSTUME">
             <shadow type="looks_costume"></shadow>
-          </value>	
+          </value>
 		</block>
         <block type="looks_nextcostume"></block>
-        <block type="looks_nextbackdrop"></block>		
+        <block type="looks_nextbackdrop"></block>
         <block type="looks_switchbackdropto">
           <value name="COSTUME">
             <shadow type="looks_backdrops"></shadow>
-          </value>	
+          </value>
 		</block>
         <block type="looks_switchbackdroptoandwait">
           <value name="COSTUME">
             <shadow type="looks_backdrops"></shadow>
-          </value>	
-		</block>		
+          </value>
+		</block>
         <block type="looks_changeeffectby">
           <value name="EFFECT">
             <shadow type="looks_effectmenu"></shadow>
@@ -964,11 +964,11 @@
               <field name="NUM">1</field>
             </shadow>
           </value>
-        </block>		
+        </block>
         <block type="looks_costumeorder"></block>
-        <block type="looks_backdroporder"></block>		
+        <block type="looks_backdroporder"></block>
         <block type="looks_backdropname"></block>
-        <block type="looks_size"></block>		
+        <block type="looks_size"></block>
       </category>
       <category name="Motion" colour="#4C97FF">
         <block type="motion_movesteps">
@@ -1098,15 +1098,15 @@
       </block>
       <block type="control_wait">
         <value name="DURATION">
-          <shadow type="math_number">
+          <shadow type="math_positive_number">
             <field name="NUM">1</field>
           </shadow>
         </value>
       </block>
       <block type="control_repeat">
         <value name="TIMES">
-          <shadow type="math_number">
-            <field name="NUM">4</field>
+          <shadow type="math_whole_number">
+            <field name="NUM">10</field>
           </shadow>
         </value>
       </block>
@@ -1240,7 +1240,7 @@
       </block>
       <block type="operator_letter_of">
         <value name="LETTER">
-          <shadow type="math_number">
+          <shadow type="math_whole_number">
             <field name="NUM">1</field>
           </shadow>
         </value>
