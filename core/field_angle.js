@@ -26,6 +26,7 @@
 
 goog.provide('Blockly.FieldAngle');
 
+goog.require('Blockly.DropDownDiv');
 goog.require('Blockly.FieldTextInput');
 goog.require('goog.math');
 goog.require('goog.userAgent');
@@ -49,35 +50,6 @@ Blockly.FieldAngle = function(text, opt_validator) {
   Blockly.FieldAngle.superClass_.constructor.call(this, text, opt_validator);
 };
 goog.inherits(Blockly.FieldAngle, Blockly.FieldTextInput);
-
-/**
- * Sets a new change handler for angle field.
- * @param {Function} handler New change handler, or null.
- */
-Blockly.FieldAngle.prototype.setValidator = function(handler) {
-  var wrappedHandler;
-  if (handler) {
-    // Wrap the user's change handler together with the angle validator.
-    wrappedHandler = function(value) {
-      var v1 = handler.call(this, value);
-      if (v1 === null) {
-        var v2 = v1;
-      } else {
-        if (v1 === undefined) {
-          v1 = value;
-        }
-        var v2 = Blockly.FieldAngle.angleValidator.call(this, v1);
-        if (v2 === undefined) {
-          v2 = v1;
-        }
-      }
-      return v2 === value ? undefined : v2;
-    };
-  } else {
-    wrappedHandler = Blockly.FieldAngle.angleValidator;
-  }
-  Blockly.FieldAngle.superClass_.setValidator.call(this, wrappedHandler);
-};
 
 /**
  * Round angles to the nearest 15 degrees when using mouse.
@@ -105,19 +77,19 @@ Blockly.FieldAngle.HALF = 100 / 2;
 /**
  * Angle increases clockwise (true) or counterclockwise (false).
  */
-Blockly.FieldAngle.CLOCKWISE = false;
+Blockly.FieldAngle.CLOCKWISE = true;
 
 /**
  * Offset the location of 0 degrees (and all angles) by a constant.
  * Usually either 0 (0 = right) or 90 (0 = up).
  */
-Blockly.FieldAngle.OFFSET = 0;
+Blockly.FieldAngle.OFFSET = 90;
 
 /**
  * Maximum allowed angle before wrapping.
  * Usually either 360 (for 0 to 359.9) or 180 (for -179.9 to 180).
  */
-Blockly.FieldAngle.WRAP = 360;
+Blockly.FieldAngle.WRAP = 180;
 
 
 /**
@@ -157,11 +129,10 @@ Blockly.FieldAngle.prototype.showEditor_ = function() {
       goog.userAgent.MOBILE || goog.userAgent.ANDROID || goog.userAgent.IPAD;
   // Mobile browsers have issues with in-line textareas (focus & keyboards).
   Blockly.FieldAngle.superClass_.showEditor_.call(this, noFocus);
-  var div = Blockly.WidgetDiv.DIV;
-  if (!div.firstChild) {
-    // Mobile interface uses window.prompt.
-    return;
-  }
+  // If there is an existing drop-down someone else owns, hide it immediately and clear it.
+  Blockly.DropDownDiv.hideWithoutAnimation();
+  Blockly.DropDownDiv.clearContent();
+  var div = Blockly.DropDownDiv.getContentDiv();
   // Build the SVG DOM.
   var svg = Blockly.createSvgElement('svg', {
     'xmlns': 'http://www.w3.org/2000/svg',
@@ -195,9 +166,16 @@ Blockly.FieldAngle.prototype.showEditor_ = function() {
           Blockly.FieldAngle.HALF + ',' + Blockly.FieldAngle.HALF + ')'
     }, svg);
   }
-  svg.style.marginLeft = (15 - Blockly.FieldAngle.RADIUS) + 'px';
+
+  Blockly.DropDownDiv.setColour(this.sourceBlock_.parentBlock_.getColour(),
+      this.sourceBlock_.getColourTertiary());
+  Blockly.DropDownDiv.showPositionedByBlock(this, this.sourceBlock_);
+
   this.clickWrapper_ =
-      Blockly.bindEvent_(svg, 'click', this, Blockly.WidgetDiv.hide);
+      Blockly.bindEvent_(svg, 'click', this, function() {
+        Blockly.WidgetDiv.hide();
+        Blockly.DropDownDiv.hide();
+      });
   this.moveWrapper1_ =
       Blockly.bindEvent_(circle, 'mousemove', this, this.onMouseMove);
   this.moveWrapper2_ =
