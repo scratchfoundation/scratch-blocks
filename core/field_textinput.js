@@ -217,16 +217,14 @@ Blockly.FieldTextInput.prototype.onHtmlInputKeyDown_ = function(e) {
 
 /**
  * Key codes that are whitelisted from the restrictor.
+ * These are only needed and used on Gecko (Firefox).
+ * See: https://github.com/LLK/scratch-blocks/issues/503.
  */
-Blockly.FieldTextInput.KEYCODE_WHITELIST = [
-  8, // Backspace
-  37, // Left
-  39, // Right
-  46, // Delete
-  97, // Select all
-  99, // Copy
-  118, // Paste
-  120 // Cut
+Blockly.FieldTextInput.GECKO_KEYCODE_WHITELIST = [
+  97, // Select all, META-A.
+  99, // Copy, META-C.
+  118, // Paste, META-V.
+  120 // Cut, META-X.
 ];
 
 /**
@@ -237,9 +235,26 @@ Blockly.FieldTextInput.KEYCODE_WHITELIST = [
 Blockly.FieldTextInput.prototype.onHtmlInputChange_ = function(e) {
   // Check if the key matches the restrictor.
   if (e.type === 'keypress' && this.restrictor_) {
-    var keyCode = e.keyCode || e.charCode; // charCode in Firefox.
+    var keyCode;
+    var isWhitelisted = false;
+    if (goog.userAgent.GECKO) {
+      // e.keyCode is not available in Gecko.
+      keyCode = e.charCode;
+      // Gecko reports control characters (e.g., left, right, copy, paste)
+      // in the key event - whitelist these from being restricted.
+      // < 32 and 127 (delete) are control characters.
+      // See: http://www.theasciicode.com.ar/ascii-control-characters/delete-ascii-code-127.html
+      if (keyCode < 32 || keyCode == 127) {
+        isWhitelisted = true;
+      } else if (e.metaKey || e.ctrlKey) {
+        // For combos (ctrl-v, ctrl-c, etc.), Gecko reports the ASCII letter
+        // and the metaKey/ctrlKey flags.
+        isWhitelisted = Blockly.FieldTextInput.GECKO_KEYCODE_WHITELIST.indexOf(keyCode) > -1;
+      }
+    } else {
+      keyCode = e.keyCode;
+    }
     var char = String.fromCharCode(keyCode);
-    var isWhitelisted = Blockly.FieldTextInput.KEYCODE_WHITELIST.indexOf(keyCode) > -1;
     if (!isWhitelisted && !this.restrictor_.test(char) && e.preventDefault) {
       // Failed to pass restrictor.
       e.preventDefault();
