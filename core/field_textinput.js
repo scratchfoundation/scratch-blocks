@@ -238,15 +238,17 @@ Blockly.FieldTextInput.prototype.onHtmlInputChange_ = function(e) {
     var keyCode;
     var isWhitelisted = false;
     if (goog.userAgent.GECKO) {
-      // e.keyCode is not available in Firefox.
+      // e.keyCode is not available in Gecko.
       keyCode = e.charCode;
-      // 32 = " ". Values below this are special keys.
-      // See: http://www.asciitable.com/
-      if (keyCode < 32) {
+      // Gecko reports control characters (e.g., left, right, copy, paste)
+      // in the key event - whitelist these from being restricted.
+      // < 32 and 127 (delete) are control characters.
+      // See: http://www.theasciicode.com.ar/ascii-control-characters/delete-ascii-code-127.html
+      if (keyCode < 32 || keyCode == 127) {
         isWhitelisted = true;
       } else if (e.metaKey || e.ctrlKey) {
-        // Firefox reports special characters (e.g., left, right, copy, paste)
-        // in the key event - whitelist these from being restricted.
+        // For combos (ctrl-v, ctrl-c, etc.), Gecko reports the ASCII letter
+        // and the metaKey/ctrlKey flags.
         isWhitelisted = Blockly.FieldTextInput.GECKO_KEYCODE_WHITELIST.indexOf(keyCode) > -1;
       }
     } else {
