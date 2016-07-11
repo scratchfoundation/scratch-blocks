@@ -18,20 +18,14 @@
  * limitations under the License.
  */
 
- /**
-  * @fileoverview Operator blocks for scratch-blocks.
-  * @author tmickel@mit.edu (Tim Mickel)
-  */
-
 'use strict';
 
 goog.provide('Blockly.Blocks.operators');
 
 goog.require('Blockly.Blocks');
-
 goog.require('Blockly.Colours');
-
 goog.require('Blockly.constants');
+
 
 Blockly.Blocks['operator_add'] = {
   /**
