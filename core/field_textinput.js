@@ -240,7 +240,9 @@ Blockly.FieldTextInput.prototype.onHtmlInputChange_ = function(e) {
     if (goog.userAgent.GECKO) {
       // e.keyCode is not available in Firefox.
       keyCode = e.charCode;
-      if (keyCode < 45) { // 45 = "-". Values below this are special keys.
+      // 32 = " ". Values below this are special keys.
+      // See: http://www.asciitable.com/
+      if (keyCode < 32) {
         isWhitelisted = true;
       } else if (e.metaKey || e.ctrlKey) {
         // Firefox reports special characters (e.g., left, right, copy, paste)
