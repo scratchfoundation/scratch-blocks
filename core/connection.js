@@ -504,7 +504,7 @@ Blockly.Connection.singleConnection_ = function(block, orphanBlock) {
     if (thisConnection && thisConnection.type == Blockly.INPUT_VALUE &&
         orphanBlock.outputConnection.checkType_(thisConnection)) {
       if (connection) {
-        return null;  // More than one connection.
+        return null;  // More than   one connection.
       }
       connection = thisConnection;
     }

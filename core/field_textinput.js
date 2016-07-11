@@ -94,11 +94,11 @@ Blockly.FieldTextInput.prototype.setValue = function(text) {
   if (text === null) {
     return;  // No change if null.
   }
-  if (this.sourceBlock_ && this.validator_) {
-    var validated = this.validator_(text);
+  if (this.sourceBlock_) {
+    var validated = this.callValidator(text);
     // If the new text is invalid, validation returns null.
     // In this case we still want to display the illegal result.
-    if (validated !== null && validated !== undefined) {
+    if (validated !== null) {
       text = validated;
     }
   }
@@ -286,8 +286,8 @@ Blockly.FieldTextInput.prototype.validate_ = function() {
   var valid = true;
   goog.asserts.assertObject(Blockly.FieldTextInput.htmlInput_);
   var htmlInput = Blockly.FieldTextInput.htmlInput_;
-  if (this.sourceBlock_ && this.validator_) {
-    valid = this.validator_(htmlInput.value);
+  if (this.sourceBlock_) {
+    valid = this.callValidator(htmlInput.value);
   }
   if (valid === null) {
     Blockly.addClass_(htmlInput, 'blocklyInvalidInput');
@@ -393,12 +393,12 @@ Blockly.FieldTextInput.prototype.widgetDispose_ = function() {
     var htmlInput = Blockly.FieldTextInput.htmlInput_;
     // Save the edit (if it validates).
     var text = htmlInput.value;
-    if (thisField.sourceBlock_ && thisField.validator_) {
-      var text1 = thisField.validator_(text);
+    if (thisField.sourceBlock_) {
+      var text1 = thisField.callValidator(text);
       if (text1 === null) {
         // Invalid edit.
         text = htmlInput.defaultValue;
-      } else if (text1 !== undefined) {
+      } else {
         // Validation function has changed the text.
         text = text1;
       }

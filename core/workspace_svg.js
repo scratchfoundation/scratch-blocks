@@ -184,6 +184,36 @@ Blockly.WorkspaceSvg.prototype.setResizeHandlerWrapper = function(handler) {
 };
 
 /**
+ * Inverted screen CTM, for use in mouseToSvg.
+ * @type {SVGMatrix}
+ * @private
+ */
+Blockly.WorkspaceSvg.prototype.inverseScreenCTM_ = null;
+
+/**
+ * Getter for the inverted screen CTM.
+ * @return {SVGMatrix} The matrix to use in mouseToSvg
+ */
+Blockly.WorkspaceSvg.prototype.getInverseScreenCTM = function() {
+  return this.inverseScreenCTM_;
+};
+
+/**
+ * Update the inverted screen CTM.
+ */
+Blockly.WorkspaceSvg.prototype.updateInverseScreenCTM = function() {
+  this.inverseScreenCTM_ = this.getParentSvg().getScreenCTM().inverse();
+};
+
+/**
+ * Save resize handler data so we can delete it later in dispose.
+ * @param {!Array.<!Array>} handler Data that can be passed to unbindEvent_.
+ */
+Blockly.WorkspaceSvg.prototype.setResizeHandlerWrapper = function(handler) {
+  this.resizeHandlerWrapper_ = handler;
+};
+
+/**
  * Create the workspace DOM elements.
  * @param {string=} opt_backgroundClass Either 'blocklyMainBackground' or
  *     'blocklyMutatorBackground'.
@@ -618,51 +648,54 @@ Blockly.WorkspaceSvg.prototype.paste = function(xmlBlock) {
   }
   Blockly.terminateDrag_();  // Dragging while pasting?  No.
   Blockly.Events.disable();
-  var block = Blockly.Xml.domToBlock(xmlBlock, this);
-  // Move the duplicate to original position.
-  var blockX = parseInt(xmlBlock.getAttribute('x'), 10);
-  var blockY = parseInt(xmlBlock.getAttribute('y'), 10);
-  if (!isNaN(blockX) && !isNaN(blockY)) {
-    if (this.RTL) {
-      blockX = -blockX;
-    }
-    // Offset block until not clobbering another block and not in connection
-    // distance with neighbouring blocks.
-    do {
-      var collide = false;
-      var allBlocks = this.getAllBlocks();
-      for (var i = 0, otherBlock; otherBlock = allBlocks[i]; i++) {
-        var otherXY = otherBlock.getRelativeToSurfaceXY();
-        if (Math.abs(blockX - otherXY.x) <= 1 &&
-            Math.abs(blockY - otherXY.y) <= 1) {
-          collide = true;
-          break;
-        }
+  try {
+    var block = Blockly.Xml.domToBlock(xmlBlock, this);
+    // Move the duplicate to original position.
+    var blockX = parseInt(xmlBlock.getAttribute('x'), 10);
+    var blockY = parseInt(xmlBlock.getAttribute('y'), 10);
+    if (!isNaN(blockX) && !isNaN(blockY)) {
+      if (this.RTL) {
+        blockX = -blockX;
       }
-      if (!collide) {
-        // Check for blocks in snap range to any of its connections.
-        var connections = block.getConnections_(false);
-        for (var i = 0, connection; connection = connections[i]; i++) {
-          var neighbour = connection.closest(Blockly.SNAP_RADIUS,
-              new goog.math.Coordinate(blockX, blockY));
-          if (neighbour.connection) {
+      // Offset block until not clobbering another block and not in connection
+      // distance with neighbouring blocks.
+      do {
+        var collide = false;
+        var allBlocks = this.getAllBlocks();
+        for (var i = 0, otherBlock; otherBlock = allBlocks[i]; i++) {
+          var otherXY = otherBlock.getRelativeToSurfaceXY();
+          if (Math.abs(blockX - otherXY.x) <= 1 &&
+              Math.abs(blockY - otherXY.y) <= 1) {
             collide = true;
             break;
           }
         }
-      }
-      if (collide) {
-        if (this.RTL) {
-          blockX -= Blockly.SNAP_RADIUS;
-        } else {
-          blockX += Blockly.SNAP_RADIUS;
+        if (!collide) {
+          // Check for blocks in snap range to any of its connections.
+          var connections = block.getConnections_(false);
+          for (var i = 0, connection; connection = connections[i]; i++) {
+            var neighbour = connection.closest(Blockly.SNAP_RADIUS,
+                new goog.math.Coordinate(blockX, blockY));
+            if (neighbour.connection) {
+              collide = true;
+              break;
+            }
+          }
         }
-        blockY += Blockly.SNAP_RADIUS * 2;
-      }
-    } while (collide);
-    block.moveBy(blockX, blockY);
+        if (collide) {
+          if (this.RTL) {
+            blockX -= Blockly.SNAP_RADIUS;
+          } else {
+            blockX += Blockly.SNAP_RADIUS;
+          }
+          blockY += Blockly.SNAP_RADIUS * 2;
+        }
+      } while (collide);
+      block.moveBy(blockX, blockY);
+    }
+  } finally {
+    Blockly.Events.enable();
   }
-  Blockly.Events.enable();
   if (Blockly.Events.isEnabled() && !block.isShadow()) {
     Blockly.Events.fire(new Blockly.Events.Create(block));
   }
@@ -795,6 +828,14 @@ Blockly.WorkspaceSvg.prototype.moveDrag = function(e) {
 };
 
 /**
+ * Is the user currently dragging a block or scrolling the workspace?
+ * @return {boolean} True if currently dragging or scrolling.
+ */
+Blockly.WorkspaceSvg.prototype.isDragging = function() {
+  return Blockly.dragMode_ == Blockly.DRAG_FREE || this.isScrolling;
+};
+
+/**
  * Handle a mouse-wheel on SVG drawing surface.
  * @param {!Event} e Mouse wheel event.
  * @private
@@ -829,7 +870,7 @@ Blockly.WorkspaceSvg.prototype.onMouseWheel_ = function(e) {
  *   containing the blocks on the workspace.
  */
 Blockly.WorkspaceSvg.prototype.getBlocksBoundingBox = function() {
-  var topBlocks = this.getTopBlocks();
+  var topBlocks = this.getTopBlocks(false);
   // There are no blocks, return empty rectangle.
   if (!topBlocks.length) {
     return {x: 0, y: 0, width: 0, height: 0};
