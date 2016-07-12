@@ -848,10 +848,17 @@ Blockly.Flyout.prototype.clearOldBlocks_ = function() {
  * @private
  */
 Blockly.Flyout.prototype.addBlockListeners_ = function(root, block, rect) {
-  this.listeners_.push(Blockly.bindEvent_(root, 'mousedown', null,
-      this.blockMouseDown_(block)));
-  this.listeners_.push(Blockly.bindEvent_(rect, 'mousedown', null,
-      this.blockMouseDown_(block)));
+  if (this.autoClose) {
+    this.listeners_.push(Blockly.bindEvent_(root, 'mousedown', null,
+        this.createBlockFunc_(block)));
+    this.listeners_.push(Blockly.bindEvent_(rect, 'mousedown', null,
+        this.createBlockFunc_(block)));
+  } else {
+    this.listeners_.push(Blockly.bindEvent_(root, 'mousedown', null,
+        this.blockMouseDown_(block)));
+    this.listeners_.push(Blockly.bindEvent_(rect, 'mousedown', null,
+        this.blockMouseDown_(block)));
+  }
   this.listeners_.push(Blockly.bindEvent_(root, 'mouseover', block,
       block.addSelect));
   this.listeners_.push(Blockly.bindEvent_(root, 'mouseout', block,
