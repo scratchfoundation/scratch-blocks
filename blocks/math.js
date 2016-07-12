@@ -53,6 +53,28 @@ Blockly.Blocks['math_number'] = {
   }
 };
 
+Blockly.Blocks['math_integer'] = {
+  /**
+   * Block for integer value (no decimal, + or -).
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.jsonInit({
+      "message0": "%1",
+      "args0": [
+        {
+          "type": "field_number",
+          "name": "NUM",
+          "precision": 1
+        }
+      ],
+      "output": "Number",
+      "outputShape": Blockly.OUTPUT_SHAPE_ROUND,
+      "colour": Blockly.Colours.textField
+    });
+  }
+};
+
 Blockly.Blocks['math_whole_number'] = {
   /**
    * Block for whole number value, no negatives or decimals.
