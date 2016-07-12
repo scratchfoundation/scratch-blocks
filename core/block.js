@@ -258,6 +258,7 @@ Blockly.Block.prototype.dispose = function(healStack) {
       if (connection.isConnected()) {
         connection.disconnect();
       }
+      connections[i].dispose();
     }
   } finally {
     Blockly.Events.enable();

@@ -892,7 +892,6 @@ Blockly.Flyout.prototype.blockMouseDown_ = function(block) {
       flyout.startDragMouseX_ = e.clientX;
       Blockly.Flyout.startDownEvent_ = e;
       Blockly.Flyout.startBlock_ = block;
-      Blockly.Flyout.startFlyout_ = flyout;
       Blockly.Flyout.onMouseUpWrapper_ = Blockly.bindEvent_(document,
           'mouseup', flyout, flyout.onMouseUp_);
       Blockly.Flyout.onMouseMoveBlockWrapper_ = Blockly.bindEvent_(document,
@@ -1237,9 +1236,7 @@ Blockly.Flyout.prototype.getClientRect = function() {
  * @private
  */
 Blockly.Flyout.terminateDrag_ = function() {
-  if (Blockly.Flyout.startFlyout_) {
-    Blockly.Flyout.startFlyout_.dragMode_ = Blockly.DRAG_NONE;
-  }
+  this.dragMode_ = Blockly.DRAG_NONE;
   if (Blockly.Flyout.onMouseUpWrapper_) {
     Blockly.unbindEvent_(Blockly.Flyout.onMouseUpWrapper_);
     Blockly.Flyout.onMouseUpWrapper_ = null;
@@ -1258,7 +1255,6 @@ Blockly.Flyout.terminateDrag_ = function() {
   }
   Blockly.Flyout.startDownEvent_ = null;
   Blockly.Flyout.startBlock_ = null;
-  Blockly.Flyout.startFlyout_ = null;
 };
 
 /**
