@@ -135,7 +135,7 @@ Blockly.Variables.flyoutCategory = function(workspace) {
       var block = goog.dom.createDom('block');
       block.setAttribute('type', 'data_variable');
       block.setAttribute('gap', 8);
-      block.appendChild(Blockly.Variables.createVariableDom_());
+      block.appendChild(Blockly.Variables.createVariableDom_(variableList[i]));
       xmlList.push(block);
     }
   }
@@ -157,7 +157,7 @@ Blockly.Variables.flyoutCategory = function(workspace) {
       var block = goog.dom.createDom('block');
       block.setAttribute('type', 'data_setvariableto');
       block.setAttribute('gap', 8);
-      block.appendChild(Blockly.Variables.createVariableDom_());
+      block.appendChild(Blockly.Variables.createVariableDom_(variableList[0]));
       block.appendChild(Blockly.Variables.createMathNumberDom_());
       xmlList.push(block);
     }
@@ -175,7 +175,7 @@ Blockly.Variables.flyoutCategory = function(workspace) {
       var block = goog.dom.createDom('block');
       block.setAttribute('type', 'data_changevariableby');
       block.setAttribute('gap', 8);
-      block.appendChild(Blockly.Variables.createVariableDom_());
+      block.appendChild(Blockly.Variables.createVariableDom_(variableList[0]));
       block.appendChild(Blockly.Variables.createMathNumberDom_());
       xmlList.push(block);
     }
@@ -188,7 +188,7 @@ Blockly.Variables.flyoutCategory = function(workspace) {
       var block = goog.dom.createDom('block');
       block.setAttribute('type', 'data_showvariable');
       block.setAttribute('gap', 8);
-      block.appendChild(Blockly.Variables.createVariableDom_());
+      block.appendChild(Blockly.Variables.createVariableDom_(variableList[0]));
       xmlList.push(block);
     }
     if (Blockly.Blocks['data_hidevariable']) {
@@ -198,8 +198,8 @@ Blockly.Variables.flyoutCategory = function(workspace) {
       //   </value>
       // </block>
       var block = goog.dom.createDom('block');
-      block.setAttribute('type', 'data_showvariable');
-      block.appendChild(Blockly.Variables.createVariableDom_());
+      block.setAttribute('type', 'data_hidevariable');
+      block.appendChild(Blockly.Variables.createVariableDom_(variableList[0]));
       xmlList.push(block);
     }
   }
@@ -220,7 +220,8 @@ Blockly.Variables.createValueDom_ = function(name) {
 /**
  * Create a dom element for a shadow tag with the given tupe attribute.
  * @param {string} type The value to use for the type attribute.
- * @return {!Element} An XML element: <shadow type="type"></shadow>
+ * @param {string} value The value to have inside the tag.
+ * @return {!Element} An XML element: <shadow type="type">value</shadow>
  */
 Blockly.Variables.createShadowDom_ = function(type) {
   var shadow = goog.dom.createDom('shadow');
@@ -230,14 +231,22 @@ Blockly.Variables.createShadowDom_ = function(type) {
 
 /**
  * Create a dom element for value tag with a shadow variable inside.
+ * @param {string} name The name of the variable to select.
  * @return {!Element} An XML element.
  */
-Blockly.Variables.createVariableDom_ = function() {
+Blockly.Variables.createVariableDom_ = function(name) {
   //   <value name="VARIABLE">
-  //     <shadow type="data_variablemenu"></shadow>
+  //     <shadow type="data_variablemenu">
+  //       <field name="VARIABLE">variablename
+  //       </field>
+  //     </shadow>
   //   </value>
   var value = Blockly.Variables.createValueDom_('VARIABLE');
-  value.appendChild(Blockly.Variables.createShadowDom_('data_variablemenu'));
+  var shadow = Blockly.Variables.createShadowDom_('data_variablemenu');
+  var field = goog.dom.createDom('field', null, name);
+  field.setAttribute('name', 'VARIABLE');
+  shadow.appendChild(field);
+  value.appendChild(shadow);
   return value;
 };
 
