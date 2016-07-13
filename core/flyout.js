@@ -29,6 +29,7 @@ goog.provide('Blockly.Flyout');
 goog.require('Blockly.Block');
 goog.require('Blockly.Comment');
 goog.require('Blockly.Events');
+goog.require('Blockly.FlyoutButton');
 goog.require('Blockly.WorkspaceSvg');
 goog.require('goog.dom');
 goog.require('goog.events');
@@ -84,6 +85,11 @@ Blockly.Flyout = function(workspaceOptions) {
    * landing in the blocks' lakes and bays.
    * @type {!Array.<!Element>}
    * @private
+   */
+  this.backgroundButtons_ = [];
+
+  /**
+   * List of visible buttons.
    */
   this.buttons_ = [];
 
@@ -642,24 +648,34 @@ Blockly.Flyout.prototype.show = function(xmlList) {
 
   this.svgGroup_.style.display = 'block';
   // Create the blocks to be shown in this flyout.
-  var blocks = [];
+  var contents = [];
   var gaps = [];
   this.permanentlyDisabled_.length = 0;
   for (var i = 0, xml; xml = xmlList[i]; i++) {
-    if (xml.tagName && xml.tagName.toUpperCase() == 'BLOCK') {
-      var curBlock = Blockly.Xml.domToBlock(xml, this.workspace_);
-      if (curBlock.disabled) {
-        // Record blocks that were initially disabled.
-        // Do not enable these blocks as a result of capacity filtering.
-        this.permanentlyDisabled_.push(curBlock);
+    if (xml.tagName) {
+      var tagName = xml.tagName.toUpperCase();
+      if (tagName == 'BLOCK') {
+        var curBlock = Blockly.Xml.domToBlock(xml, this.workspace_);
+        if (curBlock.disabled) {
+          // Record blocks that were initially disabled.
+          // Do not enable these blocks as a result of capacity filtering.
+          this.permanentlyDisabled_.push(curBlock);
+        }
+        contents.push({type: 'block', block: curBlock});
+        var gap = parseInt(xml.getAttribute('gap'), 10);
+        gaps.push(isNaN(gap) ? this.MARGIN * 3 : gap);
       }
-      blocks.push(curBlock);
-      var gap = parseInt(xml.getAttribute('gap'), 10);
-      gaps.push(isNaN(gap) ? this.MARGIN * 3 : gap);
+      else if (tagName == 'BUTTON') {
+        var label = xml.getAttribute('text');
+        var curButton = new Blockly.FlyoutButton(this.workspace_,
+            this.targetWorkspace_, label);
+        contents.push({type: 'button', button: curButton});
+        gaps.push(this.MARGIN);
+      }
     }
   }
 
-  this.layoutBlocks_(blocks, gaps);
+  this.layout_(contents, gaps);
 
   // IE 11 is an incompetent browser that fails to fire mouseout events.
   // When the mouse is over the background, deselect all blocks.
@@ -690,56 +706,74 @@ Blockly.Flyout.prototype.show = function(xmlList) {
 
 /**
  * Lay out the blocks in the flyout.
- * @param {!Array.<!Blockly.BlockSvg>} blocks The blocks to lay out.
+ * @param {!Array.<!Object>} contents The blocks and buttons to lay out.
  * @param {!Array.<number>} gaps The visible gaps between blocks.
  * @private
  */
-Blockly.Flyout.prototype.layoutBlocks_ = function(blocks, gaps) {
+Blockly.Flyout.prototype.layout_ = function(contents, gaps) {
+  this.workspace_.scale = this.targetWorkspace_.scale;
   var margin = this.MARGIN;
   var cursorX = margin;
   var cursorY = margin;
   if (this.horizontalLayout_ && this.RTL) {
-    blocks = blocks.reverse();
+    contents = contents.reverse();
   }
-  for (var i = 0, block; block = blocks[i]; i++) {
-    var allBlocks = block.getDescendants();
-    for (var j = 0, child; child = allBlocks[j]; j++) {
-      // Mark blocks as being inside a flyout.  This is used to detect and
-      // prevent the closure of the flyout if the user right-clicks on such a
-      // block.
-      child.isInFlyout = true;
+
+  for (var i = 0, item; item = contents[i]; i++) {
+    if (item.type == 'block') {
+      var block = item.block;
+      var allBlocks = block.getDescendants();
+      for (var j = 0, child; child = allBlocks[j]; j++) {
+        // Mark blocks as being inside a flyout.  This is used to detect and
+        // prevent the closure of the flyout if the user right-clicks on such a
+        // block.
+        child.isInFlyout = true;
+      }
+      var root = block.getSvgRoot();
+      var blockHW = block.getHeightWidth();
+
+      var moveX = cursorX;
+      if (this.horizontalLayout_ && this.RTL) {
+        moveX += blockHW.width;
+      }
+
+      if (!this.horizontalLayout_ && block.hasCheckboxInFlyout()) {
+        this.createCheckbox_(block, cursorX, cursorY, blockHW);
+        moveX += this.CHECKBOX_SIZE + this.CHECKBOX_MARGIN;
+      }
+      block.moveBy(moveX, cursorY);
+
+      if (this.horizontalLayout_) {
+        cursorX += blockHW.width + gaps[i];
+      } else {
+        cursorY += blockHW.height + gaps[i];
+      }
+
+      // Create an invisible rectangle under the block to act as a button.  Just
+      // using the block as a button is poor, since blocks have holes in them.
+      var rect = Blockly.createSvgElement('rect', {'fill-opacity': 0}, null);
+      rect.tooltip = block;
+      Blockly.Tooltip.bindMouseEvents(rect);
+      // Add the rectangles under the blocks, so that the blocks' tooltips work.
+      this.workspace_.getCanvas().insertBefore(rect, block.getSvgRoot());
+      block.flyoutRect_ = rect;
+      this.backgroundButtons_[i] = rect;
+
+      this.addBlockListeners_(root, block, rect);
+    } else if (item.type == 'button') {
+      var button = item.button;
+      var buttonSvg = button.createDom();
+      button.moveTo(cursorX, cursorY);
+      button.show();
+      Blockly.bindEvent_(buttonSvg, 'mouseup', button, button.onMouseUp);
+
+      this.buttons_.push(button);
+      if (this.horizontalLayout_) {
+        cursorX += (button.width + gaps[i]);
+      } else {
+        cursorY += button.height + gaps[i];
+      }
     }
-    var root = block.getSvgRoot();
-    var blockHW = block.getHeightWidth();
-
-    var moveX = cursorX;
-    if (this.horizontalLayout_ && this.RTL) {
-      moveX += blockHW.width;
-    }
-
-    if (!this.horizontalLayout_ && block.hasCheckboxInFlyout()) {
-      this.createCheckbox_(block, cursorX, cursorY, blockHW);
-      moveX += this.CHECKBOX_SIZE + this.CHECKBOX_MARGIN;
-    }
-    block.moveBy(moveX, cursorY);
-
-    if (this.horizontalLayout_) {
-      cursorX += blockHW.width + gaps[i];
-    } else {
-      cursorY += blockHW.height + gaps[i];
-    }
-
-    // Create an invisible rectangle under the block to act as a button.  Just
-    // using the block as a button is poor, since blocks have holes in them.
-    var rect = Blockly.createSvgElement('rect', {'fill-opacity': 0}, null);
-    rect.tooltip = block;
-    Blockly.Tooltip.bindMouseEvents(rect);
-    // Add the rectangles under the blocks, so that the blocks' tooltips work.
-    this.workspace_.getCanvas().insertBefore(rect, block.getSvgRoot());
-    block.flyoutRect_ = rect;
-    this.buttons_[i] = rect;
-
-    this.addBlockListeners_(root, block, rect);
   }
 };
 
@@ -826,8 +860,13 @@ Blockly.Flyout.prototype.clearOldBlocks_ = function() {
     }
   }
   // Delete any background buttons from a previous showing.
-  for (var j = 0, rect; rect = this.buttons_[j]; j++) {
+  for (var j = 0, rect; rect = this.backgroundButtons_[j]; j++) {
     goog.dom.removeNode(rect);
+  }
+  this.backgroundButtons_.length = 0;
+
+  for (var i = 0, button; button = this.buttons_[i]; i++) {
+    button.dispose();
   }
   this.buttons_.length = 0;
 
@@ -1321,6 +1360,9 @@ Blockly.Flyout.prototype.reflowVertical = function(blocks) {
       width += this.CHECKBOX_SIZE + this.CHECKBOX_MARGIN;
     }
     flyoutWidth = Math.max(flyoutWidth, width);
+  }
+  for (var i = 0, button; button = this.buttons_[i]; i++) {
+    flyoutWidth = Math.max(flyoutWidth, button.width);
   }
   flyoutWidth += this.MARGIN * 1.5;
   flyoutWidth *= this.workspace_.scale;
