@@ -190,21 +190,21 @@ Blockly.Block.prototype.data = null;
  * @type {string}
  * @private
  */
-Blockly.Block.prototype.colour_ = '#000000';
+Blockly.Block.prototype.colour_ = '#FF0000';
 
 /**
  * Secondary colour of the block in '#RRGGBB' format.
  * @type {string}
  * @private
  */
-Blockly.Block.prototype.colourSecondary_ = '#000000';
+Blockly.Block.prototype.colourSecondary_ = '#FF0000';
 
 /**
  * Tertiary colour of the block in '#RRGGBB' format.
  * @type {string}
  * @private
  */
-Blockly.Block.prototype.colourTertiary_ = '#000000';
+Blockly.Block.prototype.colourTertiary_ = '#FF0000';
 
 /**
  * Dispose of this block.
