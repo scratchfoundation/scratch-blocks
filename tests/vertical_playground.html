@@ -122,12 +122,6 @@
         taChange();
       }
 
-      function toCode(lang) {
-        var output = document.getElementById('importExport');
-        output.value = Blockly[lang].workspaceToCode(workspace);
-        taChange();
-      }
-
       // Disable the "Import from XML" button if the XML is invalid.
       // Preserve text between page reloads.
       function taChange() {
@@ -1319,8 +1313,6 @@
       <input type="button" value="Export to XML" onclick="toXml()">
       &nbsp;
       <input type="button" value="Import from XML" onclick="fromXml()" id="import">
-      <br>
-      <input type="button" value="To JavaScript" onclick="toCode('JavaScript')">
       <br>
       <textarea id="importExport" style="width: 26%; height: 12em"
         onchange="taChange();" onkeyup="taChange()"></textarea>
