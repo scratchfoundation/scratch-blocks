@@ -36,9 +36,9 @@ Blockly.Colours = {
     "tertiary": "#774DCB"
   },
   "sounds": {
-    "primary": "#D65CD6",
-    "secondary": "#BF40BF",
-    "tertiary": "#A63FA6"
+    "primary": "#CF63CF",
+    "secondary": "#C94FC9",
+    "tertiary": "#BD42BD"
   },
   "control": {
     "primary": "#FFAB19",
@@ -46,34 +46,34 @@ Blockly.Colours = {
     "tertiary": "#CF8B17"
   },
   "event": {
-    "primary": "#FFD500",
-    "secondary": "#DBC200",
-    "tertiary": "#CCAA00"
+    "primary": "#FFBF00",
+    "secondary": "#E6AC00",
+    "tertiary": "#CC9900"
   },
   "sensing": {
-    "primary": "#4CBFE6",
-    "secondary": "#FF0000", // No spec
-    "tertiary": "#00FF00" // No spec
+    "primary": "#5CB1D6",
+    "secondary": "#47A8D1",
+    "tertiary": "#2E8EB8"
   },
   "pen": {
-    "primary": "#00B295",
-    "secondary": "#FF0000", // No spec
-    "tertiary": "#00FF00" // No spec
+    "primary": "#0fBD8C",
+    "secondary": "#0DA57A",
+    "tertiary": "#0B8E69"
   },
   "operators": {
-    "primary": "#40BF4A",
-    "secondary": "#2B7F31", // No spec
-    "tertiary": "#489D84" // No spec
+    "primary": "#59C059",
+    "secondary": "#46B946",
+    "tertiary": "#389438"
   },
   "data": {
     "primary": "#FF8C1A",
-    "secondary": "#FF0000", // No spec
-    "tertiary": "#00FF00" // No spec
+    "secondary": "#FF8000",
+    "tertiary": "#DB6E00"
   },
   "more": {
     "primary": "#FF6680",
-    "secondary": "#FF0000", // No spec
-    "tertiary": "#00FF00" // No spec
+    "secondary": "#FF4D6A",
+    "tertiary": "#FF3355"
   },
   "text": "#575E75",
   "workspace": "#F5F8FF",
