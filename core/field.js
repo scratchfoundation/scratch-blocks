@@ -150,6 +150,7 @@ Blockly.Field.prototype.init = function() {
       {'class': 'blocklyText',
        'x': fieldX,
        'y': size.height / 2 + Blockly.BlockSvg.FIELD_TOP_PADDING,
+       'dominant-baseline': 'middle',
        'text-anchor': 'middle'},
       this.fieldGroup_);
 
