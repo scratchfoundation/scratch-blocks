@@ -52,7 +52,7 @@ Blockly.BlockSvg.SEP_SPACE_Y = 2 * Blockly.BlockSvg.GRID_UNIT;
  * Minimum width of a block.
  * @const
  */
-Blockly.BlockSvg.MIN_BLOCK_X = 24 * Blockly.BlockSvg.GRID_UNIT;
+Blockly.BlockSvg.MIN_BLOCK_X = 16 * Blockly.BlockSvg.GRID_UNIT;
 
 /**
  * Minimum width of a block with output (reporters).
