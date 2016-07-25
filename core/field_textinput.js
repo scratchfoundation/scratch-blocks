@@ -340,6 +340,7 @@ Blockly.FieldTextInput.prototype.resizeEditor_ = function() {
   // Add 0.5px to account for slight difference between SVG and CSS border
   var borderRadius = this.getBorderRadius() + 0.5;
   div.style.borderRadius = borderRadius + 'px';
+  Blockly.FieldTextInput.htmlInput_.style.borderRadius = borderRadius + 'px';
   // Pull stroke colour from the existing shadow block
   var strokeColour = this.sourceBlock_.getColourTertiary();
   div.style.borderColor = strokeColour;
