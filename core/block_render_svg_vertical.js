@@ -925,9 +925,13 @@ Blockly.BlockSvg.prototype.renderDrawRight_ = function(steps,
       // Move to the right edge
       cursorX = Math.max(cursorX, inputRows.rightEdge);
       this.width = Math.max(this.width, cursorX);
-      steps.push('H', cursorX - this.edgeShapeWidth_);
       if (!this.edgeShape_) {
+        // Include corner radius in drawing the horizontal line.
+        steps.push('H', cursorX - Blockly.BlockSvg.CORNER_RADIUS - this.edgeShapeWidth_);
         steps.push(Blockly.BlockSvg.TOP_RIGHT_CORNER);
+      } else {
+        // Don't include corner radius - no corner (edge shape drawn).
+        steps.push('H', cursorX - this.edgeShapeWidth_);
       }
       // Subtract CORNER_RADIUS * 2 to account for the top right corner
       // and also the bottom right corner. Only move vertically the non-corner length.
@@ -958,7 +962,7 @@ Blockly.BlockSvg.prototype.renderDrawRight_ = function(steps,
         steps.push('h ', Blockly.BlockSvg.STATEMENT_INPUT_INNER_SPACE);
         steps.push(Blockly.BlockSvg.NOTCH_PATH_LEFT);
       }
-      steps.push('H', inputRows.rightEdge);
+      steps.push('H', inputRows.rightEdge - Blockly.BlockSvg.CORNER_RADIUS);
 
       // Create statement connection.
       connectionX = connectionsXY.x + (this.RTL ? -cursorX : cursorX);
