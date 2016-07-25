@@ -264,7 +264,7 @@ Blockly.BlockSvg.INPUT_SHAPE_HEXAGONAL =
  * Width of empty boolean input shape.
  * @const
  */
-Blockly.BlockSvg.INPUT_SHAPE_HEXAGONAL_WIDTH = 10 * Blockly.BlockSvg.GRID_UNIT;
+Blockly.BlockSvg.INPUT_SHAPE_HEXAGONAL_WIDTH = 12 * Blockly.BlockSvg.GRID_UNIT;
 
 /**
  * SVG path for an empty square input shape.
@@ -661,7 +661,19 @@ Blockly.BlockSvg.prototype.renderCompute_ = function(iconWidth) {
 
     // The width is currently only needed for inline value inputs.
     if (input.type == Blockly.INPUT_VALUE) {
-      input.renderWidth = Blockly.BlockSvg.SEP_SPACE_X * 1.25;
+      switch (input.connection.getOutputShape()) {
+        case Blockly.OUTPUT_SHAPE_SQUARE:
+          input.renderWidth = Blockly.BlockSvg.INPUT_SHAPE_SQUARE_WIDTH;
+          break;
+        case Blockly.OUTPUT_SHAPE_ROUND:
+          input.renderWidth = Blockly.BlockSvg.INPUT_SHAPE_ROUND_WIDTH;
+          break;
+        case Blockly.OUTPUT_SHAPE_HEXAGONAL:
+          input.renderWidth = Blockly.BlockSvg.INPUT_SHAPE_HEXAGONAL_WIDTH;
+          break;
+        default:
+          input.renderWidth = 0;
+      }
     } else {
       input.renderWidth = 0;
     }
@@ -937,7 +949,7 @@ Blockly.BlockSvg.prototype.renderDrawRight_ = function(steps,
           if (input.connection.isConnected()) {
             input.connection.tighten_();
           }
-          cursorX += this.renderInputShape_(input, cursorX, cursorY + connectionYOffset);
+          this.renderInputShape_(input, cursorX, cursorY + connectionYOffset);
           cursorX += input.renderWidth + Blockly.BlockSvg.SEP_SPACE_X;
         }
       }
@@ -1036,7 +1048,6 @@ Blockly.BlockSvg.prototype.renderDrawRight_ = function(steps,
  * @param {!Blockly.Input} input Input to be rendered.
  * @param {Number} x X offset of input.
  * @param {Number} y Y offset of input.
- * @return {Number} Width of rendered input shape, or 0 if not rendered.
  */
 Blockly.BlockSvg.prototype.renderInputShape_ = function(input, x, y) {
   var inputShape = this.inputShapes_[input.name];
@@ -1075,7 +1086,6 @@ Blockly.BlockSvg.prototype.renderInputShape_ = function(input, x, y) {
     );
     inputShape.setAttribute('style', 'visibility: visible');
   }
-  return inputShapeWidth;
 };
 
 /**
