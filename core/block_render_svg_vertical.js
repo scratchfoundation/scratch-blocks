@@ -85,11 +85,17 @@ Blockly.BlockSvg.EXTRA_STATEMENT_ROW_Y = 8 * Blockly.BlockSvg.GRID_UNIT;
 Blockly.BlockSvg.MIN_BLOCK_X_WITH_STATEMENT = 40 * Blockly.BlockSvg.GRID_UNIT;
 
 /**
- * Minimum height of a block with output and a single field.
+ * Minimum height of a shadow block with output and a single field.
  * This is used for shadow blocks that only contain a field - which are smaller than even reporters.
  * @const
  */
 Blockly.BlockSvg.MIN_BLOCK_Y_SINGLE_FIELD_OUTPUT = 8 * Blockly.BlockSvg.GRID_UNIT;
+
+/**
+ * Minimum height of a non-shadow block with output, i.e. a reporter.
+ * @const
+ */
+Blockly.BlockSvg.MIN_BLOCK_Y_REPORTER = 10 * Blockly.BlockSvg.GRID_UNIT;
 
 /**
  * Minimum space for a statement input height.
@@ -634,8 +640,13 @@ Blockly.BlockSvg.prototype.renderCompute_ = function(iconWidth) {
 
     // Compute minimum height for this input.
     if (inputList.length === 1 && this.outputConnection) {
-      // Special case: height of "lone" field blocks is smaller.
-      input.renderHeight = Blockly.BlockSvg.MIN_BLOCK_Y_SINGLE_FIELD_OUTPUT;
+      if (this.isShadow()) {
+        // Special case: height of "lone" field blocks is smaller.
+        input.renderHeight = Blockly.BlockSvg.MIN_BLOCK_Y_SINGLE_FIELD_OUTPUT;
+      } else {
+        // Special case: reporters.
+        input.renderHeight = Blockly.BlockSvg.MIN_BLOCK_Y_REPORTER;
+      }
     } else if (row.type == Blockly.NEXT_STATEMENT) {
       input.renderHeight = Blockly.BlockSvg.MIN_STATEMENT_INPUT_HEIGHT;
     } else if (previousRow && previousRow.type == Blockly.NEXT_STATEMENT) {
