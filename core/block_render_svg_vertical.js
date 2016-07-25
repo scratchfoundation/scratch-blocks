@@ -658,7 +658,13 @@ Blockly.BlockSvg.prototype.renderCompute_ = function(iconWidth) {
       // All other blocks.
       input.renderHeight = Blockly.BlockSvg.MIN_BLOCK_Y;
     }
-    input.renderWidth = 0;
+
+    // The width is currently only needed for inline value inputs.
+    if (input.type == Blockly.INPUT_VALUE) {
+      input.renderWidth = Blockly.BlockSvg.SEP_SPACE_X * 1.25;
+    } else {
+      input.renderWidth = 0;
+    }
 
     // If the input is a statement input, determine if a notch
     // should be drawn at the inner bottom of the C.
