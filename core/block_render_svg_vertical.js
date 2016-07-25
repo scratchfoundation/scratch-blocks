@@ -55,10 +55,16 @@ Blockly.BlockSvg.SEP_SPACE_Y = 2 * Blockly.BlockSvg.GRID_UNIT;
 Blockly.BlockSvg.MIN_BLOCK_X = 24 * Blockly.BlockSvg.GRID_UNIT;
 
 /**
- * Minimum width of a block with output (reporters, single fields).
+ * Minimum width of a block with output (reporters).
  * @const
  */
 Blockly.BlockSvg.MIN_BLOCK_X_OUTPUT = 12 * Blockly.BlockSvg.GRID_UNIT;
+
+/**
+ * Minimum width of a shadow block with output (single fields).
+ * @const
+ */
+Blockly.BlockSvg.MIN_BLOCK_X_SHADOW_OUTPUT = 10 * Blockly.BlockSvg.GRID_UNIT;
 
 /**
  * Minimum height of a block.
@@ -720,9 +726,15 @@ Blockly.BlockSvg.prototype.renderCompute_ = function(iconWidth) {
     inputRows.rightEdge = Math.max(inputRows.rightEdge,
       Blockly.BlockSvg.MIN_BLOCK_X);
   } else if (this.outputConnection) {
-    // Single-fields and reporters
-    inputRows.rightEdge = Math.max(inputRows.rightEdge,
-      Blockly.BlockSvg.MIN_BLOCK_X_OUTPUT);
+    if (this.isShadow()) {
+      // Single-fields
+      inputRows.rightEdge = Math.max(inputRows.rightEdge,
+        Blockly.BlockSvg.MIN_BLOCK_X_SHADOW_OUTPUT);
+    } else {
+      // Reporters
+      inputRows.rightEdge = Math.max(inputRows.rightEdge,
+        Blockly.BlockSvg.MIN_BLOCK_X_OUTPUT);
+    }
   }
   if (hasStatement) {
     // Statement blocks (C- or E- shaped) have a longer minimum width.
