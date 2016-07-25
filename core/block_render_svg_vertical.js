@@ -391,7 +391,7 @@ Blockly.BlockSvg.NO_PREVIOUS_INPUT_X_MIN = 12 * Blockly.BlockSvg.GRID_UNIT;
  * Vertical padding around inline elements.
  * @const
  */
-Blockly.BlockSvg.INLINE_PADDING_Y = 2 * Blockly.BlockSvg.GRID_UNIT;
+Blockly.BlockSvg.INLINE_PADDING_Y = 1 * Blockly.BlockSvg.GRID_UNIT;
 
 /**
  * Point size of text field before animation. Must match size in CSS.
@@ -639,19 +639,20 @@ Blockly.BlockSvg.prototype.renderCompute_ = function(iconWidth) {
     row.push(input);
 
     // Compute minimum height for this input.
-    if (inputList.length === 1 && this.outputConnection) {
-      if (this.isShadow()) {
-        // Special case: height of "lone" field blocks is smaller.
-        input.renderHeight = Blockly.BlockSvg.MIN_BLOCK_Y_SINGLE_FIELD_OUTPUT;
-      } else {
-        // Special case: reporters.
-        input.renderHeight = Blockly.BlockSvg.MIN_BLOCK_Y_REPORTER;
-      }
+    if (inputList.length === 1 && this.isShadow() && this.outputConnection) {
+      // "Lone" field blocks are smaller.
+      input.renderHeight = Blockly.BlockSvg.MIN_BLOCK_Y_SINGLE_FIELD_OUTPUT;
+    } else if (this.outputConnection) {
+      // All other reporters.
+      input.renderHeight = Blockly.BlockSvg.MIN_BLOCK_Y_REPORTER;
     } else if (row.type == Blockly.NEXT_STATEMENT) {
+      // Statement input.
       input.renderHeight = Blockly.BlockSvg.MIN_STATEMENT_INPUT_HEIGHT;
     } else if (previousRow && previousRow.type == Blockly.NEXT_STATEMENT) {
+      // Extra row for below statement input.
       input.renderHeight = Blockly.BlockSvg.EXTRA_STATEMENT_ROW_Y;
     } else {
+      // All other blocks.
       input.renderHeight = Blockly.BlockSvg.MIN_BLOCK_Y;
     }
     // The width is currently only needed for inline value inputs.
