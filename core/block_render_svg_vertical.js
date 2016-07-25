@@ -318,7 +318,7 @@ Blockly.BlockSvg.FIELD_HEIGHT = 8 * Blockly.BlockSvg.GRID_UNIT;
  * Width of user inputs
  * @const
  */
-Blockly.BlockSvg.FIELD_WIDTH = 8 * Blockly.BlockSvg.GRID_UNIT;
+Blockly.BlockSvg.FIELD_WIDTH = 6 * Blockly.BlockSvg.GRID_UNIT;
 
 /**
  * Minimum width of user inputs during editing
