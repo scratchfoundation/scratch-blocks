@@ -67,6 +67,12 @@ Blockly.BlockSvg.FIELD_HEIGHT = 8 * Blockly.BlockSvg.GRID_UNIT;
 Blockly.BlockSvg.FIELD_WIDTH = 12 * Blockly.BlockSvg.GRID_UNIT;
 
 /**
+ * Editable field padding (left/right of the text).
+ * @const
+ */
+Blockly.BlockSvg.EDITABLE_FIELD_PADDING = 0;
+
+/**
  * Minimum width of user inputs during editing
  * @const
  */

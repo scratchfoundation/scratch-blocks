@@ -303,6 +303,10 @@ Blockly.Field.prototype.render_ = function() {
         Blockly.Field.cacheWidths_[key] = width;
       }
     }
+    if (this.EDITABLE) {
+      // Add padding to left and right of text.
+      width += Blockly.BlockSvg.EDITABLE_FIELD_PADDING;
+    }
     // Update text centering, based on newly calculated width.
     var centerTextX = width / 2;
     // In a text-editing shadow block's field,
