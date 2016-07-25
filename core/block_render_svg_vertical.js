@@ -632,6 +632,9 @@ Blockly.BlockSvg.prototype.renderCompute_ = function(iconWidth) {
         row.type = input.type;
       }
       row.height = 0;
+      // Default padding for a block: same as separators between fields/inputs.
+      row.paddingLeft = Blockly.BlockSvg.SEP_SPACE_X;
+      row.paddingRight = Blockly.BlockSvg.SEP_SPACE_X;
       inputRows.push(row);
     } else {
       row = inputRows[inputRows.length - 1];
@@ -882,7 +885,7 @@ Blockly.BlockSvg.prototype.renderDrawRight_ = function(steps,
   var cursorY = 0;
   var connectionX, connectionY;
   for (var y = 0, row; row = inputRows[y]; y++) {
-    cursorX = Blockly.BlockSvg.SEP_SPACE_X;
+    cursorX = row.paddingLeft;
     if (y == 0) {
       cursorX += this.RTL ? -iconWidth : iconWidth;
     }
@@ -932,6 +935,9 @@ Blockly.BlockSvg.prototype.renderDrawRight_ = function(steps,
           cursorX += input.renderWidth + Blockly.BlockSvg.SEP_SPACE_X;
         }
       }
+      // Remove final separator and replace it with right-padding.
+      cursorX -= Blockly.BlockSvg.SEP_SPACE_X;
+      cursorX += row.paddingRight;
       // Update right edge for all inputs, such that all rows
       // stretch to be at least the size of all previous rows.
       inputRows.rightEdge = Math.max(cursorX, inputRows.rightEdge);
