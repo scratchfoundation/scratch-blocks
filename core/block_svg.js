@@ -437,6 +437,7 @@ Blockly.BlockSvg.prototype.moveBy = function(dx, dy) {
   this.moveConnections_(dx, dy);
   if (eventsEnabled) {
     event.recordNew();
+    Blockly.resizeSvgContents(this.workspace);
     Blockly.Events.fire(event);
   }
 };
