@@ -67,6 +67,12 @@ Blockly.BlockSvg.FIELD_HEIGHT = 8 * Blockly.BlockSvg.GRID_UNIT;
 Blockly.BlockSvg.FIELD_WIDTH = 12 * Blockly.BlockSvg.GRID_UNIT;
 
 /**
+ * Editable field padding (left/right of the text).
+ * @const
+ */
+Blockly.BlockSvg.EDITABLE_FIELD_PADDING = 0;
+
+/**
  * Minimum width of user inputs during editing
  * @const
  */
@@ -88,7 +94,7 @@ Blockly.BlockSvg.FIELD_HEIGHT_MAX_EDIT = 10 * Blockly.BlockSvg.GRID_UNIT;
  * Top padding of user inputs
  * @const
  */
-Blockly.BlockSvg.FIELD_TOP_PADDING = 1.5 * Blockly.BlockSvg.GRID_UNIT;
+Blockly.BlockSvg.FIELD_TOP_PADDING = 1 * Blockly.BlockSvg.GRID_UNIT;
 
 /**
  * Corner radius of number inputs

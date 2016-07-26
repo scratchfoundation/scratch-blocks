@@ -150,6 +150,7 @@ Blockly.Field.prototype.init = function() {
       {'class': 'blocklyText',
        'x': fieldX,
        'y': size.height / 2 + Blockly.BlockSvg.FIELD_TOP_PADDING,
+       'dominant-baseline': 'middle',
        'text-anchor': 'middle'},
       this.fieldGroup_);
 
@@ -301,6 +302,10 @@ Blockly.Field.prototype.render_ = function() {
       if (Blockly.Field.cacheWidths_) {
         Blockly.Field.cacheWidths_[key] = width;
       }
+    }
+    if (this.EDITABLE) {
+      // Add padding to left and right of text.
+      width += Blockly.BlockSvg.EDITABLE_FIELD_PADDING;
     }
     // Update text centering, based on newly calculated width.
     var centerTextX = width / 2;
