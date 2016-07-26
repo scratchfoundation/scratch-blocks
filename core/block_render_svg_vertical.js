@@ -661,8 +661,8 @@ Blockly.BlockSvg.prototype.renderCompute_ = function(iconWidth) {
       }
       row.height = 0;
       // Default padding for a block: same as separators between fields/inputs.
-      row.paddingLeft = Blockly.BlockSvg.SEP_SPACE_X;
-      row.paddingRight = Blockly.BlockSvg.SEP_SPACE_X;
+      row.paddingStart = Blockly.BlockSvg.SEP_SPACE_X;
+      row.paddingEnd = Blockly.BlockSvg.SEP_SPACE_X;
       inputRows.push(row);
     } else {
       row = inputRows[inputRows.length - 1];
@@ -820,7 +820,7 @@ Blockly.BlockSvg.prototype.renderCompute_ = function(iconWidth) {
 
 /**
  * For a block with output,
- * determine left and right padding, based on connected inputs.
+ * determine start and end padding, based on connected inputs.
  * Padding will depend on the shape of the output, the shape of the input,
  * and possibly the size of the input.
  * @param {!Array.<!Array.<!Object>>} inputRows Partially calculated rows.
@@ -837,14 +837,14 @@ Blockly.BlockSvg.prototype.computeOutputPadding_ = function(inputRows) {
   var row = inputRows[0];
   var shape = this.getOutputShape();
   // Reset any padding: it's about to be set.
-  row.paddingLeft = 0;
-  row.paddingRight = 0;
-  // Left row padding: based on first input or first field.
+  row.paddingStart = 0;
+  row.paddingEnd = 0;
+  // Start row padding: based on first input or first field.
   var firstInput = row[0];
   var firstField = firstInput.fieldRow[0];
   var otherShape;
-  // In checking the left side, a field takes precedence over any input.
-  // That's because a field will be rendered to the left of any value input.
+  // In checking the left/start side, a field takes precedence over any input.
+  // That's because a field will be rendered before any value input.
   if (firstField) {
     otherShape = 0; // Field comes first in the row.
   } else {
@@ -857,21 +857,21 @@ Blockly.BlockSvg.prototype.computeOutputPadding_ = function(inputRows) {
       // Connected: use the connected block's output shape.
       otherShape = inputConnection.targetConnection.getSourceBlock().getOutputShape();
     }
-    // Special case for hexagonal output: if the left-most connection is larger height
-    // than a standard reporter, add some left padding.
+    // Special case for hexagonal output: if the connection is larger height
+    // than a standard reporter, add some start padding.
     // https://github.com/LLK/scratch-blocks/issues/376
     if (shape == Blockly.OUTPUT_SHAPE_HEXAGONAL &&
         otherShape != Blockly.OUTPUT_SHAPE_HEXAGONAL) {
       var deltaHeight = firstInput.renderHeight - Blockly.BlockSvg.MIN_BLOCK_Y_REPORTER;
       // One grid unit per level of nesting.
-      row.paddingLeft += deltaHeight / 2;
+      row.paddingStart += deltaHeight / 2;
     }
   }
-  row.paddingLeft += Blockly.BlockSvg.SHAPE_IN_SHAPE_PADDING[shape][otherShape];
-  // Right row padding: based on last input or last field.
+  row.paddingStart += Blockly.BlockSvg.SHAPE_IN_SHAPE_PADDING[shape][otherShape];
+  // End row padding: based on last input or last field.
   var lastInput = row[row.length - 1];
-  // In checking the right side, any value input takes precedence over any field.
-  // That's because fields are rendered to the left of inputs...the last item
+  // In checking the right/end side, any value input takes precedence over any field.
+  // That's because fields are rendered before inputs...the last item
   // in the row will be an input, if one exists.
   if (lastInput.connection) {
     // Value input last in the row.
@@ -883,20 +883,20 @@ Blockly.BlockSvg.prototype.computeOutputPadding_ = function(inputRows) {
       // Connected: use the connected block's output shape.
       otherShape = inputConnection.targetConnection.getSourceBlock().getOutputShape();
     }
-    // Special case for hexagonal output: if the right-most connection is larger height
-    // than a standard reporter, add some right padding.
+    // Special case for hexagonal output: if the connection is larger height
+    // than a standard reporter, add some end padding.
     // https://github.com/LLK/scratch-blocks/issues/376
     if (shape == Blockly.OUTPUT_SHAPE_HEXAGONAL &&
         otherShape != Blockly.OUTPUT_SHAPE_HEXAGONAL) {
       var deltaHeight = lastInput.renderHeight - Blockly.BlockSvg.MIN_BLOCK_Y_REPORTER;
       // One grid unit per level of nesting.
-      row.paddingRight += deltaHeight / 2;
+      row.paddingEnd += deltaHeight / 2;
     }
   } else {
     // No input in this row - mark as field.
     otherShape = 0;
   }
-  row.paddingRight += Blockly.BlockSvg.SHAPE_IN_SHAPE_PADDING[shape][otherShape];
+  row.paddingEnd += Blockly.BlockSvg.SHAPE_IN_SHAPE_PADDING[shape][otherShape];
 };
 
 /**
@@ -1014,7 +1014,7 @@ Blockly.BlockSvg.prototype.renderDrawRight_ = function(steps,
   var cursorY = 0;
   var connectionX, connectionY;
   for (var y = 0, row; row = inputRows[y]; y++) {
-    cursorX = row.paddingLeft;
+    cursorX = row.paddingStart;
     if (y == 0) {
       cursorX += this.RTL ? -iconWidth : iconWidth;
     }
@@ -1066,7 +1066,7 @@ Blockly.BlockSvg.prototype.renderDrawRight_ = function(steps,
       }
       // Remove final separator and replace it with right-padding.
       cursorX -= Blockly.BlockSvg.SEP_SPACE_X;
-      cursorX += row.paddingRight;
+      cursorX += row.paddingEnd;
       // Update right edge for all inputs, such that all rows
       // stretch to be at least the size of all previous rows.
       inputRows.rightEdge = Math.max(cursorX, inputRows.rightEdge);
