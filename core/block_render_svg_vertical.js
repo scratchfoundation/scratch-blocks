@@ -418,6 +418,34 @@ Blockly.BlockSvg.FIELD_TEXTINPUT_EXPAND_PAST_TRUNCATION = false;
 Blockly.BlockSvg.FIELD_TEXTINPUT_ANIMATE_POSITIONING = false;
 
 /**
+ * Map of output/input shapes and the amount they should cause a block to be padded.
+ * Outer key is the outer shape, inner key is the inner shape.
+ * When a block with the outer shape contains an input block with the inner shape
+ * on its left or right edge, that side is extended by the padding specified.
+ * See also: `Blockly.BlockSvg.computeOutputPadding_`.
+ */
+Blockly.BlockSvg.SHAPE_IN_SHAPE_PADDING = {
+  1: { // Outer shape: hexagon.
+    0: 5 * Blockly.BlockSvg.GRID_UNIT, // Field in hexagon.
+    1: 2 * Blockly.BlockSvg.GRID_UNIT, // Hexagon in hexagon.
+    2: 5 * Blockly.BlockSvg.GRID_UNIT, // Round in hexagon.
+    3: 5 * Blockly.BlockSvg.GRID_UNIT // Square in hexagon.
+  },
+  2: { // Outer shape: round.
+    0: 3 * Blockly.BlockSvg.GRID_UNIT, // Field in round.
+    1: 3 * Blockly.BlockSvg.GRID_UNIT, // Hexagon in round.
+    2: 1 * Blockly.BlockSvg.GRID_UNIT, // Round in round.
+    3: 2 * Blockly.BlockSvg.GRID_UNIT // Square in round.
+  },
+  3: { // Outer shape: square.
+    0: 2 * Blockly.BlockSvg.GRID_UNIT, // Field in square.
+    1: 2 * Blockly.BlockSvg.GRID_UNIT, // Hexagon in square.
+    2: 2 * Blockly.BlockSvg.GRID_UNIT, // Round in square.
+    3: 2 * Blockly.BlockSvg.GRID_UNIT // Square in square.
+  }
+};
+
+/**
  * Change the colour of a block.
  */
 Blockly.BlockSvg.prototype.updateColour = function() {
@@ -750,6 +778,9 @@ Blockly.BlockSvg.prototype.renderCompute_ = function(iconWidth) {
     }
     previousRow = row;
   }
+  // Compute padding for output blocks.
+  // Data is attached to the row.
+  this.computeOutputPadding_(inputRows);
   // Compute the statement edge.
   // This is the width of a block where statements are nested.
   inputRows.statementEdge = Blockly.BlockSvg.STATEMENT_INPUT_EDGE_WIDTH +
@@ -787,6 +818,86 @@ Blockly.BlockSvg.prototype.renderCompute_ = function(iconWidth) {
   return inputRows;
 };
 
+/**
+ * For a block with output,
+ * determine left and right padding, based on connected inputs.
+ * Padding will depend on the shape of the output, the shape of the input,
+ * and possibly the size of the input.
+ * @param {!Array.<!Array.<!Object>>} inputRows Partially calculated rows.
+ */
+Blockly.BlockSvg.prototype.computeOutputPadding_ = function(inputRows) {
+  // Only apply to blocks with outputs and not single fields (shadows).
+  if (!this.getOutputShape() || !this.outputConnection || this.isShadow()) {
+    return;
+  }
+  // Blocks with outputs must have single row to be padded.
+  if (inputRows.length > 1) {
+    return;
+  }
+  var row = inputRows[0];
+  var shape = this.getOutputShape();
+  // Reset any padding: it's about to be set.
+  row.paddingLeft = 0;
+  row.paddingRight = 0;
+  // Left row padding: based on first input or first field.
+  var firstInput = row[0];
+  var firstField = firstInput.fieldRow[0];
+  var otherShape;
+  // In checking the left side, a field takes precedence over any input.
+  // That's because a field will be rendered to the left of any value input.
+  if (firstField) {
+    otherShape = 0; // Field comes first in the row.
+  } else {
+    // Value input comes first in the row.
+    var inputConnection = firstInput.connection;
+    if (!inputConnection.targetConnection) {
+      // Not connected: use the drawn shape.
+      otherShape = inputConnection.getOutputShape();
+    } else {
+      // Connected: use the connected block's output shape.
+      otherShape = inputConnection.targetConnection.getSourceBlock().getOutputShape();
+    }
+    // Special case for hexagonal output: if the left-most connection is larger height
+    // than a standard reporter, add some left padding.
+    // https://github.com/LLK/scratch-blocks/issues/376
+    if (shape == Blockly.OUTPUT_SHAPE_HEXAGONAL &&
+        otherShape != Blockly.OUTPUT_SHAPE_HEXAGONAL) {
+      var deltaHeight = firstInput.renderHeight - Blockly.BlockSvg.MIN_BLOCK_Y_REPORTER;
+      // One grid unit per level of nesting.
+      row.paddingLeft += deltaHeight / 2;
+    }
+  }
+  row.paddingLeft += Blockly.BlockSvg.SHAPE_IN_SHAPE_PADDING[shape][otherShape];
+  // Right row padding: based on last input or last field.
+  var lastInput = row[row.length - 1];
+  // In checking the right side, any value input takes precedence over any field.
+  // That's because fields are rendered to the left of inputs...the last item
+  // in the row will be an input, if one exists.
+  if (lastInput.connection) {
+    // Value input last in the row.
+    var inputConnection = lastInput.connection;
+    if (!inputConnection.targetConnection) {
+      // Not connected: use the drawn shape.
+      otherShape = inputConnection.getOutputShape();
+    } else {
+      // Connected: use the connected block's output shape.
+      otherShape = inputConnection.targetConnection.getSourceBlock().getOutputShape();
+    }
+    // Special case for hexagonal output: if the right-most connection is larger height
+    // than a standard reporter, add some right padding.
+    // https://github.com/LLK/scratch-blocks/issues/376
+    if (shape == Blockly.OUTPUT_SHAPE_HEXAGONAL &&
+        otherShape != Blockly.OUTPUT_SHAPE_HEXAGONAL) {
+      var deltaHeight = lastInput.renderHeight - Blockly.BlockSvg.MIN_BLOCK_Y_REPORTER;
+      // One grid unit per level of nesting.
+      row.paddingRight += deltaHeight / 2;
+    }
+  } else {
+    // No input in this row - mark as field.
+    otherShape = 0;
+  }
+  row.paddingRight += Blockly.BlockSvg.SHAPE_IN_SHAPE_PADDING[shape][otherShape];
+};
 
 /**
  * Draw the path of the block.
