@@ -453,6 +453,12 @@ Blockly.BlockSvg.prototype.updateColour = function() {
   if (this.isShadow() && this.parentBlock_) {
     // Pull shadow block stroke colour from parent block's tertiary if possible.
     strokeColour = this.parentBlock_.getColourTertiary();
+    // Special case: if we contain a colour field, set to a special stroke colour.
+    if (this.inputList[0] &&
+        this.inputList[0].fieldRow[0] &&
+        this.inputList[0].fieldRow[0] instanceof Blockly.FieldColour) {
+      strokeColour = Blockly.Colours.colourPickerStroke;
+    }
   }
 
   // Render block stroke

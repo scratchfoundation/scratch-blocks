@@ -90,6 +90,7 @@ Blockly.Colours = {
   "stackGlowOpacity": 1,
   "replacementGlow": "#FFFFFF",
   "replacementGlowOpacity": 1,
+  "colourPickerStroke": "#FFFFFF",
   // CSS colours: support RGBA
   "fieldShadow": "rgba(0,0,0,0.1)",
   "dropDownShadow": "rgba(0, 0, 0, .3)",
