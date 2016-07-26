@@ -1186,7 +1186,7 @@ Blockly.BlockSvg.prototype.renderInputShape_ = function(input, x, y) {
         break;
     }
     if (this.RTL) {
-      inputShapeX = -x - inputShapeWidth - Blockly.BlockSvg.SEP_SPACE_X;
+      inputShapeX = -x - inputShapeWidth;
     } else {
       inputShapeX = x;
     }
