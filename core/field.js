@@ -307,6 +307,10 @@ Blockly.Field.prototype.render_ = function() {
       // Add padding to left and right of text.
       width += Blockly.BlockSvg.EDITABLE_FIELD_PADDING;
     }
+    if (this.box_) {
+      // Add padding to any drawn box.
+      width += Blockly.BlockSvg.BOX_FIELD_PADDING;
+    }
     // Update text centering, based on newly calculated width.
     var centerTextX = width / 2;
     // In a text-editing shadow block's field,
@@ -332,6 +336,11 @@ Blockly.Field.prototype.render_ = function() {
     var width = 0;
   }
   this.size_.width = width;
+  // Update any drawn box to the correct width and height.
+  if (this.box_) {
+    this.box_.setAttribute('width', this.size_.width);
+    this.box_.setAttribute('height', this.size_.height);
+  }
 };
 
 /**
