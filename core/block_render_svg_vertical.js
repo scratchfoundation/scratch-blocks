@@ -333,6 +333,12 @@ Blockly.BlockSvg.FIELD_WIDTH = 6 * Blockly.BlockSvg.GRID_UNIT;
 Blockly.BlockSvg.EDITABLE_FIELD_PADDING = 6;
 
 /**
+ * Square box field padding (left/right of the text).
+ * @const
+ */
+Blockly.BlockSvg.BOX_FIELD_PADDING = 3 * Blockly.BlockSvg.GRID_UNIT;
+
+/**
  * Minimum width of user inputs during editing
  * @const
  */

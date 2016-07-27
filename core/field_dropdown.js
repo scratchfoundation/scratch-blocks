@@ -91,6 +91,18 @@ Blockly.FieldDropdown.prototype.init = function() {
           ' ' + Blockly.FieldDropdown.ARROW_CHAR));
 
   Blockly.FieldDropdown.superClass_.init.call(this);
+  // If not in a shadow block, draw a box.
+  if (!this.sourceBlock_.isShadow()) {
+    this.box_ = Blockly.createSvgElement('rect', {
+      'rx': Blockly.BlockSvg.CORNER_RADIUS,
+      'ry': Blockly.BlockSvg.CORNER_RADIUS,
+      'x': 0,
+      'y': 0,
+      'width': this.size_.width,
+      'height': this.size_.height,
+      'stroke': this.sourceBlock_.getColourTertiary()
+    }, this.fieldGroup_);
+  }
   // Force a reset of the text to add the arrow.
   var text = this.text_;
   this.text_ = null;
@@ -165,7 +177,10 @@ Blockly.FieldDropdown.prototype.showEditor_ = function() {
   // Recalculate height for the total content, not only box height.
   menuSize.height = menuDom.scrollHeight;
 
-  Blockly.DropDownDiv.setColour(this.sourceBlock_.parentBlock_.getColour(), this.sourceBlock_.getColourTertiary());
+  var primaryColour = (this.sourceBlock_.isShadow()) ?
+    this.sourceBlock_.parentBlock_.getColour() : this.sourceBlock_.getColour();
+
+  Blockly.DropDownDiv.setColour(primaryColour, this.sourceBlock_.getColourTertiary());
   Blockly.DropDownDiv.showPositionedByBlock(this, this.sourceBlock_);
 
   menu.setAllowAutoFocus(true);

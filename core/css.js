@@ -392,18 +392,12 @@ Blockly.Css.CONTENT = [
 
   '.blocklyNonEditableText>rect,',
   '.blocklyEditableText>rect {',
-    'fill: #fff;',
-    'fill-opacity: .6;',
+    'fill-opacity: 0;',
   '}',
 
   '.blocklyNonEditableText>text,',
   '.blocklyEditableText>text {',
     'fill: $colour_text;',
-  '}',
-
-  '.blocklyEditableText:hover>rect {',
-    'stroke: #fff;',
-    'stroke-width: 2;',
   '}',
 
   '.blocklyDropdownText {',
