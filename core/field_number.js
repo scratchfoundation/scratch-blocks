@@ -175,8 +175,8 @@ Blockly.FieldNumber.prototype.showNumPad_ = function() {
     button.title = buttonText;
     button.innerHTML = buttonText;
     Blockly.bindEvent_(button, 'mousedown', button,
-	Blockly.FieldNumber.numPadButtonTouch_);
-    if (buttonText == '.' && !this.decimalAllowed) {
+        Blockly.FieldNumber.numPadButtonTouch_);
+    if (buttonText == '.' && !this.decimalAllowed_) {
       // Don't show the decimal point for inputs that must be round numbers
       button.setAttribute('style', 'visibility: hidden');
     }
