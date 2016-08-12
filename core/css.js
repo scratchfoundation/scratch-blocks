@@ -198,7 +198,7 @@ Blockly.Css.CONTENT = [
     'box-shadow: 4px 4px 20px 1px rgba(0,0,0,.15);',
     'color: #000;',
     'display: none;',
-    'font-family: sans-serif;',
+    'font-family: "Helvetica Neue", Helvetica, sans-serif;',
     'font-size: 9pt;',
     'opacity: 0.9;',
     'padding: 2px;',
@@ -297,7 +297,7 @@ Blockly.Css.CONTENT = [
     'border: 1px solid $colour_numPadBorder;',
     'cursor: pointer;',
     'font-weight: 600;',
-    'font-family: sans-serif;',
+    'font-family: "Helvetica Neue", Helvetica, sans-serif;',
     'font-size: 12pt;',
     '-webkit-tap-highlight-color: rgba(0,0,0,0);',
   '}',
@@ -317,12 +317,14 @@ Blockly.Css.CONTENT = [
     'border-top: 1px solid;',
     'border-left: 1px solid;',
     'border-top-left-radius: 4px;',
+    'border-color: inherit;',
   '}',
 
   '.arrowBottom {',
     'border-bottom: 1px solid;',
     'border-right: 1px solid;',
     'border-bottom-right-radius: 4px;',
+    'border-color: inherit;',
   '}',
 
   '.valueReportBox {',
@@ -375,9 +377,9 @@ Blockly.Css.CONTENT = [
 
   '.blocklyText {',
     'fill: #fff;',
-    'font-family: sans-serif;',
+    'font-family: "Helvetica Neue", Helvetica, sans-serif;',
     'font-size: 12pt;',
-    'font-weight: 600;',
+    'font-weight: 500;',
   '}',
 
   '.blocklyTextTruncated {',
@@ -390,18 +392,12 @@ Blockly.Css.CONTENT = [
 
   '.blocklyNonEditableText>rect,',
   '.blocklyEditableText>rect {',
-    'fill: #fff;',
-    'fill-opacity: .6;',
+    'fill-opacity: 0;',
   '}',
 
   '.blocklyNonEditableText>text,',
   '.blocklyEditableText>text {',
     'fill: $colour_text;',
-  '}',
-
-  '.blocklyEditableText:hover>rect {',
-    'stroke: #fff;',
-    'stroke-width: 2;',
   '}',
 
   '.blocklyDropdownText {',
@@ -474,17 +470,16 @@ Blockly.Css.CONTENT = [
 
   '.blocklyHtmlInput {',
     'border: none;',
-    'font-family: sans-serif;',
+    'font-family: "Helvetica Neue", Helvetica, sans-serif;',
     'font-size: 12pt;',
     'height: 100%;',
     'margin: 0;',
     'outline: none;',
     'box-sizing: border-box;',
-    'padding: 2px 0 0 0;',
     'width: 100%;',
     'text-align: center;',
     'color: $colour_text;',
-    'font-weight: 600;',
+    'font-weight: 500;',
   '}',
 
   '.blocklyMainBackground {',
@@ -678,7 +673,7 @@ Blockly.Css.CONTENT = [
 
   '.blocklyTreeLabel {',
     'cursor: default;',
-    'font-family: sans-serif;',
+    'font-family: "Helvetica Neue", Helvetica, sans-serif;',
     'font-size: 16px;',
     'padding: 0 3px;',
     'vertical-align: middle;',
@@ -758,7 +753,7 @@ Blockly.Css.CONTENT = [
     'border-style: solid;',
     'border-width: 1px;',
     'cursor: default;',
-    'font: normal 13px Arial, sans-serif;',
+    'font: normal 13px "Helvetica Neue", Helvetica, sans-serif;',
     'margin: 0;',
     'outline: none;',
     'padding: 4px 0;',
@@ -771,7 +766,7 @@ Blockly.Css.CONTENT = [
 
   '.blocklyDropDownDiv .goog-menu {',
     'cursor: default;',
-    'font: normal 13px Arial, sans-serif;',
+    'font: normal 13px "Helvetica Neue", Helvetica, sans-serif;',
     'outline: none;',
     'z-index: 20000;',  /* Arbitrary, but some apps depend on it... */
   '}',
@@ -807,7 +802,7 @@ Blockly.Css.CONTENT = [
    */
   '.blocklyWidgetDiv .goog-menuitem {',
     'color: #000;',
-    'font: normal 13px Arial, sans-serif;',
+    'font: normal 13px "Helvetica Neue", Helvetica, sans-serif;',
     'list-style: none;',
     'margin: 0;',
      /* 28px on the left for icon or checkbox; 7em on the right for shortcut. */
@@ -817,7 +812,7 @@ Blockly.Css.CONTENT = [
 
   '.blocklyDropDownDiv .goog-menuitem {',
     'color: #fff;',
-    'font: normal 13px Arial, sans-serif;',
+    'font: normal 13px "Helvetica Neue", Helvetica, sans-serif;',
     'font-weight: bold;',
     'list-style: none;',
     'margin: 0;',
@@ -855,7 +850,7 @@ Blockly.Css.CONTENT = [
   '.blocklyWidgetDiv .goog-menuitem-content ',
   '.blocklyDropDownDiv .goog-menuitem-content {',
     'color: #000;',
-    'font: normal 13px Arial, sans-serif;',
+    'font: normal 13px "Helvetica Neue", Helvetica, sans-serif;',
   '}',
 
   /* State: disabled. */

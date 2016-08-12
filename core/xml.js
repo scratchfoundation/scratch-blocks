@@ -357,11 +357,11 @@ Blockly.Xml.domToBlock = function(xmlBlock, workspace) {
           }
         }, 1);
       }
+      topBlock.updateDisabled();
+      // Allow the scrollbars to resize and move based on the new contents.
+      // TODO(@picklesrus): #387. Remove when domToBlock avoids resizing.
+      Blockly.resizeSvgContents(workspace);
     }
-    topBlock.updateDisabled();
-    // Allow the scrollbars to resize and move based on the new contents.
-    // TODO(@picklesrus): #387. Remove when domToBlock avoids resizing.
-    Blockly.resizeSvgContents(workspace);
   } finally {
     Blockly.Events.enable();
   }
