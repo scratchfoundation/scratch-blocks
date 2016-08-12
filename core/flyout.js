@@ -139,6 +139,22 @@ Blockly.Flyout.prototype.DRAG_RADIUS = 10;
 Blockly.Flyout.prototype.MARGIN = 12;
 
 /**
+ * Gap between blocks in horizontal flyouts. Can be overridden with the "gap"
+ * attribute on the <block> element.
+ * @type {number}
+ * @const
+ */
+Blockly.Flyout.prototype.GAP_X = Blockly.Flyout.prototype.MARGIN * 3;
+
+/**
+ * Gap between blocks in vertical flyouts. Can be overridden with the "gap"
+ * attribute on the <block> element.
+ * @type {number}
+ * @const
+ */
+Blockly.Flyout.prototype.GAP_Y = Blockly.Flyout.prototype.MARGIN * 3;
+
+/**
  * Top/bottom padding between scrollbar and edge of flyout background.
  * @type {number}
  * @const
@@ -655,7 +671,8 @@ Blockly.Flyout.prototype.show = function(xmlList) {
       }
       blocks.push(curBlock);
       var gap = parseInt(xml.getAttribute('gap'), 10);
-      gaps.push(isNaN(gap) ? this.MARGIN * 3 : gap);
+      var default_gap = this.horizontalLayout_ ? this.GAP_X : this.GAP_Y;
+      gaps.push(isNaN(gap) ? default_gap : gap);
     }
   }
 
