@@ -1,7 +1,11 @@
 {
 	"@metadata": {
 		"author": "Ellen Spertus <ellen.spertus@gmail.com>",
+<<<<<<< HEAD
 		"lastupdated": "2016-07-14 11:17:05.788569",
+=======
+		"lastupdated": "2016-08-11 17:04:14.955398",
+>>>>>>> aa8cc2cb9f38faa34621e3ebf824d683524833b6
 		"locale": "en",
 		"messagedocumentation" : "qqq"
 	},
@@ -30,6 +34,7 @@
 	"NEW_VARIABLE_TITLE": "New variable name:",
 	"RENAME_VARIABLE": "Rename variable...",
 	"RENAME_VARIABLE_TITLE": "Rename all '%1' variables to:",
+	"DELETE_VARIABLE_CONFIRMATION": "Delete %1 uses of the %2 variable?",
 	"COLOUR_PICKER_HELPURL": "https://en.wikipedia.org/wiki/Color",
 	"COLOUR_PICKER_TOOLTIP": "Choose a colour from the palette.",
 	"COLOUR_RANDOM_HELPURL": "http://randomcolour.com",

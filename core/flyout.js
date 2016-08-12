@@ -115,7 +115,59 @@ Blockly.Flyout = function(workspaceOptions) {
    * @private
    */
   this.permanentlyDisabled_ = [];
+
+  /**
+   * y coordinate of mousedown - used to calculate scroll distances.
+   * @private {number}
+   */
+  this.startDragMouseY_ = 0;
+
+  /**
+   * x coordinate of mousedown - used to calculate scroll distances.
+   * @private {number}
+   */
+  this.startDragMouseX_ = 0;
 };
+
+/**
+ * When a flyout drag is in progress, this is a reference to the flyout being
+ * dragged. This is used by Flyout.terminateDrag_ to reset dragMode_.
+ * @private {Blockly.Flyout}
+ */
+Blockly.Flyout.startFlyout_ = null;
+
+/**
+ * Event that started a drag. Used to determine the drag distance/direction and
+ * also passed to BlockSvg.onMouseDown_() after creating a new block.
+ * @private {Event}
+ */
+Blockly.Flyout.startDownEvent_ = null;
+
+/**
+ * Flyout block where the drag/click was initiated. Used to fire click events or
+ * create a new block.
+ * @private {Event}
+ */
+Blockly.Flyout.startBlock_ = null;
+
+/**
+ * Wrapper function called when a mouseup occurs during a background or block
+ * drag operation.
+ * @private {Array.<!Array>}
+ */
+Blockly.Flyout.onMouseUpWrapper_ = null;
+
+/**
+ * Wrapper function called when a mousemove occurs during a background drag.
+ * @private {Array.<!Array>}
+ */
+Blockly.Flyout.onMouseMoveWrapper_ = null;
+
+/**
+ * Wrapper function called when a mousemove occurs during a block drag.
+ * @private {Array.<!Array>}
+ */
+Blockly.Flyout.onMouseMoveBlockWrapper_ = null;
 
 /**
  * Does the flyout automatically close when a block is created?
@@ -664,8 +716,21 @@ Blockly.Flyout.prototype.show = function(xmlList) {
         contents.push({type: 'block', block: curBlock});
         var gap = parseInt(xml.getAttribute('gap'), 10);
         gaps.push(isNaN(gap) ? this.MARGIN * 3 : gap);
-      }
-      else if (tagName == 'BUTTON') {
+      } else if (xml.tagName.toUpperCase() == 'SEP') {
+        // Change the gap between two blocks.
+        // <sep gap="36"></sep>
+        // The default gap is 24, can be set larger or smaller.
+        // This overwrites the gap attribute on the previous block.
+        // Note that a deprecated method is to add a gap to a block.
+        // <block type="math_arithmetic" gap="8"></block>
+        var newGap = parseInt(xml.getAttribute('gap'), 10);
+        // Ignore gaps before the first block.
+        if (!isNaN(newGap) && gaps.length > 0) {
+          gaps[gaps.length - 1] = newGap;
+        } else {
+          gaps.push(this.MARGIN * 3);
+        }
+      } else if (tagName == 'BUTTON') {
         var label = xml.getAttribute('text');
         var curButton = new Blockly.FlyoutButton(this.workspace_,
             this.targetWorkspace_, label);
@@ -965,6 +1030,7 @@ Blockly.Flyout.prototype.onMouseDown_ = function(e) {
   this.dragMode_ = Blockly.DRAG_FREE;
   this.startDragMouseY_ = e.clientY;
   this.startDragMouseX_ = e.clientX;
+  Blockly.Flyout.startFlyout_ = this;
   Blockly.Flyout.onMouseMoveWrapper_ = Blockly.bindEvent_(document, 'mousemove',
       this, this.onMouseMove_);
   Blockly.Flyout.onMouseUpWrapper_ = Blockly.bindEvent_(document, 'mouseup',
@@ -1294,10 +1360,6 @@ Blockly.Flyout.terminateDrag_ = function() {
   if (Blockly.Flyout.onMouseMoveWrapper_) {
     Blockly.unbindEvent_(Blockly.Flyout.onMouseMoveWrapper_);
     Blockly.Flyout.onMouseMoveWrapper_ = null;
-  }
-  if (Blockly.Flyout.onMouseUpWrapper_) {
-    Blockly.unbindEvent_(Blockly.Flyout.onMouseUpWrapper_);
-    Blockly.Flyout.onMouseUpWrapper_ = null;
   }
   Blockly.Flyout.startDownEvent_ = null;
   Blockly.Flyout.startBlock_ = null;

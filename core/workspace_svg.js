@@ -317,8 +317,9 @@ Blockly.WorkspaceSvg.prototype.dispose = function() {
     this.zoomControls_ = null;
   }
   if (!this.options.parentWorkspace) {
-    // Top-most workspace.  Dispose of the SVG too.
-    goog.dom.removeNode(this.getParentSvg());
+    // Top-most workspace.  Dispose of the div that the
+    // svg is injected into (i.e. injectionDiv).
+    goog.dom.removeNode(this.getParentSvg().parentNode);
   }
   if (this.resizeHandlerWrapper_) {
     Blockly.unbindEvent_(this.resizeHandlerWrapper_);
@@ -845,11 +846,13 @@ Blockly.WorkspaceSvg.prototype.moveDrag = function(e) {
 };
 
 /**
- * Is the user currently dragging a block or scrolling the workspace?
+ * Is the user currently dragging a block or scrolling the flyout/workspace?
  * @return {boolean} True if currently dragging or scrolling.
  */
 Blockly.WorkspaceSvg.prototype.isDragging = function() {
   return Blockly.dragMode_ == Blockly.DRAG_FREE ||
+      (Blockly.Flyout.startFlyout_ &&
+          Blockly.Flyout.startFlyout_.dragMode_ == Blockly.DRAG_FREE) ||
       this.dragMode_ == Blockly.DRAG_FREE;
 };
 
@@ -923,9 +926,8 @@ Blockly.WorkspaceSvg.prototype.getBlocksBoundingBox = function() {
 
 /**
  * Clean up the workspace by ordering all the blocks in a column.
- * @private
  */
-Blockly.WorkspaceSvg.prototype.cleanUp_ = function() {
+Blockly.WorkspaceSvg.prototype.cleanUp = function() {
   Blockly.Events.setGroup(true);
   var topBlocks = this.getTopBlocks(true);
   var cursorY = 0;
@@ -971,7 +973,7 @@ Blockly.WorkspaceSvg.prototype.showContextMenu_ = function(e) {
     var cleanOption = {};
     cleanOption.text = Blockly.Msg.CLEAN_UP;
     cleanOption.enabled = topBlocks.length > 1;
-    cleanOption.callback = this.cleanUp_.bind(this);
+    cleanOption.callback = this.cleanUp.bind(this);
     menuOptions.push(cleanOption);
   }
 
@@ -1133,7 +1135,7 @@ Blockly.WorkspaceSvg.prototype.preloadAudio_ = function() {
 };
 
 /**
- * Play an audio file at specified value.  If volume is not specified,
+ * Play a named sound at specified volume.  If volume is not specified,
  * use full volume (1).
  * @param {string} name Name of sound.
  * @param {number=} opt_volume Volume of sound (0-1).

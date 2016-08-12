@@ -1253,11 +1253,9 @@ Blockly.BlockSvg.prototype.setMovable = function(movable) {
  */
 Blockly.BlockSvg.prototype.setEditable = function(editable) {
   Blockly.BlockSvg.superClass_.setEditable.call(this, editable);
-  if (this.rendered) {
-    var icons = this.getIcons();
-    for (var i = 0; i < icons.length; i++) {
-      icons[i].updateEditable();
-    }
+  var icons = this.getIcons();
+  for (var i = 0; i < icons.length; i++) {
+    icons[i].updateEditable();
   }
 };
 
@@ -1295,6 +1293,10 @@ Blockly.BlockSvg.prototype.getSvgRoot = function() {
  * @param {boolean} animate If true, show a disposal animation and sound.
  */
 Blockly.BlockSvg.prototype.dispose = function(healStack, animate) {
+  if (!this.workspace) {
+    // The block has already been deleted.
+    return;
+  }
   Blockly.Tooltip.hide();
   Blockly.Field.startCache();
   // Save the block's workspace temporarily so we can resize the

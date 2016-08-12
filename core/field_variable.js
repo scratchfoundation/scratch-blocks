@@ -65,6 +65,12 @@ Blockly.FieldVariable.prototype.init = function() {
             this.sourceBlock_.workspace;
     this.setValue(Blockly.Variables.generateUniqueName(workspace));
   }
+  // If the selected variable doesn't exist yet, create it.
+  // For instance, some blocks in the toolbox have variable dropdowns filled
+  // in by default.
+  if (!this.sourceBlock_.isInFlyout) {
+    this.sourceBlock_.workspace.createVariable(this.getValue());
+  }
 };
 
 /**
@@ -128,9 +134,8 @@ Blockly.FieldVariable.dropdownCreate = function() {
  * @return {null|undefined|string} An acceptable new variable name, or null if
  *     change is to be either aborted (cancel button) or has been already
  *     handled (rename), or undefined if an existing variable was chosen.
- * @this {!Blockly.FieldVariable}
  */
-Blockly.FieldVariable.classValidator = function(text) {
+Blockly.FieldVariable.prototype.classValidator = function(text) {
   var workspace = this.sourceBlock_.workspace;
   if (text == Blockly.Msg.RENAME_VARIABLE) {
     var oldVar = this.getText();

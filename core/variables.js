@@ -345,11 +345,10 @@ Blockly.Variables.getUses = function(name, workspace) {
 
 /**
  * When a variable is deleted, find and dispose of all uses of it.
- * @param {string} name Name of deleted variable.
- * @param {!Blockly.Workspace} workspace The workspace to delete uses from.
+ * @param {!Array.<!Blockly.Block>} uses An array of blocks using the variable.
+ * @private
  */
-Blockly.Variables.disposeUses = function(name, workspace) {
-  var uses = Blockly.Variables.getUses(name, workspace);
+Blockly.Variables.disposeUses_ = function(uses) {
   Blockly.Events.setGroup(true);
   for (var i = 0; i < uses.length; i++) {
     uses[i].dispose(true, false);
@@ -365,10 +364,26 @@ Blockly.Variables.disposeUses = function(name, workspace) {
 Blockly.Variables.delete = function(name, workspace) {
   var variableIndex = workspace.variableList.indexOf(name);
   if (variableIndex != -1) {
+    var uses = Blockly.Variables.getUses(name, workspace);
+    if (uses.length > 1) {
+      for (var i = 0, block; block = uses[i]; i++) {
+        if (block.type == 'procedures_defnoreturn' ||
+          block.type == 'procedures_defreturn') {
+          var procedureName = block.getFieldValue('NAME');
+          window.alert(
+              Blockly.Msg.CANNOT_DELETE_VARIABLE_PROCEDURE.replace('%1', name).
+              replace('%2', procedureName));
+          return;
+        }
+      }
+      window.confirm(
+          Blockly.Msg.DELETE_VARIABLE_CONFIRMATION.replace('%1', uses.length).
+          replace('%2', name));
+    }
+    Blockly.Variables.disposeUses_(uses);
     workspace.variableList.splice(variableIndex, 1);
   }
 
-  Blockly.Variables.disposeUses(name, workspace);
 };
 
 /**

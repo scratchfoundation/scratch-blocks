@@ -160,6 +160,7 @@ Blockly.Css.CONTENT = [
     'background-color: $colour_workspace;',
     'outline: none;',
     'overflow: hidden;',  /* IE overflows by default. */
+    'display: block;', 
   '}',
 
   /* Necessary to position the drag surface */
@@ -172,7 +173,19 @@ Blockly.Css.CONTENT = [
   '.blocklyWidgetDiv {',
     'display: none;',
     'position: absolute;',
-    'z-index: 999;',
+    'z-index: 99999;', /* big value for bootstrap3 compatibility */
+  '}',
+
+  '.injectionDiv {',
+    'height: 100%;',
+    'position: relative;',
+  '}',
+
+  '.blocklyNonSelectable {',
+    'user-select: none;',
+    '-moz-user-select: none;',
+    '-webkit-user-select: none;',
+    '-ms-user-select: none;',
   '}',
 
   '.blocklyWidgetDiv.fieldTextInput {',
@@ -203,7 +216,7 @@ Blockly.Css.CONTENT = [
     'opacity: 0.9;',
     'padding: 2px;',
     'position: absolute;',
-    'z-index: 1000;',
+    'z-index: 100000;', /* big value for bootstrap3 compatibility */
   '}',
 
   '.blocklyDragSurface {',

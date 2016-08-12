@@ -55,10 +55,10 @@ var getNumRestrictor = function(decimalAllowed, negativeAllowed) {
  * to construct a restrictor on typable characters, and to inform the pop-up numpad on touch devices.
  * These properties are included here (i.e. instead of just accepting a decimalAllowed, negativeAllowed)
  * to maintain API compatibility with Blockly and Blockly for Android.
- * @param {string} value The initial value of the field.
- * @param {number=} opt_min Minimum number allowed.
- * @param {number=} opt_max Maximum number allowed.
- * @param {number=} opt_precision Step allowed between numbers
+ * @param {number|string} value The initial content of the field.
+ * @param {number|string|undefined} opt_min Minimum value.
+ * @param {number|string|undefined} opt_max Maximum value.
+ * @param {number|string|undefined} opt_precision Precision for value.
  * @param {Function=} opt_validator An optional function that is called
  *     to validate any constraints on what the user entered.  Takes the new
  *     text as an argument and returns the accepted text or null to abort
