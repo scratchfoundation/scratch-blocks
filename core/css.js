@@ -334,6 +334,7 @@ Blockly.Css.CONTENT = [
     'overflow: auto;',
     'word-wrap: break-word;',
     'text-align: center;',
+    'font-family: "Helvetica Neue", Helvetica, sans-serif;',
     'font-size: .8em;',
   '}',
 
