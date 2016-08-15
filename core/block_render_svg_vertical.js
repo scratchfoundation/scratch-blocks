@@ -824,6 +824,11 @@ Blockly.BlockSvg.prototype.renderCompute_ = function(iconWidth) {
     inputRows.bottomEdge += inputRows[i].height;
   }
 
+  // Ensure insertion markers are at least insertionMarkerMinWidth_ wide.
+  if (this.insertionMarkerMinWidth_ > 0) {
+    inputRows.rightEdge = Math.max(inputRows.rightEdge, this.insertionMarkerMinWidth_);
+  }
+
   inputRows.hasValue = hasValue;
   inputRows.hasStatement = hasStatement;
   inputRows.hasDummy = hasDummy;
@@ -1131,8 +1136,6 @@ Blockly.BlockSvg.prototype.renderDrawRight_ = function(steps,
 
       if (input.connection.isConnected()) {
         input.connection.tighten_();
-        this.width = Math.max(this.width, inputRows.statementEdge +
-            input.connection.targetBlock().getHeightWidth().width);
       }
       if (y == inputRows.length - 1 ||
           inputRows[y + 1].type == Blockly.NEXT_STATEMENT) {
@@ -1174,9 +1177,13 @@ Blockly.BlockSvg.prototype.renderDrawRight_ = function(steps,
  */
 Blockly.BlockSvg.prototype.renderInputShape_ = function(input, x, y) {
   var inputShape = this.inputShapes_[input.name];
+  if (!inputShape) {
+    // No input shape for this input - e.g., the block is an insertion marker.
+    return;
+  }
   var inputShapeWidth = 0;
-  // Input shapes are only visibly rendered on non-connected non-insertion-markers.
-  if (this.isInsertionMarker() || input.connection.targetConnection) {
+  // Input shapes are only visibly rendered on non-connected slots.
+  if (input.connection.targetConnection) {
     inputShape.setAttribute('style', 'visibility: hidden');
   } else {
     var inputShapeX = 0, inputShapeY = 0;

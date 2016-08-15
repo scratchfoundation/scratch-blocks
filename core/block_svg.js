@@ -84,6 +84,12 @@ Blockly.BlockSvg.prototype.height = 0;
 Blockly.BlockSvg.prototype.width = 0;
 
 /**
+ * Minimum width of block if insertion marker; comes from inserting block.
+ * @type {number}
+ */
+Blockly.BlockSvg.prototype.insertionMarkerMinWidth_ = 0;
+
+/**
  * Opacity of this block between 0 and 1.
  * @type {number}
  * @private
@@ -124,16 +130,18 @@ Blockly.BlockSvg.INLINE = -1;
  */
 Blockly.BlockSvg.prototype.initSvg = function() {
   goog.asserts.assert(this.workspace.rendered, 'Workspace is headless.');
-  // Input shapes are empty holes drawn when a value input is not connected.
-  for (var i = 0, input; input = this.inputList[i]; i++) {
-    input.init();
-    if (input.type === Blockly.INPUT_VALUE) {
-      this.initInputShape(input);
+  if (!this.isInsertionMarker()) { // Insertion markers not allowed to have inputs or icons
+    // Input shapes are empty holes drawn when a value input is not connected.
+    for (var i = 0, input; input = this.inputList[i]; i++) {
+      input.init();
+      if (input.type === Blockly.INPUT_VALUE) {
+        this.initInputShape(input);
+      }
     }
-  }
-  var icons = this.getIcons();
-  for (i = 0; i < icons.length; i++) {
-    icons[i].createIcon();
+    var icons = this.getIcons();
+    for (i = 0; i < icons.length; i++) {
+      icons[i].createIcon();
+    }
   }
   this.updateColour();
   this.updateMovable();
@@ -1156,10 +1164,11 @@ Blockly.BlockSvg.removeReplacementMarker = function() {
  */
 Blockly.BlockSvg.prototype.connectInsertionMarker_ = function(localConnection,
     closestConnection) {
+  var insertingBlock = Blockly.localConnection_.sourceBlock_;
   if (!Blockly.insertionMarker_) {
     Blockly.insertionMarker_ =
-        this.workspace.newBlock(Blockly.localConnection_.sourceBlock_.type);
-    Blockly.insertionMarker_.setInsertionMarker(true);
+        this.workspace.newBlock(insertingBlock.type);
+    Blockly.insertionMarker_.setInsertionMarker(true, insertingBlock.width);
     Blockly.insertionMarker_.initSvg();
   }
 
@@ -1273,9 +1282,11 @@ Blockly.BlockSvg.prototype.setShadow = function(shadow) {
 /**
  * Set whether this block is an insertion marker block or not.
  * @param {boolean} insertionMarker True if an insertion marker.
+ * @param {Number=} opt_minWidth Optional minimum width of the marker.
  */
-Blockly.BlockSvg.prototype.setInsertionMarker = function(insertionMarker) {
+Blockly.BlockSvg.prototype.setInsertionMarker = function(insertionMarker, opt_minWidth) {
   Blockly.BlockSvg.superClass_.setInsertionMarker.call(this, insertionMarker);
+  this.insertionMarkerMinWidth_ = opt_minWidth;
   this.updateColour();
 };
 
