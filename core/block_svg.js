@@ -636,6 +636,7 @@ Blockly.BlockSvg.prototype.onMouseDown_ = function(e) {
   Blockly.terminateDrag_();
   this.select();
   Blockly.hideChaff();
+  Blockly.DropDownDiv.hideWithoutAnimation();
   if (Blockly.isRightButton(e)) {
     // Right-click.
     this.showContextMenu_(e);
@@ -682,10 +683,10 @@ Blockly.BlockSvg.prototype.onMouseDown_ = function(e) {
  * @private
  */
 Blockly.BlockSvg.prototype.onMouseUp_ = function(e) {
-  // XXX: This condition is broken because isShadow returns the wrong value.
-  // See: https://github.com/google/blockly/issues/336
-  // and https://github.com/LLK/scratch-blocks/issues/307
-  if (Blockly.dragMode_ != Blockly.DRAG_FREE && !Blockly.WidgetDiv.isVisible() && !this.isShadow()) {
+  // A field is being edited if either the WidgetDiv or DropDownDiv is currently open.
+  // If a field is being edited, don't fire any click events.
+  var fieldEditing = Blockly.WidgetDiv.isVisible() || Blockly.DropDownDiv.isVisible();
+  if (Blockly.dragMode_ != Blockly.DRAG_FREE && !fieldEditing) {
     Blockly.Events.fire(
         new Blockly.Events.Ui(this, 'click', undefined, undefined));
     // Scratch-specific: also fire a "stack click" event for this stack.

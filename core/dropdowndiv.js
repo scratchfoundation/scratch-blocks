@@ -335,6 +335,14 @@ Blockly.DropDownDiv.getPositionMetrics = function(primaryX, primaryY, secondaryX
 };
 
 /**
+ * Is the container visible?
+ * @return {boolean} True if visible.
+ */
+Blockly.DropDownDiv.isVisible = function() {
+  return !!Blockly.DropDownDiv.owner_;
+};
+
+/**
  * Hide the menu only if it is owned by the provided object.
  * @param {Object} owner Object which must be owning the drop-down to hide
  * @return {Boolean} True if hidden
