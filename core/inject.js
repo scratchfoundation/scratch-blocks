@@ -66,17 +66,14 @@ Blockly.inject = function(container, opt_options) {
     throw 'Error: container is not in current document.';
   }
   var options = new Blockly.Options(opt_options || {});
+  var subContainer = goog.dom.createDom('div', 'injectionDiv');
+  container.appendChild(subContainer);
 
-  // Add the relative wrapper. This is for positioning the drag surface exactly
-  // on top of the blockly SVG. Without this, top positioning of the drag surface
-  // is always off by a few pixels.
-  var relativeWrapper = goog.dom.createDom('div', 'blocklyRelativeWrapper');
-  container.appendChild(relativeWrapper);
-
-  var svg = Blockly.createDom_(relativeWrapper, options);
-  var dragSurface = new Blockly.DragSurfaceSvg(relativeWrapper);
+  var svg = Blockly.createDom_(subContainer, options);
+  var dragSurface = new Blockly.DragSurfaceSvg(subContainer);
   dragSurface.createDom();
   var workspace = Blockly.createMainWorkspace_(svg, options, dragSurface);
+
   Blockly.init_(workspace);
   workspace.markFocused();
   Blockly.bindEvent_(svg, 'focus', workspace, workspace.markFocused);

@@ -79,6 +79,12 @@ Blockly.Workspace = function(opt_options) {
    * @private
    */
   this.blockDB_ = Object.create(null);
+  /*
+   * @type {!Array.<!string>}
+   * A list of all of the named variables in the workspace, including variables
+   * that are not currently in use.
+   */
+  this.variableList = [];
 };
 
 /**
@@ -118,6 +124,14 @@ Blockly.Workspace.SCAN_ANGLE = 3;
  */
 Blockly.Workspace.prototype.addTopBlock = function(block) {
   this.topBlocks_.push(block);
+  if (this.isFlyout) {
+    var variables = Blockly.Variables.allUsedVariables(block);
+    for (var i = 0; i < variables.length; i++) {
+      if (this.variableList.indexOf(variables[i]) == -1) {
+        this.variableList.push(variables[i]);
+      }
+    }
+  }
 };
 
 /**
@@ -186,6 +200,59 @@ Blockly.Workspace.prototype.clear = function() {
   }
   if (!existingGroup) {
     Blockly.Events.setGroup(false);
+  }
+
+  this.variableList.length = 0;
+};
+
+/**
+ * Walk the workspace and update the list of variables to include all variables
+ * in use on the workspace.  Use when loading new workspaces from disk.
+ * @param {boolean} clearList True if the old variable list should be cleared.
+ */
+Blockly.Workspace.prototype.updateVariableList = function(clearList) {
+  // TODO: Sort
+  if (!this.isFlyout) {
+    // Update the list in place so that the flyout's references stay correct.
+    if (clearList) {
+      this.variableList.length = 0;
+    }
+    var allVariables = Blockly.Variables.allUsedVariables(this);
+    for (var i = 0; i < allVariables.length; i++) {
+      this.createVariable(allVariables[i]);
+    }
+  }
+};
+
+/**
+ * Rename a variable by updating its name in the variable list.
+ * TODO: #468
+ * @param {string} oldName Variable to rename.
+ * @param {string} newName New variable name.
+ */
+Blockly.Workspace.prototype.renameVariable = function(oldName, newName) {
+  // Find the old name in the list and replace it.
+  var variableIndex = this.variableList.indexOf(oldName);
+  var newVariableIndex = this.variableList.indexOf(newName);
+  if (variableIndex != -1 && newVariableIndex == -1) {
+    this.variableList[variableIndex] = newName;
+  } else if (variableIndex != -1 && newVariableIndex != -1) {
+    this.variableList.splice(variableIndex, 1);
+  } else {
+    this.variableList.push(newName);
+    console.log('Tried to rename an non-existent variable.');
+  }
+};
+
+/**
+ * Create a variables with the given name.
+ * TODO: #468
+ * @param {string} name The new variable's name.
+ */
+Blockly.Workspace.prototype.createVariable = function(name) {
+  var index = this.variableList.indexOf(name);
+  if (index == -1) {
+    this.variableList.push(name);
   }
 };
 
