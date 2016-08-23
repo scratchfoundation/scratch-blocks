@@ -17,7 +17,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
+
 'use strict';
 
 goog.provide('Blockly.Blocks.event');
@@ -55,36 +55,6 @@ Blockly.Blocks['event_whenflagclicked'] = {
   }
 };
 
-Blockly.Blocks['event_broadcast_menu'] = {
-  /**
-   * Broadcast drop-down menu.
-   * @this Blockly.Block
-   */
-  init: function() {
-    this.jsonInit(
-      {
-        "message0": "%1",
-        "args0": [
-          {
-            "type": "field_dropdown",
-            "name": "BROADCAST_OPTION",
-            "options": [
-              ['message1', 'MESSAGE1'],
-              ['message2', 'MESSAGE2'],
-              ['new message', 'NEW_MESSAGE']
-            ]
-          }
-        ],
-        "inputsInline": true,
-        "output": "String",
-        "colour": Blockly.Colours.event.secondary,
-        "colourSecondary": Blockly.Colours.event.secondary,
-        "colourTertiary": Blockly.Colours.event.tertiary,
-        "outputShape": Blockly.OUTPUT_SHAPE_ROUND
-      });
-  }
-};
-
 Blockly.Blocks['event_whenthisspriteclicked'] = {
   /**
    * Block for when this sprite clicked.
@@ -113,8 +83,13 @@ Blockly.Blocks['event_whenbroadcastreceived'] = {
       "message0": "when I receive %1",
       "args0": [
         {
-          "type": "input_value",
-          "name": "BROADCAST_OPTION"
+          "type": "field_dropdown",
+          "name": "BROADCAST_OPTION",
+          "options": [
+            ['message1', 'MESSAGE1'],
+            ['message2', 'MESSAGE2'],
+            ['new message', 'NEW_MESSAGE']
+          ]
         }
       ],
       "inputsInline": true,
@@ -136,30 +111,6 @@ Blockly.Blocks['event_whenbackdropswitchesto'] = {
       "message0": "when backdrop switches to %1",
       "args0": [
         {
-          "type": "input_value",
-          "name": "BACKDROP"
-        }
-      ],
-      "inputsInline": true,
-      "nextStatement": null,
-      "colour": Blockly.Colours.event.primary,
-      "colourSecondary": Blockly.Colours.event.secondary,
-      "colourTertiary": Blockly.Colours.event.tertiary
-    });
-  }
-};
-
-Blockly.Blocks['event_backdrops'] = {
-  /**
-   * Backdrop list
-   * @this Blockly.Block
-   */
-  init: function() {
-    this.jsonInit({
-      "id": "event_backdrops",
-      "message0": "%1",
-      "args0": [
-        {
           "type": "field_dropdown",
           "name": "BACKDROP",
           "options": [
@@ -168,11 +119,10 @@ Blockly.Blocks['event_backdrops'] = {
         }
       ],
       "inputsInline": true,
-      "output": "String",
-      "colour": Blockly.Colours.event.secondary,
+      "nextStatement": null,
+      "colour": Blockly.Colours.event.primary,
       "colourSecondary": Blockly.Colours.event.secondary,
-      "colourTertiary": Blockly.Colours.event.tertiary,
-      "outputShape": Blockly.OUTPUT_SHAPE_ROUND
+      "colourTertiary": Blockly.Colours.event.tertiary
     });
   }
 };
@@ -187,8 +137,13 @@ Blockly.Blocks['event_whengreaterthan'] = {
       "message0": "when %1 > %2",
       "args0": [
         {
-          "type": "input_value",
-          "name": "WHENGREATERTHANMENU"
+          "type": "field_dropdown",
+          "name": "WHENGREATERTHANMENU",
+          "options": [
+              ['loudness', 'LOUDNESS'],
+              ['timer', 'TIMER'],
+              ['video motion', 'VIDEOMOTION']
+          ]
         },
         {
           "type": "input_value",
@@ -204,36 +159,6 @@ Blockly.Blocks['event_whengreaterthan'] = {
   }
 };
 
-Blockly.Blocks['event_whengreaterthanmenu'] = {
-  /**
-   * "When [loudness/timer/video motion] > [Value]" list
-   * @this Blockly.Block
-   */
-  init: function() {
-    this.jsonInit({
-      "id": "event_whengreaterthanmenu",
-      "message0": "%1",
-      "args0": [
-        {
-          "type": "field_dropdown",
-          "name": "WHENGREATERTHANMENU",
-          "options": [
-              ['loudness', 'LOUDNESS'],
-              ['timer', 'TIMER'],
-              ['video motion', 'VIDEOMOTION']
-          ]
-        }
-      ],
-      "inputsInline": true,
-      "output": "String",
-      "colour": Blockly.Colours.event.secondary,
-      "colourSecondary": Blockly.Colours.event.secondary,
-      "colourTertiary": Blockly.Colours.event.tertiary,
-      "outputShape": Blockly.OUTPUT_SHAPE_ROUND
-    });
-  }
-};
-
 Blockly.Blocks['event_broadcast'] = {
   /**
    * Block to send a broadcast.
@@ -245,8 +170,13 @@ Blockly.Blocks['event_broadcast'] = {
       "message0": "broadcast %1",
       "args0": [
         {
-          "type": "input_value",
-          "name": "BROADCAST_OPTION"
+          "type": "field_dropdown",
+          "name": "BROADCAST_OPTION",
+          "options": [
+            ['message1', 'MESSAGE1'],
+            ['message2', 'MESSAGE2'],
+            ['new message', 'NEW_MESSAGE']
+          ]
         }
       ],
       "inputsInline": true,
@@ -269,8 +199,13 @@ Blockly.Blocks['event_broadcastandwait'] = {
       "message0": "broadcast %1 and wait",
       "args0": [
         {
-          "type": "input_value",
-          "name": "BROADCAST_OPTION"
+          "type": "field_dropdown",
+          "name": "BROADCAST_OPTION",
+          "options": [
+            ['message1', 'MESSAGE1'],
+            ['message2', 'MESSAGE2'],
+            ['new message', 'NEW_MESSAGE']
+          ]
         }
       ],
       "inputsInline": true,
@@ -283,15 +218,15 @@ Blockly.Blocks['event_broadcastandwait'] = {
   }
 };
 
-Blockly.Blocks['event_keyoptions'] = {
+Blockly.Blocks['event_whenkeypressed'] = {
   /**
-   * Options for Keys
+   * Block to send a broadcast.
    * @this Blockly.Block
    */
   init: function() {
     this.jsonInit({
-      "id": "event_keyoptions",
-      "message0": "%1",
+      "id": "event_whenkeypressed",
+      "message0": "when %1 key pressed",
       "args0": [
         {
           "type": "field_dropdown",
@@ -338,31 +273,6 @@ Blockly.Blocks['event_keyoptions'] = {
               ['8', 'EIGHT'],
               ['9', 'NINE']
           ]
-        }
-      ],
-      "inputsInline": true,
-      "output": "String",
-      "colour": Blockly.Colours.event.secondary,
-      "colourSecondary": Blockly.Colours.event.secondary,
-      "colourTertiary": Blockly.Colours.event.tertiary,
-      "outputShape": Blockly.OUTPUT_SHAPE_ROUND
-    });
-  }
-};
-
-Blockly.Blocks['event_whenkeypressed'] = {
-  /**
-   * Block to send a broadcast.
-   * @this Blockly.Block
-   */
-  init: function() {
-    this.jsonInit({
-      "id": "event_whenkeypressed",
-      "message0": "when %1 key pressed",
-      "args0": [
-        {
-          "type": "input_value",
-          "name": "KEY_OPTION"
         }
       ],
       "inputsInline": true,
