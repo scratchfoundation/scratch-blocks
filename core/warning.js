@@ -139,7 +139,7 @@ Blockly.Warning.prototype.setVisible = function(visible) {
  * @param {!Event} e Mouse up event.
  * @private
  */
-Blockly.Warning.prototype.bodyFocus_ = function(e) {
+Blockly.Warning.prototype.bodyFocus_ = function(/*e*/) {
   this.bubble_.promote_();
 };
 

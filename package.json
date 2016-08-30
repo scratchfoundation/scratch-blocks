@@ -13,6 +13,6 @@
     "test": "./node_modules/.bin/eslint ."
   },
   "devDependencies": {
-    "eslint": "~2.9.0"
+    "eslint": "2.9.0"
   }
 }

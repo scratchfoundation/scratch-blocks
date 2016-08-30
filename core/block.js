@@ -47,7 +47,7 @@ goog.require('goog.string');
  * @param {!Blockly.Workspace} workspace The block's workspace.
  * @param {?string} prototypeName Name of the language object containing
  *     type-specific functions for this block.
- * @param {=string} opt_id Optional ID.  Use this ID if provided, otherwise
+ * @param {string=} opt_id Optional ID.  Use this ID if provided, otherwise
  *     create a new id.
  * @constructor
  */
@@ -1153,7 +1153,7 @@ Blockly.Block.prototype.jsonInit = function(json) {
  * @param {string} message Text contains interpolation tokens (%1, %2, ...)
  *     that match with fields or inputs defined in the args array.
  * @param {!Array} args Array of arguments to be interpolated.
- * @param {=string} lastDummyAlign If a dummy input is added at the end,
+ * @param {string=} lastDummyAlign If a dummy input is added at the end,
  *     how should it be aligned?
  * @private
  */
@@ -1480,16 +1480,18 @@ Blockly.Block.prototype.hasCheckboxInFlyout = function() {
 /**
  * Set this block's warning text.
  * @param {?string} text The text, or null to delete.
+ * @abstract
  */
-Blockly.Block.prototype.setWarningText = function(text) {
+Blockly.Block.prototype.setWarningText = function(/*text*/) {
   // NOP.
 };
 
 /**
  * Give this block a mutator dialog.
  * @param {Blockly.Mutator} mutator A mutator dialog instance or null to remove.
+ * @abstract
  */
-Blockly.Block.prototype.setMutator = function(mutator) {
+Blockly.Block.prototype.setMutator = function(/*mutator*/) {
   // NOP.
 };
 

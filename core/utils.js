@@ -339,11 +339,9 @@ Blockly.is3dSupported = function() {
  * @param {string} name Element's tag name.
  * @param {!Object} attrs Dictionary of attribute names and values.
  * @param {Element} parent Optional parent on which to append the element.
- * @param {Blockly.Workspace=} opt_workspace Optional workspace for access to
- *     context (scale...).
  * @return {!SVGElement} Newly created SVG element.
  */
-Blockly.createSvgElement = function(name, attrs, parent, opt_workspace) {
+Blockly.createSvgElement = function(name, attrs, parent) {
   var e = /** @type {!SVGElement} */ (
       document.createElementNS(Blockly.SVG_NS, name));
   for (var key in attrs) {

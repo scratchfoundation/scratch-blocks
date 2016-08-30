@@ -239,7 +239,6 @@ Blockly.Toolbox.prototype.position = function() {
     return;
   }
   var svg = this.workspace_.getParentSvg();
-  var svgPosition = goog.style.getPageOffset(svg);
   var svgSize = Blockly.svgSize(svg);
   if (this.horizontalLayout_) {
     treeDiv.style.left = '0';
@@ -286,8 +285,9 @@ Blockly.Toolbox.prototype.populate_ = function(newTree) {
 /**
  * Sync trees of the toolbox.
  * @param {Node} treeIn DOM tree of blocks, or null.
- * @param {Blockly.Toolbox.TreeControl} treeOut
- * @param {string} pathToMedia
+ * @param {Blockly.Toolbox.TreeControl} treeOut Blockly toolbox tree to sync.
+ * @param {boolean} iconic Whether the toolbox uses icons.
+ * @param {string} pathToMedia Media path for the toolbox.
  * @private
  */
 Blockly.Toolbox.prototype.syncTrees_ = function(treeIn, treeOut, iconic,
@@ -600,7 +600,7 @@ Blockly.Toolbox.TreeNode.prototype.getExpandIconSafeHtml = function() {
  * @param {!goog.events.BrowserEvent} e The browser event.
  * @override
  */
-Blockly.Toolbox.TreeNode.prototype.onMouseDown = function(e) {
+Blockly.Toolbox.TreeNode.prototype.onMouseDown = function(/*e*/) {
   // Expand icon.
   if (this.hasChildren() && this.isUserCollapsible_) {
     this.toggle();
@@ -619,7 +619,7 @@ Blockly.Toolbox.TreeNode.prototype.onMouseDown = function(e) {
  * @override
  * @private
  */
-Blockly.Toolbox.TreeNode.prototype.onDoubleClick_ = function(e) {
+Blockly.Toolbox.TreeNode.prototype.onDoubleClick_ = function(/*e*/) {
   // NOP.
 };
 
@@ -651,9 +651,6 @@ Blockly.Toolbox.TreeNode.prototype.onKeyDown = function(e) {
  *    goog.ui.tree.TreeControl.DefaultConfig. If not specified, a default config
  *    will be used.
  * @constructor
- * @param {Object=} config The configuration for the tree. See
- *    goog.ui.tree.TreeControl.DefaultConfig. If not specified, a default config
- *    will be used.
  * @extends {Blockly.Toolbox.TreeNode}
  */
 Blockly.Toolbox.TreeSeparator = function(config) {

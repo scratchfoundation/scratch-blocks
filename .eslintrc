@@ -15,14 +15,15 @@
         "no-cond-assign": ["off"], # Blockly often uses cond-assignment in loops
         "no-redeclare": ["off"], # Closure style allows redeclarations
         "valid-jsdoc": ["error", {"requireReturn": false}],
-        "no-console": ["off"]
+        "no-console": ["off"],
+        "no-constant-condition": ["off"]
     },
     "env": {
         "browser": true
     },
     "globals": {
         "Blockly": true, # Blockly global
-        "goog": true # goog closure libraries/includes
+        "goog": true, # goog closure libraries/includes
     },
     "extends": "eslint:recommended"
 }

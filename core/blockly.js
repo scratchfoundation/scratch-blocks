@@ -56,7 +56,9 @@ goog.require('goog.userAgent');
 
 
 // Turn off debugging when compiled.
+/* eslint-disable no-unused-vars */
 var CLOSURE_DEFINES = {'goog.DEBUG': false};
+/* eslint-enable no-unused-vars */
 
 /**
  * The main workspace most recently used.
@@ -221,7 +223,7 @@ Blockly.svgResize = function(workspace) {
  * @param {!Event} e Mouse up event.
  * @private
  */
-Blockly.onMouseUp_ = function(e) {
+Blockly.onMouseUp_ = function(/*e*/) {
   var workspace = Blockly.getMainWorkspace();
   Blockly.Css.setCursor(Blockly.Css.Cursor.OPEN);
   workspace.dragMode_ = Blockly.DRAG_NONE;
