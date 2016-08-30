@@ -29,7 +29,7 @@
 # cycle since there is no need to rebuild or recompile, just reload.
 #
 # This script also generates:
-#   blocks_compressed.js: The compressed Blockly language blocks.
+#   blocks_compressed.js: The compressed common blocks.
 #   blocks_horizontal_compressed.js: The compressed Scratch horizontal blocks.
 #   blocks_vertical_compressed.js: The compressed Scratch vertical blocks.
 #   msg/js/<LANG>.js for every language <LANG> defined in msg/js/<LANG>.json.
@@ -222,7 +222,7 @@ class Gen_compressed(threading.Thread):
       filenames = glob.glob(os.path.join("blocks_vertical", "*.js"))
     elif block_type == "common":
       target_filename = "blocks_compressed.js"
-      filenames = glob.glob(os.path.join("blocks", "*.js"))
+      filenames = glob.glob(os.path.join("blocks_common", "*.js"))
     # Define the parameters for the POST request.
     params = [
         ("compilation_level", "SIMPLE_OPTIMIZATIONS"),
