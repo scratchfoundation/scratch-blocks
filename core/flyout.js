@@ -1048,7 +1048,7 @@ Blockly.Flyout.prototype.onMouseDown_ = function(e) {
  * @param {!Event} e Mouse up event.
  * @private
  */
-Blockly.Flyout.prototype.onMouseUp_ = function(e) {
+Blockly.Flyout.prototype.onMouseUp_ = function(/*e*/) {
   if (!this.workspace_.isDragging()) {
     if (this.autoClose) {
       this.createBlockFunc_(Blockly.Flyout.startBlock_)(

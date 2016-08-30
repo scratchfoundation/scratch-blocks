@@ -302,7 +302,7 @@ Blockly.Events.Abstract = function(block) {
  */
 Blockly.Events.Abstract.prototype.toJson = function() {
   var json = {
-    'type': this.type,
+    'type': this.type
   };
   if (this.blockId) {
     json['blockId'] = this.blockId;
@@ -333,8 +333,9 @@ Blockly.Events.Abstract.prototype.isNull = function() {
 /**
  * Run an event.
  * @param {boolean} forward True if run forward, false if run backward (undo).
+ * @abstract
  */
-Blockly.Events.Abstract.prototype.run = function(forward) {
+Blockly.Events.Abstract.prototype.run = function(/*forward*/) {
   // Defined by subclasses.
 };
 

@@ -161,7 +161,7 @@ Blockly.Tooltip.onMouseOver_ = function(e) {
  * @param {!Event} e Mouse event.
  * @private
  */
-Blockly.Tooltip.onMouseOut_ = function(e) {
+Blockly.Tooltip.onMouseOut_ = function(/*e*/) {
   // Moving from one element to another (overlapping or with no gap) generates
   // a mouseOut followed instantly by a mouseOver.  Fork off the mouseOut
   // event and kill it if a mouseOver is received immediately.

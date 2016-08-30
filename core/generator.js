@@ -361,7 +361,7 @@ Blockly.Generator.prototype.provideFunction_ = function(desiredName, code) {
     var oldCodeText;
     while (oldCodeText != codeText) {
       oldCodeText = codeText;
-      codeText = codeText.replace(/^((  )*)  /gm, '$1' + this.INDENT);
+      codeText = codeText.replace(/^(( {2})*) {2}/gm, '$1' + this.INDENT);
     }
     this.definitions_[desiredName] = codeText;
   }
