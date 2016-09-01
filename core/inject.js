@@ -191,8 +191,6 @@ Blockly.createDom_ = function(container, options) {
  */
 Blockly.createMainWorkspace_ = function(svg, options, dragSurface) {
   options.parentWorkspace = null;
-  options.getMetrics = Blockly.getMainWorkspaceMetrics_;
-  options.setMetrics = Blockly.setMainWorkspaceMetrics_;
   var mainWorkspace = new Blockly.WorkspaceSvg(options, dragSurface);
   mainWorkspace.scale = options.zoomOptions.startScale;
   svg.appendChild(mainWorkspace.createDom('blocklyMainBackground'));

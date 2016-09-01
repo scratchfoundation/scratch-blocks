@@ -144,6 +144,9 @@ Blockly.Block = function(workspace, prototypeName, opt_id) {
   /** @type {boolean} */
   this.isInFlyout = workspace.isFlyout;
   /** @type {boolean} */
+  this.isInMutator = workspace.isMutator;
+
+  /** @type {boolean} */
   this.RTL = workspace.RTL;
 
   /** @type {boolean} */

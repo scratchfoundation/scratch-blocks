@@ -350,7 +350,7 @@ Blockly.BlockSvg.terminateDrag = function() {
         Blockly.Events.setGroup(false);
       }, Blockly.BUMP_DELAY);
       // Fire an event to allow scrollbars to resize.
-      Blockly.resizeSvgContents(selected.workspace);
+      selected.workspace.resizeContents();
     }
   }
   Blockly.dragMode_ = Blockly.DRAG_NONE;
@@ -445,7 +445,7 @@ Blockly.BlockSvg.prototype.moveBy = function(dx, dy) {
   this.moveConnections_(dx, dy);
   if (eventsEnabled) {
     event.recordNew();
-    Blockly.resizeSvgContents(this.workspace);
+    this.workspace.resizeContents();
     Blockly.Events.fire(event);
   }
 };
@@ -640,6 +640,13 @@ Blockly.BlockSvg.prototype.onMouseDown_ = function(e) {
   if (this.isInFlyout) {
     return;
   }
+  if (this.isInMutator) {
+    // Mutator's coordinate system could be out of date because the bubble was
+    // dragged, the block was moved, the parent workspace zoomed, etc.
+    this.workspace.resize();
+  }
+
+  this.workspace.updateScreenCalculationsIfScrolled();
   this.workspace.markFocused();
   Blockly.terminateDrag_();
   this.select();
@@ -1343,7 +1350,7 @@ Blockly.BlockSvg.prototype.dispose = function(healStack, animate) {
   Blockly.BlockSvg.superClass_.dispose.call(this, healStack);
 
   goog.dom.removeNode(this.svgGroup_);
-  Blockly.resizeSvgContents(blockWorkspace);
+  blockWorkspace.resizeContents();
   // Sever JavaScript to DOM connections.
   this.svgGroup_ = null;
   this.svgPath_ = null;
