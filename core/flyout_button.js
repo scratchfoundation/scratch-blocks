@@ -150,6 +150,7 @@ Blockly.FlyoutButton.prototype.dispose = function() {
     this.svgGroup_ = null;
   }
   this.workspace_ = null;
+  this.targetWorkspace_ = null;
 };
 
 /**
@@ -161,6 +162,8 @@ Blockly.FlyoutButton.prototype.onMouseUp = function(e) {
   e.preventDefault();
   // Don't propagate mousewheel event (zooming).
   e.stopPropagation();
-
+  // Stop binding to mouseup and mousemove events--flyout mouseup would normally
+  // do this, but we're skipping that.
+  Blockly.Flyout.terminateDrag_();
   Blockly.Variables.createVariable(this.targetWorkspace_);
 };
