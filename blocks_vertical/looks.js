@@ -346,7 +346,7 @@ Blockly.Blocks['looks_costume'] = {
         "args0": [
           {
             "type": "field_dropdown",
-            "name": "EFFECT",
+            "name": "COSTUME",
             "options": [
               ['costume1', 'COSTUME1'],
               ['costume2', 'COSTUME2']
@@ -416,7 +416,7 @@ Blockly.Blocks['looks_switchbackdropto'] = {
       "args0": [
         {
           "type": "input_value",
-          "name": "COSTUME"
+          "name": "BACKDROP"
         }
       ],
       "inputsInline": true,
@@ -564,7 +564,7 @@ Blockly.Blocks['looks_switchbackdroptoandwait'] = {
       "args0": [
         {
           "type": "input_value",
-          "name": "COSTUME"
+          "name": "BACKDROP"
         }
       ],
       "inputsInline": true,

@@ -137,7 +137,7 @@ Blockly.Blocks['motion_pointtowards_menu'] = {
             "type": "field_dropdown",
             "name": "TOWARDS",
             "options": [
-              ['mouse pointer', 'MOUSE-POINTER']
+              ['mouse-pointer', '_mouse_']
             ]
           }
         ],
@@ -189,8 +189,8 @@ Blockly.Blocks['motion_goto_menu'] = {
             "type": "field_dropdown",
             "name": "TO",
             "options": [
-              ['mouse pointer', 'MOUSE-POINTER'],
-              ['random position', 'RANDOM-POSITION']
+              ['mouse-pointer', '_mouse_'],
+              ['random position', '_random_']
             ]
           }
         ],

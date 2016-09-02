@@ -65,8 +65,8 @@ Blockly.Blocks['sensing_touchingobjectmenu'] = {
             "type": "field_dropdown",
             "name": "TOUCHINGOBJECTMENU",
             "options": [
-              ['mouse pointer', 'MOUSE_POINTER'],
-              ['edge', 'EDGE']
+              ['mouse-pointer', '_mouse_'],
+              ['edge', '_edge_']
             ]
           }
         ],
@@ -169,7 +169,7 @@ Blockly.Blocks['sensing_distancetomenu'] = {
             "type": "field_dropdown",
             "name": "DISTANCETOMENU",
             "options": [
-              ['mouse pointer', 'MOUSE_POINTER']
+              ['mouse-pointer', '_mouse_']
             ]
           }
         ],
@@ -235,7 +235,7 @@ Blockly.Blocks['sensing_keypressed'] = {
       "args0": [
         {
           "type": "input_value",
-          "name": "KEY_OPTIONS"
+          "name": "KEY_OPTION"
         }
       ],
       "inputsInline": true,
@@ -255,7 +255,6 @@ Blockly.Blocks['sensing_keyoptions'] = {
    */
   init: function() {
     this.jsonInit({
-      "id": "event_keyoptions",
       "message0": "%1",
       "args0": [
         {
