@@ -346,7 +346,7 @@ Blockly.Blocks['looks_costume'] = {
         "args0": [
           {
             "type": "field_dropdown",
-            "name": "EFFECT",
+            "name": "COSTUME",
             "options": [
               ['costume1', 'COSTUME1'],
               ['costume2', 'COSTUME2']

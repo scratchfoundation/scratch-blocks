@@ -65,8 +65,8 @@ Blockly.Blocks['sensing_touchingobjectmenu'] = {
             "type": "field_dropdown",
             "name": "TOUCHINGOBJECTMENU",
             "options": [
-              ['mouse pointer', 'MOUSE_POINTER'],
-              ['edge', 'EDGE']
+              ['mouse-pointer', '_mouse_'],
+              ['edge', '_edge_']
             ]
           }
         ],
@@ -169,7 +169,7 @@ Blockly.Blocks['sensing_distancetomenu'] = {
             "type": "field_dropdown",
             "name": "DISTANCETOMENU",
             "options": [
-              ['mouse pointer', 'MOUSE_POINTER']
+              ['mouse-pointer', '_mouse_']
             ]
           }
         ],
