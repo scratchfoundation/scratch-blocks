@@ -416,7 +416,7 @@ Blockly.Blocks['looks_switchbackdropto'] = {
       "args0": [
         {
           "type": "input_value",
-          "name": "COSTUME"
+          "name": "BACKDROP"
         }
       ],
       "inputsInline": true,
@@ -564,7 +564,7 @@ Blockly.Blocks['looks_switchbackdroptoandwait'] = {
       "args0": [
         {
           "type": "input_value",
-          "name": "COSTUME"
+          "name": "BACKDROP"
         }
       ],
       "inputsInline": true,

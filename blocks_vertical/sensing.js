@@ -235,7 +235,7 @@ Blockly.Blocks['sensing_keypressed'] = {
       "args0": [
         {
           "type": "input_value",
-          "name": "KEY_OPTIONS"
+          "name": "KEY_OPTION"
         }
       ],
       "inputsInline": true,
@@ -255,7 +255,6 @@ Blockly.Blocks['sensing_keyoptions'] = {
    */
   init: function() {
     this.jsonInit({
-      "id": "event_keyoptions",
       "message0": "%1",
       "args0": [
         {
