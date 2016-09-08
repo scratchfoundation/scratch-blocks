@@ -199,20 +199,6 @@ Blockly.HorizontalFlyout.prototype.position = function() {
  * @private
  */
 Blockly.HorizontalFlyout.prototype.setBackgroundPath_ = function(width, height) {
-  this.setBackgroundPathHorizontal_(width, height);
-};
-
-/**
- * Create and set the path for the visible boundaries of the flyout in
- * horizontal mode.
- * @param {number} width The width of the flyout, not including the
- *     rounded corners.
- * @param {number} height The height of the flyout, not including
- *     rounded corners.
- * @private
- */
-Blockly.HorizontalFlyout.prototype.setBackgroundPathHorizontal_ = function(width,
-    height) {
   var atTop = this.toolboxPosition_ == Blockly.TOOLBOX_AT_TOP;
   // Start at top left.
   var path = ['M 0,' + (atTop ? 0 : this.CORNER_RADIUS)];
@@ -292,7 +278,7 @@ Blockly.HorizontalFlyout.prototype.layout_ = function(contents, gaps) {
   var margin = this.MARGIN;
   var cursorX = margin;
   var cursorY = margin;
-  if (this.horizontalLayout_ && this.RTL) {
+  if (this.RTL) {
     contents = contents.reverse();
   }
 
@@ -310,21 +296,12 @@ Blockly.HorizontalFlyout.prototype.layout_ = function(contents, gaps) {
       var blockHW = block.getHeightWidth();
 
       var moveX = cursorX;
-      if (this.horizontalLayout_ && this.RTL) {
+      if (this.RTL) {
         moveX += blockHW.width;
       }
 
-      if (!this.horizontalLayout_ && block.hasCheckboxInFlyout()) {
-        this.createCheckbox_(block, cursorX, cursorY, blockHW);
-        moveX += this.CHECKBOX_SIZE + this.CHECKBOX_MARGIN;
-      }
-      block.moveBy((this.horizontalLayout_ && this.RTL) ?
-          cursorX + blockHW.width : cursorX, cursorY);
-      if (this.horizontalLayout_) {
-        cursorX += blockHW.width + gaps[i];
-      } else {
-        cursorY += blockHW.height + gaps[i];
-      }
+      block.moveBy(moveX, cursorY);
+      cursorX += blockHW.width + gaps[i];
 
       // Create an invisible rectangle under the block to act as a button.  Just
       // using the block as a button is poor, since blocks have holes in them.
@@ -345,11 +322,7 @@ Blockly.HorizontalFlyout.prototype.layout_ = function(contents, gaps) {
       Blockly.bindEvent_(buttonSvg, 'mouseup', button, button.onMouseUp);
 
       this.buttons_.push(button);
-      if (this.horizontalLayout_) {
-        cursorX += (button.width + gaps[i]);
-      } else {
-        cursorY += button.height + gaps[i];
-      }
+      cursorX += (button.width + gaps[i]);
     }
   }
 };
@@ -506,7 +479,7 @@ Blockly.HorizontalFlyout.prototype.getClientRect = function() {
  * For RTL: Lay out the blocks right-aligned.
  * @param {!Array<!Blockly.Block>} blocks The blocks to reflow.
  */
-Blockly.HorizontalFlyout.prototype.reflowHorizontal = function(blocks) {
+Blockly.HorizontalFlyout.prototype.reflowInternal_ = function(blocks) {
   this.workspace_.scale = this.targetWorkspace_.scale;
   var flyoutHeight = 0;
   for (var i = 0, block; block = blocks[i]; i++) {
@@ -541,19 +514,5 @@ Blockly.HorizontalFlyout.prototype.reflowHorizontal = function(blocks) {
     // Call this since it is possible the trash and zoom buttons need
     // to move. e.g. on a bottom positioned flyout when zoom is clicked.
     this.targetWorkspace_.resize();
-  }
-};
-
-/**
- * Reflow blocks and their buttons.
- */
-Blockly.HorizontalFlyout.prototype.reflow = function() {
-  if (this.reflowWrapper_) {
-    this.workspace_.removeChangeListener(this.reflowWrapper_);
-  }
-  var blocks = this.workspace_.getTopBlocks(false);
-  this.reflowHorizontal(blocks);
-  if (this.reflowWrapper_) {
-    this.workspace_.addChangeListener(this.reflowWrapper_);
   }
 };
