@@ -823,8 +823,8 @@ Blockly.Flyout.prototype.layout_ = function(contents, gaps) {
         this.createCheckbox_(block, cursorX, cursorY, blockHW);
         moveX += this.CHECKBOX_SIZE + this.CHECKBOX_MARGIN;
       }
-      block.moveBy((this.horizontalLayout_ && this.RTL) ?
-          cursorX + blockHW.width : cursorX, cursorY);
+      block.moveBy(moveX, cursorY);
+
       if (this.horizontalLayout_) {
         cursorX += blockHW.width + gaps[i];
       } else {
