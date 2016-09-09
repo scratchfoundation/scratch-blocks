@@ -55,6 +55,15 @@ Blockly.VerticalFlyout = function(workspaceOptions) {
    * @private
    */
   this.horizontalLayout_ = false;
+
+  /**
+   * List of checkboxes next to variable blocks.
+   * Each element is an object containing the SVG for the checkbox, a boolean
+   * for its checked state, and the block the checkbox is associated with.
+   * @type {!Array.<!Object>}
+   * @private
+   */
+  this.checkboxes_ = [];
 };
 goog.inherits(Blockly.VerticalFlyout, Blockly.Flyout);
 
@@ -65,6 +74,28 @@ goog.inherits(Blockly.VerticalFlyout, Blockly.Flyout);
 Blockly.VerticalFlyout.prototype.autoClose = false;
 
 Blockly.VerticalFlyout.prototype.DEFAULT_WIDTH = 250;
+/**
+ * Size of a checkbox next to a variable reporter.
+ * @type {number}
+ * @const
+ */
+Blockly.VerticalFlyout.prototype.CHECKBOX_SIZE = 20;
+
+/**
+ * Space above and around the checkbox.
+ * @type {number}
+ * @const
+ */
+Blockly.VerticalFlyout.prototype.CHECKBOX_MARGIN = Blockly.Flyout.prototype.MARGIN;
+
+/**
+ * Total additional width of a row that contains a checkbox.
+ * @type {number}
+ * @const
+ */
+Blockly.VerticalFlyout.prototype.CHECKBOX_SPACE_X =
+    Blockly.VerticalFlyout.prototype.CHECKBOX_SIZE +
+    2 * Blockly.VerticalFlyout.prototype.CHECKBOX_MARGIN;
 
 /**
  * Return an object with all the metrics required to size scrollbars for the
@@ -100,8 +131,7 @@ Blockly.VerticalFlyout.prototype.getMetrics_ = function() {
   var absoluteLeft = 0;
 
   var viewHeight = this.height_ - 2 * this.SCROLLBAR_PADDING;
-  var viewWidth = this.parentToolbox_ ?
-      this.parentToolbox_.getWidth() : this.width_;
+  var viewWidth = this.getWidth();
   if (!this.RTL) {
     viewWidth -= this.SCROLLBAR_PADDING;
   }
@@ -250,6 +280,39 @@ Blockly.VerticalFlyout.prototype.wheel_ = function(e) {
 };
 
 /**
+ * Delete blocks and background buttons from a previous showing of the flyout.
+ * @private
+ */
+Blockly.VerticalFlyout.prototype.clearOldBlocks_ = function() {
+  Blockly.VerticalFlyout.superClass_.clearOldBlocks_.call(this);
+
+  // Do the same for checkboxes.
+  for (var i = 0, elem; elem = this.checkboxes_[i]; i++) {
+    elem.block.flyoutCheckbox = null;
+    goog.dom.removeNode(elem.svgRoot);
+  }
+  this.checkboxes_ = [];
+};
+
+/**
+ * Add listeners to a block that has been added to the flyout.
+ * @param {Element} root The root node of the SVG group the block is in.
+ * @param {!Blockly.Block} block The block to add listeners for.
+ * @param {!Element} rect The invisible rectangle under the block that acts as
+ *     a button for that block.
+ * @private
+ */
+Blockly.VerticalFlyout.prototype.addBlockListeners_ = function(root, block,
+    rect) {
+  Blockly.VerticalFlyout.superClass_.addBlockListeners_.call(this, root, block,
+      rect);
+  if (block.flyoutCheckbox) {
+    this.listeners_.push(Blockly.bindEvent_(block.flyoutCheckbox.svgRoot,
+        'mousedown', null, this.checkboxClicked_(block.flyoutCheckbox)));
+  }
+};
+
+/**
  * Lay out the blocks in the flyout.
  * @param {!Array.<!Object>} contents The blocks and buttons to lay out.
  * @param {!Array.<number>} gaps The visible gaps between blocks.
@@ -375,6 +438,46 @@ Blockly.VerticalFlyout.prototype.createCheckbox_ = function(block, cursorX, curs
   this.checkboxes_.push(checkboxObj);
 };
 
+/**
+ * Respond to a click on a checkbox in the flyout.
+ * @param {!Object} checkboxObj An object containing the svg element of the
+ *    checkbox, a boolean for the state of the checkbox, and the block the
+ *    checkbox is associated with.
+ * @return {!Function} Function to call when checkbox is clicked.
+ * @private
+ */
+Blockly.VerticalFlyout.prototype.checkboxClicked_ = function(checkboxObj) {
+  return function(e) {
+    checkboxObj.clicked = !checkboxObj.clicked;
+    if (checkboxObj.clicked) {
+      Blockly.addClass_((checkboxObj.svgRoot), 'checked');
+    } else {
+      Blockly.removeClass_((checkboxObj.svgRoot), 'checked');
+    }
+    // This event has been handled.  No need to bubble up to the document.
+    e.stopPropagation();
+    e.preventDefault();
+  };
+};
+
+/**
+ * Explicitly set the clicked state of the checkbox for the given block.
+ * @param {string} blockId ID of block whose checkbox should be changed.
+ * @param {boolean} clicked True if the box should be marked clicked.
+ */
+Blockly.VerticalFlyout.prototype.setCheckboxState = function(blockId, clicked) {
+  var block = this.workspace_.getBlockById(blockId);
+  if (!block) {
+    throw 'No block found in the flyout for id ' + blockId;
+  }
+  var checkboxObj = block.flyoutCheckbox;
+  checkboxObj.clicked = clicked;
+  if (checkboxObj.clicked) {
+    Blockly.addClass_((checkboxObj.svgRoot), 'checked');
+  } else {
+    Blockly.removeClass_((checkboxObj.svgRoot), 'checked');
+  }
+};
 
 /**
  * Handle a mouse-move to vertically drag the flyout.
