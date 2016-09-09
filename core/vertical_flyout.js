@@ -95,10 +95,10 @@ Blockly.VerticalFlyout.prototype.getMetrics_ = function() {
     var optionBox = {height: 0, y: 0, width: 0, x: 0};
   }
 
+  // Padding for the end of the scrollbar.
   var absoluteTop = this.SCROLLBAR_PADDING;
-  var absoluteLeft = this.SCROLLBAR_PADDING;
+  var absoluteLeft = 0;
 
-  absoluteLeft = 0;
   var viewHeight = this.height_ - 2 * this.SCROLLBAR_PADDING;
   var viewWidth = this.parentToolbox_ ?
       this.parentToolbox_.getWidth() : this.width_;
@@ -159,7 +159,8 @@ Blockly.VerticalFlyout.prototype.position = function() {
 
   if (this.parentToolbox_) {
     var x = this.parentToolbox_.HtmlDiv.offsetLeft;
-    var y = this.parentToolbox_.HtmlDiv.offsetTop + this.parentToolbox_.getHeight();
+    var y = this.parentToolbox_.HtmlDiv.offsetTop +
+        this.parentToolbox_.getHeight();
   } else {
     var x = this.toolboxPosition_ == Blockly.TOOLBOX_AT_RIGHT ?
         targetWorkspaceMetrics.viewWidth - this.width_ : 0;
@@ -172,7 +173,6 @@ Blockly.VerticalFlyout.prototype.position = function() {
   this.height_ = targetWorkspaceMetrics.viewHeight - y;
 
   this.setBackgroundPath_(this.width_, this.height_);
-      //targetWorkspaceMetrics.viewHeight);
   // Update the scrollbar (if one exists).
   if (this.scrollbar_) {
     this.scrollbar_.resize();
@@ -275,6 +275,8 @@ Blockly.VerticalFlyout.prototype.layout_ = function(contents, gaps) {
       var root = block.getSvgRoot();
       var blockHW = block.getHeightWidth();
 
+      // Figure out where the block goes, taking into account its size, whether
+      // we're in RTL mode, and whether it has a checkbox.
       var oldX = block.getRelativeToSurfaceXY().x;
       var newX = flyoutWidth - this.MARGIN;
 
@@ -287,6 +289,9 @@ Blockly.VerticalFlyout.prototype.layout_ = function(contents, gaps) {
           moveX += this.CHECKBOX_SIZE + this.CHECKBOX_MARGIN;
         }
       }
+
+      // The block moves a bit extra for the hat, but the block's rectangle
+      // doesn't.  That's because the hat actually extends up from 0.
       block.moveBy(moveX,
           cursorY + (block.startHat_ ? Blockly.BlockSvg.START_HAT_HEIGHT : 0));
 
@@ -311,23 +316,23 @@ Blockly.VerticalFlyout.prototype.layout_ = function(contents, gaps) {
 /**
  * Create and place a rectangle corresponding to the given block.
  * @param {!Blockly.Block} block The block to associate the rect to.
- * @param {number} cursorX The x position of the cursor during this layout pass.
- * @param {number} cursorY The y position of the cursor during this layout pass.
+ * @param {number} x The x position of the cursor during this layout pass.
+ * @param {number} y The y position of the cursor during this layout pass.
  * @param {!{height: number, width: number}} blockHW The height and width of the
  *     block.
  * @param {number} index The index into the background buttons list where this
  *     rect should be placed.
  * @private
  */
-Blockly.VerticalFlyout.prototype.createRect_ = function(block, cursorX, cursorY,
+Blockly.VerticalFlyout.prototype.createRect_ = function(block, x, y,
     blockHW, index) {
   // Create an invisible rectangle under the block to act as a button.  Just
   // using the block as a button is poor, since blocks have holes in them.
   var rect = Blockly.createSvgElement('rect',
     {
       'fill-opacity': 0,
-      'x': this.RTL ? this.MARGIN - blockHW.width : this.MARGIN,
-      'y': cursorY,
+      'x': x,
+      'y': y,
       'height': blockHW.height,
       'width': blockHW.width
     }, null);
@@ -432,6 +437,7 @@ Blockly.VerticalFlyout.prototype.placeNewBlock_ = function(originBlock) {
   // Figure out where the original block is on the screen, relative to the upper
   // left corner of the main workspace.
   var xyOld = Blockly.getSvgXY_(svgRootOld, targetWorkspace);
+
   // Take into account that the flyout might have been scrolled horizontally
   // (separately from the main workspace).
   // Generally a no-op in vertical mode but likely to happen in horizontal
@@ -449,20 +455,26 @@ Blockly.VerticalFlyout.prototype.placeNewBlock_ = function(originBlock) {
     xyOld.x += scrollX / scale - scrollX;
   }
 
+  // The main workspace has 0,0 at the top inside corner of the toolbox.
+  // Need to take that into account now that the flyout is offset from there in
+  // both directions.
+  if (this.parentToolbox_) {
+    xyOld.y += (this.parentToolbox_.getHeight()) / scale -
+        this.parentToolbox_.getHeight();
+    var xOffset = this.parentToolbox_.getWidth() / scale -
+        this.parentToolbox_.getWidth();
+    if (this.toolboxPosition_ == Blockly.TOOLBOX_AT_RIGHT) {
+      xyOld.x += xOffset;
+    } else {
+      xyOld.x -= xOffset;
+    }
+  }
+
   // Take into account that the flyout might have been scrolled vertically
   // (separately from the main workspace).
-  // Generally a no-op in horizontal mode but likely to happen in vertical
-  // mode.
   var scrollY = this.workspace_.scrollY;
   scale = this.workspace_.scale;
   xyOld.y += scrollY / scale - scrollY;
-  // If the flyout is on the bottom, (0, 0) in the flyout is offset to be below
-  // (0, 0) in the main workspace.  Add an offset to take that into account.
-  if (this.toolboxPosition_ == Blockly.TOOLBOX_AT_BOTTOM) {
-    scrollY = targetWorkspace.getMetrics().viewHeight - this.height_;
-    scale = targetWorkspace.scale;
-    xyOld.y += scrollY / scale - scrollY;
-  }
 
   // Create the new block by cloning the block in the flyout (via XML).
   var xml = Blockly.Xml.blockToDom(originBlock);
