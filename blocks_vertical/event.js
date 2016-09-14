@@ -86,9 +86,9 @@ Blockly.Blocks['event_whenbroadcastreceived'] = {
           "type": "field_dropdown",
           "name": "BROADCAST_OPTION",
           "options": [
-            ['message1', 'MESSAGE1'],
-            ['message2', 'MESSAGE2'],
-            ['new message', 'NEW_MESSAGE']
+            ['message1', 'message1'],
+            ['message2', 'message2'],
+            ['new message', 'new message']
           ]
         }
       ],
@@ -159,6 +159,36 @@ Blockly.Blocks['event_whengreaterthan'] = {
   }
 };
 
+Blockly.Blocks['event_broadcast_menu'] = {
+  /**
+   * Broadcast drop-down menu.
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.jsonInit(
+      {
+        "message0": "%1",
+        "args0": [
+          {
+            "type": "field_dropdown",
+            "name": "BROADCAST_OPTION",
+            "options": [
+              ['message1', 'message1'],
+              ['message2', 'message2'],
+              ['new message', 'new message']
+            ]
+          }
+        ],
+        "inputsInline": true,
+        "output": "String",
+        "colour": Blockly.Colours.event.secondary,
+        "colourSecondary": Blockly.Colours.event.secondary,
+        "colourTertiary": Blockly.Colours.event.tertiary,
+        "outputShape": Blockly.OUTPUT_SHAPE_ROUND
+      });
+  }
+};
+
 Blockly.Blocks['event_broadcast'] = {
   /**
    * Block to send a broadcast.
@@ -170,13 +200,8 @@ Blockly.Blocks['event_broadcast'] = {
       "message0": "broadcast %1",
       "args0": [
         {
-          "type": "field_dropdown",
-          "name": "BROADCAST_OPTION",
-          "options": [
-            ['message1', 'MESSAGE1'],
-            ['message2', 'MESSAGE2'],
-            ['new message', 'NEW_MESSAGE']
-          ]
+          "type": "input_value",
+          "name": "BROADCAST_OPTION"
         }
       ],
       "inputsInline": true,
@@ -199,13 +224,8 @@ Blockly.Blocks['event_broadcastandwait'] = {
       "message0": "broadcast %1 and wait",
       "args0": [
         {
-          "type": "field_dropdown",
-          "name": "BROADCAST_OPTION",
-          "options": [
-            ['message1', 'MESSAGE1'],
-            ['message2', 'MESSAGE2'],
-            ['new message', 'NEW_MESSAGE']
-          ]
+          "type": "input_value",
+          "name": "BROADCAST_OPTION"
         }
       ],
       "inputsInline": true,
