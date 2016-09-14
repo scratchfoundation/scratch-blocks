@@ -197,14 +197,15 @@ Blockly.Blocks['control_stop_menu'] = {
             "type": "field_dropdown",
             "name": "STOP_OPTION",
             "options": [
-              ['all', 'ALL'],
-              ['this script', 'THIS'],
-              ['other scripts in sprite', 'OTHER']
+              ['all', 'all'],
+              ['this script', 'this script'],
+              ['other scripts in sprite', 'other scripts in sprite']
             ]
           }
         ],
         "inputsInline": true,
         "output": "String",
+        "outputShape": Blockly.OUTPUT_SHAPE_ROUND,
         "colour": Blockly.Colours.control.secondary,
         "colourSecondary": Blockly.Colours.control.secondary,
         "colourTertiary": Blockly.Colours.control.tertiary
@@ -369,6 +370,7 @@ Blockly.Blocks['control_create_clone_of_menu'] = {
         ],
         "inputsInline": true,
         "output": "String",
+        "outputShape": Blockly.OUTPUT_SHAPE_ROUND,
         "colour": Blockly.Colours.control.secondary,
         "colourSecondary": Blockly.Colours.control.secondary,
         "colourTertiary": Blockly.Colours.control.tertiary
