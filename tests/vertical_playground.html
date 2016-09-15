@@ -861,11 +861,19 @@
   		</block>
   		<block type="sensing_timer"></block>
   		<block type="sensing_resettimer"></block>
-  	    <block type="sensing_current">
-            <value name="CURRENTMENU">
-              <shadow type="sensing_currentmenu"></shadow>
-            </value>
-          </block>
+      <block type="sensing_of">
+        <value name="PROPERTY">
+          <shadow type="sensing_of_property_menu"></shadow>
+        </value>
+        <value name="OBJECT">
+          <shadow type="sensing_of_object_menu"></shadow>
+        </value>
+      </block>
+  	  <block type="sensing_current">
+        <value name="CURRENTMENU">
+          <shadow type="sensing_currentmenu"></shadow>
+        </value>
+      </block>
   		<block type="sensing_dayssince2000"></block>
   		<block type="sensing_username"></block>
 	  </category>
