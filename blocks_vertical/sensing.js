@@ -583,6 +583,100 @@ Blockly.Blocks['sensing_resettimer'] = {
   }
 };
 
+Blockly.Blocks['sensing_of_property_menu'] = {
+  /**
+   * "_ of *" properties menu.
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.jsonInit(
+      {
+        "message0": "%1",
+        "args0": [
+          {
+            "type": "field_dropdown",
+            "name": "PROPERTY",
+            "options": [
+              ['x position', 'x position'],
+              ['y position', 'y position'],
+              ['direction', 'direction'],
+              ['costume #', 'costume #'],
+              ['costume name', 'costume name'],
+              ['size', 'size'],
+              ['volume', 'volume'],
+              ['backdrop #', 'backdrop #'],
+              ['backdrop name', 'backdrop name']
+            ]
+          }
+        ],
+        "inputsInline": true,
+        "output": "String",
+        "colour": Blockly.Colours.sensing.secondary,
+        "colourSecondary": Blockly.Colours.sensing.secondary,
+        "colourTertiary": Blockly.Colours.sensing.tertiary,
+        "outputShape": Blockly.OUTPUT_SHAPE_ROUND
+      });
+  }
+};
+
+Blockly.Blocks['sensing_of_object_menu'] = {
+  /**
+   * "* of _" object menu.
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.jsonInit(
+      {
+        "message0": "%1",
+        "args0": [
+          {
+            "type": "field_dropdown",
+            "name": "OBJECT",
+            "options": [
+              ['Sprite1', 'Sprite1'],
+              ['Stage', 'Stage']
+            ]
+          }
+        ],
+        "inputsInline": true,
+        "output": "String",
+        "colour": Blockly.Colours.sensing.secondary,
+        "colourSecondary": Blockly.Colours.sensing.secondary,
+        "colourTertiary": Blockly.Colours.sensing.tertiary,
+        "outputShape": Blockly.OUTPUT_SHAPE_ROUND
+      });
+  }
+};
+
+
+Blockly.Blocks['sensing_of'] = {
+  /**
+   * Block to report properties of sprites.
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.jsonInit({
+      "message0": "%1 of %2",
+      "args0": [
+        {
+          "type": "input_value",
+          "name": "PROPERTY"
+        },
+        {
+          "type": "input_value",
+          "name": "OBJECT"
+        }
+      ],
+      "output": true,
+      "colour": Blockly.Colours.sensing.primary,
+      "colourSecondary": Blockly.Colours.sensing.secondary,
+      "colourTertiary": Blockly.Colours.sensing.tertiary,
+      "outputShape": Blockly.OUTPUT_SHAPE_ROUND,
+      "checkboxInFlyout": true
+    });
+  }
+};
+
 Blockly.Blocks['sensing_current'] = {
   /**
    * Block to Report the current option.
