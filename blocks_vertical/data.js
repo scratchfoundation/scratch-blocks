@@ -175,3 +175,266 @@ Blockly.Blocks['data_hidevariable'] = {
     });
   }
 };
+
+Blockly.Blocks['data_list'] = {
+  /**
+   * List reporter.
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.jsonInit({
+      "message0": "%1",
+      "args0": [
+        {
+          "type": "field_variable",
+          "name": "LIST"
+        }
+      ],
+      "colour": Blockly.Colours.data.primary,
+      "colourSecondary": Blockly.Colours.data.secondary,
+      "colourTertiary": Blockly.Colours.data.tertiary,
+      "output": "String",
+      "outputShape": Blockly.OUTPUT_SHAPE_ROUND,
+      "checkboxInFlyout": true
+    });
+  }
+};
+
+Blockly.Blocks['data_addtolist'] = {
+  /**
+   * Block to add item to list.
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.jsonInit({
+      "message0": "add %1 to %2",
+      "args0": [
+        {
+          "type": "input_value",
+          "name": "ITEM"
+        },
+        {
+          "type": "field_variable",
+          "name": "LIST"
+        }
+      ],
+      "previousStatement": null,
+      "nextStatement": null,
+      "colour": Blockly.Colours.data.primary,
+      "colourSecondary": Blockly.Colours.data.secondary,
+      "colourTertiary": Blockly.Colours.data.tertiary
+    });
+  }
+};
+
+Blockly.Blocks['data_deleteoflist'] = {
+  /**
+   * Block to delete item from list.
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.jsonInit({
+      "message0": "delete %1 of %2",
+      "args0": [
+        {
+          "type": "input_value",
+          "name": "INDEX"
+        },
+        {
+          "type": "field_variable",
+          "name": "LIST"
+        }
+      ],
+      "previousStatement": null,
+      "nextStatement": null,
+      "colour": Blockly.Colours.data.primary,
+      "colourSecondary": Blockly.Colours.data.secondary,
+      "colourTertiary": Blockly.Colours.data.tertiary
+    });
+  }
+};
+
+Blockly.Blocks['data_insertatlist'] = {
+  /**
+   * Block to insert item to list.
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.jsonInit({
+      "message0": "insert %1 at %2 of %3",
+      "args0": [
+        {
+          "type": "input_value",
+          "name": "ITEM"
+        },
+        {
+          "type": "input_value",
+          "name": "INDEX"
+        },
+        {
+          "type": "field_variable",
+          "name": "LIST"
+        }
+      ],
+      "previousStatement": null,
+      "nextStatement": null,
+      "colour": Blockly.Colours.data.primary,
+      "colourSecondary": Blockly.Colours.data.secondary,
+      "colourTertiary": Blockly.Colours.data.tertiary
+    });
+  }
+};
+
+Blockly.Blocks['data_replaceitemoflist'] = {
+  /**
+   * Block to insert item to list.
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.jsonInit({
+      "message0": "replace item %1 of %2 with %3",
+      "args0": [
+        {
+          "type": "input_value",
+          "name": "INDEX"
+        },
+        {
+          "type": "field_variable",
+          "name": "LIST"
+        },
+        {
+          "type": "input_value",
+          "name": "ITEM"
+        }
+      ],
+      "previousStatement": null,
+      "nextStatement": null,
+      "colour": Blockly.Colours.data.primary,
+      "colourSecondary": Blockly.Colours.data.secondary,
+      "colourTertiary": Blockly.Colours.data.tertiary
+    });
+  }
+};
+
+Blockly.Blocks['data_itemoflist'] = {
+  /**
+   * Block for reporting item of list.
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.jsonInit({
+      "message0": "item %1 of %2",
+      "args0": [
+        {
+          "type": "input_value",
+          "name": "INDEX"
+        },
+        {
+          "type": "field_variable",
+          "name": "LIST"
+        }
+      ],
+      "output": null,
+      "colour": Blockly.Colours.data.primary,
+      "colourSecondary": Blockly.Colours.data.secondary,
+      "colourTertiary": Blockly.Colours.data.tertiary,
+      "outputShape": Blockly.OUTPUT_SHAPE_ROUND
+    });
+  }
+};
+
+Blockly.Blocks['data_lengthoflist'] = {
+  /**
+   * Block for reporting length of list.
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.jsonInit({
+      "message0": "length of %1",
+      "args0": [
+        {
+          "type": "field_variable",
+          "name": "LIST"
+        }
+      ],
+      "output": "Number",
+      "colour": Blockly.Colours.data.primary,
+      "colourSecondary": Blockly.Colours.data.secondary,
+      "colourTertiary": Blockly.Colours.data.tertiary,
+      "outputShape": Blockly.OUTPUT_SHAPE_ROUND
+    });
+  }
+};
+
+Blockly.Blocks['data_listcontainsitem'] = {
+  /**
+   * Block to report whether list contains item.
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.jsonInit({
+      "message0": "%1 contains %2?",
+      "args0": [
+        {
+          "type": "field_variable",
+          "name": "LIST"
+        },
+        {
+          "type": "input_value",
+          "name": "ITEM"
+        }
+      ],
+      "output": "Boolean",
+      "outputShape": Blockly.OUTPUT_SHAPE_HEXAGONAL,
+      "colour": Blockly.Colours.data.primary,
+      "colourSecondary": Blockly.Colours.data.secondary,
+      "colourTertiary": Blockly.Colours.data.tertiary
+    });
+  }
+};
+
+Blockly.Blocks['data_showlist'] = {
+  /**
+   * Block to show a list.
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.jsonInit({
+      "message0": "show list %1",
+      "args0": [
+        {
+          "type": "field_variable",
+          "name": "LIST"
+        }
+      ],
+      "previousStatement": null,
+      "nextStatement": null,
+      "colour": Blockly.Colours.data.primary,
+      "colourSecondary": Blockly.Colours.data.secondary,
+      "colourTertiary": Blockly.Colours.data.tertiary
+    });
+  }
+};
+
+Blockly.Blocks['data_hidelist'] = {
+  /**
+   * Block to hide a list.
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.jsonInit({
+      "message0": "hide list %1",
+      "args0": [
+        {
+          "type": "field_variable",
+          "name": "LIST"
+        }
+      ],
+      "previousStatement": null,
+      "nextStatement": null,
+      "colour": Blockly.Colours.data.primary,
+      "colourSecondary": Blockly.Colours.data.secondary,
+      "colourTertiary": Blockly.Colours.data.tertiary
+    });
+  }
+};
