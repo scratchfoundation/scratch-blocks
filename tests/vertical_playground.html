@@ -738,6 +738,64 @@
       </category>
       <category name="Data" colour="#FF8C1A" custom="VARIABLE">
       </category>
+      <category name="Lists" colour="#FF8C1A">
+        <block type="data_list"></block>
+        <block type="data_addtolist">
+          <value name="ITEM">
+            <shadow type="text">
+              <field name="TEXT">thing</field>
+            </shadow>
+          </value>
+        </block>
+        <block type="data_deleteoflist">
+          <value name="INDEX">
+            <shadow type="math_integer">
+              <field name="NUM">1</field>
+            </shadow>
+          </value>
+        </block>
+        <block type="data_insertatlist">
+          <value name="INDEX">
+            <shadow type="math_integer">
+              <field name="NUM">1</field>
+            </shadow>
+          </value>
+          <value name="ITEM">
+            <shadow type="text">
+              <field name="TEXT">thing</field>
+            </shadow>
+          </value>
+        </block>
+        <block type="data_replaceitemoflist">
+          <value name="INDEX">
+            <shadow type="math_integer">
+              <field name="NUM">1</field>
+            </shadow>
+          </value>
+          <value name="ITEM">
+            <shadow type="text">
+              <field name="TEXT">thing</field>
+            </shadow>
+          </value>
+        </block>
+        <block type="data_itemoflist">
+          <value name="INDEX">
+            <shadow type="math_integer">
+              <field name="NUM">1</field>
+            </shadow>
+          </value>
+        </block>
+        <block type="data_lengthoflist"></block>
+        <block type="data_listcontainsitem">
+          <value name="ITEM">
+            <shadow type="text">
+              <field name="TEXT">thing</field>
+            </shadow>
+          </value>
+        </block>
+        <block type="data_showlist"></block>
+        <block type="data_hidelist"></block>
+      </category>
       <category name="Events" colour="#FFD500">
         <block type="event_whenflagclicked"></block>
         <block type="event_whenkeypressed">
