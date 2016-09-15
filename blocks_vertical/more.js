@@ -27,6 +27,7 @@
 goog.provide('Blockly.Blocks.procedures');
 
 goog.require('Blockly.Blocks');
+goog.require('Blockly.constants');
 
 Blockly.Blocks['procedures_defnoreturn'] = {
   /**
@@ -705,6 +706,7 @@ Blockly.Blocks['procedures_callreturn'] = {
     this.appendDummyInput('TOPROW')
         .appendField('', 'NAME');
     this.setOutput(true);
+    this.setOutputShape(Blockly.OUTPUT_SHAPE_ROUND);
     this.setColour(Blockly.Colours.more.primary,
       Blockly.Colours.more.secondary,
       Blockly.Colours.more.tertiary);
