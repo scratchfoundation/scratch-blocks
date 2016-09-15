@@ -160,7 +160,7 @@ Blockly.Css.CONTENT = [
     'background-color: $colour_workspace;',
     'outline: none;',
     'overflow: hidden;',  /* IE overflows by default. */
-    'display: block;', 
+    'display: block;',
   '}',
 
   /* Necessary to position the drag surface */
@@ -402,6 +402,10 @@ Blockly.Css.CONTENT = [
 
   '.blocklyNonEditableText>text {',
     'pointer-events: none;',
+  '}',
+  '.blocklyNonEditableText>rect,',
+  '.blocklyEditableText>rect {',
+    'fill-opacity: 0;',
   '}',
 
   '.blocklyNonEditableText>text,',
