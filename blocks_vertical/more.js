@@ -538,7 +538,6 @@ Blockly.Blocks['procedures_callnoreturn'] = {
         // Add new input.
         field = new Blockly.FieldLabel(this.arguments_[i]);
         var input = this.appendValueInput('ARG' + i)
-            .setAlign(Blockly.ALIGN_RIGHT)
             .appendField(field, 'ARGNAME' + i);
         input.init();
       }
