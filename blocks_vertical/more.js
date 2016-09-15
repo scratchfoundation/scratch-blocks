@@ -787,20 +787,17 @@ Blockly.Blocks['procedures_callreturn'] = {
   defType_: 'procedures_defreturn'
 };
 
-Blockly.Blocks['procedures_ifreturn'] = {
+Blockly.Blocks['procedures_report'] = {
   /**
    * Block for conditionally returning a value from a procedure.
    * @this Blockly.Block
    */
   init: function() {
-    this.appendValueInput('CONDITION')
-        .setCheck('Boolean')
-        .appendField(Blockly.Msg.CONTROLS_IF_MSG_IF);
     this.appendValueInput('VALUE')
-        .appendField(Blockly.Msg.PROCEDURES_DEFRETURN_RETURN);
+        .appendField('report');
     this.setInputsInline(true);
     this.setPreviousStatement(true);
-    this.setNextStatement(true);
+    this.setNextStatement(false);
     this.setColour(Blockly.Colours.more.primary,
       Blockly.Colours.more.secondary,
       Blockly.Colours.more.tertiary);
