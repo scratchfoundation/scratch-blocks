@@ -134,7 +134,7 @@ Blockly.Mutator.prototype.createEditor_ = function() {
     getMetrics: this.getFlyoutMetrics_.bind(this),
     setMetrics: null
   };
-  this.workspace_ = new Blockly.WorkspaceSvg(workspaceOptions);
+  this.workspace_ = new Blockly.WorkspaceSvg(workspaceOptions, this.block_.workspace.dragSurface);
   this.workspace_.isMutator = true;
   this.svgDialog_.appendChild(
       this.workspace_.createDom('blocklyMutatorBackground'));

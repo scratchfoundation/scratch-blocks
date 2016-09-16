@@ -79,6 +79,28 @@ Blockly.FieldTextInput.prototype.CURSOR = 'text';
 Blockly.FieldTextInput.prototype.spellcheck_ = true;
 
 /**
+ * Install this text field on a block.
+ */
+Blockly.FieldTextInput.prototype.init = function() {
+
+  Blockly.FieldTextInput.superClass_.init.call(this);
+  // If not in a shadow block, draw a box.
+  if (!this.sourceBlock_.isShadow()) {
+    this.box_ = Blockly.createSvgElement('rect', {
+      'rx': Blockly.BlockSvg.CORNER_RADIUS,
+      'ry': Blockly.BlockSvg.CORNER_RADIUS,
+      'x': 0,
+      'y': 0,
+      'width': this.size_.width,
+      'height': this.size_.height,
+      'fill': Blockly.Colours.textField,
+      'stroke': this.sourceBlock_.getColourTertiary()
+    });
+    this.fieldGroup_.insertBefore(this.box_, this.textElement_);
+  }
+};
+
+/**
  * Close the input widget if this input is being deleted.
  */
 Blockly.FieldTextInput.prototype.dispose = function() {
