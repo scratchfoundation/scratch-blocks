@@ -287,7 +287,7 @@ Blockly.Blocks['procedures_defreturn'] = {
     this.appendStatementInput('STACK')
         .appendField(Blockly.Msg.PROCEDURES_DEFNORETURN_DO);
     this.appendValueInput('RETURN')
-        .setAlign(Blockly.ALIGN_RIGHT)
+        .setAlign(Blockly.ALIGN_LEFT)
         .appendField('report');
     this.statementConnection_ = null;
   },
