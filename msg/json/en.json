@@ -343,7 +343,7 @@
 	"VARIABLES_SET_TOOLTIP": "Sets this variable to be equal to the input.",
 	"VARIABLES_SET_CREATE_GET": "Create 'get %1'",
 	"PROCEDURES_DEFNORETURN_HELPURL": "https://en.wikipedia.org/wiki/Procedure_%28computer_science%29",
-	"PROCEDURES_DEFNORETURN_TITLE": "to",
+	"PROCEDURES_DEFNORETURN_TITLE": "Define",
 	"PROCEDURES_DEFNORETURN_PROCEDURE": "do something",
 	"PROCEDURES_BEFORE_PARAMS": "with:",
 	"PROCEDURES_CALL_BEFORE_PARAMS": "with:",
