@@ -1029,7 +1029,7 @@ Blockly.Msg.PROCEDURES_DEFNORETURN_HELPURL = 'https://en.wikipedia.org/wiki/Proc
 /// block text - This precedes the name of the function when defining it.  See
 /// [https://blockly-demo.appspot.com/static/apps/code/index.html?lang=en#c84aoc this sample
 /// function definition].
-Blockly.Msg.PROCEDURES_DEFNORETURN_TITLE = 'to';
+Blockly.Msg.PROCEDURES_DEFNORETURN_TITLE = 'Define';
 /// default name - This acts as a placeholder for the name of a function on a
 /// function definition block, as shown on
 /// [https://blockly-demo.appspot.com/static/apps/code/index.html?lang=en#w7cfju this block].
