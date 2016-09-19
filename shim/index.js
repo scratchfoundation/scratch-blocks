@@ -12,6 +12,6 @@
  *     msg/messages
 **/
 module.exports = {
-    Horizontal: require('imports?Blockly=../shim/blocks_compressed_horizontal,goog=../shim/blockly_compressed_horizontal.goog!exports?Blockly!../msg/messages'),
-    Vertical: require('imports?Blockly=../shim/blocks_compressed_vertical,goog=../shim/blockly_compressed_vertical.goog!exports?Blockly!../msg/messages')
+    Horizontal: require('./horizontal'),
+    Vertical: require('./vertical')
 };

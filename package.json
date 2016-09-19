@@ -9,13 +9,15 @@
     "type": "git",
     "url": "https://github.com/LLK/scratch-blocks.git"
   },
-  "webpack": "./shim/index.js",
+  "main": "./dist/vertical.js",
   "scripts": {
-    "test": "./node_modules/.bin/eslint ."
+    "prepublish": "webpack",
+    "test": "eslint ."
   },
   "devDependencies": {
     "eslint": "2.9.0",
     "exports-loader": "0.6.3",
-    "imports-loader": "0.6.5"
+    "imports-loader": "0.6.5",
+    "webpack": "1.13.2"
   }
 }
