@@ -8,3 +8,6 @@
 /demos/*
 /accessible/*
 /appengine/*
+/shim/*
+/dist/*
+/webpack.config.js
