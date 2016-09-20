@@ -297,6 +297,7 @@ Blockly.WorkspaceSvg.prototype.createDom = function(opt_backgroundClass) {
     this.addFlyout_();
   }
   this.updateGridPattern_();
+  this.updateStackGlowScale_();
   this.recordDeleteAreas();
   return this.svgGroup_;
 };
@@ -1371,6 +1372,7 @@ Blockly.WorkspaceSvg.prototype.setScale = function(newScale) {
     newScale = this.options.zoomOptions.minScale;
   }
   this.scale = newScale;
+  this.updateStackGlowScale_();
   this.updateGridPattern_();
   // Hide the WidgetDiv without animation (zoom makes field out of place with div)
   Blockly.WidgetDiv.hide(true);
@@ -1446,6 +1448,18 @@ Blockly.WorkspaceSvg.prototype.updateGridPattern_ = function() {
   }
 };
 
+/**
+ * Update the workspace's stack glow radius to be proportional to scale.
+ * Ensures that stack glows always appear to be a fixed size.
+ */
+Blockly.WorkspaceSvg.prototype.updateStackGlowScale_ = function() {
+  // No such def in the flyout workspace.
+  if (this.options.stackGlowBlur) {
+    this.options.stackGlowBlur.setAttribute('stdDeviation',
+      Blockly.STACK_GLOW_RADIUS / this.scale
+    );
+  }
+};
 
 /**
  * Return an object with all the metrics required to size scrollbars for a
