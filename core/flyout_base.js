@@ -483,11 +483,6 @@ Blockly.Flyout.prototype.show = function(xmlList) {
   this.listeners_.push(Blockly.bindEvent_(this.svgBackground_, 'mouseover',
       this, deselectAll));
 
-  // if (this.horizontalLayout_) {
-  //   this.height_ = 0;
-  // } else {
-  //   this.width_ = 0;
-  // }
   this.reflow();
 
   // Correctly position the flyout's scrollbar when it opens.
