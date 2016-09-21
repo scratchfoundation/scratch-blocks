@@ -115,7 +115,7 @@ Blockly.createDom_ = function(container, options) {
   var stackGlowFilter = Blockly.createSvgElement('filter',
       {'id': 'blocklyStackGlowFilter',
         'height': '160%', 'width': '180%', y: '-30%', x: '-40%'}, defs);
-  Blockly.createSvgElement('feGaussianBlur',
+  options.stackGlowBlur = Blockly.createSvgElement('feGaussianBlur',
       {'in': 'SourceGraphic',
       'stdDeviation': Blockly.STACK_GLOW_RADIUS}, stackGlowFilter);
   // Set all gaussian blur pixels to 1 opacity before applying flood
