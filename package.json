@@ -11,8 +11,8 @@
   },
   "main": "./dist/vertical.js",
   "scripts": {
-    "postinstall": "webpack",
-    "test": "eslint ."
+    "postinstall": "./node_modules/.bin/webpack",
+    "test": "./node_modules/.bin/eslint ."
   },
   "dependencies": {
     "exports-loader": "0.6.3",
