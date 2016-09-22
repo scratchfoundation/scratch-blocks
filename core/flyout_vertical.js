@@ -107,6 +107,36 @@ Blockly.VerticalFlyout.prototype.init = function(targetWorkspace) {
   this.workspace_.scale = targetWorkspace.scale;
 };
 
+
+Blockly.VerticalFlyout.prototype.createDom = function() {
+  Blockly.VerticalFlyout.superClass_.createDom.call(this);
+
+  /*
+    <defs>
+      <clipPath id="blocklyBlockMenuClipPath">
+        <rect id="blocklyBlockMenuClipRect" height="1147px"
+            width="248px" y="0" x="0">
+        </rect>
+      </clipPath>
+    </defs>
+  */
+  this.defs_ = Blockly.createSvgElement('defs', {}, this.svgGroup_);
+  var clipPath = Blockly.createSvgElement('clipPath',
+      {'id':'blocklyBlockMenuClipPath'}, this.defs_);
+  this.clipRect_ = Blockly.createSvgElement('rect',
+      {'id': 'blocklyBlockMenuClipRect',
+        'height': '0',
+        'width': '0',
+        'y': '0',
+        'x': '0'
+      },
+      clipPath);
+  this.workspace_.svgGroup_.setAttribute('clip-path',
+      'url(#blocklyBlockMenuClipPath)');
+
+  return this.svgGroup_;
+};
+
 /**
  * Return an object with all the metrics required to size scrollbars for the
  * flyout.  The following properties are computed:
@@ -177,9 +207,17 @@ Blockly.VerticalFlyout.prototype.setMetrics_ = function(xyRatio) {
   if (goog.isNumber(xyRatio.y)) {
     this.workspace_.scrollY = -metrics.contentHeight * xyRatio.y;
   }
-
   this.workspace_.translate(this.workspace_.scrollX + metrics.absoluteLeft,
       this.workspace_.scrollY + metrics.absoluteTop);
+
+  this.clipRect_.setAttribute('height', metrics.viewHeight + 'px');
+  this.clipRect_.setAttribute('width', metrics.viewWidth + 'px');
+
+  // if (goog.isNumber(xyRatio.x)) {
+  //   this.workspace_.scrollX = -metrics.contentWidth * xyRatio.x;
+  // }
+  // this.workspace_.translate(this.workspace_.scrollX + metrics.absoluteLeft,
+  //     this.workspace_.scrollY + metrics.absoluteTop);
 };
 
 /**
@@ -215,6 +253,7 @@ Blockly.VerticalFlyout.prototype.position = function() {
   this.setBackgroundPath_(this.width_, this.height_);
   // Update the scrollbar (if one exists).
   if (this.scrollbar_) {
+    //this.scrollToStart();
     this.scrollbar_.resize();
   }
   // The blocks need to be visible in order to be laid out and measured
@@ -259,7 +298,7 @@ Blockly.VerticalFlyout.prototype.setBackgroundPath_ = function(width, height) {
  * Scroll the flyout to the top.
  */
 Blockly.VerticalFlyout.prototype.scrollToStart = function() {
-  this.scrollbar_.set(0);
+  this.scrollbar_.set(0, 0);
 };
 
 /**
