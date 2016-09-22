@@ -1176,6 +1176,10 @@ Blockly.BlockSvg.prototype.connectInsertionMarker_ = function(localConnection,
   if (!Blockly.insertionMarker_) {
     Blockly.insertionMarker_ =
         this.workspace.newBlock(insertingBlock.type);
+    if (insertingBlock.mutationToDom) {
+      var oldMutationDom = insertingBlock.mutationToDom();
+      Blockly.insertionMarker_.domToMutation(oldMutationDom);
+    }
     Blockly.insertionMarker_.setInsertionMarker(true, insertingBlock.width);
     Blockly.insertionMarker_.initSvg();
   }
