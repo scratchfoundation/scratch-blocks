@@ -183,57 +183,48 @@ Blockly.Blocks['control_if_else'] = {
   }
 };
 
-Blockly.Blocks['control_stop_menu'] = {
-  /**
-   * Stop drop-down menu.
-   * @this Blockly.Block
-   */
-  init: function() {
-    this.jsonInit(
-      {
-        "message0": "%1",
-        "args0": [
-          {
-            "type": "field_dropdown",
-            "name": "STOP_OPTION",
-            "options": [
-              ['all', 'all'],
-              ['this script', 'this script'],
-              ['other scripts in sprite', 'other scripts in sprite']
-            ]
-          }
-        ],
-        "inputsInline": true,
-        "output": "String",
-        "outputShape": Blockly.OUTPUT_SHAPE_ROUND,
-        "colour": Blockly.Colours.control.secondary,
-        "colourSecondary": Blockly.Colours.control.secondary,
-        "colourTertiary": Blockly.Colours.control.tertiary
-      });
-  }
-};
-
 Blockly.Blocks['control_stop'] = {
   /**
    * Block for stop all scripts.
    * @this Blockly.Block
    */
   init: function() {
-    this.jsonInit({
-      "id": "control_stop",
-      "message0": "stop %1",
-      "args0": [
-        {
-          "type": "input_value",
-          "name": "STOP_OPTION"
-        }
-      ],
-      "inputsInline": true,
-      "previousStatement": null,
-      "colour": Blockly.Colours.control.primary,
-      "colourSecondary": Blockly.Colours.control.secondary,
-      "colourTertiary": Blockly.Colours.control.tertiary
+    var ALL_SCRIPTS = 'all';
+    var THIS_SCRIPT = 'this script';
+    var OTHER_SCRIPTS = 'other scripts in sprite';
+    var stopDropdown = new Blockly.FieldDropdown(function() {
+      if (this.sourceBlock_ &&
+          this.sourceBlock_.nextConnection &&
+          this.sourceBlock_.nextConnection.isConnected()) {
+        return [
+          ['other scripts in sprite', OTHER_SCRIPTS]
+        ];
+      }
+      return [['all', ALL_SCRIPTS],
+        ['this script', THIS_SCRIPT],
+        ['other scripts in sprite', OTHER_SCRIPTS]
+      ];
+    }, function(option) {
+      this.sourceBlock_.setNextStatement(option == OTHER_SCRIPTS);
     });
+    this.appendDummyInput()
+        .appendField('stop')
+        .appendField(stopDropdown, 'STOP_OPTION');
+    this.setColour(Blockly.Colours.control.primary,
+      Blockly.Colours.control.secondary,
+      Blockly.Colours.control.tertiary
+    );
+    this.setPreviousStatement(true);
+  },
+  mutationToDom: function() {
+    var container = document.createElement('mutation');
+    var hasNext = (this.getFieldValue('STOP_OPTION') == 'other scripts in sprite');
+    container.setAttribute('hasnext', hasNext);
+    return container;
+  },
+  domToMutation: function(xmlElement) {
+    var hasNext = (xmlElement.getAttribute('hasnext') == 'true');
+    this.setNextStatement(hasNext);
   }
 };
 
