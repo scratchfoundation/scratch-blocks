@@ -189,16 +189,20 @@ Blockly.Blocks['control_stop'] = {
    * @this Blockly.Block
    */
   init: function() {
-    var stopDropdown = new Blockly.FieldDropdown([
-        ['all', 'all'],
+    var stopDropdown = new Blockly.FieldDropdown(function() {
+      if (this.sourceBlock_ &&
+          this.sourceBlock_.nextConnection &&
+          this.sourceBlock_.nextConnection.isConnected()) {
+        return [
+          ['other scripts in sprite', 'other scripts in sprite']
+        ];
+      }
+      return [['all', 'all'],
         ['this script', 'this script'],
         ['other scripts in sprite', 'other scripts in sprite']
-    ], function(option) {
-      if (option == 'other scripts in sprite') {
-        this.sourceBlock_.setNextStatement(true);
-      } else {
-        this.sourceBlock_.setNextStatement(false);
-      }
+      ];
+    }, function(option) {
+      this.sourceBlock_.setNextStatement(option == 'other scripts in sprite');
     });
     this.appendDummyInput()
         .appendField('stop')
