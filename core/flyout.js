@@ -1149,7 +1149,6 @@ Blockly.Flyout.prototype.onMouseMoveBlock_ = function(e) {
   var dy = e.clientY - Blockly.Flyout.startDownEvent_.clientY;
   var createBlock = this.determineDragIntention_(dx, dy);
   if (createBlock) {
-    Blockly.longStop_();
     this.createBlockFunc_(Blockly.Flyout.startBlock_)(
         Blockly.Flyout.startDownEvent_);
   } else if (this.dragMode_ == Blockly.DRAG_FREE) {
@@ -1258,7 +1257,13 @@ Blockly.Flyout.prototype.createBlockFunc_ = function(originBlock) {
     }
     Blockly.Events.disable();
     try {
+      // If creating the block creates a variable, we need startFlyout_ set so
+      // we don't try to refresh the flyout immediately.  That would be a
+      // problem because it would change the DOM on the path the touch events
+      // were on.  See google/blockly #613.
+      Blockly.Flyout.startFlyout_ = flyout;
       var block = flyout.placeNewBlock_(originBlock);
+      Blockly.Flyout.startFlyout_ = null;
     } finally {
       Blockly.Events.enable();
     }
@@ -1390,7 +1395,6 @@ Blockly.Flyout.prototype.getClientRect = function() {
  * @private
  */
 Blockly.Flyout.terminateDrag_ = function() {
-  this.dragMode_ = Blockly.DRAG_NONE;
   if (Blockly.Flyout.startFlyout_) {
     // User was dragging the flyout background, and has stopped.
     if (Blockly.Flyout.startFlyout_.dragMode_ == Blockly.DRAG_FREE) {
