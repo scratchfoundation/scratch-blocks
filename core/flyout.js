@@ -1250,6 +1250,8 @@ Blockly.Flyout.prototype.createBlockFunc_ = function(originBlock) {
       // Right-click.  Don't create a block, let the context menu show.
       return;
     }
+    // It wasn't a right-click.  Get rid of the pending longPress handler.
+    Blockly.longStop_();
     if (originBlock.disabled) {
       // Beyond capacity.
       return;
