@@ -984,16 +984,14 @@ Blockly.BlockSvg.prototype.renderClassify_ = function() {
   
   if(this.outputConnection) {
     if(this.isShadow_) {
-      shapes.push("input");
+      shapes.push('argument');
     } else {
-      shapes.push("reporter");
+      shapes.push('reporter');
     }
     if(this.edgeShape_ === Blockly.OUTPUT_SHAPE_HEXAGONAL) {
-      shapes.push("boolean");
+      shapes.push('boolean');
     } else if(this.edgeShape_ === Blockly.OUTPUT_SHAPE_ROUND) {
-      shapes.push("string");
-    } else {
-      // this shouldn't happen anymore because string-shaped reporters were phased out
+      shapes.push('round');
     }
   } else {
     // count the number of statement inputs
@@ -1006,22 +1004,20 @@ Blockly.BlockSvg.prototype.renderClassify_ = function() {
     }
     
     if(statementCount) {
-      shapes.push("c-block");
-      if(statementCount > 1) {
-        shapes.push("else");
-      }
+      shapes.push('c-block');
+      shapes.push('c-' + statementCount);
     }
     if(this.startHat_) {
-      shapes.push("hat"); // c-block+hats are possible (e.x. reprter procedures)
+      shapes.push('hat'); // c-block+hats are possible (e.x. reprter procedures)
     } else if(!statementCount) {
-      shapes.push("stack"); //only call it "stack" if it's not a c-block
+      shapes.push('stack'); //only call it "stack" if it's not a c-block
     }
     if(!this.nextConnection) {
-      shapes.push("end");
+      shapes.push('end');
     }
   }
   
-  this.svgGroup_.setAttribute('data-shapes', shapes.join(" "));
+  this.svgGroup_.setAttribute('data-shapes', shapes.join(' '));
 };
 
 /**
