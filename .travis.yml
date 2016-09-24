@@ -6,3 +6,18 @@ sudo: false
 cache:
   directories:
   - node_modules
+after_script:
+- |
+  # RELEASE_BRANCHES and NPM_TOKEN defined in Travis settings panel
+  declare exitCode
+  $(npm bin)/travis-after-all
+  exitCode=$?
+  if [[
+    $exitCode = 0 &&
+    $RELEASE_BRANCHES =~ $TRAVIS_BRANCH &&
+    $TRAVIS_PULL_REQUEST = "false"
+  ]]; then
+    echo "//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" > .npmrc
+    npm --no-git-tag-version version $(node -p -e "require('./package.json').version")-${TRAVIS_COMMIT:0:5}
+    npm publish
+  fi

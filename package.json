@@ -11,15 +11,15 @@
   },
   "main": "./dist/vertical.js",
   "scripts": {
-    "postinstall": "./node_modules/.bin/webpack",
+    "prepublish": "./node_modules/.bin/webpack",
     "test": "./node_modules/.bin/eslint ."
   },
-  "dependencies": {
+  "dependencies": {},
+  "devDependencies": {
+    "eslint": "2.9.0",
     "exports-loader": "0.6.3",
     "imports-loader": "0.6.5",
+    "travis-after-all": "1.4.4",
     "webpack": "1.13.2"
-  },
-  "devDependencies": {
-    "eslint": "2.9.0"
   }
 }
