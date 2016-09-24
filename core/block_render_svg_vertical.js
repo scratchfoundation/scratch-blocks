@@ -1021,11 +1021,7 @@ Blockly.BlockSvg.prototype.renderClassify_ = function() {
     }
   }
   
-  var tempShapes = this.svgGroup_.getAttribute('data-shapes');
-  var shapesStringified = shapes.join(" ");
-  if(tempShapes !== shapesStringified) {
-    this.svgGroup_.setAttribute('data-shapes', shapesStringified);
-  }
+  this.svgGroup_.setAttribute('data-shapes', shapes.join(" "));
 };
 
 /**
