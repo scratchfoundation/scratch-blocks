@@ -613,16 +613,20 @@ Blockly.BlockSvg.prototype.renderDraw_ = function(metrics) {
 Blockly.BlockSvg.prototype.renderClassify_ = function(metrics) {
   var shapes = [];
   
-  if(metrics.statement) {
-    shapes.push('c-block');
-  }
-  if(metrics.startHat) {
-    shapes.push('hat'); // c-block+hats are possible (e.x. reprter procedures)
-  } else if(!metrics.statement) {
-    shapes.push('stack'); //only call it "stack" if it's not a c-block
-  }
-  if(!this.nextConnection) {
-    shapes.push('end');
+  if(this.isShadow_) {
+    shapes.push('argument');
+  } else {
+    if(metrics.statement) {
+      shapes.push('c-block');
+    }
+    if(metrics.startHat) {
+      shapes.push('hat'); // c-block+hats are possible (e.x. reprter procedures)
+    } else if(!metrics.statement) {
+      shapes.push('stack'); //only call it "stack" if it's not a c-block
+    }
+    if(!this.nextConnection) {
+      shapes.push('end');
+    }
   }
   
   this.svgGroup_.setAttribute('data-shapes', shapes.join(' '));
