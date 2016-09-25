@@ -396,10 +396,9 @@ Blockly.BlockSvg.prototype.render = function(opt_bubble) {
     this.height = metrics.height;
     this.width = metrics.width;
     this.renderDraw_(metrics);
+    this.renderClassify_(metrics);
     this.renderingMetrics_ = metrics;
   }
-  
-  this.renderClassify_(metrics);
 
   if (opt_bubble !== false) {
     // Render all blocks above this one (propagate a reflow).
