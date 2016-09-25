@@ -13,11 +13,16 @@ after_script:
   $(npm bin)/travis-after-all
   exitCode=$?
   if [[
+    # Execute after all jobs finish successfully
     $exitCode = 0 &&
+    # Only release on release branches
     $RELEASE_BRANCHES =~ $TRAVIS_BRANCH &&
+    # Don't release on PR builds
     $TRAVIS_PULL_REQUEST = "false"
   ]]; then
+    # Authenticate NPM
     echo "//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" > .npmrc
+    # Set version to commit SHA
     npm --no-git-tag-version version $(node -p -e "require('./package.json').version")-${TRAVIS_COMMIT:0:5}
     npm publish
   fi
