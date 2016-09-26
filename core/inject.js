@@ -311,24 +311,7 @@ Blockly.init_ = function(mainWorkspace) {
 
   // Load the sounds.
   if (options.hasSounds) {
-    mainWorkspace.loadAudio_(
-        [options.pathToMedia + 'click.wav'], 'click');
-    mainWorkspace.loadAudio_(
-        [options.pathToMedia + 'delete.wav'], 'delete');
-
-    // Bind temporary hooks that preload the sounds.
-    var soundBinds = [];
-    var unbindSounds = function() {
-      while (soundBinds.length) {
-        Blockly.unbindEvent_(soundBinds.pop());
-      }
-      mainWorkspace.preloadAudio_();
-    };
-    // Android ignores any sound not loaded as a result of a user action.
-    soundBinds.push(
-        Blockly.bindEvent_(document, 'mousemove', null, unbindSounds));
-    soundBinds.push(
-        Blockly.bindEvent_(document, 'touchstart', null, unbindSounds));
+    Blockly.inject.loadSounds_(options.pathToMedia, mainWorkspace);
   }
 };
 
@@ -361,6 +344,33 @@ Blockly.inject.bindDocumentEvents_ = function() {
     }
   }
   Blockly.documentEventsBound_ = true;
+};
+
+/**
+ * Load sounds for the given workspace.
+ * @param {string} pathToMedia The path to the media directory.
+ * @param {!Blockly.Workspace} workspace The workspace to load sounds for.
+ * @private
+ */
+Blockly.inject.loadSounds_ = function(pathToMedia, workspace) {
+  workspace.loadAudio_(
+      [pathToMedia + 'click.wav'], 'click');
+  workspace.loadAudio_(
+      [pathToMedia + 'delete.wav'], 'delete');
+
+  // Bind temporary hooks that preload the sounds.
+  var soundBinds = [];
+  var unbindSounds = function() {
+    while (soundBinds.length) {
+      Blockly.unbindEvent_(soundBinds.pop());
+    }
+    workspace.preloadAudio_();
+  };
+  // Android ignores any sound not loaded as a result of a user action.
+  soundBinds.push(
+      Blockly.bindEvent_(document, 'mousemove', null, unbindSounds, true));
+  soundBinds.push(
+      Blockly.bindEvent_(document, 'touchstart', null, unbindSounds, true));
 };
 
 /**

@@ -30,6 +30,7 @@ goog.require('Blockly.Block');
 goog.require('Blockly.Comment');
 goog.require('Blockly.Events');
 goog.require('Blockly.FlyoutButton');
+goog.require('Blockly.Touch');
 goog.require('Blockly.WorkspaceSvg');
 goog.require('goog.dom');
 goog.require('goog.events');
@@ -996,6 +997,20 @@ Blockly.Flyout.prototype.addBlockListeners_ = function(root, block, rect) {
 };
 
 /**
+ * Actions to take when a block in the flyout is right-clicked.
+ * @param {!Event} e Event that triggered the right-click.  Could originate from
+ *     a long-press in a touch environment.
+ * @param {Blockly.BlockSvg} block The block that was clicked.
+ */
+Blockly.Flyout.blockRightClick_ = function(e, block) {
+  Blockly.terminateDrag_();
+  Blockly.hideChaff(true);
+  block.showContextMenu_(e);
+  // This was a right-click, so end the gesture immediately.
+  Blockly.Touch.clearTouchIdentifier();
+};
+
+/**
  * Handle a mouse-down on an SVG block in a non-closing flyout.
  * @param {!Blockly.Block} block The flyout block to copy.
  * @return {!Function} Function to call when block is clicked.
@@ -1010,9 +1025,10 @@ Blockly.Flyout.prototype.blockMouseDown_ = function(block) {
     Blockly.DropDownDiv.hideWithoutAnimation();
     Blockly.hideChaff();
     if (Blockly.isRightButton(e)) {
-      // Right-click.
-      block.showContextMenu_(e);
+      Blockly.Flyout.blockRightClick_(e, block);
     } else {
+      Blockly.terminateDrag_();
+      Blockly.hideChaff(true);
       // Left-click (or middle click)
       Blockly.Css.setCursor(Blockly.Css.Cursor.CLOSED);
       // Record the current mouse position.
@@ -1040,6 +1056,8 @@ Blockly.Flyout.prototype.blockMouseDown_ = function(block) {
 Blockly.Flyout.prototype.onMouseDown_ = function(e) {
   this.dragMode_ = Blockly.DRAG_FREE;
   if (Blockly.isRightButton(e)) {
+    // Don't start drags with right clicks.
+    Blockly.Touch.clearTouchIdentifier();
     return;
   }
   Blockly.WidgetDiv.hide(true);
@@ -1067,6 +1085,8 @@ Blockly.Flyout.prototype.onMouseDown_ = function(e) {
  */
 Blockly.Flyout.prototype.onMouseUp_ = function(/*e*/) {
   if (!this.workspace_.isDragging()) {
+    // This was a click, not a drag.  End the gesture.
+    Blockly.Touch.clearTouchIdentifier();
     if (this.autoClose) {
       this.createBlockFunc_(Blockly.Flyout.startBlock_)(
           Blockly.Flyout.startDownEvent_);
@@ -1132,6 +1152,7 @@ Blockly.Flyout.prototype.onMouseMoveBlock_ = function(e) {
     this.createBlockFunc_(Blockly.Flyout.startBlock_)(
         Blockly.Flyout.startDownEvent_);
   } else if (this.dragMode_ == Blockly.DRAG_FREE) {
+    Blockly.longStop_();
     // Do a scroll.
     this.onMouseMove_(e);
   }
@@ -1228,13 +1249,21 @@ Blockly.Flyout.prototype.createBlockFunc_ = function(originBlock) {
       // Right-click.  Don't create a block, let the context menu show.
       return;
     }
+    // It wasn't a right-click.  Get rid of the pending longPress handler.
+    Blockly.longStop_();
     if (originBlock.disabled) {
       // Beyond capacity.
       return;
     }
     Blockly.Events.disable();
     try {
+      // If creating the block creates a variable, we need startFlyout_ set so
+      // we don't try to refresh the flyout immediately.  That would be a
+      // problem because it would change the DOM on the path the touch events
+      // were on.  See google/blockly #613.
+      Blockly.Flyout.startFlyout_ = flyout;
       var block = flyout.placeNewBlock_(originBlock);
+      Blockly.Flyout.startFlyout_ = null;
     } finally {
       Blockly.Events.enable();
     }
@@ -1366,9 +1395,13 @@ Blockly.Flyout.prototype.getClientRect = function() {
  * @private
  */
 Blockly.Flyout.terminateDrag_ = function() {
-  this.dragMode_ = Blockly.DRAG_NONE;
   if (Blockly.Flyout.startFlyout_) {
+    // User was dragging the flyout background, and has stopped.
+    if (Blockly.Flyout.startFlyout_.dragMode_ == Blockly.DRAG_FREE) {
+      Blockly.Touch.clearTouchIdentifier();
+    }
     Blockly.Flyout.startFlyout_.dragMode_ = Blockly.DRAG_NONE;
+    Blockly.Flyout.startFlyout_ = null;
   }
   if (Blockly.Flyout.onMouseUpWrapper_) {
     Blockly.unbindEvent_(Blockly.Flyout.onMouseUpWrapper_);
@@ -1384,7 +1417,6 @@ Blockly.Flyout.terminateDrag_ = function() {
   }
   Blockly.Flyout.startDownEvent_ = null;
   Blockly.Flyout.startBlock_ = null;
-  Blockly.Flyout.startFlyout_ = null;
 };
 
 /**
