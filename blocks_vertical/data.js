@@ -176,7 +176,7 @@ Blockly.Blocks['data_hidevariable'] = {
   }
 };
 
-Blockly.Blocks['data_list'] = {
+Blockly.Blocks['data_listcontents'] = {
   /**
    * List reporter.
    * @this Blockly.Block
