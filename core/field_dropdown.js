@@ -77,6 +77,12 @@ Blockly.FieldDropdown.ARROW_CHAR = goog.userAgent.ANDROID ? '\u25BC' : '\u25BE';
 Blockly.FieldDropdown.prototype.CURSOR = 'default';
 
 /**
+ * Closure menu item currently selected.
+ * @type {?goog.ui.MenuItem}
+ */
+Blockly.FieldDropdown.prototype.selectedItem = null;
+
+/**
  * Install this dropdown on a block.
  */
 Blockly.FieldDropdown.prototype.init = function() {
@@ -148,7 +154,11 @@ Blockly.FieldDropdown.prototype.showEditor_ = function() {
     menuItem.setValue(value);
     menuItem.setCheckable(true);
     menu.addChild(menuItem, true);
-    menuItem.setChecked(value == this.value_);
+    var checked = (value == this.value_);
+    menuItem.setChecked(checked);
+    if (checked) {
+      this.selectedItem = menuItem;
+    }
   }
   // Listen for mouse/keyboard events.
   goog.events.listen(menu, goog.ui.Component.EventType.ACTION, callback);
@@ -260,6 +270,11 @@ Blockly.FieldDropdown.prototype.setValue = function(newValue) {
     Blockly.Events.fire(new Blockly.Events.Change(
         this.sourceBlock_, 'field', this.name, this.value_, newValue));
   }
+  // Clear menu item for old value.
+  if (this.selectedItem) {
+    this.selectedItem.setChecked(false);
+    this.selectedItem = null;
+  }
   this.value_ = newValue;
   // Look up and display the human-readable text.
   var options = this.getOptions_();
@@ -311,6 +326,7 @@ Blockly.FieldDropdown.prototype.setText = function(text) {
  * Close the dropdown menu if this input is being deleted.
  */
 Blockly.FieldDropdown.prototype.dispose = function() {
+  this.selectedItem = null;
   Blockly.WidgetDiv.hideIfOwner(this);
   Blockly.FieldDropdown.superClass_.dispose.call(this);
 };
