@@ -131,8 +131,8 @@ Blockly.Variables.flyoutCategory = function(workspace) {
       //    <shadow type="data_variablemenu"></shadow>
       //   </value>
       //   <value name="VALUE">
-      //     <shadow type="math_number">
-      //       <field name="NUM">0</field>
+      //     <shadow type="text">
+      //       <field name="TEXT">0</field>
       //     </shadow>
       //   </value>
       // </block>
@@ -140,7 +140,7 @@ Blockly.Variables.flyoutCategory = function(workspace) {
       block.setAttribute('type', 'data_setvariableto');
       block.setAttribute('gap', 8);
       block.appendChild(Blockly.Variables.createVariableDom_(variableList[0]));
-      block.appendChild(Blockly.Variables.createMathNumberDom_());
+      block.appendChild(Blockly.Variables.createTextDom_());
       xmlList.push(block);
     }
     if (Blockly.Blocks['data_changevariableby']) {
@@ -233,6 +233,25 @@ Blockly.Variables.createVariableDom_ = function(name) {
 };
 
 /**
+ * Create a dom element for value tag with a shadow text inside.
+ * @return {!Element} An XML element.
+ */
+Blockly.Variables.createTextDom_ = function() {
+  //   <value name="VALUE">
+  //     <shadow type="text">
+  //       <field name="TEXT">0</field>
+  //     </shadow>
+  //   </value>
+  var value = Blockly.Variables.createValueDom_('VALUE');
+  var shadow = Blockly.Variables.createShadowDom_('text');
+  var field = goog.dom.createDom('field', null, '0');
+  field.setAttribute('name', 'TEXT');
+  shadow.appendChild(field);
+  value.appendChild(shadow);
+  return value;
+};
+
+/**
  * Create a dom element for value tag with a shadow number inside.
  * @return {!Element} An XML element.
  */
@@ -244,7 +263,7 @@ Blockly.Variables.createMathNumberDom_ = function() {
   //   </value>
   var value = Blockly.Variables.createValueDom_('VALUE');
   var shadow = Blockly.Variables.createShadowDom_('math_number');
-  var field = goog.dom.createDom('field', null, '0');
+  var field = goog.dom.createDom('field', null, '1');
   field.setAttribute('name', 'NUM');
   shadow.appendChild(field);
   value.appendChild(shadow);
