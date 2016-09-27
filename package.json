@@ -12,13 +12,15 @@
   "main": "./dist/vertical.js",
   "scripts": {
     "prepublish": "./node_modules/.bin/webpack",
-    "test": "./node_modules/.bin/eslint ."
+    "test": "./node_modules/.bin/eslint .",
+    "version": "./node_modules/.bin/json -f package.json -I -e \"this.repository.sha = '$(git log -n1 --pretty=format:%H)'\""
   },
   "dependencies": {},
   "devDependencies": {
     "eslint": "2.9.0",
     "exports-loader": "0.6.3",
     "imports-loader": "0.6.5",
+    "json": "9.0.4",
     "travis-after-all": "1.4.4",
     "webpack": "1.13.2"
   }
