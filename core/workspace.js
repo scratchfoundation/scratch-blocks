@@ -204,8 +204,14 @@ Blockly.Workspace.prototype.clear = function() {
   if (!existingGroup) {
     Blockly.Events.setGroup(false);
   }
-
   this.variableList.length = 0;
+  // Any block with a drop-down or WidgetDiv was disposed.
+  if (Blockly.DropDownDiv) {
+    Blockly.DropDownDiv.hideWithoutAnimation();
+  }
+  if (Blockly.WidgetDiv) {
+    Blockly.WidgetDiv.hide(true);
+  }
 };
 
 /**
