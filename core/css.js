@@ -934,6 +934,9 @@ Blockly.Css.CONTENT = [
   '.blocklyDropDownDiv .goog-option-selected .goog-menuitem-icon {',
      /* Client apps may override the URL at which they serve the sprite. */
     'background: url(<<<PATH>>>/sprites.png) no-repeat -48px -16px !important;',
+    'position: static;', /* Scroll with the menu. */
+    'float: left;',
+    'margin-left: -24px;',
   '}',
 
   /* Keyboard shortcut ("accelerator") style. */
