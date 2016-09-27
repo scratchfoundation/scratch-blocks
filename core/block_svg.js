@@ -30,7 +30,6 @@ goog.require('Blockly.Block');
 goog.require('Blockly.ContextMenu');
 goog.require('Blockly.Touch');
 goog.require('Blockly.RenderedConnection');
-goog.require('goog.Timer');
 goog.require('goog.asserts');
 goog.require('goog.dom');
 goog.require('goog.math.Coordinate');
@@ -746,7 +745,7 @@ Blockly.BlockSvg.prototype.onMouseUp_ = function(e) {
       this.workspace.isDeleteArea(e)) {
     var trashcan = this.workspace.trashcan;
     if (trashcan) {
-      goog.Timer.callOnce(trashcan.close, 100, trashcan);
+      setTimeout(trashcan.close.bind(trashcan), 100);
     }
     Blockly.selected.dispose(false, true);
   }
