@@ -6,6 +6,9 @@ sudo: false
 cache:
   directories:
   - node_modules
+before_install:
+# Symlink closure library
+- ln -s $(npm root)/google-closure-library ../closure-library
 after_script:
 - |
   # RELEASE_BRANCHES and NPM_TOKEN defined in Travis settings panel
