@@ -22,7 +22,7 @@ after_script:
   ]]; then
     # Authenticate NPM
     echo "//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" > .npmrc
-    # Set version to commit SHA
-    npm --no-git-tag-version version $(node -p -e "require('./package.json').version")-${TRAVIS_COMMIT:0:5}
+    # Set version to timestamp
+    npm --no-git-tag-version version $($(npm bin)/json -f package.json version)-prerelease.$(date +%s)
     npm publish
   fi
