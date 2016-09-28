@@ -230,3 +230,17 @@ Blockly.OUTPUT_SHAPE_ROUND = 2;
  * @const
  */
 Blockly.OUTPUT_SHAPE_SQUARE = 3;
+
+/**
+ * Radius of stack glow, in px.
+ * @type {number}
+ * @const
+ */
+Blockly.STACK_GLOW_RADIUS = 1.3;
+
+/**
+ * Radius of replacement glow, in px.
+ * @type {number}
+ * @const
+ */
+Blockly.REPLACEMENT_GLOW_RADIUS = 2;

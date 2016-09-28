@@ -27,6 +27,7 @@
 goog.provide('Blockly.inject');
 
 goog.require('Blockly.Css');
+goog.require('Blockly.constants');
 goog.require('Blockly.Options');
 goog.require('Blockly.WorkspaceSvg');
 goog.require('Blockly.DragSurfaceSvg');
@@ -34,20 +35,6 @@ goog.require('Blockly.DropDownDiv');
 goog.require('goog.dom');
 goog.require('goog.ui.Component');
 goog.require('goog.userAgent');
-
-/**
- * Radius of stack glow, in px.
- * @type {number}
- * @const
- */
-Blockly.STACK_GLOW_RADIUS = 1.3;
-
-/**
- * Radius of replacement glow, in px.
- * @type {number}
- * @const
- */
-Blockly.REPLACEMENT_GLOW_RADIUS = 2;
 
 /**
  * Inject a Blockly editor into the specified container element (usually a div).
