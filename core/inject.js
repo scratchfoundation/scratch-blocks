@@ -40,7 +40,7 @@ goog.require('goog.userAgent');
  * @type {number}
  * @const
  */
-Blockly.STACK_GLOW_RADIUS = 1;
+Blockly.STACK_GLOW_RADIUS = 1.3;
 
 /**
  * Radius of replacement glow, in px.
