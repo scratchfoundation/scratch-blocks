@@ -976,21 +976,21 @@ Blockly.BlockSvg.prototype.renderDraw_ = function(iconWidth, inputRows) {
 };
 
 /**
- * Give the block an attribute 'data-shapes' that lists its shape[s]
+ * Give the block an attribute 'data-shapes' that lists its shape[s].
  * @private
  */
 Blockly.BlockSvg.prototype.renderClassify_ = function() {
   var shapes = [];
   
-  if(this.outputConnection) {
-    if(this.isShadow_) {
+  if (this.outputConnection) {
+    if (this.isShadow_) {
       shapes.push('argument');
     } else {
       shapes.push('reporter');
     }
-    if(this.edgeShape_ === Blockly.OUTPUT_SHAPE_HEXAGONAL) {
+    if (this.edgeShape_ === Blockly.OUTPUT_SHAPE_HEXAGONAL) {
       shapes.push('boolean');
-    } else if(this.edgeShape_ === Blockly.OUTPUT_SHAPE_ROUND) {
+    } else if (this.edgeShape_ === Blockly.OUTPUT_SHAPE_ROUND) {
       shapes.push('round');
     }
   } else {
@@ -1003,16 +1003,16 @@ Blockly.BlockSvg.prototype.renderClassify_ = function() {
       }
     }
     
-    if(statementCount) {
+    if (statementCount) {
       shapes.push('c-block');
       shapes.push('c-' + statementCount);
     }
-    if(this.startHat_) {
+    if (this.startHat_) {
       shapes.push('hat'); // c-block+hats are possible (e.x. reprter procedures)
-    } else if(!statementCount) {
+    } else if (!statementCount) {
       shapes.push('stack'); //only call it "stack" if it's not a c-block
     }
-    if(!this.nextConnection) {
+    if (!this.nextConnection) {
       shapes.push('end');
     }
   }

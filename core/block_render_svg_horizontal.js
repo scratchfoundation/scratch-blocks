@@ -604,7 +604,7 @@ Blockly.BlockSvg.prototype.renderDraw_ = function(metrics) {
 };
 
 /**
- * Give the block an attribute 'data-shapes' that lists its shape[s]
+ * Give the block an attribute 'data-shapes' that lists its shape[s].
  * @param {!Object} metrics An object containing computed measurements of the
  *    block.
  * @private
@@ -612,18 +612,18 @@ Blockly.BlockSvg.prototype.renderDraw_ = function(metrics) {
 Blockly.BlockSvg.prototype.renderClassify_ = function(metrics) {
   var shapes = [];
   
-  if(this.isShadow_) {
+  if (this.isShadow_) {
     shapes.push('argument');
   } else {
     if(metrics.statement) {
       shapes.push('c-block');
     }
-    if(metrics.startHat) {
+    if (metrics.startHat) {
       shapes.push('hat'); // c-block+hats are possible (e.x. reprter procedures)
-    } else if(!metrics.statement) {
+    } else if (!metrics.statement) {
       shapes.push('stack'); //only call it "stack" if it's not a c-block
     }
-    if(!this.nextConnection) {
+    if (!this.nextConnection) {
       shapes.push('end');
     }
   }
