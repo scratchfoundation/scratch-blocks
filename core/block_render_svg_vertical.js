@@ -573,6 +573,8 @@ Blockly.BlockSvg.prototype.render = function(opt_bubble) {
 
   var inputRows = this.renderCompute_(cursorX);
   this.renderDraw_(cursorX, inputRows);
+  
+  this.renderClassify_();
 
   if (opt_bubble !== false) {
     // Render all blocks above this one (propagate a reflow).
@@ -971,6 +973,51 @@ Blockly.BlockSvg.prototype.renderDraw_ = function(iconWidth, inputRows) {
     // This is awesome.
     this.svgPath_.setAttribute('transform', 'scale(-1 1)');
   }
+};
+
+/**
+ * Give the block an attribute 'data-shapes' that lists its shape[s].
+ * @private
+ */
+Blockly.BlockSvg.prototype.renderClassify_ = function() {
+  var shapes = [];
+  
+  if (this.outputConnection) {
+    if (this.isShadow_) {
+      shapes.push('argument');
+    } else {
+      shapes.push('reporter');
+    }
+    if (this.edgeShape_ === Blockly.OUTPUT_SHAPE_HEXAGONAL) {
+      shapes.push('boolean');
+    } else if (this.edgeShape_ === Blockly.OUTPUT_SHAPE_ROUND) {
+      shapes.push('round');
+    }
+  } else {
+    // count the number of statement inputs
+    var inputList = this.inputList;
+    var statementCount = 0;
+    for (var i = 0, input; input = inputList[i]; i++) {
+      if (input.connection && input.connection.type === Blockly.NEXT_STATEMENT) {
+        statementCount++;
+      }
+    }
+    
+    if (statementCount) {
+      shapes.push('c-block');
+      shapes.push('c-' + statementCount);
+    }
+    if (this.startHat_) {
+      shapes.push('hat'); // c-block+hats are possible (e.x. reprter procedures)
+    } else if (!statementCount) {
+      shapes.push('stack'); //only call it "stack" if it's not a c-block
+    }
+    if (!this.nextConnection) {
+      shapes.push('end');
+    }
+  }
+  
+  this.svgGroup_.setAttribute('data-shapes', shapes.join(' '));
 };
 
 /**

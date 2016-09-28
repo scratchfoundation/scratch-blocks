@@ -396,6 +396,7 @@ Blockly.BlockSvg.prototype.render = function(opt_bubble) {
     this.height = metrics.height;
     this.width = metrics.width;
     this.renderDraw_(metrics);
+    this.renderClassify_(metrics);
     this.renderingMetrics_ = metrics;
   }
 
@@ -600,6 +601,34 @@ Blockly.BlockSvg.prototype.renderDraw_ = function(metrics) {
     var transformation = 'translate(' + valueX + ',' + valueY + ')';
     input.setAttribute('transform', transformation);
   }
+};
+
+/**
+ * Give the block an attribute 'data-shapes' that lists its shape[s].
+ * @param {!Object} metrics An object containing computed measurements of the
+ *    block.
+ * @private
+ */
+Blockly.BlockSvg.prototype.renderClassify_ = function(metrics) {
+  var shapes = [];
+  
+  if (this.isShadow_) {
+    shapes.push('argument');
+  } else {
+    if(metrics.statement) {
+      shapes.push('c-block');
+    }
+    if (metrics.startHat) {
+      shapes.push('hat'); // c-block+hats are possible (e.x. reprter procedures)
+    } else if (!metrics.statement) {
+      shapes.push('stack'); //only call it "stack" if it's not a c-block
+    }
+    if (!this.nextConnection) {
+      shapes.push('end');
+    }
+  }
+  
+  this.svgGroup_.setAttribute('data-shapes', shapes.join(' '));
 };
 
 /**
