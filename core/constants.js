@@ -30,18 +30,18 @@ goog.provide('Blockly.constants');
 /**
  * Number of pixels the mouse must move before a drag starts.
  */
-Blockly.DRAG_RADIUS = 5;
+Blockly.DRAG_RADIUS = 3;
 
 /**
  * Maximum misalignment between connections for them to snap together.
  */
-Blockly.SNAP_RADIUS = 72;
+Blockly.SNAP_RADIUS = 48;
 
 /**
  * Maximum misalignment between connections for them to snap together,
  * when a connection is already highlighted.
  */
-Blockly.CONNECTING_SNAP_RADIUS = 132;
+Blockly.CONNECTING_SNAP_RADIUS = 96;
 
 /**
  * How much to prefer staying connected to the current connection over moving to
