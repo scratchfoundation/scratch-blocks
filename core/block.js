@@ -1469,7 +1469,7 @@ Blockly.Block.prototype.getOutputShape = function() {
 
 /**
  * Set this block's category (for styling purposes)
- * @param {?string} string representing category (see constants.js).
+ * @param {?string} category The block's category (see constants.js).
  */
 Blockly.Block.prototype.setCategory = function(category) {
   this.category = category;
