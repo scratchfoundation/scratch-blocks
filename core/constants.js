@@ -249,15 +249,15 @@ Blockly.REPLACEMENT_GLOW_RADIUS = 2;
  * ENUM for categories.
  * @const
  */
- Blockly.Categories = {
-   "motion": "motion",
-   "looks": "looks",
-   "sounds": "sound",
-   "pen": "pen",
-   "data": "data",
-   "event": "events",
-   "control": "control",
-   "sensing": "sensing",
-   "operators": "operators",
-   "more": "more"
- };
+Blockly.Categories = {
+  "motion": "motion",
+  "looks": "looks",
+  "sounds": "sound",
+  "pen": "pen",
+  "data": "data",
+  "event": "events",
+  "control": "control",
+  "sensing": "sensing",
+  "operators": "operators",
+  "more": "more"
+};
