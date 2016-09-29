@@ -976,7 +976,8 @@ Blockly.BlockSvg.prototype.renderDraw_ = function(iconWidth, inputRows) {
 };
 
 /**
- * Give the block an attribute 'data-shapes' that lists its shape[s].
+ * Give the block an attribute 'data-shapes' that lists its shape[s], and an
+ *     attribute 'data-category' with its category.
  * @private
  */
 Blockly.BlockSvg.prototype.renderClassify_ = function() {
@@ -1018,6 +1019,10 @@ Blockly.BlockSvg.prototype.renderClassify_ = function() {
   }
   
   this.svgGroup_.setAttribute('data-shapes', shapes.join(' '));
+  
+  if (this.category) {
+    this.svgGroup_.setAttribute('data-category', this.category);
+  }
 };
 
 /**
