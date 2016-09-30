@@ -37,6 +37,7 @@ Blockly.Blocks['pen_clear'] = {
       "message0": "clear",
       "previousStatement": null,
       "nextStatement": null,
+      "category": Blockly.Categories.pen,
       "colour": Blockly.Colours.pen.primary,
       "colourSecondary": Blockly.Colours.pen.secondary,
       "colourTertiary": Blockly.Colours.pen.tertiary
@@ -54,6 +55,7 @@ Blockly.Blocks['pen_stamp'] = {
       "message0": "stamp",
       "previousStatement": null,
       "nextStatement": null,
+      "category": Blockly.Categories.pen,
       "colour": Blockly.Colours.pen.primary,
       "colourSecondary": Blockly.Colours.pen.secondary,
       "colourTertiary": Blockly.Colours.pen.tertiary
@@ -71,6 +73,7 @@ Blockly.Blocks['pen_pendown'] = {
       "message0": "pen down",
       "previousStatement": null,
       "nextStatement": null,
+      "category": Blockly.Categories.pen,
       "colour": Blockly.Colours.pen.primary,
       "colourSecondary": Blockly.Colours.pen.secondary,
       "colourTertiary": Blockly.Colours.pen.tertiary
@@ -88,6 +91,7 @@ Blockly.Blocks['pen_penup'] = {
       "message0": "pen up",
       "previousStatement": null,
       "nextStatement": null,
+      "category": Blockly.Categories.pen,
       "colour": Blockly.Colours.pen.primary,
       "colourSecondary": Blockly.Colours.pen.secondary,
       "colourTertiary": Blockly.Colours.pen.tertiary
@@ -111,6 +115,7 @@ Blockly.Blocks['pen_setpencolortocolor'] = {
       ],
       "previousStatement": null,
       "nextStatement": null,
+      "category": Blockly.Categories.pen,
       "colour": Blockly.Colours.pen.primary,
       "colourSecondary": Blockly.Colours.pen.secondary,
       "colourTertiary": Blockly.Colours.pen.tertiary
@@ -134,6 +139,7 @@ Blockly.Blocks['pen_changepencolorby'] = {
       ],
       "previousStatement": null,
       "nextStatement": null,
+      "category": Blockly.Categories.pen,
       "colour": Blockly.Colours.pen.primary,
       "colourSecondary": Blockly.Colours.pen.secondary,
       "colourTertiary": Blockly.Colours.pen.tertiary
@@ -157,6 +163,7 @@ Blockly.Blocks['pen_setpencolortonum'] = {
       ],
       "previousStatement": null,
       "nextStatement": null,
+      "category": Blockly.Categories.pen,
       "colour": Blockly.Colours.pen.primary,
       "colourSecondary": Blockly.Colours.pen.secondary,
       "colourTertiary": Blockly.Colours.pen.tertiary
@@ -180,6 +187,7 @@ Blockly.Blocks['pen_changepenshadeby'] = {
       ],
       "previousStatement": null,
       "nextStatement": null,
+      "category": Blockly.Categories.pen,
       "colour": Blockly.Colours.pen.primary,
       "colourSecondary": Blockly.Colours.pen.secondary,
       "colourTertiary": Blockly.Colours.pen.tertiary
@@ -203,6 +211,7 @@ Blockly.Blocks['pen_setpenshadeto'] = {
       ],
       "previousStatement": null,
       "nextStatement": null,
+      "category": Blockly.Categories.pen,
       "colour": Blockly.Colours.pen.primary,
       "colourSecondary": Blockly.Colours.pen.secondary,
       "colourTertiary": Blockly.Colours.pen.tertiary
@@ -226,6 +235,7 @@ Blockly.Blocks['pen_changepensizeby'] = {
       ],
       "previousStatement": null,
       "nextStatement": null,
+      "category": Blockly.Categories.pen,
       "colour": Blockly.Colours.pen.primary,
       "colourSecondary": Blockly.Colours.pen.secondary,
       "colourTertiary": Blockly.Colours.pen.tertiary
@@ -249,6 +259,7 @@ Blockly.Blocks['pen_setpensizeto'] = {
       ],
       "previousStatement": null,
       "nextStatement": null,
+      "category": Blockly.Categories.pen,
       "colour": Blockly.Colours.pen.primary,
       "colourSecondary": Blockly.Colours.pen.secondary,
       "colourTertiary": Blockly.Colours.pen.tertiary
