@@ -66,6 +66,7 @@ Blockly.Blocks['data_variable'] = {
           "name": "VARIABLE"
         }
       ],
+      "category": Blockly.Categories.data,
       "colour": Blockly.Colours.data.primary,
       "colourSecondary": Blockly.Colours.data.secondary,
       "colourTertiary": Blockly.Colours.data.tertiary,
@@ -96,6 +97,7 @@ Blockly.Blocks['data_setvariableto'] = {
       ],
       "previousStatement": null,
       "nextStatement": null,
+      "category": Blockly.Categories.data,
       "colour": Blockly.Colours.data.primary,
       "colourSecondary": Blockly.Colours.data.secondary,
       "colourTertiary": Blockly.Colours.data.tertiary
@@ -123,6 +125,7 @@ Blockly.Blocks['data_changevariableby'] = {
       ],
       "previousStatement": null,
       "nextStatement": null,
+      "category": Blockly.Categories.data,
       "colour": Blockly.Colours.data.primary,
       "colourSecondary": Blockly.Colours.data.secondary,
       "colourTertiary": Blockly.Colours.data.tertiary
@@ -146,6 +149,7 @@ Blockly.Blocks['data_showvariable'] = {
       ],
       "previousStatement": null,
       "nextStatement": null,
+      "category": Blockly.Categories.data,
       "colour": Blockly.Colours.data.primary,
       "colourSecondary": Blockly.Colours.data.secondary,
       "colourTertiary": Blockly.Colours.data.tertiary
@@ -169,6 +173,7 @@ Blockly.Blocks['data_hidevariable'] = {
       ],
       "previousStatement": null,
       "nextStatement": null,
+      "category": Blockly.Categories.data,
       "colour": Blockly.Colours.data.primary,
       "colourSecondary": Blockly.Colours.data.secondary,
       "colourTertiary": Blockly.Colours.data.tertiary
@@ -190,6 +195,7 @@ Blockly.Blocks['data_listcontents'] = {
           "name": "LIST"
         }
       ],
+      "category": Blockly.Categories.data,
       "colour": Blockly.Colours.data.primary,
       "colourSecondary": Blockly.Colours.data.secondary,
       "colourTertiary": Blockly.Colours.data.tertiary,
@@ -220,6 +226,7 @@ Blockly.Blocks['data_addtolist'] = {
       ],
       "previousStatement": null,
       "nextStatement": null,
+      "category": Blockly.Categories.data,
       "colour": Blockly.Colours.data.primary,
       "colourSecondary": Blockly.Colours.data.secondary,
       "colourTertiary": Blockly.Colours.data.tertiary
@@ -247,6 +254,7 @@ Blockly.Blocks['data_deleteoflist'] = {
       ],
       "previousStatement": null,
       "nextStatement": null,
+      "category": Blockly.Categories.data,
       "colour": Blockly.Colours.data.primary,
       "colourSecondary": Blockly.Colours.data.secondary,
       "colourTertiary": Blockly.Colours.data.tertiary
@@ -278,6 +286,7 @@ Blockly.Blocks['data_insertatlist'] = {
       ],
       "previousStatement": null,
       "nextStatement": null,
+      "category": Blockly.Categories.data,
       "colour": Blockly.Colours.data.primary,
       "colourSecondary": Blockly.Colours.data.secondary,
       "colourTertiary": Blockly.Colours.data.tertiary
@@ -309,6 +318,7 @@ Blockly.Blocks['data_replaceitemoflist'] = {
       ],
       "previousStatement": null,
       "nextStatement": null,
+      "category": Blockly.Categories.data,
       "colour": Blockly.Colours.data.primary,
       "colourSecondary": Blockly.Colours.data.secondary,
       "colourTertiary": Blockly.Colours.data.tertiary
@@ -335,6 +345,7 @@ Blockly.Blocks['data_itemoflist'] = {
         }
       ],
       "output": null,
+      "category": Blockly.Categories.data,
       "colour": Blockly.Colours.data.primary,
       "colourSecondary": Blockly.Colours.data.secondary,
       "colourTertiary": Blockly.Colours.data.tertiary,
@@ -358,6 +369,7 @@ Blockly.Blocks['data_lengthoflist'] = {
         }
       ],
       "output": "Number",
+      "category": Blockly.Categories.data,
       "colour": Blockly.Colours.data.primary,
       "colourSecondary": Blockly.Colours.data.secondary,
       "colourTertiary": Blockly.Colours.data.tertiary,
@@ -386,6 +398,7 @@ Blockly.Blocks['data_listcontainsitem'] = {
       ],
       "output": "Boolean",
       "outputShape": Blockly.OUTPUT_SHAPE_HEXAGONAL,
+      "category": Blockly.Categories.data,
       "colour": Blockly.Colours.data.primary,
       "colourSecondary": Blockly.Colours.data.secondary,
       "colourTertiary": Blockly.Colours.data.tertiary
@@ -409,6 +422,7 @@ Blockly.Blocks['data_showlist'] = {
       ],
       "previousStatement": null,
       "nextStatement": null,
+      "category": Blockly.Categories.data,
       "colour": Blockly.Colours.data.primary,
       "colourSecondary": Blockly.Colours.data.secondary,
       "colourTertiary": Blockly.Colours.data.tertiary
@@ -432,6 +446,7 @@ Blockly.Blocks['data_hidelist'] = {
       ],
       "previousStatement": null,
       "nextStatement": null,
+      "category": Blockly.Categories.data,
       "colour": Blockly.Colours.data.primary,
       "colourSecondary": Blockly.Colours.data.secondary,
       "colourTertiary": Blockly.Colours.data.tertiary
