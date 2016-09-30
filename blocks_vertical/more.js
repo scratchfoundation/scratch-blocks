@@ -44,6 +44,7 @@ Blockly.Blocks['procedures_defnoreturn'] = {
         .appendField(nameField, 'NAME')
         .appendField('', 'PARAMS');
     this.setMutator(new Blockly.Mutator(['procedures_mutatorarg']));
+    this.setCategory(Blockly.Categories.more);
     this.setColour(Blockly.Colours.more.primary,
       Blockly.Colours.more.secondary,
       Blockly.Colours.more.tertiary);
@@ -278,6 +279,7 @@ Blockly.Blocks['procedures_defreturn'] = {
         .appendField(nameField, 'NAME')
         .appendField('', 'PARAMS');
     this.setMutator(new Blockly.Mutator(['procedures_mutatorarg']));
+    this.setCategory(Blockly.Categories.more);
     this.setColour(Blockly.Colours.more.primary,
       Blockly.Colours.more.secondary,
       Blockly.Colours.more.tertiary);
@@ -322,6 +324,7 @@ Blockly.Blocks['procedures_mutatorcontainer'] = {
     this.appendDummyInput()
         .appendField(Blockly.Msg.PROCEDURES_MUTATORCONTAINER_TITLE);
     this.appendStatementInput('STACK');
+    this.setCategory(Blockly.Categories.more);
     this.setColour(Blockly.Colours.more.primary,
       Blockly.Colours.more.secondary,
       Blockly.Colours.more.tertiary);
@@ -342,6 +345,7 @@ Blockly.Blocks['procedures_mutatorarg'] = {
         .appendField(field, 'NAME');
     this.setPreviousStatement(true);
     this.setNextStatement(true);
+    this.setCategory(Blockly.Categories.more);
     this.setColour(Blockly.Colours.more.primary,
       Blockly.Colours.more.secondary,
       Blockly.Colours.more.tertiary);
@@ -392,6 +396,7 @@ Blockly.Blocks['procedures_callnoreturn'] = {
         .appendField(this.id, 'NAME');
     this.setPreviousStatement(true);
     this.setNextStatement(true);
+    this.setCategory(Blockly.Categories.more);
     this.setColour(Blockly.Colours.more.primary,
       Blockly.Colours.more.secondary,
       Blockly.Colours.more.tertiary);
@@ -707,6 +712,7 @@ Blockly.Blocks['procedures_callreturn'] = {
         .appendField('', 'NAME');
     this.setOutput(true);
     this.setOutputShape(Blockly.OUTPUT_SHAPE_ROUND);
+    this.setCategory(Blockly.Categories.more);
     this.setColour(Blockly.Colours.more.primary,
       Blockly.Colours.more.secondary,
       Blockly.Colours.more.tertiary);
@@ -741,6 +747,7 @@ Blockly.Blocks['procedures_report'] = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(false);
+    this.setCategory(Blockly.Categories.more);
     this.setColour(Blockly.Colours.more.primary,
       Blockly.Colours.more.secondary,
       Blockly.Colours.more.tertiary);
