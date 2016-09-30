@@ -43,6 +43,7 @@ Blockly.Blocks['sensing_touchingobject'] = {
       ],
       "inputsInline": true,
       "output": "Boolean",
+      "category": Blockly.Categories.sensing,
       "colour": Blockly.Colours.sensing.primary,
       "colourSecondary": Blockly.Colours.sensing.secondary,
       "colourTertiary": Blockly.Colours.sensing.tertiary,
@@ -96,6 +97,7 @@ Blockly.Blocks['sensing_touchingcolor'] = {
       ],
       "inputsInline": true,
       "output": "Boolean",
+      "category": Blockly.Categories.sensing,
       "colour": Blockly.Colours.sensing.primary,
       "colourSecondary": Blockly.Colours.sensing.secondary,
       "colourTertiary": Blockly.Colours.sensing.tertiary,
@@ -124,6 +126,7 @@ Blockly.Blocks['sensing_coloristouchingcolor'] = {
       ],
       "inputsInline": true,
       "output": "Boolean",
+      "category": Blockly.Categories.sensing,
       "colour": Blockly.Colours.sensing.primary,
       "colourSecondary": Blockly.Colours.sensing.secondary,
       "colourTertiary": Blockly.Colours.sensing.tertiary,
@@ -146,6 +149,7 @@ Blockly.Blocks['sensing_distanceto'] = {
           "name": "DISTANCETOMENU"
         }
       ],
+      "category": Blockly.Categories.sensing,
       "colour": Blockly.Colours.sensing.primary,
       "colourSecondary": Blockly.Colours.sensing.secondary,
       "colourTertiary": Blockly.Colours.sensing.tertiary,
@@ -199,6 +203,7 @@ Blockly.Blocks['sensing_askandwait'] = {
       ],
       "previousStatement": null,
       "nextStatement": null,
+      "category": Blockly.Categories.sensing,
       "colour": Blockly.Colours.sensing.primary,
       "colourSecondary": Blockly.Colours.sensing.secondary,
       "colourTertiary": Blockly.Colours.sensing.tertiary
@@ -214,6 +219,7 @@ Blockly.Blocks['sensing_answer'] = {
   init: function() {
     this.jsonInit({
       "message0": "answer",
+      "category": Blockly.Categories.sensing,
       "colour": Blockly.Colours.sensing.primary,
       "colourSecondary": Blockly.Colours.sensing.secondary,
       "colourTertiary": Blockly.Colours.sensing.tertiary,
@@ -240,6 +246,7 @@ Blockly.Blocks['sensing_keypressed'] = {
       ],
       "inputsInline": true,
       "output": "Boolean",
+      "category": Blockly.Categories.sensing,
       "colour": Blockly.Colours.sensing.primary,
       "colourSecondary": Blockly.Colours.sensing.secondary,
       "colourTertiary": Blockly.Colours.sensing.tertiary,
@@ -327,6 +334,7 @@ Blockly.Blocks['sensing_mousedown'] = {
       "message0": "mouse down?",
       "inputsInline": true,
       "output": "Boolean",
+      "category": Blockly.Categories.sensing,
       "colour": Blockly.Colours.sensing.primary,
       "colourSecondary": Blockly.Colours.sensing.secondary,
       "colourTertiary": Blockly.Colours.sensing.tertiary,
@@ -343,6 +351,7 @@ Blockly.Blocks['sensing_mousex'] = {
   init: function() {
     this.jsonInit({
       "message0": "mouse x",
+      "category": Blockly.Categories.sensing,
       "colour": Blockly.Colours.sensing.primary,
       "colourSecondary": Blockly.Colours.sensing.secondary,
       "colourTertiary": Blockly.Colours.sensing.tertiary,
@@ -360,6 +369,7 @@ Blockly.Blocks['sensing_mousey'] = {
   init: function() {
     this.jsonInit({
       "message0": "mouse y",
+      "category": Blockly.Categories.sensing,
       "colour": Blockly.Colours.sensing.primary,
       "colourSecondary": Blockly.Colours.sensing.secondary,
       "colourTertiary": Blockly.Colours.sensing.tertiary,
@@ -377,6 +387,7 @@ Blockly.Blocks['sensing_loudness'] = {
   init: function() {
     this.jsonInit({
       "message0": "loudness",
+      "category": Blockly.Categories.sensing,
       "colour": Blockly.Colours.sensing.primary,
       "colourSecondary": Blockly.Colours.sensing.secondary,
       "colourTertiary": Blockly.Colours.sensing.tertiary,
@@ -407,6 +418,7 @@ Blockly.Blocks['sensing_videoon'] = {
       ],
       "inputsInline": true,
       "output": "Number",
+      "category": Blockly.Categories.sensing,
       "colour": Blockly.Colours.sensing.primary,
       "colourSecondary": Blockly.Colours.sensing.secondary,
       "colourTertiary": Blockly.Colours.sensing.tertiary,
@@ -488,6 +500,7 @@ Blockly.Blocks['sensing_videotoggle'] = {
       ],
       "previousStatement": null,
       "nextStatement": null,
+      "category": Blockly.Categories.sensing,
       "colour": Blockly.Colours.sensing.primary,
       "colourSecondary": Blockly.Colours.sensing.secondary,
       "colourTertiary": Blockly.Colours.sensing.tertiary
@@ -541,6 +554,7 @@ Blockly.Blocks['sensing_setvideotransparency'] = {
       ],
       "previousStatement": null,
       "nextStatement": null,
+      "category": Blockly.Categories.sensing,
       "colour": Blockly.Colours.sensing.primary,
       "colourSecondary": Blockly.Colours.sensing.secondary,
       "colourTertiary": Blockly.Colours.sensing.tertiary
@@ -556,6 +570,7 @@ Blockly.Blocks['sensing_timer'] = {
   init: function() {
     this.jsonInit({
       "message0": "timer",
+      "category": Blockly.Categories.sensing,
       "colour": Blockly.Colours.sensing.primary,
       "colourSecondary": Blockly.Colours.sensing.secondary,
       "colourTertiary": Blockly.Colours.sensing.tertiary,
@@ -576,6 +591,7 @@ Blockly.Blocks['sensing_resettimer'] = {
       "message0": "reset timer",
       "previousStatement": null,
       "nextStatement": null,
+      "category": Blockly.Categories.sensing,
       "colour": Blockly.Colours.sensing.primary,
       "colourSecondary": Blockly.Colours.sensing.secondary,
       "colourTertiary": Blockly.Colours.sensing.tertiary
@@ -668,6 +684,7 @@ Blockly.Blocks['sensing_of'] = {
         }
       ],
       "output": true,
+      "category": Blockly.Categories.sensing,
       "colour": Blockly.Colours.sensing.primary,
       "colourSecondary": Blockly.Colours.sensing.secondary,
       "colourTertiary": Blockly.Colours.sensing.tertiary,
@@ -693,6 +710,7 @@ Blockly.Blocks['sensing_current'] = {
       ],
       "inputsInline": true,
       "output": "Number",
+      "category": Blockly.Categories.sensing,
       "colour": Blockly.Colours.sensing.primary,
       "colourSecondary": Blockly.Colours.sensing.secondary,
       "colourTertiary": Blockly.Colours.sensing.tertiary,
@@ -744,6 +762,7 @@ Blockly.Blocks['sensing_dayssince2000'] = {
   init: function() {
     this.jsonInit({
       "message0": "days since 2000",
+      "category": Blockly.Categories.sensing,
       "colour": Blockly.Colours.sensing.primary,
       "colourSecondary": Blockly.Colours.sensing.secondary,
       "colourTertiary": Blockly.Colours.sensing.tertiary,
@@ -761,6 +780,7 @@ Blockly.Blocks['sensing_username'] = {
   init: function() {
     this.jsonInit({
       "message0": "username",
+      "category": Blockly.Categories.sensing,
       "colour": Blockly.Colours.sensing.primary,
       "colourSecondary": Blockly.Colours.sensing.secondary,
       "colourTertiary": Blockly.Colours.sensing.tertiary,
