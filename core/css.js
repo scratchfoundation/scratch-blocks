@@ -917,6 +917,17 @@ Blockly.Css.CONTENT = [
     'width: 16px;',
   '}',
 
+  '.blocklyWidgetDiv .goog-option-selected .goog-menuitem-checkbox,',
+  '.blocklyWidgetDiv .goog-option-selected .goog-menuitem-icon,',
+  '.blocklyDropDownDiv .goog-option-selected .goog-menuitem-checkbox,',
+  '.blocklyDropDownDiv .goog-option-selected .goog-menuitem-icon {',
+     /* Client apps may override the URL at which they serve the sprite. */
+    'background: url(<<<PATH>>>/sprites.png) no-repeat -48px -16px !important;',
+    'position: static;', /* Scroll with the menu. */
+    'float: left;',
+    'margin-left: -24px;',
+  '}',
+
   /* BiDi override for the selected/checked state. */
   /* #noflip */
   '.blocklyWidgetDiv .goog-menuitem-rtl .goog-menuitem-checkbox,',
@@ -924,16 +935,8 @@ Blockly.Css.CONTENT = [
   '.blocklyDropDownDiv .goog-menuitem-rtl .goog-menuitem-checkbox,',
   '.blocklyDropDownDiv .goog-menuitem-rtl .goog-menuitem-icon {',
      /* Flip left/right positioning. */
-    'left: auto;',
-    'right: 6px;',
-  '}',
-
-  '.blocklyWidgetDiv .goog-option-selected .goog-menuitem-checkbox,',
-  '.blocklyWidgetDiv .goog-option-selected .goog-menuitem-icon,',
-  '.blocklyDropDownDiv .goog-option-selected .goog-menuitem-checkbox,',
-  '.blocklyDropDownDiv .goog-option-selected .goog-menuitem-icon {',
-     /* Client apps may override the URL at which they serve the sprite. */
-    'background: url(<<<PATH>>>/sprites.png) no-repeat -48px -16px !important;',
+     'float: right;',
+     'margin-left: 6px;',
   '}',
 
   /* Keyboard shortcut ("accelerator") style. */
