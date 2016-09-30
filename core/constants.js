@@ -252,7 +252,7 @@ Blockly.REPLACEMENT_GLOW_RADIUS = 2;
 Blockly.Categories = {
   "motion": "motion",
   "looks": "looks",
-  "sounds": "sound",
+  "sound": "sounds",
   "pen": "pen",
   "data": "data",
   "event": "events",
