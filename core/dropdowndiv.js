@@ -177,7 +177,7 @@ Blockly.DropDownDiv.setColour = function(backgroundColour, borderColour) {
 Blockly.DropDownDiv.showPositionedByBlock = function(owner, block,
       opt_onHide, opt_secondaryYOffset) {
   var scale = block.workspace.scale;
-  var bBox = block.getHeightWidth();
+  var bBox = {width: block.width, height: block.height};
   bBox.width *= scale;
   bBox.height *= scale;
   var position = goog.style.getPageOffset(block.getSvgRoot());
