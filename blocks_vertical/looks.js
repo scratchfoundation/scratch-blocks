@@ -47,6 +47,7 @@ Blockly.Blocks['looks_sayforsecs'] = {
       ],
       "previousStatement": null,
       "nextStatement": null,
+      "category": Blockly.Categories.looks,
       "colour": Blockly.Colours.looks.primary,
       "colourSecondary": Blockly.Colours.looks.secondary,
       "colourTertiary": Blockly.Colours.looks.tertiary
@@ -70,6 +71,7 @@ Blockly.Blocks['looks_say'] = {
       ],
       "previousStatement": null,
       "nextStatement": null,
+      "category": Blockly.Categories.looks,
       "colour": Blockly.Colours.looks.primary,
       "colourSecondary": Blockly.Colours.looks.secondary,
       "colourTertiary": Blockly.Colours.looks.tertiary
@@ -97,6 +99,7 @@ Blockly.Blocks['looks_thinkforsecs'] = {
       ],
       "previousStatement": null,
       "nextStatement": null,
+      "category": Blockly.Categories.looks,
       "colour": Blockly.Colours.looks.primary,
       "colourSecondary": Blockly.Colours.looks.secondary,
       "colourTertiary": Blockly.Colours.looks.tertiary
@@ -120,6 +123,7 @@ Blockly.Blocks['looks_think'] = {
       ],
       "previousStatement": null,
       "nextStatement": null,
+      "category": Blockly.Categories.looks,
       "colour": Blockly.Colours.looks.primary,
       "colourSecondary": Blockly.Colours.looks.secondary,
       "colourTertiary": Blockly.Colours.looks.tertiary
@@ -138,6 +142,7 @@ Blockly.Blocks['looks_show'] = {
         "message0": "show",
         "previousStatement": null,
         "nextStatement": null,
+        "category": Blockly.Categories.looks,
         "colour": Blockly.Colours.looks.primary,
         "colourSecondary": Blockly.Colours.looks.secondary,
         "colourTertiary": Blockly.Colours.looks.tertiary
@@ -156,6 +161,7 @@ Blockly.Blocks['looks_hide'] = {
         "message0": "hide",
         "previousStatement": null,
         "nextStatement": null,
+        "category": Blockly.Categories.looks,
         "colour": Blockly.Colours.looks.primary,
         "colourSecondary": Blockly.Colours.looks.secondary,
         "colourTertiary": Blockly.Colours.looks.tertiary
@@ -218,6 +224,7 @@ Blockly.Blocks['looks_changeeffectby'] = {
       "inputsInline": true,
       "previousStatement": null,
       "nextStatement": null,
+      "category": Blockly.Categories.looks,
       "colour": Blockly.Colours.looks.primary,
       "colourSecondary": Blockly.Colours.looks.secondary,
       "colourTertiary": Blockly.Colours.looks.tertiary
@@ -246,6 +253,7 @@ Blockly.Blocks['looks_seteffectto'] = {
       "inputsInline": true,
       "previousStatement": null,
       "nextStatement": null,
+      "category": Blockly.Categories.looks,
       "colour": Blockly.Colours.looks.primary,
       "colourSecondary": Blockly.Colours.looks.secondary,
       "colourTertiary": Blockly.Colours.looks.tertiary
@@ -263,6 +271,7 @@ Blockly.Blocks['looks_cleargraphiceffects'] = {
       "message0": "clear graphic effects",
       "previousStatement": null,
       "nextStatement": null,
+      "category": Blockly.Categories.looks,
       "colour": Blockly.Colours.looks.primary,
       "colourSecondary": Blockly.Colours.looks.secondary,
       "colourTertiary": Blockly.Colours.looks.tertiary
@@ -286,6 +295,7 @@ Blockly.Blocks['looks_changesizeby'] = {
       ],
       "previousStatement": null,
       "nextStatement": null,
+      "category": Blockly.Categories.looks,
       "colour": Blockly.Colours.looks.primary,
       "colourSecondary": Blockly.Colours.looks.secondary,
       "colourTertiary": Blockly.Colours.looks.tertiary
@@ -309,6 +319,7 @@ Blockly.Blocks['looks_setsizeto'] = {
       ],
       "previousStatement": null,
       "nextStatement": null,
+      "category": Blockly.Categories.looks,
       "colour": Blockly.Colours.looks.primary,
       "colourSecondary": Blockly.Colours.looks.secondary,
       "colourTertiary": Blockly.Colours.looks.tertiary
@@ -324,6 +335,7 @@ Blockly.Blocks['looks_size'] = {
   init: function() {
     this.jsonInit({
       "message0": "size",
+      "category": Blockly.Categories.looks,
       "colour": Blockly.Colours.looks.primary,
       "colourSecondary": Blockly.Colours.looks.secondary,
       "colourTertiary": Blockly.Colours.looks.tertiary,
@@ -380,6 +392,7 @@ Blockly.Blocks['looks_switchcostumeto'] = {
       "inputsInline": true,
       "previousStatement": null,
       "nextStatement": null,
+      "category": Blockly.Categories.looks,
       "colour": Blockly.Colours.looks.primary,
       "colourSecondary": Blockly.Colours.looks.secondary,
       "colourTertiary": Blockly.Colours.looks.tertiary
@@ -398,6 +411,7 @@ Blockly.Blocks['looks_nextcostume'] = {
         "message0": "next costume",
         "previousStatement": null,
         "nextStatement": null,
+        "category": Blockly.Categories.looks,
         "colour": Blockly.Colours.looks.primary,
         "colourSecondary": Blockly.Colours.looks.secondary,
         "colourTertiary": Blockly.Colours.looks.tertiary
@@ -422,6 +436,7 @@ Blockly.Blocks['looks_switchbackdropto'] = {
       "inputsInline": true,
       "previousStatement": null,
       "nextStatement": null,
+      "category": Blockly.Categories.looks,
       "colour": Blockly.Colours.looks.primary,
       "colourSecondary": Blockly.Colours.looks.secondary,
       "colourTertiary": Blockly.Colours.looks.tertiary
@@ -468,6 +483,7 @@ Blockly.Blocks['looks_gotofront'] = {
         "message0": "go to front",
         "previousStatement": null,
         "nextStatement": null,
+        "category": Blockly.Categories.looks,
         "colour": Blockly.Colours.looks.primary,
         "colourSecondary": Blockly.Colours.looks.secondary,
         "colourTertiary": Blockly.Colours.looks.tertiary
@@ -492,6 +508,7 @@ Blockly.Blocks['looks_gobacklayers'] = {
       "inputsInline": true,
       "previousStatement": null,
       "nextStatement": null,
+      "category": Blockly.Categories.looks,
       "colour": Blockly.Colours.looks.primary,
       "colourSecondary": Blockly.Colours.looks.secondary,
       "colourTertiary": Blockly.Colours.looks.tertiary
@@ -507,6 +524,7 @@ Blockly.Blocks['looks_backdropname'] = {
   init: function() {
     this.jsonInit({
       "message0": "backdrop name",
+      "category": Blockly.Categories.looks,
       "colour": Blockly.Colours.looks.primary,
       "colourSecondary": Blockly.Colours.looks.secondary,
       "colourTertiary": Blockly.Colours.looks.tertiary,
@@ -525,6 +543,7 @@ Blockly.Blocks['looks_costumeorder'] = {
   init: function() {
     this.jsonInit({
       "message0": "costume #",
+      "category": Blockly.Categories.looks,
       "colour": Blockly.Colours.looks.primary,
       "colourSecondary": Blockly.Colours.looks.secondary,
       "colourTertiary": Blockly.Colours.looks.tertiary,
@@ -543,6 +562,7 @@ Blockly.Blocks['looks_backdroporder'] = {
   init: function() {
     this.jsonInit({
       "message0": "backdrop #",
+      "category": Blockly.Categories.looks,
       "colour": Blockly.Colours.looks.primary,
       "colourSecondary": Blockly.Colours.looks.secondary,
       "colourTertiary": Blockly.Colours.looks.tertiary,
@@ -570,6 +590,7 @@ Blockly.Blocks['looks_switchbackdroptoandwait'] = {
       "inputsInline": true,
       "previousStatement": null,
       "nextStatement": null,
+      "category": Blockly.Categories.looks,
       "colour": Blockly.Colours.looks.primary,
       "colourSecondary": Blockly.Colours.looks.secondary,
       "colourTertiary": Blockly.Colours.looks.tertiary
@@ -588,6 +609,7 @@ Blockly.Blocks['looks_nextbackdrop'] = {
         "message0": "next backdrop",
         "previousStatement": null,
         "nextStatement": null,
+        "category": Blockly.Categories.looks,
         "colour": Blockly.Colours.looks.primary,
         "colourSecondary": Blockly.Colours.looks.secondary,
         "colourTertiary": Blockly.Colours.looks.tertiary

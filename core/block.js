@@ -1149,6 +1149,9 @@ Blockly.Block.prototype.jsonInit = function(json) {
   if (json['checkboxInFlyout'] !== undefined) {
     this.setCheckboxInFlyout(json['checkboxInFlyout']);
   }
+  if (json['category'] !== undefined) {
+    this.setCategory(json['category']);
+  }
 };
 
 /**
@@ -1462,6 +1465,14 @@ Blockly.Block.prototype.setOutputShape = function(outputShape) {
  */
 Blockly.Block.prototype.getOutputShape = function() {
   return this.outputShape_;
+};
+
+/**
+ * Set this block's category (for styling purposes)
+ * @param {?string} category The block's category (see constants.js).
+ */
+Blockly.Block.prototype.setCategory = function(category) {
+  this.category = category;
 };
 
 /**
