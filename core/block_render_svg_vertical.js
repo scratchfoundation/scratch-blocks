@@ -1180,9 +1180,10 @@ Blockly.BlockSvg.prototype.renderDrawRight_ = function(steps,
       connectionX = connectionsXY.x + (this.RTL ? -cursorX : cursorX);
       connectionY = connectionsXY.y + cursorY;
       input.connection.moveTo(connectionX, connectionY);
-
       if (input.connection.isConnected()) {
         input.connection.tighten_();
+        this.width = Math.max(this.width, inputRows.statementEdge +
+          input.connection.targetBlock().getHeightWidth().width);
       }
       if (y == inputRows.length - 1 ||
           inputRows[y + 1].type == Blockly.NEXT_STATEMENT) {
