@@ -44,6 +44,7 @@ Blockly.Blocks['motion_movesteps'] = {
       "inputsInline": true,
       "previousStatement": null,
       "nextStatement": null,
+      "category": Blockly.Categories.motion,
       "colour": Blockly.Colours.motion.primary,
       "colourSecondary": Blockly.Colours.motion.secondary,
       "colourTertiary": Blockly.Colours.motion.tertiary
@@ -68,6 +69,7 @@ Blockly.Blocks['motion_turnright'] = {
       "inputsInline": true,
       "previousStatement": null,
       "nextStatement": null,
+      "category": Blockly.Categories.motion,
       "colour": Blockly.Colours.motion.primary,
       "colourSecondary": Blockly.Colours.motion.secondary,
       "colourTertiary": Blockly.Colours.motion.tertiary
@@ -92,6 +94,7 @@ Blockly.Blocks['motion_turnleft'] = {
       "inputsInline": true,
       "previousStatement": null,
       "nextStatement": null,
+      "category": Blockly.Categories.motion,
       "colour": Blockly.Colours.motion.primary,
       "colourSecondary": Blockly.Colours.motion.secondary,
       "colourTertiary": Blockly.Colours.motion.tertiary
@@ -116,6 +119,7 @@ Blockly.Blocks['motion_pointindirection'] = {
       "inputsInline": true,
       "previousStatement": null,
       "nextStatement": null,
+      "category": Blockly.Categories.motion,
       "colour": Blockly.Colours.motion.primary,
       "colourSecondary": Blockly.Colours.motion.secondary,
       "colourTertiary": Blockly.Colours.motion.tertiary
@@ -168,6 +172,7 @@ Blockly.Blocks['motion_pointtowards'] = {
       "inputsInline": true,
       "previousStatement": null,
       "nextStatement": null,
+      "category": Blockly.Categories.motion,
       "colour": Blockly.Colours.motion.primary,
       "colourSecondary": Blockly.Colours.motion.secondary,
       "colourTertiary": Blockly.Colours.motion.tertiary
@@ -225,6 +230,7 @@ Blockly.Blocks['motion_gotoxy'] = {
       "inputsInline": true,
       "previousStatement": null,
       "nextStatement": null,
+      "category": Blockly.Categories.motion,
       "colour": Blockly.Colours.motion.primary,
       "colourSecondary": Blockly.Colours.motion.secondary,
       "colourTertiary": Blockly.Colours.motion.tertiary
@@ -249,6 +255,7 @@ Blockly.Blocks['motion_goto'] = {
       "inputsInline": true,
       "previousStatement": null,
       "nextStatement": null,
+      "category": Blockly.Categories.motion,
       "colour": Blockly.Colours.motion.primary,
       "colourSecondary": Blockly.Colours.motion.secondary,
       "colourTertiary": Blockly.Colours.motion.tertiary
@@ -281,6 +288,7 @@ Blockly.Blocks['motion_glidesecstoxy'] = {
       "inputsInline": true,
       "previousStatement": null,
       "nextStatement": null,
+      "category": Blockly.Categories.motion,
       "colour": Blockly.Colours.motion.primary,
       "colourSecondary": Blockly.Colours.motion.secondary,
       "colourTertiary": Blockly.Colours.motion.tertiary
@@ -305,6 +313,7 @@ Blockly.Blocks['motion_changexby'] = {
       "inputsInline": true,
       "previousStatement": null,
       "nextStatement": null,
+      "category": Blockly.Categories.motion,
       "colour": Blockly.Colours.motion.primary,
       "colourSecondary": Blockly.Colours.motion.secondary,
       "colourTertiary": Blockly.Colours.motion.tertiary
@@ -329,6 +338,7 @@ Blockly.Blocks['motion_setx'] = {
       "inputsInline": true,
       "previousStatement": null,
       "nextStatement": null,
+      "category": Blockly.Categories.motion,
       "colour": Blockly.Colours.motion.primary,
       "colourSecondary": Blockly.Colours.motion.secondary,
       "colourTertiary": Blockly.Colours.motion.tertiary
@@ -353,6 +363,7 @@ Blockly.Blocks['motion_changeyby'] = {
       "inputsInline": true,
       "previousStatement": null,
       "nextStatement": null,
+      "category": Blockly.Categories.motion,
       "colour": Blockly.Colours.motion.primary,
       "colourSecondary": Blockly.Colours.motion.secondary,
       "colourTertiary": Blockly.Colours.motion.tertiary
@@ -377,6 +388,7 @@ Blockly.Blocks['motion_sety'] = {
       "inputsInline": true,
       "previousStatement": null,
       "nextStatement": null,
+      "category": Blockly.Categories.motion,
       "colour": Blockly.Colours.motion.primary,
       "colourSecondary": Blockly.Colours.motion.secondary,
       "colourTertiary": Blockly.Colours.motion.tertiary
@@ -394,6 +406,7 @@ Blockly.Blocks['motion_ifonedgebounce'] = {
       "message0": "if on edge, bounce",
       "previousStatement": null,
       "nextStatement": null,
+      "category": Blockly.Categories.motion,
       "colour": Blockly.Colours.motion.primary,
       "colourSecondary": Blockly.Colours.motion.secondary,
       "colourTertiary": Blockly.Colours.motion.tertiary
@@ -447,6 +460,7 @@ Blockly.Blocks['motion_setrotationstyle'] = {
       ],
       "previousStatement": null,
       "nextStatement": null,
+      "category": Blockly.Categories.motion,
       "colour": Blockly.Colours.motion.primary,
       "colourSecondary": Blockly.Colours.motion.secondary,
       "colourTertiary": Blockly.Colours.motion.tertiary
@@ -464,6 +478,7 @@ Blockly.Blocks['motion_xposition'] = {
       "message0": "x position",
       "output": "Number",
       "outputShape": Blockly.OUTPUT_SHAPE_ROUND,
+      "category": Blockly.Categories.motion,
       "colour": Blockly.Colours.motion.primary,
       "colourSecondary": Blockly.Colours.motion.secondary,
       "colourTertiary": Blockly.Colours.motion.tertiary,
@@ -482,6 +497,7 @@ Blockly.Blocks['motion_yposition'] = {
       "message0": "y position",
       "output": "Number",
       "outputShape": Blockly.OUTPUT_SHAPE_ROUND,
+      "category": Blockly.Categories.motion,
       "colour": Blockly.Colours.motion.primary,
       "colourSecondary": Blockly.Colours.motion.secondary,
       "colourTertiary": Blockly.Colours.motion.tertiary,
@@ -500,6 +516,7 @@ Blockly.Blocks['motion_direction'] = {
       "message0": "direction",
       "output": "Number",
       "outputShape": Blockly.OUTPUT_SHAPE_ROUND,
+      "category": Blockly.Categories.motion,
       "colour": Blockly.Colours.motion.primary,
       "colourSecondary": Blockly.Colours.motion.secondary,
       "colourTertiary": Blockly.Colours.motion.tertiary,
