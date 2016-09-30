@@ -74,6 +74,7 @@ Blockly.Blocks['sound_play'] = {
       "inputsInline": true,
       "previousStatement": null,
       "nextStatement": null,
+      "category": Blockly.Categories.sound,
       "colour": Blockly.Colours.sounds.primary,
       "colourSecondary": Blockly.Colours.sounds.secondary,
       "colourTertiary": Blockly.Colours.sounds.tertiary
@@ -98,6 +99,7 @@ Blockly.Blocks['sound_playuntildone'] = {
       "inputsInline": true,
       "previousStatement": null,
       "nextStatement": null,
+      "category": Blockly.Categories.sound,
       "colour": Blockly.Colours.sounds.primary,
       "colourSecondary": Blockly.Colours.sounds.secondary,
       "colourTertiary": Blockly.Colours.sounds.tertiary
@@ -115,6 +117,7 @@ Blockly.Blocks['sound_stopallsounds'] = {
       "message0": "stop all sounds",
       "previousStatement": null,
       "nextStatement": null,
+      "category": Blockly.Categories.sound,
       "colour": Blockly.Colours.sounds.primary,
       "colourSecondary": Blockly.Colours.sounds.secondary,
       "colourTertiary": Blockly.Colours.sounds.tertiary
@@ -142,6 +145,7 @@ Blockly.Blocks['sound_playdrumforbeats'] = {
       ],
       "previousStatement": null,
       "nextStatement": null,
+      "category": Blockly.Categories.sound,
       "colour": Blockly.Colours.sounds.primary,
       "colourSecondary": Blockly.Colours.sounds.secondary,
       "colourTertiary": Blockly.Colours.sounds.tertiary
@@ -165,6 +169,7 @@ Blockly.Blocks['sound_restforbeats'] = {
       ],
       "previousStatement": null,
       "nextStatement": null,
+      "category": Blockly.Categories.sound,
       "colour": Blockly.Colours.sounds.primary,
       "colourSecondary": Blockly.Colours.sounds.secondary,
       "colourTertiary": Blockly.Colours.sounds.tertiary
@@ -192,6 +197,7 @@ Blockly.Blocks['sound_playnoteforbeats'] = {
       ],
       "previousStatement": null,
       "nextStatement": null,
+      "category": Blockly.Categories.sound,
       "colour": Blockly.Colours.sounds.primary,
       "colourSecondary": Blockly.Colours.sounds.secondary,
       "colourTertiary": Blockly.Colours.sounds.tertiary
@@ -215,6 +221,7 @@ Blockly.Blocks['sound_setinstrumentto'] = {
       ],
       "previousStatement": null,
       "nextStatement": null,
+      "category": Blockly.Categories.sound,
       "colour": Blockly.Colours.sounds.primary,
       "colourSecondary": Blockly.Colours.sounds.secondary,
       "colourTertiary": Blockly.Colours.sounds.tertiary
@@ -238,6 +245,7 @@ Blockly.Blocks['sound_changevolumeby'] = {
       ],
       "previousStatement": null,
       "nextStatement": null,
+      "category": Blockly.Categories.sound,
       "colour": Blockly.Colours.sounds.primary,
       "colourSecondary": Blockly.Colours.sounds.secondary,
       "colourTertiary": Blockly.Colours.sounds.tertiary
@@ -261,6 +269,7 @@ Blockly.Blocks['sound_setvolumeto'] = {
       ],
       "previousStatement": null,
       "nextStatement": null,
+      "category": Blockly.Categories.sound,
       "colour": Blockly.Colours.sounds.primary,
       "colourSecondary": Blockly.Colours.sounds.secondary,
       "colourTertiary": Blockly.Colours.sounds.tertiary
@@ -276,6 +285,7 @@ Blockly.Blocks['sound_volume'] = {
   init: function() {
     this.jsonInit({
       "message0": "volume",
+      "category": Blockly.Categories.sound,
       "colour": Blockly.Colours.sounds.primary,
       "colourSecondary": Blockly.Colours.sounds.secondary,
       "colourTertiary": Blockly.Colours.sounds.tertiary,
@@ -302,6 +312,7 @@ Blockly.Blocks['sound_changetempoby'] = {
       ],
       "previousStatement": null,
       "nextStatement": null,
+      "category": Blockly.Categories.sound,
       "colour": Blockly.Colours.sounds.primary,
       "colourSecondary": Blockly.Colours.sounds.secondary,
       "colourTertiary": Blockly.Colours.sounds.tertiary
@@ -325,6 +336,7 @@ Blockly.Blocks['sound_settempotobpm'] = {
       ],
       "previousStatement": null,
       "nextStatement": null,
+      "category": Blockly.Categories.sound,
       "colour": Blockly.Colours.sounds.primary,
       "colourSecondary": Blockly.Colours.sounds.secondary,
       "colourTertiary": Blockly.Colours.sounds.tertiary
@@ -340,6 +352,7 @@ Blockly.Blocks['sound_tempo'] = {
   init: function() {
     this.jsonInit({
       "message0": "tempo",
+      "category": Blockly.Categories.sound,
       "colour": Blockly.Colours.sounds.primary,
       "colourSecondary": Blockly.Colours.sounds.secondary,
       "colourTertiary": Blockly.Colours.sounds.tertiary,
