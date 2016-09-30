@@ -917,17 +917,6 @@ Blockly.Css.CONTENT = [
     'width: 16px;',
   '}',
 
-  /* BiDi override for the selected/checked state. */
-  /* #noflip */
-  '.blocklyWidgetDiv .goog-menuitem-rtl .goog-menuitem-checkbox,',
-  '.blocklyWidgetDiv .goog-menuitem-rtl .goog-menuitem-icon,',
-  '.blocklyDropDownDiv .goog-menuitem-rtl .goog-menuitem-checkbox,',
-  '.blocklyDropDownDiv .goog-menuitem-rtl .goog-menuitem-icon {',
-     /* Flip left/right positioning. */
-    'left: auto;',
-    'right: 6px;',
-  '}',
-
   '.blocklyWidgetDiv .goog-option-selected .goog-menuitem-checkbox,',
   '.blocklyWidgetDiv .goog-option-selected .goog-menuitem-icon,',
   '.blocklyDropDownDiv .goog-option-selected .goog-menuitem-checkbox,',
@@ -937,6 +926,17 @@ Blockly.Css.CONTENT = [
     'position: static;', /* Scroll with the menu. */
     'float: left;',
     'margin-left: -24px;',
+  '}',
+
+  /* BiDi override for the selected/checked state. */
+  /* #noflip */
+  '.blocklyWidgetDiv .goog-menuitem-rtl .goog-menuitem-checkbox,',
+  '.blocklyWidgetDiv .goog-menuitem-rtl .goog-menuitem-icon,',
+  '.blocklyDropDownDiv .goog-menuitem-rtl .goog-menuitem-checkbox,',
+  '.blocklyDropDownDiv .goog-menuitem-rtl .goog-menuitem-icon {',
+     /* Flip left/right positioning. */
+     'float: right;',
+     'margin-left: 6px;',
   '}',
 
   /* Keyboard shortcut ("accelerator") style. */
