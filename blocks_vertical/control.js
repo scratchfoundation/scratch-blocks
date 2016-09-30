@@ -57,6 +57,7 @@ Blockly.Blocks['control_forever'] = {
       ],
       "inputsInline": true,
       "previousStatement": null,
+      "category": Blockly.Categories.control,
       "colour": Blockly.Colours.control.primary,
       "colourSecondary": Blockly.Colours.control.secondary,
       "colourTertiary": Blockly.Colours.control.tertiary
@@ -102,6 +103,7 @@ Blockly.Blocks['control_repeat'] = {
       "inputsInline": true,
       "previousStatement": null,
       "nextStatement": null,
+      "category": Blockly.Categories.control,
       "colour": Blockly.Colours.control.primary,
       "colourSecondary": Blockly.Colours.control.secondary,
       "colourTertiary": Blockly.Colours.control.tertiary
@@ -135,6 +137,7 @@ Blockly.Blocks['control_if'] = {
       "inputsInline": true,
       "previousStatement": null,
       "nextStatement": null,
+      "category": Blockly.Categories.control,
       "colour": Blockly.Colours.control.primary,
       "colourSecondary": Blockly.Colours.control.secondary,
       "colourTertiary": Blockly.Colours.control.tertiary
@@ -176,6 +179,7 @@ Blockly.Blocks['control_if_else'] = {
       "inputsInline": true,
       "previousStatement": null,
       "nextStatement": null,
+      "category": Blockly.Categories.control,
       "colour": Blockly.Colours.control.primary,
       "colourSecondary": Blockly.Colours.control.secondary,
       "colourTertiary": Blockly.Colours.control.tertiary
@@ -210,6 +214,7 @@ Blockly.Blocks['control_stop'] = {
     this.appendDummyInput()
         .appendField('stop')
         .appendField(stopDropdown, 'STOP_OPTION');
+    this.setCategory(Blockly.Categories.control);
     this.setColour(Blockly.Colours.control.primary,
       Blockly.Colours.control.secondary,
       Blockly.Colours.control.tertiary
@@ -246,6 +251,7 @@ Blockly.Blocks['control_wait'] = {
       "inputsInline": true,
       "previousStatement": null,
       "nextStatement": null,
+      "category": Blockly.Categories.control,
       "colour": Blockly.Colours.control.primary,
       "colourSecondary": Blockly.Colours.control.secondary,
       "colourTertiary": Blockly.Colours.control.tertiary
@@ -271,6 +277,7 @@ Blockly.Blocks['control_wait_until'] = {
       "inputsInline": true,
       "previousStatement": null,
       "nextStatement": null,
+      "category": Blockly.Categories.control,
       "colour": Blockly.Colours.control.primary,
       "colourSecondary": Blockly.Colours.control.secondary,
       "colourTertiary": Blockly.Colours.control.tertiary
@@ -314,6 +321,7 @@ Blockly.Blocks['control_repeat_until'] = {
       "inputsInline": true,
       "previousStatement": null,
       "nextStatement": null,
+      "category": Blockly.Categories.control,
       "colour": Blockly.Colours.control.primary,
       "colourSecondary": Blockly.Colours.control.secondary,
       "colourTertiary": Blockly.Colours.control.tertiary
@@ -334,6 +342,7 @@ Blockly.Blocks['control_start_as_clone'] = {
       ],
       "inputsInline": true,
       "nextStatement": null,
+      "category": Blockly.Categories.control,
       "colour": Blockly.Colours.control.primary,
       "colourSecondary": Blockly.Colours.control.secondary,
       "colourTertiary": Blockly.Colours.control.tertiary
@@ -387,6 +396,7 @@ Blockly.Blocks['control_create_clone_of'] = {
       "inputsInline": true,
       "previousStatement": null,
       "nextStatement": null,
+      "category": Blockly.Categories.control,
       "colour": Blockly.Colours.control.primary,
       "colourSecondary": Blockly.Colours.control.secondary,
       "colourTertiary": Blockly.Colours.control.tertiary
@@ -406,6 +416,7 @@ Blockly.Blocks['control_delete_this_clone'] = {
       ],
       "inputsInline": true,
       "previousStatement": null,
+      "category": Blockly.Categories.control,
       "colour": Blockly.Colours.control.primary,
       "colourSecondary": Blockly.Colours.control.secondary,
       "colourTertiary": Blockly.Colours.control.tertiary
