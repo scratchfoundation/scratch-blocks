@@ -55,7 +55,7 @@ Blockly.BlockSvg = function(workspace, prototypeName, opt_id) {
    */
   this.svgGroup_ = Blockly.createSvgElement('g', {}, null);
   /** @type {SVGElement} */
-  this.svgPath_ = Blockly.createSvgElement('path', {'class': 'blocklyPath'},
+  this.svgPath_ = Blockly.createSvgElement('path', {'class': 'blocklyPath blocklyBlockBackground'},
       this.svgGroup_);
   this.svgPath_.tooltip = this;
 
