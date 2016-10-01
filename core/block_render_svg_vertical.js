@@ -1242,19 +1242,23 @@ Blockly.BlockSvg.prototype.renderInputShape_ = function(input, x, y) {
     var inputShapeX = 0, inputShapeY = 0;
     // If the input connection is not connected, draw a hole shape.
     var inputShapePath = null;
+    var inputShapeFieldType = null;
     switch (input.connection.getOutputShape()) {
       case Blockly.OUTPUT_SHAPE_HEXAGONAL:
         inputShapePath = Blockly.BlockSvg.INPUT_SHAPE_HEXAGONAL;
         inputShapeWidth = Blockly.BlockSvg.INPUT_SHAPE_HEXAGONAL_WIDTH;
+        inputShapeFieldType = 'boolean';
         break;
       case Blockly.OUTPUT_SHAPE_ROUND:
         inputShapePath = Blockly.BlockSvg.INPUT_SHAPE_ROUND;
         inputShapeWidth = Blockly.BlockSvg.INPUT_SHAPE_ROUND_WIDTH;
+        inputShapeFieldType = 'round';
         break;
       case Blockly.OUTPUT_SHAPE_SQUARE:
       default:
         inputShapePath = Blockly.BlockSvg.INPUT_SHAPE_SQUARE;
         inputShapeWidth = Blockly.BlockSvg.INPUT_SHAPE_SQUARE_WIDTH;
+        inputShapeFieldType = 'square';
         break;
     }
     if (this.RTL) {
@@ -1267,6 +1271,7 @@ Blockly.BlockSvg.prototype.renderInputShape_ = function(input, x, y) {
     inputShape.setAttribute('transform',
       'translate(' + inputShapeX + ',' + inputShapeY + ')'
     );
+    inputShape.setAttribute('data-argument-type', inputShapeFieldType);
     inputShape.setAttribute('style', 'visibility: visible');
   }
 };

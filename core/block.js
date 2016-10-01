@@ -1280,6 +1280,7 @@ Blockly.Block.prototype.interpolate_ = function(message, args, lastDummyAlign) {
         }
       } while (altRepeat);
       if (field) {
+        field.fieldType = element['type'].replace(/field_/, '');
         fieldStack.push([field, element['name']]);
       } else if (input) {
         if (element['check']) {
