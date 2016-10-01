@@ -140,9 +140,9 @@ Blockly.Field.prototype.init = function() {
   // Build the DOM.
   this.fieldGroup_ = Blockly.createSvgElement('g', {}, null);
   if (this.sourceBlock_.isShadow_) {
-    this.sourceBlock_.svgGroup_.setAttribute('data-field-type', this.fieldType);
+    this.sourceBlock_.svgGroup_.setAttribute('data-argument-type', this.fieldType);
   } else {
-    this.fieldGroup_.setAttribute('data-field-type', this.fieldType); // square dropdowns
+    this.fieldGroup_.setAttribute('data-argument-type', this.fieldType); // square dropdowns
   }
   if (!this.visible_) {
     this.fieldGroup_.style.display = 'none';
