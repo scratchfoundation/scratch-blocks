@@ -45,6 +45,7 @@ Blockly.FieldIconMenu = function(icons) {
   // First icon provides the default values.
   var defaultValue = icons[0].value;
   Blockly.FieldIconMenu.superClass_.constructor.call(this, defaultValue);
+  this.setArgType('iconmenu');
 };
 goog.inherits(Blockly.FieldIconMenu, Blockly.Field);
 
