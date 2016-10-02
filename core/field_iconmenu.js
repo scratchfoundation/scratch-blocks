@@ -234,6 +234,7 @@ Blockly.FieldIconMenu.prototype.showEditor_ = function() {
   contentDiv.style.width = Blockly.FieldIconMenu.DROPDOWN_WIDTH + 'px';
 
   Blockly.DropDownDiv.setColour(this.sourceBlock_.getColour(), this.sourceBlock_.getColourTertiary());
+  Blockly.DropDownDiv.setCategory(this.sourceBlock_.parentBlock_.getCategory());
 
   // Update source block colour to look selected
   this.savedPrimary_ = this.sourceBlock_.getColour();
