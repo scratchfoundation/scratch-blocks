@@ -1485,7 +1485,7 @@ Blockly.Block.prototype.setCategory = function(category) {
  * Get this block's category (for styling purposes)
  * @return {?string} category The block's category (see constants.js).
  */
-Blockly.Block.prototype.getCategory = function(category) {
+Blockly.Block.prototype.getCategory = function() {
   return this.category_;
 };
 
