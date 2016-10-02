@@ -72,6 +72,7 @@ Blockly.FieldNumber = function(value, opt_min, opt_max, opt_precision, opt_valid
     (Math.floor(opt_precision) != opt_precision);
   this.negativeAllowed_ = (typeof opt_min == 'undefined') || isNaN(opt_min) || opt_min < 0;
   var numRestrictor = getNumRestrictor(this.decimalAllowed_, this.negativeAllowed_);
+  this.setArgType('number');
   Blockly.FieldNumber.superClass_.constructor.call(this, value, opt_validator, numRestrictor);
 };
 goog.inherits(Blockly.FieldNumber, Blockly.FieldTextInput);

@@ -103,6 +103,13 @@ Blockly.Field.prototype.sourceBlock_ = null;
 Blockly.Field.prototype.visible_ = true;
 
 /**
+ * The field's argType (for styling).
+ * @type {Blockly.Block}
+ * @private
+ */
+Blockly.Field.prototype.argType_ = null;
+
+/**
  * Validation function called when user edits an editable field.
  * @type {Function}
  * @private
@@ -141,6 +148,15 @@ Blockly.Field.prototype.init = function() {
   this.fieldGroup_ = Blockly.createSvgElement('g', {}, null);
   if (!this.visible_) {
     this.fieldGroup_.style.display = 'none';
+  }
+  // Add an attribute to cassify the type of field.
+  if (this.getArgType() !== null) {
+    if (this.sourceBlock_.isShadow()) {
+      this.sourceBlock_.svgGroup_.setAttribute('data-argument-type', this.getArgType());
+    } else {
+      // Fields without a shadow wrapper, like square dropdowns.
+      this.fieldGroup_.setAttribute('data-argument-type', this.getArgType());
+    }
   }
   // Adjust X to be flipped for RTL. Position is relative to horizontal start of source block.
   var size = this.getSize();
@@ -219,6 +235,22 @@ Blockly.Field.prototype.setVisible = function(visible) {
     root.style.display = visible ? 'block' : 'none';
     this.render_();
   }
+};
+
+/**
+ * Sets the field's argType (used for styling).
+ * @param {string} argType New argType.
+ */
+Blockly.Field.prototype.setArgType = function(argType) {
+  this.argType_ = argType;
+};
+
+/**
+ * Gets the field's argType (used for styling).
+ * @return {string} argType string, or null.
+ */
+Blockly.Field.prototype.getArgType = function() {
+  return this.argType_;
 };
 
 /**

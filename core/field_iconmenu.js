@@ -44,6 +44,7 @@ Blockly.FieldIconMenu = function(icons) {
   // [{src: '...', width: 20, height: 20, alt: '...', value: 'machine_value'}, ...]
   // First icon provides the default values.
   var defaultValue = icons[0].value;
+  this.setArgType('iconmenu');
   Blockly.FieldIconMenu.superClass_.constructor.call(this, defaultValue);
 };
 goog.inherits(Blockly.FieldIconMenu, Blockly.Field);

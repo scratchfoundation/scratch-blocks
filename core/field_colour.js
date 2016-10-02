@@ -46,6 +46,7 @@ goog.require('goog.ui.ColorPicker');
  */
 Blockly.FieldColour = function(colour, opt_validator) {
   Blockly.FieldColour.superClass_.constructor.call(this, colour, opt_validator);
+  this.setArgType('colour');
 };
 goog.inherits(Blockly.FieldColour, Blockly.Field);
 
