@@ -631,8 +631,8 @@ Blockly.BlockSvg.prototype.renderClassify_ = function(metrics) {
   
   this.svgGroup_.setAttribute('data-shapes', shapes.join(' '));
   
-  if (this.category) {
-    this.svgGroup_.setAttribute('data-category', this.category);
+  if (this.getCategory()) {
+    this.svgGroup_.setAttribute('data-category', this.getCategory());
   }
 };
 
