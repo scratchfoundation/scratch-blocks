@@ -54,11 +54,11 @@ Blockly.FieldDropdown = function(menuGenerator, opt_validator) {
   this.menuGenerator_ = menuGenerator;
   this.trimOptions_();
   var firstTuple = this.getOptions_()[0];
-  this.setArgType('dropdown');
 
   // Call parent's constructor.
   Blockly.FieldDropdown.superClass_.constructor.call(this, firstTuple[1],
       opt_validator);
+  this.setArgType('dropdown');
 };
 goog.inherits(Blockly.FieldDropdown, Blockly.Field);
 

@@ -46,9 +46,9 @@ Blockly.FieldAngle = function(text, opt_validator) {
   // Add degree symbol: "360°" (LTR) or "°360" (RTL)
   this.symbol_ = Blockly.createSvgElement('tspan', {}, null);
   this.symbol_.appendChild(document.createTextNode('\u00B0'));
-  this.setArgType('angle');
 
   Blockly.FieldAngle.superClass_.constructor.call(this, text, opt_validator);
+  this.setArgType('angle');
 };
 goog.inherits(Blockly.FieldAngle, Blockly.FieldTextInput);
 
