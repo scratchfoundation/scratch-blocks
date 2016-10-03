@@ -192,6 +192,10 @@ Blockly.FieldDropdown.prototype.showEditor_ = function() {
     this.sourceBlock_.parentBlock_.getColour() : this.sourceBlock_.getColour();
 
   Blockly.DropDownDiv.setColour(primaryColour, this.sourceBlock_.getColourTertiary());
+  
+  var category = (this.sourceBlock_.isShadow()) ?
+    this.sourceBlock_.parentBlock_.getCategory() : this.sourceBlock_.getCategory();
+  Blockly.DropDownDiv.setCategory(category);
 
   // Calculate positioning based on the field position.
   var scale = this.sourceBlock_.workspace.scale;

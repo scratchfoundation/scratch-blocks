@@ -164,6 +164,14 @@ Blockly.DropDownDiv.setColour = function(backgroundColour, borderColour) {
 };
 
 /**
+ * Set the category for the drop-down.
+ * @param {string} category The new category for the drop-down.
+ */
+Blockly.DropDownDiv.setCategory = function(category) {
+  Blockly.DropDownDiv.DIV_.setAttribute('data-category', category);
+};
+
+/**
  * Shortcut to show and place the drop-down with positioning determined
  * by a particular block. The primary position will be below the block,
  * and the secondary position above the block. Drop-down will be
