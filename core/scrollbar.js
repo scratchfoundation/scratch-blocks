@@ -258,7 +258,7 @@ Blockly.Scrollbar.prototype.isVisible_ = true;
  * Increase the size of scrollbars on touch devices.
  * Don't define if there is no document object (e.g. node.js).
  */
-Blockly.Scrollbar.scrollbarThickness = 15;
+Blockly.Scrollbar.scrollbarThickness = 11;
 if (goog.events.BrowserFeature.TOUCH_ENABLED) {
   Blockly.Scrollbar.scrollbarThickness = 25;
 }
