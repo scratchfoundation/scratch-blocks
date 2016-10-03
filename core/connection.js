@@ -645,7 +645,7 @@ Blockly.Connection.prototype.setCheck = function(check) {
  * @return {number} Enum representing shape.
  */
 Blockly.Connection.prototype.getOutputShape = function() {
-  if (!this.check_) return Blockly.OUTPUT_SHAPE_SQUARE;
+  if (!this.check_) return Blockly.OUTPUT_SHAPE_ROUND;
   if (this.check_.indexOf('Boolean') !== -1) {
     return Blockly.OUTPUT_SHAPE_HEXAGONAL;
   }
@@ -655,7 +655,7 @@ Blockly.Connection.prototype.getOutputShape = function() {
   if (this.check_.indexOf('String') !== -1) {
     return Blockly.OUTPUT_SHAPE_SQUARE;
   }
-  return Blockly.OUTPUT_SHAPE_SQUARE;
+  return Blockly.OUTPUT_SHAPE_ROUND;
 };
 
 /**

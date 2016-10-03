@@ -285,7 +285,7 @@ Blockly.BlockSvg.INPUT_SHAPE_SQUARE =
  * Width of empty square input shape.
  * @const
  */
-Blockly.BlockSvg.INPUT_SHAPE_SQUARE_WIDTH = 9 * Blockly.BlockSvg.GRID_UNIT;
+Blockly.BlockSvg.INPUT_SHAPE_SQUARE_WIDTH = 10 * Blockly.BlockSvg.GRID_UNIT;
 
 /**
  * SVG path for an empty round input shape.
@@ -306,7 +306,7 @@ Blockly.BlockSvg.INPUT_SHAPE_ROUND =
  * Width of empty round input shape.
  * @const
  */
-Blockly.BlockSvg.INPUT_SHAPE_ROUND_WIDTH = 10 * Blockly.BlockSvg.GRID_UNIT;
+Blockly.BlockSvg.INPUT_SHAPE_ROUND_WIDTH = 12 * Blockly.BlockSvg.GRID_UNIT;
 
 /**
  * Height of empty input shape.
@@ -573,7 +573,7 @@ Blockly.BlockSvg.prototype.render = function(opt_bubble) {
 
   var inputRows = this.renderCompute_(cursorX);
   this.renderDraw_(cursorX, inputRows);
-  
+
   this.renderClassify_();
 
   if (opt_bubble !== false) {
@@ -701,8 +701,9 @@ Blockly.BlockSvg.prototype.renderCompute_ = function(iconWidth) {
       input.renderHeight = Blockly.BlockSvg.MIN_BLOCK_Y;
     }
 
-    // The width is currently only needed for inline value inputs.
-    if (input.type == Blockly.INPUT_VALUE) {
+    // Empty input shape widths.
+    if (input.type == Blockly.INPUT_VALUE &&
+        (!input.connection || !input.connection.isConnected())) {
       switch (input.connection.getOutputShape()) {
         case Blockly.OUTPUT_SHAPE_SQUARE:
           input.renderWidth = Blockly.BlockSvg.INPUT_SHAPE_SQUARE_WIDTH;
@@ -982,7 +983,7 @@ Blockly.BlockSvg.prototype.renderDraw_ = function(iconWidth, inputRows) {
  */
 Blockly.BlockSvg.prototype.renderClassify_ = function() {
   var shapes = [];
-  
+
   if (this.outputConnection) {
     if (this.isShadow_) {
       shapes.push('argument');
@@ -1003,7 +1004,7 @@ Blockly.BlockSvg.prototype.renderClassify_ = function() {
         statementCount++;
       }
     }
-    
+
     if (statementCount) {
       shapes.push('c-block');
       shapes.push('c-' + statementCount);
@@ -1017,9 +1018,9 @@ Blockly.BlockSvg.prototype.renderClassify_ = function() {
       shapes.push('end');
     }
   }
-  
+
   this.svgGroup_.setAttribute('data-shapes', shapes.join(' '));
-  
+
   if (this.getCategory()) {
     this.svgGroup_.setAttribute('data-category', this.getCategory());
   }
