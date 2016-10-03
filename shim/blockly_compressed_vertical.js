@@ -1,1 +1,1 @@
-module.exports = require('exports?Blockly&goog!../blockly_compressed_vertical');
+module.exports = require('imports?this=>window!exports?Blockly&goog!../blockly_compressed_vertical');
