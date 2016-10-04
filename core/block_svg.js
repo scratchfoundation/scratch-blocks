@@ -337,6 +337,8 @@ Blockly.BlockSvg.terminateDrag = function() {
       selected.setDragging_(false);
       selected.moveOffDragSurface_();
       selected.render();
+      // Re-enable workspace resizing.
+      selected.workspace.setResizesEnabled(true);
       // Ensure that any stap and bump are part of this move's event group.
       var group = Blockly.Events.getGroup();
       setTimeout(function() {
@@ -349,8 +351,6 @@ Blockly.BlockSvg.terminateDrag = function() {
         selected.bumpNeighbours_();
         Blockly.Events.setGroup(false);
       }, Blockly.BUMP_DELAY);
-      // Fire an event to allow scrollbars to resize.
-      selected.workspace.resizeContents();
     }
   }
   Blockly.dragMode_ = Blockly.DRAG_NONE;
@@ -445,9 +445,9 @@ Blockly.BlockSvg.prototype.moveBy = function(dx, dy) {
   this.moveConnections_(dx, dy);
   if (eventsEnabled) {
     event.recordNew();
-    this.workspace.resizeContents();
     Blockly.Events.fire(event);
   }
+  this.workspace.resizeContents();
 };
 
 /**
@@ -975,6 +975,8 @@ Blockly.BlockSvg.prototype.onMouseMove_ = function(e) {
       // drag surface. By moving to the drag surface before unplug, connection
       // positions will be calculated correctly.
       this.moveToDragSurface_();
+      // Disable workspace resizing as an optimization.
+      this.workspace.setResizesEnabled(false);
       // Clear WidgetDiv/DropDownDiv without animating, in case blocks are moved
       // around
       Blockly.WidgetDiv.hide(true);

@@ -1279,6 +1279,8 @@ Blockly.Flyout.prototype.createBlockFunc_ = function(originBlock) {
     Blockly.dragMode_ = Blockly.DRAG_FREE;
     block.setDragging_(true);
     block.moveToDragSurface_();
+    // Disable workspace resizing as an optimization.
+    flyout.targetWorkspace_.setResizesEnabled(false);
   };
 };
 
