@@ -109,6 +109,7 @@ Blockly.FieldDropdown.prototype.init = function() {
       'height': this.size_.height,
       'stroke': this.sourceBlock_.getColourTertiary(),
       'class': 'blocklyBlockBackground'
+      
     }, null);
     this.fieldGroup_.insertBefore(this.box_, this.textElement_);
   }
