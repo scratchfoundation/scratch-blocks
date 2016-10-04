@@ -238,11 +238,16 @@ Blockly.Field.prototype.setVisible = function(visible) {
 };
 
 /**
- * Sets the field's argType (used for styling).
+ * Sets or appends a string to the field's argType (used for styling).
  * @param {string} argType New argType.
  */
 Blockly.Field.prototype.setArgType = function(argType) {
-  this.argType_ = argType;
+  if (this.argType_ == null) {
+    this.argType_ = '';
+  } else {
+    this.argType_ += ' ';
+  }
+  this.argType_ += argType;
 };
 
 /**
