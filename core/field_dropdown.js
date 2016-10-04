@@ -112,7 +112,9 @@ Blockly.FieldDropdown.prototype.init = function() {
       'width': this.size_.width,
       'height': this.size_.height,
       'stroke': this.sourceBlock_.getColourTertiary(),
-      'class': 'blocklyBlockBackground'
+      'fill': this.sourceBlock_.getColour(),
+      'class': 'blocklyBlockBackground',
+      'fill-opacity': 1
     }, null);
     this.fieldGroup_.insertBefore(this.box_, this.textElement_);
   }
@@ -215,10 +217,33 @@ Blockly.FieldDropdown.prototype.showEditor_ = function() {
   var secondaryY = position.y;
   // Set bounds to workspace; show the drop-down.
   Blockly.DropDownDiv.setBoundsElement(this.sourceBlock_.workspace.getParentSvg().parentNode);
-  Blockly.DropDownDiv.show(this, primaryX, primaryY, secondaryX, secondaryY);
+  Blockly.DropDownDiv.show(this, primaryX, primaryY, secondaryX, secondaryY,
+    this.onHide.bind(this));
 
   menu.setAllowAutoFocus(true);
   menuDom.focus();
+
+  // Update colour to look selected.
+  if (this.sourceBlock_.isShadow()) {
+    this.savedPrimary_ = this.sourceBlock_.getColour();
+    this.sourceBlock_.setColour(this.sourceBlock_.getColourTertiary(),
+      this.sourceBlock_.getColourSecondary(), this.sourceBlock_.getColourTertiary());
+  } else if (this.box_) {
+    this.box_.setAttribute('fill', this.sourceBlock_.getColourTertiary());
+  }
+};
+
+/**
+ * Callback for when the drop-down is hidden.
+ */
+Blockly.FieldDropdown.prototype.onHide = function() {
+  // Update colour to look selected.
+  if (this.sourceBlock_.isShadow()) {
+    this.sourceBlock_.setColour(this.savedPrimary_,
+      this.sourceBlock_.getColourSecondary(), this.sourceBlock_.getColourTertiary());
+  } else if (this.box_) {
+    this.box_.setAttribute('fill', this.sourceBlock_.getColour());
+  }
 };
 
 /**
