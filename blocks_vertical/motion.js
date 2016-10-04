@@ -59,8 +59,14 @@ Blockly.Blocks['motion_turnright'] = {
    */
   init: function() {
     this.jsonInit({
-      "message0": "turn right %1 degrees",
+      "message0": "turn %1 %2 degrees",
       "args0": [
+        {
+          "type": "field_image",
+          "src": Blockly.mainWorkspace.options.pathToMedia + "/turnright_arrow.png",
+          "width": 16,
+          "height": 16
+        },
         {
           "type": "input_value",
           "name": "DEGREES"
@@ -84,8 +90,14 @@ Blockly.Blocks['motion_turnleft'] = {
    */
   init: function() {
     this.jsonInit({
-      "message0": "turn left %1 degrees",
+      "message0": "turn %1 %2 degrees",
       "args0": [
+        {
+          "type": "field_image",
+          "src": Blockly.mainWorkspace.options.pathToMedia + "/turnleft_arrow.png",
+          "width": 16,
+          "height": 16
+        },
         {
           "type": "input_value",
           "name": "DEGREES"
