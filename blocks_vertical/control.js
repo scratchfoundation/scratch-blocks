@@ -48,9 +48,9 @@ Blockly.Blocks['control_forever'] = {
       "args2": [
         {
           "type": "field_image",
-          "src": Blockly.mainWorkspace.options.pathToMedia + "icons/control_forever.svg",
-          "width": 10,
-          "height": 10,
+          "src": Blockly.mainWorkspace.options.pathToMedia + "/c_arrow.svg",
+          "width": 16,
+          "height": 16,
           "alt": "*",
           "flip_rtl": true
         }
@@ -93,9 +93,9 @@ Blockly.Blocks['control_repeat'] = {
       "args2": [
         {
           "type": "field_image",
-          "src": Blockly.mainWorkspace.options.pathToMedia + "icons/control_forever.svg",
-          "width": 10,
-          "height": 10,
+          "src": Blockly.mainWorkspace.options.pathToMedia + "/c_arrow.svg",
+          "width": 16,
+          "height": 16,
           "alt": "*",
           "flip_rtl": true
         }
@@ -311,9 +311,9 @@ Blockly.Blocks['control_repeat_until'] = {
       "args2": [
         {
           "type": "field_image",
-          "src": Blockly.mainWorkspace.options.pathToMedia + "icons/control_forever.svg",
-          "width": 10,
-          "height": 10,
+          "src": Blockly.mainWorkspace.options.pathToMedia + "/c_arrow.svg",
+          "width": 16,
+          "height": 16,
           "alt": "*",
           "flip_rtl": true
         }
