@@ -341,12 +341,21 @@ Blockly.Field.prototype.render_ = function() {
       // Add padding to left and right of text.
       width += Blockly.BlockSvg.EDITABLE_FIELD_PADDING;
     }
+    // Adjust width for drop-down arrows.
+    var arrowWidth = 0;
+    if (this.positionArrow) {
+      arrowWidth = this.positionArrow(width);
+      width += arrowWidth;
+    }
     if (this.box_) {
       // Add padding to any drawn box.
-      width += Blockly.BlockSvg.BOX_FIELD_PADDING;
+      width += 2 * Blockly.BlockSvg.BOX_FIELD_PADDING;
     }
     // Update text centering, based on newly calculated width.
-    var centerTextX = width / 2;
+    var centerTextX = (width - arrowWidth) / 2;
+    if (this.sourceBlock_.RTL) {
+      centerTextX += arrowWidth;
+    }
     // In a text-editing shadow block's field,
     // if half the text length is not at least center of
     // visible field (FIELD_WIDTH), center it there instead.

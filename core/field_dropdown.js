@@ -68,11 +68,6 @@ goog.inherits(Blockly.FieldDropdown, Blockly.Field);
 Blockly.FieldDropdown.CHECKMARK_OVERHANG = 25;
 
 /**
- * Android can't (in 2014) display "▾", so use "▼" instead.
- */
-Blockly.FieldDropdown.ARROW_CHAR = goog.userAgent.ANDROID ? '\u25BC' : '\u25BE';
-
-/**
  * Mouse cursor style when over the hotspot that initiates the editor.
  */
 Blockly.FieldDropdown.prototype.CURSOR = 'default';
@@ -92,10 +87,19 @@ Blockly.FieldDropdown.prototype.init = function() {
     return;
   }
   // Add dropdown arrow: "option ▾" (LTR) or "▾ אופציה" (RTL)
-  this.arrow_ = Blockly.createSvgElement('tspan', {}, null);
-  this.arrow_.appendChild(document.createTextNode(
-      this.sourceBlock_.RTL ? Blockly.FieldDropdown.ARROW_CHAR + ' ' :
-          ' ' + Blockly.FieldDropdown.ARROW_CHAR));
+  // Positioned on render, after text size is calculated.
+  /** @type {Number} */
+  this.arrowSize_ = 12;
+  /** @type {Number} */
+  this.arrowX_ = 0;
+  /** @type {Number} */
+  this.arrowY_ = 11;
+  this.arrow_ = Blockly.createSvgElement('image', {
+    'height': this.arrowSize_ + 'px',
+    'width': this.arrowSize_ + 'px'
+  });
+  this.arrow_.setAttributeNS('http://www.w3.org/1999/xlink',
+      'xlink:href', Blockly.mainWorkspace.options.pathToMedia + 'dropdown-arrow.svg');
 
   Blockly.FieldDropdown.superClass_.init.call(this);
   // If not in a shadow block, draw a box.
@@ -194,7 +198,7 @@ Blockly.FieldDropdown.prototype.showEditor_ = function() {
     this.sourceBlock_.parentBlock_.getColour() : this.sourceBlock_.getColour();
 
   Blockly.DropDownDiv.setColour(primaryColour, this.sourceBlock_.getColourTertiary());
-  
+
   var category = (this.sourceBlock_.isShadow()) ?
     this.sourceBlock_.parentBlock_.getCategory() : this.sourceBlock_.getCategory();
   Blockly.DropDownDiv.setCategory(category);
@@ -328,18 +332,32 @@ Blockly.FieldDropdown.prototype.setText = function(text) {
     this.textElement_.setAttribute('class',
         this.textElement_.getAttribute('class') + ' blocklyDropdownText'
     );
-    // Insert dropdown arrow.
-    if (this.sourceBlock_.RTL) {
-      this.textElement_.insertBefore(this.arrow_, this.textElement_.firstChild);
-    } else {
-      this.textElement_.appendChild(this.arrow_);
-    }
+    this.textElement_.parentNode.appendChild(this.arrow_);
   }
 
   if (this.sourceBlock_ && this.sourceBlock_.rendered) {
     this.sourceBlock_.render();
     this.sourceBlock_.bumpNeighbours_();
   }
+};
+
+Blockly.FieldDropdown.prototype.positionArrow = function(x) {
+  var addedWidth = 0;
+  if (this.sourceBlock_.RTL) {
+    this.arrowX_ = this.arrowSize_ - Blockly.BlockSvg.DROPDOWN_ARROW_PADDING;
+    addedWidth = this.arrowSize_ + Blockly.BlockSvg.DROPDOWN_ARROW_PADDING;
+  } else {
+    this.arrowX_ = x + Blockly.BlockSvg.DROPDOWN_ARROW_PADDING / 2;
+    addedWidth = this.arrowSize_ + Blockly.BlockSvg.DROPDOWN_ARROW_PADDING;
+  }
+  if (this.box_) {
+    // Bump positioning to the right for a box-type drop-down.
+    this.arrowX_ += Blockly.BlockSvg.BOX_FIELD_PADDING;
+  }
+  this.arrow_.setAttribute('transform',
+    'translate(' + this.arrowX_ + ',' + this.arrowY_ + ')'
+  );
+  return addedWidth;
 };
 
 /**
