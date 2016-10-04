@@ -403,11 +403,6 @@ Blockly.Css.CONTENT = [
   '.blocklyNonEditableText>text {',
     'pointer-events: none;',
   '}',
-  '.blocklyNonEditableText>rect,',
-  '.blocklyEditableText>rect {',
-    'fill-opacity: 0;',
-  '}',
-
   '.blocklyNonEditableText>text,',
   '.blocklyEditableText>text {',
     'fill: $colour_text;',
