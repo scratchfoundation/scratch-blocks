@@ -108,7 +108,8 @@ Blockly.FieldDropdown.prototype.init = function() {
       'width': this.size_.width,
       'height': this.size_.height,
       'stroke': this.sourceBlock_.getColourTertiary()
-    }, this.fieldGroup_);
+    }, null);
+    this.fieldGroup_.insertBefore(this.box_, this.textElement_);
   }
   // Force a reset of the text to add the arrow.
   var text = this.text_;
