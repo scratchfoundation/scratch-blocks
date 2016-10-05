@@ -206,6 +206,66 @@ Blockly.Blocks['data_listcontents'] = {
   }
 };
 
+Blockly.Blocks['data_listindexall'] = {
+  /**
+   * List index menu, with all option.
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.jsonInit({
+      "message0": "%1",
+      "args0": [
+        {
+          "type": "field_numberdropdown",
+          "name": "INDEX",
+          "value": "1",
+          "min": 0,
+          "precision": 1,
+          "options": [
+            ["1", "1"],
+            ["last", "last"],
+            ["all", "all"]
+          ]
+        }
+      ],
+      "output": "String",
+      "category": Blockly.Categories.data,
+      "outputShape": Blockly.OUTPUT_SHAPE_ROUND,
+      "colour": Blockly.Colours.textField
+    });
+  }
+};
+
+Blockly.Blocks['data_listindexrandom'] = {
+  /**
+   * List index menu, with random option.
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.jsonInit({
+      "message0": "%1",
+      "args0": [
+        {
+          "type": "field_numberdropdown",
+          "name": "INDEX",
+          "value": "1",
+          "min": 0,
+          "precision": 1,
+          "options": [
+            ["1", "1"],
+            ["last", "last"],
+            ["random", "random"]
+          ]
+        }
+      ],
+      "output": "String",
+      "category": Blockly.Categories.data,
+      "outputShape": Blockly.OUTPUT_SHAPE_ROUND,
+      "colour": Blockly.Colours.textField
+    });
+  }
+};
+
 Blockly.Blocks['data_addtolist'] = {
   /**
    * Block to add item to list.
