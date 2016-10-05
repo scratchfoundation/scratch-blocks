@@ -92,6 +92,7 @@ Blockly.FieldTextDropdown.prototype.dispose = function() {
   if (this.mouseUpWrapper_) {
     Blockly.unbindEvent_(this.mouseUpWrapper_);
     this.mouseUpWrapper_ = null;
+    Blockly.Touch.clearTouchIdentifier();
   }
   Blockly.FieldTextDropdown.superClass_.dispose.call(this);
 };
