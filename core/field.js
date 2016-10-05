@@ -366,8 +366,9 @@ Blockly.Field.prototype.render_ = function() {
     }
     // In a text-editing shadow block's field,
     // if half the text length is not at least center of
-    // visible field (FIELD_WIDTH), center it there instead.
-    if (this.sourceBlock_.isShadow()) {
+    // visible field (FIELD_WIDTH), center it there instead,
+    // unless there is a drop-down arrow.
+    if (this.sourceBlock_.isShadow() && !this.positionArrow) {
       var minOffset = Blockly.BlockSvg.FIELD_WIDTH / 2;
       if (this.sourceBlock_.RTL) {
         // X position starts at the left edge of the block, in both RTL and LTR.
