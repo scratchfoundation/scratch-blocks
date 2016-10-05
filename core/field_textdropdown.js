@@ -62,23 +62,25 @@ Blockly.FieldTextDropdown.prototype.init = function() {
   Blockly.FieldTextDropdown.superClass_.init.call(this);
   // Add dropdown arrow: "option ▾" (LTR) or "▾ אופציה" (RTL)
   // Positioned on render, after text size is calculated.
-  /** @type {Number} */
-  this.arrowSize_ = 12;
-  /** @type {Number} */
-  this.arrowX_ = 0;
-  /** @type {Number} */
-  this.arrowY_ = 11;
-  this.arrow_ = Blockly.createSvgElement('image', {
-    'height': this.arrowSize_ + 'px',
-    'width': this.arrowSize_ + 'px'
-  });
-  this.arrow_.setAttributeNS('http://www.w3.org/1999/xlink',
-      'xlink:href', Blockly.mainWorkspace.options.pathToMedia + 'dropdown-arrow-dark.svg');
-  this.arrow_.style.cursor = 'pointer';
-  this.fieldGroup_.appendChild(this.arrow_);
-  this.mouseUpWrapper_ =
-      Blockly.bindEvent_(this.arrow_, 'mouseup', this,
-          this.showDropdown_);
+  if (!this.arrow_) {
+    /** @type {Number} */
+    this.arrowSize_ = 12;
+    /** @type {Number} */
+    this.arrowX_ = 0;
+    /** @type {Number} */
+    this.arrowY_ = 11;
+    this.arrow_ = Blockly.createSvgElement('image', {
+      'height': this.arrowSize_ + 'px',
+      'width': this.arrowSize_ + 'px'
+    });
+    this.arrow_.setAttributeNS('http://www.w3.org/1999/xlink',
+        'xlink:href', Blockly.mainWorkspace.options.pathToMedia + 'dropdown-arrow-dark.svg');
+    this.arrow_.style.cursor = 'pointer';
+    this.fieldGroup_.appendChild(this.arrow_);
+    this.mouseUpWrapper_ =
+        Blockly.bindEvent_(this.arrow_, 'mouseup', this,
+            this.showDropdown_);
+  }
   // Prevent the drop-down handler from changing the field colour on open.
   this.disableColourChange_ = true;
 };
