@@ -370,6 +370,11 @@ Blockly.FieldDropdown.prototype.setText = function(text) {
   }
 };
 
+/**
+ * Position a drop-down arrow at the appropriate location at render-time.
+ * @param {number} x X position the arrow is being rendered at, in px.
+ * @return {number} Amount of space the arrow is taking up, in px.
+ */
 Blockly.FieldDropdown.prototype.positionArrow = function(x) {
   var addedWidth = 0;
   if (this.sourceBlock_.RTL) {
