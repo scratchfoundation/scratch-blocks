@@ -113,8 +113,7 @@ Blockly.FieldNumber.activeField_ = null;
  */
 Blockly.FieldNumber.prototype.getNumRestrictor = function(opt_min, opt_max, opt_precision) {
   this.decimalAllowed_ = (typeof opt_precision == 'undefined') || isNaN(opt_precision) ||
-    (opt_precision == 0) ||
-    (Math.floor(opt_precision) != opt_precision);
+    (opt_precision == 0) || (Math.floor(opt_precision) != opt_precision);
   this.negativeAllowed_ = (typeof opt_min == 'undefined') || isNaN(opt_min) || opt_min < 0;
   var pattern = "[\\d]"; // Always allow digits.
   if (this.decimalAllowed_) {
@@ -134,8 +133,7 @@ Blockly.FieldNumber.prototype.getNumRestrictor = function(opt_min, opt_max, opt_
  */
 Blockly.FieldNumber.prototype.setConstraints_ = function(opt_min, opt_max, opt_precision) {
   this.decimalAllowed_ = (typeof opt_precision == 'undefined') || isNaN(opt_precision) ||
-    (opt_precision == 0) ||
-    (Math.floor(opt_precision) != opt_precision);
+    (opt_precision == 0) || (Math.floor(opt_precision) != opt_precision);
   this.negativeAllowed_ = (typeof opt_min == 'undefined') || isNaN(opt_min) || opt_min < 0;
 };
 
