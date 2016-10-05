@@ -128,6 +128,7 @@ Blockly.FieldTextDropdown.prototype.showEditor_ = function() {
         // When the drop-down arrow is clicked, hide text editor and show drop-down.
         Blockly.WidgetDiv.hide();
         this.showDropdown_();
+        Blockly.Touch.clearTouchIdentifier();
       });
   }
 };
