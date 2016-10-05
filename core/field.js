@@ -103,8 +103,8 @@ Blockly.Field.prototype.sourceBlock_ = null;
 Blockly.Field.prototype.visible_ = true;
 
 /**
- * The field's argType (for styling).
- * @type {Blockly.Block}
+ * Null, or an array of the field's argTypes (for styling).
+ * @type {Array}
  * @private
  */
 Blockly.Field.prototype.argType_ = null;
@@ -150,12 +150,13 @@ Blockly.Field.prototype.init = function() {
     this.fieldGroup_.style.display = 'none';
   }
   // Add an attribute to cassify the type of field.
-  if (this.getArgType() !== null) {
+  if (this.getArgTypes() !== null) {
     if (this.sourceBlock_.isShadow()) {
-      this.sourceBlock_.svgGroup_.setAttribute('data-argument-type', this.getArgType());
+      this.sourceBlock_.svgGroup_.setAttribute('data-argument-type',
+          this.getArgTypes());
     } else {
       // Fields without a shadow wrapper, like square dropdowns.
-      this.fieldGroup_.setAttribute('data-argument-type', this.getArgType());
+      this.fieldGroup_.setAttribute('data-argument-type', this.getArgTypes());
     }
   }
   // Adjust X to be flipped for RTL. Position is relative to horizontal start of source block.
@@ -238,24 +239,26 @@ Blockly.Field.prototype.setVisible = function(visible) {
 };
 
 /**
- * Sets or appends a string to the field's argType (used for styling).
+ * Adds a string to the field's array of argTypes (used for styling).
  * @param {string} argType New argType.
  */
-Blockly.Field.prototype.setArgType = function(argType) {
+Blockly.Field.prototype.addArgType = function(argType) {
   if (this.argType_ == null) {
-    this.argType_ = '';
-  } else {
-    this.argType_ += ' ';
+    this.argType_ = [];
   }
-  this.argType_ += argType;
+  this.argType_.push(argType);
 };
 
 /**
- * Gets the field's argType (used for styling).
+ * Gets the field's argTypes joined as a string, or returns null (used for styling).
  * @return {string} argType string, or null.
  */
-Blockly.Field.prototype.getArgType = function() {
-  return this.argType_;
+Blockly.Field.prototype.getArgTypes = function() {
+  if (this.argType_ === null || this.argType_.length === 0) {
+    return null;
+  } else {
+    return this.argType_.join(' ');
+  }
 };
 
 /**

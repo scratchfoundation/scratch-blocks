@@ -48,7 +48,7 @@ Blockly.FieldAngle = function(text, opt_validator) {
   this.symbol_.appendChild(document.createTextNode('\u00B0'));
 
   Blockly.FieldAngle.superClass_.constructor.call(this, text, opt_validator);
-  this.setArgType('angle');
+  this.addArgType('angle');
 };
 goog.inherits(Blockly.FieldAngle, Blockly.FieldTextInput);
 

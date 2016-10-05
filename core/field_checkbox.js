@@ -43,7 +43,7 @@ Blockly.FieldCheckbox = function(state, opt_validator) {
   Blockly.FieldCheckbox.superClass_.constructor.call(this, '', opt_validator);
   // Set the initial state.
   this.setValue(state);
-  this.setArgType('checkbox');
+  this.addArgType('checkbox');
 };
 goog.inherits(Blockly.FieldCheckbox, Blockly.Field);
 

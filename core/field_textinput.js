@@ -54,7 +54,7 @@ Blockly.FieldTextInput = function(text, opt_validator, opt_restrictor) {
   Blockly.FieldTextInput.superClass_.constructor.call(this, text,
       opt_validator);
   this.setRestrictor(opt_restrictor);
-  this.setArgType('text');
+  this.addArgType('text');
 };
 goog.inherits(Blockly.FieldTextInput, Blockly.Field);
 
