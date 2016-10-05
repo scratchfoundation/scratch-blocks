@@ -132,7 +132,7 @@ Blockly.Block = function(workspace, prototypeName, opt_id) {
    * @private
    */
   this.outputShape_ = null;
-  
+
   /**
    * @type {?string}
    * @private
@@ -1242,6 +1242,18 @@ Blockly.Block.prototype.interpolate_ = function(message, args, lastDummyAlign) {
               if (typeof element['spellcheck'] == 'boolean') {
                 field.setSpellcheck(element['spellcheck']);
               }
+              break;
+            case 'field_textdropdown':
+              field = new Blockly.FieldTextDropdown(element['text'], element['options']);
+              if (typeof element['spellcheck'] == 'boolean') {
+                field.setSpellcheck(element['spellcheck']);
+              }
+              break;
+            case 'field_numberdropdown':
+              field = new Blockly.FieldNumberDropdown(
+                element['value'], element['options'],
+                element['min'], element['max'], element['precision']
+              );
               break;
             case 'field_angle':
               field = new Blockly.FieldAngle(element['angle']);
