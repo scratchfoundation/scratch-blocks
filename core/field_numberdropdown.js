@@ -46,16 +46,13 @@ goog.require('goog.userAgent');
  * @constructor
  */
 Blockly.FieldNumberDropdown = function(value, menuGenerator, opt_min, opt_max, opt_precision, opt_validator) {
-  this.decimalAllowed_ = (typeof opt_precision == 'undefined') || isNaN(opt_precision) ||
-    (opt_precision == 0) ||
-    (Math.floor(opt_precision) != opt_precision);
-  this.negativeAllowed_ = (typeof opt_min == 'undefined') || isNaN(opt_min) || opt_min < 0;
-  var numRestrictor = Blockly.FieldNumber.getNumRestrictor(
-    this.decimalAllowed_, this.negativeAllowed_
+  var numRestrictor = Blockly.FieldNumber.prototype.getNumRestrictor.call(
+    this, opt_min, opt_max, opt_precision
   );
   Blockly.FieldNumberDropdown.superClass_.constructor.call(
     this, value, menuGenerator, opt_validator, numRestrictor
   );
   this.addArgType('numberdropdown');
 };
+
 goog.inherits(Blockly.FieldNumberDropdown, Blockly.FieldTextDropdown);

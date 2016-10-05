@@ -48,13 +48,7 @@ goog.require('goog.userAgent');
  * @constructor
  */
 Blockly.FieldNumber = function(value, opt_min, opt_max, opt_precision, opt_validator) {
-  this.decimalAllowed_ = (typeof opt_precision == 'undefined') || isNaN(opt_precision) ||
-    (opt_precision == 0) ||
-    (Math.floor(opt_precision) != opt_precision);
-  this.negativeAllowed_ = (typeof opt_min == 'undefined') || isNaN(opt_min) || opt_min < 0;
-  var numRestrictor = Blockly.FieldNumber.getNumRestrictor(
-    this.decimalAllowed_, this.negativeAllowed_
-  );
+  var numRestrictor = this.getNumRestrictor(opt_min, opt_max, opt_precision);
   Blockly.FieldNumber.superClass_.constructor.call(this, value, opt_validator, numRestrictor);
   this.addArgType('number');
 };
@@ -112,16 +106,21 @@ Blockly.FieldNumber.activeField_ = null;
 /**
  * Return an appropriate restrictor, depending on whether this FieldNumber
  * allows decimal or negative numbers.
- * @param {boolean} decimalAllowed Whether number may have decimal/float component.
- * @param {boolean} negativeAllowed Whether number may be negative.
+ * @param {number|string|undefined} opt_min Minimum value.
+ * @param {number|string|undefined} opt_max Maximum value.
+ * @param {number|string|undefined} opt_precision Precision for value.
  * @return {!RegExp} Regular expression for this FieldNumber's restrictor.
  */
-Blockly.FieldNumber.getNumRestrictor = function(decimalAllowed, negativeAllowed) {
+Blockly.FieldNumber.prototype.getNumRestrictor = function(opt_min, opt_max, opt_precision) {
+  this.decimalAllowed_ = (typeof opt_precision == 'undefined') || isNaN(opt_precision) ||
+    (opt_precision == 0) ||
+    (Math.floor(opt_precision) != opt_precision);
+  this.negativeAllowed_ = (typeof opt_min == 'undefined') || isNaN(opt_min) || opt_min < 0;
   var pattern = "[\\d]"; // Always allow digits.
-  if (decimalAllowed) {
+  if (this.decimalAllowed_) {
     pattern += "|[\\.]";
   }
-  if (negativeAllowed) {
+  if (this.negativeAllowed_) {
     pattern += "|[-]";
   }
   return new RegExp(pattern);
