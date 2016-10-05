@@ -219,7 +219,7 @@ Blockly.Blocks['data_listindexall'] = {
           "type": "field_numberdropdown",
           "name": "INDEX",
           "value": "1",
-          "min": 0,
+          "min": 1,
           "precision": 1,
           "options": [
             ["1", "1"],
@@ -249,7 +249,7 @@ Blockly.Blocks['data_listindexrandom'] = {
           "type": "field_numberdropdown",
           "name": "INDEX",
           "value": "1",
-          "min": 0,
+          "min": 1,
           "precision": 1,
           "options": [
             ["1", "1"],
