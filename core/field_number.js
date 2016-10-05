@@ -30,25 +30,6 @@ goog.require('Blockly.FieldTextInput');
 goog.require('goog.math');
 goog.require('goog.userAgent');
 
-
-/**
- * Return an appropriate restrictor, depending on whether this FieldNumber
- * allows decimal or negative numbers.
- * @param {boolean} decimalAllowed Whether number may have decimal/float component.
- * @param {boolean} negativeAllowed Whether number may be negative.
- * @return {!RegExp} Regular expression for this FieldNumber's restrictor.
- */
-var getNumRestrictor = function(decimalAllowed, negativeAllowed) {
-  var pattern = "[\\d]"; // Always allow digits.
-  if (decimalAllowed) {
-    pattern += "|[\\.]";
-  }
-  if (negativeAllowed) {
-    pattern += "|[-]";
-  }
-  return new RegExp(pattern);
-};
-
 /**
  * Class for an editable number field.
  * In scratch-blocks, the min/max/precision properties are only used
@@ -71,7 +52,9 @@ Blockly.FieldNumber = function(value, opt_min, opt_max, opt_precision, opt_valid
     (opt_precision == 0) ||
     (Math.floor(opt_precision) != opt_precision);
   this.negativeAllowed_ = (typeof opt_min == 'undefined') || isNaN(opt_min) || opt_min < 0;
-  var numRestrictor = getNumRestrictor(this.decimalAllowed_, this.negativeAllowed_);
+  var numRestrictor = Blockly.FieldNumber.getNumRestrictor(
+    this.decimalAllowed_, this.negativeAllowed_
+  );
   Blockly.FieldNumber.superClass_.constructor.call(this, value, opt_validator, numRestrictor);
   this.addArgType('number');
 };
@@ -125,6 +108,24 @@ Blockly.FieldNumber.NUMPAD_DELETE_ICON = 'data:image/svg+xml;utf8,' +
  * @private
  */
 Blockly.FieldNumber.activeField_ = null;
+
+/**
+ * Return an appropriate restrictor, depending on whether this FieldNumber
+ * allows decimal or negative numbers.
+ * @param {boolean} decimalAllowed Whether number may have decimal/float component.
+ * @param {boolean} negativeAllowed Whether number may be negative.
+ * @return {!RegExp} Regular expression for this FieldNumber's restrictor.
+ */
+Blockly.FieldNumber.getNumRestrictor = function(decimalAllowed, negativeAllowed) {
+  var pattern = "[\\d]"; // Always allow digits.
+  if (decimalAllowed) {
+    pattern += "|[\\.]";
+  }
+  if (negativeAllowed) {
+    pattern += "|[-]";
+  }
+  return new RegExp(pattern);
+};
 
 /**
  * Set the constraints for this field.
