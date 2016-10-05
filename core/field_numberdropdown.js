@@ -56,6 +56,6 @@ Blockly.FieldNumberDropdown = function(value, menuGenerator, opt_min, opt_max, o
   Blockly.FieldNumberDropdown.superClass_.constructor.call(
     this, value, menuGenerator, opt_validator, numRestrictor
   );
-  this.setArgType('numberdropdown');
+  this.addArgType('numberdropdown');
 };
 goog.inherits(Blockly.FieldNumberDropdown, Blockly.FieldTextDropdown);

@@ -51,7 +51,7 @@ Blockly.FieldTextDropdown = function(text, menuGenerator, opt_validator, opt_res
   this.menuGenerator_ = menuGenerator;
   Blockly.FieldDropdown.prototype.trimOptions_.call(this);
   Blockly.FieldTextDropdown.superClass_.constructor.call(this, text, opt_validator, opt_restrictor);
-  this.setArgType('textdropdown');
+  this.addArgType('textdropdown');
 };
 goog.inherits(Blockly.FieldTextDropdown, Blockly.FieldTextInput);
 
