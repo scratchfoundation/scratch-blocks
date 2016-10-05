@@ -129,6 +129,7 @@ Blockly.FieldDropdown.prototype.init = function() {
  * @private
  */
 Blockly.FieldDropdown.prototype.showEditor_ = function() {
+  this.dropDownOpen_ = true;
   // If there is an existing drop-down someone else owns, hide it immediately and clear it.
   Blockly.DropDownDiv.hideWithoutAnimation();
   Blockly.DropDownDiv.clearContent();
@@ -239,6 +240,7 @@ Blockly.FieldDropdown.prototype.showEditor_ = function() {
  * Callback for when the drop-down is hidden.
  */
 Blockly.FieldDropdown.prototype.onHide = function() {
+  this.dropDownOpen_ = false;
   // Update colour to look selected.
   if (!this.disableColourChange_) {
     if (this.sourceBlock_.isShadow()) {

@@ -98,27 +98,6 @@ Blockly.FieldTextDropdown.prototype.dispose = function() {
 };
 
 /**
- * Return a list of the options for this dropdown.
- * See: Blockly.FieldDropDown.prototype.getOptions_.
- * @return {!Array.<!Array.<string>>} Array of option tuples:
- *     (human-readable text, language-neutral name).
- * @private
- */
-Blockly.FieldTextDropdown.prototype.getOptions_ = function() {
-  return Blockly.FieldDropdown.prototype.getOptions_.call(this);
-};
-
-/**
- * Position a drop-down arrow at the appropriate location at render-time.
- * See: Blockly.FieldDropDown.prototype.positionArrow.
- * @param {number} x X position the arrow is being rendered at, in px.
- * @return {number} Amount of space the arrow is taking up, in px.
- */
-Blockly.FieldTextDropdown.prototype.positionArrow = function(x) {
-  return Blockly.FieldDropdown.prototype.positionArrow.call(this, x);
-};
-
-/**
  * If the drop-down isn't open, show the text editor.
  */
 Blockly.FieldTextDropdown.prototype.showEditor_ = function() {
@@ -134,18 +113,29 @@ Blockly.FieldTextDropdown.prototype.showEditor_ = function() {
 };
 
 /**
+ * Return a list of the options for this dropdown.
+ * See: Blockly.FieldDropDown.prototype.getOptions_.
+ * @return {!Array.<!Array.<string>>} Array of option tuples:
+ *     (human-readable text, language-neutral name).
+ * @private
+ */
+Blockly.FieldTextDropdown.prototype.getOptions_ = Blockly.FieldDropdown.prototype.getOptions_;
+
+/**
+ * Position a drop-down arrow at the appropriate location at render-time.
+ * See: Blockly.FieldDropDown.prototype.positionArrow.
+ * @param {number} x X position the arrow is being rendered at, in px.
+ * @return {number} Amount of space the arrow is taking up, in px.
+ */
+Blockly.FieldTextDropdown.prototype.positionArrow = Blockly.FieldDropdown.prototype.positionArrow;
+
+/**
  * Create the dropdown menu.
  * @private
  */
-Blockly.FieldTextDropdown.prototype.showDropdown_ = function() {
-  this.dropDownOpen_ = true;
-  Blockly.FieldDropdown.prototype.showEditor_.call(this);
-};
+Blockly.FieldTextDropdown.prototype.showDropdown_ = Blockly.FieldDropdown.prototype.showEditor_;
 
 /**
  * Callback when the drop-down menu is hidden.
  */
-Blockly.FieldTextDropdown.prototype.onHide = function() {
-  this.dropDownOpen_ = false;
-  Blockly.FieldDropdown.prototype.onHide.call(this);
-};
+Blockly.FieldTextDropdown.prototype.onHide = Blockly.FieldDropdown.prototype.onHide;
