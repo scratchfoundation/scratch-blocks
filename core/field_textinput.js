@@ -152,9 +152,12 @@ Blockly.FieldTextInput.prototype.setRestrictor = function(restrictor) {
  *     focus.  Defaults to false.
  * @param {boolean=} opt_readOnly True if editor should be created with HTML
  *     input set to read-only, to prevent virtual keyboards.
+ * @param {boolean=} opt_withArrow True to show drop-down arrow in text editor.
+ * @param {Function=} opt_arrowCallback Callback for when drop-down arrow clicked.
  * @private
  */
-Blockly.FieldTextInput.prototype.showEditor_ = function(opt_quietInput, opt_readOnly) {
+Blockly.FieldTextInput.prototype.showEditor_ = function(
+  opt_quietInput, opt_readOnly, opt_withArrow, opt_arrowCallback) {
   this.workspace_ = this.sourceBlock_.workspace;
   var quietInput = opt_quietInput || false;
   var readOnly = opt_readOnly || false;
@@ -174,6 +177,36 @@ Blockly.FieldTextInput.prototype.showEditor_ = function(opt_quietInput, opt_read
   /** @type {!HTMLInputElement} */
   Blockly.FieldTextInput.htmlInput_ = htmlInput;
   div.appendChild(htmlInput);
+
+  if (opt_withArrow) {
+    // Move text in input to account for displayed drop-down arrow.
+    if (this.sourceBlock_.RTL) {
+      htmlInput.style.paddingLeft = (this.arrowSize_+ Blockly.BlockSvg.DROPDOWN_ARROW_PADDING) + 'px';
+    } else {
+      htmlInput.style.paddingRight = (this.arrowSize_ + Blockly.BlockSvg.DROPDOWN_ARROW_PADDING) + 'px';
+    }
+    // Create the arrow.
+    var dropDownArrow =
+        goog.dom.createDom(goog.dom.TagName.IMG, 'blocklyTextDropDownArrow');
+    dropDownArrow.setAttribute('src',
+      Blockly.mainWorkspace.options.pathToMedia + 'dropdown-arrow-dark.svg');
+    dropDownArrow.style.width = this.arrowSize_ + 'px';
+    dropDownArrow.style.height = this.arrowSize_ + 'px';
+    dropDownArrow.style.top = this.arrowY_ + 'px';
+    dropDownArrow.style.cursor = 'pointer';
+    // Magic number for positioning the drop-down arrow on top of the text editor.
+    var dropdownArrowMagic = '11px';
+    if (this.sourceBlock_.RTL) {
+      dropDownArrow.style.left = dropdownArrowMagic;
+    } else {
+      dropDownArrow.style.right = dropdownArrowMagic;
+    }
+    if (opt_arrowCallback) {
+      htmlInput.dropDownArrowMouseWrapper_ = Blockly.bindEvent_(dropDownArrow,
+        'mousedown', this, opt_arrowCallback);
+    }
+    div.appendChild(dropDownArrow);
+  }
 
   htmlInput.value = htmlInput.defaultValue = this.text_;
   htmlInput.oldValue_ = null;
@@ -379,6 +412,7 @@ Blockly.FieldTextInput.prototype.resizeEditor_ = function() {
   if (this.sourceBlock_.RTL) {
     xy.x += width;
     xy.x -= div.offsetWidth * scale;
+    xy.x += 1 * scale;
   }
   // Shift by a few pixels to line up exactly.
   xy.y += 1 * scale;
@@ -438,6 +472,9 @@ Blockly.FieldTextInput.prototype.widgetDispose_ = function() {
     Blockly.unbindEvent_(htmlInput.onKeyUpWrapper_);
     Blockly.unbindEvent_(htmlInput.onKeyPressWrapper_);
     Blockly.unbindEvent_(htmlInput.onInputWrapper_);
+    if (htmlInput.dropDownArrowMouseWrapper_) {
+      Blockly.unbindEvent_(htmlInput.dropDownArrowMouseWrapper_);
+    }
     thisField.workspace_.removeChangeListener(
         htmlInput.onWorkspaceChangeWrapper_);
 

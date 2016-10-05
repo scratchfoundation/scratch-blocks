@@ -129,6 +129,7 @@ Blockly.FieldDropdown.prototype.init = function() {
  * @private
  */
 Blockly.FieldDropdown.prototype.showEditor_ = function() {
+  this.dropDownOpen_ = true;
   // If there is an existing drop-down someone else owns, hide it immediately and clear it.
   Blockly.DropDownDiv.hideWithoutAnimation();
   Blockly.DropDownDiv.clearContent();
@@ -224,12 +225,14 @@ Blockly.FieldDropdown.prototype.showEditor_ = function() {
   menuDom.focus();
 
   // Update colour to look selected.
-  if (this.sourceBlock_.isShadow()) {
-    this.savedPrimary_ = this.sourceBlock_.getColour();
-    this.sourceBlock_.setColour(this.sourceBlock_.getColourTertiary(),
-      this.sourceBlock_.getColourSecondary(), this.sourceBlock_.getColourTertiary());
-  } else if (this.box_) {
-    this.box_.setAttribute('fill', this.sourceBlock_.getColourTertiary());
+  if (!this.disableColourChange_) {
+    if (this.sourceBlock_.isShadow()) {
+      this.savedPrimary_ = this.sourceBlock_.getColour();
+      this.sourceBlock_.setColour(this.sourceBlock_.getColourTertiary(),
+        this.sourceBlock_.getColourSecondary(), this.sourceBlock_.getColourTertiary());
+    } else if (this.box_) {
+      this.box_.setAttribute('fill', this.sourceBlock_.getColourTertiary());
+    }
   }
 };
 
@@ -237,12 +240,15 @@ Blockly.FieldDropdown.prototype.showEditor_ = function() {
  * Callback for when the drop-down is hidden.
  */
 Blockly.FieldDropdown.prototype.onHide = function() {
+  this.dropDownOpen_ = false;
   // Update colour to look selected.
-  if (this.sourceBlock_.isShadow()) {
-    this.sourceBlock_.setColour(this.savedPrimary_,
-      this.sourceBlock_.getColourSecondary(), this.sourceBlock_.getColourTertiary());
-  } else if (this.box_) {
-    this.box_.setAttribute('fill', this.sourceBlock_.getColour());
+  if (!this.disableColourChange_) {
+    if (this.sourceBlock_.isShadow()) {
+      this.sourceBlock_.setColour(this.savedPrimary_,
+        this.sourceBlock_.getColourSecondary(), this.sourceBlock_.getColourTertiary());
+    } else if (this.box_) {
+      this.box_.setAttribute('fill', this.sourceBlock_.getColour());
+    }
   }
 };
 
@@ -366,6 +372,11 @@ Blockly.FieldDropdown.prototype.setText = function(text) {
   }
 };
 
+/**
+ * Position a drop-down arrow at the appropriate location at render-time.
+ * @param {number} x X position the arrow is being rendered at, in px.
+ * @return {number} Amount of space the arrow is taking up, in px.
+ */
 Blockly.FieldDropdown.prototype.positionArrow = function(x) {
   var addedWidth = 0;
   if (this.sourceBlock_.RTL) {
