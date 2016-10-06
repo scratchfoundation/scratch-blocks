@@ -314,7 +314,7 @@ Blockly.Flyout.prototype.init = function(targetWorkspace) {
   this.scrollbar_ = new Blockly.Scrollbar(this.workspace_,
       this.horizontalLayout_, false);
 
-  this.hide();
+  this.position();
 
   Array.prototype.push.apply(this.eventWrappers_,
       Blockly.bindEvent_(this.svgGroup_, 'wheel', this, this.wheel_));
@@ -343,6 +343,7 @@ Blockly.Flyout.prototype.dispose = function() {
     goog.dom.removeNode(this.svgGroup_);
     this.svgGroup_ = null;
   }
+  this.parentToolbox_ = null;
   this.svgBackground_ = null;
   this.targetWorkspace_ = null;
 };

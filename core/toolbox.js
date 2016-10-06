@@ -123,25 +123,9 @@ Blockly.Toolbox.prototype.init = function() {
         }
         Blockly.Touch.clearTouchIdentifier();  // Don't block future drags.
       });
-  var workspaceOptions = {
-    disabledPatternId: workspace.options.disabledPatternId,
-    parentWorkspace: workspace,
-    RTL: workspace.RTL,
-    horizontalLayout: workspace.horizontalLayout,
-    toolboxPosition: workspace.options.toolboxPosition
-  };
 
-  if (workspace.horizontalLayout) {
-    this.flyout_ = new Blockly.HorizontalFlyout(workspaceOptions);
-  } else {
-    this.flyout_ = new Blockly.VerticalFlyout(workspaceOptions);
-  }
-  this.flyout_.setParentToolbox(this);
-
+  this.createFlyout_();
   this.categoryMenu_ = new Blockly.Toolbox.CategoryMenu(this, this.HtmlDiv);
-
-  goog.dom.insertSiblingAfter(this.flyout_.createDom(), workspace.svgGroup_);
-  this.flyout_.init(workspace);
   this.populate_(workspace.options.languageTree);
   this.position();
 };
@@ -159,6 +143,43 @@ Blockly.Toolbox.prototype.dispose = function() {
 };
 
 /**
+ * Create and configure a flyout based on the main workspace's options.
+ * @private
+ */
+Blockly.Toolbox.prototype.createFlyout_ = function() {
+  var workspace = this.workspace_;
+
+  var options = {
+    disabledPatternId: workspace.options.disabledPatternId,
+    parentWorkspace: workspace,
+    RTL: workspace.RTL,
+    horizontalLayout: workspace.horizontalLayout,
+    toolboxPosition: workspace.options.toolboxPosition
+  };
+
+  if (workspace.horizontalLayout) {
+    this.flyout_ = new Blockly.HorizontalFlyout(options);
+  } else {
+    this.flyout_ = new Blockly.VerticalFlyout(options);
+  }
+  this.flyout_.setParentToolbox(this);
+
+  goog.dom.insertSiblingAfter(this.flyout_.createDom(), workspace.svgGroup_);
+  this.flyout_.init(workspace);
+};
+
+/**
+ * Fill the toolbox with categories and blocks.
+ * @param {!Node} newTree DOM tree of blocks.
+ * @return {Node} Tree node to open at startup (or null).
+ * @private
+ */
+Blockly.Toolbox.prototype.populate_ = function(newTree) {
+  this.categoryMenu_.populate(newTree);
+  this.setSelectedItem(this.categoryMenu_.categories_[0]);
+};
+
+/**
  * Get the width of the toolbox.
  * @return {number} The width of the toolbox.
  */
@@ -167,8 +188,8 @@ Blockly.Toolbox.prototype.getWidth = function() {
 };
 
 /**
- * Get the height of the toolbox.
- * @return {number} The width of the toolbox.
+ * Get the height of the toolbox, not including the block menu.
+ * @return {number} The height of the toolbox.
  */
 Blockly.Toolbox.prototype.getHeight = function() {
   return this.categoryMenu_ ? this.categoryMenu_.getHeight() : 0;
@@ -203,154 +224,8 @@ Blockly.Toolbox.prototype.position = function() {
     }
     treeDiv.style.height = this.getHeight() + 'px';
     treeDiv.style.width = this.width + 'px';
-    //this.width = treeDiv.offsetWidth;
   }
   this.flyout_.position();
-};
-
-/**
- * Fill the toolbox with categories and blocks.
- * @param {!Node} newTree DOM tree of blocks.
- * @return {Node} Tree node to open at startup (or null).
- * @private
- */
-Blockly.Toolbox.prototype.populate_ = function(newTree) {
-  this.categoryMenu_.populate(newTree);
-  this.setSelectedItem(this.categoryMenu_.categories_[0]);
-
-  // this.tree_.blocks = [];
-  // this.hasColours_ = false;
-  // this.syncTrees_(newTree, this.tree_, this.iconic_,
-  //     this.workspace_.options.pathToMedia);
-
-  // if (this.tree_.blocks.length) {
-  //   throw 'Toolbox cannot have both blocks and categories in the root level.';
-  // }
-
-  // Fire a resize event since the toolbox may have changed width and height.
-//  Blockly.resizeSvgContents(this.workspace_);
-};
-
-/**
- * Sync trees of the toolbox.
- * @param {Node} treeIn DOM tree of blocks, or null.
- * @param {Blockly.Toolbox.TreeControl} treeOut Blockly toolbox tree to sync.
- * @param {boolean} iconic Whether the toolbox uses icons.
- * @param {string} pathToMedia Media path for the toolbox.
- * @return {Node} Tree node to open at startup (or null).
- * @param {Blockly.Toolbox.Contents} treeOut
- * @param {string} pathToMedia
- * @private
- */
-Blockly.Toolbox.prototype.syncTrees_ = function(treeIn, treeOut, iconic,
-    pathToMedia) {
-  var openNode = null;
-  var lastElement = null;
-  for (var i = 0, childIn; childIn = treeIn.childNodes[i]; i++) {
-    if (!childIn.tagName) {
-      // Skip over text.
-      continue;
-    }
-    switch (childIn.tagName.toUpperCase()) {
-      case 'CATEGORY':
-        if (iconic && childIn.getAttribute('icon')) {
-          var childOut = this.tree_.createNode(childIn.getAttribute('name'),
-              pathToMedia + childIn.getAttribute('icon'));
-        } else {
-          var childOut = this.tree_.createNode(childIn.getAttribute('name'),
-              null);
-        }
-        childOut.blocks = [];
-        treeOut.add(childOut);
-        var custom = childIn.getAttribute('custom');
-        if (custom) {
-          // Variables and procedures are special dynamic categories.
-          childOut.blocks = custom;
-        } else {
-          var newOpenNode = this.syncTrees_(childIn, childOut, iconic,
-              pathToMedia);
-          if (newOpenNode) {
-            openNode = newOpenNode;
-          }
-        }
-        var colour = childIn.getAttribute('colour');
-        if (goog.isString(colour)) {
-          if (colour.match(/^#[0-9a-fA-F]{6}$/)) {
-            childOut.hexColour = colour;
-          } else {
-            childOut.hexColour = Blockly.hueToRgb(colour);
-          }
-          this.hasColours_ = true;
-        } else {
-          childOut.hexColour = '';
-        }
-        if (childIn.getAttribute('expanded') == 'true') {
-          if (childOut.blocks.length) {
-            // This is a category that directly contians blocks.
-            // After the tree is rendered, open this category and show flyout.
-            openNode = childOut;
-          }
-          childOut.setExpanded(true);
-        } else {
-          childOut.setExpanded(false);
-        }
-        lastElement = childIn;
-        break;
-      case 'SEP':
-        if (lastElement) {
-          if (lastElement.tagName.toUpperCase() == 'CATEGORY') {
-            // Separator between two categories.
-            // <sep></sep>
-            treeOut.add(new Blockly.Toolbox.TreeSeparator(
-                this.treeSeparatorConfig_));
-          } else {
-            // Change the gap between two blocks.
-            // <sep gap="36"></sep>
-            // The default gap is 24, can be set larger or smaller.
-            // Note that a deprecated method is to add a gap to a block.
-            // <block type="math_arithmetic" gap="8"></block>
-            var newGap = parseFloat(childIn.getAttribute('gap'));
-            if (!isNaN(newGap) && lastElement) {
-              lastElement.setAttribute('gap', newGap);
-            }
-          }
-        }
-        break;
-      case 'BLOCK':
-      case 'SHADOW':
-        treeOut.blocks.push(childIn);
-        lastElement = childIn;
-        break;
-    }
-  }
-  return openNode;
-};
-
-/**
- * Recursively add colours to this toolbox.
- * @param {Blockly.Toolbox.TreeNode} opt_tree Starting point of tree.
- *     Defaults to the root node.
- * @private
- */
-Blockly.Toolbox.prototype.addColour_ = function(opt_tree) {
-  var tree = opt_tree || this.tree_;
-  var children = tree.getChildren();
-  for (var i = 0, child; child = children[i]; i++) {
-    var element = child.getRowElement();
-    if (element) {
-      if (this.hasColours_) {
-        var border = '8px solid ' + (child.hexColour || '#ddd');
-      } else {
-        var border = 'none';
-      }
-      if (this.RTL) {
-        element.style.borderRight = border;
-      } else {
-        element.style.borderLeft = border;
-      }
-    }
-    this.addColour_(child);
-  }
 };
 
 /**
@@ -427,6 +302,10 @@ Blockly.Toolbox.prototype.setSelectedItemFactory = function(item) {
   };
 };
 
+
+
+// Category menu
+
 Blockly.Toolbox.CategoryMenu = function(parent, parentHtml) {
   this.parent_ = parent;
   this.parentHtml_ = parentHtml;
@@ -448,10 +327,15 @@ Blockly.Toolbox.CategoryMenu.prototype.createDom = function() {
 };
 
 /**
- * Fill the toolbox with categories and blocks.
+ * Fill the toolbox with categories and blocks by creating a new
+ * {Blockly.Toolbox.Category} for every category tag in the toolbox xml.
  * @param {Node} domTree DOM tree of blocks, or null.
  */
 Blockly.Toolbox.CategoryMenu.prototype.populate = function(domTree) {
+  if (!domTree) {
+    return;
+  }
+
   // TODO: Clean up/make sure things are clean.
   // TODO: Track last element, maybe.
   for (var i = 0, child; child = domTree.childNodes[i]; i++) {
@@ -476,9 +360,17 @@ Blockly.Toolbox.CategoryMenu.prototype.populate = function(domTree) {
 };
 
 Blockly.Toolbox.CategoryMenu.prototype.dispose = function() {
-  // Dispose of all the categories
-  // then dispose of my own dom
+  for (var i = 0, category; category = this.categories_[i]; i++) {
+    category.dispose();
+  }
+  if (this.table) {
+    goog.dom.removeNode(this.table);
+    this.table = null;
+  }
 };
+
+
+// Category
 
 Blockly.Toolbox.Category = function(parent, parentHtml, domTree) {
   this.parent_ = parent;
@@ -493,9 +385,17 @@ Blockly.Toolbox.Category = function(parent, parentHtml, domTree) {
   this.createDom();
 };
 
+Blockly.Toolbox.Category.prototype.dispose = function() {
+  if (this.item_) {
+    goog.dom.removeNode(this.item_);
+    this.item = null;
+  }
+  this.parent_ = null;
+  this.parentHtml_ = null;
+  this.contents_ = null;
+};
+
 Blockly.Toolbox.Category.prototype.createDom = function() {
-  // this.row_ = goog.dom.createDom('tr', 'scratchCategoryMenuRow');
-  // this.parentHtml_.appendChild(this.row_);
   this.item_ = goog.dom.createDom('td',
       {'class': 'scratchCategoryMenuItem',
        'style': 'background-color:' + this.colour_
@@ -504,7 +404,7 @@ Blockly.Toolbox.Category.prototype.createDom = function() {
   this.parentHtml_.appendChild(this.item_);
 
 // this.parent_.parent_ should be the toolbox.  Don't leave this line in this
-// state.
+// state. (TODO)
   Blockly.bindEvent_(this.item_, 'mousedown', this.parent_.parent_,
     this.parent_.parent_.setSelectedItemFactory(this));
 };
@@ -532,6 +432,11 @@ Blockly.Toolbox.Category.prototype.getContents = function() {
   return this.custom_ ? this.custom_ : this.contents_;
 };
 
+/**
+ * Set the colour of the category's background from a DOM node.
+ * @param {Node} node DOM node with "colour" attribute.  Colour is a hex string
+ *     or hue on a colour wheel (0-360).
+ */
 Blockly.Toolbox.Category.prototype.setColour = function(node) {
   var colour = node.getAttribute('colour');
   if (goog.isString(colour)) {

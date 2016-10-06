@@ -19,8 +19,8 @@
  */
 
 /**
- * @fileoverview Flyout tray containing blocks which may be created.
- * @author fraser@google.com (Neil Fraser)
+ * @fileoverview Layout code for a vertical variant of the flyout.
+ * @author fenichel@google.com (Rachel Fenichel)
  */
 'use strict';
 
@@ -171,10 +171,7 @@ Blockly.VerticalFlyout.prototype.getMetrics_ = function() {
   var absoluteLeft = 0;
 
   var viewHeight = this.height_ - 2 * this.SCROLLBAR_PADDING;
-  var viewWidth = this.getWidth();
-  if (!this.RTL) {
-    viewWidth -= this.SCROLLBAR_PADDING;
-  }
+  var viewWidth = this.getWidth() - this.SCROLLBAR_PADDING;
 
   var metrics = {
     viewHeight: viewHeight,
@@ -212,12 +209,6 @@ Blockly.VerticalFlyout.prototype.setMetrics_ = function(xyRatio) {
 
   this.clipRect_.setAttribute('height', metrics.viewHeight + 'px');
   this.clipRect_.setAttribute('width', metrics.viewWidth + 'px');
-
-  // if (goog.isNumber(xyRatio.x)) {
-  //   this.workspace_.scrollX = -metrics.contentWidth * xyRatio.x;
-  // }
-  // this.workspace_.translate(this.workspace_.scrollX + metrics.absoluteLeft,
-  //     this.workspace_.scrollY + metrics.absoluteTop);
 };
 
 /**
@@ -233,6 +224,8 @@ Blockly.VerticalFlyout.prototype.position = function() {
     return;
   }
 
+  // This version of the flyout does not change width to fit its contents.
+  // Instead it matches the width of its parent or uses a default value.
   this.width_ = this.getWidth();
 
   if (this.parentToolbox_) {
@@ -253,7 +246,6 @@ Blockly.VerticalFlyout.prototype.position = function() {
   this.setBackgroundPath_(this.width_, this.height_);
   // Update the scrollbar (if one exists).
   if (this.scrollbar_) {
-    //this.scrollToStart();
     this.scrollbar_.resize();
   }
   // The blocks need to be visible in order to be laid out and measured
@@ -298,7 +290,7 @@ Blockly.VerticalFlyout.prototype.setBackgroundPath_ = function(width, height) {
  * Scroll the flyout to the top.
  */
 Blockly.VerticalFlyout.prototype.scrollToStart = function() {
-  this.scrollbar_.set(0, 0);
+  this.scrollbar_.set(0);
 };
 
 /**
@@ -433,6 +425,8 @@ Blockly.VerticalFlyout.prototype.layout_ = function(contents, gaps) {
  *     block.
  * @param {number} index The index into the background buttons list where this
  *     rect should be placed.
+ * @return {!SVGElement} Newly created SVG element for the rectangle behind the
+ *     block.
  * @private
  */
 Blockly.VerticalFlyout.prototype.createRect_ = function(block, x, y,
@@ -466,8 +460,8 @@ Blockly.VerticalFlyout.prototype.createRect_ = function(block, x, y,
  *     block.
  * @private
  */
-Blockly.VerticalFlyout.prototype.createCheckbox_ = function(block, cursorX, cursorY,
-    blockHW) {
+Blockly.VerticalFlyout.prototype.createCheckbox_ = function(block, cursorX,
+     cursorY, blockHW) {
   var svgRoot = block.getSvgRoot();
   var extraSpace = this.CHECKBOX_SIZE + this.CHECKBOX_MARGIN;
   var checkboxRect = Blockly.createSvgElement('rect',
@@ -575,7 +569,7 @@ Blockly.VerticalFlyout.prototype.isDragTowardWorkspace_ = function(dx, dy) {
 
 /**
  * Copy a block from the flyout to the workspace and position it correctly.
- * @param {!Blockly.Block} originBlock The flyout block to copy..
+ * @param {!Blockly.Block} originBlock The flyout block to copy.
  * @return {!Blockly.Block} The new block in the main workspace.
  * @private
  */
@@ -611,9 +605,11 @@ Blockly.VerticalFlyout.prototype.placeNewBlock_ = function(originBlock) {
   // Need to take that into account now that the flyout is offset from there in
   // both directions.
   if (this.parentToolbox_) {
-    xyOld.y += (this.parentToolbox_.getHeight()) / scale -
+    // TODO (fenichel): fix these offsets to correctly deal with scaling
+    // changes.
+    xyOld.y += (this.parentToolbox_.getHeight()) / scale  -
         this.parentToolbox_.getHeight();
-    var xOffset = this.parentToolbox_.getWidth() / scale -
+    var xOffset = this.parentToolbox_.getWidth() / scale  -
         this.parentToolbox_.getWidth();
     if (this.toolboxPosition_ == Blockly.TOOLBOX_AT_RIGHT) {
       xyOld.x += xOffset;
@@ -629,6 +625,9 @@ Blockly.VerticalFlyout.prototype.placeNewBlock_ = function(originBlock) {
 
   // Create the new block by cloning the block in the flyout (via XML).
   var xml = Blockly.Xml.blockToDom(originBlock);
+  // The target workspace would normally resize during domToBlock, which will
+  // lead to weird jumps.  Save it for terminateDrag.
+  targetWorkspace.setResizesEnabled(false);
   var block = Blockly.Xml.domToBlock(xml, targetWorkspace);
   var svgRootNew = block.getSvgRoot();
   if (!svgRootNew) {
@@ -639,6 +638,7 @@ Blockly.VerticalFlyout.prototype.placeNewBlock_ = function(originBlock) {
   // original block because the flyout's origin may not be the same as the
   // main workspace's origin.
   var xyNew = Blockly.getSvgXY_(svgRootNew, targetWorkspace);
+
   // Scale the scroll (getSvgXY_ did not do this).
   xyNew.x +=
       targetWorkspace.scrollX / targetWorkspace.scale - targetWorkspace.scrollX;
