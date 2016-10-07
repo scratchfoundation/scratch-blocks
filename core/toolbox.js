@@ -287,8 +287,12 @@ Blockly.Toolbox.prototype.getSelectedItem = function() {
 
 Blockly.Toolbox.prototype.setSelectedItem = function(item) {
   // item is a category
+  if (this.selectedItem_) {
+    this.selectedItem_.setSelected(false);
+  }
   this.selectedItem_ = item;
   if (this.selectedItem_ != null) {
+    this.selectedItem_.setSelected(true);
     this.flyout_.show(item.getContents());
   }
 };
@@ -337,23 +341,26 @@ Blockly.Toolbox.CategoryMenu.prototype.populate = function(domTree) {
 
   // TODO: Clean up/make sure things are clean.
   // TODO: Track last element, maybe.
+  var categories = [];
+  // Find actual categories from the DOM tree.
   for (var i = 0, child; child = domTree.childNodes[i]; i++) {
-    if (!child.tagName) {
-      // skip it
+    if (!child.tagName || child.tagName.toUpperCase() != 'CATEGORY') {
       continue;
     }
-    switch (child.tagName.toUpperCase()) {
-      case 'CATEGORY':
-        if (!(this.categories_.length % 2)) {
-          var row = goog.dom.createDom('tr', 'scratchCategoryMenuRow');
-          this.table.appendChild(row);
-        }
-        this.categories_.push(new Blockly.Toolbox.Category(this, row,
-            child));
-        break;
-      case 'SEP':
-        // TODO: deal with separators.
-        break;
+    categories.push(child);
+  }
+  // Create categories one row at a time.
+  // Note that this involves skipping around by `columnSeparator` in the DOM tree.
+  var columnSeparator = Math.ceil(categories.length / 2);
+  for (var i = 0; i < columnSeparator; i += 1) {
+    child = categories[i];
+    var row = goog.dom.createDom('tr', 'scratchCategoryMenuRow');
+    this.table.appendChild(row);
+    this.categories_.push(new Blockly.Toolbox.Category(this, row,
+        child));
+    if (categories[i + columnSeparator]) {
+      this.categories_.push(new Blockly.Toolbox.Category(this, row,
+          categories[i + columnSeparator]));
     }
   }
 };
@@ -395,17 +402,26 @@ Blockly.Toolbox.Category.prototype.dispose = function() {
 };
 
 Blockly.Toolbox.Category.prototype.createDom = function() {
+  var toolbox = this.parent_.parent_;
   this.item_ = goog.dom.createDom('td',
-      {'class': 'scratchCategoryMenuItem',
-       'style': 'background-color:' + this.colour_
-      },
+      {'class': 'scratchCategoryMenuItem'},
       this.name_);
+  this.bubble_ = goog.dom.createDom('div', {
+    'class': (toolbox.RTL) ? 'scratchCategoryItemBubbleRTL' : 'scratchCategoryItemBubbleLTR'});
+  this.bubble_.style.backgroundColor = this.colour_;
+  this.bubble_.style.borderColor = this.secondaryColour_;
+  this.item_.appendChild(this.bubble_);
   this.parentHtml_.appendChild(this.item_);
+  Blockly.bindEvent_(this.item_, 'mousedown', toolbox,
+    toolbox.setSelectedItemFactory(this));
+};
 
-// this.parent_.parent_ should be the toolbox.  Don't leave this line in this
-// state. (TODO)
-  Blockly.bindEvent_(this.item_, 'mousedown', this.parent_.parent_,
-    this.parent_.parent_.setSelectedItemFactory(this));
+Blockly.Toolbox.Category.prototype.setSelected = function(selected) {
+  if (selected) {
+    this.item_.className = 'scratchCategoryMenuItem categorySelected';
+  } else {
+    this.item_.className = 'scratchCategoryMenuItem';
+  }
 };
 
 Blockly.Toolbox.Category.prototype.parseContents_ = function(domTree) {
@@ -433,19 +449,26 @@ Blockly.Toolbox.Category.prototype.getContents = function() {
 
 /**
  * Set the colour of the category's background from a DOM node.
- * @param {Node} node DOM node with "colour" attribute.  Colour is a hex string
- *     or hue on a colour wheel (0-360).
+ * @param {Node} node DOM node with "colour" and "secondaryColour" attribute.
+ *     Colours are a hex string or hue on a colour wheel (0-360).
  */
 Blockly.Toolbox.Category.prototype.setColour = function(node) {
   var colour = node.getAttribute('colour');
+  var secondaryColour = node.getAttribute('secondaryColour');
   if (goog.isString(colour)) {
     if (colour.match(/^#[0-9a-fA-F]{6}$/)) {
       this.colour_ = colour;
     } else {
       this.colour_ = Blockly.hueToRgb(colour);
     }
+    if (secondaryColour.match(/^#[0-9a-fA-F]{6}$/)) {
+      this.secondaryColour_ = secondaryColour;
+    } else {
+      this.secondaryColour_ = Blockly.hueToRgb(secondaryColour);
+    }
     this.hasColours_ = true;
   } else {
     this.colour_ = '#000000';
+    this.secondaryColour_ = '#000000';
   }
 };
