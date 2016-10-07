@@ -588,15 +588,17 @@ Blockly.VerticalFlyout.prototype.placeNewBlock_ = function(originBlock) {
   // (separately from the main workspace).
   // Generally a no-op in vertical mode but likely to happen in horizontal
   // mode.
-  var scrollX = this.workspace_.scrollX;
+  // var scrollX = this.workspace_.scrollX;
   var scale = this.workspace_.scale;
-  xyOld.x += scrollX / scale - scrollX;
+  // xyOld.x += scrollX / scale - scrollX;
+
+  var targetMetrics = targetWorkspace.getMetrics();
 
   // If the flyout is on the right side, (0, 0) in the flyout is offset to
   // the right of (0, 0) in the main workspace.  Add an offset to take that
   // into account.
   if (this.toolboxPosition_ == Blockly.TOOLBOX_AT_RIGHT) {
-    scrollX = targetWorkspace.getMetrics().viewWidth - this.width_;
+    scrollX = targetMetrics.viewWidth - this.width_;
     // Scale the scroll (getSvgXY_ did not do this).
     xyOld.x += scrollX / scale - scrollX;
   }
@@ -607,9 +609,10 @@ Blockly.VerticalFlyout.prototype.placeNewBlock_ = function(originBlock) {
   if (this.parentToolbox_) {
     // TODO (fenichel): fix these offsets to correctly deal with scaling
     // changes.
-    xyOld.y += (this.parentToolbox_.getHeight()) / scale  -
-        this.parentToolbox_.getHeight();
-    var xOffset = this.parentToolbox_.getWidth() / scale  -
+    xyOld.y += (this.parentToolbox_.getHeight()) /
+        targetWorkspace.scale -
+        (this.parentToolbox_.getHeight());
+    var xOffset = this.parentToolbox_.getWidth() / targetWorkspace.scale -
         this.parentToolbox_.getWidth();
     if (this.toolboxPosition_ == Blockly.TOOLBOX_AT_RIGHT) {
       xyOld.x += xOffset;
