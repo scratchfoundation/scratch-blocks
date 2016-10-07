@@ -725,7 +725,16 @@ Blockly.BlockSvg.prototype.onMouseUp_ = function(e) {
       new Blockly.Events.Ui(rootBlock, 'stackclick', undefined, undefined));
   }
   Blockly.terminateDrag_();
-  if (Blockly.selected && Blockly.highlightedConnection_) {
+  // If we're over a delete area, delete the block even if it could be connected
+  // to another block.  Thi sis different from blockly.
+  if (!this.getParent() && Blockly.selected.isDeletable() &&
+      this.workspace.isDeleteArea(e)) {
+    var trashcan = this.workspace.trashcan;
+    if (trashcan) {
+      setTimeout(trashcan.close.bind(trashcan), 100);
+    }
+    Blockly.selected.dispose(false, true);
+  } else if (Blockly.selected && Blockly.highlightedConnection_) {
     this.positionNewBlock(Blockly.selected,
         Blockly.localConnection_, Blockly.highlightedConnection_);
     // Connect two blocks together.
@@ -741,14 +750,7 @@ Blockly.BlockSvg.prototype.onMouseUp_ = function(e) {
       // Don't throw an object in the trash can if it just got connected.
       this.workspace.trashcan.close();
     }
-  } else if (!this.getParent() && Blockly.selected.isDeletable() &&
-      this.workspace.isDeleteArea(e)) {
-    var trashcan = this.workspace.trashcan;
-    if (trashcan) {
-      setTimeout(trashcan.close.bind(trashcan), 100);
-    }
-    Blockly.selected.dispose(false, true);
-  }
+  } //else
   if (Blockly.highlightedConnection_) {
     Blockly.highlightedConnection_ = null;
   }

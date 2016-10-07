@@ -1004,5 +1004,20 @@ Blockly.Css.CONTENT = [
     'fill: blue',
   '}',
 
+  '.scratchCategoryMenu {',
+    'width:250px',
+  '}',
+
+  '.scratchCategoryRow {',
+    'width:50%',
+  '}',
+
+  '.scratchCategoryMenuItem {',
+    'width:50%',
+  '}',
+
+  '.scratchCategoryMenuItem:hover {',
+    'color: orange !important;',
+  '}',
   ''
 ];
