@@ -341,23 +341,26 @@ Blockly.Toolbox.CategoryMenu.prototype.populate = function(domTree) {
 
   // TODO: Clean up/make sure things are clean.
   // TODO: Track last element, maybe.
+  var categories = [];
+  // Find actual categories from the DOM tree.
   for (var i = 0, child; child = domTree.childNodes[i]; i++) {
-    if (!child.tagName) {
-      // skip it
+    if (!child.tagName || child.tagName.toUpperCase() != 'CATEGORY') {
       continue;
     }
-    switch (child.tagName.toUpperCase()) {
-      case 'CATEGORY':
-        if (!(this.categories_.length % 2)) {
-          var row = goog.dom.createDom('tr', 'scratchCategoryMenuRow');
-          this.table.appendChild(row);
-        }
-        this.categories_.push(new Blockly.Toolbox.Category(this, row,
-            child));
-        break;
-      case 'SEP':
-        // TODO: deal with separators.
-        break;
+    categories.push(child);
+  }
+  // Create categories one row at a time.
+  // Note that this involves skipping around by `columnSeparator` in the DOM tree.
+  var columnSeparator = Math.ceil(categories.length / 2);
+  for (var i = 0; i < columnSeparator; i += 1) {
+    child = categories[i];
+    var row = goog.dom.createDom('tr', 'scratchCategoryMenuRow');
+    this.table.appendChild(row);
+    this.categories_.push(new Blockly.Toolbox.Category(this, row,
+        child));
+    if (categories[i + columnSeparator]) {
+      this.categories_.push(new Blockly.Toolbox.Category(this, row,
+          categories[i + columnSeparator]));
     }
   }
 };
