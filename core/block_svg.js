@@ -1245,7 +1245,8 @@ Blockly.BlockSvg.disconnectInsertionMarker = function() {
     var innerConnection = Blockly.insertionMarkerConnection_.targetConnection;
     innerConnection.sourceBlock_.unplug(false);
     var previousBlockNextConnection =
-        Blockly.insertionMarker_.previousConnection.targetConnection;
+        Blockly.insertionMarker_.previousConnection ?
+        Blockly.insertionMarker_.previousConnection.targetConnection : null;
     Blockly.insertionMarker_.unplug(true);
     if (previousBlockNextConnection) {
       previousBlockNextConnection.connect(innerConnection);
