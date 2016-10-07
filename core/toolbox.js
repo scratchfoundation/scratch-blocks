@@ -171,7 +171,6 @@ Blockly.Toolbox.prototype.createFlyout_ = function() {
 /**
  * Fill the toolbox with categories and blocks.
  * @param {!Node} newTree DOM tree of blocks.
- * @return {Node} Tree node to open at startup (or null).
  * @private
  */
 Blockly.Toolbox.prototype.populate_ = function(newTree) {

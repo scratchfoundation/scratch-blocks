@@ -349,7 +349,8 @@ Blockly.Flyout.prototype.dispose = function() {
 };
 
 /**
- * TODO: Comment
+ * Set the parent toolbox of this flyout.
+ * @param {!Blockly.Toolbox} toolbox The toolbox that owns this flyout.
  */
 Blockly.Flyout.prototype.setParentToolbox = function(toolbox) {
   this.parentToolbox_ = toolbox;
