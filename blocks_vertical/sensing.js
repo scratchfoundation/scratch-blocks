@@ -650,7 +650,8 @@ Blockly.Blocks['sensing_of_object_menu'] = {
             "name": "OBJECT",
             "options": [
               ['Sprite1', 'Sprite1'],
-              ['Stage', '_stage_']
+              ['Stage', '_stage_'],
+              ['this sprite', '_this-sprite_']
             ]
           }
         ],
