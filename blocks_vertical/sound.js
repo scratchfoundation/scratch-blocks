@@ -27,7 +27,7 @@ goog.require('Blockly.Colours');
 goog.require('Blockly.constants');
 
 
-Blockly.Blocks['sound_sounds_menu'] = {
+Blockly.Blocks['sound_sounds_option'] = {
   /**
    * Sound effects drop-down menu.
    * @this Blockly.Block
@@ -61,7 +61,7 @@ Blockly.Blocks['sound_sounds_menu'] = {
   }
 };
 
-Blockly.Blocks['sound_playsound'] = {
+Blockly.Blocks['sound_play'] = {
   /**
    * Block to play sound.
    * @this Blockly.Block
@@ -72,7 +72,7 @@ Blockly.Blocks['sound_playsound'] = {
       "args0": [
         {
           "type": "input_value",
-          "name": "SOUND_NUM"
+          "name": "SOUND_MENU"
         }
       ],
       "inputsInline": true,
