@@ -440,9 +440,9 @@ Blockly.Blocks['motion_setrotationstyle_menu'] = {
             "type": "field_dropdown",
             "name": "STYLE",
             "options": [
-              ['left-right', 'LEFT-RIGHT'],
-              ['don\'t rotate', 'NONE'],
-              ['all around', 'ALL']
+              ['left-right', 'left-right'],
+              ['don\'t rotate', 'don\'t rotate'],
+              ['all around', 'all around']
             ]
           }
         ],
