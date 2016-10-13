@@ -462,7 +462,9 @@ Blockly.Workspace.prototype.fireChangeListener = function(event) {
       this.undoStack_.unshift();
     }
   }
-  for (var i = 0, func; func = this.listeners_[i]; i++) {
+  // Copy listeners in case a listener attaches/detaches itself.
+  var currentListeners = this.listeners_.slice();
+  for (var i = 0, func; func = currentListeners[i]; i++) {
     func(event);
   }
 };
@@ -473,7 +475,11 @@ Blockly.Workspace.prototype.fireChangeListener = function(event) {
  * @return {Blockly.Block} The sought after block or null if not found.
  */
 Blockly.Workspace.prototype.getBlockById = function(id) {
-  return this.blockDB_[id] || null;
+  var block = this.blockDB_[id];
+  if (!block && this.getFlyout() && this.getFlyout().getWorkspace()) {
+    block = this.getFlyout().getWorkspace().blockDB_[id];
+  }
+  return block || null;
 };
 
 /**
