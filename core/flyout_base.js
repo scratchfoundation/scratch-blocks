@@ -647,6 +647,9 @@ Blockly.Flyout.prototype.onMouseUp_ = function(/*e*/) {
       Blockly.Events.fire(
           new Blockly.Events.Ui(Blockly.Flyout.startBlock_, 'click',
                                 undefined, undefined));
+      Blockly.Events.fire(
+          new Blockly.Events.Ui(Blockly.Flyout.startBlock_, 'stackclick',
+                                undefined, undefined));
     }
   }
   Blockly.terminateDrag_();
