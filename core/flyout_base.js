@@ -584,7 +584,6 @@ Blockly.Flyout.prototype.blockMouseDown_ = function(block) {
       Blockly.DropDownDiv.hideWithoutAnimation();
       Blockly.hideChaff();
       // Left-click (or middle click)
-      Blockly.Css.setCursor(Blockly.Css.Cursor.CLOSED);
       // Record the current mouse position.
       flyout.startDragMouseY_ = e.clientY;
       flyout.startDragMouseX_ = e.clientX;
@@ -699,6 +698,7 @@ Blockly.Flyout.prototype.onMouseMoveBlock_ = function(e) {
     e.stopPropagation();
     return;
   }
+  Blockly.Css.setCursor(Blockly.Css.Cursor.CLOSED);
   var dx = e.clientX - Blockly.Flyout.startDownEvent_.clientX;
   var dy = e.clientY - Blockly.Flyout.startDownEvent_.clientY;
   var createBlock = this.determineDragIntention_(dx, dy);
