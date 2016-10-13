@@ -46,6 +46,11 @@ Blockly.Options = function(options) {
     var hasDisable = false;
     var hasSounds = false;
   } else {
+    if (!options['toolbox']) {
+      var oParser = new DOMParser();
+      var dom = oParser.parseFromString(Blockly.Blocks.defaultToolbox, 'text/xml');
+      options['toolbox'] = dom.children[0];
+    }
     var languageTree = Blockly.Options.parseToolboxTree(options['toolbox']);
     var hasCategories = Boolean(languageTree &&
         languageTree.getElementsByTagName('category').length);
