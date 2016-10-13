@@ -47,7 +47,7 @@ Blockly.Blocks['sound_sounds_option'] = {
               ['drip drop', '3'],
               ['drum machine', '4'],
               ['eggs', '5'],
-              ['zoop', '6'],
+              ['zoop', '6']
             ]
           }
         ],
@@ -172,11 +172,11 @@ Blockly.Blocks['sound_beats_menu'] = {
             "name": "BEATS",
             "options": [
               ['1/8', '0.125'],
-      			  ['1/4', '0.25'],
+              ['1/4', '0.25'],
               ['1/2', '0.5'],
-      			  ['1', '1'],
+              ['1', '1'],
               ['2', '2'],
-      			  ['4', '4'],
+              ['4', '4']
             ]
           }
         ],
@@ -332,10 +332,10 @@ Blockly.Blocks['sound_scales_menu'] = {
             "type": "field_dropdown",
             "name": "SCALE",
             "options": [
-      			  ['major', 'MAJOR'],
+              ['major', 'MAJOR'],
               ['minor', 'MINOR'],
               ['pentatonic', 'PENTATONIC'],
-              ['chromatic', 'CHROMATIC'],
+              ['chromatic', 'CHROMATIC']
             ]
           }
         ],
@@ -374,7 +374,7 @@ Blockly.Blocks['sound_roots_menu'] = {
               ['G#', '8'],
               ['A', '9'],
               ['A#', '10'],
-              ['B', '11'],
+              ['B', '11']
             ]
           }
         ],
@@ -402,10 +402,10 @@ Blockly.Blocks['sound_setkey'] = {
           "name": "ROOT"
         },
         {
-    		  "type": "input_value",
+          "type": "input_value",
           "name": "SCALE"
         }
-	   ],
+      ],
       "previousStatement": null,
       "nextStatement": null,
       "colour": Blockly.Colours.sounds.primary,
@@ -432,7 +432,7 @@ Blockly.Blocks['sound_effects_menu'] = {
               ['echo', 'ECHO'],
               ['pan left/right', 'PAN'],
               ['reverb', 'REVERB'],
-              ['pitch', 'PITCH'],
+              ['pitch', 'PITCH']
             ]
           }
         ],
@@ -463,7 +463,7 @@ Blockly.Blocks['sound_seteffectto'] = {
           "type": "input_value",
           "name": "VALUE"
         }
-     ],
+      ],
       "previousStatement": null,
       "nextStatement": null,
       "colour": Blockly.Colours.sounds.primary,
@@ -491,7 +491,7 @@ Blockly.Blocks['sound_changeeffectby'] = {
           "type": "input_value",
           "name": "VALUE"
         }
-     ],
+      ],
       "previousStatement": null,
       "nextStatement": null,
       "colour": Blockly.Colours.sounds.primary,
