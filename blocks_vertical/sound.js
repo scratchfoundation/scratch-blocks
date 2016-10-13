@@ -97,7 +97,7 @@ Blockly.Blocks['sound_playuntildone'] = {
       "args0": [
         {
           "type": "input_value",
-          "name": "SOUND_NUM"
+          "name": "SOUND_MENU"
         }
       ],
       "inputsInline": true,
