@@ -176,7 +176,7 @@ Blockly.Blocks['wedo_motorspeed'] = {
   init: function() {
     this.jsonInit({
       "id": "wedo_motorspeed",
-      "message0": "Motor Speed %2",
+      "message0": "Motor Speed %1",
       "args0": [
         {
           "type": "input_value",
@@ -232,7 +232,7 @@ Blockly.Blocks['wedo_whentilt'] = {
   init: function() {
     this.jsonInit({
       "id": "wedo_whentilt",
-      "message0": "When tilted %2",
+      "message0": "When tilted %1",
       "args0": [
         {
           "type": "input_value",
