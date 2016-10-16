@@ -756,7 +756,7 @@ Blockly.Blocks.defaultToolbox = '<xml id="toolbox-categories" style="display: no
     '</block>'+
   '</category>'+
   '<category name="More Blocks" colour="#FF6680" secondaryColour="#FF3355" custom="PROCEDURE"></category>'+
-  '<category name="Wedo">' +
+  '<category name="Wedo" colour="#c0c0c0" secondaryColour="#808080">' +
     '<block type="wedo_setcolor">' +
       '<value name="CHOICE">' +
         '<shadow type="dropdown_wedo_setcolor">' +
