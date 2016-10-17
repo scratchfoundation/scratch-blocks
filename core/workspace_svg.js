@@ -410,7 +410,6 @@ Blockly.WorkspaceSvg.prototype.addFlyout_ = function() {
     horizontalLayout: this.horizontalLayout,
     toolboxPosition: this.options.toolboxPosition
   };
-  /** @type {Blockly.Flyout} */
   if (this.horizontalLayout) {
     this.flyout_ = new Blockly.HorizontalFlyout(workspaceOptions);
   } else {
