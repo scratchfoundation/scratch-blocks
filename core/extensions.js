@@ -51,11 +51,13 @@ Blockly.Extensions.flyoutCategory = function(workspace) {
       for (var i = 0; i < extensions[v].length; i++) {
         var data = JSON.parse(extensions[v][i]);
         var code = data.code;
+        var id = data.id;
         var block = goog.dom.createDom('block');
         block.setAttribute('type', 'extensions_' + data.type);
         block.setAttribute('gap', 16);
         var mutation = goog.dom.createDom('mutation');
         mutation.setAttribute('code', code);
+        mutation.setAttribute('id', id);
         block.appendChild(mutation);
         xmlList.push(block);
       }
