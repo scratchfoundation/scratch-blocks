@@ -27,6 +27,7 @@
 goog.provide('Blockly.FieldNumber');
 
 goog.require('Blockly.FieldTextInput');
+goog.require('Blockly.Touch');
 goog.require('goog.math');
 goog.require('goog.userAgent');
 
@@ -36,8 +37,8 @@ goog.require('goog.userAgent');
  * to construct a restrictor on typable characters, and to inform the pop-up
  * numpad on touch devices.
  * These properties are included here (i.e. instead of just accepting a
- * decimalAllowed, negativeAllowed)
- * to maintain API compatibility with Blockly and Blockly for Android.
+ * decimalAllowed, negativeAllowed) to maintain API compatibility with Blockly
+ * and Blockly for Android.
  * @param {number|string} value The initial content of the field.
  * @param {number|string|undefined} opt_min Minimum value.
  * @param {number|string|undefined} opt_max Maximum value.
@@ -271,6 +272,9 @@ Blockly.FieldNumber.numPadButtonTouch = function() {
       oldValue.slice(selectionEnd);
 
   Blockly.FieldNumber.updateDisplay_(newValue);
+
+  // This is just a click.
+  Blockly.Touch.clearTouchIdentifier();
 };
 
 /**
@@ -291,8 +295,10 @@ Blockly.FieldNumber.numPadEraseButtonTouch = function() {
     newValue = oldValue.slice(0, selectionStart - 1) +
         oldValue.slice(selectionStart);
   }
-
   Blockly.FieldNumber.updateDisplay_(newValue);
+
+  // This is just a click.
+  Blockly.Touch.clearTouchIdentifier();
 };
 
 /**
