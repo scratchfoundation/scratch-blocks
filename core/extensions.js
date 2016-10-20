@@ -49,13 +49,13 @@ Blockly.Extensions.flyoutCategory = function(workspace) {
   for (var v = 0; v < Blockly.Extension.EXTENSIONS.length; v++) {
     for (var i = 0; i < Blockly.Extension.EXTENSIONS[v].length; i++) {
       var data = JSON.parse(Blockly.Extension.EXTENSIONS[v][i]);
-      var code = data.code;
+      var spec = data.spec;
       var id = data.id;
       var block = goog.dom.createDom('block');
       block.setAttribute('type', 'extensions_' + data.type);
       block.setAttribute('gap', 16);
       var mutation = goog.dom.createDom('mutation');
-      mutation.setAttribute('code', code);
+      mutation.setAttribute('spec', spec);
       mutation.setAttribute('id', id);
       block.appendChild(mutation);
       xmlList.push(block);
