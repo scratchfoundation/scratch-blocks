@@ -39,6 +39,25 @@ Blockly.Extensions.NAME_TYPE = 'EXTENSION';
 
 Blockly.Extensions.EXTENSIONS = [];
 
+Blockly.Extensions.populateExtensions = function(extensions, xmlList) {
+  for (var v = 0; v < extensions.length; v++)
+    for (var i = 0; i < extensions[v].length; i++) {
+      var data = JSON.parse(extensions[v][i]);
+      var code = data.code;
+      var id = data.id;
+      var block = goog.dom.createDom('block');
+      block.setAttribute('type', 'extensions_' + data.type);
+      block.setAttribute('gap', 16);
+      var mutation = goog.dom.createDom('mutation');
+      mutation.setAttribute('code', code);
+      mutation.setAttribute('id', id);
+      block.appendChild(mutation);
+      xmlList.push(block);
+    }
+  }
+  return xmlList;
+}
+
 /**
  * Construct the blocks required by the flyout for the procedure category.
  * @param {!Blockly.Workspace} workspace The workspace contianing procedures.
@@ -46,23 +65,5 @@ Blockly.Extensions.EXTENSIONS = [];
  */
 Blockly.Extensions.flyoutCategory = function(workspace) {
   var xmlList = [];
-  function populateExtensions(extensions) {
-    for (var v = 0; v < extensions.length; v++)
-      for (var i = 0; i < extensions[v].length; i++) {
-        var data = JSON.parse(extensions[v][i]);
-        var code = data.code;
-        var id = data.id;
-        var block = goog.dom.createDom('block');
-        block.setAttribute('type', 'extensions_' + data.type);
-        block.setAttribute('gap', 16);
-        var mutation = goog.dom.createDom('mutation');
-        mutation.setAttribute('code', code);
-        mutation.setAttribute('id', id);
-        block.appendChild(mutation);
-        xmlList.push(block);
-      }
-    }
-  }
-  populateExtensions(Blockly.Extensions.EXTENSIONS);
-  return xmlList;
+  return Blockly.Extensions.populateExtensions(Blockly.Extensions.EXTENSIONS, xmlList);
 };
