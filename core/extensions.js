@@ -39,10 +39,16 @@ Blockly.Extensions.NAME_TYPE = 'EXTENSION';
 
 Blockly.Extensions.EXTENSIONS = [];
 
-Blockly.Extensions.populateExtensions = function(extensions, xmlList) {
-  for (var v = 0; v < extensions.length; v++)
-    for (var i = 0; i < extensions[v].length; i++) {
-      var data = JSON.parse(extensions[v][i]);
+/**
+ * Construct the blocks required by the flyout for the procedure category.
+ * @param {!Blockly.Workspace} workspace The workspace contianing procedures.
+ * @return {!Array.<!Element>} Array of XML block elements.
+ */
+Blockly.Extensions.flyoutCategory = function(workspace) {
+  var xmlList = [];
+  for (var v = 0; v < Blockly.Extension.EXTENSIONS.length; v++)
+    for (var i = 0; i < Blockly.Extension.EXTENSIONS[v].length; i++) {
+      var data = JSON.parse(Blockly.Extension.EXTENSIONS[v][i]);
       var code = data.code;
       var id = data.id;
       var block = goog.dom.createDom('block');
@@ -56,14 +62,4 @@ Blockly.Extensions.populateExtensions = function(extensions, xmlList) {
     }
   }
   return xmlList;
-}
-
-/**
- * Construct the blocks required by the flyout for the procedure category.
- * @param {!Blockly.Workspace} workspace The workspace contianing procedures.
- * @return {!Array.<!Element>} Array of XML block elements.
- */
-Blockly.Extensions.flyoutCategory = function(workspace) {
-  var xmlList = [];
-  return Blockly.Extensions.populateExtensions(Blockly.Extensions.EXTENSIONS, xmlList);
 };
