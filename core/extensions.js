@@ -46,7 +46,7 @@ Blockly.Extensions.EXTENSIONS = [];
  */
 Blockly.Extensions.flyoutCategory = function(workspace) {
   var xmlList = [];
-  for (var v = 0; v < Blockly.Extension.EXTENSIONS.length; v++)
+  for (var v = 0; v < Blockly.Extension.EXTENSIONS.length; v++) {
     for (var i = 0; i < Blockly.Extension.EXTENSIONS[v].length; i++) {
       var data = JSON.parse(Blockly.Extension.EXTENSIONS[v][i]);
       var code = data.code;
