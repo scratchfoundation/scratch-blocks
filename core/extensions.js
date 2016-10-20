@@ -63,3 +63,16 @@ Blockly.Extensions.flyoutCategory = function(workspace) {
   }
   return xmlList;
 };
+
+Blockly.Extensions.lookupBlock = function(blockId) {
+  for (var v = 0; v < Blockly.Extension.EXTENSIONS.length; v++) {
+    for (var i = 0; i < Blockly.Extension.EXTENSIONS[v].length; i++) {
+      var data = JSON.parse(Blockly.Extension.EXTENSIONS[v][i]);
+      var id = data.id;
+      if (id == blockId) {
+        return data;
+      }
+    }
+  }
+  return false;
+}
