@@ -40,7 +40,7 @@ Blockly.Blocks['extensions_block'] = {
     this.setColour(Blockly.Colours.extensions.primary,
       Blockly.Colours.extensions.secondary,
       Blockly.Colours.extensions.tertiary);
-    this._code = '';
+    this._spec = '';
     this._id = '';
   },
   /**
@@ -50,7 +50,7 @@ Blockly.Blocks['extensions_block'] = {
    */
   mutationToDom: function() {
     var container = document.createElement('mutation');
-    container.setAttribute('code', this._code);
+    container.setAttribute('spec', this._spec);
     container.setAttribute('id', this._id);
     return container;
   },
@@ -60,13 +60,13 @@ Blockly.Blocks['extensions_block'] = {
    * @this Blockly.Block
    */
   domToMutation: function(xmlElement) {
-    this._code = xmlElement.getAttribute('code');
+    this._spec = xmlElement.getAttribute('spec');
     this._id = xmlElement.getAttribute('id');
     this._updateDisplay();
   },
   _updateDisplay: function() {
     // Split the proc into components, by %n, %b, and %s (ignoring escaped).
-    var procComponents = this._code.split(/(?=[^\\]\%[nbs])/);
+    var procComponents = this._spec.split(/(?=[^\\]\%[nbs])/);
     procComponents = procComponents.map(function(c) {
       return c.trim(); // Strip whitespace.
     });
@@ -123,7 +123,7 @@ Blockly.Blocks['extensions_hat'] = {
     this.setColour(Blockly.Colours.extensions.primary,
       Blockly.Colours.extensions.secondary,
       Blockly.Colours.extensions.tertiary);
-    this._code = '';
+    this._spec = '';
     this._id = '';
   },
   /**
@@ -133,7 +133,7 @@ Blockly.Blocks['extensions_hat'] = {
    */
   mutationToDom: function() {
     var container = document.createElement('mutation');
-    container.setAttribute('code', this._code);
+    container.setAttribute('spec', this._spec);
     container.setAttribute('id', this._id);
     return container;
   },
@@ -143,13 +143,13 @@ Blockly.Blocks['extensions_hat'] = {
    * @this Blockly.Block
    */
   domToMutation: function(xmlElement) {
-    this._code = xmlElement.getAttribute('code');
+    this._spec = xmlElement.getAttribute('spec');
     this._id = xmlElement.getAttribute('id');
     this._updateDisplay();
   },
   _updateDisplay: function() {
     // Split the proc into components, by %n, %b, and %s (ignoring escaped).
-    var procComponents = this._code.split(/(?=[^\\]\%[nbs])/);
+    var procComponents = this._spec.split(/(?=[^\\]\%[nbs])/);
     procComponents = procComponents.map(function(c) {
       return c.trim(); // Strip whitespace.
     });
@@ -208,7 +208,7 @@ Blockly.Blocks['extensions_reporter'] = {
     this.setColour(Blockly.Colours.extensions.primary,
       Blockly.Colours.extensions.secondary,
       Blockly.Colours.extensions.tertiary);
-    this._code = '';
+    this._spec = '';
     this._id = '';
   },
   /**
@@ -218,7 +218,7 @@ Blockly.Blocks['extensions_reporter'] = {
    */
   mutationToDom: function() {
     var container = document.createElement('mutation');
-    container.setAttribute('code', this._code);
+    container.setAttribute('spec', this._spec);
     container.setAttribute('id', this._id);
     return container;
   },
@@ -228,13 +228,13 @@ Blockly.Blocks['extensions_reporter'] = {
    * @this Blockly.Block
    */
   domToMutation: function(xmlElement) {
-    this._code = xmlElement.getAttribute('code');
+    this._spec = xmlElement.getAttribute('spec');
     this._id = xmlElement.getAttribute('id');
     this._updateDisplay();
   },
   _updateDisplay: function() {
     // Split the proc into components, by %n, %b, and %s (ignoring escaped).
-    var procComponents = this._code.split(/(?=[^\\]\%[nbs])/);
+    var procComponents = this._spec.split(/(?=[^\\]\%[nbs])/);
     procComponents = procComponents.map(function(c) {
       return c.trim(); // Strip whitespace.
     });
@@ -293,7 +293,7 @@ Blockly.Blocks['extensions_boolean'] = {
     this.setColour(Blockly.Colours.extensions.primary,
       Blockly.Colours.extensions.secondary,
       Blockly.Colours.extensions.tertiary);
-    this._code = '';
+    this._spec = '';
     this._id = '';
   },
   /**
@@ -303,7 +303,7 @@ Blockly.Blocks['extensions_boolean'] = {
    */
   mutationToDom: function() {
     var container = document.createElement('mutation');
-    container.setAttribute('code', this._code);
+    container.setAttribute('spec', this._spec);
     container.setAttribute('id', this._id);
     return container;
   },
@@ -313,13 +313,13 @@ Blockly.Blocks['extensions_boolean'] = {
    * @this Blockly.Block
    */
   domToMutation: function(xmlElement) {
-    this._code = xmlElement.getAttribute('code');
+    this._spec = xmlElement.getAttribute('spec');
     this._id = xmlElement.getAttribute('id');
     this._updateDisplay();
   },
   _updateDisplay: function() {
     // Split the proc into components, by %n, %b, and %s (ignoring escaped).
-    var procComponents = this._code.split(/(?=[^\\]\%[nbs])/);
+    var procComponents = this._spec.split(/(?=[^\\]\%[nbs])/);
     procComponents = procComponents.map(function(c) {
       return c.trim(); // Strip whitespace.
     });
