@@ -44,7 +44,7 @@ Blockly.Extensions.EXTENSIONS = [];
  * @param {!Blockly.Workspace} workspace The workspace contianing procedures.
  * @return {!Array.<!Element>} Array of XML block elements.
  */
-Blockly.Extensions.flyoutCategory = function(workspace) {
+Blockly.Extensions.flyoutCategory = function() {
   var xmlList = [];
   for (var v = 0; v < Blockly.Extension.EXTENSIONS.length; v++) {
     for (var i = 0; i < Blockly.Extension.EXTENSIONS[v].length; i++) {
