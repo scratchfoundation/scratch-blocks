@@ -38,9 +38,9 @@ Blockly.Extensions.EXTENSIONS = [];
 
 Blockly.Extensions.flyoutCategory = function() {
   var xmlList = [];
-  for (var v = 0; v < Blockly.Extension.EXTENSIONS.length; v++) {
-    for (var i = 0; i < Blockly.Extension.EXTENSIONS[v].length; i++) {
-      var data = Blockly.Extension.EXTENSIONS[v][i];
+  for (var v = 0; v < Blockly.Extensions.EXTENSIONS.length; v++) {
+    for (var i = 0; i < Blockly.Extensions.EXTENSIONS[v].length; i++) {
+      var data = Blockly.Extensions.EXTENSIONS[v][i];
       var spec = data.spec;
       var id = data.id;
       var type = data.type;
@@ -63,9 +63,9 @@ Blockly.Extensions.loadExtension = function(loader) {
 };
 
 Blockly.Extensions.lookupBlock = function(blockId) {
-  for (var v = 0; v < Blockly.Extension.EXTENSIONS.length; v++) {
-    for (var i = 0; i < Blockly.Extension.EXTENSIONS[v].length; i++) {
-      var data = Blockly.Extension.EXTENSIONS[v][i];
+  for (var v = 0; v < Blockly.Extensions.EXTENSIONS.length; v++) {
+    for (var i = 0; i < Blockly.Extensions.EXTENSIONS[v].length; i++) {
+      var data = Blockly.Extensions.EXTENSIONS[v][i];
       var id = data.id;
       if (id == blockId) {
         return data;
