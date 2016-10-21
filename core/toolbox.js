@@ -311,13 +311,14 @@ Blockly.Toolbox.prototype.setSelectedItemFactory = function(item) {
 
 Blockly.Toolbox.CategoryMenu = function(parent, parentHtml) {
   this.parent_ = parent;
+  this.height_ = 0;
   this.parentHtml_ = parentHtml;
   this.createDom();
   this.categories_ = [];
 };
 
 Blockly.Toolbox.CategoryMenu.prototype.getHeight = function() {
-  return this.table.offsetHeight;
+  return this.height_;
 };
 
 Blockly.Toolbox.CategoryMenu.prototype.createDom = function() {
@@ -363,6 +364,7 @@ Blockly.Toolbox.CategoryMenu.prototype.populate = function(domTree) {
           categories[i + columnSeparator]));
     }
   }
+  this.height_ = this.table.offsetHeight;
 };
 
 Blockly.Toolbox.CategoryMenu.prototype.dispose = function() {

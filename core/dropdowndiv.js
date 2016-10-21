@@ -386,6 +386,9 @@ Blockly.DropDownDiv.hide = function() {
  * Hide the menu, without animation.
  */
 Blockly.DropDownDiv.hideWithoutAnimation = function() {
+  if (!Blockly.DropDownDiv.isVisible()) {
+    return;
+  }
   var div = Blockly.DropDownDiv.DIV_;
   Blockly.DropDownDiv.animateOutTimer_ && window.clearTimeout(Blockly.DropDownDiv.animateOutTimer_);
   div.style.transform = '';
