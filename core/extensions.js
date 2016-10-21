@@ -32,23 +32,15 @@ goog.require('Blockly.Names');
 goog.require('Blockly.Workspace');
 
 
-/**
- * Category to separate procedure names from variables and generated functions.
- */
 Blockly.Extensions.NAME_TYPE = 'EXTENSION';
 
 Blockly.Extensions.EXTENSIONS = [];
 
-/**
- * Construct the blocks required by the flyout for the procedure category.
- * @param {!Blockly.Workspace} workspace The workspace contianing procedures.
- * @return {!Array.<!Element>} Array of XML block elements.
- */
 Blockly.Extensions.flyoutCategory = function() {
   var xmlList = [];
   for (var v = 0; v < Blockly.Extension.EXTENSIONS.length; v++) {
     for (var i = 0; i < Blockly.Extension.EXTENSIONS[v].length; i++) {
-      var data = JSON.parse(Blockly.Extension.EXTENSIONS[v][i]);
+      var data = Blockly.Extension.EXTENSIONS[v][i];
       var spec = data.spec;
       var id = data.id;
       var block = goog.dom.createDom('block');
@@ -64,10 +56,14 @@ Blockly.Extensions.flyoutCategory = function() {
   return xmlList;
 };
 
+Blockly.Extensions.loadExtension = function(loader) {
+  eval(loader);
+};
+
 Blockly.Extensions.lookupBlock = function(blockId) {
   for (var v = 0; v < Blockly.Extension.EXTENSIONS.length; v++) {
     for (var i = 0; i < Blockly.Extension.EXTENSIONS[v].length; i++) {
-      var data = JSON.parse(Blockly.Extension.EXTENSIONS[v][i]);
+      var data = Blockly.Extension.EXTENSIONS[v][i];
       var id = data.id;
       if (id == blockId) {
         return data;
