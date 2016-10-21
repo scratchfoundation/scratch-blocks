@@ -332,7 +332,6 @@ Blockly.FieldTextInput.prototype.onHtmlInputChange_ = function(e) {
     this.sourceBlock_.render();
   }
   this.resizeEditor_();
-  Blockly.svgResize(this.sourceBlock_.workspace);
 };
 
 /**
