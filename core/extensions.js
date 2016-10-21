@@ -43,12 +43,14 @@ Blockly.Extensions.flyoutCategory = function() {
       var data = Blockly.Extension.EXTENSIONS[v][i];
       var spec = data.spec;
       var id = data.id;
+      var type = data.type;
       var block = goog.dom.createDom('block');
-      block.setAttribute('type', 'extensions_' + data.type);
+      block.setAttribute('type', 'extensions_block');
       block.setAttribute('gap', 16);
       var mutation = goog.dom.createDom('mutation');
       mutation.setAttribute('spec', spec);
       mutation.setAttribute('id', id);
+      mutation.setAttribute('type', type);
       block.appendChild(mutation);
       xmlList.push(block);
     }
