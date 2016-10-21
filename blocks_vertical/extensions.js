@@ -69,7 +69,7 @@ Blockly.Blocks['extensions_block'] = {
   },
   _updateDisplay: function() {
     // Split the proc into components, by %n, %b, and %s (ignoring escaped).
-    var procComponents = this._spec.split(/(?=[^\\]\%[nbs])/);
+    var procComponents = this._spec.split(/(?=[^\\]\%[nbsc])/);
     procComponents = procComponents.map(function(c) {
       return c.trim(); // Strip whitespace.
     });
