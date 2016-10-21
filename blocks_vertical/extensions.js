@@ -105,6 +105,9 @@ Blockly.Blocks['extensions_block'] = {
             colour.setShadow(true);
             colour.outputConnection.connect(input.connection);
             break;
+          case 'i':
+            this.appendStatementInput('SUBSTACK').appendField('');
+            break;
         }
       } else {
         newLabel = component.trim();
@@ -133,6 +136,11 @@ Blockly.Blocks['extensions_block'] = {
         this.setNextStatement(false);
         this.setOutputShape(Blockly.OUTPUT_SHAPE_ROUND);
         this.setOutput(true, 'String');
+        break;
+      case 'cap':
+        this.setOutput(false);
+        this.setPreviousStatement(true);
+        this.setNextStatement(false);
         break;
       default:
         this.setOutput(false);
