@@ -73,4 +73,4 @@ Blockly.Extensions.lookupBlock = function(blockId) {
     }
   }
   return false;
-}
+};
