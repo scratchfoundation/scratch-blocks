@@ -165,8 +165,9 @@ Blockly.BlockSvg.prototype.initSvg = function() {
  * @param {!Blockly.Input} input Value input to add a shape SVG element for.
  */
 Blockly.BlockSvg.prototype.initInputShape = function(input) {
-  if (this.inputShapes_[input.name]) {
-    // Only create the shape elements once.
+  if (this.inputShapes_[input.name] || input.connection.getShadowDom()) {
+    // Only create the shape elements once, and don't bother creating them if
+    // there's a shadow block that will always cover the input shape.
     return;
   }
   this.inputShapes_[input.name] = Blockly.createSvgElement(
