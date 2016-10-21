@@ -75,7 +75,7 @@ Blockly.Colours = {
     "secondary": "#FF4D6A",
     "tertiary": "#FF3355"
   },
-  "extentions": {
+  "extensions": {
     "primary": "#C0C0C0",
     "secondary": "#D3D3D3",
     "tertiary": "#808080"
