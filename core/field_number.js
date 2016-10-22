@@ -82,7 +82,7 @@ Blockly.FieldNumber.DROPDOWN_Y_PADDING = 8;
  */
  // Calculator order
 Blockly.FieldNumber.NUMPAD_BUTTONS =
-    ['7', '8', '9', '4', '5', '6', '1', '2', '3', '.', '0', '-'];
+    ['7', '8', '9', '4', '5', '6', '1', '2', '3', '.', '0', ' ', '-'];
 
 /**
  * Src for the delete icon to be shown on the num-pad.
@@ -225,6 +225,8 @@ Blockly.FieldNumber.prototype.position_ = function() {
 Blockly.FieldNumber.prototype.addButtons_ = function(contentDiv) {
   // Add numeric keypad buttons
   var buttons = Blockly.FieldNumber.NUMPAD_BUTTONS;
+  var spaceAt = 0;
+  var negativeAt = 0;
   for (var i = 0, buttonText; buttonText = buttons[i]; i++) {
     var button = document.createElement('button');
     button.setAttribute('role', 'menuitem');
@@ -236,6 +238,12 @@ Blockly.FieldNumber.prototype.addButtons_ = function(contentDiv) {
     if (buttonText == '.' && !this.decimalAllowed_) {
       // Don't show the decimal point for inputs that must be round numbers
       button.setAttribute('style', 'visibility: hidden');
+    } else if (buttonText == '-' && !this.negativeAllowed_) {
+      // Don't show the decimal point for inputs that must be round numbers
+      negativeAt = i;
+    } else if (buttonText == ' ') {
+      button.setAttribute('style', 'visibility: hidden');
+      spaceAt = i;
     }
     contentDiv.appendChild(button);
   }
@@ -251,7 +259,12 @@ Blockly.FieldNumber.prototype.addButtons_ = function(contentDiv) {
 
   Blockly.bindEvent_(eraseButton, 'mousedown', null,
       Blockly.FieldNumber.numPadEraseButtonTouch);
-  contentDiv.appendChild(eraseButton);
+  if (!this.negativeAllowed_) {
+    contentDiv.children[negativeAt] = eraseButton;
+    contentDiv.children.splice(spaceAt, 1);
+  } else {
+    contentDiv.appendChild(eraseButton);
+  }
 };
 
 /**
