@@ -261,7 +261,7 @@ Blockly.FieldNumber.prototype.addButtons_ = function(contentDiv) {
       Blockly.FieldNumber.numPadEraseButtonTouch);
   if (!this.negativeAllowed_) {
     contentDiv.children[negativeAt] = eraseButton;
-    contentDiv.children.splice(spaceAt, 1);
+    delete contentDiv.children[spaceAt];
   } else {
     contentDiv.appendChild(eraseButton);
   }
