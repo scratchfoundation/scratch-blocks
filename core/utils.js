@@ -755,7 +755,7 @@ Blockly.measureText = function(fontSize, fontFamily, fontWeight, text) {
 /**
  * Encode a string's HTML entities.
  * E.g., <a> -> &lt;a&gt;
- * @param {!string} rawStr Unencoded raw string to encode.
+ * @param {string} rawStr Unencoded raw string to encode.
  * @return {string} String with HTML entities encoded.
  */
 Blockly.encodeEntities = function(rawStr) {
