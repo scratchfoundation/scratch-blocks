@@ -32,7 +32,7 @@ goog.require('Blockly.constants');
 
 /**
  * Pick a random colour.
- * @return {!string} #RRGGBB for random colour.
+ * @return {string} #RRGGBB for random colour.
  */
 function randomColour() {
   var num = Math.floor(Math.random() * Math.pow(2, 24));
