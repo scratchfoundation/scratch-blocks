@@ -240,10 +240,9 @@ Blockly.FieldNumber.prototype.addButtons_ = function(contentDiv) {
       button.setAttribute('style', 'visibility: hidden');
     } else if (buttonText == '-' && !this.negativeAllowed_) {
       // Don't show the decimal point for inputs that must be round numbers
-      negativeAt = i;
+      button.setAttribute('style', 'visibility: hidden');
     } else if (buttonText == ' ') {
       button.setAttribute('style', 'visibility: hidden');
-      spaceAt = i;
     }
     contentDiv.appendChild(button);
   }
@@ -259,12 +258,7 @@ Blockly.FieldNumber.prototype.addButtons_ = function(contentDiv) {
 
   Blockly.bindEvent_(eraseButton, 'mousedown', null,
       Blockly.FieldNumber.numPadEraseButtonTouch);
-  if (!this.negativeAllowed_) {
-    contentDiv.children[negativeAt] = eraseButton;
-    delete contentDiv.children[spaceAt];
-  } else {
-    contentDiv.appendChild(eraseButton);
-  }
+  contentDiv.appendChild(eraseButton);
 };
 
 /**
