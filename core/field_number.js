@@ -225,8 +225,6 @@ Blockly.FieldNumber.prototype.position_ = function() {
 Blockly.FieldNumber.prototype.addButtons_ = function(contentDiv) {
   // Add numeric keypad buttons
   var buttons = Blockly.FieldNumber.NUMPAD_BUTTONS;
-  var spaceAt = 0;
-  var negativeAt = 0;
   for (var i = 0, buttonText; buttonText = buttons[i]; i++) {
     var button = document.createElement('button');
     button.setAttribute('role', 'menuitem');
