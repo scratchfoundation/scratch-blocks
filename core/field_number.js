@@ -237,9 +237,10 @@ Blockly.FieldNumber.prototype.addButtons_ = function(contentDiv) {
       // Don't show the decimal point for inputs that must be round numbers
       button.setAttribute('style', 'visibility: hidden');
     } else if (buttonText == '-' && !this.negativeAllowed_) {
-      // Don't show the decimal point for inputs that must be round numbers
-      button.setAttribute('style', 'visibility: hidden');
-    } else if (buttonText == ' ') {
+      continue;
+    } else if (buttonText == ' ' && !this.negativeAllowed_) {
+      continue;
+    } else if (buttonText == ' ' && this.negativeAllowed_) {
       button.setAttribute('style', 'visibility: hidden');
     }
     contentDiv.appendChild(button);
