@@ -288,12 +288,17 @@ Blockly.Toolbox.prototype.getSelectedItem = function() {
 Blockly.Toolbox.prototype.setSelectedItem = function(item) {
   // item is a category
   if (this.selectedItem_) {
+    // Don't do anything if they selected the already-open category.
+    if (this.selectedItem_ == item) {
+      return;
+    }
     this.selectedItem_.setSelected(false);
   }
   this.selectedItem_ = item;
   if (this.selectedItem_ != null) {
     this.selectedItem_.setSelected(true);
     this.flyout_.show(item.getContents());
+    this.flyout_.scrollToStart();
   }
 };
 
