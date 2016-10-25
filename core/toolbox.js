@@ -281,17 +281,24 @@ Blockly.Toolbox.prototype.refreshSelection = function() {
   }
 };
 
+/**
+ * @return {Blockly.Toolbox.Category} the currently selected category.
+ */
 Blockly.Toolbox.prototype.getSelectedItem = function() {
   return this.selectedItem_;
 };
 
+/**
+ * Set the currently selected category.
+ * @param {Blockly.Toolbox.Category} item The category to select.
+ */
 Blockly.Toolbox.prototype.setSelectedItem = function(item) {
-  // item is a category
   if (this.selectedItem_) {
     // Don't do anything if they selected the already-open category.
     if (this.selectedItem_ == item) {
       return;
     }
+    // They selected a different category but one was already open.  Close it.
     this.selectedItem_.setSelected(false);
   }
   this.selectedItem_ = item;
@@ -302,6 +309,11 @@ Blockly.Toolbox.prototype.setSelectedItem = function(item) {
   }
 };
 
+/**
+ * Wrapper function for calling setSelectedItem from a touch handler.
+ * @param {Blockly.Toolbox.Category} item The category to select.
+ * @return {function} A function that can be passed to bindEvent.
+ */
 Blockly.Toolbox.prototype.setSelectedItemFactory = function(item) {
   var selectedItem = item;
   return function() {
@@ -310,10 +322,14 @@ Blockly.Toolbox.prototype.setSelectedItemFactory = function(item) {
   };
 };
 
-
-
 // Category menu
-
+/**
+ * Class for a table of category titles that will control which category is
+ * displayed.
+ * @param {Blockly.Toolbox} parent The toolbox that owns the category menu.
+ * @param {Element} parentHtml The containing html div.
+ * @constructor
+ */
 Blockly.Toolbox.CategoryMenu = function(parent, parentHtml) {
   this.parent_ = parent;
   this.height_ = 0;
@@ -322,10 +338,16 @@ Blockly.Toolbox.CategoryMenu = function(parent, parentHtml) {
   this.categories_ = [];
 };
 
+/**
+ * @return {number} the height of the category menu.
+ */
 Blockly.Toolbox.CategoryMenu.prototype.getHeight = function() {
   return this.height_;
 };
 
+/**
+ * Create the DOM for the category menu.
+ */
 Blockly.Toolbox.CategoryMenu.prototype.createDom = function() {
   /*
   <table class="scratchCategoryMenu">
@@ -346,7 +368,6 @@ Blockly.Toolbox.CategoryMenu.prototype.populate = function(domTree) {
   }
 
   // TODO: Clean up/make sure things are clean.
-  // TODO: Track last element, maybe.
   var categories = [];
   // Find actual categories from the DOM tree.
   for (var i = 0, child; child = domTree.childNodes[i]; i++) {
@@ -362,8 +383,10 @@ Blockly.Toolbox.CategoryMenu.prototype.populate = function(domTree) {
     child = categories[i];
     var row = goog.dom.createDom('tr', 'scratchCategoryMenuRow');
     this.table.appendChild(row);
-    this.categories_.push(new Blockly.Toolbox.Category(this, row,
-        child));
+    if (child) {
+      this.categories_.push(new Blockly.Toolbox.Category(this, row,
+          child));
+    }
     if (categories[i + columnSeparator]) {
       this.categories_.push(new Blockly.Toolbox.Category(this, row,
           categories[i + columnSeparator]));
@@ -372,6 +395,9 @@ Blockly.Toolbox.CategoryMenu.prototype.populate = function(domTree) {
   this.height_ = this.table.offsetHeight;
 };
 
+/**
+ * Dispose of this Category Menu and all of its children.
+ */
 Blockly.Toolbox.CategoryMenu.prototype.dispose = function() {
   for (var i = 0, category; category = this.categories_[i]; i++) {
     category.dispose();
@@ -384,7 +410,14 @@ Blockly.Toolbox.CategoryMenu.prototype.dispose = function() {
 
 
 // Category
-
+/**
+ * Class for the data model of a category in the toolbox.
+ * @param {Blockly.Toolbox.CategoryMenu} parent The category menu that owns this
+ *     category.
+ * @param {Element} parentHtml The containing html div.
+ * @param {Node} domTree DOM tree of blocks.
+ * @constructor
+ */
 Blockly.Toolbox.Category = function(parent, parentHtml, domTree) {
   this.parent_ = parent;
   this.parentHtml_ = parentHtml;
@@ -398,6 +431,9 @@ Blockly.Toolbox.Category = function(parent, parentHtml, domTree) {
   this.createDom();
 };
 
+/**
+ * Dispose of this category and all of its contents.
+ */
 Blockly.Toolbox.Category.prototype.dispose = function() {
   if (this.item_) {
     goog.dom.removeNode(this.item_);
@@ -408,13 +444,17 @@ Blockly.Toolbox.Category.prototype.dispose = function() {
   this.contents_ = null;
 };
 
+/**
+ * Create the DOM for a category in the toolbox.
+ */
 Blockly.Toolbox.Category.prototype.createDom = function() {
   var toolbox = this.parent_.parent_;
   this.item_ = goog.dom.createDom('td',
       {'class': 'scratchCategoryMenuItem'},
       this.name_);
   this.bubble_ = goog.dom.createDom('div', {
-    'class': (toolbox.RTL) ? 'scratchCategoryItemBubbleRTL' : 'scratchCategoryItemBubbleLTR'});
+    'class': (toolbox.RTL) ? 'scratchCategoryItemBubbleRTL' :
+    'scratchCategoryItemBubbleLTR'});
   this.bubble_.style.backgroundColor = this.colour_;
   this.bubble_.style.borderColor = this.secondaryColour_;
   this.item_.appendChild(this.bubble_);
@@ -423,6 +463,10 @@ Blockly.Toolbox.Category.prototype.createDom = function() {
     toolbox.setSelectedItemFactory(this));
 };
 
+/**
+ * Set the selected state of this category.
+ * @param {boolean} selected Whether this category is selected.
+ */
 Blockly.Toolbox.Category.prototype.setSelected = function(selected) {
   if (selected) {
     this.item_.className = 'scratchCategoryMenuItem categorySelected';
@@ -431,6 +475,11 @@ Blockly.Toolbox.Category.prototype.setSelected = function(selected) {
   }
 };
 
+/**
+ * Set the contents of this category from DOM.
+ * @param {Node} domTree DOM tree of blocks.
+ * @constructor
+ */
 Blockly.Toolbox.Category.prototype.parseContents_ = function(domTree) {
   for (var i = 0, child; child = domTree.childNodes[i]; i++) {
     if (!child.tagName) {
@@ -450,6 +499,11 @@ Blockly.Toolbox.Category.prototype.parseContents_ = function(domTree) {
   }
 };
 
+/**
+ * Get the contents of this category.
+ * @return {!Array|string} xmlList List of blocks to show, or a string with the
+ *     name of a custom category.
+ */
 Blockly.Toolbox.Category.prototype.getContents = function() {
   return this.custom_ ? this.custom_ : this.contents_;
 };
