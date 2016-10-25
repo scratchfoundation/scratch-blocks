@@ -367,7 +367,6 @@ Blockly.Toolbox.CategoryMenu.prototype.populate = function(domTree) {
     return;
   }
 
-  // TODO: Clean up/make sure things are clean.
   var categories = [];
   // Find actual categories from the DOM tree.
   for (var i = 0, child; child = domTree.childNodes[i]; i++) {
