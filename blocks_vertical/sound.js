@@ -41,13 +41,16 @@ Blockly.Blocks['sound_sounds_option'] = {
             "type": "field_dropdown",
             "name": "SOUND_MENU",
             "options": [
-              ['meow', '0'],
-              ['boing', '1'],
-              ['cave', '2'],
-              ['drip drop', '3'],
-              ['drum machine', '4'],
-              ['eggs', '5'],
-              ['zoop', '6']
+              ['1', '0'],
+              ['2', '1'],
+              ['3', '2'],
+              ['4', '3'],
+              ['5', '4'],
+              ['6', '5'],
+              ['7', '6'],
+              ['8', '7'],
+              ['9', '8'],
+              ['10', '9']
             ]
           }
         ],
