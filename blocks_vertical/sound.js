@@ -460,10 +460,12 @@ Blockly.Blocks['sound_effects_menu'] = {
             "type": "field_dropdown",
             "name": "EFFECT",
             "options": [
-              ['echo', 'ECHO'],
+              ['pitch', 'PITCH'],
               ['pan left/right', 'PAN'],
+              ['echo', 'ECHO'],
               ['reverb', 'REVERB'],
-              ['pitch', 'PITCH']
+              ['distortion', 'DISTORTION'],
+              ['robotic', 'ROBOTIC']
             ]
           }
         ],
