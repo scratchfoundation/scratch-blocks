@@ -318,6 +318,34 @@ Blockly.Blocks['sound_playnoteforbeats'] = {
   }
 };
 
+Blockly.Blocks['sound_playthereminforbeats'] = {
+  /**
+   * Block to play a certain note for certain beats
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.jsonInit({
+      "message0": "play spooky note %1 for %2 beats",
+      "args0": [
+        {
+          "type": "input_value",
+          "name": "NOTE"
+        },
+        {
+          "type": "input_value",
+          "name": "BEATS"
+        }
+      ],
+      "previousStatement": null,
+      "nextStatement": null,
+      "category": Blockly.Categories.sound,
+      "colour": Blockly.Colours.sounds.primary,
+      "colourSecondary": Blockly.Colours.sounds.secondary,
+      "colourTertiary": Blockly.Colours.sounds.tertiary
+    });
+  }
+};
+
 Blockly.Blocks['sound_scales_menu'] = {
   /**
    * Sound scales drop-down menu.
