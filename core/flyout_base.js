@@ -792,7 +792,6 @@ Blockly.Flyout.prototype.createBlockFunc_ = function(originBlock) {
  * @private
  */
 Blockly.Flyout.terminateDrag_ = function() {
-  this.dragMode_ = Blockly.DRAG_NONE;
   if (Blockly.Flyout.startFlyout_) {
     // User was dragging the flyout background, and has stopped.
     if (Blockly.Flyout.startFlyout_.dragMode_ == Blockly.DRAG_FREE) {
