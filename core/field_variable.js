@@ -152,7 +152,6 @@ Blockly.FieldVariable.dropdownCreate = function() {
  * @param {goog.ui.MenuItem} menuItem The MenuItem selected within menu.
  */
 Blockly.FieldVariable.prototype.onItemSelected = function(menu, menuItem) {
-  var menuLength = menu.getChildCount();
   var itemText = menuItem.getValue();
   if (this.sourceBlock_) {
     var workspace = this.sourceBlock_.workspace;

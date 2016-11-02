@@ -260,7 +260,7 @@ Blockly.FieldDropdown.prototype.onItemSelected = function(menu, menuItem) {
   if (value !== null) {
     this.setValue(value);
   }
-}
+};
 
 /**
  * Factor out common words in statically defined options.

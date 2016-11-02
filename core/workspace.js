@@ -314,6 +314,14 @@ Blockly.Workspace.prototype.getVariableUses = function(name) {
  */
 Blockly.Workspace.prototype.deleteVariable = function(name) {
   var workspace = this;
+  function doDeletion(variableUses, index) {
+    Blockly.Events.setGroup(true);
+    for (var i = 0; i < variableUses.length; i++) {
+      variableUses[i].dispose(true, false);
+    }
+    Blockly.Events.setGroup(false);
+    workspace.variableList.splice(index, 1);
+  }
   var variableIndex = this.variableIndexOf(name);
   if (variableIndex != -1) {
     // Check whether this variable is a function parameter before deleting.
@@ -329,15 +337,7 @@ Blockly.Workspace.prototype.deleteVariable = function(name) {
         return;
       }
     }
-    
-    function doDeletion() {
-      Blockly.Events.setGroup(true);
-      for (var i = 0; i < uses.length; i++) {
-        uses[i].dispose(true, false);
-      }
-      Blockly.Events.setGroup(false);
-      workspace.variableList.splice(variableIndex, 1);
-    }
+
     if (uses.length > 1) {
       // Confirm before deleting multiple blocks.
       Blockly.confirm(
@@ -345,7 +345,7 @@ Blockly.Workspace.prototype.deleteVariable = function(name) {
           replace('%2', name),
           function(ok) {
             if (ok) {
-              doDeletion();
+              doDeletion(uses, variableIndex);
             }
           });
     } else {

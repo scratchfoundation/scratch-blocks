@@ -329,9 +329,9 @@ Blockly.Variables.generateUniqueName = function(workspace) {
  * Create a new variable on the given workspace.
  * @param {!Blockly.Workspace} workspace The workspace on which to create the
  *     variable.
- * @param {function(null|undefined|string)=} opt_callback A callback. It will
- *     return an acceptable new variable name, or null if change is to be
- *     aborted (cancel button), or undefined if an existing variable was chosen.
+ * @param {function(?string)=} opt_callback A callback. It
+ *     will be passed a new variable name, or null if the change is to be
+ *     aborted (cancel button).
  */
 Blockly.Variables.createVariable = function(workspace, opt_callback) {
   var promptAndCheckWithAlert = function(defaultName) {
@@ -365,7 +365,7 @@ Blockly.Variables.createVariable = function(workspace, opt_callback) {
  * Prompt the user for a new variable name.
  * @param {string} promptText The string of the prompt.
  * @param {string} defaultText The default value to show in the prompt's field.
- * @param {function(?string)} callback A callback. It will return the new
+ * @param {function(?string)} callback A callback. It will be passed the new
  *     variable name, or null if the user picked something illegal.
  */
 Blockly.Variables.promptName = function(promptText, defaultText, callback) {

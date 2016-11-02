@@ -66,7 +66,7 @@ Blockly.ContextMenu.show = function(e, options, rtl) {
     if (option.enabled) {
       goog.events.listen(menuItem, goog.ui.Component.EventType.ACTION,
                          option.callback);
-      menuItem.handleContextMenu = function(e) {
+      menuItem.handleContextMenu = function(/* e */) {
         // Right-clicking on menu option should count as a click.
         goog.events.dispatchEvent(this, goog.ui.Component.EventType.ACTION);
       };
