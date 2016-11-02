@@ -98,8 +98,10 @@ Blockly.createDom_ = function(container, options) {
   // Each filter/pattern needs a unique ID for the case of multiple Blockly
   // instances on a page.  Browser behaviour becomes undefined otherwise.
   // https://neil.fraser.name/news/2015/11/01/
+  // TODO (tmickel): Look into whether block highlighting still works.
+  // Reference commit:
+  // https://github.com/google/blockly/commit/144be4d49f36fdba260a26edbd170ae75bbc37a6
   var rnd = String(Math.random()).substring(2);
-<<<<<<< HEAD
 
   // Using a dilate distorts the block shape.
   // Instead use a gaussian blur, and then set all alpha to 1 with a transfer.
@@ -127,24 +129,6 @@ Blockly.createDom_ = function(container, options) {
   var replacementGlowFilter = Blockly.createSvgElement('filter',
       {'id': 'blocklyReplacementGlowFilter',
         'height': '160%', 'width': '180%', y: '-30%', x: '-40%'}, defs);
-=======
-  /*
-    <filter id="blocklyEmbossFilter837493">
-      <feGaussianBlur in="SourceAlpha" stdDeviation="1" result="blur" />
-      <feSpecularLighting in="blur" surfaceScale="1" specularConstant="0.5"
-                          specularExponent="10" lighting-color="white"
-                          result="specOut">
-        <fePointLight x="-5000" y="-10000" z="20000" />
-      </feSpecularLighting>
-      <feComposite in="specOut" in2="SourceAlpha" operator="in"
-                   result="specOut" />
-      <feComposite in="SourceGraphic" in2="specOut" operator="arithmetic"
-                   k1="0" k2="1" k3="1" k4="0" />
-    </filter>
-  */
-  var embossFilter = Blockly.createSvgElement('filter',
-      {'id': 'blocklyEmbossFilter' + rnd}, defs);
->>>>>>> dfbf787655adf6c89ead1a4faa72d1de09d0cf48
   Blockly.createSvgElement('feGaussianBlur',
       {'in': 'SourceGraphic',
       'stdDeviation': Blockly.REPLACEMENT_GLOW_RADIUS}, replacementGlowFilter);
