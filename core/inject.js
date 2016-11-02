@@ -63,7 +63,7 @@ Blockly.inject = function(container, opt_options) {
 
   Blockly.init_(workspace);
   workspace.markFocused();
-  Blockly.bindEvent_(svg, 'focus', workspace, workspace.markFocused);
+  Blockly.bindEventWithChecks_(svg, 'focus', workspace, workspace.markFocused);
   Blockly.svgResize(workspace);
   return workspace;
 };
@@ -95,6 +95,12 @@ Blockly.createDom_ = function(container, options) {
     'class': 'blocklySvg'
   }, container);
   var defs = Blockly.createSvgElement('defs', {}, svg);
+  // Each filter/pattern needs a unique ID for the case of multiple Blockly
+  // instances on a page.  Browser behaviour becomes undefined otherwise.
+  // https://neil.fraser.name/news/2015/11/01/
+  // TODO (tmickel): Look into whether block highlighting still works.
+  // Reference commit:
+  // https://github.com/google/blockly/commit/144be4d49f36fdba260a26edbd170ae75bbc37a6
   var rnd = String(Math.random()).substring(2);
 
   // Using a dilate distorts the block shape.
@@ -251,18 +257,19 @@ Blockly.init_ = function(mainWorkspace) {
   var svg = mainWorkspace.getParentSvg();
 
   // Supress the browser's context menu.
-  Blockly.bindEvent_(svg, 'contextmenu', null,
+  Blockly.bindEventWithChecks_(svg, 'contextmenu', null,
       function(e) {
         if (!Blockly.isTargetInput_(e)) {
           e.preventDefault();
         }
       });
 
-  var workspaceResizeHandler = Blockly.bindEvent_(window, 'resize', null,
-       function() {
-         Blockly.hideChaff(true);
-         Blockly.svgResize(mainWorkspace);
-       });
+  var workspaceResizeHandler = Blockly.bindEventWithChecks_(window, 'resize',
+      null,
+      function() {
+        Blockly.hideChaff(true);
+        Blockly.svgResize(mainWorkspace);
+      });
   mainWorkspace.setResizeHandlerWrapper(workspaceResizeHandler);
 
   Blockly.inject.bindDocumentEvents_();
@@ -315,19 +322,21 @@ Blockly.init_ = function(mainWorkspace) {
  */
 Blockly.inject.bindDocumentEvents_ = function() {
   if (!Blockly.documentEventsBound_) {
-    Blockly.bindEvent_(document, 'keydown', null, Blockly.onKeyDown_);
-    Blockly.bindEvent_(document, 'touchend', null, Blockly.longStop_);
-    Blockly.bindEvent_(document, 'touchcancel', null, Blockly.longStop_);
+    Blockly.bindEventWithChecks_(document, 'keydown', null, Blockly.onKeyDown_);
+    Blockly.bindEventWithChecks_(document, 'touchend', null, Blockly.longStop_);
+    Blockly.bindEventWithChecks_(document, 'touchcancel', null,
+        Blockly.longStop_);
     // Don't use bindEvent_ for document's mouseup since that would create a
     // corresponding touch handler that would squeltch the ability to interact
     // with non-Blockly elements.
     document.addEventListener('mouseup', Blockly.onMouseUp_, false);
     // Some iPad versions don't fire resize after portrait to landscape change.
     if (goog.userAgent.IPAD) {
-      Blockly.bindEvent_(window, 'orientationchange', document, function() {
-        // TODO(#397): Fix for multiple blockly workspaces.
-        Blockly.svgResize(Blockly.getMainWorkspace());
-      });
+      Blockly.bindEventWithChecks_(window, 'orientationchange', document,
+          function() {
+            // TODO(#397): Fix for multiple blockly workspaces.
+            Blockly.svgResize(Blockly.getMainWorkspace());
+          });
     }
   }
   Blockly.documentEventsBound_ = true;
@@ -353,11 +362,16 @@ Blockly.inject.loadSounds_ = function(pathToMedia, workspace) {
     }
     workspace.preloadAudio_();
   };
+
+  // opt_noCaptureIdentifier is true because this is an action to take on a
+  // click, not a drag.
   // Android ignores any sound not loaded as a result of a user action.
   soundBinds.push(
-      Blockly.bindEvent_(document, 'mousemove', null, unbindSounds, true));
+      Blockly.bindEventWithChecks_(document, 'mousemove', null, unbindSounds,
+          /* opt_noCaptureIdentifier */ true));
   soundBinds.push(
-      Blockly.bindEvent_(document, 'touchstart', null, unbindSounds, true));
+      Blockly.bindEventWithChecks_(document, 'touchstart', null, unbindSounds,
+          /* opt_noCaptureIdentifier */ true));
 };
 
 /**

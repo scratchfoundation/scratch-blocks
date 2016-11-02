@@ -24,7 +24,10 @@
  */
 'use strict';
 
-// Top level object for Blockly.
+/**
+ * The top level namespace used to access the Blockly library.
+ * @namespace Blockly
+ */
 goog.provide('Blockly');
 
 goog.require('Blockly.BlockSvg.render');
@@ -151,6 +154,28 @@ Blockly.clipboardSource_ = null;
  * @private
  */
 Blockly.dragMode_ = Blockly.DRAG_NONE;
+
+/**
+ * Map from function names to callbacks, for deciding what to do when a button
+ * is clicked.
+ * @type {!Object<string, function(!Blockly.FlyoutButton)}
+ */
+Blockly.flyoutButtonCallbacks_ = {};
+
+/**
+ * Register a callback function associated with a given key, for clicks on
+ * buttons and labels in the flyout.
+ * For instance, a button specified by the XML
+ * <button text="create variable" callbackKey="CREATE_VARIABLE"></button>
+ * should be matched by a call to
+ * registerButtonCallback("CREATE_VARIABLE", yourCallbackFunction).
+ * @param {string} key The name to use to look up this function.
+ * @param {function(!Blockly.FlyoutButton)} func The function to call when the
+ *     given button is clicked.
+ */
+Blockly.registerButtonCallback = function(key, func) {
+  Blockly.flyoutButtonCallbacks_[key] = func;
+};
 
 /**
  * Convert a hue (HSV model) into an RGB hex triplet.
@@ -349,6 +374,42 @@ Blockly.hideChaff = function(opt_allowToolbox) {
  */
 Blockly.getMainWorkspace = function() {
   return Blockly.mainWorkspace;
+};
+
+/**
+ * Wrapper to window.alert() that app developers may override to
+ * provide alternatives to the modal browser window.
+ * @param {string} message The message to display to the user.
+ * @param {function()=} opt_callback The callback when the alert is dismissed.
+ */
+Blockly.alert = function(message, opt_callback) {
+  window.alert(message);
+  if (opt_callback) {
+    opt_callback();
+  }
+};
+
+/**
+ * Wrapper to window.confirm() that app developers may override to
+ * provide alternatives to the modal browser window.
+ * @param {string} message The message to display to the user.
+ * @param {!function(boolean)} callback The callback for handling user response.
+ */
+Blockly.confirm = function(message, callback) {
+  callback(window.confirm(message));
+};
+
+/**
+ * Wrapper to window.prompt() that app developers may override to provide
+ * alternatives to the modal browser window. Built-in browser prompts are
+ * often used for better text input experience on mobile device. We strongly
+ * recommend testing mobile when overriding this.
+ * @param {string} message The message to display to the user.
+ * @param {string} defaultValue The value to initialize the prompt with.
+ * @param {!function(string)} callback The callback for handling user reponse.
+ */
+Blockly.prompt = function(message, defaultValue, callback) {
+  callback(window.prompt(message, defaultValue));
 };
 
 // IE9 does not have a console.  Create a stub to stop errors.

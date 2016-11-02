@@ -114,20 +114,23 @@ Blockly.Flyout = function(workspaceOptions) {
 
   /**
    * y coordinate of mousedown - used to calculate scroll distances.
-   * @private {number}
+   * @type {number}
+   * @private
    */
   this.startDragMouseY_ = 0;
 
   /**
    * x coordinate of mousedown - used to calculate scroll distances.
-   * @private {number}
+   * @type {number}
+   * @private
    */
   this.startDragMouseX_ = 0;
 
   /**
    * The toolbox that this flyout belongs to, or none if tihs is a simple
    * workspace.
-   * @private {Blockly.Toolbox}
+   * @type {Blockly.Toolbox}
+   * @private
    */
   this.parentToolbox_ = null;
 };
@@ -135,34 +138,39 @@ Blockly.Flyout = function(workspaceOptions) {
 /**
  * When a flyout drag is in progress, this is a reference to the flyout being
  * dragged. This is used by Flyout.terminateDrag_ to reset dragMode_.
- * @private {Blockly.Flyout}
+ * @type {Blockly.Flyout}
+ * @private
  */
 Blockly.Flyout.startFlyout_ = null;
 
 /**
  * Event that started a drag. Used to determine the drag distance/direction and
  * also passed to BlockSvg.onMouseDown_() after creating a new block.
- * @private {Event}
+ * @type {Event}
+ * @private
  */
 Blockly.Flyout.startDownEvent_ = null;
 
 /**
  * Flyout block where the drag/click was initiated. Used to fire click events or
  * create a new block.
- * @private {Event}
+ * @type {Blockly.Block}
+ * @private
  */
 Blockly.Flyout.startBlock_ = null;
 
 /**
  * Wrapper function called when a mouseup occurs during a background or block
  * drag operation.
- * @private {Array.<!Array>}
+ * @type {function}
+ * private
  */
 Blockly.Flyout.onMouseUpWrapper_ = null;
 
 /**
  * Wrapper function called when a mousemove occurs during a background drag.
- * @private {Array.<!Array>}
+ * @type {function}
+ * @private
  */
 Blockly.Flyout.onMouseMoveWrapper_ = null;
 
@@ -462,10 +470,13 @@ Blockly.Flyout.prototype.show = function(xmlList) {
         } else {
           gaps.push(default_gap);
         }
-      } else if (tagName == 'BUTTON') {
-        var label = xml.getAttribute('text');
+      } else if (tagName == 'BUTTON' || tagName == 'LABEL') {
+        // Labels behave the same as buttons, but are styled differently.
+        var isLabel = tagName == 'LABEL';
+        var text = xml.getAttribute('text');
+        var callbackKey = xml.getAttribute('callbackKey');
         var curButton = new Blockly.FlyoutButton(this.workspace_,
-            this.targetWorkspace_, label);
+            this.targetWorkspace_, text, callbackKey, isLabel);
         contents.push({type: 'button', button: curButton});
         gaps.push(default_gap);
       }
@@ -529,14 +540,14 @@ Blockly.Flyout.prototype.clearOldBlocks_ = function() {
  */
 Blockly.Flyout.prototype.addBlockListeners_ = function(root, block, rect) {
   if (this.autoClose) {
-    this.listeners_.push(Blockly.bindEvent_(root, 'mousedown', null,
+    this.listeners_.push(Blockly.bindEventWithChecks_(root, 'mousedown', null,
         this.createBlockFunc_(block)));
-    this.listeners_.push(Blockly.bindEvent_(rect, 'mousedown', null,
+    this.listeners_.push(Blockly.bindEventWithChecks_(rect, 'mousedown', null,
         this.createBlockFunc_(block)));
   } else {
-    this.listeners_.push(Blockly.bindEvent_(root, 'mousedown', null,
+    this.listeners_.push(Blockly.bindEventWithChecks_(root, 'mousedown', null,
         this.blockMouseDown_(block)));
-    this.listeners_.push(Blockly.bindEvent_(rect, 'mousedown', null,
+    this.listeners_.push(Blockly.bindEventWithChecks_(rect, 'mousedown', null,
         this.blockMouseDown_(block)));
   }
   this.listeners_.push(Blockly.bindEvent_(root, 'mouseover', block,
@@ -783,6 +794,8 @@ Blockly.Flyout.prototype.createBlockFunc_ = function(originBlock) {
     block.onMouseDown_(e);
     Blockly.dragMode_ = Blockly.DRAG_FREE;
     block.setDragging_(true);
+    // Disable workspace resizing.  Reenable at the end of the drag.
+    flyout.targetWorkspace_.setResizesEnabled(false);
     block.moveToDragSurface_();
   };
 };

@@ -89,7 +89,7 @@ Blockly.FieldCheckbox.prototype.getValue = function() {
  * @param {string} strBool New state.
  */
 Blockly.FieldCheckbox.prototype.setValue = function(strBool) {
-  var newState = (strBool == 'TRUE');
+  var newState = (strBool.toUpperCase() == 'TRUE');
   if (this.state_ !== newState) {
     if (this.sourceBlock_ && Blockly.Events.isEnabled()) {
       Blockly.Events.fire(new Blockly.Events.Change(
