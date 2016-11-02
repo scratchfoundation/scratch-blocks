@@ -104,14 +104,17 @@ Blockly.Toolbox.prototype.init = function() {
   var workspace = this.workspace_;
   var svg = this.workspace_.getParentSvg();
 
-  // Create an HTML container for the Toolbox menu.
+  /**
+   * HTML container for the Toolbox menu.
+   * @type {Element}
+   */
   this.HtmlDiv =
       goog.dom.createDom(goog.dom.TagName.DIV, 'blocklyToolboxDiv');
   this.HtmlDiv.setAttribute('dir', workspace.RTL ? 'RTL' : 'LTR');
   svg.parentNode.insertBefore(this.HtmlDiv, svg);
 
   // Clicking on toolbox closes popups.
-  Blockly.bindEvent_(this.HtmlDiv, 'mousedown', this,
+  Blockly.bindEventWithChecks_(this.HtmlDiv, 'mousedown', this,
       function(e) {
         Blockly.DropDownDiv.hide();
         if (Blockly.isRightButton(e) || e.target == this.HtmlDiv) {
@@ -153,6 +156,7 @@ Blockly.Toolbox.prototype.createFlyout_ = function() {
     disabledPatternId: workspace.options.disabledPatternId,
     parentWorkspace: workspace,
     RTL: workspace.RTL,
+    oneBasedIndex: workspace.options.oneBasedIndex,
     horizontalLayout: workspace.horizontalLayout,
     toolboxPosition: workspace.options.toolboxPosition
   };
@@ -488,6 +492,7 @@ Blockly.Toolbox.Category.prototype.parseContents_ = function(domTree) {
     switch (child.tagName.toUpperCase()) {
       case 'BLOCK':
       case 'SHADOW':
+      case 'LABEL':
       case 'BUTTON':
       case 'TEXT':
         this.contents_.push(child);

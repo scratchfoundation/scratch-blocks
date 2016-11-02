@@ -63,7 +63,7 @@ Blockly.inject = function(container, opt_options) {
 
   Blockly.init_(workspace);
   workspace.markFocused();
-  Blockly.bindEvent_(svg, 'focus', workspace, workspace.markFocused);
+  Blockly.bindEventWithChecks_(svg, 'focus', workspace, workspace.markFocused);
   Blockly.svgResize(workspace);
   return workspace;
 };
@@ -95,7 +95,11 @@ Blockly.createDom_ = function(container, options) {
     'class': 'blocklySvg'
   }, container);
   var defs = Blockly.createSvgElement('defs', {}, svg);
+  // Each filter/pattern needs a unique ID for the case of multiple Blockly
+  // instances on a page.  Browser behaviour becomes undefined otherwise.
+  // https://neil.fraser.name/news/2015/11/01/
   var rnd = String(Math.random()).substring(2);
+<<<<<<< HEAD
 
   // Using a dilate distorts the block shape.
   // Instead use a gaussian blur, and then set all alpha to 1 with a transfer.
@@ -123,6 +127,24 @@ Blockly.createDom_ = function(container, options) {
   var replacementGlowFilter = Blockly.createSvgElement('filter',
       {'id': 'blocklyReplacementGlowFilter',
         'height': '160%', 'width': '180%', y: '-30%', x: '-40%'}, defs);
+=======
+  /*
+    <filter id="blocklyEmbossFilter837493">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="1" result="blur" />
+      <feSpecularLighting in="blur" surfaceScale="1" specularConstant="0.5"
+                          specularExponent="10" lighting-color="white"
+                          result="specOut">
+        <fePointLight x="-5000" y="-10000" z="20000" />
+      </feSpecularLighting>
+      <feComposite in="specOut" in2="SourceAlpha" operator="in"
+                   result="specOut" />
+      <feComposite in="SourceGraphic" in2="specOut" operator="arithmetic"
+                   k1="0" k2="1" k3="1" k4="0" />
+    </filter>
+  */
+  var embossFilter = Blockly.createSvgElement('filter',
+      {'id': 'blocklyEmbossFilter' + rnd}, defs);
+>>>>>>> dfbf787655adf6c89ead1a4faa72d1de09d0cf48
   Blockly.createSvgElement('feGaussianBlur',
       {'in': 'SourceGraphic',
       'stdDeviation': Blockly.REPLACEMENT_GLOW_RADIUS}, replacementGlowFilter);
@@ -251,18 +273,19 @@ Blockly.init_ = function(mainWorkspace) {
   var svg = mainWorkspace.getParentSvg();
 
   // Supress the browser's context menu.
-  Blockly.bindEvent_(svg, 'contextmenu', null,
+  Blockly.bindEventWithChecks_(svg, 'contextmenu', null,
       function(e) {
         if (!Blockly.isTargetInput_(e)) {
           e.preventDefault();
         }
       });
 
-  var workspaceResizeHandler = Blockly.bindEvent_(window, 'resize', null,
-       function() {
-         Blockly.hideChaff(true);
-         Blockly.svgResize(mainWorkspace);
-       });
+  var workspaceResizeHandler = Blockly.bindEventWithChecks_(window, 'resize',
+      null,
+      function() {
+        Blockly.hideChaff(true);
+        Blockly.svgResize(mainWorkspace);
+      });
   mainWorkspace.setResizeHandlerWrapper(workspaceResizeHandler);
 
   Blockly.inject.bindDocumentEvents_();
@@ -315,19 +338,21 @@ Blockly.init_ = function(mainWorkspace) {
  */
 Blockly.inject.bindDocumentEvents_ = function() {
   if (!Blockly.documentEventsBound_) {
-    Blockly.bindEvent_(document, 'keydown', null, Blockly.onKeyDown_);
-    Blockly.bindEvent_(document, 'touchend', null, Blockly.longStop_);
-    Blockly.bindEvent_(document, 'touchcancel', null, Blockly.longStop_);
+    Blockly.bindEventWithChecks_(document, 'keydown', null, Blockly.onKeyDown_);
+    Blockly.bindEventWithChecks_(document, 'touchend', null, Blockly.longStop_);
+    Blockly.bindEventWithChecks_(document, 'touchcancel', null,
+        Blockly.longStop_);
     // Don't use bindEvent_ for document's mouseup since that would create a
     // corresponding touch handler that would squeltch the ability to interact
     // with non-Blockly elements.
     document.addEventListener('mouseup', Blockly.onMouseUp_, false);
     // Some iPad versions don't fire resize after portrait to landscape change.
     if (goog.userAgent.IPAD) {
-      Blockly.bindEvent_(window, 'orientationchange', document, function() {
-        // TODO(#397): Fix for multiple blockly workspaces.
-        Blockly.svgResize(Blockly.getMainWorkspace());
-      });
+      Blockly.bindEventWithChecks_(window, 'orientationchange', document,
+          function() {
+            // TODO(#397): Fix for multiple blockly workspaces.
+            Blockly.svgResize(Blockly.getMainWorkspace());
+          });
     }
   }
   Blockly.documentEventsBound_ = true;
@@ -353,11 +378,16 @@ Blockly.inject.loadSounds_ = function(pathToMedia, workspace) {
     }
     workspace.preloadAudio_();
   };
+
+  // opt_noCaptureIdentifier is true because this is an action to take on a
+  // click, not a drag.
   // Android ignores any sound not loaded as a result of a user action.
   soundBinds.push(
-      Blockly.bindEvent_(document, 'mousemove', null, unbindSounds, true));
+      Blockly.bindEventWithChecks_(document, 'mousemove', null, unbindSounds,
+          /* opt_noCaptureIdentifier */ true));
   soundBinds.push(
-      Blockly.bindEvent_(document, 'touchstart', null, unbindSounds, true));
+      Blockly.bindEventWithChecks_(document, 'touchstart', null, unbindSounds,
+          /* opt_noCaptureIdentifier */ true));
 };
 
 /**
