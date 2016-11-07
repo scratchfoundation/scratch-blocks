@@ -650,10 +650,13 @@ Blockly.Flyout.prototype.onMouseUp_ = function(/*e*/) {
   if (!this.workspace_.isDragging()) {
     // This was a click, not a drag.  End the gesture.
     Blockly.Touch.clearTouchIdentifier();
+    // A field is being edited if either the WidgetDiv or DropDownDiv is currently open.
+    // If a field is being edited, don't fire any click events.
+    var fieldEditing = Blockly.WidgetDiv.isVisible() || Blockly.DropDownDiv.isVisible();
     if (this.autoClose) {
       this.createBlockFunc_(Blockly.Flyout.startBlock_)(
           Blockly.Flyout.startDownEvent_);
-    } else if (!Blockly.WidgetDiv.isVisible()) {
+    } else if (!fieldEditing) {
       Blockly.Events.fire(
           new Blockly.Events.Ui(Blockly.Flyout.startBlock_, 'click',
                                 undefined, undefined));
