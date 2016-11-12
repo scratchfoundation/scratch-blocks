@@ -82,7 +82,7 @@ Blockly.FieldNumber.DROPDOWN_Y_PADDING = 8;
  */
  // Calculator order
 Blockly.FieldNumber.NUMPAD_BUTTONS =
-    ['7', '8', '9', '4', '5', '6', '1', '2', '3', '.', '0'];
+    ['7', '8', '9', '4', '5', '6', '1', '2', '3', '.', '0', '-', ' '];
 
 /**
  * Src for the delete icon to be shown on the num-pad.
@@ -235,6 +235,12 @@ Blockly.FieldNumber.prototype.addButtons_ = function(contentDiv) {
         Blockly.FieldNumber.numPadButtonTouch);
     if (buttonText == '.' && !this.decimalAllowed_) {
       // Don't show the decimal point for inputs that must be round numbers
+      button.setAttribute('style', 'visibility: hidden');
+    } else if (buttonText == '-' && !this.negativeAllowed_) {
+      continue;
+    } else if (buttonText == ' ' && !this.negativeAllowed_) {
+      continue;
+    } else if (buttonText == ' ' && this.negativeAllowed_) {
       button.setAttribute('style', 'visibility: hidden');
     }
     contentDiv.appendChild(button);
