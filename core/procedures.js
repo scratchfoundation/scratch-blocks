@@ -177,7 +177,7 @@ Blockly.Procedures.flyoutCategory = function(workspace) {
     xmlList[xmlList.length - 1].setAttribute('gap', 24);
   }
 
-  function populateProcedures(procedureList, templateName) {
+  function populateProcedures(procedureList, templateName, form) {
     for (var i = 0; i < procedureList.length; i++) {
       var procCode = procedureList[i][0];
       // <block type="procedures_callnoreturn" gap="16">
@@ -190,83 +190,15 @@ Blockly.Procedures.flyoutCategory = function(workspace) {
       block.setAttribute('gap', 16);
       var mutation = goog.dom.createDom('mutation');
       mutation.setAttribute('proccode', procCode);
+      mutation.setAttribute('type', form);
       block.appendChild(mutation);
       xmlList.push(block);
     }
   }
 
   var tuple = Blockly.Procedures.allProcedures(workspace);
-  populateProcedures(tuple[0], 'procedures_callnoreturn');
-  populateProcedures(tuple[1], 'procedures_callreturn');
+  populateProcedures(tuple[0], 'procedures_callnoreturn', null);
+  populateProcedures(tuple[1], 'procedures_callreturn', 0);
+  populateProcedures(tuple[2], 'procedures_callreturn', 1);
   return xmlList;
-};
-
-/**
- * Find all the callers of a named procedure.
- * @param {string} name Name of procedure.
- * @param {!Blockly.Workspace} workspace The workspace to find callers in.
- * @return {!Array.<!Blockly.Block>} Array of caller blocks.
- */
-Blockly.Procedures.getCallers = function(name, workspace) {
-  var callers = [];
-  var blocks = workspace.getAllBlocks();
-  // Iterate through every block and check the name.
-  for (var i = 0; i < blocks.length; i++) {
-    if (blocks[i].getProcedureCall) {
-      var procName = blocks[i].getProcedureCall();
-      // Procedure name may be null if the block is only half-built.
-      if (procName && Blockly.Names.equals(procName, name)) {
-        callers.push(blocks[i]);
-      }
-    }
-  }
-  return callers;
-};
-
-/**
- * When a procedure definition changes its parameters, find and edit all its
- * callers.
- * @param {!Blockly.Block} defBlock Procedure definition block.
- */
-Blockly.Procedures.mutateCallers = function(defBlock) {
-  var oldRecordUndo = Blockly.Events.recordUndo;
-  var name = defBlock.getProcedureDef()[0];
-  var xmlElement = defBlock.mutationToDom(true);
-  var callers = Blockly.Procedures.getCallers(name, defBlock.workspace);
-  for (var i = 0, caller; caller = callers[i]; i++) {
-    var oldMutationDom = caller.mutationToDom();
-    var oldMutation = oldMutationDom && Blockly.Xml.domToText(oldMutationDom);
-    caller.domToMutation(xmlElement);
-    var newMutationDom = caller.mutationToDom();
-    var newMutation = newMutationDom && Blockly.Xml.domToText(newMutationDom);
-    if (oldMutation != newMutation) {
-      // Fire a mutation on every caller block.  But don't record this as an
-      // undo action since it is deterministically tied to the procedure's
-      // definition mutation.
-      Blockly.Events.recordUndo = false;
-      Blockly.Events.fire(new Blockly.Events.Change(
-          caller, 'mutation', null, oldMutation, newMutation));
-      Blockly.Events.recordUndo = oldRecordUndo;
-    }
-  }
-};
-
-/**
- * Find the definition block for the named procedure.
- * @param {string} name Name of procedure.
- * @param {!Blockly.Workspace} workspace The workspace to search.
- * @return {Blockly.Block} The procedure definition block, or null not found.
- */
-Blockly.Procedures.getDefinition = function(name, workspace) {
-  // Assume that a procedure definition is a top block.
-  var blocks = workspace.getTopBlocks(false);
-  for (var i = 0; i < blocks.length; i++) {
-    if (blocks[i].getProcedureDef) {
-      var tuple = blocks[i].getProcedureDef();
-      if (tuple && Blockly.Names.equals(tuple[0], name)) {
-        return blocks[i];
-      }
-    }
-  }
-  return null;
 };
