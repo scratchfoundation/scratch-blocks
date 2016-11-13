@@ -48,22 +48,27 @@ Blockly.Procedures.NAME_TYPE = 'PROCEDURE';
 Blockly.Procedures.allProcedures = function(root) {
   var blocks = root.getAllBlocks();
   var proceduresReturn = [];
+  var proceduresReturnBool = [];
   var proceduresNoReturn = [];
   for (var i = 0; i < blocks.length; i++) {
-    if (blocks[i].getProcedureDef) {
-      var tuple = blocks[i].getProcedureDef();
-      if (tuple) {
-        if (tuple[2]) {
+    if (blocks[i].type) {
+      var type = blocks[i].type;
+      var form = blocks[i]._form;
+      if (type) {
+        if (type == "procedures_defnoreturn" && form == "report") {
           proceduresReturn.push(tuple);
-        } else {
+        } else if (type == "procedures_defnoreturn" && form == "block") {
           proceduresNoReturn.push(tuple);
+        } else if (type == "procedures_defnoreturn" && form == "bool") {
+          proceduresReturnBool.push(tuple);
         }
       }
     }
   }
   proceduresNoReturn.sort(Blockly.Procedures.procTupleComparator_);
   proceduresReturn.sort(Blockly.Procedures.procTupleComparator_);
-  return [proceduresNoReturn, proceduresReturn];
+  proceduresReturnBool.sort(Blockly.Procedures.procTupleComparator_);
+  return [proceduresNoReturn, proceduresReturn, proceduresReturnBool];
 };
 
 /**
@@ -118,9 +123,9 @@ Blockly.Procedures.isLegalName_ = function(name, workspace, opt_exclude) {
     if (blocks[i] == opt_exclude) {
       continue;
     }
-    if (blocks[i].getProcedureDef) {
-      var procName = blocks[i].getProcedureDef();
-      if (Blockly.Names.equals(procName[0], name)) {
+    if (blocks[i]._procCode) {
+      var procCode = blocks[i]._procCode;
+      if (Blockly.Names.equals(procCode, name)) {
         return false;
       }
     }
@@ -160,20 +165,6 @@ Blockly.Procedures.rename = function(name) {
  */
 Blockly.Procedures.flyoutCategory = function(workspace) {
   var xmlList = [];
-  if (Blockly.Blocks['procedures_defnoreturn']) {
-    // <block type="procedures_defnoreturn" gap="16"></block>
-    var block = goog.dom.createDom('block');
-    block.setAttribute('type', 'procedures_defnoreturn');
-    block.setAttribute('gap', 16);
-    xmlList.push(block);
-  }
-  if (Blockly.Blocks['procedures_defreturn']) {
-    // <block type="procedures_defreturn" gap="16"></block>
-    var block = goog.dom.createDom('block');
-    block.setAttribute('type', 'procedures_defreturn');
-    block.setAttribute('gap', 16);
-    xmlList.push(block);
-  }
   if (Blockly.Blocks['procedures_report']) {
     // <block type="procedures_ifreturn" gap="16"></block>
     var block = goog.dom.createDom('block');
@@ -188,8 +179,7 @@ Blockly.Procedures.flyoutCategory = function(workspace) {
 
   function populateProcedures(procedureList, templateName) {
     for (var i = 0; i < procedureList.length; i++) {
-      var name = procedureList[i][0];
-      var args = procedureList[i][1];
+      var procCode = procedureList[i][0];
       // <block type="procedures_callnoreturn" gap="16">
       //   <mutation name="do something">
       //     <arg name="x"></arg>
@@ -199,13 +189,8 @@ Blockly.Procedures.flyoutCategory = function(workspace) {
       block.setAttribute('type', templateName);
       block.setAttribute('gap', 16);
       var mutation = goog.dom.createDom('mutation');
-      mutation.setAttribute('name', name);
+      mutation.setAttribute('proccode', procCode);
       block.appendChild(mutation);
-      for (var j = 0; j < args.length; j++) {
-        var arg = goog.dom.createDom('arg');
-        arg.setAttribute('name', args[j]);
-        mutation.appendChild(arg);
-      }
       xmlList.push(block);
     }
   }
