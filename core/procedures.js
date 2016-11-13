@@ -176,7 +176,33 @@ Blockly.Procedures.flyoutCategory = function(workspace) {
     // Add slightly larger gap between system blocks and user calls.
     xmlList[xmlList.length - 1].setAttribute('gap', 24);
   }
+  var button1 = goog.dom.createDom('button');
+  button1.setAttribute('text', 'New Block');
+  button1.setAttribute('callbackKey', 'NEW_BLOCK');
 
+  Blockly.registerButtonCallback('NEW_BLOCK', function(button) {
+    Blockly.Procedures.new(0);
+  });
+
+  xmlList.push(button1);
+  var button2 = goog.dom.createDom('button');
+  button2.setAttribute('text', 'New Reporter');
+  button2.setAttribute('callbackKey', 'NEW_REPORT');
+
+  Blockly.registerButtonCallback('NEW_REPORT', function(button) {
+    Blockly.Procedures.new(1);
+  });
+
+  xmlList.push(button2);
+  var button3 = goog.dom.createDom('button');
+  button3.setAttribute('text', 'New Boolean');
+  button3.setAttribute('callbackKey', 'NEW_BOOL');
+
+  Blockly.registerButtonCallback('NEW_BOOL', function(button) {
+    Blockly.Procedures.new(2);
+  });
+
+  xmlList.push(button3);
   function populateProcedures(procedureList, templateName, form) {
     for (var i = 0; i < procedureList.length; i++) {
       var procCode = procedureList[i][0];
@@ -202,3 +228,14 @@ Blockly.Procedures.flyoutCategory = function(workspace) {
   populateProcedures(tuple[2], 'procedures_callreturn', 1);
   return xmlList;
 };
+
+Blockly.Procedures.new = function (type) {
+  switch (type) {
+    case 0:
+      // TODO
+    case 1:
+      // TODO
+    case 2:
+      // TODO
+  }
+}
