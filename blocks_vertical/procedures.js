@@ -53,6 +53,7 @@ Blockly.Blocks['procedures_defnoreturn'] = {
     this._argumentNames = [];
     this._argumentDefaults = [];
     this._warp = false;
+    this._form = 0;
   },
   mutationToDom: function() {
     var container = document.createElement('mutation');
@@ -68,6 +69,7 @@ Blockly.Blocks['procedures_defnoreturn'] = {
     var warp = document.createElement('warp');
     warp.setAttribute('value', this._warp);
     container.appendChild(warp);
+    container.setAttribute('type', this._form);
     return container;
   },
   domToMutation: function(xmlElement) {
@@ -75,6 +77,7 @@ Blockly.Blocks['procedures_defnoreturn'] = {
     this._argumentNames =  JSON.parse(xmlElement.getAttribute('argumentnames'));
     this._argumentValues =  JSON.parse(xmlElement.getAttribute('argumentvalues'));
     this._warp = xmlElement.getAttribute('warp');
+    this._form = xmlElement.getAttribute('type');
     this._updateDisplay();
   },
   _updateDisplay: function() {
