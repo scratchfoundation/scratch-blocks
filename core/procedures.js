@@ -242,4 +242,4 @@ Blockly.Procedures.new = function (type) {
       // TODO
       break;
   }
-}
+};
