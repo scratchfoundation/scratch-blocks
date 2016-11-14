@@ -240,10 +240,13 @@ Blockly.Blocks['procedures_callreturn'] = {
     switch (this._type) {
       case 0:
         this.setOutputShape(Blockly.OUTPUT_SHAPE_ROUND);
+        break;
       case 1:
         this.setOutputShape(Blockly.OUTPUT_SHAPE_HEXAGONAL);
+        break;
       default:
         this.setOutputShape(Blockly.OUTPUT_SHAPE_ROUND);
+        break;
     }
   }
 };
