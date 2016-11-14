@@ -56,11 +56,11 @@ Blockly.Procedures.allProcedures = function(root) {
       var form = blocks[i]._form;
       var procCode = blocks[i]._procCode;
       if (type) {
-        if (type == "procedures_defnoreturn" && form == "report") {
+        if (type == "procedures_defnoreturn" && form == 0) {
           proceduresReturn.push(procCode);
-        } else if (type == "procedures_defnoreturn" && form == "block") {
+        } else if (type == "procedures_defnoreturn" && form == null) {
           proceduresNoReturn.push(procCode);
-        } else if (type == "procedures_defnoreturn" && form == "bool") {
+        } else if (type == "procedures_defnoreturn" && form == 1) {
           proceduresReturnBool.push(procCode);
         }
       }
