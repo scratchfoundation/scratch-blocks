@@ -54,13 +54,14 @@ Blockly.Procedures.allProcedures = function(root) {
     if (blocks[i].type) {
       var type = blocks[i].type;
       var form = blocks[i]._form;
+      var procCode = blocks[i]._procCode;
       if (type) {
         if (type == "procedures_defnoreturn" && form == "report") {
-          proceduresReturn.push(tuple);
+          proceduresReturn.push(procCode);
         } else if (type == "procedures_defnoreturn" && form == "block") {
-          proceduresNoReturn.push(tuple);
+          proceduresNoReturn.push(procCode);
         } else if (type == "procedures_defnoreturn" && form == "bool") {
-          proceduresReturnBool.push(tuple);
+          proceduresReturnBool.push(procCode);
         }
       }
     }
@@ -205,7 +206,7 @@ Blockly.Procedures.flyoutCategory = function(workspace) {
   xmlList.push(button3);
   function populateProcedures(procedureList, templateName, form) {
     for (var i = 0; i < procedureList.length; i++) {
-      var procCode = procedureList[i][0];
+      var procCode = procedureList[i];
       // <block type="procedures_callnoreturn" gap="16">
       //   <mutation name="do something">
       //     <arg name="x"></arg>
@@ -233,9 +234,12 @@ Blockly.Procedures.new = function (type) {
   switch (type) {
     case 0:
       // TODO
+      break;
     case 1:
       // TODO
+      break;
     case 2:
       // TODO
+      break;
   }
 }
