@@ -181,7 +181,7 @@ Blockly.Procedures.flyoutCategory = function(workspace) {
   button1.setAttribute('text', 'New Block');
   button1.setAttribute('callbackKey', 'NEW_BLOCK');
 
-  Blockly.registerButtonCallback('NEW_BLOCK', function(button) {
+  Blockly.registerButtonCallback('NEW_BLOCK', function() {
     Blockly.Procedures.new(0);
   });
 
@@ -190,7 +190,7 @@ Blockly.Procedures.flyoutCategory = function(workspace) {
   button2.setAttribute('text', 'New Reporter');
   button2.setAttribute('callbackKey', 'NEW_REPORT');
 
-  Blockly.registerButtonCallback('NEW_REPORT', function(button) {
+  Blockly.registerButtonCallback('NEW_REPORT', function() {
     Blockly.Procedures.new(1);
   });
 
@@ -199,7 +199,7 @@ Blockly.Procedures.flyoutCategory = function(workspace) {
   button3.setAttribute('text', 'New Boolean');
   button3.setAttribute('callbackKey', 'NEW_BOOL');
 
-  Blockly.registerButtonCallback('NEW_BOOL', function(button) {
+  Blockly.registerButtonCallback('NEW_BOOL', function() {
     Blockly.Procedures.new(2);
   });
 
@@ -230,7 +230,7 @@ Blockly.Procedures.flyoutCategory = function(workspace) {
   return xmlList;
 };
 
-Blockly.Procedures.new = function (type) {
+Blockly.Procedures.new = function(type) {
   switch (type) {
     case 0:
       // TODO
