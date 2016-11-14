@@ -618,6 +618,7 @@ Blockly.Css.CONTENT = [
     'overflow-x: visible;',
     'overflow-y: auto;',
     'position: absolute;',
+    'font-family: "Helvetica Neue", Helvetica, sans-serif;',
   '}',
 
   '.blocklyTreeRoot {',
