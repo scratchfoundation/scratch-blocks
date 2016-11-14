@@ -69,7 +69,9 @@ Blockly.Blocks['procedures_defnoreturn'] = {
     var warp = document.createElement('warp');
     warp.setAttribute('value', this._warp);
     container.appendChild(warp);
-    container.setAttribute('type', this._form);
+    var form = document.createElement('form');
+    form.setAttribute('value', this._form);
+    container.appendChild(form);
     return container;
   },
   domToMutation: function(xmlElement) {
