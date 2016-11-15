@@ -64,7 +64,7 @@ Blockly.Procedures.allProcedures = function(root) {
           proceduresReturnBool.push(procCode);
         }
         if (type == "procedures_defnoreturn" || type == "procedures_calreturn" || type == "procedures_callnoreturn") {
-          procCode = Blockly.findLegalName(procCode, blocks[i]);
+          procCode = Blockly.Procedures.findLegalName(procCode, blocks[i]);
         }
       }
     }
