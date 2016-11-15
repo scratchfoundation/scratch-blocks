@@ -94,18 +94,13 @@ Blockly.Procedures.procTupleComparator_ = function(ta, tb) {
  * @return {string} Non-colliding name.
  */
 Blockly.Procedures.findLegalName = function(name, block) {
-  if (block.isInFlyout) {
-    // Flyouts can have multiple procedures called 'do something'.
-    return name;
-  }
-  while (!Blockly.Procedures.isLegalName_(name, block.workspace, block)) {
+  var i = 2;
+  while (!Blockly.Procedures.isLegalName(name, block.workspace)) {
     // Collision with another procedure.
-    var r = name.match(/^(.*?)(\d+)$/);
-    if (!r) {
-      name += '2';
-    } else {
-      name = r[1] + (parseInt(r[2], 10) + 1);
+    if (Blockly.Procedures.isLegalName(name + i, block.workspace)) {
+      name = name + i;
     }
+    i++;
   }
   return name;
 };
@@ -120,13 +115,10 @@ Blockly.Procedures.findLegalName = function(name, block) {
  * @return {boolean} True if the name is legal.
  * @private
  */
-Blockly.Procedures.isLegalName_ = function(name, workspace, opt_exclude) {
+Blockly.Procedures.isLegalName_ = function(name, workspace) {
   var blocks = workspace.getAllBlocks();
   // Iterate through every block and check the name.
   for (var i = 0; i < blocks.length; i++) {
-    if (blocks[i] == opt_exclude) {
-      continue;
-    }
     if (blocks[i]._procCode) {
       var procCode = blocks[i]._procCode;
       if (Blockly.Names.equals(procCode, name)) {
@@ -135,31 +127,6 @@ Blockly.Procedures.isLegalName_ = function(name, workspace, opt_exclude) {
     }
   }
   return true;
-};
-
-/**
- * Rename a procedure.  Called by the editable field.
- * @param {string} name The proposed new name.
- * @return {string} The accepted name.
- * @this Blockly.Field
- */
-Blockly.Procedures.rename = function(name) {
-  // Strip leading and trailing whitespace.  Beyond this, all names are legal.
-  name = name.replace(/^[\s\xa0]+|[\s\xa0]+$/g, '');
-
-  // Ensure two identically-named procedures don't exist.
-  var legalName = Blockly.Procedures.findLegalName(name, this.sourceBlock_);
-  var oldName = this.text_;
-  if (oldName != name && oldName != legalName) {
-    // Rename any callers.
-    var blocks = this.sourceBlock_.workspace.getAllBlocks();
-    for (var i = 0; i < blocks.length; i++) {
-      if (blocks[i].renameProcedure) {
-        blocks[i].renameProcedure(oldName, legalName);
-      }
-    }
-  }
-  return legalName;
 };
 
 /**
