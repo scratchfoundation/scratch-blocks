@@ -56,6 +56,7 @@ Blockly.Blocks['procedures_defnoreturn'] = {
     this._form = 0;
   },
   mutationToDom: function() {
+    this._procCode = Blockly.Procedures.findLegalName(this._procCode, this);
     var container = document.createElement('mutation');
     var procCode = document.createElement('proccode');
     procCode.setAttribute('value', this._procCode);
@@ -111,6 +112,7 @@ Blockly.Blocks['procedures_callnoreturn'] = {
    * @this Blockly.Block
    */
   mutationToDom: function() {
+    this._procCode = Blockly.Procedures.findLegalName(this._procCode, this);
     var container = document.createElement('mutation');
     container.setAttribute('proccode', this._procCode);
     return container;
@@ -186,6 +188,7 @@ Blockly.Blocks['procedures_callreturn'] = {
    * @this Blockly.Block
    */
   mutationToDom: function() {
+    this._procCode = Blockly.Procedures.findLegalName(this._procCode, this);
     var container = document.createElement('mutation');
     container.setAttribute('proccode', this._procCode);
     container.setAttribute('type', this._type);
