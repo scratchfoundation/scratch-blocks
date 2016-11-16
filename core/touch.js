@@ -105,6 +105,16 @@ Blockly.onMouseUp_ = function(/* e */) {
   var workspace = Blockly.getMainWorkspace();
   if (workspace.dragMode_ == Blockly.DRAG_NONE) {
     return;
+  } else if (workspace.dragMode_ == Blockly.DRAG_BEGIN) {
+    if (Blockly.selected && !Blockly.selected.isMovable()) {
+      Blockly.Events.fire(
+          new Blockly.Events.Ui(Blockly.selected, 'click', undefined, undefined));
+      // Scratch-specific: also fire a "stack click" event for this stack.
+      // This is used to toggle the stack when any block in the stack is clicked.
+      var rootBlock = Blockly.selected.workspace.getBlockById(Blockly.selected.id).getRootBlock();
+      Blockly.Events.fire(
+        new Blockly.Events.Ui(rootBlock, 'stackclick', undefined, undefined));
+    }
   }
   Blockly.Touch.clearTouchIdentifier();
   Blockly.Css.setCursor(Blockly.Css.Cursor.OPEN);
