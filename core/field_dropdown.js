@@ -205,11 +205,11 @@ Blockly.FieldDropdown.prototype.showEditor_ = function() {
   var bBox = {width: this.size_.width, height: this.size_.height};
   bBox.width *= scale;
   bBox.height *= scale;
-  var position = goog.style.getPageOffset(this.fieldGroup_);
-  var primaryX = position.x + bBox.width / 2;
-  var primaryY = position.y + bBox.height;
+  var position = this.fieldGroup_.getBoundingClientRect();
+  var primaryX = position.left + bBox.width / 2;
+  var primaryY = position.top + bBox.height;
   var secondaryX = primaryX;
-  var secondaryY = position.y;
+  var secondaryY = position.top;
   // Set bounds to workspace; show the drop-down.
   Blockly.DropDownDiv.setBoundsElement(this.sourceBlock_.workspace.getParentSvg().parentNode);
   Blockly.DropDownDiv.show(this, primaryX, primaryY, secondaryX, secondaryY,
