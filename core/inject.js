@@ -323,8 +323,8 @@ Blockly.init_ = function(mainWorkspace) {
 Blockly.inject.bindDocumentEvents_ = function() {
   if (!Blockly.documentEventsBound_) {
     Blockly.bindEventWithChecks_(document, 'keydown', null, Blockly.onKeyDown_);
-    Blockly.bindEventWithChecks_(document, 'touchend', null, Blockly.longStop_);
-    Blockly.bindEventWithChecks_(document, 'touchcancel', null,
+    Blockly.bindEvent_(document, 'touchend', null, Blockly.longStop_);
+    Blockly.bindEvent_(document, 'touchcancel', null,
         Blockly.longStop_);
     // Don't use bindEvent_ for document's mouseup since that would create a
     // corresponding touch handler that would squeltch the ability to interact
