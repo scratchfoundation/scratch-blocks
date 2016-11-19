@@ -622,10 +622,12 @@ Blockly.Block.prototype.setInsertionMarker = function(insertionMarker) {
     return;  // No change.
   }
   this.isInsertionMarker_ = insertionMarker;
+  // TODO: handle removing insertion marker status.
   if (this.isInsertionMarker_) {
     this.setColour(Blockly.Colours.insertionMarker);
     this.setOpacity(Blockly.Colours.insertionMarkerOpacity);
-    this.svgGroup_.classList.add('blocklyInsertionMarker');
+    Blockly.addClass_(/** @type {!Element} */ (this.svgGroup_),
+        'blocklyInsertionMarker');
   }
 };
 

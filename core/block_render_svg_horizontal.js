@@ -336,10 +336,12 @@ Blockly.BlockSvg.prototype.updateColour = function() {
 Blockly.BlockSvg.prototype.highlightForReplacement = function(add) {
   if (add) {
     this.svgPath_.setAttribute('filter', 'url(#blocklyReplacementGlowFilter)');
-    this.svgGroup_.classList.add('blocklyReplaceable');
+    Blockly.addClass_(/** @type {!Element} */ (this.svgGroup_),
+        'blocklyReplaceable');
   } else {
     this.svgPath_.removeAttribute('filter');
-    this.svgGroup_.classList.remove('blocklyReplaceable');
+    Blockly.removeClass_(/** @type {!Element} */ (this.svgGroup_),
+        'blocklyReplaceable');
   }
 };
 
@@ -614,7 +616,7 @@ Blockly.BlockSvg.prototype.renderDraw_ = function(metrics) {
  */
 Blockly.BlockSvg.prototype.renderClassify_ = function(metrics) {
   var shapes = [];
-  
+
   if (this.isShadow_) {
     shapes.push('argument');
   } else {
@@ -630,9 +632,9 @@ Blockly.BlockSvg.prototype.renderClassify_ = function(metrics) {
       shapes.push('end');
     }
   }
-  
+
   this.svgGroup_.setAttribute('data-shapes', shapes.join(' '));
-  
+
   if (this.getCategory()) {
     this.svgGroup_.setAttribute('data-category', this.getCategory());
   }
