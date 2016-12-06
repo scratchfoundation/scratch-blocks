@@ -27,7 +27,7 @@ goog.require('Blockly.Colours');
 goog.require('Blockly.constants');
 
 
-Blockly.Blocks['sound_sounds_option'] = {
+Blockly.Blocks['sound_sounds_menu'] = {
   /**
    * Sound effects drop-down menu.
    * @this Blockly.Block
@@ -41,13 +41,13 @@ Blockly.Blocks['sound_sounds_option'] = {
             "type": "field_dropdown",
             "name": "SOUND_MENU",
             "options": [
-              ['meow', '0'],
-              ['boing', '1'],
-              ['cave', '2'],
-              ['drip drop', '3'],
-              ['drum machine', '4'],
-              ['eggs', '5'],
-              ['zoop', '6']
+              ['pop', '0'],
+              ['scratch', '1'],
+              ['comb', '2'],
+              ['spooky scary skeletons', '3'],
+              ['airhorn', '4'],
+              ['boing', '5'],
+              ['howl', '6']
             ]
           }
         ],
@@ -93,7 +93,7 @@ Blockly.Blocks['sound_playuntildone'] = {
    */
   init: function() {
     this.jsonInit({
-      "message0": "play sound %1 until done",
+      "message0": "play sound %1",
       "args0": [
         {
           "type": "input_value",
@@ -429,10 +429,9 @@ Blockly.Blocks['sound_effects_menu'] = {
             "type": "field_dropdown",
             "name": "EFFECT",
             "options": [
+              ['pitch', 'PITCH'],
               ['echo', 'ECHO'],
-              ['pan left/right', 'PAN'],
-              ['reverb', 'REVERB'],
-              ['pitch', 'PITCH']
+              ['robotic', 'ROBOTIC']
             ]
           }
         ],
@@ -515,6 +514,54 @@ Blockly.Blocks['sound_cleareffects'] = {
       "colourSecondary": Blockly.Colours.sounds.secondary,
       "colourTertiary": Blockly.Colours.sounds.tertiary
     });
+  }
+};
+
+Blockly.Blocks['sound_instruments_menu'] = {
+  /**
+   * Instruments drop-down menu.
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.jsonInit(
+      {
+        "message0": "%1",
+        "args0": [
+          {
+            "type": "field_dropdown",
+            "name": "INSTRUMENT",
+            "options": [
+              ['(1) Piano', '1'],
+              ['(2) Electric Piano', '2'],
+              ['(3) Organ', '3'],
+              ['(4) Guitar', '4'],
+              ['(5) Electric Guitar', '5'],
+              ['(6) Bass', '6'],
+              ['(7) Pizzicato', '7'],
+              ['(8) Cello', '8'],
+              ['(9) Trombone', '9'],
+              ['(10) Clarinet', '10'],
+              ['(11) Saxophone', '11'],
+              ['(12) Flute', '12'],
+              ['(13) Wooden Flute', '13'],
+              ['(14) Bassoon', '14'],
+              ['(15) Choir', '15'],
+              ['(16) Vibraphone', '16'],
+              ['(17) Music Box', '17'],
+              ['(18) Steel Drum', '18'],
+              ['(19) Marimba', '19'],
+              ['(20) Synth Lead', '20'],
+              ['(21) Synth Pad', '21']
+            ]
+          }
+        ],
+        "inputsInline": true,
+        "output": "String",
+        "colour": Blockly.Colours.sounds.secondary,
+        "colourSecondary": Blockly.Colours.sounds.secondary,
+        "colourTertiary": Blockly.Colours.sounds.tertiary,
+        "outputShape": Blockly.OUTPUT_SHAPE_ROUND
+      });
   }
 };
 
