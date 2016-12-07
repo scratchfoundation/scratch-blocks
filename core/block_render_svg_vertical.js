@@ -28,7 +28,6 @@ goog.provide('Blockly.BlockSvg.render');
 
 goog.require('Blockly.BlockSvg');
 
-
 // UI constants for rendering blocks.
 /**
 * Grid unit to pixels conversion
