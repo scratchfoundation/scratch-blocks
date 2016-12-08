@@ -102,6 +102,30 @@ Blockly.Blocks.defaultToolbox = '<xml id="toolbox-categories" style="display: no
         '</block>' +
         '<block type="wedo_whendistanceclose"></block>' +
         '</category>' +
+        '<category name="Motion" colour="#4C97FF" secondaryColour="#3373CC">'+
+          '<block type="motion_movesteps">'+
+            '<value name="STEPS">'+
+              '<shadow type="math_number">'+
+                '<field name="NUM">10</field>'+
+              '</shadow>'+
+            '</value>'+
+          '</block>'+
+          '<block type="motion_turnright">'+
+            '<value name="DEGREES">'+
+              '<shadow type="math_number">'+
+                '<field name="NUM">15</field>'+
+              '</shadow>'+
+            '</value>'+
+          '</block>'+
+          '<block type="motion_turnleft">'+
+            '<value name="DEGREES">'+
+              '<shadow type="math_number">'+
+                '<field name="NUM">15</field>'+
+              '</shadow>'+
+            '</value>'+
+          '</block>'+
+          '<block type="motion_ifonedgebounce"></block>'+
+        '</category>'+
         '</xml>' +
         '<xml id="toolbox-simple" style="display: none">' +
         '<block type="event_whenflagclicked"></block>' +
