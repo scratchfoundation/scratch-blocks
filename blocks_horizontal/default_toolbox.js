@@ -156,6 +156,32 @@ Blockly.Blocks.defaultToolbox = '<xml id="toolbox-categories" style="display: no
           '</block>'+
           '<block type="motion_home"></block>'+
         '</category>'+
+        '<category name="Looks" colour="#9966FF" secondaryColour="#774DCB">'+
+          '<block type="looks_grow">'+
+            '<value name="CHANGE">'+
+              '<shadow type="math_number">'+
+                '<field name="NUM">10</field>'+
+              '</shadow>'+
+            '</value>'+
+          '</block>'+
+          '<block type="looks_shrink">'+
+            '<value name="CHANGE">'+
+              '<shadow type="math_number">'+
+                '<field name="NUM">10</field>'+
+              '</shadow>'+
+            '</value>'+
+          '</block>'+
+          '<block type="looks_reset"></block>'+
+          '<block type="looks_show"></block>'+
+          '<block type="looks_hide"></block>'+
+          '<block type="looks_say">'+
+            '<value name="MESSAGE">'+
+              '<shadow type="text">'+
+                '<field name="TEXT">Hello</field>'+
+              '</shadow>'+
+            '</value>'+
+          '</block>'+
+        '</category>'+
         '</xml>' +
         '<xml id="toolbox-simple" style="display: none">' +
         '<block type="event_whenflagclicked"></block>' +
