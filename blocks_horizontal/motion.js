@@ -71,7 +71,7 @@ Blockly.Blocks['motion_turnright'] = {
       "args0": [
         {
           "type": "field_image",
-          "src": Blockly.mainWorkspace.options.pathToMedia + "/Right.svg",
+          "src": Blockly.mainWorkspace.options.pathToMedia + "icons/Right.svg",
           "width": 40,
           "height": 40
         },
@@ -102,7 +102,7 @@ Blockly.Blocks['motion_turnleft'] = {
       "args0": [
         {
           "type": "field_image",
-          "src": Blockly.mainWorkspace.options.pathToMedia + "/Left.svg",
+          "src": Blockly.mainWorkspace.options.pathToMedia + "icons/Left.svg",
           "width": 40,
           "height": 40
         },
@@ -133,7 +133,7 @@ Blockly.Blocks['motion_ifonedgebounce'] = {
       "args0": [
         {
           "type": "field_image",
-          "src": Blockly.mainWorkspace.options.pathToMedia + "/Bump.svg",
+          "src": Blockly.mainWorkspace.options.pathToMedia + "icons/Bump.svg",
           "width": 40,
           "height": 40
         }
