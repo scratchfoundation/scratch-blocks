@@ -20,7 +20,7 @@
 
 'use strict';
 
-goog.provide('Blockly.Blocks.motion');
+goog.provide('Blockly.Blocks.looks');
 
 goog.require('Blockly.Blocks');
 goog.require('Blockly.Colours');
