@@ -124,6 +124,13 @@ Blockly.Blocks.defaultToolbox = '<xml id="toolbox-categories" style="display: no
               '</shadow>'+
             '</value>'+
           '</block>'+
+          '<block type="motion_moveback">'+
+            '<value name="STEPS">'+
+              '<shadow type="math_number">'+
+                '<field name="NUM">10</field>'+
+              '</shadow>'+
+            '</value>'+
+          '</block>'+
           '<block type="motion_turnright">'+
             '<value name="DEGREES">'+
               '<shadow type="math_number">'+
