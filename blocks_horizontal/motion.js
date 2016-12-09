@@ -38,7 +38,7 @@ Blockly.Blocks['motion_movesteps'] = {
       "args0": [
         {
           "type": "field_image",
-          "src": Blockly.mainWorkspace.options.pathToMedia + "icons/Forward.svg",
+          "src": Blockly.mainWorkspace.options.pathToMedia + "icons/motion_forward.svg",
           "width": 40,
           "height": 40,
           "alt": "*",
@@ -71,7 +71,40 @@ Blockly.Blocks['motion_moveup'] = {
       "args0": [
         {
           "type": "field_image",
-          "src": Blockly.mainWorkspace.options.pathToMedia + "icons/Up.svg",
+          "src": Blockly.mainWorkspace.options.pathToMedia + "icons/motion_up.svg",
+          "width": 40,
+          "height": 40,
+          "alt": "*",
+          "flip_rtl": true
+        },
+        {
+          "type": "input_value",
+          "name": "STEPS"
+        }
+      ],
+      "inputsInline": true,
+      "previousStatement": null,
+      "nextStatement": null,
+      "category": Blockly.Categories.motion,
+      "colour": Blockly.Colours.motion.primary,
+      "colourSecondary": Blockly.Colours.motion.secondary,
+      "colourTertiary": Blockly.Colours.motion.tertiary
+    });
+  }
+};
+
+Blockly.Blocks['motion_hop'] = {
+  /**
+   * Block to move steps.
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.jsonInit({
+      "message0": "%1 %2",
+      "args0": [
+        {
+          "type": "field_image",
+          "src": Blockly.mainWorkspace.options.pathToMedia + "icons/motion_hop.svg",
           "width": 40,
           "height": 40,
           "alt": "*",
@@ -104,7 +137,7 @@ Blockly.Blocks['motion_movedown'] = {
       "args0": [
         {
           "type": "field_image",
-          "src": Blockly.mainWorkspace.options.pathToMedia + "icons/Down.svg",
+          "src": Blockly.mainWorkspace.options.pathToMedia + "icons/motion_down.svg",
           "width": 40,
           "height": 40,
           "alt": "*",
@@ -137,7 +170,7 @@ Blockly.Blocks['motion_moveback'] = {
       "args0": [
         {
           "type": "field_image",
-          "src": Blockly.mainWorkspace.options.pathToMedia + "icons/Back.svg",
+          "src": Blockly.mainWorkspace.options.pathToMedia + "icons/motion_back.svg",
           "width": 40,
           "height": 40,
           "alt": "*",
@@ -170,7 +203,7 @@ Blockly.Blocks['motion_turnright'] = {
       "args0": [
         {
           "type": "field_image",
-          "src": Blockly.mainWorkspace.options.pathToMedia + "icons/Right.svg",
+          "src": Blockly.mainWorkspace.options.pathToMedia + "icons/motion_right.svg",
           "width": 40,
           "height": 40
         },
@@ -201,7 +234,7 @@ Blockly.Blocks['motion_turnleft'] = {
       "args0": [
         {
           "type": "field_image",
-          "src": Blockly.mainWorkspace.options.pathToMedia + "icons/Left.svg",
+          "src": Blockly.mainWorkspace.options.pathToMedia + "icons/motion_left.svg",
           "width": 40,
           "height": 40
         },
@@ -221,7 +254,7 @@ Blockly.Blocks['motion_turnleft'] = {
   }
 };
 
-Blockly.Blocks['motion_ifonedgebounce'] = {
+Blockly.Blocks['motion_home'] = {
   /**
    * Block to bounce on edge.
    * @this Blockly.Block
@@ -232,7 +265,7 @@ Blockly.Blocks['motion_ifonedgebounce'] = {
       "args0": [
         {
           "type": "field_image",
-          "src": Blockly.mainWorkspace.options.pathToMedia + "icons/Bump.svg",
+          "src": Blockly.mainWorkspace.options.pathToMedia + "icons/motion_home.svg",
           "width": 40,
           "height": 40
         }
