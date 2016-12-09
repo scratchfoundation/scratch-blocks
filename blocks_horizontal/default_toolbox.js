@@ -31,6 +31,8 @@ goog.require('Blockly.Blocks');
 Blockly.Blocks.defaultToolbox = '<xml id="toolbox-categories" style="display: none">' +
     '<category name="Events">' +
         '<block type="event_whenflagclicked"></block>' +
+        '<block type="event_whenthisspriteclicked"></block>' +
+        '<block type="event_bump"></block>' +
         '<block type="event_whenbroadcastreceived">' +
         '<value name="CHOICE">' +
         '<shadow type="dropdown_whenbroadcast">' +
