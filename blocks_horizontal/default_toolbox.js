@@ -177,7 +177,7 @@ Blockly.Blocks.defaultToolbox = '<xml id="toolbox-categories" style="display: no
           '<block type="looks_say">'+
             '<value name="MESSAGE">'+
               '<shadow type="text">'+
-                '<field name="TEXT">Hello</field>'+
+                '<field name="TEXT">Hi</field>'+
               '</shadow>'+
             '</value>'+
           '</block>'+
