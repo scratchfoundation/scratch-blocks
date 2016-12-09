@@ -28,7 +28,7 @@ goog.require('Blockly.Blocks');
  * @fileoverview Provide a default toolbox XML.
  */
 
-Blockly.Blocks.defaultToolbox = '<xml id="toolbox-categories" style="display: none">' +
+Blockly.Blocks.defaultToolbox = '<xml id="toolbox-categories" style="display: none" colour="#FFD500" secondaryColour="#CC9900">' +
     '<category name="Events">' +
         '<block type="event_whenflagclicked"></block>' +
         '<block type="event_whenthisspriteclicked"></block>' +
@@ -48,7 +48,7 @@ Blockly.Blocks.defaultToolbox = '<xml id="toolbox-categories" style="display: no
         '</value>' +
         '</block>' +
     '</category>' +
-    '<category name="Control">' +
+    '<category name="Control" colour="#FFAB19" secondaryColour="#CF8B17">' +
         '<block type="control_forever"></block>' +
         '<block type="control_repeat">' +
         '<value name="TIMES">' +
@@ -66,7 +66,7 @@ Blockly.Blocks.defaultToolbox = '<xml id="toolbox-categories" style="display: no
         '</value>' +
         '</block>' +
     '</category>' +
-    '<category name="Wedo">' +
+    '<category name="Wedo" colour="#C0C0C0" secondaryColour="#808080">' +
         '<block type="wedo_setcolor">' +
         '<value name="CHOICE">' +
         '<shadow type="dropdown_wedo_setcolor">' +
