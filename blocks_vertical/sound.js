@@ -27,7 +27,7 @@ goog.require('Blockly.Colours');
 goog.require('Blockly.constants');
 
 
-Blockly.Blocks['sound_sounds_option'] = {
+Blockly.Blocks['sound_sounds_menu'] = {
   /**
    * Sound effects drop-down menu.
    * @this Blockly.Block
@@ -41,13 +41,13 @@ Blockly.Blocks['sound_sounds_option'] = {
             "type": "field_dropdown",
             "name": "SOUND_MENU",
             "options": [
-              ['meow', '0'],
-              ['boing', '1'],
-              ['cave', '2'],
-              ['drip drop', '3'],
-              ['drum machine', '4'],
-              ['eggs', '5'],
-              ['zoop', '6']
+              ['pop', '0'],
+              ['scratch', '1'],
+              ['comb', '2'],
+              ['spooky scary skeletons', '3'],
+              ['airhorn', '4'],
+              ['boing', '5'],
+              ['howl', '6']
             ]
           }
         ],
@@ -429,10 +429,10 @@ Blockly.Blocks['sound_effects_menu'] = {
             "type": "field_dropdown",
             "name": "EFFECT",
             "options": [
+              ['pitch', 'PITCH'],
               ['echo', 'ECHO'],
-              ['pan left/right', 'PAN'],
-              ['reverb', 'REVERB'],
-              ['pitch', 'PITCH']
+              ['robot', 'ROBOTIC'],
+              ['fuzz', 'FUZZ']
             ]
           }
         ],
