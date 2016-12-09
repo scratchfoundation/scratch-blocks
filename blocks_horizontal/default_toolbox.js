@@ -117,6 +117,13 @@ Blockly.Blocks.defaultToolbox = '<xml id="toolbox-categories" style="display: no
               '</shadow>'+
             '</value>'+
           '</block>'+
+          '<block type="motion_hop">'+
+            '<value name="STEPS">'+
+              '<shadow type="math_number">'+
+                '<field name="NUM">10</field>'+
+              '</shadow>'+
+            '</value>'+
+          '</block>'+
           '<block type="motion_movedown">'+
             '<value name="STEPS">'+
               '<shadow type="math_number">'+
@@ -145,7 +152,7 @@ Blockly.Blocks.defaultToolbox = '<xml id="toolbox-categories" style="display: no
               '</shadow>'+
             '</value>'+
           '</block>'+
-          '<block type="motion_ifonedgebounce"></block>'+
+          '<block type="motion_home"></block>'+
         '</category>'+
         '</xml>' +
         '<xml id="toolbox-simple" style="display: none">' +
