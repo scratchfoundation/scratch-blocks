@@ -103,6 +103,13 @@ Blockly.Field.prototype.sourceBlock_ = null;
 Blockly.Field.prototype.visible_ = true;
 
 /**
+ * Null, or an array of the field's argTypes (for styling).
+ * @type {Array}
+ * @private
+ */
+Blockly.Field.prototype.argType_ = null;
+
+/**
  * Validation function called when user edits an editable field.
  * @type {Function}
  * @private
@@ -142,27 +149,35 @@ Blockly.Field.prototype.init = function() {
   if (!this.visible_) {
     this.fieldGroup_.style.display = 'none';
   }
+  // Add an attribute to cassify the type of field.
+  if (this.getArgTypes() !== null) {
+    if (this.sourceBlock_.isShadow()) {
+      this.sourceBlock_.svgGroup_.setAttribute('data-argument-type',
+          this.getArgTypes());
+    } else {
+      // Fields without a shadow wrapper, like square dropdowns.
+      this.fieldGroup_.setAttribute('data-argument-type', this.getArgTypes());
+    }
+  }
   // Adjust X to be flipped for RTL. Position is relative to horizontal start of source block.
-  var fieldX = (this.sourceBlock_.RTL) ? -this.size_.width / 2 : this.size_.width / 2;
+  var size = this.getSize();
+  var fieldX = (this.sourceBlock_.RTL) ? -size.width / 2 : size.width / 2;
   /** @type {!Element} */
   this.textElement_ = Blockly.createSvgElement('text',
       {'class': 'blocklyText',
        'x': fieldX,
-       'y': this.size_.height / 2 + Blockly.BlockSvg.FIELD_TOP_PADDING,
+       'y': size.height / 2 + Blockly.BlockSvg.FIELD_TOP_PADDING,
+       'dominant-baseline': 'middle',
        'text-anchor': 'middle'},
       this.fieldGroup_);
 
   this.updateEditable();
   this.sourceBlock_.getSvgRoot().appendChild(this.fieldGroup_);
   this.mouseUpWrapper_ =
-      Blockly.bindEvent_(this.getClickTarget_(), 'mouseup', this,
-          this.onMouseUp_);
+      Blockly.bindEventWithChecks_(this.getClickTarget_(), 'mouseup', this,
+      this.onMouseUp_);
   // Force a render.
   this.updateTextNode_();
-  if (Blockly.Events.isEnabled()) {
-    Blockly.Events.fire(new Blockly.Events.Change(
-        this.sourceBlock_, 'field', this.name, '', this.getValue()));
-  }
 };
 
 /**
@@ -184,20 +199,17 @@ Blockly.Field.prototype.dispose = function() {
  * Add or remove the UI indicating if this field is editable or not.
  */
 Blockly.Field.prototype.updateEditable = function() {
-  if (!this.EDITABLE || !this.sourceBlock_) {
+  var group = this.fieldGroup_;
+  if (!this.EDITABLE || !group) {
     return;
   }
   if (this.sourceBlock_.isEditable()) {
-    Blockly.addClass_(/** @type {!Element} */ (this.fieldGroup_),
-                      'blocklyEditableText');
-    Blockly.removeClass_(/** @type {!Element} */ (this.fieldGroup_),
-                         'blocklyNoNEditableText');
+    Blockly.addClass_(group, 'blocklyEditableText');
+    Blockly.removeClass_(group, 'blocklyNonEditableText');
     this.getClickTarget_().style.cursor = this.CURSOR;
   } else {
-    Blockly.addClass_(/** @type {!Element} */ (this.fieldGroup_),
-                      'blocklyNonEditableText');
-    Blockly.removeClass_(/** @type {!Element} */ (this.fieldGroup_),
-                         'blocklyEditableText');
+    Blockly.addClass_(group, 'blocklyNonEditableText');
+    Blockly.removeClass_(group, 'blocklyEditableText');
     this.getClickTarget_().style.cursor = '';
   }
 };
@@ -227,11 +239,78 @@ Blockly.Field.prototype.setVisible = function(visible) {
 };
 
 /**
+ * Adds a string to the field's array of argTypes (used for styling).
+ * @param {string} argType New argType.
+ */
+Blockly.Field.prototype.addArgType = function(argType) {
+  if (this.argType_ == null) {
+    this.argType_ = [];
+  }
+  this.argType_.push(argType);
+};
+
+/**
+ * Gets the field's argTypes joined as a string, or returns null (used for styling).
+ * @return {string} argType string, or null.
+ */
+Blockly.Field.prototype.getArgTypes = function() {
+  if (this.argType_ === null || this.argType_.length === 0) {
+    return null;
+  } else {
+    return this.argType_.join(' ');
+  }
+};
+
+/**
  * Sets a new validation function for editable fields.
  * @param {Function} handler New validation function, or null.
  */
 Blockly.Field.prototype.setValidator = function(handler) {
   this.validator_ = handler;
+};
+
+/**
+ * Gets the validation function for editable fields.
+ * @return {Function} Validation function, or null.
+ */
+Blockly.Field.prototype.getValidator = function() {
+  return this.validator_;
+};
+
+/**
+ * Validates a change.  Does nothing.  Subclasses may override this.
+ * @param {string} text The user's text.
+ * @return {string} No change needed.
+ */
+Blockly.Field.prototype.classValidator = function(text) {
+  return text;
+};
+
+/**
+ * Calls the validation function for this field, as well as all the validation
+ * function for the field's class and its parents.
+ * @param {string} text Proposed text.
+ * @return {?string} Revised text, or null if invalid.
+ */
+Blockly.Field.prototype.callValidator = function(text) {
+  var classResult = this.classValidator(text);
+  if (classResult === null) {
+    // Class validator rejects value.  Game over.
+    return null;
+  } else if (classResult !== undefined) {
+    text = classResult;
+  }
+  var userValidator = this.getValidator();
+  if (userValidator) {
+    var userResult = userValidator.call(this, text);
+    if (userResult === null) {
+      // User validator rejects value.  Game over.
+      return null;
+    } else if (userResult !== undefined) {
+      text = userResult;
+    }
+  }
+  return text;
 };
 
 /**
@@ -266,10 +345,54 @@ Blockly.Field.prototype.render_ = function() {
         Blockly.Field.cacheWidths_[key] = width;
       }
     }
+    if (this.EDITABLE) {
+      // Add padding to left and right of text.
+      width += Blockly.BlockSvg.EDITABLE_FIELD_PADDING;
+    }
+    // Adjust width for drop-down arrows.
+    var arrowWidth = 0;
+    if (this.positionArrow) {
+      arrowWidth = this.positionArrow(width);
+      width += arrowWidth;
+    }
+    if (this.box_) {
+      // Add padding to any drawn box.
+      width += 2 * Blockly.BlockSvg.BOX_FIELD_PADDING;
+    }
+    // Update text centering, based on newly calculated width.
+    var centerTextX = (width - arrowWidth) / 2;
+    if (this.sourceBlock_.RTL) {
+      centerTextX += arrowWidth;
+    }
+    // In a text-editing shadow block's field,
+    // if half the text length is not at least center of
+    // visible field (FIELD_WIDTH), center it there instead,
+    // unless there is a drop-down arrow.
+    if (this.sourceBlock_.isShadow() && !this.positionArrow) {
+      var minOffset = Blockly.BlockSvg.FIELD_WIDTH / 2;
+      if (this.sourceBlock_.RTL) {
+        // X position starts at the left edge of the block, in both RTL and LTR.
+        // First offset by the width of the block to move to the right edge,
+        // and then subtract to move to the same position as LTR.
+        var minCenter = width - minOffset;
+        centerTextX = Math.min(minCenter, centerTextX);
+      } else {
+        // (width / 2) should exceed Blockly.BlockSvg.FIELD_WIDTH / 2
+        // if the text is longer.
+        centerTextX = Math.max(minOffset, centerTextX);
+      }
+    }
+    this.textElement_.setAttribute('x', centerTextX);
+
   } else {
     var width = 0;
   }
   this.size_.width = width;
+  // Update any drawn box to the correct width and height.
+  if (this.box_) {
+    this.box_.setAttribute('width', this.size_.width);
+    this.box_.setAttribute('height', this.size_.height);
+  }
 };
 
 /**
@@ -431,12 +554,15 @@ Blockly.Field.prototype.onMouseUp_ = function(e) {
   } else if (Blockly.isRightButton(e)) {
     // Right-click.
     return;
-  } else if (Blockly.dragMode_ == Blockly.DRAG_FREE) {
+  } else if (this.sourceBlock_.workspace.isDragging()) {
     // Drag operation is concluding.  Don't open the editor.
     return;
   } else if (this.sourceBlock_.isEditable()) {
     // Non-abstract sub-classes must define a showEditor_ method.
     this.showEditor_();
+    // The field is handling the touch, but we also want the blockSvg onMouseUp
+    // handler to fire, so we will leave the touch identifier as it is.
+    // The next onMouseUp is responsible for nulling it out.
   }
 };
 
@@ -444,8 +570,9 @@ Blockly.Field.prototype.onMouseUp_ = function(e) {
  * Change the tooltip text for this field.
  * @param {string|!Element} newTip Text for tooltip or a parent element to
  *     link to for its tooltip.
+ * @abstract
  */
-Blockly.Field.prototype.setTooltip = function(newTip) {
+Blockly.Field.prototype.setTooltip = function(/*newTip*/) {
   // Non-abstract sub-classes may wish to implement this.  See FieldLabel.
 };
 

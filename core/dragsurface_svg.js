@@ -150,6 +150,12 @@ Blockly.DragSurfaceSvg.prototype.setBlocksAndShow = function(blocks) {
 Blockly.DragSurfaceSvg.prototype.translateAndScaleGroup = function(x, y, scale) {
   var transform;
   this.scale_ = scale;
+  // Force values to have two decimal points.
+  // This is a work-around to prevent a bug in Safari, where numbers close to 0
+  // are sometimes reported as something like "2.9842794901924208e-12".
+  // That is incompatible with translate3d, causing bugs.
+  x = x.toFixed(2);
+  y = y.toFixed(2);
   if (Blockly.is3dSupported()) {
     transform = 'transform: translate3d(' + x + 'px, ' + y + 'px, 0px)' +
       'scale3d(' + scale + ',' + scale + ',' + scale + ')';
@@ -172,6 +178,12 @@ Blockly.DragSurfaceSvg.prototype.translateSurface = function(x, y) {
   var transform;
   x *= this.scale_;
   y *= this.scale_;
+  // Force values to have two decimal points.
+  // This is a work-around to prevent a bug in Safari, where numbers close to 0
+  // are sometimes reported as something like "2.9842794901924208e-12".
+  // That is incompatible with translate3d, causing bugs.
+  x = x.toFixed(2);
+  y = y.toFixed(2);
   if (Blockly.is3dSupported()) {
     transform = 'transform: translate3d(' + x + 'px, ' + y + 'px, 0px); display: block;';
     this.SVG_.setAttribute('style', transform);

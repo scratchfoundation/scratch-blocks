@@ -12,3 +12,21 @@ common.pyc
 *.pyc
 *.komodoproject
 /nbproject/private/
+
+# Unused by scratch-blocks
+javascript_compressed.js
+lua_compressed.js
+php_compressed.js
+python_compressed.js
+
+/accessible/*
+/dist
+/msg/json/synonyms.json
+/msg/json/qqq.json
+/blockly_compressed_horizontal.js
+/blockly_compressed_vertical.js
+/blockly_uncompressed_horizontal.js
+/blockly_uncompressed_vertical.js
+/blocks_compressed_horizontal.js
+/blocks_compressed_vertical.js
+/blocks_compressed.js

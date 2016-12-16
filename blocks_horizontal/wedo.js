@@ -90,6 +90,7 @@ Blockly.Blocks['wedo_setcolor'] = {
       "inputsInline": true,
       "previousStatement": null,
       "nextStatement": null,
+      "category": Blockly.Categories.looks,
       "colour": Blockly.Colours.looks.primary,
       "colourSecondary": Blockly.Colours.looks.secondary,
       "colourTertiary": Blockly.Colours.looks.tertiary
@@ -123,6 +124,7 @@ Blockly.Blocks['wedo_motorclockwise'] = {
       "inputsInline": true,
       "previousStatement": null,
       "nextStatement": null,
+      "category": Blockly.Categories.motion,
       "colour": Blockly.Colours.motion.primary,
       "colourSecondary": Blockly.Colours.motion.secondary,
       "colourTertiary": Blockly.Colours.motion.tertiary
@@ -156,6 +158,7 @@ Blockly.Blocks['wedo_motorcounterclockwise'] = {
       "inputsInline": true,
       "previousStatement": null,
       "nextStatement": null,
+      "category": Blockly.Categories.motion,
       "colour": Blockly.Colours.motion.primary,
       "colourSecondary": Blockly.Colours.motion.secondary,
       "colourTertiary": Blockly.Colours.motion.tertiary
@@ -211,6 +214,7 @@ Blockly.Blocks['wedo_motorspeed'] = {
       "inputsInline": true,
       "previousStatement": null,
       "nextStatement": null,
+      "category": Blockly.Categories.motion,
       "colour": Blockly.Colours.motion.primary,
       "colourSecondary": Blockly.Colours.motion.secondary,
       "colourTertiary": Blockly.Colours.motion.tertiary
@@ -272,6 +276,7 @@ Blockly.Blocks['wedo_whentilt'] = {
       ],
       "inputsInline": true,
       "nextStatement": null,
+      "category": Blockly.Categories.event,
       "colour": Blockly.Colours.event.primary,
       "colourSecondary": Blockly.Colours.event.secondary,
       "colourTertiary": Blockly.Colours.event.tertiary
@@ -299,6 +304,7 @@ Blockly.Blocks['wedo_whendistanceclose'] = {
       ],
       "inputsInline": true,
       "nextStatement": null,
+      "category": Blockly.Categories.event,
       "colour": Blockly.Colours.event.primary,
       "colourSecondary": Blockly.Colours.event.secondary,
       "colourTertiary": Blockly.Colours.event.tertiary

@@ -24,8 +24,13 @@
  */
 'use strict';
 
+/**
+ * Events fired as a result of actions in Blockly's editor.
+ * @namespace Blockly.Events
+ */
 goog.provide('Blockly.Events');
 
+goog.require('goog.array');
 goog.require('goog.math.Coordinate');
 
 
@@ -302,9 +307,11 @@ Blockly.Events.Abstract = function(block) {
  */
 Blockly.Events.Abstract.prototype.toJson = function() {
   var json = {
-    'type': this.type,
-    'blockId': this.blockId
+    'type': this.type
   };
+  if (this.blockId) {
+    json['blockId'] = this.blockId;
+  }
   if (this.group) {
     json['group'] = this.group;
   }
@@ -331,8 +338,9 @@ Blockly.Events.Abstract.prototype.isNull = function() {
 /**
  * Run an event.
  * @param {boolean} forward True if run forward, false if run backward (undo).
+ * @abstract
  */
-Blockly.Events.Abstract.prototype.run = function(forward) {
+Blockly.Events.Abstract.prototype.run = function(/*forward*/) {
   // Defined by subclasses.
 };
 
@@ -393,7 +401,7 @@ Blockly.Events.Create.prototype.run = function(forward) {
     for (var i = 0, id; id = this.ids[i]; i++) {
       var block = workspace.getBlockById(id);
       if (block) {
-        block.dispose(false, true);
+        block.dispose(false, false);
       } else if (id == this.blockId) {
         // Only complain about root-level block.
         console.warn("Can't uncreate non-existant block: " + id);
@@ -456,7 +464,7 @@ Blockly.Events.Delete.prototype.run = function(forward) {
     for (var i = 0, id; id = this.ids[i]; i++) {
       var block = workspace.getBlockById(id);
       if (block) {
-        block.dispose(false, true);
+        block.dispose(false, false);
       } else if (id == this.blockId) {
         // Only complain about root-level block.
         console.warn("Can't delete non-existant block: " + id);
@@ -550,6 +558,9 @@ Blockly.Events.Change.prototype.run = function(forward) {
     case 'field':
       var field = block.getField(this.name);
       if (field) {
+        // Run the validator for any side-effects it may have.
+        // The validator's opinion on validity is ignored.
+        field.callValidator(value);
         field.setValue(value);
       } else {
         console.warn("Can't set non-existant field: " + this.name);
@@ -779,4 +790,35 @@ Blockly.Events.Ui.prototype.fromJson = function(json) {
   Blockly.Events.Ui.superClass_.fromJson.call(this, json);
   this.element = json['element'];
   this.newValue = json['newValue'];
+};
+
+/**
+ * Enable/disable a block depending on whether it is properly connected.
+ * Use this on applications where all blocks should be connected to a top block.
+ * Recommend setting the 'disable' option to 'false' in the config so that
+ * users don't try to reenable disabled orphan blocks.
+ * @param {!Blockly.Events.Abstract} event Custom data for event.
+ */
+Blockly.Events.disableOrphans = function(event) {
+  if (event.type == Blockly.Events.MOVE ||
+      event.type == Blockly.Events.CREATE) {
+    Blockly.Events.disable();
+    var workspace = Blockly.Workspace.getById(event.workspaceId);
+    var block = workspace.getBlockById(event.blockId);
+    if (block) {
+      if (block.getParent() && !block.getParent().disabled) {
+        var children = block.getDescendants();
+        for (var i = 0, child; child = children[i]; i++) {
+          child.setDisabled(false);
+        }
+      } else if ((block.outputConnection || block.previousConnection) &&
+                 Blockly.dragMode_ == Blockly.DRAG_NONE) {
+        do {
+          block.setDisabled(true);
+          block = block.getNextBlock();
+        } while (block);
+      }
+    }
+    Blockly.Events.enable();
+  }
 };

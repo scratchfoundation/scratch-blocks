@@ -1,4 +1,13 @@
-*_compressed_*.js
-*_uncompressed_*.js
+*_compressed*.js
+*_uncompressed*.js
 /msg/*
+/core/css.js
 /tests/jsunit/*
+/tests/generators/*
+/generators/*
+/demos/*
+/accessible/*
+/appengine/*
+/shim/*
+/dist/*
+/webpack.config.js

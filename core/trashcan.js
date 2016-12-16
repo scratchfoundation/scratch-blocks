@@ -26,7 +26,6 @@
 
 goog.provide('Blockly.Trashcan');
 
-goog.require('goog.Timer');
 goog.require('goog.dom');
 goog.require('goog.math');
 goog.require('goog.math.Rect');
@@ -82,6 +81,20 @@ Blockly.Trashcan.prototype.MARGIN_SIDE_ = 20;
  * @private
  */
 Blockly.Trashcan.prototype.MARGIN_HOTSPOT_ = 10;
+
+/**
+ * Location of trashcan in sprite image.
+ * @type {number}
+ * @private
+ */
+Blockly.Trashcan.prototype.SPRITE_LEFT_ = 0;
+
+/**
+ * Location of trashcan in sprite image.
+ * @type {number}
+ * @private
+ */
+Blockly.Trashcan.prototype.SPRITE_TOP_ = 32;
 
 /**
  * Current open/close state of the lid.
@@ -161,7 +174,8 @@ Blockly.Trashcan.prototype.createDom = function() {
        'y': this.LID_HEIGHT_},
       clip);
   var body = Blockly.createSvgElement('image',
-      {'width': Blockly.SPRITE.width, 'height': Blockly.SPRITE.height, 'y': -32,
+      {'width': Blockly.SPRITE.width, 'x': -this.SPRITE_LEFT_,
+       'height': Blockly.SPRITE.height, 'y': -this.SPRITE_TOP_,
        'clip-path': 'url(#blocklyTrashBodyClipPath' + rnd + ')'},
       this.svgGroup_);
   body.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href',
@@ -173,13 +187,14 @@ Blockly.Trashcan.prototype.createDom = function() {
   Blockly.createSvgElement('rect',
       {'width': this.WIDTH_, 'height': this.LID_HEIGHT_}, clip);
   this.svgLid_ = Blockly.createSvgElement('image',
-      {'width': Blockly.SPRITE.width, 'height': Blockly.SPRITE.height, 'y': -32,
+      {'width': Blockly.SPRITE.width, 'x': -this.SPRITE_LEFT_,
+       'height': Blockly.SPRITE.height, 'y': -this.SPRITE_TOP_,
        'clip-path': 'url(#blocklyTrashLidClipPath' + rnd + ')'},
       this.svgGroup_);
   this.svgLid_.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href',
       this.workspace_.options.pathToMedia + Blockly.SPRITE.url);
 
-  Blockly.bindEvent_(this.svgGroup_, 'mouseup', this, this.click);
+  Blockly.bindEventWithChecks_(this.svgGroup_, 'mouseup', this, this.click);
   this.animateLid_();
   return this.svgGroup_;
 };
@@ -206,7 +221,7 @@ Blockly.Trashcan.prototype.dispose = function() {
   }
   this.svgLid_ = null;
   this.workspace_ = null;
-  goog.Timer.clear(this.lidTask_);
+  clearTimeout(this.lidTask_);
 };
 
 /**
@@ -220,12 +235,26 @@ Blockly.Trashcan.prototype.position = function() {
   }
   if (this.workspace_.RTL) {
     this.left_ = this.MARGIN_SIDE_ + Blockly.Scrollbar.scrollbarThickness;
+    if (metrics.toolboxPosition == Blockly.TOOLBOX_AT_LEFT) {
+      this.left_ += metrics.flyoutWidth;
+      if (this.workspace_.toolbox_) {
+        this.left_ += metrics.absoluteLeft;
+      }
+    }
   } else {
     this.left_ = metrics.viewWidth + metrics.absoluteLeft -
         this.WIDTH_ - this.MARGIN_SIDE_ - Blockly.Scrollbar.scrollbarThickness;
+
+    if (metrics.toolboxPosition == Blockly.TOOLBOX_AT_RIGHT) {
+      this.left_ -= metrics.flyoutWidth;
+    }
   }
   this.top_ = metrics.viewHeight + metrics.absoluteTop -
       (this.BODY_HEIGHT_ + this.LID_HEIGHT_) - this.bottom_;
+
+  if (metrics.toolboxPosition == Blockly.TOOLBOX_AT_BOTTOM) {
+    this.top_ -= metrics.flyoutHeight;
+  }
   this.svgGroup_.setAttribute('transform',
       'translate(' + this.left_ + ',' + this.top_ + ')');
 };
@@ -235,11 +264,16 @@ Blockly.Trashcan.prototype.position = function() {
  * @return {goog.math.Rect} Rectangle in which to delete.
  */
 Blockly.Trashcan.prototype.getClientRect = function() {
+  if (!this.svgGroup_) {
+    return null;
+  }
+
   var trashRect = this.svgGroup_.getBoundingClientRect();
-  return new goog.math.Rect(trashRect.left - this.MARGIN_HOTSPOT_,
-                            trashRect.top - this.MARGIN_HOTSPOT_,
-                            trashRect.width + 2 * this.MARGIN_HOTSPOT_,
-                            trashRect.height + 2 * this.MARGIN_HOTSPOT_);
+  var left = trashRect.left + this.SPRITE_LEFT_ - this.MARGIN_HOTSPOT_;
+  var top = trashRect.top + this.SPRITE_TOP_ - this.MARGIN_HOTSPOT_;
+  var width = this.WIDTH_ + 2 * this.MARGIN_HOTSPOT_;
+  var height = this.LID_HEIGHT_ + this.BODY_HEIGHT_ + 2 * this.MARGIN_HOTSPOT_;
+  return new goog.math.Rect(left, top, width, height);
 
 };
 
@@ -252,7 +286,7 @@ Blockly.Trashcan.prototype.setOpen_ = function(state) {
   if (this.isOpen == state) {
     return;
   }
-  goog.Timer.clear(this.lidTask_);
+  clearTimeout(this.lidTask_);
   this.isOpen = state;
   this.animateLid_();
 };
@@ -272,7 +306,7 @@ Blockly.Trashcan.prototype.animateLid_ = function() {
   var opacity = goog.math.lerp(0.4, 0.8, this.lidOpen_);
   this.svgGroup_.style.opacity = opacity;
   if (this.lidOpen_ > 0 && this.lidOpen_ < 1) {
-    this.lidTask_ = goog.Timer.callOnce(this.animateLid_, 20, this);
+    this.lidTask_ = setTimeout(this.animateLid_.bind(this), 20);
   }
 };
 

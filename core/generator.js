@@ -71,13 +71,26 @@ Blockly.Generator.prototype.STATEMENT_PREFIX = null;
 Blockly.Generator.prototype.INDENT = '  ';
 
 /**
+ * Maximum length for a comment before wrapping.  Does not account for
+ * indenting level.
+ * @type {number}
+ */
+Blockly.Generator.prototype.COMMENT_WRAP = 60;
+
+/**
+ * List of outer-inner pairings that do NOT require parentheses.
+ * @type {!Array.<!Array.<number>>}
+ */
+Blockly.Generator.prototype.ORDER_OVERRIDES = [];
+
+/**
  * Generate code for all blocks in the workspace to the specified language.
  * @param {Blockly.Workspace} workspace Workspace to generate code from.
  * @return {string} Generated code.
  */
 Blockly.Generator.prototype.workspaceToCode = function(workspace) {
   if (!workspace) {
-    // Backwards compatability from before there could be multiple workspaces.
+    // Backwards compatibility from before there could be multiple workspaces.
     console.warn('No workspace specified in workspaceToCode call.  Guessing.');
     workspace = Blockly.getMainWorkspace();
   }
@@ -119,7 +132,7 @@ Blockly.Generator.prototype.workspaceToCode = function(workspace) {
  * @return {string} The prefixed lines of code.
  */
 Blockly.Generator.prototype.prefixLines = function(text, prefix) {
-  return prefix + text.replace(/\n(.)/g, '\n' + prefix + '$1');
+  return prefix + text.replace(/(?!\n$)\n/g, '\n' + prefix);
 };
 
 /**
@@ -130,8 +143,8 @@ Blockly.Generator.prototype.prefixLines = function(text, prefix) {
 Blockly.Generator.prototype.allNestedComments = function(block) {
   var comments = [];
   var blocks = block.getDescendants();
-  for (var x = 0; x < blocks.length; x++) {
-    var comment = blocks[x].getCommentText();
+  for (var i = 0; i < blocks.length; i++) {
+    var comment = blocks[i].getCommentText();
     if (comment) {
       comments.push(comment);
     }
@@ -174,8 +187,9 @@ Blockly.Generator.prototype.blockToCode = function(block) {
         'Expecting string from statement block "%s".', block.type);
     return [this.scrub_(block, code[0]), code[1]];
   } else if (goog.isString(code)) {
+    var id = block.id.replace(/\$/g, '$$$$');  // Issue 251.
     if (this.STATEMENT_PREFIX) {
-      code = this.STATEMENT_PREFIX.replace(/%1/g, '\'' + block.id + '\'') +
+      code = this.STATEMENT_PREFIX.replace(/%1/g, '\'' + id + '\'') +
           code;
     }
     return this.scrub_(block, code);
@@ -191,13 +205,13 @@ Blockly.Generator.prototype.blockToCode = function(block) {
  * Generate code representing the specified value input.
  * @param {!Blockly.Block} block The block containing the input.
  * @param {string} name The name of the input.
- * @param {number} order The maximum binding strength (minimum order value)
+ * @param {number} outerOrder The maximum binding strength (minimum order value)
  *     of any operators adjacent to "block".
  * @return {string} Generated code or '' if no blocks are connected or the
  *     specified input does not exist.
  */
-Blockly.Generator.prototype.valueToCode = function(block, name, order) {
-  if (isNaN(order)) {
+Blockly.Generator.prototype.valueToCode = function(block, name, outerOrder) {
+  if (isNaN(outerOrder)) {
     goog.asserts.fail('Expecting valid order from block "%s".', block.type);
   }
   var targetBlock = block.getInputTargetBlock(name);
@@ -219,8 +233,17 @@ Blockly.Generator.prototype.valueToCode = function(block, name, order) {
     goog.asserts.fail('Expecting valid order from value block "%s".',
         targetBlock.type);
   }
-  if (code && order <= innerOrder) {
-    if (order == innerOrder && (order == 0 || order == 99)) {
+  if (!code) {
+    return '';
+  }
+
+  // Add parentheses if needed.
+  var parensNeeded = false;
+  var outerOrderClass = Math.floor(outerOrder);
+  var innerOrderClass = Math.floor(innerOrder);
+  if (outerOrderClass <= innerOrderClass) {
+    if (outerOrderClass == innerOrderClass &&
+        (outerOrderClass == 0 || outerOrderClass == 99)) {
       // Don't generate parens around NONE-NONE and ATOMIC-ATOMIC pairs.
       // 0 is the atomic order, 99 is the none order.  No parentheses needed.
       // In all known languages multiple such code blocks are not order
@@ -229,10 +252,21 @@ Blockly.Generator.prototype.valueToCode = function(block, name, order) {
       // The operators outside this code are stonger than the operators
       // inside this code.  To prevent the code from being pulled apart,
       // wrap the code in parentheses.
-      // Technically, this should be handled on a language-by-language basis.
-      // However all known (sane) languages use parentheses for grouping.
-      code = '(' + code + ')';
+      parensNeeded = true;
+      // Check for special exceptions.
+      for (var i = 0; i < this.ORDER_OVERRIDES.length; i++) {
+        if (this.ORDER_OVERRIDES[i][0] == outerOrder &&
+            this.ORDER_OVERRIDES[i][1] == innerOrder) {
+          parensNeeded = false;
+          break;
+        }
+      }
     }
+  }
+  if (parensNeeded) {
+    // Technically, this should be handled on a language-by-language basis.
+    // However all known (sane) languages use parentheses for grouping.
+    code = '(' + code + ')';
   }
   return code;
 };
@@ -264,6 +298,7 @@ Blockly.Generator.prototype.statementToCode = function(block, name) {
  * @return {string} Loop contents, with infinite loop trap added.
  */
 Blockly.Generator.prototype.addLoopTrap = function(branch, id) {
+  id = id.replace(/\$/g, '$$$$');  // Issue 251.
   if (this.INFINITE_LOOP_TRAP) {
     branch = this.INFINITE_LOOP_TRAP.replace(/%1/g, '\'' + id + '\'') + branch;
   }
@@ -319,17 +354,21 @@ Blockly.Generator.prototype.FUNCTION_NAME_PLACEHOLDER_ = '{leCUI8hutHZI4480Dc}';
  */
 Blockly.Generator.prototype.provideFunction_ = function(desiredName, code) {
   if (!this.definitions_[desiredName]) {
-    var functionName =
-        this.variableDB_.getDistinctName(desiredName, this.NAME_TYPE);
+    var functionName = this.variableDB_.getDistinctName(desiredName,
+        Blockly.Procedures.NAME_TYPE);
     this.functionNames_[desiredName] = functionName;
     var codeText = code.join('\n').replace(
         this.FUNCTION_NAME_PLACEHOLDER_REGEXP_, functionName);
     // Change all '  ' indents into the desired indent.
+    // To avoid an infinite loop of replacements, change all indents to '\0'
+    // character first, then replace them all with the indent.
+    // We are assuming that no provided functions contain a literal null char.
     var oldCodeText;
     while (oldCodeText != codeText) {
       oldCodeText = codeText;
-      codeText = codeText.replace(/^((  )*)  /gm, '$1' + this.INDENT);
+      codeText = codeText.replace(/^(( {2})*) {2}/gm, '$1\0');
     }
+    codeText = codeText.replace(/\0/g, this.INDENT);
     this.definitions_[desiredName] = codeText;
   }
   return this.functionNames_[desiredName];

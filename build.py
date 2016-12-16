@@ -29,7 +29,7 @@
 # cycle since there is no need to rebuild or recompile, just reload.
 #
 # This script also generates:
-#   blocks_compressed.js: The compressed Blockly language blocks.
+#   blocks_compressed.js: The compressed common blocks.
 #   blocks_horizontal_compressed.js: The compressed Scratch horizontal blocks.
 #   blocks_vertical_compressed.js: The compressed Scratch vertical blocks.
 #   msg/js/<LANG>.js for every language <LANG> defined in msg/js/<LANG>.json.
@@ -115,7 +115,7 @@ window.BLOCKLY_BOOT = function() {
     // Execute after Closure has loaded.
     if (!window.goog) {
       alert('Error: Closure not found.  Read this:\\n' +
-            'developers.google.com/blockly/hacking/closure');
+            'developers.google.com/blockly/guides/modify/web/closure');
     }
     dir = window.BLOCKLY_DIR.match(/[^\\/]+$/)[0];
   }
@@ -222,7 +222,7 @@ class Gen_compressed(threading.Thread):
       filenames = glob.glob(os.path.join("blocks_vertical", "*.js"))
     elif block_type == "common":
       target_filename = "blocks_compressed.js"
-      filenames = glob.glob(os.path.join("blocks", "*.js"))
+      filenames = glob.glob(os.path.join("blocks_common", "*.js"))
     # Define the parameters for the POST request.
     params = [
         ("compilation_level", "SIMPLE_OPTIMIZATIONS"),
@@ -238,6 +238,7 @@ class Gen_compressed(threading.Thread):
     params.append(("js_code", "goog.provide('Blockly.Blocks');"))
     # Add Blockly.Colours for use of centralized colour bank
     filenames.append(os.path.join("core", "colours.js"))
+    filenames.append(os.path.join("core", "constants.js"))
     for filename in filenames:
       f = open(filename)
       params.append(("js_code", "".join(f.readlines())))
@@ -444,7 +445,7 @@ if __name__ == "__main__":
            "Please rename this directory.")
     else:
       print("""Error: Closure not found.  Read this:
-https://developers.google.com/blockly/hacking/closure""")
+developers.google.com/blockly/guides/modify/web/closure""")
     sys.exit(1)
 
   search_paths = calcdeps.ExpandDirectories(

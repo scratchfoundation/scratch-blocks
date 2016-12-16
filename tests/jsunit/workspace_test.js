@@ -50,23 +50,6 @@ function test_flatWorkspace() {
   assertEquals('Cleared workspace (3).', 0, workspace.getAllBlocks().length);
 }
 
-function test_maxBlocksWorkspace() {
-  var workspace = new Blockly.Workspace();
-  var blockA = workspace.newBlock('');
-  var blockB = workspace.newBlock('');
-  assertEquals('Infinite capacity.', Infinity, workspace.remainingCapacity());
-  workspace.options.maxBlocks = 3;
-  assertEquals('Three capacity.', 1, workspace.remainingCapacity());
-  workspace.options.maxBlocks = 2;
-  assertEquals('Two capacity.', 0, workspace.remainingCapacity());
-  workspace.options.maxBlocks = 1;
-  assertEquals('One capacity.', -1, workspace.remainingCapacity());
-  workspace.options.maxBlocks = 0;
-  assertEquals('Zero capacity.', -2, workspace.remainingCapacity());
-  workspace.clear();
-  assertEquals('Cleared capacity.', 0, workspace.remainingCapacity());
-}
-
 function test_getWorkspaceById() {
   var workspaceA = new Blockly.Workspace();
   var workspaceB = new Blockly.Workspace();

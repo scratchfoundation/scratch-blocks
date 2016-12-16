@@ -76,7 +76,9 @@ Blockly.Comment.prototype.drawIcon_ = function(group) {
   // Body of question mark.
   Blockly.createSvgElement('path',
       {'class': 'blocklyIconSymbol',
-       'd': 'm6.8,10h2c0.003,-0.617 0.271,-0.962 0.633,-1.266 2.875,-2.405 0.607,-5.534 -3.765,-3.874v1.7c3.12,-1.657 3.698,0.118 2.336,1.25 -1.201,0.998 -1.201,1.528 -1.204,2.19z'},
+       'd': 'm6.8,10h2c0.003,-0.617 0.271,-0.962 0.633,-1.266 2.875,-2.405' +
+       ' 0.607,-5.534 -3.765,-3.874v1.7c3.12,-1.657 3.698,0.118 2.336,1.25' +
+       ' -1.201,0.998 -1.201,1.528 -1.204,2.19z'},
        group);
   // Dot of question point.
   Blockly.createSvgElement('rect',
@@ -112,12 +114,12 @@ Blockly.Comment.prototype.createEditor_ = function() {
   body.appendChild(textarea);
   this.textarea_ = textarea;
   this.foreignObject_.appendChild(body);
-  Blockly.bindEvent_(textarea, 'mouseup', this, this.textareaFocus_);
+  Blockly.bindEventWithChecks_(textarea, 'mouseup', this, this.textareaFocus_);
   // Don't zoom with mousewheel.
-  Blockly.bindEvent_(textarea, 'wheel', this, function(e) {
+  Blockly.bindEventWithChecks_(textarea, 'wheel', this, function(e) {
     e.stopPropagation();
   });
-  Blockly.bindEvent_(textarea, 'change', this, function(e) {
+  Blockly.bindEventWithChecks_(textarea, 'change', this, function(/* e */) {
     if (this.text_ != textarea.value) {
       Blockly.Events.fire(new Blockly.Events.Change(
         this.block_, 'comment', null, this.text_, textarea.value));
@@ -207,7 +209,7 @@ Blockly.Comment.prototype.setVisible = function(visible) {
  * @param {!Event} e Mouse up event.
  * @private
  */
-Blockly.Comment.prototype.textareaFocus_ = function(e) {
+Blockly.Comment.prototype.textareaFocus_ = function(/*e*/) {
   // Ideally this would be hooked to the focus event for the comment.
   // However doing so in Firefox swallows the cursor for unknown reasons.
   // So this is hooked to mouseup instead.  No big deal.

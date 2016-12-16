@@ -30,7 +30,6 @@ goog.provide('Blockly.Mutator');
 goog.require('Blockly.Bubble');
 goog.require('Blockly.Icon');
 goog.require('Blockly.WorkspaceSvg');
-goog.require('goog.Timer');
 goog.require('goog.dom');
 
 
@@ -73,7 +72,13 @@ Blockly.Mutator.prototype.drawIcon_ = function(group) {
   // Gear teeth.
   Blockly.createSvgElement('path',
       {'class': 'blocklyIconSymbol',
-       'd': 'm4.203,7.296 0,1.368 -0.92,0.677 -0.11,0.41 0.9,1.559 0.41,0.11 1.043,-0.457 1.187,0.683 0.127,1.134 0.3,0.3 1.8,0 0.3,-0.299 0.127,-1.138 1.185,-0.682 1.046,0.458 0.409,-0.11 0.9,-1.559 -0.11,-0.41 -0.92,-0.677 0,-1.366 0.92,-0.677 0.11,-0.41 -0.9,-1.559 -0.409,-0.109 -1.046,0.458 -1.185,-0.682 -0.127,-1.138 -0.3,-0.299 -1.8,0 -0.3,0.3 -0.126,1.135 -1.187,0.682 -1.043,-0.457 -0.41,0.11 -0.899,1.559 0.108,0.409z'},
+       'd': 'm4.203,7.296 0,1.368 -0.92,0.677 -0.11,0.41 0.9,1.559 ' +
+       '0.41,0.11 1.043,-0.457 1.187,0.683 0.127,1.134 0.3,0.3 ' +
+       '1.8,0 0.3,-0.299 0.127,-1.138 1.185,-0.682 1.046,0.458 0.409,-0.11 ' +
+       '0.9,-1.559 -0.11,-0.41 -0.92,-0.677 0,-1.366 0.92,-0.677 0.11,-0.41 ' +
+       '-0.9,-1.559 -0.409,-0.109 -1.046,0.458 -1.185,-0.682 -0.127,-1.138 ' +
+       '-0.3,-0.299 -1.8,0 -0.3,0.3 -0.126,1.135 -1.187,0.682 -1.043,-0.457 ' +
+       '-0.41,0.11 -0.899,1.559 0.108,0.409z'},
        group);
   // Axle hole.
   Blockly.createSvgElement('circle',
@@ -122,10 +127,14 @@ Blockly.Mutator.prototype.createEditor_ = function() {
     parentWorkspace: this.block_.workspace,
     pathToMedia: this.block_.workspace.options.pathToMedia,
     RTL: this.block_.RTL,
+    toolboxPosition: this.block_.RTL ? Blockly.TOOLBOX_AT_RIGHT :
+        Blockly.TOOLBOX_AT_LEFT,
+    horizontalLayout: false,
     getMetrics: this.getFlyoutMetrics_.bind(this),
     setMetrics: null
   };
-  this.workspace_ = new Blockly.WorkspaceSvg(workspaceOptions);
+  this.workspace_ = new Blockly.WorkspaceSvg(workspaceOptions, this.block_.workspace.dragSurface);
+  this.workspace_.isMutator = true;
   this.svgDialog_.appendChild(
       this.workspace_.createDom('blocklyMutatorBackground'));
   return this.svgDialog_;
@@ -135,17 +144,23 @@ Blockly.Mutator.prototype.createEditor_ = function() {
  * Add or remove the UI indicating if this icon may be clicked or not.
  */
 Blockly.Mutator.prototype.updateEditable = function() {
-  if (this.block_.isEditable()) {
-    // Default behaviour for an icon.
-    Blockly.Icon.prototype.updateEditable.call(this);
-  } else {
-    // Close any mutator bubble.  Icon is not clickable.
-    this.setVisible(false);
-    if (this.iconGroup_) {
-      Blockly.addClass_(/** @type {!Element} */ (this.iconGroup_),
-                        'blocklyIconGroupReadonly');
+  if (!this.block_.isInFlyout) {
+    if (this.block_.isEditable()) {
+      if (this.iconGroup_) {
+        Blockly.removeClass_(/** @type {!Element} */ (this.iconGroup_),
+                             'blocklyIconGroupReadonly');
+      }
+    } else {
+      // Close any mutator bubble.  Icon is not clickable.
+      this.setVisible(false);
+      if (this.iconGroup_) {
+        Blockly.addClass_(/** @type {!Element} */ (this.iconGroup_),
+                          'blocklyIconGroupReadonly');
+      }
     }
   }
+  // Default behaviour for an icon.
+  Blockly.Icon.prototype.updateEditable.call(this);
 };
 
 /**
@@ -303,9 +318,9 @@ Blockly.Mutator.prototype.workspaceChanged_ = function() {
       // Ensure that any bump is part of this mutation's event group.
       var group = Blockly.Events.getGroup();
       setTimeout(function() {
-          Blockly.Events.setGroup(group);
-          block.bumpNeighbours_();
-          Blockly.Events.setGroup(false);
+        Blockly.Events.setGroup(group);
+        block.bumpNeighbours_();
+        Blockly.Events.setGroup(false);
       }, Blockly.BUMP_DELAY);
     }
     if (block.rendered) {

@@ -1,6 +1,6 @@
 {
   "name": "scratch-blocks",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "Scratch Blocks is a library for building creative computing interfaces.",
   "author": "Massachusetts Institute of Technology",
   "license": "Apache-2.0",
@@ -9,10 +9,19 @@
     "type": "git",
     "url": "https://github.com/LLK/scratch-blocks.git"
   },
+  "main": "./dist/vertical.js",
   "scripts": {
-    "test": "./node_modules/.bin/eslint ."
+    "prepublish": "python ./build.py && ./node_modules/.bin/webpack",
+    "test": "./node_modules/.bin/eslint .",
+    "version": "./node_modules/.bin/json -f package.json -I -e \"this.repository.sha = '$(git log -n1 --pretty=format:%H)'\""
   },
   "devDependencies": {
-    "eslint": "~2.9.0"
+    "eslint": "2.9.0",
+    "exports-loader": "0.6.3",
+    "google-closure-library": "20160911.0.0",
+    "imports-loader": "0.6.5",
+    "json": "9.0.4",
+    "travis-after-all": "1.4.4",
+    "webpack": "1.13.2"
   }
 }

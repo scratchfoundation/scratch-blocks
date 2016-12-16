@@ -45,6 +45,7 @@ Blockly.FieldIconMenu = function(icons) {
   // First icon provides the default values.
   var defaultValue = icons[0].value;
   Blockly.FieldIconMenu.superClass_.constructor.call(this, defaultValue);
+  this.addArgType('iconmenu');
 };
 goog.inherits(Blockly.FieldIconMenu, Blockly.Field);
 
@@ -203,23 +204,23 @@ Blockly.FieldIconMenu.prototype.showEditor_ = function() {
     }
     button.style.backgroundColor = backgroundColor;
     button.style.borderColor = this.sourceBlock_.getColourTertiary();
-    button.onclick = this.buttonClick_.bind(this);
-    button.ontouchend = this.buttonClick_.bind(this);
+    Blockly.bindEvent_(button, 'click', this, this.buttonClick_);
+    Blockly.bindEvent_(button, 'mouseup', this, this.buttonClick_);
     // These are applied manually instead of using the :hover pseudoclass
     // because Android has a bad long press "helper" menu and green highlight
     // that we must prevent with ontouchstart preventDefault
-    button.ontouchstart = function(e) {
+    Blockly.bindEvent_(button, 'mousedown', button, function(e) {
       this.setAttribute('class', 'blocklyDropDownButton blocklyDropDownButtonHover');
       e.preventDefault();
-    };
-    button.onmouseover = function() {
+    });
+    Blockly.bindEvent_(button, 'mouseover', button, function() {
       this.setAttribute('class', 'blocklyDropDownButton blocklyDropDownButtonHover');
       contentDiv.setAttribute('aria-activedescendant', this.id);
-    };
-    button.onmouseout = function() {
+    });
+    Blockly.bindEvent_(button, 'mouseout', button, function() {
       this.setAttribute('class', 'blocklyDropDownButton');
       contentDiv.removeAttribute('aria-activedescendant');
-    };
+    });
     var buttonImg = document.createElement('img');
     buttonImg.src = icon.src;
     //buttonImg.alt = icon.alt;
@@ -231,30 +232,22 @@ Blockly.FieldIconMenu.prototype.showEditor_ = function() {
     contentDiv.appendChild(button);
   }
   contentDiv.style.width = Blockly.FieldIconMenu.DROPDOWN_WIDTH + 'px';
-  // Calculate positioning for the drop-down
-  // sourceBlock_ is the rendered shadow field button
-  var scale = this.sourceBlock_.workspace.scale;
-  var bBox = this.sourceBlock_.getHeightWidth();
-  bBox.width *= scale;
-  bBox.height *= scale;
-  var position = this.getAbsoluteXY_();
-  // If we can fit it, render below the shadow block
-  var primaryX = position.x + bBox.width / 2;
-  var primaryY = position.y + bBox.height;
-  // If we can't fit it, render above the entire parent block
-  var secondaryX = primaryX;
-  var secondaryY = position.y - (Blockly.BlockSvg.MIN_BLOCK_Y * scale) - (Blockly.BlockSvg.FIELD_Y_OFFSET * scale);
 
   Blockly.DropDownDiv.setColour(this.sourceBlock_.getColour(), this.sourceBlock_.getColourTertiary());
+  Blockly.DropDownDiv.setCategory(this.sourceBlock_.parentBlock_.getCategory());
 
   // Update source block colour to look selected
   this.savedPrimary_ = this.sourceBlock_.getColour();
   this.sourceBlock_.setColour(this.sourceBlock_.getColourSecondary(),
     this.sourceBlock_.getColourSecondary(), this.sourceBlock_.getColourTertiary());
 
-  Blockly.DropDownDiv.setBoundsElement(this.sourceBlock_.workspace.getParentSvg().parentNode);
-  var renderedPrimary = Blockly.DropDownDiv.show(this, primaryX, primaryY,
-    secondaryX, secondaryY, this.onHide_.bind(this));
+  var scale = this.sourceBlock_.workspace.scale;
+  // Offset for icon-type horizontal blocks.
+  var secondaryYOffset = (
+    -(Blockly.BlockSvg.MIN_BLOCK_Y * scale) - (Blockly.BlockSvg.FIELD_Y_OFFSET * scale)
+  );
+  var renderedPrimary = Blockly.DropDownDiv.showPositionedByBlock(
+      this, this.sourceBlock_, this.onHide_.bind(this), secondaryYOffset);
   if (!renderedPrimary) {
     // Adjust for rotation
     var arrowX = this.arrowX_ + Blockly.DropDownDiv.ARROW_SIZE / 1.5 + 1;

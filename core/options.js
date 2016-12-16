@@ -32,7 +32,7 @@ goog.require('Blockly.Colours');
  * Parse the user-specified options, using reasonable defaults where behaviour
  * is unspecified.
  * @param {!Object} options Dictionary of options.  Specification:
- *   https://developers.google.com/blockly/installation/overview#configuration
+ *   https://developers.google.com/blockly/guides/get-started/web#configuration
  * @constructor
  */
 Blockly.Options = function(options) {
@@ -46,6 +46,11 @@ Blockly.Options = function(options) {
     var hasDisable = false;
     var hasSounds = false;
   } else {
+    if (!options['toolbox']) {
+      var oParser = new DOMParser();
+      var dom = oParser.parseFromString(Blockly.Blocks.defaultToolbox, 'text/xml');
+      options['toolbox'] = dom.children[0];
+    }
     var languageTree = Blockly.Options.parseToolboxTree(options['toolbox']);
     var hasCategories = Boolean(languageTree &&
         languageTree.getElementsByTagName('category').length);
@@ -70,6 +75,26 @@ Blockly.Options = function(options) {
       hasSounds = true;
     }
   }
+  var rtl = !!options['rtl'];
+  var horizontalLayout = options['horizontalLayout'];
+  if (horizontalLayout === undefined) {
+    horizontalLayout = false;
+  }
+  var toolboxAtStart = options['toolboxPosition'];
+  if (toolboxAtStart === 'end') {
+    toolboxAtStart = false;
+  } else {
+    toolboxAtStart = true;
+  }
+
+  if (horizontalLayout) {
+    var toolboxPosition = toolboxAtStart ?
+        Blockly.TOOLBOX_AT_TOP : Blockly.TOOLBOX_AT_BOTTOM;
+  } else {
+    var toolboxPosition = (toolboxAtStart == rtl) ?
+        Blockly.TOOLBOX_AT_RIGHT : Blockly.TOOLBOX_AT_LEFT;
+  }
+
   var hasScrollbars = options['scrollbars'];
   if (hasScrollbars === undefined) {
     hasScrollbars = hasCategories;
@@ -85,23 +110,10 @@ Blockly.Options = function(options) {
     // 'path' is a deprecated option which has been replaced by 'media'.
     pathToMedia = options['path'] + 'media/';
   }
-
-  var horizontalLayout = options['horizontalLayout'];
-  if (horizontalLayout === undefined) {
-    horizontalLayout = false;
-  }
-  var toolboxAtStart = options['toolboxPosition'];
-  if (toolboxAtStart === 'end') {
-    toolboxAtStart = false;
+  if (options['oneBasedIndex'] === undefined) {
+    var oneBasedIndex = true;
   } else {
-    toolboxAtStart = true;
-  }
-
-  if (horizontalLayout) {
-    var toolboxPosition = toolboxAtStart ? Blockly.TOOLBOX_AT_TOP : Blockly.TOOLBOX_AT_BOTTOM;
-  } else {
-    var toolboxPosition =
-        (toolboxAtStart == options['rtl']) ? Blockly.TOOLBOX_AT_RIGHT : Blockly.TOOLBOX_AT_LEFT;
+    var oneBasedIndex = !!options['oneBasedIndex'];
   }
 
   var enableRealtime = !!options['realtime'];
@@ -120,51 +132,48 @@ Blockly.Options = function(options) {
     }
   }
 
-  this.RTL = !!options['rtl'];
+  this.RTL = rtl;
+  this.oneBasedIndex = oneBasedIndex;
   this.collapse = hasCollapse;
   this.comments = hasComments;
   this.disable = hasDisable;
   this.readOnly = readOnly;
-  this.maxBlocks = options['maxBlocks'] || Infinity;
   this.pathToMedia = pathToMedia;
   this.hasCategories = hasCategories;
   this.hasScrollbars = hasScrollbars;
   this.hasTrashcan = hasTrashcan;
   this.hasSounds = hasSounds;
   this.hasCss = hasCss;
+  this.horizontalLayout = horizontalLayout;
   this.languageTree = languageTree;
   this.gridOptions = Blockly.Options.parseGridOptions_(options);
   this.zoomOptions = Blockly.Options.parseZoomOptions_(options);
   this.enableRealtime = enableRealtime;
   this.realtimeOptions = realtimeOptions;
-  this.horizontalLayout = horizontalLayout;
-  this.toolboxAtStart = toolboxAtStart;
   this.toolboxPosition = toolboxPosition;
 };
 
 /**
- * @type {Blockly.Workspace} the parent of the current workspace, or null if
- *    there is no parent workspace.
+ * The parent of the current workspace, or null if there is no parent workspace.
+ * @type {Blockly.Workspace}
  **/
 Blockly.Options.prototype.parentWorkspace = null;
 
 /**
  * If set, sets the translation of the workspace to match the scrollbars.
- * No-op if unset.
  */
-Blockly.Options.prototype.setMetrics = function(translation) { return; };
+Blockly.Options.prototype.setMetrics = null;
 
 /**
- * Return an object with the metrics required to size the workspace, or null
- * if unset.
- * @return {Object} Contains size an position metrics, or null.
+ * Return an object with the metrics required to size the workspace.
+ * @return {Object} Contains size and position metrics, or null.
  */
-Blockly.Options.prototype.getMetrics = function() { return null; };
+Blockly.Options.prototype.getMetrics = null;
 
 /**
  * Parse the user-specified zoom options, using reasonable defaults where
  * behaviour is unspecified.  See zoom documentation:
- *   https://developers.google.com/blockly/installation/zoom
+ *   https://developers.google.com/blockly/guides/configure/web/zoom
  * @param {!Object} options Dictionary of options.
  * @return {!Object} A dictionary of normalized options.
  * @private
@@ -208,7 +217,7 @@ Blockly.Options.parseZoomOptions_ = function(options) {
 /**
  * Parse the user-specified grid options, using reasonable defaults where
  * behaviour is unspecified. See grid documentation:
- *   https://developers.google.com/blockly/installation/grid
+ *   https://developers.google.com/blockly/guides/configure/web/grid
  * @param {!Object} options Dictionary of options.
  * @return {!Object} A dictionary of normalized options.
  * @private

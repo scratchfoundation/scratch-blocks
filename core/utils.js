@@ -28,6 +28,7 @@
 
 goog.provide('Blockly.utils');
 
+goog.require('Blockly.Touch');
 goog.require('goog.dom');
 goog.require('goog.events.BrowserFeature');
 goog.require('goog.math.Coordinate');
@@ -97,7 +98,69 @@ Blockly.hasClass_ = function(element, className) {
 };
 
 /**
- * Bind an event to a function call.
+ * Bind an event to a function call.  When calling the function, verifies that
+ * it belongs to the touch stream that is currently being processsed, and splits
+ * multitouch events into multiple events as needed.
+ * @param {!Node} node Node upon which to listen.
+ * @param {string} name Event name to listen to (e.g. 'mousedown').
+ * @param {Object} thisObject The value of 'this' in the function.
+ * @param {!Function} func Function to call when event is triggered.
+ * @param {boolean} opt_noCaptureIdentifier True if triggering on this event
+ *     should not block execution of other event handlers on this touch or other
+ *     simultaneous touches.
+ * @return {!Array.<!Array>} Opaque data that can be passed to unbindEvent_.
+ * @private
+ */
+Blockly.bindEventWithChecks_ = function(node, name, thisObject, func,
+    opt_noCaptureIdentifier) {
+  var handled = false;
+  var wrapFunc = function(e) {
+    var captureIdentifier = !opt_noCaptureIdentifier;
+    // Handle each touch point separately.  If the event was a mouse event, this
+    // will hand back an array with one element, which we're fine handling.
+    var events = Blockly.Touch.splitEventByTouches(e);
+    for (var i = 0, event; event = events[i]; i++) {
+      if (captureIdentifier && !Blockly.Touch.shouldHandleEvent(event)) {
+        continue;
+      }
+      Blockly.Touch.setClientFromTouch(event);
+      if (thisObject) {
+        func.call(thisObject, event);
+      } else {
+        func(event);
+      }
+      handled = true;
+    }
+  };
+
+  node.addEventListener(name, wrapFunc, false);
+  var bindData = [[node, name, wrapFunc]];
+
+  // Add equivalent touch event.
+  if (name in Blockly.Touch.TOUCH_MAP) {
+    var touchWrapFunc = function(e) {
+      wrapFunc(e);
+      // Stop the browser from scrolling/zooming the page.
+      if (handled) {
+        e.preventDefault();
+      }
+    };
+    for (var i = 0, eventName;
+         eventName = Blockly.Touch.TOUCH_MAP[name][i]; i++) {
+      node.addEventListener(eventName, touchWrapFunc, false);
+      bindData.push([node, eventName, touchWrapFunc]);
+    }
+  }
+  return bindData;
+};
+
+
+/**
+ * Bind an event to a function call.  Handles multitouch events by using the
+ * coordinates of the first changed touch, and doesn't do any safety checks for
+ * simultaneous event processing.
+ * @deprecated in favor of bindEventWithChecks_, but preserved for external
+ * users.
  * @param {!Node} node Node upon which to listen.
  * @param {string} name Event name to listen to (e.g. 'mousedown').
  * @param {Object} thisObject The value of 'this' in the function.
@@ -106,18 +169,20 @@ Blockly.hasClass_ = function(element, className) {
  * @private
  */
 Blockly.bindEvent_ = function(node, name, thisObject, func) {
-  if (thisObject) {
-    var wrapFunc = function(e) {
+  var wrapFunc = function(e) {
+    if (thisObject) {
       func.call(thisObject, e);
-    };
-  } else {
-    var wrapFunc = func;
-  }
+    } else {
+      func(e);
+    }
+  };
+
   node.addEventListener(name, wrapFunc, false);
   var bindData = [[node, name, wrapFunc]];
+
   // Add equivalent touch event.
-  if (name in Blockly.bindEvent_.TOUCH_MAP) {
-    wrapFunc = function(e) {
+  if (name in Blockly.Touch.TOUCH_MAP) {
+    var touchWrapFunc = function(e) {
       // Punt on multitouch events.
       if (e.changedTouches.length == 1) {
         // Map the touch event's properties to the event.
@@ -125,32 +190,19 @@ Blockly.bindEvent_ = function(node, name, thisObject, func) {
         e.clientX = touchPoint.clientX;
         e.clientY = touchPoint.clientY;
       }
-      func.call(thisObject, e);
+      wrapFunc(e);
+
       // Stop the browser from scrolling/zooming the page.
       e.preventDefault();
     };
     for (var i = 0, eventName;
-         eventName = Blockly.bindEvent_.TOUCH_MAP[name][i]; i++) {
-      node.addEventListener(eventName, wrapFunc, false);
-      bindData.push([node, eventName, wrapFunc]);
+         eventName = Blockly.Touch.TOUCH_MAP[name][i]; i++) {
+      node.addEventListener(eventName, touchWrapFunc, false);
+      bindData.push([node, eventName, touchWrapFunc]);
     }
   }
   return bindData;
 };
-
-/**
- * The TOUCH_MAP lookup dictionary specifies additional touch events to fire,
- * in conjunction with mouse events.
- * @type {Object}
- */
-Blockly.bindEvent_.TOUCH_MAP = {};
-if (goog.events.BrowserFeature.TOUCH_ENABLED) {
-  Blockly.bindEvent_.TOUCH_MAP = {
-    'mousedown': ['touchstart'],
-    'mousemove': ['touchmove'],
-    'mouseup': ['touchend', 'touchcancel']
-  };
-}
 
 /**
  * Unbind one or more events event from a function call.
@@ -215,7 +267,8 @@ Blockly.getRelativeXY_ = function(element) {
   // Second, check for transform="translate(...)" attribute.
   var transform = element.getAttribute('transform');
   if (transform) {
-    var transformComponents = transform.match(Blockly.getRelativeXY_.XY_REGEXP_);
+    var transformComponents =
+        transform.match(Blockly.getRelativeXY_.XY_REGEXP_);
     if (transformComponents) {
       xy.x += parseFloat(transformComponents[1]);
       if (transformComponents[3]) {
@@ -311,19 +364,19 @@ Blockly.is3dSupported = function() {
   var el = document.createElement('p'),
     has3d,
     transforms = {
-    'webkitTransform':'-webkit-transform',
-    'OTransform':'-o-transform',
-    'msTransform':'-ms-transform',
-    'MozTransform':'-moz-transform',
-    'transform':'transform'
-  };
+      'webkitTransform': '-webkit-transform',
+      'OTransform': '-o-transform',
+      'msTransform': '-ms-transform',
+      'MozTransform': '-moz-transform',
+      'transform': 'transform'
+    };
 
   // Add it to the body to get the computed style.
   document.body.insertBefore(el, null);
 
   for (var t in transforms) {
     if (el.style[t] !== undefined) {
-      el.style[t] = "translate3d(1px,1px,1px)";
+      el.style[t] = 'translate3d(1px,1px,1px)';
       has3d = window.getComputedStyle(el).getPropertyValue(transforms[t]);
     }
   }
@@ -338,11 +391,9 @@ Blockly.is3dSupported = function() {
  * @param {string} name Element's tag name.
  * @param {!Object} attrs Dictionary of attribute names and values.
  * @param {Element} parent Optional parent on which to append the element.
- * @param {Blockly.Workspace=} opt_workspace Optional workspace for access to
- *     context (scale...).
  * @return {!SVGElement} Newly created SVG element.
  */
-Blockly.createSvgElement = function(name, attrs, parent, opt_workspace) {
+Blockly.createSvgElement = function(name, attrs, parent) {
   var e = /** @type {!SVGElement} */ (
       document.createElementNS(Blockly.SVG_NS, name));
   for (var key in attrs) {
@@ -379,14 +430,17 @@ Blockly.isRightButton = function(e) {
  * The origin (0,0) is the top-left corner of the Blockly svg.
  * @param {!Event} e Mouse event.
  * @param {!Element} svg SVG element.
+ * @param {SVGMatrix} matrix Inverted screen CTM to use.
  * @return {!Object} Object with .x and .y properties.
  */
-Blockly.mouseToSvg = function(e, svg) {
+Blockly.mouseToSvg = function(e, svg, matrix) {
   var svgPoint = svg.createSVGPoint();
   svgPoint.x = e.clientX;
   svgPoint.y = e.clientY;
-  var matrix = svg.getScreenCTM();
-  matrix = matrix.inverse();
+
+  if (!matrix) {
+    matrix = svg.getScreenCTM().inverse();
+  }
   return svgPoint.matrixTransform(matrix);
 };
 
@@ -491,7 +545,7 @@ Blockly.isNumber = function(str) {
  * @param {string} message Text containing interpolation tokens.
  * @return {!Array.<string|number>} Array of strings and numbers.
  */
-Blockly.tokenizeInterpolation = function(message) {
+Blockly.utils.tokenizeInterpolation = function(message) {
   var tokens = [];
   var chars = message.split('');
   chars.push('');  // End marker.
@@ -559,13 +613,182 @@ Blockly.genUid = function() {
 };
 
 /**
- * Legal characters for the unique ID.
- * Should be all on a US keyboard.  No XML special characters or control codes.
- * Removed $ due to issue 251.
+ * Legal characters for the unique ID.  Should be all on a US keyboard.
+ * No characters that conflict with XML or JSON.  Requests to remove additional
+ * 'problematic' characters from this soup will be denied.  That's your failure
+ * to properly escape in your own environment.  Issues #251, #625, #682.
  * @private
  */
-Blockly.genUid.soup_ = '!#%()*+,-./:;=?@[]^_`{|}~' +
+Blockly.genUid.soup_ = '!#$%()*+,-./:;=?@[]^_`{|}~' +
     'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+
+/**
+ * Wrap text to the specified width.
+ * @param {string} text Text to wrap.
+ * @param {number} limit Width to wrap each line.
+ * @return {string} Wrapped text.
+ */
+Blockly.utils.wrap = function(text, limit) {
+  var lines = text.split('\n');
+  for (var i = 0; i < lines.length; i++) {
+    lines[i] = Blockly.utils.wrap_line_(lines[i], limit);
+  }
+  return lines.join('\n');
+};
+
+/**
+ * Wrap single line of text to the specified width.
+ * @param {string} text Text to wrap.
+ * @param {number} limit Width to wrap each line.
+ * @return {string} Wrapped text.
+ * @private
+ */
+Blockly.utils.wrap_line_ = function(text, limit) {
+  if (text.length <= limit) {
+    // Short text, no need to wrap.
+    return text;
+  }
+  // Split the text into words.
+  var words = text.trim().split(/\s+/);
+  // Set limit to be the length of the largest word.
+  for (var i = 0; i < words.length; i++) {
+    if (words[i].length > limit) {
+      limit = words[i].length;
+    }
+  }
+
+  var lastScore;
+  var score = -Infinity;
+  var lastText;
+  var lineCount = 1;
+  do {
+    lastScore = score;
+    lastText = text;
+    // Create a list of booleans representing if a space (false) or
+    // a break (true) appears after each word.
+    var wordBreaks = [];
+    // Seed the list with evenly spaced linebreaks.
+    var steps = words.length / lineCount;
+    var insertedBreaks = 1;
+    for (var i = 0; i < words.length - 1; i++) {
+      if (insertedBreaks < (i + 1.5) / steps) {
+        insertedBreaks++;
+        wordBreaks[i] = true;
+      } else {
+        wordBreaks[i] = false;
+      }
+    }
+    wordBreaks = Blockly.utils.wrapMutate_(words, wordBreaks, limit);
+    score = Blockly.utils.wrapScore_(words, wordBreaks, limit);
+    text = Blockly.utils.wrapToText_(words, wordBreaks);
+    lineCount++;
+  } while (score > lastScore);
+  return lastText;
+};
+
+/**
+ * Compute a score for how good the wrapping is.
+ * @param {!Array.<string>} words Array of each word.
+ * @param {!Array.<boolean>} wordBreaks Array of line breaks.
+ * @param {number} limit Width to wrap each line.
+ * @return {number} Larger the better.
+ * @private
+ */
+Blockly.utils.wrapScore_ = function(words, wordBreaks, limit) {
+  // If this function becomes a performance liability, add caching.
+  // Compute the length of each line.
+  var lineLengths = [0];
+  var linePunctuation = [];
+  for (var i = 0; i < words.length; i++) {
+    lineLengths[lineLengths.length - 1] += words[i].length;
+    if (wordBreaks[i] === true) {
+      lineLengths.push(0);
+      linePunctuation.push(words[i].charAt(words[i].length - 1));
+    } else if (wordBreaks[i] === false) {
+      lineLengths[lineLengths.length - 1]++;
+    }
+  }
+  var maxLength = Math.max.apply(Math, lineLengths);
+
+  var score = 0;
+  for (var i = 0; i < lineLengths.length; i++) {
+    // Optimize for width.
+    // -2 points per char over limit (scaled to the power of 1.5).
+    score -= Math.pow(Math.abs(limit - lineLengths[i]), 1.5) * 2;
+    // Optimize for even lines.
+    // -1 point per char smaller than max (scaled to the power of 1.5).
+    score -= Math.pow(maxLength - lineLengths[i], 1.5);
+    // Optimize for structure.
+    // Add score to line endings after punctuation.
+    if ('.?!'.indexOf(linePunctuation[i]) != -1) {
+      score += limit / 3;
+    } else if (',;)]}'.indexOf(linePunctuation[i]) != -1) {
+      score += limit / 4;
+    }
+  }
+  // All else being equal, the last line should not be longer than the
+  // previous line.  For example, this looks wrong:
+  // aaa bbb
+  // ccc ddd eee
+  if (lineLengths.length > 1 && lineLengths[lineLengths.length - 1] <=
+      lineLengths[lineLengths.length - 2]) {
+    score += 0.5;
+  }
+  return score;
+};
+
+/**
+ * Mutate the array of line break locations until an optimal solution is found.
+ * No line breaks are added or deleted, they are simply moved around.
+ * @param {!Array.<string>} words Array of each word.
+ * @param {!Array.<boolean>} wordBreaks Array of line breaks.
+ * @param {number} limit Width to wrap each line.
+ * @return {!Array.<boolean>} New array of optimal line breaks.
+ * @private
+ */
+Blockly.utils.wrapMutate_ = function(words, wordBreaks, limit) {
+  var bestScore = Blockly.utils.wrapScore_(words, wordBreaks, limit);
+  var bestBreaks;
+  // Try shifting every line break forward or backward.
+  for (var i = 0; i < wordBreaks.length - 1; i++) {
+    if (wordBreaks[i] == wordBreaks[i + 1]) {
+      continue;
+    }
+    var mutatedWordBreaks = [].concat(wordBreaks);
+    mutatedWordBreaks[i] = !mutatedWordBreaks[i];
+    mutatedWordBreaks[i + 1] = !mutatedWordBreaks[i + 1];
+    var mutatedScore =
+        Blockly.utils.wrapScore_(words, mutatedWordBreaks, limit);
+    if (mutatedScore > bestScore) {
+      bestScore = mutatedScore;
+      bestBreaks = mutatedWordBreaks;
+    }
+  }
+  if (bestBreaks) {
+    // Found an improvement.  See if it may be improved further.
+    return Blockly.utils.wrapMutate_(words, bestBreaks, limit);
+  }
+  // No improvements found.  Done.
+  return wordBreaks;
+};
+
+/**
+ * Reassemble the array of words into text, with the specified line breaks.
+ * @param {!Array.<string>} words Array of each word.
+ * @param {!Array.<boolean>} wordBreaks Array of line breaks.
+ * @return {string} Plain text.
+ * @private
+ */
+Blockly.utils.wrapToText_ = function(words, wordBreaks) {
+  var text = [];
+  for (var i = 0; i < words.length; i++) {
+    text.push(words[i]);
+    if (wordBreaks[i] !== undefined) {
+      text.push(wordBreaks[i] ? '\n' : ' ');
+    }
+  }
+  return text.join('');
+};
 
 /**
  * Measure some text using a canvas in-memory.
@@ -580,4 +803,17 @@ Blockly.measureText = function(fontSize, fontFamily, fontWeight, text) {
   var context = canvas.getContext('2d');
   context.font = fontWeight + ' ' + fontSize + ' ' + fontFamily;
   return context.measureText(text).width;
+};
+
+/**
+ * Encode a string's HTML entities.
+ * E.g., <a> -> &lt;a&gt;
+ * @param {string} rawStr Unencoded raw string to encode.
+ * @return {string} String with HTML entities encoded.
+ */
+Blockly.encodeEntities = function(rawStr) {
+  // CC-BY-SA https://stackoverflow.com/questions/18749591/encode-html-entities-in-javascript
+  return rawStr.replace(/[\u00A0-\u9999<>\&]/gim, function(i) {
+    return '&#' + i.charCodeAt(0) + ';';
+  });
 };
