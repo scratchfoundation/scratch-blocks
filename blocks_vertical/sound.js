@@ -551,6 +551,54 @@ Blockly.Blocks['sound_cleareffects'] = {
   }
 };
 
+Blockly.Blocks['sound_instruments_menu'] = {
+  /**
+   * Instruments drop-down menu.
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.jsonInit(
+      {
+        "message0": "%1",
+        "args0": [
+          {
+            "type": "field_dropdown",
+            "name": "INSTRUMENT",
+            "options": [
+              ['(1) Piano', '1'],
+              ['(2) Electric Piano', '2'],
+              ['(3) Organ', '3'],
+              ['(4) Guitar', '4'],
+              ['(5) Electric Guitar', '5'],
+              ['(6) Bass', '6'],
+              ['(7) Pizzicato', '7'],
+              ['(8) Cello', '8'],
+              ['(9) Trombone', '9'],
+              ['(10) Clarinet', '10'],
+              ['(11) Saxophone', '11'],
+              ['(12) Flute', '12'],
+              ['(13) Wooden Flute', '13'],
+              ['(14) Bassoon', '14'],
+              ['(15) Choir', '15'],
+              ['(16) Vibraphone', '16'],
+              ['(17) Music Box', '17'],
+              ['(18) Steel Drum', '18'],
+              ['(19) Marimba', '19'],
+              ['(20) Synth Lead', '20'],
+              ['(21) Synth Pad', '21']
+            ]
+          }
+        ],
+        "inputsInline": true,
+        "output": "String",
+        "colour": Blockly.Colours.sounds.secondary,
+        "colourSecondary": Blockly.Colours.sounds.secondary,
+        "colourTertiary": Blockly.Colours.sounds.tertiary,
+        "outputShape": Blockly.OUTPUT_SHAPE_ROUND
+      });
+  }
+};
+
 Blockly.Blocks['sound_setinstrumentto'] = {
   /**
    * Block to set the sprite's instrument to a certain value
