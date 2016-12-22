@@ -29,7 +29,7 @@ goog.require('Blockly.constants');
 
 Blockly.Blocks['sound_sounds_menu'] = {
   /**
-   * Sound effects drop-down menu.
+   * Sounds drop-down menu.
    * @this Blockly.Block
    */
   init: function() {
