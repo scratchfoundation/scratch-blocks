@@ -139,16 +139,10 @@ Blockly.FieldDropdown.prototype.showEditor_ = function() {
   var thisField = this;
 
   function callback(e) {
+    var menu = this;
     var menuItem = e.target;
     if (menuItem) {
-      var value = menuItem.getValue();
-      if (thisField.sourceBlock_) {
-        // Call any validation function, and allow it to override.
-        value = thisField.callValidator(value);
-      }
-      if (value !== null) {
-        thisField.setValue(value);
-      }
+      thisField.onItemSelected(menu, menuItem);
     }
     Blockly.DropDownDiv.hide();
   }
@@ -211,11 +205,11 @@ Blockly.FieldDropdown.prototype.showEditor_ = function() {
   var bBox = {width: this.size_.width, height: this.size_.height};
   bBox.width *= scale;
   bBox.height *= scale;
-  var position = goog.style.getPageOffset(this.fieldGroup_);
-  var primaryX = position.x + bBox.width / 2;
-  var primaryY = position.y + bBox.height;
+  var position = this.fieldGroup_.getBoundingClientRect();
+  var primaryX = position.left + bBox.width / 2;
+  var primaryY = position.top + bBox.height;
   var secondaryX = primaryX;
-  var secondaryY = position.y;
+  var secondaryY = position.top;
   // Set bounds to workspace; show the drop-down.
   Blockly.DropDownDiv.setBoundsElement(this.sourceBlock_.workspace.getParentSvg().parentNode);
   Blockly.DropDownDiv.show(this, primaryX, primaryY, secondaryX, secondaryY,
@@ -249,6 +243,22 @@ Blockly.FieldDropdown.prototype.onHide = function() {
     } else if (this.box_) {
       this.box_.setAttribute('fill', this.sourceBlock_.getColour());
     }
+  }
+};
+
+/**
+ * Handle the selection of an item in the dropdown menu.
+ * @param {goog.ui.Menu} menu The Menu component clicked.
+ * @param {goog.ui.MenuItem} menuItem The MenuItem selected within menu.
+ */
+Blockly.FieldDropdown.prototype.onItemSelected = function(menu, menuItem) {
+  var value = menuItem.getValue();
+  if (this.sourceBlock_) {
+    // Call any validation function, and allow it to override.
+    value = this.callValidator(value);
+  }
+  if (value !== null) {
+    this.setValue(value);
   }
 };
 

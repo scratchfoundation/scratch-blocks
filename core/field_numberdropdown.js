@@ -45,7 +45,10 @@ goog.require('goog.userAgent');
  * @extends {Blockly.FieldTextInput}
  * @constructor
  */
-Blockly.FieldNumberDropdown = function(value, menuGenerator, opt_min, opt_max, opt_precision, opt_validator) {
+Blockly.FieldNumberDropdown = function(value, menuGenerator, opt_min, opt_max,
+    opt_precision, opt_validator) {
+  this.setConstraints_ = Blockly.FieldNumber.prototype.setConstraints_;
+
   var numRestrictor = Blockly.FieldNumber.prototype.getNumRestrictor.call(
     this, opt_min, opt_max, opt_precision
   );

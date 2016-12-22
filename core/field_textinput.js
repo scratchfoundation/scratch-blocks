@@ -221,20 +221,22 @@ Blockly.FieldTextInput.prototype.showEditor_ = function(
 
   // Bind to keydown -- trap Enter without IME and Esc to hide.
   htmlInput.onKeyDownWrapper_ =
-      Blockly.bindEvent_(htmlInput, 'keydown', this, this.onHtmlInputKeyDown_);
+      Blockly.bindEventWithChecks_(htmlInput, 'keydown', this,
+      this.onHtmlInputKeyDown_);
   // Bind to keyup -- trap Enter; resize after every keystroke.
   htmlInput.onKeyUpWrapper_ =
-      Blockly.bindEvent_(htmlInput, 'keyup', this, this.onHtmlInputChange_);
+      Blockly.bindEventWithChecks_(htmlInput, 'keyup', this,
+      this.onHtmlInputChange_);
   // Bind to keyPress -- repeatedly resize when holding down a key.
   htmlInput.onKeyPressWrapper_ =
-      Blockly.bindEvent_(htmlInput, 'keypress', this, this.onHtmlInputChange_);
+      Blockly.bindEventWithChecks_(htmlInput, 'keypress', this,
+      this.onHtmlInputChange_);
   // For modern browsers (IE 9+, Chrome, Firefox, etc.) that support the
   // DOM input event, also trigger onHtmlInputChange_ then. The input event
   // is triggered on keypress but after the value of the text input
   // has updated, allowing us to resize the block at that time.
   htmlInput.onInputWrapper_ =
       Blockly.bindEvent_(htmlInput, 'input', this, this.onHtmlInputChange_);
-
   htmlInput.onWorkspaceChangeWrapper_ = this.resizeEditor_.bind(this);
   this.workspace_.addChangeListener(htmlInput.onWorkspaceChangeWrapper_);
 
@@ -332,7 +334,6 @@ Blockly.FieldTextInput.prototype.onHtmlInputChange_ = function(e) {
     this.sourceBlock_.render();
   }
   this.resizeEditor_();
-  Blockly.svgResize(this.sourceBlock_.workspace);
 };
 
 /**

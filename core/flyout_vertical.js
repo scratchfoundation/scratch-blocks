@@ -73,7 +73,12 @@ goog.inherits(Blockly.VerticalFlyout, Blockly.Flyout);
  */
 Blockly.VerticalFlyout.prototype.autoClose = false;
 
+/**
+ * The width of the flyout, if not otherwise specified.
+ * @type {number}
+ */
 Blockly.VerticalFlyout.prototype.DEFAULT_WIDTH = 250;
+
 /**
  * Size of a checkbox next to a variable reporter.
  * @type {number}
@@ -107,7 +112,10 @@ Blockly.VerticalFlyout.prototype.init = function(targetWorkspace) {
   this.workspace_.scale = targetWorkspace.scale;
 };
 
-
+/**
+ * Creates the flyout's DOM.  Only needs to be called once.
+ * @return {!Element} The flyout's SVG group.
+ */
 Blockly.VerticalFlyout.prototype.createDom = function() {
   Blockly.VerticalFlyout.superClass_.createDom.call(this);
 
@@ -312,6 +320,9 @@ Blockly.VerticalFlyout.prototype.wheel_ = function(e) {
     pos = Math.min(pos, limit);
     pos = Math.max(pos, 0);
     this.scrollbar_.set(pos);
+    // When the flyout moves from a wheel event, hide WidgetDiv and DropDownDiv.
+    Blockly.WidgetDiv.hide(true);
+    Blockly.DropDownDiv.hideWithoutAnimation();
   }
 
   // Don't scroll the page.
