@@ -464,7 +464,8 @@ Blockly.Blocks['sound_effects_menu'] = {
               ['pan left/right', 'PAN'],
               ['echo', 'ECHO'],
               ['reverb', 'REVERB'],
-              ['distortion', 'DISTORTION'],
+              ['fuzz', 'FUZZ'],
+              ['wobble', 'WOBBLE'],
               ['robotic', 'ROBOTIC']
             ]
           }
