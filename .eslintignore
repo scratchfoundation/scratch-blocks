@@ -10,4 +10,5 @@
 /appengine/*
 /shim/*
 /dist/*
+/gh-pages/*
 /webpack.config.js
