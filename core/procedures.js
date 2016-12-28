@@ -63,7 +63,7 @@ Blockly.Procedures.allProcedures = function(root) {
         } else if (type == "procedures_defnoreturn" && form == 1) {
           proceduresReturnBool.push(procCode);
         }
-        if (type == "procedures_defnoreturn" || type == "procedures_calreturn" || type == "procedures_callnoreturn") {
+        if (type == "procedures_defnoreturn" || type == "procedures_callreturn" || type == "procedures_callnoreturn") {
           procCode = Blockly.Procedures.findLegalName(procCode, blocks[i]);
         }
       }
@@ -187,7 +187,7 @@ Blockly.Procedures.flyoutCategory = function(workspace) {
       block.setAttribute('gap', 16);
       var mutation = goog.dom.createDom('mutation');
       mutation.setAttribute('proccode', procCode);
-      mutation.setAttribute('form', form);
+      mutation.setAttribute('type', form);
       block.appendChild(mutation);
       xmlList.push(block);
     }
