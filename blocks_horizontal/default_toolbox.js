@@ -29,7 +29,7 @@ goog.require('Blockly.Blocks');
  */
 
 Blockly.Blocks.defaultToolbox = '<xml id="toolbox-categories" style="display: none" colour="#FFD500" secondaryColour="#CC9900">' +
-    '<category name="Events">' +
+    '<category name="Events" colour="#FFD500" secondaryColour="#CC9900">' +
         '<block type="event_whenflagclicked"></block>' +
         '<block type="event_whenthisspriteclicked"></block>' +
         '<block type="event_bump"></block>' +
