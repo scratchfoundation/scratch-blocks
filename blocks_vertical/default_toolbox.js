@@ -293,18 +293,6 @@ Blockly.Blocks.defaultToolbox = '<xml id="toolbox-categories" style="display: no
         '</shadow>'+
       '</value>'+
     '</block>'+
-    '<block type="sound_playthereminforbeats">'+
-      '<value name="NOTE">'+
-        '<shadow type="math_number">'+
-          '<field name="NUM">60</field>'+
-        '</shadow>'+
-      '</value>'+
-      '<value name="BEATS">'+
-        '<shadow type="math_number">'+
-          '<field name="NUM">0.5</field>'+
-        '</shadow>'+
-      '</value>'+
-    '</block>'+
     '<block type="sound_seteffectto">' +
       '<value name="EFFECT">' +
         '<shadow type="sound_effects_menu"></shadow>' +
