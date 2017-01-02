@@ -511,13 +511,7 @@ Blockly.Block.prototype.setParent = function(newParent) {
   }
   if (this.parentBlock_) {
     // Remove this block from the old parent's child list.
-    var children = this.parentBlock_.childBlocks_;
-    for (var child, x = 0; child = children[x]; x++) {
-      if (child == this) {
-        children.splice(x, 1);
-        break;
-      }
-    }
+    goog.array.remove(this.parentBlock_.childBlocks_, this);
 
     // Disconnect from superior blocks.
     if (this.previousConnection && this.previousConnection.isConnected()) {
@@ -628,10 +622,12 @@ Blockly.Block.prototype.setInsertionMarker = function(insertionMarker) {
     return;  // No change.
   }
   this.isInsertionMarker_ = insertionMarker;
+  // TODO: handle removing insertion marker status.
   if (this.isInsertionMarker_) {
     this.setColour(Blockly.Colours.insertionMarker);
     this.setOpacity(Blockly.Colours.insertionMarkerOpacity);
-    this.svgGroup_.classList.add('blocklyInsertionMarker');
+    Blockly.addClass_(/** @type {!Element} */ (this.svgGroup_),
+        'blocklyInsertionMarker');
   }
 };
 
@@ -1197,7 +1193,8 @@ Blockly.Block.prototype.interpolate_ = function(message, args, lastDummyAlign) {
       'Message does not reference all %s arg(s).', args.length);
   // Add last dummy input if needed.
   if (elements.length && (typeof elements[elements.length - 1] == 'string' ||
-      elements[elements.length - 1]['type'].indexOf('field_') == 0)) {
+      goog.string.startsWith(elements[elements.length - 1]['type'],
+                             'field_'))) {
     var dummyInput = {type: 'input_dummy'};
     if (lastDummyAlign) {
       dummyInput['align'] = lastDummyAlign;

@@ -433,6 +433,22 @@ Blockly.Css.CONTENT = [
     'fill: #aaa;',
   '}',
 
+  '.blocklyFlyoutLabel {',
+    'cursor: default;',
+  '}',
+
+  '.blocklyFlyoutLabelBackground {',
+    'opacity: 0;',
+  '}',
+
+  '.blocklyFlyoutLabelText {',
+    'fill: #000;',
+  '}',
+
+  '.blocklyFlyoutLabelText:hover {',
+    'fill: #aaa;',
+  '}',
+
   /*
     Don't allow users to select text.  It gets annoying when trying to
     drag a block and selected text moves instead.
@@ -602,6 +618,7 @@ Blockly.Css.CONTENT = [
     'overflow-x: visible;',
     'overflow-y: auto;',
     'position: absolute;',
+    'font-family: "Helvetica Neue", Helvetica, sans-serif;',
   '}',
 
   '.blocklyTreeRoot {',

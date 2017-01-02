@@ -187,8 +187,9 @@ Blockly.Generator.prototype.blockToCode = function(block) {
         'Expecting string from statement block "%s".', block.type);
     return [this.scrub_(block, code[0]), code[1]];
   } else if (goog.isString(code)) {
+    var id = block.id.replace(/\$/g, '$$$$');  // Issue 251.
     if (this.STATEMENT_PREFIX) {
-      code = this.STATEMENT_PREFIX.replace(/%1/g, '\'' + block.id + '\'') +
+      code = this.STATEMENT_PREFIX.replace(/%1/g, '\'' + id + '\'') +
           code;
     }
     return this.scrub_(block, code);
@@ -297,6 +298,7 @@ Blockly.Generator.prototype.statementToCode = function(block, name) {
  * @return {string} Loop contents, with infinite loop trap added.
  */
 Blockly.Generator.prototype.addLoopTrap = function(branch, id) {
+  id = id.replace(/\$/g, '$$$$');  // Issue 251.
   if (this.INFINITE_LOOP_TRAP) {
     branch = this.INFINITE_LOOP_TRAP.replace(/%1/g, '\'' + id + '\'') + branch;
   }
@@ -358,11 +360,15 @@ Blockly.Generator.prototype.provideFunction_ = function(desiredName, code) {
     var codeText = code.join('\n').replace(
         this.FUNCTION_NAME_PLACEHOLDER_REGEXP_, functionName);
     // Change all '  ' indents into the desired indent.
+    // To avoid an infinite loop of replacements, change all indents to '\0'
+    // character first, then replace them all with the indent.
+    // We are assuming that no provided functions contain a literal null char.
     var oldCodeText;
     while (oldCodeText != codeText) {
       oldCodeText = codeText;
-      codeText = codeText.replace(/^(( {2})*) {2}/gm, '$1' + this.INDENT);
+      codeText = codeText.replace(/^(( {2})*) {2}/gm, '$1\0');
     }
+    codeText = codeText.replace(/\0/g, this.INDENT);
     this.definitions_[desiredName] = codeText;
   }
   return this.functionNames_[desiredName];

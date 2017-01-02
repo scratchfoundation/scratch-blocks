@@ -146,7 +146,7 @@ Blockly.BlockSvg.prototype.initSvg = function() {
   this.updateColour();
   this.updateMovable();
   if (!this.workspace.options.readOnly && !this.eventsInit_) {
-    Blockly.bindEvent_(this.getSvgRoot(), 'mousedown', this,
+    Blockly.bindEventWithChecks_(this.getSvgRoot(), 'mousedown', this,
                        this.onMouseDown_);
     var thisBlock = this;
     Blockly.bindEvent_(this.getSvgRoot(), 'touchstart', null,
@@ -165,8 +165,9 @@ Blockly.BlockSvg.prototype.initSvg = function() {
  * @param {!Blockly.Input} input Value input to add a shape SVG element for.
  */
 Blockly.BlockSvg.prototype.initInputShape = function(input) {
-  if (this.inputShapes_[input.name]) {
-    // Only create the shape elements once.
+  if (this.inputShapes_[input.name] || input.connection.getShadowDom()) {
+    // Only create the shape elements once, and don't bother creating them if
+    // there's a shadow block that will always cover the input shape.
     return;
   }
   this.inputShapes_[input.name] = Blockly.createSvgElement(
@@ -339,7 +340,7 @@ Blockly.BlockSvg.terminateDrag = function() {
       selected.render();
       // Re-enable workspace resizing.
       selected.workspace.setResizesEnabled(true);
-      // Ensure that any stap and bump are part of this move's event group.
+      // Ensure that any snap and bump are part of this move's event group.
       var group = Blockly.Events.getGroup();
       setTimeout(function() {
         Blockly.Events.setGroup(group);
@@ -682,10 +683,10 @@ Blockly.BlockSvg.prototype.onMouseDown_ = function(e) {
     this.workspace.startDrag(e, this.dragStartXY_);
 
     Blockly.dragMode_ = Blockly.DRAG_STICKY;
-    Blockly.BlockSvg.onMouseUpWrapper_ = Blockly.bindEvent_(document,
+    Blockly.BlockSvg.onMouseUpWrapper_ = Blockly.bindEventWithChecks_(document,
         'mouseup', this, this.onMouseUp_);
-    Blockly.BlockSvg.onMouseMoveWrapper_ = Blockly.bindEvent_(document,
-        'mousemove', this, this.onMouseMove_);
+    Blockly.BlockSvg.onMouseMoveWrapper_ = Blockly.bindEventWithChecks_(
+        document, 'mousemove', this, this.onMouseMove_);
     // Build a list of bubbles that need to be moved and where they started.
     this.draggedBubbles_ = [];
     var descendants = this.getDescendants();
@@ -887,12 +888,17 @@ Blockly.BlockSvg.prototype.moveConnections_ = function(dx, dy) {
  */
 Blockly.BlockSvg.prototype.setDragging_ = function(adding) {
   if (adding) {
-    this.addDragging();
+    var group = this.getSvgRoot();
+    group.translate_ = '';
+    group.skew_ = '';
     Blockly.draggingConnections_ =
         Blockly.draggingConnections_.concat(this.getConnections_(true));
+    Blockly.addClass_(/** @type {!Element} */ (this.svgGroup_),
+                      'blocklyDragging');
   } else {
-    this.removeDragging();
     Blockly.draggingConnections_ = [];
+    Blockly.removeClass_(/** @type {!Element} */ (this.svgGroup_),
+                         'blocklyDragging');
   }
   // Recurse through all blocks attached under this one.
   for (var i = 0; i < this.childBlocks_.length; i++) {
@@ -1587,22 +1593,6 @@ Blockly.BlockSvg.prototype.addSelect = function() {
 Blockly.BlockSvg.prototype.removeSelect = function() {
   Blockly.removeClass_(/** @type {!Element} */ (this.svgGroup_),
                        'blocklySelected');
-};
-
-/**
- * Adds the dragging class to this block.
- */
-Blockly.BlockSvg.prototype.addDragging = function() {
-  Blockly.addClass_(/** @type {!Element} */ (this.svgGroup_),
-                    'blocklyDragging');
-};
-
-/**
- * Removes the dragging class from this block.
- */
-Blockly.BlockSvg.prototype.removeDragging = function() {
-  Blockly.removeClass_(/** @type {!Element} */ (this.svgGroup_),
-                       'blocklyDragging');
 };
 
 // Overrides of functions on Blockly.Block that take into account whether the

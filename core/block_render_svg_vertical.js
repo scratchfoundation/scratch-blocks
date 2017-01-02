@@ -510,10 +510,12 @@ Blockly.BlockSvg.prototype.updateColour = function() {
 Blockly.BlockSvg.prototype.highlightForReplacement = function(add) {
   if (add) {
     this.svgPath_.setAttribute('filter', 'url(#blocklyReplacementGlowFilter)');
-    this.svgGroup_.classList.add('blocklyReplaceable');
+    Blockly.addClass_(/** @type {!Element} */ (this.svgGroup_),
+        'blocklyReplaceable');
   } else {
     this.svgPath_.removeAttribute('filter');
-    this.svgGroup_.classList.remove('blocklyReplaceable');
+    Blockly.removeClass_(/** @type {!Element} */ (this.svgGroup_),
+        'blocklyReplaceable');
   }
 };
 
@@ -531,10 +533,12 @@ Blockly.BlockSvg.prototype.highlightShapeForInput = function(conn, add) {
   var inputShape = this.inputShapes_[input.name];
   if (add) {
     inputShape.setAttribute('filter', 'url(#blocklyReplacementGlowFilter)');
-    inputShape.classList.add('blocklyReplaceable');
+    Blockly.addClass_(/** @type {!Element} */ (this.svgGroup_),
+        'blocklyReplaceable');
   } else {
     inputShape.removeAttribute('filter');
-    inputShape.classList.remove('blocklyReplaceable');
+    Blockly.removeClass_(/** @type {!Element} */ (this.svgGroup_),
+        'blocklyReplaceable');
   }
 };
 

@@ -11,9 +11,9 @@
   },
   "main": "./dist/vertical.js",
   "scripts": {
-    "prepublish": "python ./build.py && ./node_modules/.bin/webpack",
-    "test": "./node_modules/.bin/eslint .",
-    "version": "./node_modules/.bin/json -f package.json -I -e \"this.repository.sha = '$(git log -n1 --pretty=format:%H)'\""
+    "prepublish": "python build.py && webpack",
+    "test": "eslint .",
+    "version": "json -f package.json -I -e \"this.repository.sha = '$(git log -n1 --pretty=format:%H)'\""
   },
   "devDependencies": {
     "eslint": "2.9.0",
