@@ -28,4 +28,6 @@ after_script:
     # Set version to timestamp
     npm --no-git-tag-version version $($(npm bin)/json -f package.json version)-prerelease.$(date +%s)
     npm publish
+    # Publish to gh-pages as most recent committer
+    GIT_AUTHOR_EMAIL=$(git log --pretty=format:"%ae" -n1) GIT_AUTHOR_NAME=$(git log --pretty=format:"%an" -n1) npm run --silent deploy -- -x -r https://${GH_TOKEN}@github.com/${TRAVIS_REPO_SLUG}.git
   fi
