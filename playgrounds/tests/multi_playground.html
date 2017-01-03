@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Multi-toolbox Playground</title>
+<script src="../blockly_uncompressed_horizontal.js"></script>
+<script src="../msg/messages.js"></script>
+<script src="../blocks_common/math.js"></script>
+<script src="../blocks_common/text.js"></script>
+<script src="../blocks_horizontal/control.js"></script>
+<script src="../blocks_horizontal/event.js"></script>
+<script src="../blocks_horizontal/wedo.js"></script>
+<script>
+'use strict';
+var options = {
+  comments: true,
+  collapse: true,
+  media: '../media/',
+  oneBasedIndex: true,
+  readOnly: false,
+  //rtl: false,
+  scrollbars: true,
+  trashcan: true,
+  //toolbox: null,
+  //horizontalLayout: false,
+  //toolboxPosition: 'start',
+  zoom: {
+    controls: true,
+    wheel: true,
+    startScale: 1.0,
+    maxScale: 4,
+    minScale: 0.25,
+    scaleSpeed: 1.1
+  }
+};
+
+function start() {
+  var match = location.search.match(/toolbox=([^&]+)/);
+  var toolbox =
+      document.getElementById('toolbox-' + (match ? match[1] : 'categories'));
+  document.forms.options.elements.toolbox.selectedIndex =
+      Number(toolbox.getElementsByTagName('category').length == 0);
+  startBlocklyInstance('VertStartLTR', false, false, 'start', toolbox);
+  startBlocklyInstance('VertStartRTL', true, false, 'start', toolbox);
+
+  startBlocklyInstance('VertEndLTR', false, false, 'end', toolbox);
+  startBlocklyInstance('VertEndRTL', true, false, 'end', toolbox);
+
+  startBlocklyInstance('HorizontalStartLTR', false, true, 'start', toolbox);
+  startBlocklyInstance('HorizontalStartRTL', true, true, 'start', toolbox);
+
+  startBlocklyInstance('HorizontalEndLTR', false, true, 'end', toolbox);
+  startBlocklyInstance('HorizontalEndRTL', true, true, 'end', toolbox);
+}
+
+function startBlocklyInstance(suffix, rtl, horizontalLayout, position,
+    toolbox) {
+  options.rtl = rtl;
+  options.toolbox = toolbox;
+  options.horizontalLayout = horizontalLayout;
+  options.toolboxPosition = position;
+  Blockly.inject('blocklyDiv' + suffix, options);
+}
+</script>
+
+<style>
+html, body {
+  height: 100%;
+}
+body {
+  background-color: #fff;
+  font-family: sans-serif;
+}
+h1 {
+  font-weight: normal;
+  font-size: 140%;
+}
+
+#octaweb {
+  width: 100%;
+}
+#octaweb th {
+  padding-top: 1em;
+  width: 50%;
+}
+#octaweb td {
+  width: 50%;
+}
+#octaweb td >div {
+  height: 480px;
+  width: 100%;
+}
+</style>
+</head>
+<body onload="start()">
+  <h1>Blockly Multi Playground</h1>
+
+  <form id="options">
+    <select name="toolbox" onchange="document.forms.options.submit()">
+      <option value="categories">Categories</option>
+      <option value="simple">Simple</option>
+    </select>
+  </form>
+
+  <table id="octaweb">
+    <tr>
+      <th>LTR, Vertical, Start</th>
+      <th>RTL, Vertical, Start</th>
+    </tr>
+    <tr>
+      <td><div id="blocklyDivVertStartLTR"></div></td>
+      <td><div id="blocklyDivVertStartRTL"></div></td>
+    </tr>
+    <tr>
+      <th>LTR, Vertical, End</th>
+      <th>RTL, Vertical, End</th>
+    </tr>
+    <tr>
+      <td><div id="blocklyDivVertEndLTR"></div></td>
+      <td><div id="blocklyDivVertEndRTL"></div></td>
+    </tr>
+    <tr>
+      <th>LTR, Horizontal, Start</th>
+      <th>RTL, Horizontal, Start</th>
+    </tr>
+    <tr>
+      <td><div id="blocklyDivHorizontalStartLTR"></div></td>
+      <td><div id="blocklyDivHorizontalStartRTL"></div></td>
+    </tr>
+    <tr>
+      <th>LTR, Horizontal, End</th>
+      <th>RTL, Horizontal, End</th>
+    </tr>
+    <tr>
+      <td><div id="blocklyDivHorizontalEndLTR"></div></td>
+      <td><div id="blocklyDivHorizontalEndRTL"></div></td>
+    </tr>
+  </table>
+
+  <xml id="toolbox-simple" style="display: none">
+    <block type="event_whenflagclicked"></block>
+    <block type="wedo_motorclockwise"></block>
+    <!-- <block type="control_repeat"></block> -->
+    <block type="control_forever"></block>
+    <block type="control_repeat">
+      <value name="TIMES">
+        <shadow type="math_number">
+          <field name="NUM">10</field>
+        </shadow>
+      </value>
+    </block>
+  </xml>
+
+  <xml id="toolbox-categories" style="display: none">
+     <category name="Events" colour="210" secondaryColour="0">
+      <block type="event_whenflagclicked"></block>
+      <block type="event_whenflagclicked"></block>
+      <block type="event_whenflagclicked"></block>
+      <block type="event_whenflagclicked"></block>
+      <block type="event_whenflagclicked"></block>
+      <block type="event_whenflagclicked"></block>
+      <block type="event_whenflagclicked"></block>
+      <block type="event_whenflagclicked"></block>
+      <block type="event_whenflagclicked"></block>
+      <block type="event_whenflagclicked"></block>
+      <block type="event_whenflagclicked"></block>
+      <block type="event_whenflagclicked"></block>
+      <block type="event_whenflagclicked"></block>
+    </category>
+    <sep></sep>
+      <!-- <block type="control_repeat"></block> -->
+    <category name="Pants" secondaryColour="0">
+      <block type="control_forever"></block>
+      <block type="control_repeat">
+        <value name="TIMES">
+          <shadow type="math_number">
+            <field name="NUM">10</field>
+          </shadow>
+        </value>
+      </block>
+    </category>
+  </xml>
+
+  <xml id="toolbox_categories" style="display: none">
+    <category name="Events" secondaryColour="0">
+      <block type="event_whenflagclicked"></block>
+      <block type="event_whenbroadcastreceived">
+        <value name="CHOICE">
+          <shadow type="dropdown_whenbroadcast">
+            <field name="CHOICE">blue</field>
+          </shadow>
+        </value>
+      </block>
+      <block type="event_broadcast">
+        <value name="CHOICE">
+          <shadow type="dropdown_broadcast">
+            <field name="CHOICE">blue</field>
+          </shadow>
+        </value>
+      </block>
+    </category>
+
+    <category name="Control" secondaryColour="0">
+      <block type="control_forever"></block>
+      <block type="control_repeat">
+        <value name="TIMES">
+          <shadow type="math_number">
+            <field name="NUM">4</field>
+          </shadow>
+        </value>
+      </block>
+      <block type="control_stop"></block>
+      <block type="control_wait">
+        <value name="DURATION">
+          <shadow type="math_number">
+            <field name="NUM">1</field>
+          </shadow>
+        </value>
+      </block>
+    </category>
+
+    <category name="Wedo" secondaryColour="0">
+        <block type="wedo_setcolor">
+          <value name="CHOICE">
+            <shadow type="dropdown_wedo_setcolor">
+              <field name="CHOICE">mystery</field>
+            </shadow>
+          </value>
+        </block>
+        <block type="wedo_motorclockwise">
+            <value name="DURATION">
+              <shadow type="math_number">
+                <field name="NUM">1</field>
+              </shadow>
+            </value>
+        </block>
+        <block type="wedo_motorcounterclockwise">
+            <value name="DURATION">
+              <shadow type="math_number">
+                <field name="NUM">1</field>
+              </shadow>
+            </value>
+        </block>
+        <block type="wedo_motorspeed">
+          <value name="CHOICE">
+            <shadow type="dropdown_wedo_motorspeed">
+              <field name="CHOICE">fast</field>
+            </shadow>
+          </value>
+        </block>
+        <block type="wedo_whentilt">
+          <value name="CHOICE">
+            <shadow type="dropdown_wedo_whentilt">
+              <field name="CHOICE">forward</field>
+            </shadow>
+          </value>
+        </block>
+        <block type="wedo_whendistanceclose"></block>
+    </category>
+  </xml>
+</body>
+</html>

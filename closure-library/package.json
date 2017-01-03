@@ -1,0 +1,154 @@
+{
+  "name": "google-closure-library",
+  "description": "Google's common JavaScript library",
+  "version": "20160911.0.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/google/closure-library.git"
+  },
+  "main": "closure/goog/bootstrap/nodejs.js",
+  "keywords": [
+    "javascript",
+    "library",
+    "goog",
+    "closure"
+  ],
+  "author": {
+    "name": "The Closure Library Authors"
+  },
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/google/closure-library/issues"
+  },
+  "homepage": "https://developers.google.com/closure/library/",
+  "devDependencies": {
+    "promise": "^7.0.4",
+    "protractor": "^2.1.0"
+  },
+  "contributors": [
+    {
+      "name": "Google Inc."
+    },
+    {
+      "name": "gigmade ltd."
+    },
+    {
+      "name": "Mohamed Mansour",
+      "email": "hello@mohamedmansour.com"
+    },
+    {
+      "name": "Bjorn Tipling",
+      "email": "bjorn.tipling@gmail.com"
+    },
+    {
+      "name": "SameGoal LLC",
+      "email": "help@samegoal.com"
+    },
+    {
+      "name": "Guido Tapia",
+      "email": "guido.tapia@gmail.com"
+    },
+    {
+      "name": "Andrew Mattie",
+      "email": "amattie@gmail.com"
+    },
+    {
+      "name": "Ilia Mirkin",
+      "email": "ibmirkin@gmail.com"
+    },
+    {
+      "name": "Ivan Kozik",
+      "email": "ivan.kozik@gmail.com"
+    },
+    {
+      "name": "Rich Dougherty",
+      "email": "rich@rd.gen.nz"
+    },
+    {
+      "name": "Chad Killingsworth",
+      "email": "chadkillingsworth@missouristate.edu"
+    },
+    {
+      "name": "Dan Pupius",
+      "email": "dan.pupius@gmail.com"
+    },
+    {
+      "name": "Mike Dunn",
+      "email": "dunn74@gmail.com"
+    },
+    {
+      "name": "Kengo Toda",
+      "email": "skypencil@gmail.com"
+    },
+    {
+      "name": "Remember The Milk Inc."
+    },
+    {
+      "name": "Anish Visaria",
+      "email": "anishvisaria98@gmail.com"
+    },
+    {
+      "name": "John Huân Vũ",
+      "email": "jvu.calpoly@gmail.com"
+    },
+    {
+      "name": "Peter Lu",
+      "email": "peterlu83+github@gmail.com"
+    },
+    {
+      "name": "Filipe Catraia",
+      "email": "filipe.catraia@deliveryhero.com"
+    },
+    {
+      "name": "Dan Rubalsky",
+      "email": "drubalsky@plentakill.com"
+    },
+    {
+      "name": "Michael Zhou",
+      "email": "zhoumotongxue008@gmail.com"
+    },
+    {
+      "name": "mash",
+      "email": "mashedcode@users.noreply.github.com"
+    }
+  ],
+  "gitHead": "0e3f5f579afef3cc392a8b3e35149f25c6d5e54a",
+  "_id": "google-closure-library@20160911.0.0",
+  "scripts": {},
+  "_shasum": "74eae8a2777526c9ff646f946fffc1cf15863422",
+  "_from": "google-closure-library@20160911.0.0",
+  "_npmVersion": "3.9.0",
+  "_nodeVersion": "0.10.25",
+  "_npmUser": {
+    "name": "blickly",
+    "email": "blickly+npm@google.com"
+  },
+  "dist": {
+    "shasum": "74eae8a2777526c9ff646f946fffc1cf15863422",
+    "tarball": "https://registry.npmjs.org/google-closure-library/-/google-closure-library-20160911.0.0.tgz"
+  },
+  "maintainers": [
+    {
+      "name": "blickly",
+      "email": "blickly+npm@google.com"
+    },
+    {
+      "name": "chadhikes",
+      "email": "chadkillingsworth@gmail.com"
+    },
+    {
+      "name": "joeltine",
+      "email": "jmarti221@gmail.com"
+    },
+    {
+      "name": "matrixfrog",
+      "email": "tbreisacher@google.com"
+    }
+  ],
+  "_npmOperationalInternal": {
+    "host": "packages-12-west.internal.npmjs.com",
+    "tmp": "tmp/google-closure-library-20160911.0.0.tgz_1473890778973_0.826462026219815"
+  },
+  "directories": {},
+  "_resolved": "https://registry.npmjs.org/google-closure-library/-/google-closure-library-20160911.0.0.tgz"
+}
