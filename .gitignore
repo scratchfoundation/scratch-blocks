@@ -30,3 +30,7 @@ python_compressed.js
 /blocks_compressed_horizontal.js
 /blocks_compressed_vertical.js
 /blocks_compressed.js
+/gh-pages/playgrounds
+/gh-pages/Gemfile.lock
+/gh-pages/closure-library
+/gh-pages/_site
