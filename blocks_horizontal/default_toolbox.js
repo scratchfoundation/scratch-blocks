@@ -28,7 +28,7 @@ goog.require('Blockly.Blocks');
  * @fileoverview Provide a default toolbox XML.
  */
 
-Blockly.Blocks.defaultToolbox = '<xml id="toolbox-categories" style="display: none" colour="#FFD500" secondaryColour="#CC9900">' +
+Blockly.Blocks.defaultToolbox = '<xml id="toolbox-categories" style="display: none">' +
     '<category name="Events" colour="#FFD500" secondaryColour="#CC9900">' +
         '<block type="event_whenflagclicked"></block>' +
         '<block type="event_whenthisspriteclicked"></block>' +
