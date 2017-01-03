@@ -27,7 +27,7 @@ goog.require('Blockly.Colours');
 goog.require('Blockly.constants');
 
 
-Blockly.Blocks['sound_sounds_option'] = {
+Blockly.Blocks['sound_sounds_menu'] = {
   /**
    * Sound effects drop-down menu.
    * @this Blockly.Block
