@@ -187,7 +187,7 @@ Blockly.Blocks['sound_playdrumforbeats'] = {
       "args0": [
         {
           "type": "input_value",
-          "name": "DRUMTYPE"
+          "name": "DRUM"
         },
         {
           "type": "input_value",
