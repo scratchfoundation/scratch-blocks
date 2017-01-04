@@ -29,7 +29,7 @@ goog.require('Blockly.constants');
 
 Blockly.Blocks['sound_sounds_menu'] = {
   /**
-   * Sounds drop-down menu.
+   * Sound effects drop-down menu.
    * @this Blockly.Block
    */
   init: function() {
@@ -131,9 +131,9 @@ Blockly.Blocks['sound_stopallsounds'] = {
   }
 };
 
-Blockly.Blocks['sound_beats_menu'] = {
+Blockly.Blocks['sound_drums_menu'] = {
   /**
-   * Sound beats drop-down menu.
+   * Drums drop-down menu.
    * @this Blockly.Block
    */
   init: function() {
@@ -143,14 +143,26 @@ Blockly.Blocks['sound_beats_menu'] = {
         "args0": [
           {
             "type": "field_dropdown",
-            "name": "BEATS",
+            "name": "DRUM",
             "options": [
-              ['1/8', '0.125'],
-              ['1/4', '0.25'],
-              ['1/2', '0.5'],
-              ['1', '1'],
-              ['2', '2'],
-              ['4', '4']
+              ['(1) Snare Drum', '1'],
+              ['(2) Bass Drum', '2'],
+              ['(3) Side Stick', '3'],
+              ['(4) Crash Cymbal', '4'],
+              ['(5) Open Hi-Hat', '5'],
+              ['(6) Closed Hi-Hat', '6'],
+              ['(7) Tambourine', '7'],
+              ['(8) Hand Clap', '8'],
+              ['(9) Claves', '9'],
+              ['(10) Wood Block', '10'],
+              ['(11) Cowbell', '11'],
+              ['(12) Triangle', '12'],
+              ['(13) Bongo', '13'],
+              ['(14) Conga', '14'],
+              ['(15) Cabasa', '15'],
+              ['(16) Guiro', '16'],
+              ['(17) Vibraslap', '17'],
+              ['(18) Open Cuica', '18']
             ]
           }
         ],
@@ -164,33 +176,9 @@ Blockly.Blocks['sound_beats_menu'] = {
   }
 };
 
-Blockly.Blocks['sound_playdrum'] = {
-  /**
-   * Block to play a certain drum
-   * @this Blockly.Block
-   */
-  init: function() {
-    this.jsonInit({
-      "message0": "play drum %1",
-      "args0": [
-        {
-          "type": "input_value",
-          "name": "DRUMTYPE"
-        }
-      ],
-      "previousStatement": null,
-      "nextStatement": null,
-      "colour": Blockly.Colours.sounds.primary,
-      "colourSecondary": Blockly.Colours.sounds.secondary,
-      "colourTertiary": Blockly.Colours.sounds.tertiary
-    });
-  }
-};
-
-
 Blockly.Blocks['sound_playdrumforbeats'] = {
   /**
-   * Block to play a certain drum for certain beats
+   * Block to play a drum for some number of beats
    * @this Blockly.Block
    */
   init: function() {
@@ -199,7 +187,7 @@ Blockly.Blocks['sound_playdrumforbeats'] = {
       "args0": [
         {
           "type": "input_value",
-          "name": "DRUMTYPE"
+          "name": "DRUM"
         },
         {
           "type": "input_value",
@@ -218,7 +206,7 @@ Blockly.Blocks['sound_playdrumforbeats'] = {
 
 Blockly.Blocks['sound_restforbeats'] = {
   /**
-   * Block to rest for certain beats
+   * Block to rest for some number of beats
    * @this Blockly.Block
    */
   init: function() {
@@ -242,7 +230,7 @@ Blockly.Blocks['sound_restforbeats'] = {
 
 Blockly.Blocks['sound_playnoteforbeats'] = {
   /**
-   * Block to play a certain note for certain beats
+   * Block to play a certain note for some number of beats
    * @this Blockly.Block
    */
   init: function() {
@@ -286,9 +274,8 @@ Blockly.Blocks['sound_effects_menu'] = {
               ['pan left/right', 'PAN'],
               ['echo', 'ECHO'],
               ['reverb', 'REVERB'],
-              ['fuzz', 'FUZZ'],
-              ['wobble', 'WOBBLE'],
-              ['robotic', 'ROBOTIC']
+              ['fuzz', 'DISTORTION'],
+              ['robot', 'ROBOTIC']
             ]
           }
         ],
@@ -424,7 +411,7 @@ Blockly.Blocks['sound_instruments_menu'] = {
 
 Blockly.Blocks['sound_setinstrumentto'] = {
   /**
-   * Block to set the sprite's instrument to a certain value
+   * Block to set the sprite's instrument
    * @this Blockly.Block
    */
   init: function() {

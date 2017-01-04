@@ -256,11 +256,9 @@ Blockly.Blocks.defaultToolbox = '<xml id="toolbox-categories" style="display: no
     '</block>'+
     '<block type="sound_stopallsounds"></block>'+
     '<block type="sound_playdrumforbeats">'+
-      '<value name="DRUMTYPE">'+
-        '<shadow type="math_number">'+
-          '<field name="NUM">1</field>'+
-        '</shadow>'+
-      '</value>'+
+      '<value name="DRUM">' +
+        '<shadow type="sound_drums_menu"></shadow>' +
+      '</value>' +
       '<value name="BEATS">'+
         '<shadow type="math_number">'+
           '<field name="NUM">0.25</field>'+
@@ -287,11 +285,9 @@ Blockly.Blocks.defaultToolbox = '<xml id="toolbox-categories" style="display: no
       '</value>'+
     '</block>'+
     '<block type="sound_setinstrumentto">'+
-      '<value name="INSTRUMENT">'+
-        '<shadow type="math_number">'+
-          '<field name="NUM">1</field>'+
-        '</shadow>'+
-      '</value>'+
+      '<value name="INSTRUMENT">' +
+        '<shadow type="sound_instruments_menu"></shadow>' +
+      '</value>' +
     '</block>'+
     '<block type="sound_seteffectto">' +
       '<value name="EFFECT">' +
