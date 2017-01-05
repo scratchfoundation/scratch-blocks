@@ -24,7 +24,7 @@
         var soundsEnabled = null;
         if (sessionStorage) {
           // Restore sounds state.
-          var soundsEnabled = sessionStorage.getItem('soundsEnabled');
+          soundsEnabled = sessionStorage.getItem('soundsEnabled');
           if (soundsEnabled === null) {
             soundsEnabled = true;
           } else {
