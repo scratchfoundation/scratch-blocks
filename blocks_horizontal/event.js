@@ -59,7 +59,7 @@ Blockly.Blocks['event_whenflagclicked'] = {
   }
 };
 
-Blockly.Blocks['dropdown_whenbroadcast'] = {
+Blockly.Blocks['event_whenbroadcast_menu'] = {
   /**
    * Block for when broadcast dropdown (used for shadow).
    * @this Blockly.Block
@@ -79,7 +79,7 @@ Blockly.Blocks['dropdown_whenbroadcast'] = {
               value: 'orange', width: 48, height: 48, alt: 'Orange'},
             {src: Blockly.mainWorkspace.options.pathToMedia + 'icons/event_when-broadcast-received_purple.svg',
               value: 'purple', width: 48, height: 48, alt: 'Purple'}
-        ]), 'CHOICE');
+        ]), 'BROADCAST_OPTION');
     this.setOutput(true);
     this.setColour(Blockly.Colours.event.primary,
       Blockly.Colours.event.secondary,
@@ -107,7 +107,7 @@ Blockly.Blocks['event_whenbroadcastreceived'] = {
         },
         {
           "type": "input_value",
-          "name": "CHOICE"
+          "name": "BROADCAST_OPTION"
         }
       ],
       "inputsInline": true,
@@ -120,7 +120,7 @@ Blockly.Blocks['event_whenbroadcastreceived'] = {
   }
 };
 
-Blockly.Blocks['dropdown_broadcast'] = {
+Blockly.Blocks['event_broadcast_menu'] = {
   /**
    * Block for broadcast dropdown (used for shadow).
    * @this Blockly.Block
@@ -140,7 +140,7 @@ Blockly.Blocks['dropdown_broadcast'] = {
               value: 'orange', width: 48, height: 48, alt: 'Orange'},
             {src: Blockly.mainWorkspace.options.pathToMedia + 'icons/event_broadcast_purple.svg',
               value: 'purple', width: 48, height: 48, alt: 'Purple'}
-        ]), 'CHOICE');
+        ]), 'BROADCAST_OPTION');
     this.setOutput(true);
     this.setColour(Blockly.Colours.event.primary,
       Blockly.Colours.event.secondary,
@@ -168,7 +168,7 @@ Blockly.Blocks['event_broadcast'] = {
         },
         {
           "type": "input_value",
-          "name": "CHOICE"
+          "name": "BROADCAST_OPTION"
         }
       ],
       "inputsInline": true,
