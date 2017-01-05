@@ -32,16 +32,16 @@ Blockly.Blocks.defaultToolbox = '<xml id="toolbox-categories" style="display: no
     '<category name="Events">' +
         '<block type="event_whenflagclicked"></block>' +
         '<block type="event_whenbroadcastreceived">' +
-        '<value name="CHOICE">' +
-        '<shadow type="dropdown_whenbroadcast">' +
-        '<field name="CHOICE">blue</field>' +
+        '<value name="BROADCAST_OPTION">' +
+        '<shadow type="event_whenbroadcast_menu">' +
+        '<field name="BROADCAST_OPTION">blue</field>' +
         '</shadow>' +
         '</value>' +
         '</block>' +
         '<block type="event_broadcast">' +
-        '<value name="CHOICE">' +
-        '<shadow type="dropdown_broadcast">' +
-        '<field name="CHOICE">blue</field>' +
+        '<value name="BROADCAST_OPTION">' +
+        '<shadow type="event_broadcast_menu">' +
+        '<field name="BROADCAST_OPTION">blue</field>' +
         '</shadow>' +
         '</value>' +
         '</block>' +
