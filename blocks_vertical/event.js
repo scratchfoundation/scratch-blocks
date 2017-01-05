@@ -74,6 +74,36 @@ Blockly.Blocks['event_whenthisspriteclicked'] = {
   }
 };
 
+Blockly.Blocks['event_whenbroadcast_menu'] = {
+  /**
+   * Broadcast drop-down menu.
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.jsonInit(
+      {
+        "message0": "%1",
+        "args0": [
+          {
+            "type": "field_dropdown",
+            "name": "BROADCAST_OPTION",
+            "options": [
+              ['message1', 'message1'],
+              ['message2', 'message2'],
+              ['new message', 'new message']
+            ]
+          }
+        ],
+        "inputsInline": true,
+        "output": "String",
+        "colour": Blockly.Colours.event.primary,
+        "colourSecondary": Blockly.Colours.event.secondary,
+        "colourTertiary": Blockly.Colours.event.tertiary,
+        "outputShape": Blockly.OUTPUT_SHAPE_SQUARE
+      });
+  }
+};
+
 Blockly.Blocks['event_whenbroadcastreceived'] = {
   /**
    * Block for when broadcast received.
@@ -85,13 +115,8 @@ Blockly.Blocks['event_whenbroadcastreceived'] = {
       "message0": "when I receive %1",
       "args0": [
         {
-          "type": "field_dropdown",
-          "name": "BROADCAST_OPTION",
-          "options": [
-            ['message1', 'message1'],
-            ['message2', 'message2'],
-            ['new message', 'new message']
-          ]
+          "type": "input_value",
+          "name": "BROADCAST_OPTION"
         }
       ],
       "inputsInline": true,
