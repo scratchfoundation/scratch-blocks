@@ -246,21 +246,19 @@ Blockly.Blocks.defaultToolbox = '<xml id="toolbox-categories" style="display: no
   '<category name="Sound" colour="#D65CD6" secondaryColour="#BD42BD">'+
     '<block type="sound_play">'+
       '<value name="SOUND_MENU">'+
-        '<shadow type="sound_sounds_option"></shadow>'+
+        '<shadow type="sound_sounds_menu"></shadow>'+
       '</value>'+
     '</block>'+
     '<block type="sound_playuntildone">'+
       '<value name="SOUND_MENU">'+
-        '<shadow type="sound_sounds_option"></shadow>'+
+        '<shadow type="sound_sounds_menu"></shadow>'+
       '</value>'+
     '</block>'+
     '<block type="sound_stopallsounds"></block>'+
     '<block type="sound_playdrumforbeats">'+
-      '<value name="DRUMTYPE">'+
-        '<shadow type="math_number">'+
-          '<field name="NUM">1</field>'+
-        '</shadow>'+
-      '</value>'+
+      '<value name="DRUM">' +
+        '<shadow type="sound_drums_menu"></shadow>' +
+      '</value>' +
       '<value name="BEATS">'+
         '<shadow type="math_number">'+
           '<field name="NUM">0.25</field>'+
@@ -277,7 +275,7 @@ Blockly.Blocks.defaultToolbox = '<xml id="toolbox-categories" style="display: no
     '<block type="sound_playnoteforbeats">'+
       '<value name="NOTE">'+
         '<shadow type="math_number">'+
-          '<field name="NUM">1</field>'+
+          '<field name="NUM">60</field>'+
         '</shadow>'+
       '</value>'+
       '<value name="BEATS">'+
@@ -287,11 +285,9 @@ Blockly.Blocks.defaultToolbox = '<xml id="toolbox-categories" style="display: no
       '</value>'+
     '</block>'+
     '<block type="sound_setinstrumentto">'+
-      '<value name="INSTRUMENT">'+
-        '<shadow type="math_number">'+
-          '<field name="NUM">1</field>'+
-        '</shadow>'+
-      '</value>'+
+      '<value name="INSTRUMENT">' +
+        '<shadow type="sound_instruments_menu"></shadow>' +
+      '</value>' +
     '</block>'+
     '<block type="sound_seteffectto">' +
       '<value name="EFFECT">' +
@@ -299,7 +295,7 @@ Blockly.Blocks.defaultToolbox = '<xml id="toolbox-categories" style="display: no
       '</value>' +
       '<value name="VALUE">' +
         '<shadow type="math_number">'+
-          '<field name="NUM">10</field>'+
+          '<field name="NUM">100</field>'+
         '</shadow>'+
       '</value>' +
     '</block>' +
