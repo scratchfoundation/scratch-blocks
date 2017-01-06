@@ -95,7 +95,7 @@ Blockly.Blocks['event_whenbroadcast_menu'] = {
           }
         ],
         "inputsInline": true,
-        "output": "String",
+        "output": "Broadcast",
         "colour": Blockly.Colours.event.primary,
         "colourSecondary": Blockly.Colours.event.secondary,
         "colourTertiary": Blockly.Colours.event.tertiary,
@@ -116,7 +116,8 @@ Blockly.Blocks['event_whenbroadcastreceived'] = {
       "args0": [
         {
           "type": "input_value",
-          "name": "BROADCAST_OPTION"
+          "name": "BROADCAST_OPTION",
+          "check": "Broadcast"
         }
       ],
       "inputsInline": true,
