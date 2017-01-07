@@ -41,7 +41,7 @@ Blockly.Blocks['motion_movesteps'] = {
           "src": Blockly.mainWorkspace.options.pathToMedia + "icons/motion_forward.svg",
           "width": 40,
           "height": 40,
-          "alt": "*",
+          "alt": "Forward",
           "flip_rtl": true
         },
         {
@@ -74,7 +74,7 @@ Blockly.Blocks['motion_moveup'] = {
           "src": Blockly.mainWorkspace.options.pathToMedia + "icons/motion_up.svg",
           "width": 40,
           "height": 40,
-          "alt": "*",
+          "alt": "Up",
           "flip_rtl": true
         },
         {
@@ -107,7 +107,7 @@ Blockly.Blocks['motion_hop'] = {
           "src": Blockly.mainWorkspace.options.pathToMedia + "icons/motion_hop.svg",
           "width": 40,
           "height": 40,
-          "alt": "*",
+          "alt": "Hop",
           "flip_rtl": true
         },
         {
@@ -140,7 +140,7 @@ Blockly.Blocks['motion_movedown'] = {
           "src": Blockly.mainWorkspace.options.pathToMedia + "icons/motion_down.svg",
           "width": 40,
           "height": 40,
-          "alt": "*",
+          "alt": "Down",
           "flip_rtl": true
         },
         {
@@ -173,7 +173,7 @@ Blockly.Blocks['motion_moveback'] = {
           "src": Blockly.mainWorkspace.options.pathToMedia + "icons/motion_back.svg",
           "width": 40,
           "height": 40,
-          "alt": "*",
+          "alt": "Backward",
           "flip_rtl": true
         },
         {
@@ -205,7 +205,8 @@ Blockly.Blocks['motion_turnright'] = {
           "type": "field_image",
           "src": Blockly.mainWorkspace.options.pathToMedia + "icons/motion_right.svg",
           "width": 40,
-          "height": 40
+          "height": 40,
+          "alt": "Turn right"
         },
         {
           "type": "input_value",
@@ -236,7 +237,8 @@ Blockly.Blocks['motion_turnleft'] = {
           "type": "field_image",
           "src": Blockly.mainWorkspace.options.pathToMedia + "icons/motion_left.svg",
           "width": 40,
-          "height": 40
+          "height": 40,
+          "alt": "Turn left"
         },
         {
           "type": "input_value",
@@ -267,7 +269,9 @@ Blockly.Blocks['motion_home'] = {
           "type": "field_image",
           "src": Blockly.mainWorkspace.options.pathToMedia + "icons/motion_home.svg",
           "width": 40,
-          "height": 40
+          "height": 40,
+          "alt": "Go Home",
+          "flip_rtl": true
         }
       ],
       "previousStatement": null,
