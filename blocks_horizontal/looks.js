@@ -41,7 +41,7 @@ Blockly.Blocks['looks_grow'] = {
           "src": Blockly.mainWorkspace.options.pathToMedia + "icons/looks_grow.svg",
           "width": 40,
           "height": 40,
-          "alt": "*",
+          "alt": "Grow by",
           "flip_rtl": true
         },
         {
@@ -74,7 +74,7 @@ Blockly.Blocks['looks_shrink'] = {
           "src": Blockly.mainWorkspace.options.pathToMedia + "icons/looks_shrink.svg",
           "width": 40,
           "height": 40,
-          "alt": "*",
+          "alt": "Shrink by",
           "flip_rtl": true
         },
         {
@@ -107,7 +107,7 @@ Blockly.Blocks['looks_reset'] = {
           "src": Blockly.mainWorkspace.options.pathToMedia + "icons/looks_reset.svg",
           "width": 40,
           "height": 40,
-          "alt": "*",
+          "alt": "Reset size",
           "flip_rtl": true
         }
       ],
@@ -136,7 +136,7 @@ Blockly.Blocks['looks_show'] = {
           "src": Blockly.mainWorkspace.options.pathToMedia + "icons/looks_show.svg",
           "width": 40,
           "height": 40,
-          "alt": "*",
+          "alt": "Show",
           "flip_rtl": true
         }
       ],
@@ -165,7 +165,7 @@ Blockly.Blocks['looks_hide'] = {
           "src": Blockly.mainWorkspace.options.pathToMedia + "icons/looks_hide.svg",
           "width": 40,
           "height": 40,
-          "alt": "*",
+          "alt": "Hide",
           "flip_rtl": true
         }
       ],
@@ -193,7 +193,9 @@ Blockly.Blocks['looks_say'] = {
           "type": "field_image",
           "src": Blockly.mainWorkspace.options.pathToMedia + "icons/looks_say.svg",
           "width": 40,
-          "height": 40
+          "height": 40,
+          "alt": "Say",
+          "flip_rtl": true
         },
         {
           "type": "input_value",
