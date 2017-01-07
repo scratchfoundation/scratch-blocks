@@ -270,7 +270,7 @@ Blockly.Blocks['motion_home'] = {
           "src": Blockly.mainWorkspace.options.pathToMedia + "icons/motion_home.svg",
           "width": 40,
           "height": 40,
-          "alt": "Go Home",
+          "alt": "Go home",
           "flip_rtl": true
         }
       ],
