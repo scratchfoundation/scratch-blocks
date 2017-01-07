@@ -112,9 +112,10 @@ Blockly.FieldTextInput.prototype.dispose = function() {
 /**
  * Set the text in this field.
  * @param {?string} text New text.
+ * @param {boolean=} opt_skipTruncation If true, skip truncation of text (for mid-renders).
  * @override
  */
-Blockly.FieldTextInput.prototype.setValue = function(text) {
+Blockly.FieldTextInput.prototype.setValue = function(text, opt_skipTruncation) {
   if (text === null) {
     return;  // No change if null.
   }
@@ -126,7 +127,7 @@ Blockly.FieldTextInput.prototype.setValue = function(text) {
       text = validated;
     }
   }
-  Blockly.Field.prototype.setValue.call(this, text);
+  Blockly.Field.prototype.setValue.call(this, text, opt_skipTruncation);
 };
 
 /**
@@ -326,7 +327,7 @@ Blockly.FieldTextInput.prototype.onHtmlInputChange_ = function(e) {
   var text = htmlInput.value;
   if (text !== htmlInput.oldValue_) {
     htmlInput.oldValue_ = text;
-    this.setValue(text);
+    this.setValue(text, true);
     this.validate_();
   } else if (goog.userAgent.WEBKIT) {
     // Cursor key.  Render the source block to show the caret moving.
