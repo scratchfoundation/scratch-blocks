@@ -74,7 +74,7 @@ Blockly.Blocks['event_whenthisspriteclicked'] = {
           "src": Blockly.mainWorkspace.options.pathToMedia + "icons/event_whentapped.svg",
           "width": 40,
           "height": 40,
-          "alt": "When green flag clicked",
+          "alt": "When this sprite clicked",
           "flip_rtl": true
         }
       ],
@@ -103,7 +103,7 @@ Blockly.Blocks['event_bump'] = {
           "src": Blockly.mainWorkspace.options.pathToMedia + "icons/event_bump.svg",
           "width": 40,
           "height": 40,
-          "alt": "When green flag clicked",
+          "alt": "When bumped",
           "flip_rtl": true
         }
       ],
