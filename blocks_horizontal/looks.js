@@ -27,7 +27,7 @@ goog.require('Blockly.Colours');
 goog.require('Blockly.constants');
 
 
-Blockly.Blocks['looks_grow'] = {
+Blockly.Blocks['looks_changesizeby'] = {
   /**
    * Block to move steps.
    * @this Blockly.Block
