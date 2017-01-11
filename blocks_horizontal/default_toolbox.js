@@ -157,7 +157,7 @@ Blockly.Blocks.defaultToolbox = '<xml id="toolbox-categories" style="display: no
           '<block type="motion_home"></block>'+
         '</category>'+
         '<category name="Looks" colour="#9966FF" secondaryColour="#774DCB">'+
-          '<block type="looks_grow">'+
+          '<block type="looks_changesizeby">'+
             '<value name="CHANGE">'+
               '<shadow type="math_number">'+
                 '<field name="NUM">10</field>'+
