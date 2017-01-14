@@ -29,6 +29,7 @@ goog.provide('Blockly.FieldVariable');
 goog.require('Blockly.FieldDropdown');
 goog.require('Blockly.Msg');
 goog.require('Blockly.Variables');
+goog.require('goog.asserts');
 goog.require('goog.string');
 
 
@@ -85,6 +86,16 @@ Blockly.FieldVariable.prototype.init = function() {
   if (!this.sourceBlock_.isInFlyout) {
     this.sourceBlock_.workspace.createVariable(this.getValue());
   }
+};
+
+/**
+ * Attach this field to a block.
+ * @param {!Blockly.Block} block The block containing this field.
+ */
+Blockly.FieldVariable.prototype.setSourceBlock = function(block) {
+  goog.asserts.assert(!block.isShadow(),
+      'Variable fields are not allowed to exist on shadow blocks.');
+  Blockly.FieldVariable.superClass_.setSourceBlock.call(this, block);
 };
 
 /**
@@ -148,8 +159,8 @@ Blockly.FieldVariable.dropdownCreate = function() {
  * Handle the selection of an item in the variable dropdown menu.
  * Special case the 'Rename variable...' and 'Delete variable...' options.
  * In the rename case, prompt the user for a new name.
- * @param {goog.ui.Menu} menu The Menu component clicked.
- * @param {goog.ui.MenuItem} menuItem The MenuItem selected within menu.
+ * @param {!goog.ui.Menu} menu The Menu component clicked.
+ * @param {!goog.ui.MenuItem} menuItem The MenuItem selected within menu.
  */
 Blockly.FieldVariable.prototype.onItemSelected = function(menu, menuItem) {
   var itemText = menuItem.getValue();
@@ -157,7 +168,7 @@ Blockly.FieldVariable.prototype.onItemSelected = function(menu, menuItem) {
     var workspace = this.sourceBlock_.workspace;
     if (this.renameVarItemIndex_ >= 0 &&
         menu.getChildAt(this.renameVarItemIndex_) === menuItem) {
-      // Rename variable
+      // Rename variable.
       var oldName = this.getText();
       Blockly.hideChaff();
       Blockly.Variables.promptName(
@@ -170,7 +181,7 @@ Blockly.FieldVariable.prototype.onItemSelected = function(menu, menuItem) {
       return;
     } else if (this.deleteVarItemIndex_ >= 0 &&
         menu.getChildAt(this.deleteVarItemIndex_) === menuItem) {
-      // Delete variable
+      // Delete variable.
       workspace.deleteVariable(this.getText());
       return;
     }

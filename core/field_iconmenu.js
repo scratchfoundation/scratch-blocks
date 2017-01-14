@@ -81,7 +81,7 @@ Blockly.FieldIconMenu.prototype.init = function(block) {
     this.arrowX_ = -this.arrowX_ - arrowSize;
   }
   /** @type {Element} */
-  this.arrowIcon_ = Blockly.createSvgElement('image', {
+  this.arrowIcon_ = Blockly.utils.createSvgElement('image', {
     'height': arrowSize + 'px',
     'width': arrowSize + 'px',
     'transform': 'translate(' + this.arrowX_ + ',' + this.arrowY_ + ')'

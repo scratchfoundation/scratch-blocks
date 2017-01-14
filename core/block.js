@@ -57,7 +57,7 @@ Blockly.Block = function(workspace, prototypeName, opt_id) {
   /** @type {string} */
   this.id = (opt_id && !workspace.getBlockById(opt_id) &&
       (!flyoutWorkspace || !flyoutWorkspace.getBlockById(opt_id))) ?
-      opt_id : Blockly.genUid();
+      opt_id : Blockly.utils.genUid();
   workspace.blockDB_[this.id] = this;
   /** @type {Blockly.Connection} */
   this.outputConnection = null;
@@ -370,7 +370,7 @@ Blockly.Block.prototype.bumpNeighbours_ = function() {
   if (rootBlock.isInFlyout) {
     return;  // Don't move blocks around in a flyout.
   }
-  // Loop though every connection on this block.
+  // Loop through every connection on this block.
   var myConnections = this.getConnections_(false);
   for (var i = 0, connection; connection = myConnections[i]; i++) {
     // Spider down from this block bumping all sub-blocks.
@@ -749,7 +749,6 @@ Blockly.Block.prototype.getColourSecondary = function() {
 Blockly.Block.prototype.getColourTertiary = function() {
   return this.colourTertiary_;
 };
-
 
 /**
 * Create an #RRGGBB string colour from a colour HSV hue value or #RRGGBB string.

@@ -117,7 +117,7 @@ Blockly.Toolbox.prototype.init = function() {
   Blockly.bindEventWithChecks_(this.HtmlDiv, 'mousedown', this,
       function(e) {
         Blockly.DropDownDiv.hide();
-        if (Blockly.isRightButton(e) || e.target == this.HtmlDiv) {
+        if (Blockly.utils.isRightButton(e) || e.target == this.HtmlDiv) {
           // Close flyout.
           Blockly.hideChaff(false);
         } else {
@@ -168,7 +168,8 @@ Blockly.Toolbox.prototype.createFlyout_ = function() {
   }
   this.flyout_.setParentToolbox(this);
 
-  goog.dom.insertSiblingAfter(this.flyout_.createDom(), workspace.svgGroup_);
+  goog.dom.insertSiblingAfter(this.flyout_.createDom('g'),
+                              this.workspace_.svgGroup_);
   this.flyout_.init(workspace);
 };
 

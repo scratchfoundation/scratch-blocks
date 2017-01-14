@@ -166,6 +166,7 @@ Blockly.FieldDate.widgetDispose_ = function() {
   if (Blockly.FieldDate.changeEventKey_) {
     goog.events.unlistenByKey(Blockly.FieldDate.changeEventKey_);
   }
+  Blockly.Events.setGroup(false);
 };
 
 /**

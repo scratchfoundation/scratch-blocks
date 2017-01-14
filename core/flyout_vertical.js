@@ -128,10 +128,10 @@ Blockly.VerticalFlyout.prototype.createDom = function() {
       </clipPath>
     </defs>
   */
-  this.defs_ = Blockly.createSvgElement('defs', {}, this.svgGroup_);
-  var clipPath = Blockly.createSvgElement('clipPath',
+  this.defs_ = Blockly.utils.createSvgElement('defs', {}, this.svgGroup_);
+  var clipPath = Blockly.utils.createSvgElement('clipPath',
       {'id':'blocklyBlockMenuClipPath'}, this.defs_);
-  this.clipRect_ = Blockly.createSvgElement('rect',
+  this.clipRect_ = Blockly.utils.createSvgElement('rect',
       {'id': 'blocklyBlockMenuClipRect',
         'height': '0',
         'width': '0',
@@ -444,7 +444,7 @@ Blockly.VerticalFlyout.prototype.createRect_ = function(block, x, y,
     blockHW, index) {
   // Create an invisible rectangle under the block to act as a button.  Just
   // using the block as a button is poor, since blocks have holes in them.
-  var rect = Blockly.createSvgElement('rect',
+  var rect = Blockly.utils.createSvgElement('rect',
     {
       'fill-opacity': 0,
       'x': x,
@@ -475,7 +475,7 @@ Blockly.VerticalFlyout.prototype.createCheckbox_ = function(block, cursorX,
      cursorY, blockHW) {
   var svgRoot = block.getSvgRoot();
   var extraSpace = this.CHECKBOX_SIZE + this.CHECKBOX_MARGIN;
-  var checkboxRect = Blockly.createSvgElement('rect',
+  var checkboxRect = Blockly.utils.createSvgElement('rect',
     {
       'class': 'blocklyFlyoutCheckbox',
       'height': this.CHECKBOX_SIZE,
@@ -593,7 +593,7 @@ Blockly.VerticalFlyout.prototype.placeNewBlock_ = function(originBlock) {
   // Figure out where the original block is on the screen, relative to the upper
   // left corner of the main workspace.
   // In what coordinates?  Pixels?
-  var xyOld = Blockly.getSvgXY_(svgRootOld, targetWorkspace);
+  var xyOld = this.workspace_.getSvgXY(svgRootOld, targetWorkspace);
 
   // Take into account that the flyout might have been scrolled horizontally
   // (separately from the main workspace).
@@ -651,7 +651,7 @@ Blockly.VerticalFlyout.prototype.placeNewBlock_ = function(originBlock) {
   // upper left corner of the workspace.  This may not be the same as the
   // original block because the flyout's origin may not be the same as the
   // main workspace's origin.
-  var xyNew = Blockly.getSvgXY_(svgRootNew, targetWorkspace);
+  var xyNew = this.workspace_.getSvgXY(svgRootNew, targetWorkspace);
 
   // Scale the scroll (getSvgXY_ did not do this).
   xyNew.x +=

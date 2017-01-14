@@ -293,18 +293,23 @@ Blockly.Flyout.prototype.dragMode_ = Blockly.DRAG_NONE;
 
 /**
  * Creates the flyout's DOM.  Only needs to be called once.
+ * @param {string} tagName The type of tag to put the flyout in. This
+ *     should be <svg> or <g>.
  * @return {!Element} The flyout's SVG group.
  */
-Blockly.Flyout.prototype.createDom = function() {
+Blockly.Flyout.prototype.createDom = function(tagName) {
+  tagName = 'g';
   /*
-  <g>
+  <svg | g>
     <path class="blocklyFlyoutBackground"/>
     <g class="blocklyFlyout"></g>
-  </g>
+  </ svg | g>
   */
-  this.svgGroup_ = Blockly.createSvgElement('g',
+  // Setting style to display:none to start. The toolbox and flyout
+  // hide/show code will set up proper visibility and size later.
+  this.svgGroup_ = Blockly.utils.createSvgElement(tagName,
       {'class': 'blocklyFlyout'}, null);
-  this.svgBackground_ = Blockly.createSvgElement('path',
+  this.svgBackground_ = Blockly.utils.createSvgElement('path',
       {'class': 'blocklyFlyoutBackground'}, this.svgGroup_);
   this.svgGroup_.appendChild(this.workspace_.createDom());
   return this.svgGroup_;
@@ -585,7 +590,7 @@ Blockly.Flyout.blockRightClick_ = function(e, block) {
 Blockly.Flyout.prototype.blockMouseDown_ = function(block) {
   var flyout = this;
   return function(e) {
-    if (Blockly.isRightButton(e)) {
+    if (Blockly.utils.isRightButton(e)) {
       Blockly.Flyout.blockRightClick_(e, block);
     } else {
       flyout.dragMode_ = Blockly.DRAG_NONE;
@@ -618,7 +623,7 @@ Blockly.Flyout.prototype.blockMouseDown_ = function(block) {
  */
 Blockly.Flyout.prototype.onMouseDown_ = function(e) {
   this.dragMode_ = Blockly.DRAG_FREE;
-  if (Blockly.isRightButton(e)) {
+  if (Blockly.utils.isRightButton(e)) {
     // Don't start drags with right clicks.
     Blockly.Touch.clearTouchIdentifier();
     return;
@@ -772,7 +777,7 @@ Blockly.Flyout.prototype.createBlockFunc_ = function(originBlock) {
     // Hide drop-downs and animating WidgetDiv immediately
     Blockly.WidgetDiv.hide(true);
     Blockly.DropDownDiv.hideWithoutAnimation();
-    if (Blockly.isRightButton(e)) {
+    if (Blockly.utils.isRightButton(e)) {
       // Right-click.  Don't create a block, let the context menu show.
       return;
     }
@@ -797,9 +802,9 @@ Blockly.Flyout.prototype.createBlockFunc_ = function(originBlock) {
     block.onMouseDown_(e);
     Blockly.dragMode_ = Blockly.DRAG_FREE;
     block.setDragging_(true);
+    block.moveToDragSurface_();
     // Disable workspace resizing.  Reenable at the end of the drag.
     flyout.targetWorkspace_.setResizesEnabled(false);
-    block.moveToDragSurface_();
   };
 };
 

@@ -308,7 +308,7 @@ Blockly.HorizontalFlyout.prototype.layout_ = function(contents, gaps) {
 
       // Create an invisible rectangle under the block to act as a button.  Just
       // using the block as a button is poor, since blocks have holes in them.
-      var rect = Blockly.createSvgElement('rect', {'fill-opacity': 0}, null);
+      var rect = Blockly.utils.createSvgElement('rect', {'fill-opacity': 0}, null);
       rect.tooltip = block;
       Blockly.Tooltip.bindMouseEvents(rect);
       // Add the rectangles under the blocks, so that the blocks' tooltips work.
@@ -390,7 +390,7 @@ Blockly.HorizontalFlyout.prototype.placeNewBlock_ = function(originBlock) {
   }
   // Figure out where the original block is on the screen, relative to the upper
   // left corner of the main workspace.
-  var xyOld = Blockly.getSvgXY_(svgRootOld, targetWorkspace);
+  var xyOld = this.workspace_.getSvgXY(svgRootOld, targetWorkspace);
   // Take into account that the flyout might have been scrolled horizontally
   // (separately from the main workspace).
   // Generally a no-op in vertical mode but likely to happen in horizontal
@@ -434,7 +434,7 @@ Blockly.HorizontalFlyout.prototype.placeNewBlock_ = function(originBlock) {
   // upper left corner of the workspace.  This may not be the same as the
   // original block because the flyout's origin may not be the same as the
   // main workspace's origin.
-  var xyNew = Blockly.getSvgXY_(svgRootNew, targetWorkspace);
+  var xyNew = this.workspace_.getSvgXY(svgRootNew, targetWorkspace);
   // Scale the scroll (getSvgXY_ did not do this).
   xyNew.x +=
       targetWorkspace.scrollX / targetWorkspace.scale - targetWorkspace.scrollX;
