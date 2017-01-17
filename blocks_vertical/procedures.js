@@ -53,8 +53,10 @@ Blockly.Blocks['procedures_defnoreturn'] = {
     this._argumentNames = [];
     this._argumentDefaults = [];
     this._warp = false;
+    this._form = 0;
   },
   mutationToDom: function() {
+    this._procCode = Blockly.Procedures.findLegalName(this._procCode, this);
     var container = document.createElement('mutation');
     var procCode = document.createElement('proccode');
     procCode.setAttribute('value', this._procCode);
@@ -68,6 +70,9 @@ Blockly.Blocks['procedures_defnoreturn'] = {
     var warp = document.createElement('warp');
     warp.setAttribute('value', this._warp);
     container.appendChild(warp);
+    var form = document.createElement('form');
+    form.setAttribute('value', this._form);
+    container.appendChild(form);
     return container;
   },
   domToMutation: function(xmlElement) {
@@ -75,6 +80,7 @@ Blockly.Blocks['procedures_defnoreturn'] = {
     this._argumentNames =  JSON.parse(xmlElement.getAttribute('argumentnames'));
     this._argumentValues =  JSON.parse(xmlElement.getAttribute('argumentvalues'));
     this._warp = xmlElement.getAttribute('warp');
+    this._form = xmlElement.getAttribute('type');
     this._updateDisplay();
   },
   _updateDisplay: function() {
@@ -106,6 +112,7 @@ Blockly.Blocks['procedures_callnoreturn'] = {
    * @this Blockly.Block
    */
   mutationToDom: function() {
+    this._procCode = Blockly.Procedures.findLegalName(this._procCode, this);
     var container = document.createElement('mutation');
     container.setAttribute('proccode', this._procCode);
     return container;
@@ -156,6 +163,95 @@ Blockly.Blocks['procedures_callnoreturn'] = {
         newLabel = component.trim();
       }
       this.appendDummyInput().appendField(newLabel.replace(/\\%/, '%'));
+    }
+  }
+};
+
+Blockly.Blocks['procedures_callreturn'] = {
+  /**
+   * Block for calling a procedure with no return value.
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.setPreviousStatement(false);
+    this.setNextStatement(false);
+    this.setCategory(Blockly.Categories.more);
+    this.setColour(Blockly.Colours.more.primary,
+      Blockly.Colours.more.secondary,
+      Blockly.Colours.more.tertiary);
+    this._procCode = '';
+    this._type = 0;
+  },
+  /**
+   * Create XML to represent the (non-editable) name and arguments.
+   * @return {!Element} XML storage element.
+   * @this Blockly.Block
+   */
+  mutationToDom: function() {
+    this._procCode = Blockly.Procedures.findLegalName(this._procCode, this);
+    var container = document.createElement('mutation');
+    container.setAttribute('proccode', this._procCode);
+    container.setAttribute('type', this._type);
+    return container;
+  },
+  /**
+   * Parse XML to restore the (non-editable) name and parameters.
+   * @param {!Element} xmlElement XML storage element.
+   * @this Blockly.Block
+   */
+  domToMutation: function(xmlElement) {
+    this._procCode = xmlElement.getAttribute('proccode');
+    this._type = xmlElement.getAttribute('type');
+    this._updateDisplay();
+  },
+  _updateDisplay: function() {
+    // Split the proc into components, by %n, %b, and %s (ignoring escaped).
+    var procComponents = this._procCode.split(/(?=[^\\]\%[nbs])/);
+    procComponents = procComponents.map(function(c) {
+      return c.trim(); // Strip whitespace.
+    });
+    // Create inputs and shadow blocks as appropriate.
+    var inputPrefix = 'input';
+    var inputCount = 0;
+    for (var i = 0, component; component = procComponents[i]; i++) {
+      var newLabel;
+      if (component.substring(0, 1) == '%') {
+        var inputType = component.substring(1, 2);
+        newLabel = component.substring(2).trim();
+        var inputName = inputPrefix + (inputCount++);
+        switch (inputType) {
+          case 'n':
+            var input = this.appendValueInput(inputName);
+            var num = this.workspace.newBlock('math_number');
+            num.setShadow(true);
+            num.outputConnection.connect(input.connection);
+            break;
+          case 'b':
+            var input = this.appendValueInput(inputName);
+            input.setCheck('Boolean');
+            break;
+          case 's':
+            var input = this.appendValueInput(inputName);
+            var text = this.workspace.newBlock('text');
+            text.setShadow(true);
+            text.outputConnection.connect(input.connection);
+            break;
+        }
+      } else {
+        newLabel = component.trim();
+      }
+      this.appendDummyInput().appendField(newLabel.replace(/\\%/, '%'));
+    }
+    switch (this._type) {
+      case 0:
+        this.setOutputShape(Blockly.OUTPUT_SHAPE_ROUND);
+        break;
+      case 1:
+        this.setOutputShape(Blockly.OUTPUT_SHAPE_HEXAGONAL);
+        break;
+      default:
+        this.setOutputShape(Blockly.OUTPUT_SHAPE_ROUND);
+        break;
     }
   }
 };
