@@ -626,7 +626,7 @@ Blockly.Block.prototype.setInsertionMarker = function(insertionMarker) {
   if (this.isInsertionMarker_) {
     this.setColour(Blockly.Colours.insertionMarker);
     this.setOpacity(Blockly.Colours.insertionMarkerOpacity);
-    Blockly.addClass_(/** @type {!Element} */ (this.svgGroup_),
+    Blockly.utils.addClass(/** @type {!Element} */ (this.svgGroup_),
         'blocklyInsertionMarker');
   }
 };

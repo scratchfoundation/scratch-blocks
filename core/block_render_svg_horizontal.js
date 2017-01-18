@@ -336,11 +336,11 @@ Blockly.BlockSvg.prototype.updateColour = function() {
 Blockly.BlockSvg.prototype.highlightForReplacement = function(add) {
   if (add) {
     this.svgPath_.setAttribute('filter', 'url(#blocklyReplacementGlowFilter)');
-    Blockly.addClass_(/** @type {!Element} */ (this.svgGroup_),
+    Blockly.utils.addClass_(/** @type {!Element} */ (this.svgGroup_),
         'blocklyReplaceable');
   } else {
     this.svgPath_.removeAttribute('filter');
-    Blockly.removeClass_(/** @type {!Element} */ (this.svgGroup_),
+    Blockly.utils.removeClass_(/** @type {!Element} */ (this.svgGroup_),
         'blocklyReplaceable');
   }
 };

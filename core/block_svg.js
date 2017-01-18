@@ -973,21 +973,6 @@ Blockly.BlockSvg.prototype.setDragging_ = function(adding) {
   }
 };
 
-/**
- * Move this block to its workspace's drag surface, accounting for positioning.
- * Generally should be called at the same time as setDragging_(true).
- * @private
- */
-Blockly.BlockSvg.prototype.moveToDragSurface_ = function() {
-  // The translation for drag surface blocks,
-  // is equal to the current relative-to-surface position,
-  // to keep the position in sync as it move on/off the surface.
-  var xy = this.getRelativeToSurfaceXY();
-  this.clearTransformAttributes_();
-  this.workspace.dragSurface.translateSurface(xy.x, xy.y);
-  // Execute the move on the top-level SVG component
-  this.workspace.dragSurface.setBlocksAndShow(this.getSvgRoot());
-};
 
 /**
  * Move this block back to the workspace block canvas.
@@ -999,7 +984,7 @@ Blockly.BlockSvg.prototype.moveOffDragSurface_ = function() {
   var xy = this.getRelativeToSurfaceXY();
   this.clearTransformAttributes_();
   this.translate(xy.x, xy.y, false);
-  this.workspace.dragSurface.clearAndHide(this.workspace.getCanvas());
+  this.workspace.blockDragSurface_.clearAndHide(this.workspace.getCanvas());
 };
 
 /**
@@ -1044,12 +1029,14 @@ Blockly.BlockSvg.prototype.onMouseMove_ = function(e) {
       // Switch to unrestricted dragging.
       Blockly.dragMode_ = Blockly.DRAG_FREE;
       Blockly.longStop_();
+      
+      // IS THIS COMMENT RELEVANT STILL???
       // Must move to drag surface before unplug(),
       // or else connections will calculate the wrong relative to surface XY
       // in tighten_(). Then blocks connected to this block move around on the
       // drag surface. By moving to the drag surface before unplug, connection
       // positions will be calculated correctly.
-      this.moveToDragSurface_();
+
       // Disable workspace resizing as an optimization.
       this.workspace.setResizesEnabled(false);
       // Clear WidgetDiv/DropDownDiv without animating, in case blocks are moved

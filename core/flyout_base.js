@@ -187,6 +187,20 @@ Blockly.Flyout.onMouseMoveBlockWrapper_ = null;
 Blockly.Flyout.prototype.autoClose = true;
 
 /**
+ * Whether the flyout is visible.
+ * @type {boolean}
+ * @private
+ */
+Blockly.Flyout.prototype.isVisible_ = false;
+
+/**
+ * Whether the workspace containing this flyout is visible.
+ * @type {boolean}
+ * @private
+ */
+Blockly.Flyout.prototype.containerVisible_ = true;
+
+/**
  * Corner radius of the flyout background.
  * @type {number}
  * @const
@@ -292,13 +306,14 @@ Blockly.Flyout.prototype.dragMode_ = Blockly.DRAG_NONE;
 
 
 /**
- * Creates the flyout's DOM.  Only needs to be called once.
+ * Creates the flyout's DOM.  Only needs to be called once. The flyout can
+ * either exist as its own <svg> element or be a <g> nested inside a separate
+ * <svg> element.
  * @param {string} tagName The type of tag to put the flyout in. This
  *     should be <svg> or <g>.
  * @return {!Element} The flyout's SVG group.
  */
 Blockly.Flyout.prototype.createDom = function(tagName) {
-  tagName = 'g';
   /*
   <svg | g>
     <path class="blocklyFlyoutBackground"/>
@@ -308,7 +323,7 @@ Blockly.Flyout.prototype.createDom = function(tagName) {
   // Setting style to display:none to start. The toolbox and flyout
   // hide/show code will set up proper visibility and size later.
   this.svgGroup_ = Blockly.utils.createSvgElement(tagName,
-      {'class': 'blocklyFlyout'}, null);
+      {'class': 'blocklyFlyout', 'style' : 'display: none'}, null);
   this.svgBackground_ = Blockly.utils.createSvgElement('path',
       {'class': 'blocklyFlyoutBackground'}, this.svgGroup_);
   this.svgGroup_.appendChild(this.workspace_.createDom());
@@ -399,7 +414,51 @@ Blockly.Flyout.prototype.getWorkspace = function() {
  * @return {boolean} True if visible.
  */
 Blockly.Flyout.prototype.isVisible = function() {
-  return this.svgGroup_ && this.svgGroup_.style.display == 'block';
+  return this.isVisible_;
+};
+
+/**
+ * Set whether the flyout is visible. A value of true does not necessarily mean
+ * that the flyout is shown. It could be hidden because its container is hidden.
+ * @param {boolean} visible True if visible.
+ */
+Blockly.Flyout.prototype.setVisible = function(visible) {
+  var visibilityChanged = (visible != this.isVisible());
+
+  this.isVisible_ = visible;
+  if (visibilityChanged) {
+    this.updateDisplay_();
+  }
+};
+
+/**
+ * Set whether this flyout's container is visible.
+ * @param {boolean} visible Whether the container is visible.
+ */
+Blockly.Flyout.prototype.setContainerVisible = function(visible) {
+  var visibilityChanged = (visible != this.containerVisible_);
+  this.containerVisible_ = visible;
+  if (visibilityChanged) {
+    this.updateDisplay_();
+  }
+};
+
+/**
+ * Update the display property of the flyout based whether it thinks it should
+ * be visible and whether its containing workspace is visible.
+ * @private
+ */
+Blockly.Flyout.prototype.updateDisplay_ = function() {
+  var show = true;
+  if (!this.containerVisible_) {
+    show = false; 
+  } else {
+    show = this.isVisible();
+  }
+  this.svgGroup_.style.display = show ? 'block' : 'none';
+  // Update the scrollbar's visiblity too since it should mimic the
+  // flyout's visibility.
+  this.scrollbar_.setContainerVisible(show);
 };
 
 /**
@@ -409,7 +468,7 @@ Blockly.Flyout.prototype.hide = function() {
   if (!this.isVisible()) {
     return;
   }
-  this.svgGroup_.style.display = 'none';
+  this.setVisible(false);
   // Delete all the event listeners.
   for (var x = 0, listen; listen = this.listeners_[x]; x++) {
     Blockly.unbindEvent_(listen);
@@ -442,7 +501,7 @@ Blockly.Flyout.prototype.show = function(xmlList) {
         Blockly.Procedures.flyoutCategory(this.workspace_.targetWorkspace);
   }
 
-  this.svgGroup_.style.display = 'block';
+  this.setVisible(true);
   // Create the blocks to be shown in this flyout.
   var contents = [];
   var gaps = [];
