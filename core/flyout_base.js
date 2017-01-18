@@ -488,6 +488,7 @@ Blockly.Flyout.prototype.hide = function() {
  *     Variables and procedures have a custom set of blocks.
  */
 Blockly.Flyout.prototype.show = function(xmlList) {
+  this.workspace_.setResizesEnabled(false);
   this.hide();
   this.clearOldBlocks_();
 
@@ -537,10 +538,8 @@ Blockly.Flyout.prototype.show = function(xmlList) {
       } else if (tagName == 'BUTTON' || tagName == 'LABEL') {
         // Labels behave the same as buttons, but are styled differently.
         var isLabel = tagName == 'LABEL';
-        var text = xml.getAttribute('text');
-        var callbackKey = xml.getAttribute('callbackKey');
         var curButton = new Blockly.FlyoutButton(this.workspace_,
-            this.targetWorkspace_, text, callbackKey, isLabel);
+            this.targetWorkspace_, xml, isLabel);
         contents.push({type: 'button', button: curButton});
         gaps.push(default_gap);
       }
@@ -845,6 +844,10 @@ Blockly.Flyout.prototype.createBlockFunc_ = function(originBlock) {
       return;
     }
     Blockly.Events.disable();
+    // Disable workspace resizing. Reenable at the end of the drag. This avoids
+    // a spurious resize between creating the new block and placing it in the
+    // workspace.
+    flyout.targetWorkspace_.setResizesEnabled(false);
     try {
       var block = flyout.placeNewBlock_(originBlock);
     } finally {
@@ -862,8 +865,6 @@ Blockly.Flyout.prototype.createBlockFunc_ = function(originBlock) {
     Blockly.dragMode_ = Blockly.DRAG_FREE;
     block.setDragging_(true);
     block.moveToDragSurface_();
-    // Disable workspace resizing.  Reenable at the end of the drag.
-    flyout.targetWorkspace_.setResizesEnabled(false);
   };
 };
 
