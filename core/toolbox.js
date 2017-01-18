@@ -168,8 +168,8 @@ Blockly.Toolbox.prototype.createFlyout_ = function() {
   }
   this.flyout_.setParentToolbox(this);
 
-  goog.dom.insertSiblingAfter(this.flyout_.createDom('g'),
-                              this.workspace_.svgGroup_);
+  goog.dom.insertSiblingAfter(this.flyout_.createDom('svg'),
+                              this.workspace_.getParentSvg());
   this.flyout_.init(workspace);
 };
 

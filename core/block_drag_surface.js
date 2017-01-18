@@ -109,6 +109,12 @@ Blockly.BlockDragSurfaceSvg.prototype.setBlocksAndShow = function(blocks) {
   // appendChild removes the blocks from the previous parent
   this.dragGroup_.appendChild(blocks);
   this.SVG_.style.display = 'block';
+  // This allows blocks to be dragged outside of the blockly svg space.
+  // This should be reset to hidden at the end of the block drag.
+  // Note that this behavior is different from blockly where block disappear
+  // "under" the blockly area.
+  var injectionDiv = document.getElementsByClassName('injectionDiv')[0];
+  injectionDiv.style.overflow = 'visible';
 };
 
 /**
@@ -187,6 +193,13 @@ Blockly.BlockDragSurfaceSvg.prototype.clearAndHide = function(newSurface) {
   // appendChild removes the node from this.dragGroup_
   newSurface.appendChild(this.getCurrentBlock());
   this.SVG_.style.display = 'none';
+  // Reset the overflow property back to hidden so that nothing appears outside
+  // of the blockly area.
+  // Note that this behavior is different from blockly. See note in
+  // setBlocksAndShow.
+  var injectionDiv = document.getElementsByClassName('injectionDiv')[0];
+  injectionDiv.style.overflow = 'hidden';
+
   goog.asserts.assert(this.dragGroup_.childNodes.length == 0,
     'Drag group was not cleared.');
 };

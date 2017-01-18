@@ -116,8 +116,8 @@ Blockly.VerticalFlyout.prototype.init = function(targetWorkspace) {
  * Creates the flyout's DOM.  Only needs to be called once.
  * @return {!Element} The flyout's SVG group.
  */
-Blockly.VerticalFlyout.prototype.createDom = function() {
-  Blockly.VerticalFlyout.superClass_.createDom.call(this);
+Blockly.VerticalFlyout.prototype.createDom = function(tagName) {
+  Blockly.VerticalFlyout.superClass_.createDom.call(this, tagName);
 
   /*
     <defs>
@@ -246,14 +246,20 @@ Blockly.VerticalFlyout.prototype.position = function() {
     var y = 0;
   }
 
-  this.svgGroup_.setAttribute('transform', 'translate(' + x + ',' + y + ')');
-
   // Record the height for Blockly.Flyout.getMetrics_
   this.height_ = targetWorkspaceMetrics.viewHeight - y;
 
   this.setBackgroundPath_(this.width_, this.height_);
+
+  this.svgGroup_.setAttribute("width", this.width_);
+  this.svgGroup_.setAttribute("height", this.height_);
+  var transform = 'translate(' + x + 'px,' + y + 'px)';  
+  this.svgGroup_.style.transform = transform;
+
   // Update the scrollbar (if one exists).
   if (this.scrollbar_) {
+    // Set the scrollbars origin to be the top left of the flyout.
+    this.scrollbar_.setOrigin(x, y);
     this.scrollbar_.resize();
   }
   // The blocks need to be visible in order to be laid out and measured
@@ -593,7 +599,7 @@ Blockly.VerticalFlyout.prototype.placeNewBlock_ = function(originBlock) {
   // Figure out where the original block is on the screen, relative to the upper
   // left corner of the main workspace.
   // In what coordinates?  Pixels?
-  var xyOld = this.workspace_.getSvgXY(svgRootOld, targetWorkspace);
+  var xyOld = Blockly.utils.getInjectionDivXY_(svgRootOld);
 
   // Take into account that the flyout might have been scrolled horizontally
   // (separately from the main workspace).
@@ -651,7 +657,7 @@ Blockly.VerticalFlyout.prototype.placeNewBlock_ = function(originBlock) {
   // upper left corner of the workspace.  This may not be the same as the
   // original block because the flyout's origin may not be the same as the
   // main workspace's origin.
-  var xyNew = this.workspace_.getSvgXY(svgRootNew, targetWorkspace);
+  var xyNew = Blockly.utils.getInjectionDivXY_(svgRootNew);
 
   // Scale the scroll (getSvgXY_ did not do this).
   xyNew.x +=
