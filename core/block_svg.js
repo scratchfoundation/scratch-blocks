@@ -1181,8 +1181,10 @@ Blockly.BlockSvg.prototype.updatePreviews = function(closestConnection,
     Blockly.localConnection_ = null;
   }
 
+  var wouldDeleteBlock = this.updateCursor_(e, closestConnection);
+  
   // Add an insertion marker or replacement marker if needed.
-  if (closestConnection &&
+  if (!wouldDeleteBlock && closestConnection &&
       closestConnection != Blockly.highlightedConnection_ &&
       !closestConnection.sourceBlock_.isInsertionMarker()) {
     Blockly.highlightedConnection_ = closestConnection;

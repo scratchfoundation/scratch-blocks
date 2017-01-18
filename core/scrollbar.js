@@ -411,8 +411,8 @@ Blockly.Scrollbar.prototype.resize = function(opt_metrics) {
 
   // If the origin has changed (e.g. the toolbox is moving from start to end)
   // we want to continue with the resize even if workspace metrics haven't.
-  if (this.originHasChanged) {
-    this.originHasChanged = false;
+  if (this.originHasChanged_) {
+    this.originHasChanged_ = false;
   } else if (Blockly.Scrollbar.metricsAreEquivalent_(hostMetrics,
       this.oldHostMetrics_)) {
     return;
