@@ -328,31 +328,40 @@ Blockly.Field.prototype.getSvgRoot = function() {
  * @private
  */
 Blockly.Field.prototype.render_ = function() {
-
+  var width = 0;
 
   if (this.visible_ && this.textElement_) {
-    var key = this.textElement_.textContent + '\n' +
-        this.textElement_.className.baseVal;
-    var width = Blockly.Field.getCachedWidth(this.textElement_);
+    // Replace the text.
+    goog.dom.removeChildren(/** @type {!Element} */ (this.textElement_));
+    var textNode = document.createTextNode(this.getDisplayText_());
+    this.textElement_.appendChild(textNode);
+
+    // Calculate width of field
+    width = Blockly.Field.getCachedWidth(this.textElement_);
+
+    // Add padding to left and right of text.
     if (this.EDITABLE) {
-      // Add padding to left and right of text.
       width += Blockly.BlockSvg.EDITABLE_FIELD_PADDING;
     }
+
     // Adjust width for drop-down arrows.
     var arrowWidth = 0;
     if (this.positionArrow) {
       arrowWidth = this.positionArrow(width);
       width += arrowWidth;
     }
+
+    // Add padding to any drawn box.
     if (this.box_) {
-      // Add padding to any drawn box.
       width += 2 * Blockly.BlockSvg.BOX_FIELD_PADDING;
     }
+
     // Update text centering, based on newly calculated width.
     var centerTextX = (width - arrowWidth) / 2;
     if (this.sourceBlock_.RTL) {
       centerTextX += arrowWidth;
     }
+
     // In a text-editing shadow block's field,
     // if half the text length is not at least center of
     // visible field (FIELD_WIDTH), center it there instead,
@@ -371,12 +380,14 @@ Blockly.Field.prototype.render_ = function() {
         centerTextX = Math.max(minOffset, centerTextX);
       }
     }
-    this.textElement_.setAttribute('x', centerTextX);
 
-  } else {
-    var width = 0;
+    // Apply new text element x position.
+    this.textElement_.setAttribute('x', centerTextX);
   }
+
+  // Set width of the field.
   this.size_.width = width;
+
   // Update any drawn box to the correct width and height.
   if (this.box_) {
     this.box_.setAttribute('width', this.size_.width);
@@ -505,7 +516,6 @@ Blockly.Field.prototype.setText = function(newText) {
   this.text_ = newText;
   // Set width to 0 to force a rerender of this field.
   this.size_.width = 0;
-
   if (this.sourceBlock_ && this.sourceBlock_.rendered) {
     this.sourceBlock_.render();
     this.sourceBlock_.bumpNeighbours_();
