@@ -648,10 +648,7 @@ Blockly.Blocks['sensing_of_object_menu'] = {
           {
             "type": "field_dropdown",
             "name": "OBJECT",
-            "options": [
-              ['Sprite1', 'Sprite1'],
-              ['Stage', '_stage_']
-            ]
+            "options": Blockly.Blocks.getSpritesMenu()
           }
         ],
         "inputsInline": true,
