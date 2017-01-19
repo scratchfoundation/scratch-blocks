@@ -26,12 +26,17 @@
 
 goog.provide('Blockly.Blocks');
 
-Blockly.Blocks.Sprites = [];
+Blockly.Blocks.SelectedSprite = "";
+
+Blockly.Blocks.Sprites = ["Stage"];
 
 Blockly.Blocks.getSpriteMenu = function () {
   var i = 0;
   var menu = [];
   for (i = 0; i < Blockly.Blocks.Sprites.length; i++) {
+    if (Blockly.Blocks.Sprites[i] == Blockly.Blocks.SelectedSprite) {
+      continue;
+    }
     var temp = [];
     temp[0] = Blockly.Blocks.Sprites[i];
     temp[1] = Blockly.Blocks.Sprites[i];
