@@ -25,3 +25,17 @@
 'use strict';
 
 goog.provide('Blockly.Blocks');
+
+Blockly.Blocks.Sprites = [];
+
+Blockly.Blocks.getSpriteMenu = function () {
+  var i = 0;
+  var menu = [];
+  for (i = 0; i < Blockly.Blocks.Sprites; i++) {
+    var temp = [];
+    temp[0] = Blockly.Blocks.Sprites[i];
+    temp[1] = Blockly.Blocks.Sprites[i];
+    menu.push(temp);
+  }
+  return menu;
+}
