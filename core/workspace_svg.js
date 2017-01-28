@@ -1348,34 +1348,14 @@ Blockly.WorkspaceSvg.prototype.zoomCenter = function(type) {
   var metrics = this.getMetrics();
   var x = metrics.viewWidth / 2;
   var y = metrics.viewHeight / 2;
-  if (this.options.RTL == false) {
-    if (this.options.horizontalLayout == false) {
-      if (this.options.toolboxPosition == 0) {
-        x = x - 250;
-      } else {
-        x = x + 250;
-      }
-    } else {
-      if (this.options.toolboxPosition == 0) {
-        y = y - 158;
-      } else {
-        y = y + 158;
-      }
-    }
-  } else {
-    if (this.options.horizontalLayout == false) {
-      if (this.options.toolboxPosition == 0) {
-        x = x + 250;
-      } else {
-        x = x - 250;
-      }
-    } else {
-      if (this.options.toolboxPosition == 0) {
-        y = y - 158;
-      } else {
-        y = y + 158;
-      }
-    }
+  if (this.options.toolboxPosition == 2) {
+    x = x - 250;
+  } else if (this.options.toolboxPosition == 3) {
+    x = x + 250;
+  } else if (this.options.toolboxPosition == 0) {
+    y = y - 236;
+  } else if (this.options.toolboxPosition == 1) {
+    y = y + 236;
   }
   this.zoom(x, y, type);
 };
