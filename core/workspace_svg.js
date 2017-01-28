@@ -1361,6 +1361,8 @@ Blockly.WorkspaceSvg.prototype.zoomCenter = function(type) {
   } else if (this.options.toolboxPosition == 1) {
     y = y + 158;
     console.log("Y Now: " + y);
+  } else {
+    console.log("TB is: " + this.options.toolboxPosition);
   }
   this.zoom(x, y, type);
 };
