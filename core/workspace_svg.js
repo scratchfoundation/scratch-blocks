@@ -1348,14 +1348,19 @@ Blockly.WorkspaceSvg.prototype.zoomCenter = function(type) {
   var metrics = this.getMetrics();
   var x = metrics.viewWidth / 2;
   var y = metrics.viewHeight / 2;
+  console.log("Start X: " + x + " Start Y: " + y);
   if (this.options.toolboxPosition == 2) {
     x = x - 250;
+    console.log("X Now: " + x);
   } else if (this.options.toolboxPosition == 3) {
     x = x + 250;
+    console.log("X Now: " + x);
   } else if (this.options.toolboxPosition == 0) {
-    y = y - 236;
+    y = y - 158;
+    console.log("Y Now: " + y);
   } else if (this.options.toolboxPosition == 1) {
-    y = y + 236;
+    y = y + 158;
+    console.log("Y Now: " + y);
   }
   this.zoom(x, y, type);
 };
