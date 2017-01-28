@@ -1351,11 +1351,11 @@ Blockly.WorkspaceSvg.prototype.zoomCenter = function(type) {
   if (this.options.toolboxPosition == 2) {
     x = x + 250;
   } else if (this.options.toolboxPosition == 3) {
-    x = x - 250;
+    x = x + 250;
   } else if (this.options.toolboxPosition == 0) {
     y = y + 158;
   } else if (this.options.toolboxPosition == 1) {
-    y = y - 158;
+    y = y + 158;
   }
   this.zoom(x, y, type);
 };
