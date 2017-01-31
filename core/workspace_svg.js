@@ -1348,13 +1348,13 @@ Blockly.WorkspaceSvg.prototype.zoomCenter = function(type) {
   var metrics = this.getMetrics();
   var x = metrics.viewWidth / 2;
   var y = metrics.viewHeight / 2;
-  if (this.options.toolboxPosition == 2) {
+  if (this.options.toolboxPosition == Blockly.TOOLBOX_AT_LEFT) {
     x = x + 250;
-  } else if (this.options.toolboxPosition == 3) {
+  } else if (this.options.toolboxPosition == Blockly.TOOLBOX_AT_RIHT) {
     x = x + 250;
-  } else if (this.options.toolboxPosition == 0) {
+  } else if (this.options.toolboxPosition == Blockly.TOOLBOX_AT_TOP) {
     y = y + 158;
-  } else if (this.options.toolboxPosition == 1) {
+  } else if (this.options.toolboxPosition == Blockly.TOOLBOX_AT_BOTTOM) {
     y = y + 158;
   }
   this.zoom(x, y, type);
