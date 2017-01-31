@@ -523,6 +523,43 @@ Blockly.Field.prototype.setText = function(newText) {
 };
 
 /**
+ * Update the text node of this field to display the current text.
+ * @private
+ */
+Blockly.Field.prototype.updateTextNode_ = function() {
+  if (!this.textElement_) {
+    // Not rendered yet.
+    return;
+  }
+  var text = this.text_;
+  if (text.length > this.maxDisplayLength) {
+    // Truncate displayed string and add an ellipsis ('...').
+    text = text.substring(0, this.maxDisplayLength - 2) + '\u2026';
+    // Add special class for sizing font when truncated
+    this.textElement_.setAttribute('class', 'blocklyText blocklyTextTruncated');
+  } else {
+    this.textElement_.setAttribute('class', 'blocklyText');
+  }
+  // Empty the text element.
+  goog.dom.removeChildren(/** @type {!Element} */ (this.textElement_));
+  // Replace whitespace with non-breaking spaces so the text doesn't collapse.
+  text = text.replace(/\s/g, Blockly.Field.NBSP);
+  if (this.sourceBlock_.RTL && text) {
+    // The SVG is LTR, force text to be RTL.
+    text += '\u200F';
+  }
+  if (!text) {
+    // Prevent the field from disappearing if empty.
+    text = Blockly.Field.NBSP;
+  }
+  var textNode = document.createTextNode(text);
+  this.textElement_.appendChild(textNode);
+
+  // Cached width is obsolete.  Clear it.
+  this.size_.width = 0;
+};
+
+/**
  * By default there is no difference between the human-readable text and
  * the language-neutral values.  Subclasses (such as dropdown) may define this.
  * @return {string} Current value.

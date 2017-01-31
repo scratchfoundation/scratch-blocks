@@ -40,8 +40,8 @@ goog.require('goog.userAgent');
 
 /**
  * Class for an editable dropdown field.
- * @param {(!Array.<!Array>|!Function)} menuGenerator An array of options
- *     for a dropdown list, or a function which generates these options.
+ * @param {(!Array.<!Array.<string>>|!Function)} menuGenerator An array of
+ *     options for a dropdown list, or a function which generates these options.
  * @param {Function=} opt_validator A function that is executed when a new
  *     option is selected, with the newly selected value as its sole argument.
  *     If it returns a value, that value (which must be one of the options) will
@@ -63,7 +63,7 @@ Blockly.FieldDropdown = function(menuGenerator, opt_validator) {
 goog.inherits(Blockly.FieldDropdown, Blockly.Field);
 
 /**
- * Horizontal distance that a checkmark overhangs the dropdown.
+ * Horizontal distance that a checkmark ovehangs the dropdown.
  */
 Blockly.FieldDropdown.CHECKMARK_OVERHANG = 25;
 
@@ -77,28 +77,6 @@ Blockly.FieldDropdown.prototype.CURSOR = 'default';
  * @type {?goog.ui.MenuItem}
  */
 Blockly.FieldDropdown.prototype.selectedItem = null;
-
-/**
- * Language-neutral currently selected string or image object.
- * @type {string|!Object}
- * @private
- */
-Blockly.FieldDropdown.prototype.value_ = '';
-
-/**
- * SVG image element if currently selected option is an image, or null.
- * @type {SVGElement}
- * @private
- */
-Blockly.FieldDropdown.prototype.imageElement_ = null;
-
-/**
- * Object with src, height, width, and alt attributes if currently selected
- * option is an image, or null.
- * @type {Object}
- * @private
- */
-Blockly.FieldDropdown.prototype.imageJson_ = null;
 
 /**
  * Install this dropdown on a block.
@@ -167,23 +145,15 @@ Blockly.FieldDropdown.prototype.showEditor_ = function() {
       thisField.onItemSelected(menu, menuItem);
     }
     Blockly.DropDownDiv.hide();
-    Blockly.Events.setGroup(false);
   }
 
   var menu = new goog.ui.Menu();
   menu.setRightToLeft(this.sourceBlock_.RTL);
   var options = this.getOptions_();
   for (var i = 0; i < options.length; i++) {
-    var content = options[i][0]; // Human-readable text or image.
-    var value = options[i][1];   // Language-neutral value.
-    if (typeof content == 'object') {
-      // An image, not text.
-      var image = new Image(content['width'], content['height']);
-      image.src = content['src'];
-      image.alt = content['alt'] || '';
-      content = image;
-    }
-    var menuItem = new goog.ui.MenuItem(content);
+    var text = options[i][0];  // Human-readable text.
+    var value = options[i][1]; // Language-neutral value.
+    var menuItem = new goog.ui.MenuItem(text);
     menuItem.setRightToLeft(this.sourceBlock_.RTL);
     menuItem.setValue(value);
     menuItem.setCheckable(true);
@@ -278,8 +248,8 @@ Blockly.FieldDropdown.prototype.onHide = function() {
 
 /**
  * Handle the selection of an item in the dropdown menu.
- * @param {!goog.ui.Menu} menu The Menu component clicked.
- * @param {!goog.ui.MenuItem} menuItem The MenuItem selected within menu.
+ * @param {goog.ui.Menu} menu The Menu component clicked.
+ * @param {goog.ui.MenuItem} menuItem The MenuItem selected within menu.
  */
 Blockly.FieldDropdown.prototype.onItemSelected = function(menu, menuItem) {
   var value = menuItem.getValue();
@@ -301,26 +271,10 @@ Blockly.FieldDropdown.prototype.trimOptions_ = function() {
   this.prefixField = null;
   this.suffixField = null;
   var options = this.menuGenerator_;
-  if (!goog.isArray(options)) {
+  if (!goog.isArray(options) || options.length < 2) {
     return;
   }
-  // Replace message strings.
-  for (var i = 0; i < options.length; i++) {
-    var rawText = options[i][0];
-    var localizedText = Blockly.utils.replaceMessageReferences(rawText);
-    options[i][0] = localizedText;
-  }
-  if (options.length < 2) {
-    return;  // Nothing to trim.
-  }
-  var strings = [];
-  for (var i = 0; i < options.length; i++) {
-    var text = options[i][0];
-    if (typeof text != 'string') {
-      return;  // No text splitting if there is an image in the list.
-    }
-    strings.push(text);
-  }
+  var strings = options.map(function(t) {return t[0];});
   var shortest = Blockly.utils.shortestStringLength(strings);
   var prefixLength = Blockly.utils.commonWordPrefix(strings, shortest);
   var suffixLength = Blockly.utils.commonWordSuffix(strings, shortest);
@@ -350,8 +304,8 @@ Blockly.FieldDropdown.prototype.trimOptions_ = function() {
 
 /**
  * Return a list of the options for this dropdown.
- * @return {!Array.<!Array>} Array of option tuples:
- *     (human-readable text or image, language-neutral name).
+ * @return {!Array.<!Array.<string>>} Array of option tuples:
+ *     (human-readable text, language-neutral name).
  * @private
  */
 Blockly.FieldDropdown.prototype.getOptions_ = function() {
@@ -392,20 +346,40 @@ Blockly.FieldDropdown.prototype.setValue = function(newValue) {
   for (var i = 0; i < options.length; i++) {
     // Options are tuples of human-readable text and language-neutral values.
     if (options[i][1] == newValue) {
-      var content = options[i][0];
-      if (typeof content == 'object') {
-        this.imageJson_ = content;
-        this.setText(content.alt);
-      } else {
-        this.imageJson_ = null;
-        this.setText(content);
-      }
+      this.setText(options[i][0]);
       return;
     }
   }
   // Value not found.  Add it, maybe it will become valid once set
   // (like variable names).
   this.setText(newValue);
+};
+
+/**
+ * Set the text in this field.  Trigger a rerender of the source block.
+ * @param {?string} text New text.
+ */
+Blockly.FieldDropdown.prototype.setText = function(text) {
+  if (text === null || text === this.text_) {
+    // No change if null.
+    return;
+  }
+  this.text_ = text;
+  this.updateTextNode_();
+
+  if (this.textElement_) {
+    // Update class for dropdown text.
+    // This class is reset every time updateTextNode_ is called.
+    this.textElement_.setAttribute('class',
+        this.textElement_.getAttribute('class') + ' blocklyDropdownText'
+    );
+    this.textElement_.parentNode.appendChild(this.arrow_);
+  }
+
+  if (this.sourceBlock_ && this.sourceBlock_.rendered) {
+    this.sourceBlock_.render();
+    this.sourceBlock_.bumpNeighbours_();
+  }
 };
 
 /**
