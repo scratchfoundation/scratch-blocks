@@ -178,6 +178,7 @@ Blockly.Field.prototype.init = function() {
       this.onMouseUp_);
   // Force a render.
   this.render_();
+  this.size_.width = 0;
 };
 
 /**

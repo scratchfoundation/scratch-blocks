@@ -488,7 +488,7 @@ Blockly.FieldTextInput.prototype.widgetDispose_ = function() {
         }
       }
     }
-    thisField.setText(text);
+    thisField.setValue(text);
     thisField.sourceBlock_.rendered && thisField.sourceBlock_.render();
     Blockly.unbindEvent_(htmlInput.onKeyDownWrapper_);
     Blockly.unbindEvent_(htmlInput.onKeyUpWrapper_);
