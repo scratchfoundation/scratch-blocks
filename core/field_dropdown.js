@@ -388,6 +388,10 @@ Blockly.FieldDropdown.prototype.setText = function(text) {
  * @return {number} Amount of space the arrow is taking up, in px.
  */
 Blockly.FieldDropdown.prototype.positionArrow = function(x) {
+  if (!this.arrow_) {
+    return 0;
+  }
+
   var addedWidth = 0;
   if (this.sourceBlock_.RTL) {
     this.arrowX_ = this.arrowSize_ - Blockly.BlockSvg.DROPDOWN_ARROW_PADDING;
