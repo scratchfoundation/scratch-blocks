@@ -95,7 +95,6 @@ Blockly.HorizontalFlyout.prototype.getMetrics_ = function() {
   var viewHeight = this.height_;
   if (this.toolboxPosition_ == Blockly.TOOLBOX_AT_TOP) {
     viewHeight += this.MARGIN;
-//    viewHeight += this.MARGIN - this.SCROLLBAR_PADDING;
   }
   var viewWidth = this.width_ - 2 * this.SCROLLBAR_PADDING;
 

@@ -1029,13 +1029,6 @@ Blockly.BlockSvg.prototype.onMouseMove_ = function(e) {
       // Switch to unrestricted dragging.
       Blockly.dragMode_ = Blockly.DRAG_FREE;
       Blockly.longStop_();
-      
-      // IS THIS COMMENT RELEVANT STILL???
-      // Must move to drag surface before unplug(),
-      // or else connections will calculate the wrong relative to surface XY
-      // in tighten_(). Then blocks connected to this block move around on the
-      // drag surface. By moving to the drag surface before unplug, connection
-      // positions will be calculated correctly.
 
       // Disable workspace resizing as an optimization.
       this.workspace.setResizesEnabled(false);
@@ -1182,7 +1175,7 @@ Blockly.BlockSvg.prototype.updatePreviews = function(closestConnection,
   }
 
   var wouldDeleteBlock = this.updateCursor_(e, closestConnection);
-  
+
   // Add an insertion marker or replacement marker if needed.
   if (!wouldDeleteBlock && closestConnection &&
       closestConnection != Blockly.highlightedConnection_ &&
