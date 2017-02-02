@@ -261,3 +261,16 @@ Blockly.Categories = {
   "operators": "operators",
   "more": "more"
 };
+
+/**
+ * ENUM representing that an event is in the delete area of the trash can.
+ * @const
+ */
+Blockly.DELETE_AREA_TRASH = 1;
+
+/**
+ * ENUM representing that an event is in the delete area of the toolbox or
+ * flyout.
+ * @const
+ */
+Blockly.DELETE_AREA_TOOLBOX = 2;

@@ -69,7 +69,7 @@ Blockly.FieldTextDropdown.prototype.init = function() {
     this.arrowX_ = 0;
     /** @type {Number} */
     this.arrowY_ = 11;
-    this.arrow_ = Blockly.createSvgElement('image', {
+    this.arrow_ = Blockly.utils.createSvgElement('image', {
       'height': this.arrowSize_ + 'px',
       'width': this.arrowSize_ + 'px'
     });
