@@ -96,10 +96,10 @@ Blockly.utils.removeClass = function(element, className) {
  * @return {boolean} True if class exists, false otherwise.
  * @private
  */
- Blockly.utils.hasClass = function(element, className) {
-   var classes = element.getAttribute('class');
-   return (' ' + classes + ' ').indexOf(' ' + className + ' ') != -1;
- };
+Blockly.utils.hasClass = function(element, className) {
+  var classes = element.getAttribute('class');
+  return (' ' + classes + ' ').indexOf(' ' + className + ' ') != -1;
+};
 
 /**
  * Don't do anything for this event, just halt propagation.
@@ -204,9 +204,9 @@ Blockly.utils.getInjectionDivXY_ = function(element) {
 Blockly.utils.getScale_ = function(element) {
   var scale = 1;
   var transform = element.getAttribute('transform');
-   if (transform) {
+  if (transform) {
     var transformComponents =
-        transform.match(Blockly.utils.getScale_.REGEXP_);
+      transform.match(Blockly.utils.getScale_.REGEXP_);
     if (transformComponents && transformComponents[0]) {
       scale = parseFloat(transformComponents[0]);
     }
@@ -260,7 +260,7 @@ Blockly.utils.getRelativeXY.XY_2D_REGEX_ =
  * @param {Element} parent Optional parent on which to append the element.
  * @return {!SVGElement} Newly created SVG element.
  */
-Blockly.utils.createSvgElement = function(name, attrs, parent, opt_workspace) {
+Blockly.utils.createSvgElement = function(name, attrs, parent) {
   var e = /** @type {!SVGElement} */ (
       document.createElementNS(Blockly.SVG_NS, name));
   for (var key in attrs) {
@@ -320,7 +320,7 @@ Blockly.utils.shortestStringLength = function(array) {
   if (!array.length) {
     return 0;
   }
-  return array.reduce(function (a, b) {
+  return array.reduce(function(a, b) {
     return a.length < b.length ? a : b;
   }).length;
 };
@@ -407,7 +407,7 @@ Blockly.utils.commonWordSuffix = function(array, opt_shortest) {
  */
 Blockly.utils.tokenizeInterpolation = function(message) {
   return Blockly.utils.tokenizeInterpolation_(message, true);
-}
+};
 
 /**
  * Replaces string table references in a message string. For example,
@@ -421,7 +421,7 @@ Blockly.utils.replaceMessageReferences = function(message) {
   // When parseInterpolationTokens == false, interpolatedResult should be at
   // most length 1.
   return interpolatedResult.length ? interpolatedResult[0] : "";
-}
+};
 
 /**
  * Internal implemention of the message reference and interpolation token
@@ -769,7 +769,7 @@ Blockly.encodeEntities = function(rawStr) {
   return rawStr.replace(/[\u00A0-\u9999<>\&]/gim, function(i) {
     return '&#' + i.charCodeAt(0) + ';';
   });
-}
+};
 
 /**
  * Check if 3D transforms are supported by adding an element

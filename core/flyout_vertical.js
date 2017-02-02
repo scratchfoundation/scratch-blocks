@@ -114,6 +114,7 @@ Blockly.VerticalFlyout.prototype.init = function(targetWorkspace) {
 
 /**
  * Creates the flyout's DOM.  Only needs to be called once.
+ * @param {string} tagName HTML element
  * @return {!Element} The flyout's SVG group.
  */
 Blockly.VerticalFlyout.prototype.createDom = function(tagName) {
@@ -253,7 +254,7 @@ Blockly.VerticalFlyout.prototype.position = function() {
 
   this.svgGroup_.setAttribute("width", this.width_);
   this.svgGroup_.setAttribute("height", this.height_);
-  var transform = 'translate(' + x + 'px,' + y + 'px)';  
+  var transform = 'translate(' + x + 'px,' + y + 'px)';
   this.svgGroup_.style.transform = transform;
 
   // Update the scrollbar (if one exists).

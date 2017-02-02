@@ -399,7 +399,7 @@ Blockly.Field.prototype.render_ = function() {
 /**
  * Gets the width of a text element, caching it in the process.
  * @param {!Element} textElement An SVG 'text' element.
- * @retur {number} Width of element.
+ * @return {number} Width of element.
  */
 Blockly.Field.getCachedWidth = function(textElement) {
   var key = textElement.textContent + '\n' + textElement.className.baseVal;

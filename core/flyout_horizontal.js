@@ -177,12 +177,12 @@ Blockly.HorizontalFlyout.prototype.position = function() {
   } else {
     this.height_ = targetWorkspaceMetrics.viewHeight;
   }
-  
+
   this.svgGroup_.setAttribute("width", this.width_);
   this.svgGroup_.setAttribute("height", this.height_);
-  var transform = 'translate(' + x + 'px,' + y + 'px)';  
+  var transform = 'translate(' + x + 'px,' + y + 'px)';
   this.svgGroup_.style.transform = transform;
-  
+
   // Update the scrollbar (if one exists).
   if (this.scrollbar_) {
     // Set the scrollbars origin to be the top left of the flyout.

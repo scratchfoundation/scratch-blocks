@@ -108,7 +108,7 @@ Blockly.onMouseUp_ = function(/* e */) {
   }
   Blockly.Touch.clearTouchIdentifier();
 
-  // TODO(#781): Check whether this needs to be called for all drag modes. 
+  // TODO(#781): Check whether this needs to be called for all drag modes.
   workspace.resetDragSurface();
   Blockly.Css.setCursor(Blockly.Css.Cursor.OPEN);
   workspace.dragMode_ = Blockly.DRAG_NONE;

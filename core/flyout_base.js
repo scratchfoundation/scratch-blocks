@@ -451,7 +451,7 @@ Blockly.Flyout.prototype.setContainerVisible = function(visible) {
 Blockly.Flyout.prototype.updateDisplay_ = function() {
   var show = true;
   if (!this.containerVisible_) {
-    show = false; 
+    show = false;
   } else {
     show = this.isVisible();
   }

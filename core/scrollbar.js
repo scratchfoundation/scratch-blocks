@@ -369,9 +369,9 @@ Blockly.Scrollbar.prototype.setScrollViewSize_ = function(newSize) {
 };
 
 /**
-+ * Set whether this scrollbar's container is visible.
-+ * @param {boolean} visible Whether the container is visible.
-+ */
+  * Set whether this scrollbar's container is visible.
+  * @param {boolean} visible Whether the container is visible.
+  */
 Blockly.ScrollbarPair.prototype.setContainerVisible = function(visible) {
   this.hScroll.setContainerVisible(visible);
   this.vScroll.setContainerVisible(visible);
@@ -651,9 +651,9 @@ Blockly.Scrollbar.prototype.setVisible = function(visible) {
  * We cannot rely on the containing workspace being hidden to hide us
  * because it is not necessarily our parent in the dom.
  */
- Blockly.Scrollbar.prototype.updateDisplay_ = function() {
+Blockly.Scrollbar.prototype.updateDisplay_ = function() {
   var show = true;
-  // Check whether our parent/container is visible. 
+  // Check whether our parent/container is visible.
   if (!this.containerVisible_) {
     show = false;
   } else {
@@ -836,8 +836,8 @@ Blockly.Scrollbar.prototype.set = function(value) {
  * Set the origin of the upper left of the scrollbar. This if for times
  * when the scrollbar is used in an object whose origin isn't the same
  * as the main workspace (e.g. in a flyout.)
- * @ param {number} x The x coordinate of the scrollbar's origin.
- * @ param {number} y The y coordinate of the scrollbar's origin.
+ * @param {number} x The x coordinate of the scrollbar's origin.
+ * @param {number} y The y coordinate of the scrollbar's origin.
  */
 Blockly.Scrollbar.prototype.setOrigin = function(x, y) {
   if (x != this.origin_.x || y != this.origin_.y) {

@@ -300,8 +300,6 @@ Blockly.Blocks['lists_indexOf'] = {
     this.appendValueInput('FIND')
         .appendField(new Blockly.FieldDropdown(OPERATORS), 'END');
     this.setInputsInline(true);
-    // Assign 'this' to a variable for use in the tooltip closure below.
-    var thisBlock = this;
     this.setTooltip(function() {
       return Blockly.Msg.LISTS_INDEX_OF_TOOLTIP.replace('%1',
           this.workspace.options.oneBasedIndex ? '0' : '-1');
