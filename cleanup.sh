@@ -10,8 +10,10 @@ git rm -rf demos
 git rm -rf generators
 git rm -rf tests/generators
 git rm -rf appengine
+git rm -rf blocks
 git rm blockly_compressed.js
 git rm blockly_uncompressed.js
+git rm blocks_compressed.js
 git rm -f python_compressed.js php_compressed.js tests/playground.html core/block_render_svg.js dart_compressed.js javascript_compressed.js lua_compressed.js
 
 # Turn on more powerful globbing
