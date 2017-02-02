@@ -145,7 +145,7 @@ Blockly.Field.prototype.init = function() {
     return;
   }
   // Build the DOM.
-  this.fieldGroup_ = Blockly.createSvgElement('g', {}, null);
+  this.fieldGroup_ = Blockly.utils.createSvgElement('g', {}, null);
   if (!this.visible_) {
     this.fieldGroup_.style.display = 'none';
   }
@@ -163,7 +163,7 @@ Blockly.Field.prototype.init = function() {
   var size = this.getSize();
   var fieldX = (this.sourceBlock_.RTL) ? -size.width / 2 : size.width / 2;
   /** @type {!Element} */
-  this.textElement_ = Blockly.createSvgElement('text',
+  this.textElement_ = Blockly.utils.createSvgElement('text',
       {'class': 'blocklyText',
        'x': fieldX,
        'y': size.height / 2 + Blockly.BlockSvg.FIELD_TOP_PADDING,
@@ -177,7 +177,8 @@ Blockly.Field.prototype.init = function() {
       Blockly.bindEventWithChecks_(this.getClickTarget_(), 'mouseup', this,
       this.onMouseUp_);
   // Force a render.
-  this.updateTextNode_();
+  this.render_();
+  this.size_.width = 0;
 };
 
 /**
@@ -204,13 +205,13 @@ Blockly.Field.prototype.updateEditable = function() {
     return;
   }
   if (this.sourceBlock_.isEditable()) {
-    Blockly.addClass_(group, 'blocklyEditableText');
-    Blockly.removeClass_(group, 'blocklyNonEditableText');
-    this.getClickTarget_().style.cursor = this.CURSOR;
+    Blockly.utils.addClass(group, 'blocklyEditableText');
+    Blockly.utils.removeClass(group, 'blocklyNonEditableText');
+    this.fieldGroup_.style.cursor = this.CURSOR;
   } else {
-    Blockly.addClass_(group, 'blocklyNonEditableText');
-    Blockly.removeClass_(group, 'blocklyEditableText');
-    this.getClickTarget_().style.cursor = '';
+    Blockly.utils.addClass(group, 'blocklyNonEditableText');
+    Blockly.utils.removeClass(group, 'blocklyEditableText');
+    this.fieldGroup_.style.cursor = '';
   }
 };
 
@@ -328,42 +329,40 @@ Blockly.Field.prototype.getSvgRoot = function() {
  * @private
  */
 Blockly.Field.prototype.render_ = function() {
+  var width = 0;
+
   if (this.visible_ && this.textElement_) {
-    var key = this.textElement_.textContent + '\n' +
-        this.textElement_.className.baseVal;
-    if (Blockly.Field.cacheWidths_ && Blockly.Field.cacheWidths_[key]) {
-      var width = Blockly.Field.cacheWidths_[key];
-    } else {
-      try {
-        var width = this.textElement_.getComputedTextLength();
-      } catch (e) {
-        // MSIE 11 is known to throw "Unexpected call to method or property
-        // access." if Blockly is hidden.
-        var width = this.textElement_.textContent.length * 8;
-      }
-      if (Blockly.Field.cacheWidths_) {
-        Blockly.Field.cacheWidths_[key] = width;
-      }
-    }
+    // Replace the text.
+    goog.dom.removeChildren(/** @type {!Element} */ (this.textElement_));
+    var textNode = document.createTextNode(this.getDisplayText_());
+    this.textElement_.appendChild(textNode);
+
+    // Calculate width of field
+    width = Blockly.Field.getCachedWidth(this.textElement_);
+
+    // Add padding to left and right of text.
     if (this.EDITABLE) {
-      // Add padding to left and right of text.
       width += Blockly.BlockSvg.EDITABLE_FIELD_PADDING;
     }
+
     // Adjust width for drop-down arrows.
     var arrowWidth = 0;
     if (this.positionArrow) {
       arrowWidth = this.positionArrow(width);
       width += arrowWidth;
     }
+
+    // Add padding to any drawn box.
     if (this.box_) {
-      // Add padding to any drawn box.
       width += 2 * Blockly.BlockSvg.BOX_FIELD_PADDING;
     }
+
     // Update text centering, based on newly calculated width.
     var centerTextX = (width - arrowWidth) / 2;
     if (this.sourceBlock_.RTL) {
       centerTextX += arrowWidth;
     }
+
     // In a text-editing shadow block's field,
     // if half the text length is not at least center of
     // visible field (FIELD_WIDTH), center it there instead,
@@ -382,17 +381,44 @@ Blockly.Field.prototype.render_ = function() {
         centerTextX = Math.max(minOffset, centerTextX);
       }
     }
-    this.textElement_.setAttribute('x', centerTextX);
 
-  } else {
-    var width = 0;
+    // Apply new text element x position.
+    this.textElement_.setAttribute('x', centerTextX);
   }
+
+  // Set width of the field.
   this.size_.width = width;
+
   // Update any drawn box to the correct width and height.
   if (this.box_) {
     this.box_.setAttribute('width', this.size_.width);
     this.box_.setAttribute('height', this.size_.height);
   }
+};
+
+/**
+ * Gets the width of a text element, caching it in the process.
+ * @param {!Element} textElement An SVG 'text' element.
+ * @return {number} Width of element.
+ */
+Blockly.Field.getCachedWidth = function(textElement) {
+  var key = textElement.textContent + '\n' + textElement.className.baseVal;
+  if (Blockly.Field.cacheWidths_ && Blockly.Field.cacheWidths_[key]) {
+    var width = Blockly.Field.cacheWidths_[key];
+  } else {
+    try {
+      var width = textElement.getComputedTextLength();
+    } catch (e) {
+      // MSIE 11 is known to throw "Unexpected call to method or property
+      // access." if Blockly is hidden.
+      var width = textElement.textContent.length * 8;
+    }
+
+    if (Blockly.Field.cacheWidths_) {
+      Blockly.Field.cacheWidths_[key] = width;
+    }
+  }
+  return width;
 };
 
 /**
@@ -442,6 +468,31 @@ Blockly.Field.prototype.getScaledBBox_ = function() {
 };
 
 /**
+ * Get the text from this field as displayed on screen.  May differ from getText
+ * due to ellipsis, and other formatting.
+ * @return {string} Currently displayed text.
+ * @private
+ */
+Blockly.Field.prototype.getDisplayText_ = function() {
+  var text = this.text_;
+  if (!text) {
+    // Prevent the field from disappearing if empty.
+    return Blockly.Field.NBSP;
+  }
+  if (text.length > this.maxDisplayLength) {
+    // Truncate displayed string and add an ellipsis ('...').
+    text = text.substring(0, this.maxDisplayLength - 2) + '\u2026';
+  }
+  // Replace whitespace with non-breaking spaces so the text doesn't collapse.
+  text = text.replace(/\s/g, Blockly.Field.NBSP);
+  if (this.sourceBlock_.RTL) {
+    // The SVG is LTR, force text to be RTL.
+    text += '\u200F';
+  }
+  return text;
+};
+
+/**
  * Get the text from this field.
  * @return {string} Current text.
  */
@@ -451,21 +502,21 @@ Blockly.Field.prototype.getText = function() {
 
 /**
  * Set the text in this field.  Trigger a rerender of the source block.
- * @param {*} text New text.
+ * @param {*} newText New text.
  */
-Blockly.Field.prototype.setText = function(text) {
-  if (text === null) {
+Blockly.Field.prototype.setText = function(newText) {
+  if (newText === null) {
     // No change if null.
     return;
   }
-  text = String(text);
-  if (text === this.text_) {
+  newText = String(newText);
+  if (newText === this.text_) {
     // No change.
     return;
   }
-  this.text_ = text;
-  this.updateTextNode_();
-
+  this.text_ = newText;
+  // Set width to 0 to force a rerender of this field.
+  this.size_.width = 0;
   if (this.sourceBlock_ && this.sourceBlock_.rendered) {
     this.sourceBlock_.render();
     this.sourceBlock_.bumpNeighbours_();
@@ -512,7 +563,7 @@ Blockly.Field.prototype.updateTextNode_ = function() {
 /**
  * By default there is no difference between the human-readable text and
  * the language-neutral values.  Subclasses (such as dropdown) may define this.
- * @return {string} Current text.
+ * @return {string} Current value.
  */
 Blockly.Field.prototype.getValue = function() {
   return this.getText();
@@ -521,22 +572,22 @@ Blockly.Field.prototype.getValue = function() {
 /**
  * By default there is no difference between the human-readable text and
  * the language-neutral values.  Subclasses (such as dropdown) may define this.
- * @param {string} newText New text.
+ * @param {string} newValue New value.
  */
-Blockly.Field.prototype.setValue = function(newText) {
-  if (newText === null) {
+Blockly.Field.prototype.setValue = function(newValue) {
+  if (newValue === null) {
     // No change if null.
     return;
   }
-  var oldText = this.getValue();
-  if (oldText == newText) {
+  var oldValue = this.getValue();
+  if (oldValue == newValue) {
     return;
   }
   if (this.sourceBlock_ && Blockly.Events.isEnabled()) {
     Blockly.Events.fire(new Blockly.Events.Change(
-        this.sourceBlock_, 'field', this.name, oldText, newText));
+        this.sourceBlock_, 'field', this.name, oldValue, newValue));
   }
-  this.setText(newText);
+  this.setText(newValue);
 };
 
 /**
@@ -551,7 +602,7 @@ Blockly.Field.prototype.onMouseUp_ = function(e) {
     // Old iOS spawns a bogus event on the next touch after a 'prompt()' edit.
     // Unlike the real events, these have a layerX and layerY set.
     return;
-  } else if (Blockly.isRightButton(e)) {
+  } else if (Blockly.utils.isRightButton(e)) {
     // Right-click.
     return;
   } else if (this.sourceBlock_.workspace.isDragging()) {

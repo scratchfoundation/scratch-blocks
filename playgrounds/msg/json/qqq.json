@@ -76,7 +76,6 @@
 	"CONTROLS_IF_IF_TOOLTIP": "tooltip - Describes [https://github.com/google/blockly/wiki/IfElse#block-modification if block modification].",
 	"CONTROLS_IF_ELSEIF_TOOLTIP": "tooltip - Describes the 'else if' subblock during [https://github.com/google/blockly/wiki/IfElse#block-modification if block modification].",
 	"CONTROLS_IF_ELSE_TOOLTIP": "tooltip - Describes the 'else' subblock during [https://github.com/google/blockly/wiki/IfElse#block-modification if block modification].",
-	"CONTROLS_IFELSE_TITLE": "block text - See [https://github.com/google/blockly/wiki/IfElse https://github.com/google/blockly/wiki/IfElse].  The English word 'otherwise' would probably be superior to 'else', but the latter is used because it is traditional and shorter.",
 	"LOGIC_COMPARE_HELPURL": "url - Information about comparisons.",
 	"LOGIC_COMPARE_TOOLTIP_EQ": "tooltip - Describes the equals (=) block.",
 	"LOGIC_COMPARE_TOOLTIP_NEQ": "tooltip - Describes the not equals (≠) block.",

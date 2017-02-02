@@ -98,9 +98,11 @@ Blockly.Css.inject = function(hasCss, pathToMedia) {
       );
     }
   }
-  // Inject CSS tag.
+
+  // Inject CSS tag at start of head.
   var cssNode = document.createElement('style');
-  document.head.appendChild(cssNode);
+  document.head.insertBefore(cssNode, document.head.firstChild);
+
   var cssTextNode = document.createTextNode(text);
   cssNode.appendChild(cssTextNode);
   Blockly.Css.styleSheet_ = cssNode.sheet;
@@ -160,6 +162,7 @@ Blockly.Css.CONTENT = [
     'background-color: $colour_workspace;',
     'outline: none;',
     'overflow: hidden;',  /* IE overflows by default. */
+    'position: absolute;',
     'display: block;',
   '}',
 
@@ -179,6 +182,7 @@ Blockly.Css.CONTENT = [
   '.injectionDiv {',
     'height: 100%;',
     'position: relative;',
+    'overflow: hidden;', /* So blocks in drag surface disappear at edges */
   '}',
 
   '.blocklyNonSelectable {',
@@ -209,6 +213,25 @@ Blockly.Css.CONTENT = [
     '-ms-user-select: none;',
   '}',
 
+  '.blocklyWsDragSurface {',
+    'display: none;',
+    'position: absolute;',
+    'overflow: visible;',
+    'top: 0;',
+    'left: 0;',
+  '}',
+
+  '.blocklyBlockDragSurface {',
+    'display: none;',
+    'position: absolute;',
+    'top: 0;',
+    'left: 0;',
+    'right: 0;',
+    'bottom: 0;',
+    'overflow: visible !important;',
+    'z-index: 5000;',
+  '}',
+
   '.blocklyTooltipDiv {',
     'background-color: #ffffc7;',
     'border: 1px solid #ddc;',
@@ -221,21 +244,6 @@ Blockly.Css.CONTENT = [
     'padding: 2px;',
     'position: absolute;',
     'z-index: 100000;', /* big value for bootstrap3 compatibility */
-  '}',
-
-  '.blocklyDragSurface {',
-    'display: none;',
-    'position: absolute;',
-    'top: 0;',
-    'left: 0;',
-    'right: 0;',
-    'bottom: 0;',
-    'overflow: visible !important;',
-    'z-index: 5000;', /* Always display on top */
-    '-webkit-backface-visibility: hidden;',
-    'backface-visibility: hidden;',
-    '-webkit-perspective: 1000;',
-    'perspective: 1000;',
   '}',
 
   '.blocklyDropDownDiv {',
@@ -420,6 +428,10 @@ Blockly.Css.CONTENT = [
     'fill: $colour_text;',
   '}',
 
+  '.blocklyFlyout {',
+    'position: absolute;',
+    'z-index: 20;',
+  '}',
   '.blocklyFlyoutButton {',
     'fill: #888;',
     'cursor: default;',
@@ -445,15 +457,11 @@ Blockly.Css.CONTENT = [
     'fill: #000;',
   '}',
 
-  '.blocklyFlyoutLabelText:hover {',
-    'fill: #aaa;',
-  '}',
-
   /*
     Don't allow users to select text.  It gets annoying when trying to
     drag a block and selected text moves instead.
   */
-  '.blocklySvg text {',
+  '.blocklySvg text, .blocklyBlockDragSurface text {',
     'user-select: none;',
     '-moz-user-select: none;',
     '-webkit-user-select: none;',
@@ -528,6 +536,12 @@ Blockly.Css.CONTENT = [
   '.blocklyFlyoutBackground {',
     'fill: $colour_flyout;',
     'fill-opacity: .8;',
+  '}',
+
+  '.blocklyScrollbarHorizontal, .blocklyScrollbarVertical {',
+    'position: absolute;',
+    'outline: none;',
+    'z-index: 30;',
   '}',
 
   '.blocklyScrollbarBackground {',
@@ -619,6 +633,7 @@ Blockly.Css.CONTENT = [
     'overflow-y: auto;',
     'position: absolute;',
     'font-family: "Helvetica Neue", Helvetica, sans-serif;',
+    'z-index: 70;', /* so blocks go under toolbox when dragging */
   '}',
 
   '.blocklyTreeRoot {',

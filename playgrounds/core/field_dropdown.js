@@ -94,7 +94,7 @@ Blockly.FieldDropdown.prototype.init = function() {
   this.arrowX_ = 0;
   /** @type {Number} */
   this.arrowY_ = 11;
-  this.arrow_ = Blockly.createSvgElement('image', {
+  this.arrow_ = Blockly.utils.createSvgElement('image', {
     'height': this.arrowSize_ + 'px',
     'width': this.arrowSize_ + 'px'
   });
@@ -104,7 +104,7 @@ Blockly.FieldDropdown.prototype.init = function() {
   Blockly.FieldDropdown.superClass_.init.call(this);
   // If not in a shadow block, draw a box.
   if (!this.sourceBlock_.isShadow()) {
-    this.box_ = Blockly.createSvgElement('rect', {
+    this.box_ = Blockly.utils.createSvgElement('rect', {
       'rx': Blockly.BlockSvg.CORNER_RADIUS,
       'ry': Blockly.BlockSvg.CORNER_RADIUS,
       'x': 0,
@@ -185,7 +185,7 @@ Blockly.FieldDropdown.prototype.showEditor_ = function() {
   // Record windowSize and scrollOffset before adding menu.
   menu.render(contentDiv);
   var menuDom = menu.getElement();
-  Blockly.addClass_(menuDom, 'blocklyDropdownMenu');
+  Blockly.utils.addClass(menuDom, 'blocklyDropdownMenu');
   // Record menuSize after adding menu.
   var menuSize = goog.style.getSize(menuDom);
   // Recalculate height for the total content, not only box height.
@@ -275,9 +275,9 @@ Blockly.FieldDropdown.prototype.trimOptions_ = function() {
     return;
   }
   var strings = options.map(function(t) {return t[0];});
-  var shortest = Blockly.shortestStringLength(strings);
-  var prefixLength = Blockly.commonWordPrefix(strings, shortest);
-  var suffixLength = Blockly.commonWordSuffix(strings, shortest);
+  var shortest = Blockly.utils.shortestStringLength(strings);
+  var prefixLength = Blockly.utils.commonWordPrefix(strings, shortest);
+  var suffixLength = Blockly.utils.commonWordSuffix(strings, shortest);
   if (!prefixLength && !suffixLength) {
     return;
   }
@@ -388,6 +388,10 @@ Blockly.FieldDropdown.prototype.setText = function(text) {
  * @return {number} Amount of space the arrow is taking up, in px.
  */
 Blockly.FieldDropdown.prototype.positionArrow = function(x) {
+  if (!this.arrow_) {
+    return 0;
+  }
+
   var addedWidth = 0;
   if (this.sourceBlock_.RTL) {
     this.arrowX_ = this.arrowSize_ - Blockly.BlockSvg.DROPDOWN_ARROW_PADDING;
