@@ -47,8 +47,14 @@ Blockly.Options = function(options) {
     var hasSounds = false;
   } else {
     if (!options['toolbox']) {
-      var oParser = new DOMParser();
-      var dom = oParser.parseFromString(Blockly.Blocks.defaultToolbox, 'text/xml');
+      if (window.DOMparser) {
+        var oParser = new DOMParser();
+        var dom = oParser.parseFromString(Blockly.Blocks.defaultToolbox, 'text/xml');
+      } else {
+        var dom = new ActiveXObject("Microsoft.XMLDOM");
+        dom.async = false;
+        dom.loadXML(Blockly.Blocks.defaultToolbox);
+      }
       options['toolbox'] = dom.children[0];
     }
     var languageTree = Blockly.Options.parseToolboxTree(options['toolbox']);
