@@ -13,7 +13,7 @@ git rm -rf blocks
 git rm blockly_compressed.js
 git rm blockly_uncompressed.js
 git rm blocks_compressed.js
-git rm -f tests/playground.html core/block_render_svg.js dart_compressed.js
+git rm -f tests/playground.html core/block_render_svg.js
 
 # Turn on more powerful globbing
 shopt -s extglob
