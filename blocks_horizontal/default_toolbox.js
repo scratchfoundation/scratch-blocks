@@ -29,8 +29,10 @@ goog.require('Blockly.Blocks');
  */
 
 Blockly.Blocks.defaultToolbox = '<xml id="toolbox-categories" style="display: none">' +
-    '<category name="Events">' +
+    '<category name="Events" colour="#FFD500" secondaryColour="#CC9900">' +
         '<block type="event_whenflagclicked"></block>' +
+        '<block type="event_whenthisspriteclicked"></block>' +
+        '<block type="event_bump"></block>' +
         '<block type="event_whenbroadcastreceived">' +
         '<value name="CHOICE">' +
         '<shadow type="dropdown_whenbroadcast">' +
@@ -46,7 +48,7 @@ Blockly.Blocks.defaultToolbox = '<xml id="toolbox-categories" style="display: no
         '</value>' +
         '</block>' +
     '</category>' +
-    '<category name="Control">' +
+    '<category name="Control" colour="#FFAB19" secondaryColour="#CF8B17">' +
         '<block type="control_forever"></block>' +
         '<block type="control_repeat">' +
         '<value name="TIMES">' +
@@ -64,7 +66,7 @@ Blockly.Blocks.defaultToolbox = '<xml id="toolbox-categories" style="display: no
         '</value>' +
         '</block>' +
     '</category>' +
-    '<category name="Wedo">' +
+    '<category name="Wedo" colour="#C0C0C0" secondaryColour="#808080">' +
         '<block type="wedo_setcolor">' +
         '<value name="CHOICE">' +
         '<shadow type="dropdown_wedo_setcolor">' +
@@ -102,6 +104,84 @@ Blockly.Blocks.defaultToolbox = '<xml id="toolbox-categories" style="display: no
         '</block>' +
         '<block type="wedo_whendistanceclose"></block>' +
         '</category>' +
+        '<category name="Motion" colour="#4C97FF" secondaryColour="#3373CC">'+
+          '<block type="motion_movesteps">'+
+            '<value name="STEPS">'+
+              '<shadow type="math_number">'+
+                '<field name="NUM">10</field>'+
+              '</shadow>'+
+            '</value>'+
+          '</block>'+
+          '<block type="motion_moveup">'+
+            '<value name="STEPS">'+
+              '<shadow type="math_number">'+
+                '<field name="NUM">10</field>'+
+              '</shadow>'+
+            '</value>'+
+          '</block>'+
+          '<block type="motion_hop">'+
+            '<value name="STEPS">'+
+              '<shadow type="math_number">'+
+                '<field name="NUM">10</field>'+
+              '</shadow>'+
+            '</value>'+
+          '</block>'+
+          '<block type="motion_movedown">'+
+            '<value name="STEPS">'+
+              '<shadow type="math_number">'+
+                '<field name="NUM">10</field>'+
+              '</shadow>'+
+            '</value>'+
+          '</block>'+
+          '<block type="motion_moveback">'+
+            '<value name="STEPS">'+
+              '<shadow type="math_number">'+
+                '<field name="NUM">10</field>'+
+              '</shadow>'+
+            '</value>'+
+          '</block>'+
+          '<block type="motion_turnright">'+
+            '<value name="DEGREES">'+
+              '<shadow type="math_number">'+
+                '<field name="NUM">15</field>'+
+              '</shadow>'+
+            '</value>'+
+          '</block>'+
+          '<block type="motion_turnleft">'+
+            '<value name="DEGREES">'+
+              '<shadow type="math_number">'+
+                '<field name="NUM">15</field>'+
+              '</shadow>'+
+            '</value>'+
+          '</block>'+
+          '<block type="motion_home"></block>'+
+        '</category>'+
+        '<category name="Looks" colour="#9966FF" secondaryColour="#774DCB">'+
+          '<block type="looks_changesizeby">'+
+            '<value name="CHANGE">'+
+              '<shadow type="math_number">'+
+                '<field name="NUM">10</field>'+
+              '</shadow>'+
+            '</value>'+
+          '</block>'+
+          '<block type="looks_shrink">'+
+            '<value name="CHANGE">'+
+              '<shadow type="math_number">'+
+                '<field name="NUM">10</field>'+
+              '</shadow>'+
+            '</value>'+
+          '</block>'+
+          '<block type="looks_reset"></block>'+
+          '<block type="looks_show"></block>'+
+          '<block type="looks_hide"></block>'+
+          '<block type="looks_say">'+
+            '<value name="MESSAGE">'+
+              '<shadow type="text">'+
+                '<field name="TEXT">Hi</field>'+
+              '</shadow>'+
+            '</value>'+
+          '</block>'+
+        '</category>'+
         '</xml>' +
         '<xml id="toolbox-simple" style="display: none">' +
         '<block type="event_whenflagclicked"></block>' +
