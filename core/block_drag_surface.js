@@ -151,7 +151,7 @@ Blockly.BlockDragSurfaceSvg.prototype.translateSurface = function(x, y) {
   x = x.toFixed(0);
   y = y.toFixed(0);
   transform =
-    'transform: translate3d(' + x + 'px, ' + y + 'px, 0px); display: block;';
+    '-webkit-transform: translate3d(' + x + 'px, ' + y + 'px, 0px); display: block;';
   this.SVG_.setAttribute('style', transform);
 };
 
