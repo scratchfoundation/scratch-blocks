@@ -17,12 +17,17 @@
       var workspace = null;
 
       function start() {
-        // Restore sounds state.
-        var soundsEnabled = sessionStorage.getItem('soundsEnabled');
-        if (soundsEnabled === null) {
-          soundsEnabled = true;
+        var soundsEnabled = null;
+        if (sessionStorage) {
+          // Restore sounds state.
+          soundsEnabled = sessionStorage.getItem('soundsEnabled');
+          if (soundsEnabled === null) {
+            soundsEnabled = true;
+          } else {
+            soundsEnabled = (soundsEnabled === 'true');
+          }
         } else {
-          soundsEnabled = (soundsEnabled === 'true');
+          soundsEnabled = true;
         }
         setSoundsEnabled(soundsEnabled);
 
@@ -81,14 +86,16 @@
           document.getElementById('importExport').value = text;
         }
         taChange();
+        
+        if (sessionStorage) {
+          // Restore event logging state.
+          var state = sessionStorage.getItem('logEvents');
+          logEvents(Boolean(state));
 
-        // Restore event logging state.
-        var state = sessionStorage.getItem('logEvents');
-        logEvents(Boolean(state));
-
-        // Restore flyout event logging state.
-        state = sessionStorage.getItem('logFlyoutEvents');
-        logFlyoutEvents(Boolean(state));
+          // Restore flyout event logging state.
+          state = sessionStorage.getItem('logFlyoutEvents');
+          logFlyoutEvents(Boolean(state));
+        }
       }
 
       function getToolboxElement() {
@@ -122,7 +129,9 @@
       // Preserve text between page reloads.
       function taChange() {
         var textarea = document.getElementById('importExport');
-        sessionStorage.setItem('textarea', textarea.value)
+        if (sessionStorage) {
+          sessionStorage.setItem('textarea', textarea.value);
+        }
         var valid = true;
         try {
           Blockly.Xml.textToDom(textarea.value);
@@ -135,7 +144,9 @@
       function logEvents(state) {
         var checkbox = document.getElementById('logCheck');
         checkbox.checked = state;
-        sessionStorage.setItem('logEvents', state ? 'checked' : '');
+        if (sessionStorage) {
+          sessionStorage.setItem('logEvents', state ? 'checked' : '');
+        }
         if (state) {
           workspace.addChangeListener(logger);
         } else {
@@ -146,7 +157,9 @@
       function logFlyoutEvents(state) {
         var checkbox = document.getElementById('logFlyoutCheck');
         checkbox.checked = state;
-        sessionStorage.setItem('logFlyoutEvents', state ? 'checked' : '');
+        if (sessionStorage) {
+          sessionStorage.setItem('logFlyoutEvents', state ? 'checked' : '');
+        }
         var flyoutWorkspace = (workspace.flyout_) ? workspace.flyout_.workspace_ :
           workspace.toolbox_.flyout_.workspace_;
         if (state) {
@@ -258,7 +271,9 @@
       function setSoundsEnabled(state) {
         var checkbox = document.getElementById('soundsEnabled');
         checkbox.checked = (state) ? 'checked' : '';
-        sessionStorage.setItem('soundsEnabled', state);
+        if (sessionStorage) {
+          sessionStorage.setItem('soundsEnabled', state);
+        }
       }
 
       function fakeDrag(id, dx, dy, opt_workspace) {
