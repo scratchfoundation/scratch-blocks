@@ -150,6 +150,127 @@ Blockly.Blocks['wedo_motorspeed'] = {
   }
 };
 
+Blockly.Blocks['wedo_motorturndegrees'] = {
+  /**
+   * Block to change motor position in degrees.
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.jsonInit({
+      "id": "wedo_motorturndegrees",
+      "message0": "turn motor %1 by %2 degrees",
+      "args0": [
+        {
+          "type": "input_value",
+          "name": "MOTOR",
+        },
+        {
+          "type": "input_value",
+          "name": "DEGREES",
+          "check": "Number"
+        }
+      ],
+      "inputsInline": true,
+      "previousStatement": null,
+      "nextStatement": null,
+      "category": Blockly.Categories.motion,
+      "colour": Blockly.Colours.motion.primary,
+      "colourSecondary": Blockly.Colours.motion.secondary,
+      "colourTertiary": Blockly.Colours.motion.tertiary
+    });
+  }
+};
+
+Blockly.Blocks['wedo_motorsetdirection'] = {
+  /**
+   * Block to set motor direction.
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.jsonInit({
+      "id": "wedo_motorsetdirection",
+      "message0": "set motor %1 direction to %2",
+      "args0": [
+        {
+          "type": "input_value",
+          "name": "MOTOR",
+        },
+        {
+          "type": "input_value",
+          "name": "DIRECTION",
+        }
+      ],
+      "inputsInline": true,
+      "previousStatement": null,
+      "nextStatement": null,
+      "category": Blockly.Categories.motion,
+      "colour": Blockly.Colours.motion.primary,
+      "colourSecondary": Blockly.Colours.motion.secondary,
+      "colourTertiary": Blockly.Colours.motion.tertiary
+    });
+  }
+};
+
+Blockly.Blocks['dropdown_wedo_motor'] = {
+  /**
+   * Motor drop-down menu.
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.jsonInit(
+      {
+        "message0": "%1",
+        "args0": [
+          {
+            "type": "field_dropdown",
+            "name": "MOTOR",
+            "options": [
+              ['A', 'A'],
+              ['B', 'B'],
+              ['external', 'external']
+            ]
+          }
+        ],
+        "inputsInline": true,
+        "output": "String",
+        "colour": Blockly.Colours.motion.secondary,
+        "colourSecondary": Blockly.Colours.motion.secondary,
+        "colourTertiary": Blockly.Colours.motion.tertiary,
+        "outputShape": Blockly.OUTPUT_SHAPE_ROUND
+      });
+  }
+};
+
+Blockly.Blocks['dropdown_wedo_motor_direction'] = {
+  /**
+   * Motor direction drop-down menu.
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.jsonInit(
+      {
+        "message0": "%1",
+        "args0": [
+          {
+            "type": "field_dropdown",
+            "name": "DIRECTION",
+            "options": [
+              ['clockwise', 'clockwise'],
+              ['counter-clockise', 'counter-clockwise'],
+              ['reverse', 'reverse']
+            ]
+          }
+        ],
+        "inputsInline": true,
+        "output": "String",
+        "colour": Blockly.Colours.motion.secondary,
+        "colourSecondary": Blockly.Colours.motion.secondary,
+        "colourTertiary": Blockly.Colours.motion.tertiary,
+        "outputShape": Blockly.OUTPUT_SHAPE_ROUND
+      });
+  }
+};
+
 Blockly.Blocks['dropdown_wedo_whentilt'] = {
   /**
    * WeDo tilt drop-down menu.
