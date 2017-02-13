@@ -102,8 +102,9 @@ Blockly.Blocks.defaultToolbox = '<xml id="toolbox-categories" style="display: no
         '</block>' +
         '<block type="wedo_whendistanceclose"></block>' +
         '</category>' +
-        '</xml>' +
-        '<xml id="toolbox-simple" style="display: none">' +
+        '</xml>';
+        
+Blockly.Blocks.defaultToolboxSimple = '<xml id="toolbox-simple" style="display: none">' +
         '<block type="event_whenflagclicked"></block>' +
         '<block type="event_whenbroadcastreceived">' +
         '<value name="CHOICE">' +
