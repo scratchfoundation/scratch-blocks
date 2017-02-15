@@ -350,9 +350,9 @@ Blockly.Field.prototype.render_ = function() {
     this.updateWidth();
 
     // Update text centering, based on newly calculated width.
-    var centerTextX = (this.size_.width - arrowWidth) / 2;
+    var centerTextX = (this.size_.width - this.arrowWidth_) / 2;
     if (this.sourceBlock_.RTL) {
-      centerTextX += arrowWidth;
+      centerTextX += this.arrowWidth_;
     }
 
     // In a text-editing shadow block's field,
@@ -401,10 +401,10 @@ Blockly.Field.prototype.updateWidth = function() {
   }
 
   // Adjust width for drop-down arrows.
-  var arrowWidth = 0;
+  this.arrowWidth_ = 0;
   if (this.positionArrow) {
-    arrowWidth = this.positionArrow(width);
-    width += arrowWidth;
+    this.arrowWidth_ = this.positionArrow(width);
+    width += this.arrowWidth_;
   }
 
   // Add padding to any drawn box.

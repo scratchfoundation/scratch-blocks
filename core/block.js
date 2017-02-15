@@ -779,14 +779,16 @@ Blockly.Block.prototype.setColour = function(colour, colourSecondary, colourTert
   if (colourSecondary !== undefined) {
     this.colourSecondary_ = this.makeColour_(colourSecondary);
   } else {
-    this.colourSecondary_ = goog.color.darken(goog.color.hexToRgb(this.colour_),
-        0.1);
+    this.colourSecondary_ = goog.color.rgbArrayToHex(
+        goog.color.darken(goog.color.hexToRgb(this.colour_),
+        0.1));
   }
   if (colourTertiary !== undefined) {
     this.colourTertiary_ = this.makeColour_(colourTertiary);
   } else {
-    this.colourTertiary_ = goog.color.darken(goog.color.hexToRgb(this.colour_),
-        0.2);
+    this.colourTertiary_ = goog.color.rgbArrayToHex(
+        goog.color.darken(goog.color.hexToRgb(this.colour_),
+        0.2));
   }
   if (this.rendered) {
     this.updateColour();
