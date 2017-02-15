@@ -24,10 +24,15 @@
  */
 'use strict';
 
+/**
+ * @name Blockly.Xml
+ * @namespace
+ **/
 goog.provide('Blockly.Xml');
 
 goog.require('goog.asserts');
 goog.require('goog.dom');
+goog.require('goog.userAgent');
 
 
 /**
@@ -368,6 +373,21 @@ Blockly.Xml.domToBlock = function(xmlBlock, workspace) {
         setTimeout(function() {
           if (topBlock.workspace) {  // Check that the block hasn't been deleted.
             topBlock.setConnectionsHidden(false);
+            // Force a render on IE and Edge to get around the issue described in
+            // Blockly.Field.getCachedWidth
+            if (goog.userAgent.IE || goog.userAgent.EDGE) {
+              topBlock.render();
+            }
+          }
+        }, 1);
+      } else {
+        setTimeout(function() {
+          if (topBlock.workspace) {  // Check that the block hasn't been deleted.
+            // Force a render on IE and Edge to get around the issue described in
+            // Blockly.Field.getCachedWidth
+            if (goog.userAgent.IE || goog.userAgent.EDGE) {
+              topBlock.render();
+            }
           }
         }, 1);
       }
@@ -551,6 +571,9 @@ Blockly.Xml.domToBlockHeadless_ = function(xmlBlock, workspace) {
       goog.asserts.assert(child.isShadow(),
                           'Shadow block not allowed non-shadow child.');
     }
+    // Ensure this block doesn't have any variable inputs.
+    goog.asserts.assert(block.getVars().length == 0,
+        'Shadow blocks cannot have variable fields.');
     block.setShadow(true);
   }
   return block;

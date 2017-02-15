@@ -535,6 +535,63 @@ Blockly.BlockSvg.prototype.clearTransformAttributes_ = function() {
 };
 
 /**
+ * Transforms a block by setting the translation on the transform attribute
+ * of the block's SVG.
+ * @param {number} x The x coordinate of the translation.
+ * @param {number} y The y coordinate of the translation.
+ */
+Blockly.BlockSvg.prototype.translate = function(x, y) {
+  this.getSvgRoot().setAttribute('transform',
+      'translate(' + x + ',' + y + ')');
+};
+
+/**
+ * Move this block to its workspace's drag surface, accounting for positioning.
+ * Generally should be called at the same time as setDragging_(true).
+ * Does nothing if useDragSurface_ is false.
+ * @private
+ */
+Blockly.BlockSvg.prototype.moveToDragSurface_ = function() {
+  if (!this.useDragSurface_) {
+    return;
+  }
+  // The translation for drag surface blocks,
+  // is equal to the current relative-to-surface position,
+  // to keep the position in sync as it move on/off the surface.
+  var xy = this.getRelativeToSurfaceXY();
+  this.clearTransformAttributes_();
+  this.workspace.blockDragSurface_.translateSurface(xy.x, xy.y);
+  // Execute the move on the top-level SVG component
+  this.workspace.blockDragSurface_.setBlocksAndShow(this.getSvgRoot());
+};
+
+/**
+ * Move this block back to the workspace block canvas.
+ * Generally should be called at the same time as setDragging_(false).
+ * Does nothing if useDragSurface_ is false.
+ * @private
+ */
+Blockly.BlockSvg.prototype.moveOffDragSurface_ = function() {
+  if (!this.useDragSurface_) {
+    return;
+  }
+  // Translate to current position, turning off 3d.
+  var xy = this.getRelativeToSurfaceXY();
+  this.clearTransformAttributes_();
+  this.translate(xy.x, xy.y);
+  this.workspace.blockDragSurface_.clearAndHide(this.workspace.getCanvas());
+};
+
+/**
+ * Clear the block of transform="..." attributes.
+ * Used when the block is switching from 3d to 2d transform or vice versa.
+ * @private
+ */
+Blockly.BlockSvg.prototype.clearTransformAttributes_ = function() {
+  this.getSvgRoot().removeAttribute('transform');
+};
+
+/**
  * Snap this block to the nearest grid point.
  */
 Blockly.BlockSvg.prototype.snapToGrid = function() {
@@ -793,18 +850,12 @@ Blockly.BlockSvg.prototype.onMouseUp_ = function(e) {
       new Blockly.Events.Ui(rootBlock, 'stackclick', undefined, undefined));
   }
   Blockly.terminateDrag_();
-  // If we're over a delete area, delete the block even if it could be connected
-  // to another block.  Thi sis different from blockly.
-  if (!this.getParent() && Blockly.selected.isDeletable() &&
-      this.workspace.isDeleteArea(e)) {
-    var trashcan = this.workspace.trashcan;
-    if (trashcan) {
-      setTimeout(trashcan.close.bind(trashcan), 100);
-    }
-    Blockly.selected.dispose(false, true);
-  } else if (Blockly.selected && Blockly.highlightedConnection_) {
-    this.positionNewBlock(Blockly.selected,
-        Blockly.localConnection_, Blockly.highlightedConnection_);
+
+  var deleteArea = this.workspace.isDeleteArea(e);
+
+  // Connect to a nearby block, but not if it's over the toolbox.
+  if (Blockly.selected && Blockly.highlightedConnection_ &&
+      deleteArea != Blockly.DELETE_AREA_TOOLBOX) {
     // Connect two blocks together.
     Blockly.localConnection_.connect(Blockly.highlightedConnection_);
     if (this.rendered) {
@@ -818,7 +869,15 @@ Blockly.BlockSvg.prototype.onMouseUp_ = function(e) {
       // Don't throw an object in the trash can if it just got connected.
       this.workspace.trashcan.close();
     }
-  } //else
+  } else if (deleteArea && !this.getParent() && Blockly.selected.isDeletable()) {
+    // We didn't connect the block, and it was over the trash can or the
+    // toolbox.  Delete it.
+    var trashcan = this.workspace.trashcan;
+    if (trashcan) {
+      goog.Timer.callOnce(trashcan.close, 100, trashcan);
+    }
+    Blockly.selected.dispose(false, true);
+  }
   if (Blockly.highlightedConnection_) {
     Blockly.highlightedConnection_ = null;
   }
@@ -1363,6 +1422,41 @@ Blockly.BlockSvg.prototype.updateCursor_ = function(e, closestConnection) {
 };
 
 /**
+ * Provide visual indication of whether the block will be deleted if
+ * dropped here.
+ * Prefer connecting over dropping into the trash can, but prefer dragging to
+ * the toolbox over connecting to other blocks.
+ * @param {!Event} e Mouse move event.
+ * @param {Blockly.Connection} closestConnection The connection this block would
+ *     potentially connect to if dropped here, or null.
+ * @return {boolean} True if the block would be deleted if dropped here,
+ *     otherwise false.
+ * @private
+ */
+Blockly.BlockSvg.prototype.updateCursor_ = function(e, closestConnection) {
+  var deleteArea = this.workspace.isDeleteArea(e);
+  var wouldConnect = Blockly.selected && closestConnection &&
+      deleteArea != Blockly.DELETE_AREA_TOOLBOX;
+  var wouldDelete = deleteArea && !this.getParent() &&
+      Blockly.selected.isDeletable();
+  var showDeleteCursor = wouldDelete && !wouldConnect;
+
+  if (showDeleteCursor) {
+    Blockly.Css.setCursor(Blockly.Css.Cursor.DELETE);
+    if (deleteArea == Blockly.DELETE_AREA_TRASH && this.workspace.trashcan) {
+      this.workspace.trashcan.setOpen_(true);
+    }
+    return true;
+  } else {
+    Blockly.Css.setCursor(Blockly.Css.Cursor.CLOSED);
+    if (this.workspace.trashcan) {
+      this.workspace.trashcan.setOpen_(false);
+    }
+    return false;
+  }
+};
+
+/**
  * Add or remove the UI indicating if this block is movable or not.
  */
 Blockly.BlockSvg.prototype.updateMovable = function() {
@@ -1637,7 +1731,7 @@ Blockly.BlockSvg.prototype.setWarningText = function(text, opt_id) {
       if (!newText) {
         this.warning.dispose();
       }
-      changedState = oldText == newText;
+      changedState = oldText != newText;
     }
   }
   if (changedState && this.rendered) {
