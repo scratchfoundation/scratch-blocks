@@ -255,7 +255,7 @@ Blockly.VerticalFlyout.prototype.position = function() {
   this.svgGroup_.setAttribute("width", this.width_);
   this.svgGroup_.setAttribute("height", this.height_);
   var transform = 'translate(' + x + 'px,' + y + 'px)';
-  this.svgGroup_.style.transform = transform;
+  Blockly.utils.setCssTransform(this.svgGroup_, transform);
 
   // Update the scrollbar (if one exists).
   if (this.scrollbar_) {
