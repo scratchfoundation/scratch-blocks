@@ -31,6 +31,7 @@ goog.require('Blockly.Comment');
 goog.require('Blockly.Events');
 goog.require('Blockly.Flyout');
 goog.require('Blockly.FlyoutButton');
+goog.require('Blockly.utils');
 goog.require('Blockly.WorkspaceSvg');
 goog.require('goog.dom');
 goog.require('goog.events');
@@ -510,9 +511,9 @@ Blockly.VerticalFlyout.prototype.checkboxClicked_ = function(checkboxObj) {
   return function(e) {
     checkboxObj.clicked = !checkboxObj.clicked;
     if (checkboxObj.clicked) {
-      Blockly.addClass_((checkboxObj.svgRoot), 'checked');
+      Blockly.utils.addClass((checkboxObj.svgRoot), 'checked');
     } else {
-      Blockly.removeClass_((checkboxObj.svgRoot), 'checked');
+      Blockly.utils.removeClass((checkboxObj.svgRoot), 'checked');
     }
     // This event has been handled.  No need to bubble up to the document.
     e.stopPropagation();
