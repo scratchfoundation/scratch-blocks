@@ -238,12 +238,12 @@ Blockly.FieldDropdown.prototype.onHide = function() {
   // Update colour to look selected.
   if (!this.disableColourChange_) {
     if (this.sourceBlock_) {
-     if (this.sourceBlock_.isShadow()) {
-       this.sourceBlock_.setColour(this.savedPrimary_,
-         this.sourceBlock_.getColourSecondary(), this.sourceBlock_.getColourTertiary());
-     } else if (this.box_) {
-       this.box_.setAttribute('fill', this.sourceBlock_.getColour());
-     }
+      if (this.sourceBlock_.isShadow()) {
+        this.sourceBlock_.setColour(this.savedPrimary_,
+          this.sourceBlock_.getColourSecondary(), this.sourceBlock_.getColourTertiary());
+      } else if (this.box_) {
+        this.box_.setAttribute('fill', this.sourceBlock_.getColour());
+      }
     }
   }
 };
