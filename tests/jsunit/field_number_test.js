@@ -28,9 +28,12 @@ function test_fieldnumber_constructor() {
   // No arguments
   var field = new Blockly.FieldNumber();
   assertEquals(field.getValue(), '0');
-  assertEquals(field.min_, -Infinity);
-  assertEquals(field.max_, Infinity);
-  assertEquals(field.precision_, 0);
+
+  // Unlike blockly, scratch-blocks doesn't store min, max, and precision.
+  // TODO: Update this to check the restrictor, based on min, max, and precision.
+  assertEquals(field.min_, undefined);
+  assertEquals(field.max_, undefined);
+  assertEquals(field.precision_, undefined);
 
   // Numeric values
   field = new Blockly.FieldNumber(1);
@@ -50,10 +53,11 @@ function test_fieldnumber_constructor() {
     /* min */ -128,
     /* max */ 127,
     /* precision */ 1);
+  // Unlike blockly, scratch-blocks doesn't store min, max, and precision.
   assertEquals(field.getValue(), '0');
-  assertEquals(field.min_, -128);
-  assertEquals(field.max_, 127);
-  assertEquals(field.precision_, 1);
+  assertEquals(field.min_, undefined);
+  assertEquals(field.max_, undefined);
+  assertEquals(field.precision_, undefined);
 
   // Bad value defaults to '0'
   field = new Blockly.FieldNumber('bad');

@@ -158,7 +158,8 @@ function test_parent_tooltip_when_inline() {
             "name": "INPUT"
           }
         ],
-        "tooltip": parentTooltip
+        "tooltip": parentTooltip,
+        "inputsInline": false
       }
     ]);
 
