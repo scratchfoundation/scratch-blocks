@@ -340,8 +340,6 @@ Blockly.Field.prototype.getSvgRoot = function() {
  * @private
  */
 Blockly.Field.prototype.render_ = function() {
-  var width = 0;
-
   if (this.visible_ && this.textElement_) {
     // Replace the text.
     goog.dom.removeChildren(/** @type {!Element} */ (this.textElement_));
@@ -365,7 +363,7 @@ Blockly.Field.prototype.render_ = function() {
         // X position starts at the left edge of the block, in both RTL and LTR.
         // First offset by the width of the block to move to the right edge,
         // and then subtract to move to the same position as LTR.
-        var minCenter = width - minOffset;
+        var minCenter = this.size_.width - minOffset;
         centerTextX = Math.min(minCenter, centerTextX);
       } else {
         // (width / 2) should exceed Blockly.BlockSvg.FIELD_WIDTH / 2

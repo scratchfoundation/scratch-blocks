@@ -479,7 +479,7 @@ Blockly.Workspace.prototype.fireChangeListener = function(event) {
 Blockly.Workspace.prototype.getBlockById = function(id) {
   var block = this.blockDB_[id];
   if (!block && this.getFlyout_() && this.getFlyout_().getWorkspace()) {
-    block = this.getFlyout().getWorkspace().blockDB_[id];
+    block = this.getFlyout_().getWorkspace().blockDB_[id];
   }
   return block || null;
 };
