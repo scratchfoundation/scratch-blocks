@@ -405,6 +405,10 @@ Blockly.Css.CONTENT = [
     'stroke-opacity: .5;',
   '}',
 
+  '.blocklyInsertionMarker>.blocklyPath {',
+    'stroke: none;',
+  '}',
+
   '.blocklyText {',
     'fill: #fff;',
     'font-family: "Helvetica Neue", Helvetica, sans-serif;',
