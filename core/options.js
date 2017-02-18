@@ -56,7 +56,7 @@ Blockly.Options = function(options) {
         languageTree.getElementsByTagName('category').length);
     var hasTrashcan = options['trashcan'];
     if (hasTrashcan === undefined) {
-      hasTrashcan = hasCategories;
+      hasTrashcan = false;
     }
     var hasCollapse = options['collapse'];
     if (hasCollapse === undefined) {
