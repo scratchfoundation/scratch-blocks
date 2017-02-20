@@ -107,8 +107,7 @@
       }
 
       function getToolboxElement() {
-        var match = location.search.match(/toolbox=([^&]+)/);
-        return document.getElementById('toolbox-' + (match ? match[1] : 'categories'));
+        return workspace.options.languageTree;
       }
 
       function toXml() {
