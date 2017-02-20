@@ -900,6 +900,8 @@ Blockly.BlockSvg.prototype.showContextMenu_ = function(e) {
       }
     };
     menuOptions.push(deleteOption);
+  } else if (this.parentBlock_.isDeletable() && this.parentBlock_.isMovable() && !block.parentBlock_.isInFlyout) {
+    this.parentBlock_.showContextMenu_(e);
   }
 
   // Option to get help.
