@@ -1354,8 +1354,6 @@ Blockly.WorkspaceSvg.prototype.zoomCenter = function(type) {
     x = x + 250;
   } else if (this.options.toolboxPosition == Blockly.TOOLBOX_AT_TOP) {
     y = y + 158;
-  } else if (this.options.toolboxPosition == Blockly.TOOLBOX_AT_BOTTOM) {
-    y = y + 158;
   }
   this.zoom(x, y, type);
 };
