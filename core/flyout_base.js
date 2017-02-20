@@ -500,6 +500,10 @@ Blockly.Flyout.prototype.show = function(xmlList) {
     // Special category for procedures.
     xmlList =
         Blockly.Procedures.flyoutCategory(this.workspace_.targetWorkspace);
+  } else if (xmlList == Blockly.Extensions.NAME_TYPE) {
+    // Special category for extensions.
+    xmlList =
+        Blockly.Extensions.flyoutCategory();
   }
 
   this.setVisible(true);
