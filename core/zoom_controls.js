@@ -137,7 +137,6 @@ Blockly.ZoomControls.prototype.createDom = function() {
     {'class': 'blocklyZoom'},
     null
   );
-  var rnd = String(Math.random()).substring(2);
 
   /**
    * Zoom in control.
