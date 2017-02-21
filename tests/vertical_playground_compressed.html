@@ -37,6 +37,13 @@
         var rtl = match && match[1] == 'rtl';
         document.forms.options.elements.dir.selectedIndex = Number(rtl);
         var toolboxMatch = location.search.match(/toolbox=([^&]+)/);
+        if (!toolboxMatch) {
+          toolboxMatch = [];
+          toolboxMatch[1] = "categories";
+        }
+        if (!toolboxMatch[1]) {
+          toolboxMatch[1] = "categories";
+        }
         var simple = false;
         if (toolboxMatch[1] == "simple") {
           simple = true;
