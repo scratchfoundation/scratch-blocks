@@ -478,8 +478,8 @@ Blockly.Workspace.prototype.fireChangeListener = function(event) {
  */
 Blockly.Workspace.prototype.getBlockById = function(id) {
   var block = this.blockDB_[id];
-  if (!block && this.getFlyout_() && this.getFlyout_().getWorkspace()) {
-    block = this.getFlyout_().getWorkspace().blockDB_[id];
+  if (!block && this.getFlyout() && this.getFlyout().getWorkspace()) {
+    block = this.getFlyout().getWorkspace().blockDB_[id];
   }
   return block || null;
 };
@@ -505,9 +505,8 @@ Blockly.Workspace.prototype.allInputsFilled = function(opt_shadowBlocksAreFilled
  * Getter for the flyout associated with this workspace.  This is null in a
  * non-rendered workspace, but may be overriden by subclasses.
  * @return {Blockly.Flyout} The flyout on this workspace.
- * @package
  */
-Blockly.Workspace.prototype.getFlyout_ = function() {
+Blockly.Workspace.prototype.getFlyout = function() {
   return null;
 };
 
