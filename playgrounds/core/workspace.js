@@ -485,6 +485,32 @@ Blockly.Workspace.prototype.getBlockById = function(id) {
 };
 
 /**
+ * Checks whether all value and statement inputs in the workspace are filled
+ * with blocks.
+ * @param {boolean=} opt_shadowBlocksAreFilled An optional argument controlling
+ *     whether shadow blocks are counted as filled. Defaults to true.
+ * @return {boolean} True if all inputs are filled, false otherwise.
+ */
+Blockly.Workspace.prototype.allInputsFilled = function(opt_shadowBlocksAreFilled) {
+  var blocks = this.getTopBlocks(false);
+  for (var i = 0, block; block = blocks[i]; i++) {
+    if (!block.allInputsFilled(opt_shadowBlocksAreFilled)) {
+      return false;
+    }
+  }
+  return true;
+};
+
+/**
+ * Getter for the flyout associated with this workspace.  This is null in a
+ * non-rendered workspace, but may be overriden by subclasses.
+ * @return {Blockly.Flyout} The flyout on this workspace.
+ */
+Blockly.Workspace.prototype.getFlyout = function() {
+  return null;
+};
+
+/**
  * Database of all workspaces.
  * @private
  */

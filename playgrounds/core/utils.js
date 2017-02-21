@@ -26,6 +26,10 @@
  */
 'use strict';
 
+/**
+ * @name Blockly.utils
+ * @namespace
+ **/
 goog.provide('Blockly.utils');
 
 goog.require('Blockly.Touch');
@@ -206,7 +210,7 @@ Blockly.utils.getScale_ = function(element) {
   var transform = element.getAttribute('transform');
   if (transform) {
     var transformComponents =
-      transform.match(Blockly.utils.getScale_.REGEXP_);
+        transform.match(Blockly.utils.getScale_.REGEXP_);
     if (transformComponents && transformComponents[0]) {
       scale = parseFloat(transformComponents[0]);
     }
@@ -410,17 +414,48 @@ Blockly.utils.tokenizeInterpolation = function(message) {
 };
 
 /**
- * Replaces string table references in a message string. For example,
- * %{bky_my_msg} and %{BKY_MY_MSG} will both be replaced with the value in
- * Blockly.Msg['MY_MSG'].
- * @param {string} message Text which might contain string table references.
+ * Replaces string table references in a message, if the message is a string.
+ * For example, "%{bky_my_msg}" and "%{BKY_MY_MSG}" will both be replaced with
+ * the value in Blockly.Msg['MY_MSG'].
+ * @param {string|?} message Message, which may be a string that contains
+ *                           string table references.
  * @return {!string} String with message references replaced.
  */
 Blockly.utils.replaceMessageReferences = function(message) {
+  if (!goog.isString(message)) {
+    return message;
+  }
   var interpolatedResult = Blockly.utils.tokenizeInterpolation_(message, false);
   // When parseInterpolationTokens == false, interpolatedResult should be at
   // most length 1.
   return interpolatedResult.length ? interpolatedResult[0] : "";
+};
+
+/**
+ * Validates that any %{BKY_...} references in the message refer to keys of
+ * the Blockly.Msg string table.
+ * @param {string} message Text which might contain string table references.
+ * @return {boolean} True if all message references have matching values.
+ *     Otherwise, false.
+ */
+Blockly.utils.checkMessageReferences = function(message) {
+  var isValid = true; // True until a bad reference is found
+
+  var regex = /%{BKY_([a-zA-Z][a-zA-Z0-9_]*)}/g;
+  var match = regex.exec(message);
+  while (match != null) {
+    var msgKey = match[1];
+    if (Blockly.Msg[msgKey] == null) {
+      console.log('WARNING: No message string for %{BKY_' + msgKey + '}.');
+      isValid = false;
+    }
+
+    // Re-run on remainder of sting.
+    message = message.substring(match.index + msgKey.length + 1);
+    match = regex.exec(message);
+  }
+
+  return isValid;
 };
 
 /**
@@ -505,7 +540,9 @@ Blockly.utils.tokenizeInterpolation_ = function(message, parseInterpolationToken
               keyUpper.substring(4) : null;
           if (bklyKey && bklyKey in Blockly.Msg) {
             var rawValue = Blockly.Msg[bklyKey];
-            var subTokens = Blockly.utils.tokenizeInterpolation(rawValue);
+            var subTokens = goog.isString(rawValue) ?
+                Blockly.utils.tokenizeInterpolation(rawValue) :
+                parseInterpolationTokens ? String(rawValue) : rawValue;
             tokens = tokens.concat(subTokens);
           } else {
             // No entry found in the string table. Pass reference as string.
@@ -839,4 +876,38 @@ Blockly.utils.insertAfter_ = function(newNode, refNode) {
   } else {
     parentNode.appendChild(newNode);
   }
+};
+
+/**
+ * Calls a function after the page has loaded, possibly immediately.
+ * @param {function()} fn Function to run.
+ * @throws Error Will throw if no global document can be found (e.g., Node.js).
+ */
+Blockly.utils.runAfterPageLoad = function(fn) {
+  if (!document) {
+    throw new Error('Blockly.utils.runAfterPageLoad() requires browser document.');
+  }
+  if (document.readyState === 'complete') {
+    fn();  // Page has already loaded. Call immediately.
+  } else {
+    // Poll readyState.
+    var readyStateCheckInterval = setInterval(function() {
+      if (document.readyState === 'complete') {
+        clearInterval(readyStateCheckInterval);
+        fn();
+      }
+    }, 10);
+  }
+};
+
+/**
+ * Sets the CSS transform property on an element. This function sets the
+ * non-vendor-prefixed and vendor-prefixed versions for backwards compatibility
+ * with older browsers. See http://caniuse.com/#feat=transforms2d
+ * @param {!Element} node The node which the CSS transform should be applied.
+ * @param {string} transform The value of the CSS `transform` property.
+ */
+Blockly.utils.setCssTransform = function(node, transform) {
+  node.style['transform'] = transform;
+  node.style['-webkit-transform'] = transform;
 };

@@ -2,7 +2,7 @@
  * @license
  * Blockly Tests
  *
- * Copyright 2012 Google Inc.
+ * Copyright 2017 Google Inc.
  * https://developers.google.com/blockly/
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,8 +19,18 @@
  */
 'use strict';
 
+function helper_createWorkspaceWithToolbox() {
+  var toolbox = document.getElementById('toolbox-categories');
+  return Blockly.inject('blocklyDiv', {toolbox: toolbox});
+}
+
+function test_createWorkspace() {
+  var workspace = helper_createWorkspaceWithToolbox();
+  workspace.dispose();
+}
+
 function test_emptyWorkspace() {
-  var workspace = new Blockly.Workspace();
+  var workspace = helper_createWorkspaceWithToolbox();
   try {
     assertEquals('Empty workspace (1).', 0, workspace.getTopBlocks(true).length);
     assertEquals('Empty workspace (2).', 0, workspace.getTopBlocks(false).length);
@@ -35,7 +45,7 @@ function test_emptyWorkspace() {
 }
 
 function test_flatWorkspace() {
-  var workspace = new Blockly.Workspace();
+  var workspace = helper_createWorkspaceWithToolbox();
   var blockA, blockB;
   try {
     blockA = workspace.newBlock('');
@@ -57,48 +67,6 @@ function test_flatWorkspace() {
   } finally {
     blockB && blockB.dispose();
     blockA && blockA.dispose();
-    workspace.dispose();
-  }
-}
-
-function test_getWorkspaceById() {
-  var workspaceA = new Blockly.Workspace();
-  var workspaceB = new Blockly.Workspace();
-  try {
-    assertEquals('Find workspaceA.', workspaceA,
-        Blockly.Workspace.getById(workspaceA.id));
-    assertEquals('Find workspaceB.', workspaceB,
-        Blockly.Workspace.getById(workspaceB.id));
-    assertEquals('No workspace found.', null,
-        Blockly.Workspace.getById('I do not exist.'));
-    workspaceA.dispose();
-    assertEquals('Can\'t find workspaceA.', null,
-        Blockly.Workspace.getById(workspaceA.id));
-    assertEquals('WorkspaceB exists.', workspaceB,
-        Blockly.Workspace.getById(workspaceB.id));
-  } finally {
-    workspaceB.dispose();
-    workspaceA.dispose();
-  }
-}
-
-function test_getBlockById() {
-  var workspace = new Blockly.Workspace();
-  var blockA = workspace.newBlock('');
-  var blockB = workspace.newBlock('');
-  try {
-    assertEquals('Find blockA.', blockA, workspace.getBlockById(blockA.id));
-    assertEquals('Find blockB.', blockB, workspace.getBlockById(blockB.id));
-    assertEquals('No block found.', null,
-        workspace.getBlockById('I do not exist.'));
-    blockA.dispose();
-    assertEquals('Can\'t find blockA.', null, workspace.getBlockById(blockA.id));
-    assertEquals('BlockB exists.', blockB, workspace.getBlockById(blockB.id));
-    workspace.clear();
-    assertEquals('Can\'t find blockB.', null, workspace.getBlockById(blockB.id));
-  } finally {
-    blockB.dispose();
-    blockA.dispose();
     workspace.dispose();
   }
 }
