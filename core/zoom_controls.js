@@ -65,14 +65,14 @@ Blockly.ZoomControls.prototype.ZOOM_RESET_PATH = 'zoom-reset.svg';
  * @type {number}
  * @private
  */
-Blockly.ZoomControls.prototype.WIDTH_ = 32;
+Blockly.ZoomControls.prototype.WIDTH_ = 36;
 
 /**
  * Height of the zoom controls.
  * @type {number}
  * @private
  */
-Blockly.ZoomControls.prototype.HEIGHT_ = 112;
+Blockly.ZoomControls.prototype.HEIGHT_ = 124;
 
 /**
  * Distance between each zoom control.
@@ -86,14 +86,14 @@ Blockly.ZoomControls.prototype.MARGIN_BETWEEN_ = 8;
  * @type {number}
  * @private
  */
-Blockly.ZoomControls.prototype.MARGIN_BOTTOM_ = 20;
+Blockly.ZoomControls.prototype.MARGIN_BOTTOM_ = 14;
 
 /**
  * Distance between zoom controls and right edge of workspace.
  * @type {number}
  * @private
  */
-Blockly.ZoomControls.prototype.MARGIN_SIDE_ = 20;
+Blockly.ZoomControls.prototype.MARGIN_SIDE_ = 14;
 
 /**
  * The SVG group containing the zoom controls.
@@ -124,11 +124,11 @@ Blockly.ZoomControls.prototype.createDom = function() {
   var workspace = this.workspace_;
   /* Here's the markup that will be generated:
   <g class="blocklyZoom" transform="translate(822,594)">
-    <image width="32" height="32" y="0" xlink:href="../media/zoom-in.svg">
+    <image width="36" height="36" y="0" xlink:href="../media/zoom-in.svg">
     </image>
-    <image width="32" height="32" y="40" xlink:href="../media/zoom-out.svg">
+    <image width="36" height="36" y="44" xlink:href="../media/zoom-out.svg">
     </image>
-    <image width="32" height="32" y="80" xlink:href="../media/zoom-reset.svg">
+    <image width="36" height="36" y="88" xlink:href="../media/zoom-reset.svg">
     </image>
   </g>
   */
