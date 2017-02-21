@@ -29,9 +29,9 @@ goog.provide('Blockly.inject');
 goog.require('Blockly.BlockDragSurfaceSvg');
 goog.require('Blockly.Css');
 goog.require('Blockly.constants');
+goog.require('Blockly.DropDownDiv');
 goog.require('Blockly.Options');
 goog.require('Blockly.WorkspaceSvg');
-goog.require('Blockly.DropDownDiv');
 goog.require('Blockly.WorkspaceDragSurfaceSvg');
 goog.require('goog.dom');
 goog.require('goog.ui.Component');
@@ -58,6 +58,7 @@ Blockly.inject = function(container, opt_options) {
   container.appendChild(subContainer);
 
   var svg = Blockly.createDom_(subContainer, options);
+
   // Create surfaces for dragging things. These are optimizations
   // so that the broowser does not repaint during the drag.
   var blockDragSurface = new Blockly.BlockDragSurfaceSvg(subContainer);
@@ -366,9 +367,10 @@ Blockly.init_ = function(mainWorkspace) {
 Blockly.inject.bindDocumentEvents_ = function() {
   if (!Blockly.documentEventsBound_) {
     Blockly.bindEventWithChecks_(document, 'keydown', null, Blockly.onKeyDown_);
+    // longStop needs to run to stop the context menu from showing up.  It
+    // should run regardless of what other touch event handlers have run.
     Blockly.bindEvent_(document, 'touchend', null, Blockly.longStop_);
-    Blockly.bindEvent_(document, 'touchcancel', null,
-        Blockly.longStop_);
+    Blockly.bindEvent_(document, 'touchcancel', null, Blockly.longStop_);
     // Don't use bindEvent_ for document's mouseup since that would create a
     // corresponding touch handler that would squelch the ability to interact
     // with non-Blockly elements.

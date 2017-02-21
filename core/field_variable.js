@@ -29,6 +29,7 @@ goog.provide('Blockly.FieldVariable');
 goog.require('Blockly.FieldDropdown');
 goog.require('Blockly.Msg');
 goog.require('Blockly.Variables');
+goog.require('goog.asserts');
 goog.require('goog.string');
 
 
@@ -52,12 +53,14 @@ goog.inherits(Blockly.FieldVariable, Blockly.FieldDropdown);
 /**
  * The menu item index for the rename variable option.
  * @type {number}
+ * @private
  */
 Blockly.FieldVariable.prototype.renameVarItemIndex_ = -1;
 
 /**
  * The menu item index for the delete variable option.
  * @type {number}
+ * @private
  */
 Blockly.FieldVariable.prototype.deleteVarItemIndex_ = -1;
 
@@ -88,6 +91,16 @@ Blockly.FieldVariable.prototype.init = function() {
 };
 
 /**
+ * Attach this field to a block.
+ * @param {!Blockly.Block} block The block containing this field.
+ */
+Blockly.FieldVariable.prototype.setSourceBlock = function(block) {
+  goog.asserts.assert(!block.isShadow(),
+      'Variable fields are not allowed to exist on shadow blocks.');
+  Blockly.FieldVariable.superClass_.setSourceBlock.call(this, block);
+};
+
+/**
  * Get the variable's name (use a variableDB to convert into a real name).
  * Unline a regular dropdown, variables are literal and have no neutral value.
  * @return {string} Current text.
@@ -113,7 +126,7 @@ Blockly.FieldVariable.prototype.setValue = function(newValue) {
  * Return a sorted list of variable names for variable dropdown menus.
  * Include a special option at the end for creating a new variable name.
  * @return {!Array.<string>} Array of variable names.
- * @this Blockly.FieldVariable
+ * @this {Blockly.FieldVariable}
  */
 Blockly.FieldVariable.dropdownCreate = function() {
   if (this.sourceBlock_ && this.sourceBlock_.workspace) {

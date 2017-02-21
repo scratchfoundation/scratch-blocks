@@ -87,7 +87,7 @@ var isNodeJS = !!(typeof module !== 'undefined' && module.exports &&
 
 if (isNodeJS) {
   var window = {};
-  require('../closure-library/closure/goog/bootstrap/nodejs');
+  require('closure-library');
 }
 
 window.BLOCKLY_DIR = (function() {
@@ -109,7 +109,7 @@ window.BLOCKLY_DIR = (function() {
 window.BLOCKLY_BOOT = function() {
   var dir = '';
   if (isNodeJS) {
-    require('../closure-library/closure/goog/bootstrap/nodejs');
+    require('closure-library');
     dir = 'blockly';
   } else {
     // Execute after Closure has loaded.
@@ -432,6 +432,7 @@ class Gen_langfiles(threading.Thread):
           os.path.join("i18n", "create_messages.py"),
           "--source_lang_file", os.path.join("msg", "json", "en.json"),
           "--source_synonym_file", os.path.join("msg", "json", "synonyms.json"),
+          "--source_constants_file", os.path.join("msg", "json", "constants.json"),
           "--key_file", os.path.join("msg", "json", "keys.json"),
           "--output_dir", os.path.join("msg", "js"),
           "--quiet"]

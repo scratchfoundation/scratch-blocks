@@ -80,6 +80,17 @@ Blockly.WorkspaceSvg = function(options, opt_blockDragSurface, opt_wsDragSurface
   this.useWorkspaceDragSurface_ =
       this.workspaceDragSurface_ && Blockly.utils.is3dSupported();
 
+  if (opt_blockDragSurface) {
+    this.blockDragSurface_ = opt_blockDragSurface;
+  }
+
+  if (opt_wsDragSurface) {
+    this.workspaceDragSurface_ = opt_wsDragSurface;
+  }
+
+  this.useWorkspaceDragSurface_ =
+      this.workspaceDragSurface_ && Blockly.utils.is3dSupported();
+
   /**
    * Database of pre-loaded sounds.
    * @private
@@ -93,6 +104,11 @@ Blockly.WorkspaceSvg = function(options, opt_blockDragSurface, opt_wsDragSurface
    * @private
    */
   this.highlightedBlocks_ = [];
+
+  this.registerToolboxCategoryCallback(Blockly.VARIABLE_CATEGORY_NAME,
+      Blockly.Variables.flyoutCategory);
+  this.registerToolboxCategoryCallback(Blockly.PROCEDURE_CATEGORY_NAME,
+      Blockly.Procedures.flyoutCategory);
 };
 goog.inherits(Blockly.WorkspaceSvg, Blockly.Workspace);
 
@@ -270,6 +286,14 @@ Blockly.WorkspaceSvg.prototype.lastRecordedPageScroll_ = null;
 Blockly.WorkspaceSvg.prototype.flyoutButtonCallbacks_ = {};
 
 /**
+ * Map from function names to callbacks, for deciding what to do when a custom
+ * toolbox category is opened.
+ * @type {!Object<string, function(!Blockly.Workspace):!Array<!Element>>}
+ * @private
+ */
+Blockly.WorkspaceSvg.prototype.toolboxCategoryCallbacks_ = {};
+
+/**
  * Inverted screen CTM, for use in mouseToSvg.
  * @type {SVGMatrix}
  * @private
@@ -347,7 +371,6 @@ Blockly.WorkspaceSvg.prototype.createDom = function(opt_backgroundClass) {
    *   [Trashcan and/or flyout may go here]
    *   <g class="blocklyBlockCanvas"></g>
    *   <g class="blocklyBubbleCanvas"></g>
-   *   [Scrollbars may go here]
    * </g>
    * @type {SVGElement}
    */
@@ -439,6 +462,13 @@ Blockly.WorkspaceSvg.prototype.dispose = function() {
     this.zoomControls_.dispose();
     this.zoomControls_ = null;
   }
+
+  if (this.toolboxCategoryCallbacks_) {
+    this.toolboxCategoryCallbacks_ = null;
+  }
+  if (this.flyoutButtonCallbacks_) {
+    this.flyoutButtonCallbacks_ = null;
+  }
   if (!this.options.parentWorkspace) {
     // Top-most workspace.  Dispose of the div that the
     // svg is injected into (i.e. injectionDiv).
@@ -523,9 +553,8 @@ Blockly.WorkspaceSvg.prototype.addFlyout_ = function(tagName) {
  * owned by either the toolbox or the workspace, depending on toolbox
  * configuration.  It will be null if there is no flyout.
  * @return {Blockly.Flyout} The flyout on this workspace.
- * @package
  */
-Blockly.WorkspaceSvg.prototype.getFlyout_ = function() {
+Blockly.WorkspaceSvg.prototype.getFlyout = function() {
   if (this.flyout_) {
     return this.flyout_;
   }
@@ -642,20 +671,6 @@ Blockly.WorkspaceSvg.prototype.getParentSvg = function() {
 };
 
 /**
-  * Get a flyout associated with this workspace, if one exists.
-  * @return {?Blockly.Flyout} Flyout associated with this workspace.
-  */
-Blockly.WorkspaceSvg.prototype.getFlyout = function() {
-  if (this.flyout_) {
-    return this.flyout_;
-  }
-  if (this.toolbox_ && this.toolbox_.flyout_) {
-    return this.toolbox_.flyout_;
-  }
-  return null;
-};
-
-/**
  * Translate this workspace to new coordinates.
  * @param {number} x Horizontal translation.
  * @param {number} y Vertical translation.
@@ -747,8 +762,8 @@ Blockly.WorkspaceSvg.prototype.setVisible = function(isVisible) {
 
   // Tell the flyout whether its container is visible so it can
   // tell when to hide itself.
-  if (this.getFlyout_()) {
-    this.getFlyout_().setContainerVisible(isVisible);
+  if (this.getFlyout()) {
+    this.getFlyout().setContainerVisible(isVisible);
   }
 
   this.getParentSvg().style.display = isVisible ? 'block' : 'none';
@@ -1095,6 +1110,14 @@ Blockly.WorkspaceSvg.prototype.isDragging = function() {
 };
 
 /**
+ * Is this workspace draggable and scrollable?
+ * @return {boolean} True if this workspace may be dragged.
+ */
+Blockly.WorkspaceSvg.prototype.isDraggable = function() {
+  return !!this.scrollbar;
+};
+
+/**
  * Handle a mouse-wheel on SVG drawing surface.
  * @param {!Event} e Mouse wheel event.
  * @private
@@ -1107,7 +1130,7 @@ Blockly.WorkspaceSvg.prototype.onMouseWheel_ = function(e) {
     var PIXELS_PER_ZOOM_STEP = 50;
     var delta = -e.deltaY / PIXELS_PER_ZOOM_STEP;
     var position = Blockly.utils.mouseToSvg(e, this.getParentSvg(),
-      this.getInverseScreenCTM());
+        this.getInverseScreenCTM());
     this.zoom(position.x, position.y, delta);
   } else {
     // This is a regular mouse wheel event - scroll the workspace
@@ -1824,6 +1847,8 @@ Blockly.WorkspaceSvg.prototype.clear = function() {
  *     given button is clicked.
  */
 Blockly.WorkspaceSvg.prototype.registerButtonCallback = function(key, func) {
+  goog.asserts.assert(goog.isFunction(func),
+      'Button callbacks must be functions.');
   this.flyoutButtonCallbacks_[key] = func;
 };
 
@@ -1831,11 +1856,56 @@ Blockly.WorkspaceSvg.prototype.registerButtonCallback = function(key, func) {
  * Get the callback function associated with a given key, for clicks on buttons
  * and labels in the flyout.
  * @param {string} key The name to use to look up the function.
- * @return {function(!Blockly.FlyoutButton)} The function corresponding to the
- *     given key for this workspace.
+ * @return {?function(!Blockly.FlyoutButton)} The function corresponding to the
+ *     given key for this workspace; null if no callback is registered.
  */
 Blockly.WorkspaceSvg.prototype.getButtonCallback = function(key) {
-  return this.flyoutButtonCallbacks_[key];
+  var result = this.flyoutButtonCallbacks_[key];
+  return result ? result : null;
+};
+
+/**
+ * Remove a callback for a click on a button in the flyout.
+ * @param {string} key The name associated with the callback function.
+ */
+Blockly.WorkspaceSvg.prototype.removeButtonCallback = function(key) {
+  this.flyoutButtonCallbacks_[key] = null;
+};
+
+/**
+ * Register a callback function associated with a given key, for populating
+ * custom toolbox categories in this workspace.  See the variable and procedure
+ * categories as an example.
+ * @param {string} key The name to use to look up this function.
+ * @param {function(!Blockly.Workspace):!Array<!Element>} func The function to
+ *     call when the given toolbox category is opened.
+ */
+Blockly.WorkspaceSvg.prototype.registerToolboxCategoryCallback = function(key,
+    func) {
+  goog.asserts.assert(goog.isFunction(func),
+      'Toolbox category callbacks must be functions.');
+  this.toolboxCategoryCallbacks_[key] = func;
+};
+
+/**
+ * Get the callback function associated with a given key, for populating
+ * custom toolbox categories in this workspace.
+ * @param {string} key The name to use to look up the function.
+ * @return {?function(!Blockly.Workspace):!Array<!Element>} The function
+ *     corresponding to the given key for this workspace, or null if no function
+ *     is registered.
+ */
+Blockly.WorkspaceSvg.prototype.getToolboxCategoryCallback = function(key) {
+  var result = this.toolboxCategoryCallbacks_[key];
+  return result ? result : null;
+};
+
+/**
+ * Remove a callback for a click on a custom category's name in the toolbox.
+ * @param {string} key The name associated with the callback function.
+ */
+Blockly.WorkspaceSvg.prototype.removeToolboxCategoryCallback = function(key) {
+  this.toolboxCategoryCallbacks_[key] = null;
 };
 
 // Export symbols that would otherwise be renamed by Closure compiler.
