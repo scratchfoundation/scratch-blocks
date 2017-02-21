@@ -36,9 +36,14 @@
         var match = location.search.match(/dir=([^&]+)/);
         var rtl = match && match[1] == 'rtl';
         document.forms.options.elements.dir.selectedIndex = Number(rtl);
-        var toolbox = getToolboxElement();
+        var toolboxMatch = location.search.match(/toolbox=([^&]+)/);
+        var simple = false;
+        if (toolboxMatch[1] == "simple") {
+          simple = true;
+        }
         document.forms.options.elements.toolbox.selectedIndex =
-          toolbox ? 1: 0;
+          toolboxMatch[1] === "simple" ? 1: 0;
+
 
         match = location.search.match(/side=([^&]+)/);
 
@@ -55,7 +60,7 @@
           readOnly: false,
           rtl: rtl,
           scrollbars: true,
-          toolbox: toolbox,
+          simple: simple,
           toolboxPosition: side == 'top' || side == 'start' ? 'start' : 'end',
           horizontalLayout: side == 'top' || side == 'bottom',
           trashcan: true,
