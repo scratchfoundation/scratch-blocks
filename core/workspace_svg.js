@@ -1350,8 +1350,6 @@ Blockly.WorkspaceSvg.prototype.zoomCenter = function(type) {
   var y = metrics.viewHeight / 2;
   if (this.options.toolboxPosition == Blockly.TOOLBOX_AT_LEFT) {
     x = x + 250;
-  } else if (this.options.toolboxPosition == Blockly.TOOLBOX_AT_RIHT) {
-    x = x + 250;
   } else if (this.options.toolboxPosition == Blockly.TOOLBOX_AT_TOP) {
     y = y + 158;
   }
