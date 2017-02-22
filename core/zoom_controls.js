@@ -44,21 +44,21 @@ Blockly.ZoomControls = function(workspace) {
  * @type {string}
  * @private
  */
-Blockly.ZoomControls.prototype.ZOOM_IN_PATH = 'zoom-in.svg';
+Blockly.ZoomControls.prototype.ZOOM_IN_PATH_ = 'zoom-in.svg';
 
 /**
  * Zoom out icon path.
  * @type {string}
  * @private
  */
-Blockly.ZoomControls.prototype.ZOOM_OUT_PATH = 'zoom-out.svg';
+Blockly.ZoomControls.prototype.ZOOM_OUT_PATH_ = 'zoom-out.svg';
 
 /**
  * Zoom reset icon path.
  * @type {string}
  * @private
  */
-Blockly.ZoomControls.prototype.ZOOM_RESET_PATH = 'zoom-reset.svg';
+Blockly.ZoomControls.prototype.ZOOM_RESET_PATH_ = 'zoom-reset.svg';
 
 /**
  * Width of the zoom controls.
@@ -154,7 +154,7 @@ Blockly.ZoomControls.prototype.createDom = function() {
   zoominSvg.setAttributeNS(
     'http://www.w3.org/1999/xlink',
     'xlink:href',
-    workspace.options.pathToMedia + this.ZOOM_IN_PATH
+    workspace.options.pathToMedia + this.ZOOM_IN_PATH_
   );
 
   /**
@@ -173,7 +173,7 @@ Blockly.ZoomControls.prototype.createDom = function() {
   zoomoutSvg.setAttributeNS(
     'http://www.w3.org/1999/xlink',
     'xlink:href',
-    workspace.options.pathToMedia + this.ZOOM_OUT_PATH
+    workspace.options.pathToMedia + this.ZOOM_OUT_PATH_
   );
 
   /**
@@ -192,7 +192,7 @@ Blockly.ZoomControls.prototype.createDom = function() {
   zoomresetSvg.setAttributeNS(
     'http://www.w3.org/1999/xlink',
     'xlink:href',
-    workspace.options.pathToMedia + this.ZOOM_RESET_PATH
+    workspace.options.pathToMedia + this.ZOOM_RESET_PATH_
   );
 
   // Attach event listeners.
