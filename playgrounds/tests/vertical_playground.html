@@ -71,7 +71,6 @@
           toolbox: toolbox,
           toolboxPosition: side == 'top' || side == 'start' ? 'start' : 'end',
           horizontalLayout: side == 'top' || side == 'bottom',
-          trashcan: true,
           sounds: soundsEnabled,
           zoom: {
             controls: true,
@@ -92,7 +91,7 @@
             dragShadowOpacity: 0.6
           }
         });
-        
+
         if (sessionStorage) {
           // Restore previously displayed text.
           var text = sessionStorage.getItem('textarea');
@@ -101,7 +100,7 @@
           }
           taChange();
         }
-        
+
         if (sessionStorage) {
           // Restore event logging state.
           var state = sessionStorage.getItem('logEvents');
