@@ -54,6 +54,9 @@ Blockly.Variables.allUsedVariables = function(root) {
   } else {
     throw 'Not Block or Workspace: ' + root;
   }
+
+  var ignorableName = Blockly.Variables.noVariableText();
+
   var variableHash = Object.create(null);
   // Iterate through every block and add each variable to the hash.
   for (var x = 0; x < blocks.length; x++) {
@@ -62,7 +65,7 @@ Blockly.Variables.allUsedVariables = function(root) {
       for (var y = 0; y < blockVariables.length; y++) {
         var varName = blockVariables[y];
         // Variable name may be null if the block is only half-built.
-        if (varName) {
+        if (varName && !varName.toLowerCase() == ignorableName) {
           variableHash[varName.toLowerCase()] = varName;
         }
       }
@@ -116,14 +119,16 @@ Blockly.Variables.flyoutCategory = function(workspace) {
   for (var i = 0; i < variableList.length; i++) {
     if (Blockly.Blocks['data_variable']) {
       // <block type="data_variable">
-      //   <value name="VARIABLE">
-      //     <shadow type="data_variablemenu"></shadow>
-      //   </value>
+      //    <field name="VARIABLE">variablename</field>
       // </block>
       var block = goog.dom.createDom('block');
       block.setAttribute('type', 'data_variable');
       block.setAttribute('gap', 8);
-      block.appendChild(Blockly.Variables.createVariableDom_(variableList[i]));
+
+      var field = goog.dom.createDom('field', null, variableList[i]);
+      field.setAttribute('name', 'VARIABLE');
+      block.appendChild(field);
+
       xmlList.push(block);
     }
   }
@@ -274,6 +279,16 @@ Blockly.Variables.createMathNumberDom_ = function() {
   shadow.appendChild(field);
   value.appendChild(shadow);
   return value;
+};
+
+/**
+ * Return the text that should be used in a field_variable or
+ * field_variable_getter when no variable exists.
+ * TODO: #572
+ * @return {string} The text to display.
+ */
+Blockly.Variables.noVariableText = function() {
+  return "No variable selected";
 };
 
 /**
