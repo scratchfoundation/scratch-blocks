@@ -23,7 +23,6 @@
 goog.provide('Blockly.Blocks.defaultToolbox');
 
 goog.require('Blockly.Blocks');
-
 goog.require('Blockly.Colours');
 
 /**
