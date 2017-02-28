@@ -30,7 +30,8 @@ goog.require('Blockly.Colours');
  */
 
 Blockly.Blocks.defaultToolbox = '<xml id="toolbox-categories" style="display: none">'+
-  '<category name="Motion" colour="'+Blockly.Colours.motion.primary+'" secondaryColour="'+Blockly.Colours.motion.secondary+'">'+
+  '<category name="Motion" colour="'+Blockly.Colours.motion.primary+
+  '" secondaryColour="'+Blockly.Colours.motion.secondary+'">'+
     '<block type="motion_movesteps">'+
       '<value name="STEPS">'+
         '<shadow type="math_number">'+
@@ -138,7 +139,8 @@ Blockly.Blocks.defaultToolbox = '<xml id="toolbox-categories" style="display: no
     '<block type="motion_yposition"></block>'+
     '<block type="motion_direction"></block>'+
   '</category>'+
-  '<category name="Looks" colour="'+Blockly.Colours.looks.primary+'" secondaryColour="'+Blockly.Colours.looks.secondary+'">'+
+  '<category name="Looks" colour="'+Blockly.Colours.looks.primary+
+  '" secondaryColour="'+Blockly.Colours.looks.secondary+'">'+
     '<block type="looks_sayforsecs">'+
       '<value name="MESSAGE">'+
         '<shadow type="text">'+
@@ -244,7 +246,8 @@ Blockly.Blocks.defaultToolbox = '<xml id="toolbox-categories" style="display: no
     '<block type="looks_backdropname"></block>'+
     '<block type="looks_size"></block>'+
   '</category>'+
-  '<category name="Sound" colour="'+Blockly.Colours.sounds.primary+'" secondaryColour="'+Blockly.Colours.sounds.secondary+'">'+
+  '<category name="Sound" colour="'+Blockly.Colours.sounds.primary+
+  '" secondaryColour="'+Blockly.Colours.sounds.secondary+'">'+
     '<block type="sound_play">'+
       '<value name="SOUND_MENU">'+
         '<shadow type="sound_sounds_menu"></shadow>'+
@@ -342,7 +345,8 @@ Blockly.Blocks.defaultToolbox = '<xml id="toolbox-categories" style="display: no
     '</block>'+
     '<block type="sound_tempo"></block>'+
   '</category>'+
-  '<category name="Pen" colour="'+Blockly.Colours.pen.primary+'" secondaryColour="'+Blockly.Colours.pen.secondary+'">'+
+  '<category name="Pen" colour="'+Blockly.Colours.pen.primary+
+  '" secondaryColour="'+Blockly.Colours.pen.secondary+'">'+
     '<block type="pen_clear"></block>'+
     '<block type="pen_stamp"></block>'+
     '<block type="pen_pendown"></block>'+
@@ -396,9 +400,11 @@ Blockly.Blocks.defaultToolbox = '<xml id="toolbox-categories" style="display: no
       '</value>'+
     '</block>'+
   '</category>'+
-  '<category name="Data" colour="'+Blockly.Colours.data.primary+'" secondaryColour="'+Blockly.Colours.data.secondary+'" custom="VARIABLE">'+
+  '<category name="Data" colour="'+Blockly.Colours.data.primary+
+  '" secondaryColour="'+Blockly.Colours.data.secondary+'" custom="VARIABLE">'+
   '</category>'+
-  '<category name="Lists" colour="'+Blockly.Colours.data.primary+'" secondaryColour="'+Blockly.Colours.data.secondary+'">'+
+  '<category name="Lists" colour="'+Blockly.Colours.data.primary+
+  '" secondaryColour="'+Blockly.Colours.data.secondary+'">'+
     '<block type="data_listcontents"></block>'+
     '<block type="data_addtolist">'+
       '<value name="ITEM">'+
@@ -456,7 +462,8 @@ Blockly.Blocks.defaultToolbox = '<xml id="toolbox-categories" style="display: no
     '<block type="data_showlist"></block>'+
     '<block type="data_hidelist"></block>'+
   '</category>'+
-  '<category name="Events" colour="'+Blockly.Colours.events.primary+'" secondaryColour="'+Blockly.Colours.events.secondary+'">'+
+  '<category name="Events" colour="'+Blockly.Colours.events.primary+
+  '" secondaryColour="'+Blockly.Colours.events.secondary+'">'+
     '<block type="event_whenflagclicked"></block>'+
     '<block type="event_whenkeypressed">'+
     '</block>'+
@@ -483,7 +490,8 @@ Blockly.Blocks.defaultToolbox = '<xml id="toolbox-categories" style="display: no
       '</value>'+
     '</block>'+
   '</category>'+
-  '<category name="Control" colour="'+Blockly.Colours.control.primary+'" secondaryColour="'+Blockly.Colours.control.secondary+'">'+
+  '<category name="Control" colour="'+Blockly.Colours.control.primary+
+  '" secondaryColour="'+Blockly.Colours.control.secondary+'">'+
     '<block type="control_wait">'+
       '<value name="DURATION">'+
         '<shadow type="math_positive_number">'+
@@ -512,7 +520,8 @@ Blockly.Blocks.defaultToolbox = '<xml id="toolbox-categories" style="display: no
     '</block>'+
     '<block type="control_delete_this_clone"></block>'+
   '</category>'+
-  '<category name="Sensing" colour="'+Blockly.Colours.sensing.primary+'" secondaryColour="'+Blockly.Colours.sensing.secondary+'">'+
+  '<category name="Sensing" colour="'+Blockly.Colours.sensing.primary+
+  '" secondaryColour="'+Blockly.Colours.sensing.secondary+'">'+
     '<block type="sensing_touchingobject">'+
       '<value name="TOUCHINGOBJECTMENU">'+
         '<shadow type="sensing_touchingobjectmenu"></shadow>'+
@@ -591,7 +600,8 @@ Blockly.Blocks.defaultToolbox = '<xml id="toolbox-categories" style="display: no
   '<block type="sensing_dayssince2000"></block>'+
   '<block type="sensing_username"></block>'+
   '</category>'+
-  '<category name="Operators" colour="'+Blockly.Colours.operators.primary+'" secondaryColour="'+Blockly.Colours.operators.secondary+'">'+
+  '<category name="Operators" colour="'+Blockly.Colours.operators.primary+
+  '" secondaryColour="'+Blockly.Colours.operators.secondary+'">'+
     '<block type="operator_add">'+
       '<value name="NUM1">'+
         '<shadow type="math_number">'+
@@ -752,5 +762,6 @@ Blockly.Blocks.defaultToolbox = '<xml id="toolbox-categories" style="display: no
       '</value>'+
     '</block>'+
   '</category>'+
-  '<category name="More Blocks" colour="'+Blockly.Colours.more.primary+'" secondaryColour="'+Blockly.Colours.more.secondary+'" custom="PROCEDURE"></category>'+
+  '<category name="More Blocks" colour="'+Blockly.Colours.more.primary+
+  '" secondaryColour="'+Blockly.Colours.more.secondary+'" custom="PROCEDURE"></category>'+
   '</xml>';
