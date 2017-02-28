@@ -957,6 +957,20 @@ Blockly.WorkspaceSvg.prototype.paste = function(xmlBlock) {
 };
 
 /**
+ * Rename a variable by updating its name in the variable list.
+ * TODO: google/blockly:#468
+ * @param {string} oldName Variable to rename.
+ * @param {string} newName New variable name.
+ */
+Blockly.WorkspaceSvg.prototype.renameVariable = function(oldName, newName) {
+  Blockly.WorkspaceSvg.superClass_.renameVariable.call(this, oldName, newName);
+  // Refresh the toolbox unless there's a drag in progress.
+  if (this.toolbox_ && this.toolbox_.flyout_ && !Blockly.Flyout.startFlyout_) {
+    this.toolbox_.refreshSelection();
+  }
+};
+
+/**
  * Create a new variable with the given name.  Update the flyout to show the new
  *     variable immediately.
  * TODO: #468

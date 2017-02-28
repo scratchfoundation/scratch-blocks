@@ -31,6 +31,7 @@ goog.require('Blockly.Colours');
 goog.require('Blockly.Comment');
 goog.require('Blockly.Connection');
 goog.require('Blockly.Extensions');
+goog.require('Blockly.FieldVariableGetter');
 goog.require('Blockly.Input');
 goog.require('Blockly.Mutator');
 goog.require('Blockly.Warning');
@@ -842,7 +843,8 @@ Blockly.Block.prototype.getVars = function() {
   var vars = [];
   for (var i = 0, input; input = this.inputList[i]; i++) {
     for (var j = 0, field; field = input.fieldRow[j]; j++) {
-      if (field instanceof Blockly.FieldVariable) {
+      if (field instanceof Blockly.FieldVariable ||
+          field instanceof Blockly.FieldVariableGetter) {
         vars.push(field.getValue());
       }
     }
@@ -859,7 +861,8 @@ Blockly.Block.prototype.getVars = function() {
 Blockly.Block.prototype.renameVar = function(oldName, newName) {
   for (var i = 0, input; input = this.inputList[i]; i++) {
     for (var j = 0, field; field = input.fieldRow[j]; j++) {
-      if (field instanceof Blockly.FieldVariable &&
+      if ((field instanceof Blockly.FieldVariable ||
+          field instanceof Blockly.FieldVariableGetter) &&
           Blockly.Names.equals(oldName, field.getValue())) {
         field.setValue(newName);
       }
@@ -1363,6 +1366,9 @@ Blockly.Block.prototype.interpolate_ = function(message, args, lastDummyAlign) {
               field = new Blockly.FieldNumber(element['value'],
                   element['min'], element['max'], element['precision']);
               break;
+            case 'field_variable_getter':
+              field = Blockly.Block.newFieldVariableGetterFromJson_(element);
+              break;
             case 'field_date':
               if (Blockly.FieldDate) {
                 field = new Blockly.FieldDate(element['date']);
@@ -1454,6 +1460,18 @@ Blockly.Block.newFieldVariableFromJson_ = function(options) {
   return new Blockly.FieldVariable(varname);
 };
 
+/**
+ * Helper function to construct a FieldVariableGetter from a JSON arg object,
+ * dereferencing any string table references.
+ * @param {!Object} options A JSON object with options (variable).
+ * @returns {!Blockly.FieldImage} The new image.
+ * @private
+ */
+Blockly.Block.newFieldVariableGetterFromJson_ = function(options) {
+  var varname = Blockly.utils.replaceMessageReferences(options['text']);
+  return new Blockly.FieldVariableGetter(varname, options['name'],
+      options['class']);
+};
 
 /**
  * Add a value input, statement input or local variable to this block.

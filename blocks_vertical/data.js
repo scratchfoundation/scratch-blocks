@@ -21,6 +21,7 @@
 'use strict';
 
 goog.provide('Blockly.Blocks.data');
+goog.provide('Blockly.Constants.Data');
 
 goog.require('Blockly.Blocks');
 goog.require('Blockly.Colours');
@@ -62,7 +63,8 @@ Blockly.Blocks['data_variable'] = {
       "message0": "%1",
       "args0": [
         {
-          "type": "input_value",
+          "type": "field_variable_getter",
+          "text": "",
           "name": "VARIABLE"
         }
       ],
@@ -72,7 +74,8 @@ Blockly.Blocks['data_variable'] = {
       "colourTertiary": Blockly.Colours.data.tertiary,
       "output": "String",
       "outputShape": Blockly.OUTPUT_SHAPE_ROUND,
-      "checkboxInFlyout": true
+      "checkboxInFlyout": true,
+      "extensions": ["contextMenu_getVariableBlock"]
     });
   }
 };
@@ -191,7 +194,8 @@ Blockly.Blocks['data_listcontents'] = {
       "message0": "%1",
       "args0": [
         {
-          "type": "field_variable",
+          "type": "field_variable_getter",
+          "text": "",
           "name": "LIST"
         }
       ],
@@ -512,4 +516,57 @@ Blockly.Blocks['data_hidelist'] = {
       "colourTertiary": Blockly.Colours.data.tertiary
     });
   }
+};
+
+/**
+ * Mixin to add a context menu for a data_variable block.  It adds one item for
+ * each variable defined on the workspace.
+ * @mixin
+ * @augments Blockly.Block
+ * @package
+ * @readonly
+ */
+Blockly.Constants.Data.CUSTOM_CONTEXT_MENU_GET_VARIABLE_MIXIN = {
+  /**
+   * Add context menu option to create getter block for the loop's variable.
+   * (customContextMenu support limited to web BlockSvg.)
+   * @param {!Array} options List of menu options to add to.
+   * @this Blockly.Block
+   */
+  customContextMenu: function(options) {
+    if (!this.isCollapsed()) {
+      var variablesList = this.workspace.variableList;
+      for (var i = 0; i < variablesList.length; i++) {
+        var option = {enabled: true};
+        option.text = variablesList[i];
+
+        option.callback =
+            Blockly.Constants.Data.VARIABLE_OPTION_CALLBACK_FACTORY(this,
+            option.text);
+        options.push(option);
+      }
+    }
+  }
+};
+
+Blockly.Extensions.registerMixin('contextMenu_getVariableBlock',
+  Blockly.Constants.Data.CUSTOM_CONTEXT_MENU_GET_VARIABLE_MIXIN);
+
+/**
+ * Callback factory for dropdown menu options associated with a variable getter
+ * block.  Each variable on the workspace gets its own item in the dropdown
+ * menu, and clicking on that item changes the text of the field on the source
+ * block.
+ * @param {!Blockly.Block} block The block to update.
+ * @param {string} name The new name to display on the block.
+ * @return {!function()} A function that updates the block with the new name.
+ */
+Blockly.Constants.Data.VARIABLE_OPTION_CALLBACK_FACTORY = function(block, name) {
+  return function() {
+    var variableField = block.getField('VARIABLE');
+    if (!variableField) {
+      console.log("Tried to get a variable field on the wrong type of block.");
+    }
+    variableField.setText(name);
+  };
 };

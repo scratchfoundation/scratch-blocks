@@ -278,6 +278,9 @@ Blockly.Workspace.prototype.renameVariable = function(oldName, newName) {
  * @param {string} name The new variable's name.
  */
 Blockly.Workspace.prototype.createVariable = function(name) {
+  if (name.toLowerCase() == Blockly.Variables.noVariableText()) {
+    return;
+  }
   var index = this.variableIndexOf(name);
   if (index == -1) {
     this.variableList.push(name);
