@@ -24,12 +24,14 @@ goog.provide('Blockly.Blocks.defaultToolbox');
 
 goog.require('Blockly.Blocks');
 
+goog.require('Blockly.Colours');
+
 /**
  * @fileoverview Provide a default toolbox XML.
  */
 
 Blockly.Blocks.defaultToolbox = '<xml id="toolbox-categories" style="display: none">'+
-  '<category name="Motion" colour="#4C97FF" secondaryColour="#3373CC">'+
+  '<category name="Motion" colour="'+Blockly.Colours.motion.primary+'" secondaryColour="'+Blockly.Colours.motion.secondary+'">'+
     '<block type="motion_movesteps">'+
       '<value name="STEPS">'+
         '<shadow type="math_number">'+
