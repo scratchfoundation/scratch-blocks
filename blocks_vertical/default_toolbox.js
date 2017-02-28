@@ -752,5 +752,5 @@ Blockly.Blocks.defaultToolbox = '<xml id="toolbox-categories" style="display: no
       '</value>'+
     '</block>'+
   '</category>'+
-  '<category name="More Blocks" colour="'+Blockly.Colours.more.primary+'" secondaryColour="'+Blockly.Colours.more.primary+'" custom="PROCEDURE"></category>'+
+  '<category name="More Blocks" colour="'+Blockly.Colours.more.primary+'" secondaryColour="'+Blockly.Colours.more.secondary+'" custom="PROCEDURE"></category>'+
   '</xml>';
