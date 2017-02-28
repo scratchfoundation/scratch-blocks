@@ -244,7 +244,7 @@ Blockly.Blocks.defaultToolbox = '<xml id="toolbox-categories" style="display: no
     '<block type="looks_backdropname"></block>'+
     '<block type="looks_size"></block>'+
   '</category>'+
-  '<category name="Sound" colour="'+Blockly.Colours.sound.primary+'" secondaryColour="'+Blockly.Colours.sound.secondary+'">'+
+  '<category name="Sound" colour="'+Blockly.Colours.sounds.primary+'" secondaryColour="'+Blockly.Colours.sounds.secondary+'">'+
     '<block type="sound_play">'+
       '<value name="SOUND_MENU">'+
         '<shadow type="sound_sounds_menu"></shadow>'+
