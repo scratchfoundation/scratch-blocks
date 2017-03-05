@@ -752,4 +752,42 @@ Blockly.Blocks.defaultToolbox = '<xml id="toolbox-categories" style="display: no
     '</block>'+
   '</category>'+
   '<category name="More Blocks" colour="#FF6680" secondaryColour="#FF3355" custom="PROCEDURE"></category>'+
+  '<category name="Wedo" colour="#c0c0c0" secondaryColour="#808080">' +
+    '<block type="wedo_setcolor">' +
+      '<value name="CHOICE">' +
+        '<shadow type="dropdown_wedo_setcolor">' +
+          '<field name="CHOICE">mystery</field>' +
+        '</shadow>' +
+      '</value>' +
+    '</block>' +
+    '<block type="wedo_motorclockwise">' +
+      '<value name="DURATION">' +
+        '<shadow type="math_positive_number">' +
+          '<field name="NUM">1</field>' +
+        '</shadow>' +
+      '</value>' +
+    '</block>' +
+    '<block type="wedo_motorcounterclockwise">' +
+      '<value name="DURATION">' +
+        '<shadow type="math_positive_number">' +
+          '<field name="NUM">1</field>' +
+        '</shadow>' +
+      '</value>' +
+    '</block>' +
+    '<block type="wedo_motorspeed">' +
+      '<value name="CHOICE">' +
+        '<shadow type="dropdown_wedo_motorspeed">' +
+          '<field name="CHOICE">fast</field>' +
+        '</shadow>' +
+      '</value>' +
+    '</block>' +
+    '<block type="wedo_whentilt">' +
+      '<value name="CHOICE">' +
+        '<shadow type="dropdown_wedo_whentilt">' +
+          '<field name="CHOICE">forward</field>' +
+        '</shadow>' +
+      '</value>' +
+    '</block>' +
+    '<block type="wedo_whendistanceclose"></block>' +
+  '</category>' +
   '</xml>';
