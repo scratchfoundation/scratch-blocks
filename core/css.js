@@ -233,7 +233,7 @@ Blockly.Css.CONTENT = [
     'right: 0;',
     'bottom: 0;',
     'overflow: visible !important;',
-    'z-index: 50;', /* Display below toolbox, but above everything else. */
+    'z-index: 50;', /* Display above the toolbox */
   '}',
 
   '.blocklyTooltipDiv {',
@@ -640,7 +640,7 @@ Blockly.Css.CONTENT = [
     'overflow-y: auto;',
     'position: absolute;',
     'font-family: "Helvetica Neue", Helvetica, sans-serif;',
-    'z-index: 70;', /* so blocks go under toolbox when dragging */
+    'z-index: 40;', /* so blocks go over toolbox when dragging */
   '}',
 
   '.blocklyTreeRoot {',
