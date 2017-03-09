@@ -219,7 +219,7 @@ Blockly.Flyout.prototype.DRAG_RADIUS = 10;
  * @type {number}
  * @const
  */
-Blockly.Flyout.prototype.MARGIN = 12;
+Blockly.Flyout.prototype.MARGIN = 4;
 
 /**
  * Gap between items in horizontal flyouts. Can be overridden with the "sep"
