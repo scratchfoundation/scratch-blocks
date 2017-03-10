@@ -26,7 +26,6 @@ goog.require('Blockly.Blocks');
 goog.require('Blockly.Colours');
 goog.require('Blockly.constants');
 
-
 Blockly.Blocks['sound_sounds_menu'] = {
   /**
    * Sound effects drop-down menu.
@@ -256,38 +255,14 @@ Blockly.Blocks['sound_playnoteforbeats'] = {
   }
 };
 
-Blockly.Blocks['sound_effects_menu'] = {
-  /**
-   * Sound effects drop-down menu.
-   * @this Blockly.Block
-   */
-  init: function() {
-    this.jsonInit(
-      {
-        "message0": "%1",
-        "args0": [
-          {
-            "type": "field_dropdown",
-            "name": "EFFECT",
-            "options": [
-              ['pitch', 'PITCH'],
-              ['pan left/right', 'PAN'],
-              ['echo', 'ECHO'],
-              ['reverb', 'REVERB'],
-              ['fuzz', 'FUZZ'],
-              ['robot', 'ROBOT']
-            ]
-          }
-        ],
-        "inputsInline": true,
-        "output": "String",
-        "colour": Blockly.Colours.sounds.secondary,
-        "colourSecondary": Blockly.Colours.sounds.secondary,
-        "colourTertiary": Blockly.Colours.sounds.tertiary,
-        "outputShape": Blockly.OUTPUT_SHAPE_ROUND
-      });
-  }
-};
+Blockly.Blocks['sound_effects_menu_options'] = [
+  ['pitch', 'PITCH'],
+  ['pan left/right', 'PAN'],
+  ['echo', 'ECHO'],
+  ['reverb', 'REVERB'],
+  ['fuzz', 'FUZZ'],
+  ['robot', 'ROBOT']
+];
 
 Blockly.Blocks['sound_seteffectto'] = {
   /**
@@ -299,8 +274,9 @@ Blockly.Blocks['sound_seteffectto'] = {
       "message0": "set effect %1 to %2",
       "args0": [
         {
-          "type": "input_value",
-          "name": "EFFECT"
+          "type": "field_dropdown",
+          "name": "EFFECT",
+          "options": Blockly.Blocks['sound_effects_menu_options']
         },
         {
           "type": "input_value",
@@ -327,8 +303,9 @@ Blockly.Blocks['sound_changeeffectby'] = {
       "message0": "change effect %1 by %2",
       "args0": [
         {
-          "type": "input_value",
-          "name": "EFFECT"
+          "type": "field_dropdown",
+          "name": "EFFECT",
+          "options": Blockly.Blocks['sound_effects_menu_options']
         },
         {
           "type": "input_value",
@@ -351,7 +328,7 @@ Blockly.Blocks['sound_cleareffects'] = {
    */
   init: function() {
     this.jsonInit({
-      "message0": "clear audio effects",
+      "message0": "clear sound effects",
       "previousStatement": null,
       "nextStatement": null,
       "colour": Blockly.Colours.sounds.primary,
