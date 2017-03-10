@@ -128,11 +128,7 @@ Blockly.Blocks.defaultToolbox = '<xml id="toolbox-categories" style="display: no
       '</value>'+
     '</block>'+
     '<block type="motion_ifonedgebounce"></block>'+
-    '<block type="motion_setrotationstyle">'+
-      '<value name="STYLE">'+
-        '<shadow type="motion_setrotationstyle_menu"></shadow>'+
-      '</value>'+
-    '</block>'+
+    '<block type="motion_setrotationstyle"></block>'+
     '<block type="motion_xposition"></block>'+
     '<block type="motion_yposition"></block>'+
     '<block type="motion_direction"></block>'+
@@ -158,9 +154,6 @@ Blockly.Blocks.defaultToolbox = '<xml id="toolbox-categories" style="display: no
       '</value>'+
     '</block>'+
     '<block type="looks_changeeffectby">'+
-      '<value name="EFFECT">'+
-        '<shadow type="looks_effectmenu"></shadow>'+
-      '</value>'+
       '<value name="CHANGE">'+
         '<shadow type="math_number">'+
           '<field name="NUM">10</field>'+
@@ -168,9 +161,6 @@ Blockly.Blocks.defaultToolbox = '<xml id="toolbox-categories" style="display: no
       '</value>'+
     '</block>'+
     '<block type="looks_seteffectto">'+
-      '<value name="EFFECT">'+
-        '<shadow type="looks_effectmenu"></shadow>'+
-      '</value>'+
       '<value name="VALUE">'+
         '<shadow type="math_number">'+
           '<field name="NUM">10</field>'+
@@ -251,23 +241,17 @@ Blockly.Blocks.defaultToolbox = '<xml id="toolbox-categories" style="display: no
         '<shadow type="sound_instruments_menu"></shadow>' +
       '</value>' +
     '</block>'+
-    '<block type="sound_seteffectto">' +
-      '<value name="EFFECT">' +
-        '<shadow type="sound_effects_menu"></shadow>' +
-      '</value>' +
-      '<value name="VALUE">' +
-        '<shadow type="math_number">'+
-          '<field name="NUM">100</field>'+
-        '</shadow>'+
-      '</value>' +
-    '</block>' +
     '<block type="sound_changeeffectby">' +
-      '<value name="EFFECT">' +
-        '<shadow type="sound_effects_menu"></shadow>' +
-      '</value>' +
       '<value name="VALUE">' +
         '<shadow type="math_number">'+
           '<field name="NUM">10</field>'+
+        '</shadow>'+
+      '</value>' +
+    '</block>' +
+    '<block type="sound_seteffectto">' +
+      '<value name="VALUE">' +
+        '<shadow type="math_number">'+
+          '<field name="NUM">100</field>'+
         '</shadow>'+
       '</value>' +
     '</block>' +
@@ -613,9 +597,6 @@ Blockly.Blocks.defaultToolbox = '<xml id="toolbox-categories" style="display: no
       '</value>'+
     '</block>'+
     '<block type="operator_mathop">'+
-      '<value name="OPERATOR">'+
-        '<shadow type="operator_mathop_menu"></shadow>'+
-      '</value>'+
       '<value name="NUM">'+
         '<shadow type="math_number">'+
           '<field name="NUM"></field>'+
