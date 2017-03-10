@@ -138,44 +138,6 @@ Blockly.Blocks.defaultToolbox = '<xml id="toolbox-categories" style="display: no
     '<block type="motion_direction"></block>'+
   '</category>'+
   '<category name="Looks" colour="#9966FF" secondaryColour="#774DCB">'+
-    '<block type="looks_sayforsecs">'+
-      '<value name="MESSAGE">'+
-        '<shadow type="text">'+
-          '<field name="TEXT">Hello!</field>'+
-        '</shadow>'+
-      '</value>'+
-      '<value name="SECS">'+
-        '<shadow type="math_number">'+
-          '<field name="NUM">2</field>'+
-        '</shadow>'+
-      '</value>'+
-    '</block>'+
-    '<block type="looks_say">'+
-      '<value name="MESSAGE">'+
-        '<shadow type="text">'+
-          '<field name="TEXT">Hello!</field>'+
-        '</shadow>'+
-      '</value>'+
-    '</block>'+
-    '<block type="looks_thinkforsecs">'+
-      '<value name="MESSAGE">'+
-        '<shadow type="text">'+
-          '<field name="TEXT">Hmm...</field>'+
-        '</shadow>'+
-      '</value>'+
-      '<value name="SECS">'+
-        '<shadow type="math_number">'+
-          '<field name="NUM">2</field>'+
-        '</shadow>'+
-      '</value>'+
-    '</block>'+
-    '<block type="looks_think">'+
-      '<value name="MESSAGE">'+
-        '<shadow type="text">'+
-          '<field name="TEXT">Hmm...</field>'+
-        '</shadow>'+
-      '</value>'+
-    '</block>'+
     '<block type="looks_show"></block>'+
     '<block type="looks_hide"></block>'+
     '<block type="looks_switchcostumeto">'+
@@ -395,66 +357,6 @@ Blockly.Blocks.defaultToolbox = '<xml id="toolbox-categories" style="display: no
       '</value>'+
     '</block>'+
   '</category>'+
-  '<category name="Data" colour="#FF8C1A" secondaryColour="#DB6E00" custom="VARIABLE">'+
-  '</category>'+
-  '<category name="Lists" colour="#FF8C1A" secondaryColour="#DB6E00">'+
-    '<block type="data_listcontents"></block>'+
-    '<block type="data_addtolist">'+
-      '<value name="ITEM">'+
-        '<shadow type="text">'+
-          '<field name="TEXT">thing</field>'+
-        '</shadow>'+
-      '</value>'+
-    '</block>'+
-    '<block type="data_deleteoflist">'+
-      '<value name="INDEX">'+
-        '<shadow type="data_listindexall">'+
-          '<field name="INDEX">1</field>'+
-        '</shadow>'+
-      '</value>'+
-    '</block>'+
-    '<block type="data_insertatlist">'+
-      '<value name="INDEX">'+
-        '<shadow type="data_listindexrandom">'+
-          '<field name="INDEX">1</field>'+
-        '</shadow>'+
-      '</value>'+
-      '<value name="ITEM">'+
-        '<shadow type="text">'+
-          '<field name="TEXT">thing</field>'+
-        '</shadow>'+
-      '</value>'+
-    '</block>'+
-    '<block type="data_replaceitemoflist">'+
-      '<value name="INDEX">'+
-        '<shadow type="data_listindexrandom">'+
-          '<field name="INDEX">1</field>'+
-        '</shadow>'+
-      '</value>'+
-      '<value name="ITEM">'+
-        '<shadow type="text">'+
-          '<field name="TEXT">thing</field>'+
-        '</shadow>'+
-      '</value>'+
-    '</block>'+
-    '<block type="data_itemoflist">'+
-      '<value name="INDEX">'+
-        '<shadow type="data_listindexrandom">'+
-          '<field name="INDEX">1</field>'+
-        '</shadow>'+
-      '</value>'+
-    '</block>'+
-    '<block type="data_lengthoflist"></block>'+
-    '<block type="data_listcontainsitem">'+
-      '<value name="ITEM">'+
-        '<shadow type="text">'+
-          '<field name="TEXT">thing</field>'+
-        '</shadow>'+
-      '</value>'+
-    '</block>'+
-    '<block type="data_showlist"></block>'+
-    '<block type="data_hidelist"></block>'+
-  '</category>'+
   '<category name="Events" colour="#FFD500" secondaryColour="#CC9900">'+
     '<block type="event_whenflagclicked"></block>'+
     '<block type="event_whenkeypressed">'+
@@ -535,14 +437,6 @@ Blockly.Blocks.defaultToolbox = '<xml id="toolbox-categories" style="display: no
         '<shadow type="sensing_distancetomenu"></shadow>'+
       '</value>'+
     '</block>'+
-    '<block type="sensing_askandwait">'+
-      '<value name="QUESTION">'+
-        '<shadow type="text">'+
-          '<field name="TEXT">What\'s your name?</field>'+
-        '</shadow>'+
-      '</value>'+
-    '</block>'+
-  '<block type="sensing_answer"></block>'+
   '<block type="sensing_keypressed">'+
       '<value name="KEY_OPTION">'+
         '<shadow type="sensing_keyoptions"></shadow>'+
@@ -551,27 +445,6 @@ Blockly.Blocks.defaultToolbox = '<xml id="toolbox-categories" style="display: no
   '<block type="sensing_mousedown"></block>'+
   '<block type="sensing_mousex"></block>'+
   '<block type="sensing_mousey"></block>'+
-  '<block type="sensing_loudness"></block>'+
-  '<block type="sensing_videoon">'+
-      '<value name="VIDEOONMENU1">'+
-        '<shadow type="sensing_videoonmenuone"></shadow>'+
-      '</value>'+
-      '<value name="VIDEOONMENU2">'+
-        '<shadow type="sensing_videoonmenutwo"></shadow>'+
-      '</value>'+
-  '</block>'+
-  '<block type="sensing_videotoggle">'+
-      '<value name="VIDEOTOGGLEMENU">'+
-        '<shadow type="sensing_videotogglemenu"></shadow>'+
-      '</value>'+
-  '</block>'+
-  '<block type="sensing_setvideotransparency">'+
-    '<value name="TRANSPARENCY">'+
-      '<shadow type="math_number">'+
-        '<field name="NUM">50</field>'+
-      '</shadow>'+
-    '</value>'+
-  '</block>'+
   '<block type="sensing_timer"></block>'+
   '<block type="sensing_resettimer"></block>'+
   '<block type="sensing_of">'+
@@ -588,7 +461,6 @@ Blockly.Blocks.defaultToolbox = '<xml id="toolbox-categories" style="display: no
     '</value>'+
   '</block>'+
   '<block type="sensing_dayssince2000"></block>'+
-  '<block type="sensing_username"></block>'+
   '</category>'+
   '<category name="Operators" colour="#40BF4A" secondaryColour="#389438">'+
     '<block type="operator_add">'+
@@ -751,5 +623,4 @@ Blockly.Blocks.defaultToolbox = '<xml id="toolbox-categories" style="display: no
       '</value>'+
     '</block>'+
   '</category>'+
-  '<category name="More Blocks" colour="#FF6680" secondaryColour="#FF3355" custom="PROCEDURE"></category>'+
   '</xml>';
