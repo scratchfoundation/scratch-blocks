@@ -128,11 +128,7 @@ Blockly.Blocks.defaultToolbox = '<xml id="toolbox-categories" style="display: no
       '</value>'+
     '</block>'+
     '<block type="motion_ifonedgebounce"></block>'+
-    '<block type="motion_setrotationstyle">'+
-      '<value name="STYLE">'+
-        '<shadow type="motion_setrotationstyle_menu"></shadow>'+
-      '</value>'+
-    '</block>'+
+    '<block type="motion_setrotationstyle"></block>'+
     '<block type="motion_xposition"></block>'+
     '<block type="motion_yposition"></block>'+
     '<block type="motion_direction"></block>'+
