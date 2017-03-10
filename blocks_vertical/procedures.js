@@ -56,18 +56,10 @@ Blockly.Blocks['procedures_defnoreturn'] = {
   },
   mutationToDom: function() {
     var container = document.createElement('mutation');
-    var procCode = document.createElement('proccode');
-    procCode.setAttribute('value', this._procCode);
-    container.appendChild(procCode);
-    var argumentNames = document.createElement('argumentnames');
-    argumentNames.setAttribute('value', JSON.stringify(this._argumentNames));
-    container.appendChild(argumentNames);
-    var argumentDefaults = document.createElement('argumentdefaults');
-    argumentDefaults.setAttribute('value', JSON.stringify(this._argumentDefaults));
-    container.appendChild(argumentDefaults);
-    var warp = document.createElement('warp');
-    warp.setAttribute('value', this._warp);
-    container.appendChild(warp);
+    container.setAttribute('proccode', this._procCode);
+    container.setAttribute('argumentnames', JSON.stringify(this._argumentNames));
+    container.setAttribute('argumentdefaults', JSON.stringify(this._argumentDefaults));
+    container.setAttribute('warp', this._warp);
     return container;
   },
   domToMutation: function(xmlElement) {
