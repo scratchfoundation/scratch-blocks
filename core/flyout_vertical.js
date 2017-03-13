@@ -421,7 +421,7 @@ Blockly.VerticalFlyout.prototype.layout_ = function(contents, gaps) {
 
       this.addBlockListeners_(root, block, rect);
 
-      cursorY += blockHW.height + gaps[i];
+      cursorY += blockHW.height + gaps[i] + (block.startHat_ ? Blockly.BlockSvg.START_HAT_HEIGHT : 0);
     } else if (item.type == 'button') {
       var button = item.button;
       var buttonSvg = button.createDom();
