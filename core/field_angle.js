@@ -115,11 +115,8 @@ Blockly.FieldAngle.prototype.dispose_ = function() {
     if (thisField.clickWrapper_) {
       Blockly.unbindEvent_(thisField.clickWrapper_);
     }
-    if (thisField.moveWrapper1_) {
-      Blockly.unbindEvent_(thisField.moveWrapper1_);
-    }
-    if (thisField.moveWrapper2_) {
-      Blockly.unbindEvent_(thisField.moveWrapper2_);
+    if (thisField.moveWrapper_) {
+      Blockly.unbindEvent_(thisField.moveWrapper_);
     }
   };
 };
@@ -184,12 +181,10 @@ Blockly.FieldAngle.prototype.showEditor_ = function() {
       Blockly.bindEvent_(svg, 'click', this, function() {
         Blockly.WidgetDiv.hide();
         Blockly.DropDownDiv.hide();
+        Blockly.unbindEvent_(this.moveWrapper_);
       });
-  this.moveWrapper1_ =
-      Blockly.bindEvent_(circle, 'mousemove', this, this.onMouseMove);
-  this.moveWrapper2_ =
-      Blockly.bindEvent_(this.gauge_, 'mousemove', this,
-      this.onMouseMove);
+  this.moveWrapper_ =
+      Blockly.bindEvent_(svg, 'mousemove', this, this.onMouseMove);
   this.updateGraph_();
 };
 
