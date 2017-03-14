@@ -143,7 +143,7 @@ Blockly.FieldAngle.prototype.showEditor_ = function() {
     'height': (Blockly.FieldAngle.HALF * 2) + 'px',
     'width': (Blockly.FieldAngle.HALF * 2) + 'px'
   }, div);
-  var circle = Blockly.utils.createSvgElement('circle', {
+  Blockly.utils.createSvgElement('circle', {
     'cx': Blockly.FieldAngle.HALF, 'cy': Blockly.FieldAngle.HALF,
     'r': Blockly.FieldAngle.RADIUS,
     'class': 'blocklyAngleCircle'
