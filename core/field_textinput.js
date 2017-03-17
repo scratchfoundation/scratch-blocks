@@ -489,7 +489,8 @@ Blockly.FieldTextInput.prototype.widgetDispose_ = function() {
       }
     }
     thisField.setText(text);
-    thisField.sourceBlock_.rendered && thisField.sourceBlock_.render();
+    // Rerender the field now that the text has changed.
+    thisField.sourceBlock_.rendered && thisField.render_();
     Blockly.unbindEvent_(htmlInput.onKeyDownWrapper_);
     Blockly.unbindEvent_(htmlInput.onKeyUpWrapper_);
     Blockly.unbindEvent_(htmlInput.onKeyPressWrapper_);
