@@ -186,7 +186,7 @@ Blockly.Blocks['looks_changeeffectby'] = {
    */
   init: function() {
     this.jsonInit({
-      "message0": "change effect %1 by %2",
+      "message0": "change %1 effect by %2",
       "args0": [
         {
           "type": "field_dropdown",
@@ -216,7 +216,7 @@ Blockly.Blocks['looks_seteffectto'] = {
    */
   init: function() {
     this.jsonInit({
-      "message0": "set effect %1 to %2",
+      "message0": "set %1 effect to %2",
       "args0": [
         {
           "type": "field_dropdown",
