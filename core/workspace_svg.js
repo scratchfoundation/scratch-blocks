@@ -1475,15 +1475,13 @@ Blockly.WorkspaceSvg.prototype.updateToolbox = function(tree) {
     }
     this.options.languageTree = tree;
     this.toolbox_.populate_(tree);
+    this.toolbox_.position();
   } else {
     if (!this.flyout_) {
       throw 'Existing toolbox has categories.  Can\'t change mode.';
     }
     this.options.languageTree = tree;
     this.flyout_.show(tree.childNodes);
-  }
-  if (this.toolbox_) {
-    this.toolbox_.position();
   }
 };
 
