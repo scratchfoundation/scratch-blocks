@@ -1422,41 +1422,6 @@ Blockly.BlockSvg.prototype.updateCursor_ = function(e, closestConnection) {
 };
 
 /**
- * Provide visual indication of whether the block will be deleted if
- * dropped here.
- * Prefer connecting over dropping into the trash can, but prefer dragging to
- * the toolbox over connecting to other blocks.
- * @param {!Event} e Mouse move event.
- * @param {Blockly.Connection} closestConnection The connection this block would
- *     potentially connect to if dropped here, or null.
- * @return {boolean} True if the block would be deleted if dropped here,
- *     otherwise false.
- * @private
- */
-Blockly.BlockSvg.prototype.updateCursor_ = function(e, closestConnection) {
-  var deleteArea = this.workspace.isDeleteArea(e);
-  var wouldConnect = Blockly.selected && closestConnection &&
-      deleteArea != Blockly.DELETE_AREA_TOOLBOX;
-  var wouldDelete = deleteArea && !this.getParent() &&
-      Blockly.selected.isDeletable();
-  var showDeleteCursor = wouldDelete && !wouldConnect;
-
-  if (showDeleteCursor) {
-    Blockly.Css.setCursor(Blockly.Css.Cursor.DELETE);
-    if (deleteArea == Blockly.DELETE_AREA_TRASH && this.workspace.trashcan) {
-      this.workspace.trashcan.setOpen_(true);
-    }
-    return true;
-  } else {
-    Blockly.Css.setCursor(Blockly.Css.Cursor.CLOSED);
-    if (this.workspace.trashcan) {
-      this.workspace.trashcan.setOpen_(false);
-    }
-    return false;
-  }
-};
-
-/**
  * Add or remove the UI indicating if this block is movable or not.
  */
 Blockly.BlockSvg.prototype.updateMovable = function() {
