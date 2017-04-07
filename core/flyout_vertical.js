@@ -616,6 +616,7 @@ Blockly.VerticalFlyout.prototype.placeNewBlock_ = function(originBlock) {
   // If the flyout is on the right side, (0, 0) in the flyout is offset to
   // the right of (0, 0) in the main workspace.  Add an offset to take that
   // into account.
+  var scrollX = 0;
   if (this.toolboxPosition_ == Blockly.TOOLBOX_AT_RIGHT) {
     scrollX = targetMetrics.viewWidth - this.width_;
     // Scale the scroll (getSvgXY_ did not do this).
