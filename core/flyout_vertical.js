@@ -88,6 +88,19 @@ Blockly.VerticalFlyout.prototype.DEFAULT_WIDTH = 250;
 Blockly.VerticalFlyout.prototype.CHECKBOX_SIZE = 20;
 
 /**
+ * SVG path data for checkmark in checkbox.
+ * @type {string}
+ * @const
+ */
+Blockly.VerticalFlyout.prototype.CHECKMARK_PATH =
+    'M' + Blockly.VerticalFlyout.prototype.CHECKBOX_SIZE / 4 +
+    ' ' + Blockly.VerticalFlyout.prototype.CHECKBOX_SIZE / 2 +
+    'L' + 5 * Blockly.VerticalFlyout.prototype.CHECKBOX_SIZE / 12 +
+    ' ' + 2 * Blockly.VerticalFlyout.prototype.CHECKBOX_SIZE / 3 +
+    'L' + 3 * Blockly.VerticalFlyout.prototype.CHECKBOX_SIZE / 4 +
+    ' ' + Blockly.VerticalFlyout.prototype.CHECKBOX_SIZE / 3;
+
+/**
  * Size of the checkbox corner radius
  * @type {number}
  * @const
@@ -490,13 +503,12 @@ Blockly.VerticalFlyout.prototype.createCheckbox_ = function(block, cursorX,
      cursorY, blockHW) {
   var svgRoot = block.getSvgRoot();
   var extraSpace = this.CHECKBOX_SIZE + this.CHECKBOX_MARGIN;
-
+  var width = this.RTL ? this.getWidth() / this.workspace_.scale - extraSpace : cursorX;
+  var height = cursorY + blockHW.height / 2 - this.CHECKBOX_SIZE / 2;
   var checkboxGroup = Blockly.utils.createSvgElement('g',
     {
       'class': 'blocklyFlyoutCheckbox',
-      'transform': 'translate(' +
-        (this.RTL ? this.getWidth() / this.workspace_.scale - extraSpace : cursorX) +
-        ', ' + (cursorY + blockHW.height / 2 - this.CHECKBOX_SIZE / 2) + ')'
+      'transform': 'translate(' + width + ', ' + height + ')'
     }, null);
   Blockly.utils.createSvgElement('rect',
     {
@@ -508,9 +520,7 @@ Blockly.VerticalFlyout.prototype.createCheckbox_ = function(block, cursorX,
   Blockly.utils.createSvgElement('path',
     {
       'class': 'blocklyFlyoutCheckboxPath',
-      'd': 'M ' + this.CHECKBOX_SIZE / 4 + ' ' + this.CHECKBOX_SIZE / 2 +
-        'L ' + 5 * this.CHECKBOX_SIZE / 12 + ' ' + 2 * this.CHECKBOX_SIZE / 3 +
-        'L ' + 3 * this.CHECKBOX_SIZE / 4 + ' ' + this.CHECKBOX_SIZE / 3
+      'd': this.CHECKMARK_PATH
     }, checkboxGroup);
   var checkboxObj = {svgRoot: checkboxGroup, clicked: false, block: block};
   block.flyoutCheckbox = checkboxObj;
