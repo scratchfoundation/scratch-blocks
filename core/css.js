@@ -1036,11 +1036,20 @@ Blockly.Css.CONTENT = [
   '}',
 
   '.blocklyFlyoutCheckbox {',
-    'fill: red;',
+    'fill: white;',
+    'stroke: #c8c8c8;',
   '}',
 
   '.blocklyFlyoutCheckbox.checked {',
-    'fill: blue;',
+    'fill: ' + Blockly.Colours.motion.primary + ';',
+    'stroke: ' + Blockly.Colours.motion.tertiary + ';',
+  '}',
+
+  '.blocklyFlyoutCheckboxPath {',
+    'stroke: white;',
+    'stroke-width: 3;',
+    'stroke-linecap: round;',
+    'stroke-linejoin: round;',
   '}',
 
   '.scratchCategoryMenu {',

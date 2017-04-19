@@ -88,6 +88,13 @@ Blockly.VerticalFlyout.prototype.DEFAULT_WIDTH = 250;
 Blockly.VerticalFlyout.prototype.CHECKBOX_SIZE = 20;
 
 /**
+ * Size of the checkbox corner radius
+ * @type {number}
+ * @const
+ */
+Blockly.VerticalFlyout.prototype.CHECKBOX_CORNER_RADIUS = 5;
+
+/**
  * Space above and around the checkbox.
  * @type {number}
  * @const
@@ -483,19 +490,31 @@ Blockly.VerticalFlyout.prototype.createCheckbox_ = function(block, cursorX,
      cursorY, blockHW) {
   var svgRoot = block.getSvgRoot();
   var extraSpace = this.CHECKBOX_SIZE + this.CHECKBOX_MARGIN;
-  var checkboxRect = Blockly.utils.createSvgElement('rect',
+
+  var checkboxGroup = Blockly.utils.createSvgElement('g',
     {
       'class': 'blocklyFlyoutCheckbox',
+      'transform': 'translate(' +
+        (this.RTL ? this.getWidth() / this.workspace_.scale - extraSpace : cursorX) +
+        ', ' + (cursorY + blockHW.height / 2 - this.CHECKBOX_SIZE / 2) + ')'
+    }, null);
+  Blockly.utils.createSvgElement('rect',
+    {
       'height': this.CHECKBOX_SIZE,
       'width': this.CHECKBOX_SIZE,
-      'x': this.RTL ? this.getWidth() / this.workspace_.scale - extraSpace :
-          cursorX,
-      'y': cursorY + blockHW.height / 2 -
-          this.CHECKBOX_SIZE / 2
-    }, null);
-  var checkboxObj = {svgRoot: checkboxRect, clicked: false, block: block};
+      'rx': this.CHECKBOX_CORNER_RADIUS,
+      'ry': this.CHECKBOX_CORNER_RADIUS
+    }, checkboxGroup);
+  Blockly.utils.createSvgElement('path',
+    {
+      'class': 'blocklyFlyoutCheckboxPath',
+      'd': 'M ' + this.CHECKBOX_SIZE / 4 + ' ' + this.CHECKBOX_SIZE / 2 +
+        'L ' + 5 * this.CHECKBOX_SIZE / 12 + ' ' + 2 * this.CHECKBOX_SIZE / 3 +
+        'L ' + 3 * this.CHECKBOX_SIZE / 4 + ' ' + this.CHECKBOX_SIZE / 3
+    }, checkboxGroup);
+  var checkboxObj = {svgRoot: checkboxGroup, clicked: false, block: block};
   block.flyoutCheckbox = checkboxObj;
-  this.workspace_.getCanvas().insertBefore(checkboxRect, svgRoot);
+  this.workspace_.getCanvas().insertBefore(checkboxGroup, svgRoot);
   this.checkboxes_.push(checkboxObj);
 };
 
