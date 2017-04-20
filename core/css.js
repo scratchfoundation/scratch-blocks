@@ -440,17 +440,26 @@ Blockly.Css.CONTENT = [
     'position: absolute;',
     'z-index: 20;',
   '}',
+
   '.blocklyFlyoutButton {',
-    'fill: #888;',
-    'cursor: default;',
+    'fill: none;',
+  '}',
+
+  '.blocklyFlyoutButtonBackground {',
+      'stroke: #c6c6c6;',
+  '}',
+
+  '.blocklyFlyoutButton .blocklyText {',
+    'fill: $colour_text;',
   '}',
 
   '.blocklyFlyoutButtonShadow {',
-    'fill: #666;',
+    'fill: none;',
   '}',
 
   '.blocklyFlyoutButton:hover {',
-    'fill: #aaa;',
+    'fill: white;',
+    'cursor: pointer;',
   '}',
 
   '.blocklyFlyoutLabel {',
