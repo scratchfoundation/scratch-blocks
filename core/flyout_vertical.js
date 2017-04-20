@@ -437,7 +437,7 @@ Blockly.VerticalFlyout.prototype.layout_ = function(contents, gaps) {
       block.moveBy(moveX,
           cursorY + (block.startHat_ ? Blockly.BlockSvg.START_HAT_HEIGHT : 0));
 
-      var rect = this.createRect_(block, moveX, cursorY, blockHW, i);
+      var rect = this.createRect_(block, this.RTL ? moveX - blockHW.width : moveX, cursorY, blockHW, i);
 
       this.addBlockListeners_(root, block, rect);
 
