@@ -358,6 +358,9 @@ Blockly.Blocks.defaultToolbox = '<xml id="toolbox-categories" style="display: no
       '</value>'+
     '</block>'+
     '<block type="event_whenbroadcastreceived">'+
+      '<value name="BROADCAST_OPTION">'+
+        '<shadow type="event_whenbroadcast_menu"></shadow>'+
+      '</value>'+
     '</block>'+
     '<block type="event_broadcast">'+
       '<value name="BROADCAST_OPTION">'+
