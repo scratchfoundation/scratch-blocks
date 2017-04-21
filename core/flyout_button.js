@@ -101,7 +101,7 @@ Blockly.FlyoutButton = function(workspace, targetWorkspace, xml, isLabel) {
 /**
  * The margin around the text in the button.
  */
-Blockly.FlyoutButton.MARGIN = 5;
+Blockly.FlyoutButton.MARGIN = 40;
 
 /**
  * The width of the button's rect.
@@ -113,7 +113,7 @@ Blockly.FlyoutButton.prototype.width = 0;
  * The height of the button's rect.
  * @type {number}
  */
-Blockly.FlyoutButton.prototype.height = 0;
+Blockly.FlyoutButton.prototype.height = 40; // Can't be computed like the width
 
 /**
  * Create the button elements.
@@ -150,7 +150,6 @@ Blockly.FlyoutButton.prototype.createDom = function() {
 
   this.width = svgText.getComputedTextLength() +
       2 * Blockly.FlyoutButton.MARGIN;
-  this.height = 20;  // Can't compute it :(
 
   if (!this.isLabel_) {
     shadow.setAttribute('width', this.width);
@@ -159,8 +158,10 @@ Blockly.FlyoutButton.prototype.createDom = function() {
   rect.setAttribute('width', this.width);
   rect.setAttribute('height', this.height);
 
+  svgText.setAttribute('text-anchor', 'middle');
+  svgText.setAttribute('alignment-baseline', 'central');
   svgText.setAttribute('x', this.width / 2);
-  svgText.setAttribute('y', this.height - Blockly.FlyoutButton.MARGIN);
+  svgText.setAttribute('y', this.height / 2);
 
   this.updateTransform_();
   return this.svgGroup_;
