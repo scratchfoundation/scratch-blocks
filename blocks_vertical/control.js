@@ -365,7 +365,7 @@ Blockly.Blocks['control_create_clone_of_menu'] = {
             "name": "CLONE_OPTION",
             "options": [
               ['myself', '_myself_']
-            ]
+            ].concat(Blockly.Blocks.getSpriteMenu())
           }
         ],
         "inputsInline": true,

@@ -154,7 +154,7 @@ Blockly.Blocks['motion_pointtowards_menu'] = {
             "name": "TOWARDS",
             "options": [
               ['mouse-pointer', '_mouse_']
-            ]
+            ].concat(Blockly.Blocks.getSpriteMenu())
           }
         ],
         "inputsInline": true,
@@ -208,7 +208,7 @@ Blockly.Blocks['motion_goto_menu'] = {
             "options": [
               ['mouse-pointer', '_mouse_'],
               ['random position', '_random_']
-            ]
+            ].concat(Blockly.Blocks.getSpriteMenu())
           }
         ],
         "inputsInline": true,
