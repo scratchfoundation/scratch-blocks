@@ -343,7 +343,7 @@ Blockly.VerticalFlyout.prototype.wheel_ = function(e) {
       delta *= 10;
     }
     var metrics = this.getMetrics_();
-    var pos = metrics.viewTop + delta;
+    var pos = -this.workspace_.scrollY + delta;
     var limit = metrics.contentHeight - metrics.viewHeight;
     pos = Math.min(pos, limit);
     pos = Math.max(pos, 0);
@@ -581,7 +581,7 @@ Blockly.VerticalFlyout.prototype.onMouseMove_ = function(e) {
   }
   var dy = e.clientY - this.startDragMouseY_;
   this.startDragMouseY_ = e.clientY;
-  var y = metrics.viewTop - dy;
+  var y = -this.workspace_.scrollY - dy;
   y = goog.math.clamp(y, 0, metrics.contentHeight - metrics.viewHeight);
   this.scrollbar_.set(y);
 };
