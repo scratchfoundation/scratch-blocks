@@ -101,30 +101,6 @@ Blockly.FieldAngle.WRAP = 180;
  */
 Blockly.FieldAngle.RADIUS = Blockly.FieldAngle.HALF - 1;
 
-// TODO does not work because textElement is not defined???
-// /**
-//  * Adds degree symbol and recalculates width.
-//  * Saves the computed width in a property.
-//  * @private
-//  */
-// Blockly.FieldAngle.prototype.render_ = function() {
-//   if (!this.visible_) {
-//     this.size_.width = 0;
-//     return;
-//   }
-//
-//   // Update textElement.
-//   this.textElement_.textContent = this.getDisplayText_();
-//
-//   // Insert degree symbol.
-//   if (this.sourceBlock_.RTL) {
-//      this.textElement_.insertBefore(this.symbol_, this.textElement_.firstChild);
-//    } else {
-//      this.textElement_.appendChild(this.symbol_);
-//    }
-//   this.updateWidth();
-// };
-
 /**
  * Clean up this FieldAngle, as well as the inherited FieldTextInput.
  * @return {!Function} Closure to call on destruction of the WidgetDiv.
