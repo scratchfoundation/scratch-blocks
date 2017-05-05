@@ -464,9 +464,6 @@ Blockly.FieldDropdown.prototype.setText = function(text) {
     this.sourceBlock_.render();
     this.sourceBlock_.bumpNeighbours_();
   }
-  this.borderRect_.setAttribute('height', this.size_.height - 9);
-  this.borderRect_.setAttribute('width',
-      this.size_.width + Blockly.BlockSvg.SEP_SPACE_X);
 };
 
 /**
