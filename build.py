@@ -149,7 +149,7 @@ delete this.BLOCKLY_BOOT;
 };
 
 if (isNodeJS) {
-  window.BLOCKLY_BOOT()
+  window.BLOCKLY_BOOT();
   module.exports = Blockly;
 } else {
   // Delete any existing Closure (e.g. Soy's nogoog_shim).
@@ -438,7 +438,7 @@ class Gen_langfiles(threading.Thread):
           "--quiet"]
       json_files = glob.glob(os.path.join("msg", "json", "*.json"))
       json_files = [file for file in json_files if not
-                    (file.endswith(("keys.json", "synonyms.json", "qqq.json")))]
+                    (file.endswith(("keys.json", "synonyms.json", "qqq.json", "constants.json")))]
       cmd.extend(json_files)
       subprocess.check_call(cmd)
     except (subprocess.CalledProcessError, OSError) as e:

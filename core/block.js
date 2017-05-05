@@ -362,41 +362,8 @@ Blockly.Block.prototype.lastConnectionInStack = function() {
  */
 // TODO: Refactor to return early in headless mode.
 Blockly.Block.prototype.bumpNeighbours_ = function() {
-  if (!this.workspace) {
-    return;  // Deleted block.
-  }
-  if (Blockly.dragMode_ != Blockly.DRAG_NONE) {
-    return;  // Don't bump blocks during a drag.
-  }
-  var rootBlock = this.getRootBlock();
-  if (rootBlock.isInFlyout) {
-    return;  // Don't move blocks around in a flyout.
-  }
-  // Loop through every connection on this block.
-  var myConnections = this.getConnections_(false);
-  for (var i = 0, connection; connection = myConnections[i]; i++) {
-    // Spider down from this block bumping all sub-blocks.
-    if (connection.isConnected() && connection.isSuperior()) {
-      connection.targetBlock().bumpNeighbours_();
-    }
-
-    var neighbours = connection.neighbours_(Blockly.SNAP_RADIUS);
-    for (var j = 0, otherConnection; otherConnection = neighbours[j]; j++) {
-      // If both connections are connected, that's probably fine.  But if
-      // either one of them is unconnected, then there could be confusion.
-      if (!connection.isConnected() || !otherConnection.isConnected()) {
-        // Only bump blocks if they are from different tree structures.
-        if (otherConnection.getSourceBlock().getRootBlock() != rootBlock) {
-          // Always bump the inferior block.
-          if (connection.isSuperior()) {
-            otherConnection.bumpAwayFrom_(connection);
-          } else {
-            connection.bumpAwayFrom_(otherConnection);
-          }
-        }
-      }
-    }
-  }
+  console.warn('Not expected to reach this bumpNeighbours_ function. The ' +
+    'BlockSvg function for bumpNeighbours_ was expected to be called instead.');
 };
 
 /**
@@ -1032,16 +999,15 @@ Blockly.Block.prototype.setDisabled = function(disabled) {
  * @return {boolean} True if disabled.
  */
 Blockly.Block.prototype.getInheritedDisabled = function() {
-  var block = this;
-  while (true) {
-    block = block.getSurroundParent();
-    if (!block) {
-      // Ran off the top.
-      return false;
-    } else if (block.disabled) {
+  var ancestor = this.getSurroundParent();
+  while (ancestor) {
+    if (ancestor.disabled) {
       return true;
     }
+    ancestor = ancestor.getSurroundParent();
   }
+  // Ran off the top.
+  return false;
 };
 
 /**
@@ -1141,6 +1107,7 @@ Blockly.Block.prototype.appendDummyInput = function(opt_name) {
  * @param {!Object} json Structured data describing the block.
  */
 Blockly.Block.prototype.jsonInit = function(json) {
+
   // Validate inputs.
   goog.asserts.assert(json['output'] == undefined ||
       json['previousStatement'] == undefined,
@@ -1202,11 +1169,17 @@ Blockly.Block.prototype.jsonInit = function(json) {
       'strings. Found raw string in JSON for \'' + json['type'] + '\' block.');
     json['extensions'] = [json['extensions']];  // Correct and continue.
   }
+
+  // Add the mutator to the block
+  if (json['mutator'] !== undefined) {
+    Blockly.Extensions.apply(json['mutator'], this, true);
+  }
+
   if (Array.isArray(json['extensions'])) {
     var extensionNames = json['extensions'];
     for (var i = 0; i < extensionNames.length; ++i) {
       var extensionName = extensionNames[i];
-      Blockly.Extensions.apply(extensionName, this);
+      Blockly.Extensions.apply(extensionName, this, false);
     }
   }
   if (json['outputShape'] !== undefined) {
@@ -1415,15 +1388,14 @@ Blockly.Block.newFieldImageFromJson_ = function(options) {
   var height =
     Number(Blockly.utils.replaceMessageReferences(options['height']));
   var alt = Blockly.utils.replaceMessageReferences(options['alt']);
-  var flip_rtl = Blockly.utils.replaceMessageReferences(options['flip_rtl']);
-  return new Blockly.FieldImage(src, width, height, alt, flip_rtl);
+  return new Blockly.FieldImage(src, width, height, alt);
 };
 
 /**
  * Helper function to construct a FieldLabel from a JSON arg object,
  * dereferencing any string table references.
  * @param {!Object} options A JSON object with options (text, and class).
- * @returns {!Blockly.FieldImage} The new image.
+ * @returns {!Blockly.FieldLabel} The new label.
  * @private
  */
 Blockly.Block.newFieldLabelFromJson_ = function(options) {
@@ -1436,7 +1408,7 @@ Blockly.Block.newFieldLabelFromJson_ = function(options) {
  * dereferencing any string table references.
  * @param {!Object} options A JSON object with options (text, class, and
  *                          spellcheck).
- * @returns {!Blockly.FieldImage} The new image.
+ * @returns {!Blockly.FieldTextInput} The new text input.
  * @private
  */
 Blockly.Block.newFieldTextInputFromJson_ = function(options) {
@@ -1452,7 +1424,7 @@ Blockly.Block.newFieldTextInputFromJson_ = function(options) {
  * Helper function to construct a FieldVariable from a JSON arg object,
  * dereferencing any string table references.
  * @param {!Object} options A JSON object with options (variable).
- * @returns {!Blockly.FieldImage} The new image.
+ * @returns {!Blockly.FieldVariable} The variable field.
  * @private
  */
 Blockly.Block.newFieldVariableFromJson_ = function(options) {
@@ -1695,7 +1667,7 @@ Blockly.Block.prototype.setMutator = function(/* mutator */) {
 
 /**
  * Return the coordinates of the top-left corner of this block relative to the
- * drawing surface's origin (0,0).
+ * drawing surface's origin (0,0), in workspace units.
  * @return {!goog.math.Coordinate} Object with .x and .y properties.
  */
 Blockly.Block.prototype.getRelativeToSurfaceXY = function() {
@@ -1704,8 +1676,8 @@ Blockly.Block.prototype.getRelativeToSurfaceXY = function() {
 
 /**
  * Move a block by a relative offset.
- * @param {number} dx Horizontal offset.
- * @param {number} dy Vertical offset.
+ * @param {number} dx Horizontal offset, in workspace units.
+ * @param {number} dy Vertical offset, in workspace units.
  */
 Blockly.Block.prototype.moveBy = function(dx, dy) {
   goog.asserts.assert(!this.parentBlock_, 'Block has parent.');

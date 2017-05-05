@@ -61,6 +61,29 @@ function test_flatWorkspace() {
   }
 }
 
+function test_maxBlocksWorkspace() {
+  var workspace = new Blockly.Workspace();
+  var blockA = workspace.newBlock('');
+  var blockB = workspace.newBlock('');
+  try {
+    assertEquals('Infinite capacity.', Infinity, workspace.remainingCapacity());
+    workspace.options.maxBlocks = 3;
+    assertEquals('Three capacity.', 1, workspace.remainingCapacity());
+    workspace.options.maxBlocks = 2;
+    assertEquals('Two capacity.', 0, workspace.remainingCapacity());
+    workspace.options.maxBlocks = 1;
+    assertEquals('One capacity.', -1, workspace.remainingCapacity());
+    workspace.options.maxBlocks = 0;
+    assertEquals('Zero capacity.', -2, workspace.remainingCapacity());
+    workspace.clear();
+    assertEquals('Cleared capacity.', 0, workspace.remainingCapacity());
+  } finally {
+    blockB.dispose();
+    blockA.dispose();
+    workspace.dispose();
+  }
+}
+
 function test_getWorkspaceById() {
   var workspaceA = new Blockly.Workspace();
   var workspaceB = new Blockly.Workspace();

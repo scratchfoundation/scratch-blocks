@@ -56,7 +56,7 @@ goog.require('goog.userAgent');
  * @param {!Blockly.Options} options Dictionary of options.
  * @param {Blockly.BlockDragSurfaceSvg=} opt_blockDragSurface Drag surface for
  *     blocks.
- * @param {Blockly.workspaceDragSurfaceSvg=} opt_wsDragSurface Drag surface for
+ * @param {Blockly.WorkspaceDragSurfaceSvg=} opt_wsDragSurface Drag surface for
  *     the workspace.
  * @extends {Blockly.Workspace}
  * @constructor
@@ -69,6 +69,17 @@ Blockly.WorkspaceSvg = function(options, opt_blockDragSurface, opt_wsDragSurface
       options.setMetrics || Blockly.WorkspaceSvg.setTopLevelWorkspaceMetrics_;
 
   Blockly.ConnectionDB.init(this);
+  if (opt_blockDragSurface) {
+    this.blockDragSurface_ = opt_blockDragSurface;
+  }
+
+  if (opt_wsDragSurface) {
+    this.workspaceDragSurface_ = opt_wsDragSurface;
+  }
+
+  this.useWorkspaceDragSurface_ =
+      this.workspaceDragSurface_ && Blockly.utils.is3dSupported();
+
   if (opt_blockDragSurface) {
     this.blockDragSurface_ = opt_blockDragSurface;
   }
@@ -553,8 +564,9 @@ Blockly.WorkspaceSvg.prototype.addFlyout_ = function(tagName) {
  * owned by either the toolbox or the workspace, depending on toolbox
  * configuration.  It will be null if there is no flyout.
  * @return {Blockly.Flyout} The flyout on this workspace.
+ * @package
  */
-Blockly.WorkspaceSvg.prototype.getFlyout = function() {
+Blockly.WorkspaceSvg.prototype.getFlyout_ = function() {
   if (this.flyout_) {
     return this.flyout_;
   }
@@ -724,6 +736,15 @@ Blockly.WorkspaceSvg.prototype.setupDragSurface = function() {
     return;
   }
 
+  // This can happen if the user starts a drag, mouses up outside of the
+  // document where the mouseup listener is registered (e.g. outside of an
+  // iframe) and then moves the mouse back in the workspace.  On mobile and ff,
+  // we get the mouseup outside the frame. On chrome and safari desktop we do
+  // not.
+  if (this.isDragSurfaceActive_) {
+    return;
+  }
+
   this.isDragSurfaceActive_ = true;
 
   // Figure out where we want to put the canvas back.  The order
@@ -762,8 +783,8 @@ Blockly.WorkspaceSvg.prototype.setVisible = function(isVisible) {
 
   // Tell the flyout whether its container is visible so it can
   // tell when to hide itself.
-  if (this.getFlyout()) {
-    this.getFlyout().setContainerVisible(isVisible);
+  if (this.getFlyout_()) {
+    this.getFlyout_().setContainerVisible(isVisible);
   }
 
   this.getParentSvg().style.display = isVisible ? 'block' : 'none';
@@ -883,7 +904,7 @@ Blockly.WorkspaceSvg.prototype.reportValue = function(id, value) {
   var contentDiv = Blockly.DropDownDiv.getContentDiv();
   var valueReportBox = goog.dom.createElement('div');
   valueReportBox.setAttribute('class', 'valueReportBox');
-  valueReportBox.innerHTML = Blockly.encodeEntities(value);
+  valueReportBox.innerHTML = Blockly.utils.encodeEntities(value);
   contentDiv.appendChild(valueReportBox);
   Blockly.DropDownDiv.setColour(
     Blockly.Colours.valueReportBackground,
@@ -1493,6 +1514,39 @@ Blockly.WorkspaceSvg.prototype.markFocused = function() {
     this.options.parentWorkspace.markFocused();
   } else {
     Blockly.mainWorkspace = this;
+    // We call e.preventDefault in many event handlers which means we
+    // need to explicitly grab focus (e.g from a textarea) because
+    // the browser will not do it for us.  How to do this is browser dependant.
+    this.setBrowserFocus();
+  }
+};
+
+/**
+ * Set the workspace to have focus in the browser.
+ * @private
+ */
+Blockly.WorkspaceSvg.prototype.setBrowserFocus = function() {
+  // Blur whatever was focused since explcitly grabbing focus below does not
+  // work in Edge.
+  if (document.activeElement) {
+    document.activeElement.blur();
+  }
+  try {
+    // Focus the workspace SVG - this is for Chrome and Firefox.
+    this.getParentSvg().focus();
+  }  catch (e) {
+    // IE and Edge do not support focus on SVG elements. When that fails
+    // above, get the injectionDiv (the workspace's parent) and focus that
+    // instead.  This doesn't work in Chrome.
+    try {
+      // In IE11, use setActive (which is IE only) so the page doesn't scroll
+      // to the workspace gaining focus.
+      this.getParentSvg().parentNode.setActive();
+    } catch (e) {
+      // setActive support was discontinued in Edge so when that fails, call
+      // focus instead.
+      this.getParentSvg().parentNode.focus();
+    }
   }
 };
 

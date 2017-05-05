@@ -14,6 +14,10 @@ git rm blockly_compressed.js
 git rm blockly_uncompressed.js
 git rm blocks_compressed.js
 git rm -f tests/playground.html core/block_render_svg.js
+git rm .travis.yml
+git rm README.md
+git rm *_compressed.js
+git rm package.json
 
 # Turn on more powerful globbing
 shopt -s extglob

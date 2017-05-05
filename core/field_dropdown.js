@@ -101,6 +101,28 @@ Blockly.FieldDropdown.prototype.imageElement_ = null;
 Blockly.FieldDropdown.prototype.imageJson_ = null;
 
 /**
+ * Language-neutral currently selected string or image object.
+ * @type {string|!Object}
+ * @private
+ */
+Blockly.FieldDropdown.prototype.value_ = '';
+
+/**
+ * SVG image element if currently selected option is an image, or null.
+ * @type {SVGElement}
+ * @private
+ */
+Blockly.FieldDropdown.prototype.imageElement_ = null;
+
+/**
+ * Object with src, height, width, and alt attributes if currently selected
+ * option is an image, or null.
+ * @type {Object}
+ * @private
+ */
+Blockly.FieldDropdown.prototype.imageJson_ = null;
+
+/**
  * Install this dropdown on a block.
  */
 Blockly.FieldDropdown.prototype.init = function() {
@@ -442,6 +464,9 @@ Blockly.FieldDropdown.prototype.setText = function(text) {
     this.sourceBlock_.render();
     this.sourceBlock_.bumpNeighbours_();
   }
+  this.borderRect_.setAttribute('height', this.size_.height - 9);
+  this.borderRect_.setAttribute('width',
+      this.size_.width + Blockly.BlockSvg.SEP_SPACE_X);
 };
 
 /**
