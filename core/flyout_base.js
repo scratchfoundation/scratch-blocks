@@ -781,7 +781,6 @@ Blockly.Flyout.prototype.onMouseMoveBlock_ = function(e) {
     e.stopPropagation();
     return;
   }
-  Blockly.Css.setCursor(Blockly.Css.Cursor.CLOSED);
   var dx = e.clientX - Blockly.Flyout.startDownEvent_.clientX;
   var dy = e.clientY - Blockly.Flyout.startDownEvent_.clientY;
   var createBlock = this.determineDragIntention_(dx, dy);

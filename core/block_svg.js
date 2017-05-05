@@ -1157,7 +1157,6 @@ Blockly.BlockSvg.prototype.onMouseMove_ = function(e) {
     // Still dragging within the sticky DRAG_RADIUS.
     var dr = goog.math.Coordinate.distance(oldXY, newXY) * this.workspace.scale;
     if (dr > Blockly.DRAG_RADIUS) {
-      Blockly.Css.setCursor(Blockly.Css.Cursor.CLOSED);
       // Switch to unrestricted dragging.
       Blockly.dragMode_ = Blockly.DRAG_FREE;
       Blockly.longStop_();

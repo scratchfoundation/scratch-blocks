@@ -198,11 +198,7 @@ Blockly.Css.CONTENT = [
     'right: 0;',
     'bottom: 0;',
     'overflow: visible !important;',
-<<<<<<< HEAD
     'z-index: 50;', /* Display above the toolbox */
-=======
-    'z-index: 50;', /* Display below toolbox, but above everything else. */
->>>>>>> 507c13ed33f178816c9cab4ce644786aed202094
   '}',
 
   '.blocklyTooltipDiv {',
