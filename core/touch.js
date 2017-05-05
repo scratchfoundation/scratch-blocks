@@ -112,8 +112,30 @@ Blockly.longStop_ = function() {
  * @param {!Event} e Mouse up event.
  * @private
  */
-Blockly.onMouseUp_ = function(/* e */) {
+Blockly.onMouseUp_ = function(e) {
   var workspace = Blockly.getMainWorkspace();
+  if (workspace.dragMode_ == Blockly.DRAG_BEGIN ||
+      !(workspace.scrollbar) && workspace.dragMode_ == Blockly.DRAG_NONE) {
+    // Workspace is not scrollable.
+    // If the mouse moved too far, don't broadcast a click on mouse up.
+    if (workspace.dragMode_ == Blockly.DRAG_NONE) {
+      var dx = e.clientX - workspace.startDragMouseX;
+      var dy = e.clientY - workspace.startDragMouseY;
+      if (Math.sqrt(dx * dx + dy * dy) > Blockly.DRAG_RADIUS) {
+        return;
+      }
+    }
+    if (Blockly.selected && !Blockly.selected.isMovable()) {
+      Blockly.Events.fire(new Blockly.Events.Ui(Blockly.selected,
+          'click', undefined, undefined));
+      // Scratch-specific: also fire a "stack click" event for this stack.
+      // This is used to toggle the stack when any block in the stack is clicked.
+      var rootBlock = Blockly.selected.workspace.getBlockById(
+          Blockly.selected.id).getRootBlock();
+      Blockly.Events.fire(
+        new Blockly.Events.Ui(rootBlock, 'stackclick', undefined, undefined));
+    }
+  }
   if (workspace.dragMode_ == Blockly.DRAG_NONE) {
     return;
   }

@@ -1076,6 +1076,8 @@ Blockly.WorkspaceSvg.prototype.onMouseDown_ = function(e) {
         Blockly.onMouseMove_));
   } else {
     // It was a click, but the workspace isn't draggable.
+    this.startDragMouseX = e.clientX;
+    this.startDragMouseY = e.clientY;
     Blockly.Touch.clearTouchIdentifier();
   }
   // This event has been handled.  No need to bubble up to the document.
