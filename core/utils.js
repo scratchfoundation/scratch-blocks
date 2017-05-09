@@ -807,6 +807,7 @@ Blockly.utils.wrapToText_ = function(words, wordBreaks) {
 
 /**
  * Measure some text using a canvas in-memory.
+ * Does not exist in Blockly, but needed in scratch-blocks
  * @param {string} fontSize E.g., '10pt'
  * @param {string} fontFamily E.g., 'Arial'
  * @param {string} fontWeight E.g., '600'
@@ -823,6 +824,7 @@ Blockly.utils.measureText = function(fontSize, fontFamily, fontWeight, text) {
 /**
  * Encode a string's HTML entities.
  * E.g., <a> -> &lt;a&gt;
+ * Does not exist in Blockly, but needed in scratch-blocks
  * @param {string} rawStr Unencoded raw string to encode.
  * @return {string} String with HTML entities encoded.
  */
