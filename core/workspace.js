@@ -355,6 +355,7 @@ Blockly.Workspace.prototype.deleteVariable = function(name) {
 /**
  * Deletes a variable and all of its uses from this workspace without asking the
  * user for confirmation.
+ * @param {string} name The name of the variable to delete
  * @private
  */
 Blockly.Workspace.prototype.deleteVariableInternal_ = function(name) {
