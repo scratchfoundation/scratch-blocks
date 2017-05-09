@@ -672,7 +672,7 @@ Blockly.Css.CONTENT = [
     'overflow-y: auto;',
     'position: absolute;',
     'font-family: "Helvetica Neue", Helvetica, sans-serif;',
-    'z-index: 70;', /* so blocks go under toolbox when dragging */
+    'z-index: 40;', /* so blocks go over toolbox when dragging */
   '}',
 
   '.blocklyTreeRoot {',
