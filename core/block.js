@@ -54,8 +54,8 @@ goog.require('goog.string');
  * @constructor
  */
 Blockly.Block = function(workspace, prototypeName, opt_id) {
-  var flyoutWorkspace = workspace && workspace.getFlyout && workspace.getFlyout() ?
-     workspace.getFlyout().getWorkspace() : null;
+  var flyoutWorkspace = workspace && workspace.getFlyout_ && workspace.getFlyout_() ?
+     workspace.getFlyout_().getWorkspace() : null;
   /** @type {string} */
   this.id = (opt_id && !workspace.getBlockById(opt_id) &&
       (!flyoutWorkspace || !flyoutWorkspace.getBlockById(opt_id))) ?
