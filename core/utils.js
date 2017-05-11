@@ -38,6 +38,23 @@ goog.require('goog.events.BrowserFeature');
 goog.require('goog.math.Coordinate');
 goog.require('goog.userAgent');
 
+/**
+ * Remove an attribute from a element even if it's in IE 10.
+ * Similar to Element.removeAttribute() but it works on SVG elements in IE 10.
+ * Sets the attribute to null in IE 10, which treats removeAttribute as a no-op
+ * if it's called on an SVG element.
+ * @param {!Element} element DOM element to remove attribute from.
+ * @param {string} attributeName Name of attribute to remove.
+ */
+Blockly.utils.removeAttribute = function(element, attributeName) {
+  // goog.userAgent.isVersion is deprecated, but the replacement is
+  // goog.userAgent.isVersionOrHigher.
+  if (goog.userAgent.IE && goog.userAgent.isVersion('10.0')) {
+    element.setAttribute(attributeName, null);
+  } else {
+    element.removeAttribute(attributeName);
+  }
+};
 
 /**
  * Cached value for whether 3D is supported
@@ -87,7 +104,7 @@ Blockly.utils.removeClass = function(element, className) {
   if (classList.length) {
     element.setAttribute('class', classList.join(' '));
   } else {
-    element.removeAttribute('class');
+    Blockly.utils.removeAttribute(element, 'class');
   }
   return true;
 };
@@ -540,10 +557,18 @@ Blockly.utils.tokenizeInterpolation_ = function(message, parseInterpolationToken
               keyUpper.substring(4) : null;
           if (bklyKey && bklyKey in Blockly.Msg) {
             var rawValue = Blockly.Msg[bklyKey];
-            var subTokens = goog.isString(rawValue) ?
-                Blockly.utils.tokenizeInterpolation(rawValue) :
-                parseInterpolationTokens ? String(rawValue) : rawValue;
-            tokens = tokens.concat(subTokens);
+            if (goog.isString(rawValue)) {
+              // Attempt to dereference substrings, too, appending to the end.
+              Array.prototype.push.apply(tokens,
+                Blockly.utils.tokenizeInterpolation(rawValue));
+            } else if (parseInterpolationTokens) {
+              // When parsing interpolation tokens, numbers are special
+              // placeholders (%1, %2, etc). Make sure all other values are
+              // strings.
+              tokens.push(String(rawValue));
+            } else {
+              tokens.push(rawValue);
+            }
           } else {
             // No entry found in the string table. Pass reference as string.
             tokens.push('%{' + rawKey + '}');
@@ -782,13 +807,14 @@ Blockly.utils.wrapToText_ = function(words, wordBreaks) {
 
 /**
  * Measure some text using a canvas in-memory.
+ * Does not exist in Blockly, but needed in scratch-blocks
  * @param {string} fontSize E.g., '10pt'
  * @param {string} fontFamily E.g., 'Arial'
  * @param {string} fontWeight E.g., '600'
  * @param {string} text The actual text to measure
  * @return {number} Width of the text in px.
  */
-Blockly.measureText = function(fontSize, fontFamily, fontWeight, text) {
+Blockly.utils.measureText = function(fontSize, fontFamily, fontWeight, text) {
   var canvas = document.createElement('canvas');
   var context = canvas.getContext('2d');
   context.font = fontWeight + ' ' + fontSize + ' ' + fontFamily;
@@ -798,10 +824,11 @@ Blockly.measureText = function(fontSize, fontFamily, fontWeight, text) {
 /**
  * Encode a string's HTML entities.
  * E.g., <a> -> &lt;a&gt;
+ * Does not exist in Blockly, but needed in scratch-blocks
  * @param {string} rawStr Unencoded raw string to encode.
  * @return {string} String with HTML entities encoded.
  */
-Blockly.encodeEntities = function(rawStr) {
+Blockly.utils.encodeEntities = function(rawStr) {
   // CC-BY-SA https://stackoverflow.com/questions/18749591/encode-html-entities-in-javascript
   return rawStr.replace(/[\u00A0-\u9999<>\&]/gim, function(i) {
     return '&#' + i.charCodeAt(0) + ';';

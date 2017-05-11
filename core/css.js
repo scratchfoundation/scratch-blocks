@@ -110,52 +110,17 @@ Blockly.Css.inject = function(hasCss, pathToMedia) {
   var cssTextNode = document.createTextNode(text);
   cssNode.appendChild(cssTextNode);
   Blockly.Css.styleSheet_ = cssNode.sheet;
-  Blockly.Css.setCursor(Blockly.Css.Cursor.OPEN);
 };
 
 /**
  * Set the cursor to be displayed when over something draggable.
+ * See See https://github.com/google/blockly/issues/981 for context.
  * @param {Blockly.Css.Cursor} cursor Enum.
+ * @deprecated April 2017.
  */
 Blockly.Css.setCursor = function(cursor) {
-  if (goog.userAgent.MOBILE || goog.userAgent.ANDROID || goog.userAgent.IPAD) {
-    // Don't try to switch the mouse cursor on a mobile device.
-    // This is an optimization - since we almost never have cursors on mobile anyway.
-    return;
-  }
-  if (Blockly.Css.currentCursor_ == cursor) {
-    return;
-  }
-  Blockly.Css.currentCursor_ = cursor;
-  var url;
-  if (cursor == Blockly.Css.Cursor.OPEN) {
-    // Scratch-specific: use CSS default cursor instead of "open hand."
-    url = 'default';
-  } else {
-    url = 'url(' + Blockly.Css.mediaPath_ + '/' + cursor + '.cur), auto';
-  }
-  // There are potentially hundreds of draggable objects.  Changing their style
-  // properties individually is too slow, so change the CSS rule instead.
-  var rule = '.blocklyDraggable {\n  cursor: ' + url + ';\n}\n';
-  Blockly.Css.styleSheet_.deleteRule(0);
-  Blockly.Css.styleSheet_.insertRule(rule, 0);
-  // There is probably only one toolbox, so just change its style property.
-  var toolboxen = document.getElementsByClassName('blocklyToolboxDiv');
-  for (var i = 0, toolbox; toolbox = toolboxen[i]; i++) {
-    if (cursor == Blockly.Css.Cursor.DELETE) {
-      toolbox.style.cursor = url;
-    } else {
-      toolbox.style.cursor = '';
-    }
-  }
-  // Set cursor on the whole document, so that rapid movements
-  // don't result in cursor changing to an arrow momentarily.
-  var html = document.body.parentNode;
-  if (cursor == Blockly.Css.Cursor.OPEN) {
-    html.style.cursor = '';
-  } else {
-    html.style.cursor = url;
-  }
+  console.warn('Deprecated call to Blockly.Css.setCursor.' +
+    'See https://github.com/google/blockly/issues/981 for context');
 };
 
 /**
@@ -397,6 +362,59 @@ Blockly.Css.CONTENT = [
     // 'stroke-width: 3px;',
   '}',
 
+  '.blocklySelected>.blocklyPathLight {',
+    'display: none;',
+  '}',
+
+  '.blocklyDraggable {',
+    /* backup for browsers (e.g. IE11) that don't support grab */
+    'cursor: url("<<<PATH>>>/handopen.cur"), auto;',
+    'cursor: grab;',
+    'cursor: -webkit-grab;',
+    'cursor: -moz-grab;',
+  '}',
+
+   '.blocklyDragging {',
+    /* backup for browsers (e.g. IE11) that don't support grabbing */
+    'cursor: url("<<<PATH>>>/handclosed.cur"), auto;',
+    'cursor: grabbing;',
+    'cursor: -webkit-grabbing;',
+    'cursor: -moz-grabbing;',
+  '}',
+  /* Changes cursor on mouse down. Not effective in Firefox because of
+    https://bugzilla.mozilla.org/show_bug.cgi?id=771241 */
+  '.blocklyDraggable:active {',
+    /* backup for browsers (e.g. IE11) that don't support grabbing */
+    'cursor: url("<<<PATH>>>/handclosed.cur"), auto;',
+    'cursor: grabbing;',
+    'cursor: -webkit-grabbing;',
+    'cursor: -moz-grabbing;',
+  '}',
+  /* Change the cursor on the whole drag surface in case the mouse gets
+     ahead of block during a drag. This way the cursor is still a closed hand.
+   */
+  '.blocklyBlockDragSurface .blocklyDraggable {',
+    /* backup for browsers (e.g. IE11) that don't support grabbing */
+    'cursor: url("<<<PATH>>>/handclosed.cur"), auto;',
+    'cursor: grabbing;',
+    'cursor: -webkit-grabbing;',
+    'cursor: -moz-grabbing;',
+  '}',
+
+  '.blocklyDragging.blocklyDraggingDelete {',
+    'cursor: url("<<<PATH>>>/handdelete.cur"), auto;',
+  '}',
+
+  '.blocklyToolboxDelete {',
+    'cursor: url("<<<PATH>>>/handdelete.cur"), auto;',
+  '}',
+
+  '.blocklyDragging>.blocklyPath,',
+  '.blocklyDragging>.blocklyPathLight {',
+    'fill-opacity: .8;',
+    'stroke-opacity: .8;',
+  '}',
+
   '.blocklyDragging>.blocklyPath {',
   '}',
 
@@ -441,6 +459,10 @@ Blockly.Css.CONTENT = [
     'z-index: 20;',
   '}',
 
+  '.blocklyFlyout {',
+    'position: absolute;',
+    'z-index: 20;',
+  '}',
   '.blocklyFlyoutButton {',
     'fill: none;',
   '}',
@@ -621,6 +643,7 @@ Blockly.Css.CONTENT = [
     'stroke: #f00;',
     'stroke-width: 2;',
     'stroke-linecap: round;',
+    'pointer-events: none;',
   '}',
 
   '.blocklyContextMenu {',

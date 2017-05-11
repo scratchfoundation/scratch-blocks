@@ -27,7 +27,7 @@
 /**
  * The top level namespace used to access the Blockly library.
  * @namespace Blockly
- */
+ **/
 goog.provide('Blockly');
 
 goog.require('Blockly.BlockSvg.render');
@@ -420,6 +420,10 @@ Blockly.defineBlocksWithJsonArray = function(jsonArray) {
       console.warn('Block definition #' + i +
         ' in JSON array is missing a type attribute. Skipping.');
     } else {
+      if (Blockly.Blocks[typename]) {
+        console.warn('Block definition #' + i +
+          ' in JSON array overwrites prior definition of "' + typename + '".');
+      }
       Blockly.Blocks[typename] = {
         init: Blockly.jsonInitFactory_(elem)
       };

@@ -182,6 +182,13 @@ Blockly.Field.prototype.init = function() {
 };
 
 /**
+ * Initializes the model of the field after it has been installed on a block.
+ * No-op by default.
+ */
+Blockly.Field.prototype.initModel = function() {
+};
+
+/**
  * Dispose of all DOM objects belonging to this editable field.
  */
 Blockly.Field.prototype.dispose = function() {
@@ -522,31 +529,6 @@ Blockly.Field.prototype.getDisplayText_ = function() {
 };
 
 /**
- * Get the text from this field as displayed on screen.  May differ from getText
- * due to ellipsis, and other formatting.
- * @return {string} Currently displayed text.
- * @private
- */
-Blockly.Field.prototype.getDisplayText_ = function() {
-  var text = this.text_;
-  if (!text) {
-    // Prevent the field from disappearing if empty.
-    return Blockly.Field.NBSP;
-  }
-  if (text.length > this.maxDisplayLength) {
-    // Truncate displayed string and add an ellipsis ('...').
-    text = text.substring(0, this.maxDisplayLength - 2) + '\u2026';
-  }
-  // Replace whitespace with non-breaking spaces so the text doesn't collapse.
-  text = text.replace(/\s/g, Blockly.Field.NBSP);
-  if (this.sourceBlock_.RTL) {
-    // The SVG is LTR, force text to be RTL.
-    text += '\u200F';
-  }
-  return text;
-};
-
-/**
  * Get the text from this field.
  * @return {string} Current text.
  */
@@ -571,6 +553,7 @@ Blockly.Field.prototype.setText = function(newText) {
   this.text_ = newText;
   // Set width to 0 to force a rerender of this field.
   this.size_.width = 0;
+
   if (this.sourceBlock_ && this.sourceBlock_.rendered) {
     this.sourceBlock_.render();
     this.sourceBlock_.bumpNeighbours_();
