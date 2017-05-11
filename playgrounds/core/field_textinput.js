@@ -387,7 +387,7 @@ Blockly.FieldTextInput.prototype.resizeEditor_ = function() {
   var width;
   if (Blockly.BlockSvg.FIELD_TEXTINPUT_EXPAND_PAST_TRUNCATION) {
     // Resize the box based on the measured width of the text, pre-truncation
-    var textWidth = Blockly.measureText(
+    var textWidth = Blockly.utils.measureText(
       Blockly.FieldTextInput.htmlInput_.style.fontSize,
       Blockly.FieldTextInput.htmlInput_.style.fontFamily,
       Blockly.FieldTextInput.htmlInput_.style.fontWeight,
