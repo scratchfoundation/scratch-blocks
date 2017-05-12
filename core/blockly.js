@@ -262,13 +262,6 @@ Blockly.onKeyDown_ = function(e) {
       Blockly.mainWorkspace.undo(e.shiftKey);
     }
   }
-  if (deleteBlock) {
-    // Common code for delete and cut.
-    Blockly.Events.setGroup(true);
-    Blockly.hideChaff();
-    Blockly.selected.dispose(/* heal */ true, true);
-    Blockly.Events.setGroup(false);
-  }
 };
 
 /**
