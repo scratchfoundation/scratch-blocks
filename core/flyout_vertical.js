@@ -538,35 +538,23 @@ Blockly.VerticalFlyout.prototype.createCheckbox_ = function(block, cursorX,
  */
 Blockly.VerticalFlyout.prototype.checkboxClicked_ = function(checkboxObj) {
   return function(e) {
-    checkboxObj.clicked = !checkboxObj.clicked;
+    var oldValue = checkboxObj.clicked;
+    var newValue = !oldValue;
+    checkboxObj.clicked = newValue;
+
     if (checkboxObj.clicked) {
       Blockly.utils.addClass((checkboxObj.svgRoot), 'checked');
     } else {
       Blockly.utils.removeClass((checkboxObj.svgRoot), 'checked');
     }
+
+    Blockly.Events.fire(new Blockly.Events.Change(
+        checkboxObj.block, 'checkbox', null, oldValue, newValue));
+
     // This event has been handled.  No need to bubble up to the document.
     e.stopPropagation();
     e.preventDefault();
   };
-};
-
-/**
- * Explicitly set the clicked state of the checkbox for the given block.
- * @param {string} blockId ID of block whose checkbox should be changed.
- * @param {boolean} clicked True if the box should be marked clicked.
- */
-Blockly.VerticalFlyout.prototype.setCheckboxState = function(blockId, clicked) {
-  var block = this.workspace_.getBlockById(blockId);
-  if (!block) {
-    throw 'No block found in the flyout for id ' + blockId;
-  }
-  var checkboxObj = block.flyoutCheckbox;
-  checkboxObj.clicked = clicked;
-  if (checkboxObj.clicked) {
-    Blockly.addClass_((checkboxObj.svgRoot), 'checked');
-  } else {
-    Blockly.removeClass_((checkboxObj.svgRoot), 'checked');
-  }
 };
 
 /**
