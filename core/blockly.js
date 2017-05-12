@@ -223,9 +223,6 @@ Blockly.onKeyDown_ = function(e) {
     if (Blockly.mainWorkspace.isDragging()) {
       return;
     }
-    if (Blockly.selected && Blockly.selected.isDeletable()) {
-      deleteBlock = true;
-    }
   } else if (e.altKey || e.ctrlKey || e.metaKey) {
     // Don't use meta keys during drags.
     if (Blockly.mainWorkspace.isDragging()) {
@@ -241,12 +238,7 @@ Blockly.onKeyDown_ = function(e) {
         // 'x' for cut.
         Blockly.copy_(Blockly.selected);
         Blockly.hideChaff();
-        var heal = Blockly.dragMode_ != Blockly.DRAG_FREE;
-        Blockly.selected.dispose(heal, true);
-        if (Blockly.highlightedConnection_) {
-          Blockly.highlightedConnection_.unhighlight();
-          Blockly.highlightedConnection_ = null;
-        }
+        Blockly.selected.dispose(/* heal */ true, true);
       }
     }
     if (e.keyCode == 86) {

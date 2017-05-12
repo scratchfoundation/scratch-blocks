@@ -70,38 +70,6 @@ Blockly.WorkspaceSvg = function(options, opt_blockDragSurface, opt_wsDragSurface
       options.setMetrics || Blockly.WorkspaceSvg.setTopLevelWorkspaceMetrics_;
 
   Blockly.ConnectionDB.init(this);
-  if (opt_blockDragSurface) {
-    this.blockDragSurface_ = opt_blockDragSurface;
-  }
-
-  if (opt_wsDragSurface) {
-    this.workspaceDragSurface_ = opt_wsDragSurface;
-  }
-
-  this.useWorkspaceDragSurface_ =
-      this.workspaceDragSurface_ && Blockly.utils.is3dSupported();
-
-  if (opt_blockDragSurface) {
-    this.blockDragSurface_ = opt_blockDragSurface;
-  }
-
-  if (opt_wsDragSurface) {
-    this.workspaceDragSurface_ = opt_wsDragSurface;
-  }
-
-  this.useWorkspaceDragSurface_ =
-      this.workspaceDragSurface_ && Blockly.utils.is3dSupported();
-
-  if (opt_blockDragSurface) {
-    this.blockDragSurface_ = opt_blockDragSurface;
-  }
-
-  if (opt_wsDragSurface) {
-    this.workspaceDragSurface_ = opt_wsDragSurface;
-  }
-
-  this.useWorkspaceDragSurface_ =
-      this.workspaceDragSurface_ && Blockly.utils.is3dSupported();
 
   if (opt_blockDragSurface) {
     this.blockDragSurface_ = opt_blockDragSurface;
@@ -1115,14 +1083,6 @@ Blockly.WorkspaceSvg.prototype.moveDrag = function(e) {
  */
 Blockly.WorkspaceSvg.prototype.isDragging = function() {
   return this.currentGesture_ && this.currentGesture_.isDragging();
-};
-
-/**
- * Is this workspace draggable and scrollable?
- * @return {boolean} True if this workspace may be dragged.
- */
-Blockly.WorkspaceSvg.prototype.isDraggable = function() {
-  return !!this.scrollbar;
 };
 
 /**
