@@ -28,6 +28,8 @@
 
 goog.provide('Blockly.Field');
 
+goog.require('Blockly.Gesture');
+
 goog.require('goog.asserts');
 goog.require('goog.dom');
 goog.require('goog.math.Size');
@@ -173,12 +175,12 @@ Blockly.Field.prototype.init = function() {
 
   this.updateEditable();
   this.sourceBlock_.getSvgRoot().appendChild(this.fieldGroup_);
-  this.mouseUpWrapper_ =
-      Blockly.bindEventWithChecks_(this.getClickTarget_(), 'mouseup', this,
-      this.onMouseUp_);
   // Force a render.
   this.render_();
   this.size_.width = 0;
+  this.mouseDownWrapper_ =
+      Blockly.bindEventWithChecks_(this.fieldGroup_, 'mousedown', this,
+      this.onMouseDown_);
 };
 
 /**
@@ -192,9 +194,9 @@ Blockly.Field.prototype.initModel = function() {
  * Dispose of all DOM objects belonging to this editable field.
  */
 Blockly.Field.prototype.dispose = function() {
-  if (this.mouseUpWrapper_) {
-    Blockly.unbindEvent_(this.mouseUpWrapper_);
-    this.mouseUpWrapper_ = null;
+  if (this.mouseDownWrapper_) {
+    Blockly.unbindEvent_(this.mouseDownWrapper_);
+    this.mouseDownWrapper_ = null;
   }
   this.sourceBlock_ = null;
   goog.dom.removeNode(this.fieldGroup_);
@@ -529,6 +531,31 @@ Blockly.Field.prototype.getDisplayText_ = function() {
 };
 
 /**
+ * Get the text from this field as displayed on screen.  May differ from getText
+ * due to ellipsis, and other formatting.
+ * @return {string} Currently displayed text.
+ * @private
+ */
+Blockly.Field.prototype.getDisplayText_ = function() {
+  var text = this.text_;
+  if (!text) {
+    // Prevent the field from disappearing if empty.
+    return Blockly.Field.NBSP;
+  }
+  if (text.length > this.maxDisplayLength) {
+    // Truncate displayed string and add an ellipsis ('...').
+    text = text.substring(0, this.maxDisplayLength - 2) + '\u2026';
+  }
+  // Replace whitespace with non-breaking spaces so the text doesn't collapse.
+  text = text.replace(/\s/g, Blockly.Field.NBSP);
+  if (this.sourceBlock_.RTL) {
+    // The SVG is LTR, force text to be RTL.
+    text += '\u200F';
+  }
+  return text;
+};
+
+/**
  * Get the text from this field.
  * @return {string} Current text.
  */
@@ -628,31 +655,20 @@ Blockly.Field.prototype.setValue = function(newValue) {
 };
 
 /**
- * Handle a mouse up event on an editable field.
- * @param {!Event} e Mouse up event.
+ * Handle a mouse down event on a field.
+ * @param {!Event} e Mouse down event.
  * @private
  */
-Blockly.Field.prototype.onMouseUp_ = function(e) {
-  if ((goog.userAgent.IPHONE || goog.userAgent.IPAD) &&
-      !goog.userAgent.isVersionOrHigher('537.51.2') &&
-      e.layerX !== 0 && e.layerY !== 0) {
-    // Old iOS spawns a bogus event on the next touch after a 'prompt()' edit.
-    // Unlike the real events, these have a layerX and layerY set.
+Blockly.Field.prototype.onMouseDown_ = function(e) {
+  if (!this.sourceBlock_ || !this.sourceBlock_.workspace) {
     return;
-  } else if (Blockly.utils.isRightButton(e)) {
-    // Right-click.
-    return;
-  } else if (this.sourceBlock_.workspace.isDragging()) {
-    // Drag operation is concluding.  Don't open the editor.
-    return;
-  } else if (this.sourceBlock_.isEditable()) {
-    // Non-abstract sub-classes must define a showEditor_ method.
-    this.showEditor_();
-    // The field is handling the touch, but we also want the blockSvg onMouseUp
-    // handler to fire, so we will leave the touch identifier as it is.
-    // The next onMouseUp is responsible for nulling it out.
+  }
+  var gesture = this.sourceBlock_.workspace.getGesture(e);
+  if (gesture) {
+    gesture.setStartField(this);
   }
 };
+
 
 /**
  * Change the tooltip text for this field.

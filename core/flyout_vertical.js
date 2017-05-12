@@ -447,7 +447,10 @@ Blockly.VerticalFlyout.prototype.layout_ = function(contents, gaps) {
       var buttonSvg = button.createDom();
       button.moveTo(cursorX, cursorY);
       button.show();
-      Blockly.bindEvent_(buttonSvg, 'mouseup', button, button.onMouseUp);
+      // Clicking on a flyout button or label is a lot like clicking on the
+      // flyout background.
+      this.listeners_.push(Blockly.bindEventWithChecks_(buttonSvg, 'mousedown',
+           this, this.onMouseDown_));
 
       this.buttons_.push(button);
       cursorY += button.height + gaps[i];
@@ -570,32 +573,17 @@ Blockly.VerticalFlyout.prototype.setCheckboxState = function(blockId, clicked) {
 };
 
 /**
- * Handle a mouse-move to vertically drag the flyout.
- * @param {!Event} e Mouse move event.
- * @private
- */
-Blockly.VerticalFlyout.prototype.onMouseMove_ = function(e) {
-  var metrics = this.getMetrics_();
-  if (metrics.contentHeight - metrics.viewHeight < 0) {
-    return;
-  }
-  var dy = e.clientY - this.startDragMouseY_;
-  this.startDragMouseY_ = e.clientY;
-  var y = -this.workspace_.scrollY - dy;
-  y = goog.math.clamp(y, 0, metrics.contentHeight - metrics.viewHeight);
-  this.scrollbar_.set(y);
-};
-
-/**
  * Determine if a drag delta is toward the workspace, based on the position
- * and orientation of the flyout. This is used in determineDragIntention_ to
- * determine if a new block should be created or if the flyout should scroll.
- * @param {number} dx X delta of the drag.
- * @param {number} dy Y delta of the drag.
+ * and orientation of the flyout. This to decide if a new block should be
+ * created or if the flyout should scroll.
+ * @param {!goog.math.Coordinate} currentDragDeltaXY How far the pointer has
+ *     moved from the position at mouse down, in pixel units.
  * @return {boolean} true if the drag is toward the workspace.
- * @private
+ * @package
  */
-Blockly.VerticalFlyout.prototype.isDragTowardWorkspace_ = function(dx, dy) {
+Blockly.VerticalFlyout.prototype.isDragTowardWorkspace = function(currentDragDeltaXY) {
+  var dx = currentDragDeltaXY.x;
+  var dy = currentDragDeltaXY.y;
   // Direction goes from -180 to 180, with 0 toward the right and 90 on top.
   var dragDirection = Math.atan2(dy, dx) / Math.PI * 180;
 

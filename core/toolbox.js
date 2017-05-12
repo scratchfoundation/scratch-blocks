@@ -258,6 +258,24 @@ Blockly.Toolbox.prototype.removeDeleteStyle = function() {
 };
 
 /**
+ * Adds styles on the toolbox indicating blocks will be deleted.
+ * @package
+ */
+Blockly.Toolbox.prototype.addDeleteStyle = function() {
+  Blockly.utils.addClass(/** @type {!Element} */ (this.HtmlDiv),
+                         'blocklyToolboxDelete');
+};
+
+/**
+ * Remove styles from the toolbox that indicate blocks will be deleted.
+ * @package
+ */
+Blockly.Toolbox.prototype.removeDeleteStyle = function() {
+  Blockly.utils.removeClass(/** @type {!Element} */ (this.HtmlDiv),
+                            'blocklyToolboxDelete');
+};
+
+/**
  * Return the deletion rectangle for this toolbox.
  * @return {goog.math.Rect} Rectangle in which to delete.
  */
