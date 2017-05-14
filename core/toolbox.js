@@ -427,6 +427,7 @@ Blockly.Toolbox.CategoryMenu.prototype.dispose = function() {
   for (var i = 0, category; category = this.categories_[i]; i++) {
     category.dispose();
   }
+  this.categories_ = [];
   if (this.table) {
     goog.dom.removeNode(this.table);
     this.table = null;
