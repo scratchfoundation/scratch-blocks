@@ -152,6 +152,7 @@ Blockly.Css.CONTENT = [
     'height: 100%;',
     'position: relative;',
     'overflow: hidden;', /* So blocks in drag surface disappear at edges */
+    'border: 1px solid #ddd;',
   '}',
 
   '.blocklyNonSelectable {',
@@ -457,6 +458,7 @@ Blockly.Css.CONTENT = [
   '.blocklyFlyout {',
     'position: absolute;',
     'z-index: 20;',
+    'border-right: 1px solid #ddd',
   '}',
 
   '.blocklyFlyout {',
@@ -559,11 +561,6 @@ Blockly.Css.CONTENT = [
     'text-align: center;',
     'color: $colour_text;',
     'font-weight: 500;',
-  '}',
-
-  '.blocklyMainBackground {',
-    'stroke-width: 1;',
-    'stroke: #c6c6c6;',  /* Equates to #ddd due to border being off-pixel. */
   '}',
 
   '.blocklyMutatorBackground {',
@@ -673,6 +670,9 @@ Blockly.Css.CONTENT = [
     'position: absolute;',
     'font-family: "Helvetica Neue", Helvetica, sans-serif;',
     'z-index: 40;', /* so blocks go over toolbox when dragging */
+    'box-sizing: content-box;',
+    'border-right: 1px solid #ddd;',
+    'border-bottom: 1px solid #ddd;',
   '}',
 
   '.blocklyTreeRoot {',
