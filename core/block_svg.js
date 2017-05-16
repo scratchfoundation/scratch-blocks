@@ -787,7 +787,7 @@ Blockly.BlockSvg.prototype.setDragging = function(adding) {
   }
   // Recurse through all blocks attached under this one.
   for (var i = 0; i < this.childBlocks_.length; i++) {
-    this.childBlocks_[i].setDragging_(adding);
+    this.childBlocks_[i].setDragging(adding);
   }
 };
 
@@ -960,6 +960,22 @@ Blockly.BlockSvg.disposeUiStep_ = function(clone, rtl, start, workspaceScale) {
     };
     setTimeout(closure, 10);
   }
+};
+
+/**
+ * Play some UI effects (sound, animation) when disconnecting a block.
+ * No-op in scratch-blocks, which has no disconnect animation.
+ * @private
+ */
+Blockly.BlockSvg.prototype.disconnectUiEffect = function() {
+};
+
+/**
+ * Stop the disconnect UI animation immediately.
+ * No-op in scratch-blocks, which has no disconnect animation.
+ * @private
+ */
+Blockly.BlockSvg.disconnectUiStop_ = function() {
 };
 
 /**

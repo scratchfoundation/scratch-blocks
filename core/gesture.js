@@ -407,7 +407,7 @@ Blockly.Gesture.prototype.doStart = function(e) {
   this.startWorkspace_.markFocused();
   this.mostRecentEvent_ = e;
 
-  // Hide chaff also hides the flyout, so don't do it if the click is in a flyout.
+  // Hide chaff also hides the flyout by default.
   Blockly.hideChaff(!!this.flyout_);
   Blockly.Tooltip.block();
 
@@ -606,7 +606,7 @@ Blockly.Gesture.prototype.doBlockClick_ = function() {
           new Blockly.Events.Ui(this.startBlock_, 'click', undefined, undefined));
       // Scratch-specific: also fire a "stack click" event for this stack.
       // This is used to toggle the stack when any block in the stack is clicked.
-      var rootBlock = this.workspace.getBlockById(this.id).getRootBlock();
+      var rootBlock = this.startBlock_.getRootBlock();
       Blockly.Events.fire(
         new Blockly.Events.Ui(rootBlock, 'stackclick', undefined, undefined));
     }

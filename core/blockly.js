@@ -111,14 +111,6 @@ Blockly.insertionMarker_ = null;
 Blockly.replacementMarker_ = null;
 
 /**
- * Connection that was bumped out of the way by an insertion marker, and may
- * need to be put back as the drag continues.
- * @type {Blockly.Connection}
- * @private
- */
-Blockly.bumpedConnection_ = null;
-
-/**
  * Contents of the local clipboard.
  * @type {Element}
  * @private

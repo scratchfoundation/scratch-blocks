@@ -270,10 +270,10 @@ Blockly.Flyout.prototype.init = function(targetWorkspace) {
   this.position();
 
   Array.prototype.push.apply(this.eventWrappers_,
-      Blockly.bindEvent_(this.svgGroup_, 'wheel', this, this.wheel_));
+      Blockly.bindEventWithChecks_(this.svgGroup_, 'wheel', this, this.wheel_));
   // Dragging the flyout up and down (or left and right).
   Array.prototype.push.apply(this.eventWrappers_,
-      Blockly.bindEvent_(this.svgGroup_, 'mousedown', this, this.onMouseDown_));
+      Blockly.bindEventWithChecks_(this.svgGroup_, 'mousedown', this, this.onMouseDown_));
 
   // A flyout connected to a workspace doesn't have its own current gesture.
   this.workspace_.getGesture =
@@ -619,8 +619,6 @@ Blockly.Flyout.prototype.createBlock = function(originalBlock) {
   }
   if (this.autoClose) {
     this.hide();
-  } else {
-    this.filterForCapacity_();
   }
   return newBlock;
 };

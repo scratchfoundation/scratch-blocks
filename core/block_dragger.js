@@ -26,7 +26,7 @@
 
 goog.provide('Blockly.BlockDragger');
 
-goog.require('Blockly.DraggedConnectionManager');
+goog.require('Blockly.InsertionMarkerManager');
 
 goog.require('goog.math.Coordinate');
 goog.require('goog.asserts');
@@ -56,10 +56,10 @@ Blockly.BlockDragger = function(block, workspace) {
 
   /**
    * Object that keeps track of connections on dragged blocks.
-   * @type {!Blockly.DraggedConnectionManager}
+   * @type {!Blockly.InsertionMarkerManager}
    * @private
    */
-  this.draggedConnectionManager_ = new Blockly.DraggedConnectionManager(
+  this.draggedConnectionManager_ = new Blockly.InsertionMarkerManager(
       this.draggingBlock_);
 
   /**
