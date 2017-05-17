@@ -87,30 +87,6 @@ Blockly.selected = null;
 Blockly.draggingConnections_ = [];
 
 /**
- * Connection on the insertion marker block that matches
- * Blockly.localConnection_ on the dragged block.
- * @type {Blockly.Connection}
- * @private
- */
-Blockly.insertionMarkerConnection_ = null;
-
-/**
- * Grayed-out block that indicates to the user what will happen if they release
- * a drag immediately.
- * @type {Blockly.Block}
- * @private
- */
-Blockly.insertionMarker_ = null;
-
-/**
- * The block that will be replaced if the drag is released immediately.  Should
- * be visually highlighted to indicate this to the user.
- * @type {Blockly.Block}
- * @private
- */
-Blockly.replacementMarker_ = null;
-
-/**
  * Contents of the local clipboard.
  * @type {Element}
  * @private

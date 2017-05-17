@@ -373,8 +373,7 @@ Blockly.Connection.prototype.isConnectionAllowed = function(candidate) {
           // If the other side of this connection is the active insertion marker
           // connection, we've obviously already decided that this is a good
           // connection.
-          if (candidate.targetConnection ==
-              Blockly.insertionMarkerConnection_) {
+          if (candidate.targetBlock().isInsertionMarker()) {
             return true;
           } else {
             return false;

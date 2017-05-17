@@ -102,15 +102,6 @@ Blockly.InsertionMarkerManager = function(block) {
   this.localConnection_ = null;
 
   /**
-   * The distance between this.closestConnection_ and this.localConnection_,
-   * in workspace units.
-   * Updated on every mouse move.
-   * @type {number}
-   * @private
-   */
-  this.radiusConnection_ = 0;
-
-  /**
    * Whether the block would be deleted if it were dropped immediately.
    * Updated on every mouse move.
    * @type {boolean}
@@ -133,7 +124,12 @@ Blockly.InsertionMarkerManager = function(block) {
    * @type {boolean}
    * @private
    */
-  this.highlightingBlock_ = true;
+  this.highlightingBlock_ = false;
+
+  /**
+   * TODO
+   */
+  this.highlightedBlock_ = null;
 
   this.insertionMarkerConnected_ = false;
 
@@ -187,7 +183,7 @@ Blockly.InsertionMarkerManager.prototype.applyConnections = function() {
   if (this.closestConnection_) {
     // Don't fire events for insertion markers.
     Blockly.Events.disable();
-    this.removeMarker_();
+    this.hidePreview_();
     Blockly.Events.enable();
     // Connect two blocks together.
     this.localConnection_.connect(this.closestConnection_);
@@ -216,7 +212,7 @@ Blockly.InsertionMarkerManager.prototype.update = function(dxy, deleteArea) {
   if (shouldUpdate) {
     // Don't fire events for insertion marker creation or movement.
     Blockly.Events.disable();
-    this.maybeRemoveMarker_(candidate);
+    this.maybeHidePreview_(candidate);
 
    // Prefer connecting over dropping into the trash can, but prefer dragging to
    // the toolbox over connecting to other blocks.
@@ -226,7 +222,7 @@ Blockly.InsertionMarkerManager.prototype.update = function(dxy, deleteArea) {
         this.topBlock_.isDeletable();
     this.wouldDeleteBlock_ = wouldDelete && !wouldConnect;
 
-    this.maybeAddMarker_(candidate);
+    this.maybeShowPreview_(candidate);
 
     // Reenable events.
     Blockly.Events.enable();
@@ -278,80 +274,6 @@ Blockly.InsertionMarkerManager.prototype.initAvailableConnections_ = function() 
 
 /**** End initialization functions ****/
 
-/**
- * Add an insertion marker or replacement marker during a drag, if one is
- * needed.
- * At the beginning of this function, this.localConnection_ and
- * this.closestConnection_ should both be null.
- * @param
- * @private
- */
-Blockly.InsertionMarkerManager.prototype.maybeAddMarker_ = function(candidate) {
-  // Nope, don't add a marker.
-  if (this.wouldDeleteBlock_) {
-    return;
-  }
-  var closest = candidate.closest;
-  var local = candidate.local;
-
-  // Nothing to connect to.
-  if (!closest) {
-    return;
-  }
-
-  // Something went wrong and we're trying to connect to an invalid connection.
-  if (closest == this.closestConnection_ ||
-      closest.sourceBlock_.isInsertionMarker()) {
-    return;
-  }
-  // Add an insertion marker or replacement marker.
-  this.closestConnection_ = closest;
-  this.localConnection_ = local;
-  this.addMarker_();
-};
-
-Blockly.InsertionMarkerManager.prototype.addMarker_ = function() {
-  if (this.shouldReplace_()) {
-    this.highlightBlock_();
-  } else {  // Should insert
-    this.connectMarker_();
-  }
-};
-
-/**
- * Remove an insertion marker or replacement marker during a drag, if one is
- * needed.
- * TODO: Decide if the following statement is true (I think it's not anymore)
- * At the end of this function, this.localConnection_ and
- * this.closestConnection_ should both be null.
- * @param
- * @private
- */
-Blockly.InsertionMarkerManager.prototype.maybeRemoveMarker_ = function(candidate) {
-  // If there's no new marker, remove the old one but don't bother deleting it.
-  // We might need it later, and this saves disposing of it and recreating it.
-  if (!candidate.closest) {
-    this.removeMarker_();
-  }
-  // If there's a new marker and there was an old marker before, and the local
-  // connection has changed, remove the old marker.
-  if (this.localConnection_ && this.localConnection_ != candidate.localConnection_) {
-    this.removeMarker_();
-  }
-
-  // Either way, clear out old state.
-  this.markerConnection_ = null;
-  this.closestConnection_ = null;
-  this.localConnection_ = null;
-};
-
-Blockly.InsertionMarkerManager.prototype.removeMarker_ = function() {
-  if (this.highlightingBlock_) {
-    this.unhighlightBlock_();
-  } else if (this.markerConnection_) {
-    this.disconnectMarker_();
-  }
-};
 
 /**
  * Whether the previews (insertion marker and replacement marker) should be
@@ -375,14 +297,16 @@ Blockly.InsertionMarkerManager.prototype.shouldUpdatePreviews_ = function(
       // Always update previews for output connections.
       return true;
     }
-    // The connection was different from the current connection.
     // We're already showing an insertion marker.
     // Decide whether the new connection has higher priority.
     if (this.localConnection_ && this.closestConnection_) {
+      // The connection was the same as the current connection.
+      if (this.closestConnection_ == candidateClosest) {
+        return false;
+      }
       var xDiff = this.localConnection_.x_ + dxy.x - this.closestConnection_.x_;
       var yDiff = this.localConnection_.y_ + dxy.y - this.closestConnection_.y_;
       var curDistance = Math.sqrt(xDiff * xDiff + yDiff * yDiff);
-
       // Slightly prefer the existing preview over a new preview.
       return  !(candidateClosest && radius > curDistance -
           Blockly.CURRENT_CONNECTION_PREFERENCE);
@@ -390,19 +314,20 @@ Blockly.InsertionMarkerManager.prototype.shouldUpdatePreviews_ = function(
     // We weren't showing a preview before, but we should now.
       return true;
     } else {
-      console.error("Only one of localConnection_ and closestConnection_ was set.");
+      console.error('Only one of localConnection_ and closestConnection_ was set.');
     }
   } else { // No connection found.
     // Only need to update if we were showing a preview before.
-    return (this.localConnection_ && this.closestConnection_);
+    return !!(this.localConnection_ && this.closestConnection_);
   }
 
-  console.error("Returning true from shouldUpdatePreviews, but it's not clear why.");
+  console.error('Returning true from shouldUpdatePreviews, but it\'s not clear why.');
   return true;
 };
 
 /**
- * Find the nearest valid connection.
+ * Find the nearest valid connection, which may be the same as the current
+ * closest connection.
  * @param {!goog.math.Coordinate} dxy Position relative to drag start,
  *     in workspace units.
  * @return {!Object} candidate An object containing a local connection, a closest
@@ -458,13 +383,125 @@ Blockly.InsertionMarkerManager.prototype.getStartRadius_ = function() {
 Blockly.InsertionMarkerManager.prototype.shouldReplace_ = function() {
   var closest = this.closestConnection_;
   var local = this.localConnection_;
+
   // Dragging a block over an existing block in an input should replace the
-  // existing block and bump it out.  Similarly, dragging a terminal block
-  // over another (connected) terminal block will replace, not insert.
-  return (local.type == Blockly.OUTPUT_VALUE ||
-      (closest.type == Blockly.PREVIOUS_STATEMENT && closest.isConnected() &&
-      !this.topBlock_.nextConnection));
+  // existing block and bump it out.
+  if (local.type == Blockly.OUTPUT_VALUE) {
+    return true; // Replace.
+  }
+
+  // Connecting to a statement input of c-block is an insertion, even if that
+  // c-block is terminal (e.g. forever).
+  if (local == local.sourceBlock_.getFirstStatementConnection()) {
+    return false; // Insert.
+  }
+
+  // Dragging a terminal block over another (connected) terminal block will
+  // replace, not insert.
+  var isTerminalBlock = !this.topBlock_.nextConnection;
+  var isConnectedTerminal = isTerminalBlock &&
+      local.type == Blockly.PREVIOUS_STATEMENT && closest.isConnected();
+  if (isConnectedTerminal) {
+    return true; // Replace.
+  }
+
+  // Otherwise it's an insertion.
+  return false;
 };
+
+/**** Begin preview visibility functions ****/
+
+/**
+ * Show an insertion marker or replacement highlighting during a drag, if
+ * needed.
+ * At the beginning of this function, this.localConnection_ and
+ * this.closestConnection_ should both be null.
+ * @param {!Object} candidate An object containing a local connection, a closest
+ *     connection, and a radius.
+ * @private
+ */
+Blockly.InsertionMarkerManager.prototype.maybeShowPreview_ = function(candidate) {
+  // Nope, don't add a marker.
+  if (this.wouldDeleteBlock_) {
+    return;
+  }
+  var closest = candidate.closest;
+  var local = candidate.local;
+
+  // Nothing to connect to.
+  if (!closest) {
+    return;
+  }
+
+  // Something went wrong and we're trying to connect to an invalid connection.
+  if (closest == this.closestConnection_ ||
+      closest.sourceBlock_.isInsertionMarker()) {
+    return;
+  }
+  // Add an insertion marker or replacement marker.
+  this.closestConnection_ = closest;
+  this.localConnection_ = local;
+  this.showPreview_();
+};
+
+/**
+ * A preview should be shown.  This function figures out if it should be a block
+ * highlight or an insertion marker, and shows the appropriate one.
+ * @private
+ */
+Blockly.InsertionMarkerManager.prototype.showPreview_ = function() {
+  if (this.shouldReplace_()) {
+    this.highlightBlock_();
+  } else {  // Should insert
+    this.connectMarker_();
+  }
+};
+
+/**
+ * Show an insertion marker or replacement highlighting during a drag, if
+ * needed.
+ * At the end of this function, this.localConnection_ and
+ * this.closestConnection_ should both be null.
+ * @param {!Object} candidate An object containing a local connection, a closest
+ *     connection, and a radius.
+ * @private
+ */
+Blockly.InsertionMarkerManager.prototype.maybeHidePreview_ = function(candidate) {
+  // If there's no new preview, remove the old one but don't bother deleting it.
+  // We might need it later, and this saves disposing of it and recreating it.
+  if (!candidate.closest) {
+    this.hidePreview_();
+  }
+  // If there's a new preview and there was an preview before, and either
+  // connection has changed, remove the old preview.
+  var hadPreview = this.closestConnection_ && this.localConnection_;
+  var closestChanged = this.closestConnection_ != candidate.closest;
+  var localChanged = this.localConnection_ != candidate.local;
+
+  if (hadPreview && (closestChanged || localChanged)) {
+    this.hidePreview_();
+  }
+
+  // Either way, clear out old state.
+  this.markerConnection_ = null;
+  this.closestConnection_ = null;
+  this.localConnection_ = null;
+};
+
+/**
+ * A preview should be hidden.  This function figures out if it is a block
+ *  highlight or an insertion marker, and hides the appropriate one.
+ * @private
+ */
+Blockly.InsertionMarkerManager.prototype.hidePreview_ = function() {
+  if (this.highlightingBlock_) {
+    this.unhighlightBlock_();
+  } else if (this.markerConnection_) {
+    this.disconnectMarker_();
+  }
+};
+
+/**** End preview visibility functions ****/
 
 /**** Begin block highlighting functions ****/
 
@@ -477,8 +514,10 @@ Blockly.InsertionMarkerManager.prototype.highlightBlock_ = function() {
   var closest = this.closestConnection_;
   var local = this.localConnection_;
   if (closest.targetBlock()) {
+    this.highlightedBlock_ = closest.targetBlock();
     closest.targetBlock().highlightForReplacement(true);
   } else if(local.type == Blockly.OUTPUT_VALUE) {
+    this.highlightedBlock_ = closest.sourceBlock_;
     closest.sourceBlock_.highlightShapeForInput(closest, true);
   }
   this.highlightingBlock_ = true;
@@ -494,10 +533,11 @@ Blockly.InsertionMarkerManager.prototype.unhighlightBlock_ = function() {
   // If there's no block in place, but we're still connecting to a value input,
   // then we must have been highlighting an input shape.
   if (closest.type == Blockly.INPUT_VALUE && !closest.isConnected()) {
-    closest.sourceBlock_.highlightShapeForInput(closest, false);
+    this.highlightedBlock_.highlightShapeForInput(closest, false);
   } else {
-    closest.targetBlock().highlightForReplacement(false);
+    this.highlightedBlock_.highlightForReplacement(false);
   }
+  this.highlightedBlock_ = null;
   this.highlightingBlock_ = false;
 };
 
@@ -512,7 +552,7 @@ Blockly.InsertionMarkerManager.prototype.unhighlightBlock_ = function() {
  */
 Blockly.InsertionMarkerManager.prototype.disconnectMarker_ = function() {
   if (!this.markerConnection_) {
-    console.log("No insertion marker connection to disconnect");
+    console.log('No insertion marker connection to disconnect');
     return;
   }
 
