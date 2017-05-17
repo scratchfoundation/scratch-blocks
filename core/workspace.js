@@ -228,7 +228,7 @@ Blockly.Workspace.prototype.updateVariableStore = function(clear) {
     // Get variable model with the used variable name.
     var tempVar = this.getVariable(name);
     if (tempVar) {
-       varList.push({'name': tempVar.name, 'type': tempVar.type,
+      varList.push({'name': tempVar.name, 'type': tempVar.type,
                      'id': tempVar.getId()});
     }
     else {
@@ -261,7 +261,7 @@ Blockly.Workspace.prototype.renameVariableInternal_ = function(variable, newName
 
   // If they are different types, throw an error.
   if (variable && newVariable && variable.type != newVariable.type) {
-    throw Error('Variable "' + oldName + '" is type "' + variable.type +
+    throw Error('Variable "' + variable.name + '" is type "' + variable.type +
          '" and variable "' + newName + '" is type "' + newVariable.type +
          '". Both must be the same type.');
   }
@@ -308,7 +308,7 @@ Blockly.Workspace.prototype.renameVariable = function(oldName, newName) {
 Blockly.Workspace.prototype.renameVariableById = function(id, newName) {
   var variable = this.getVariableById(id);
   this.renameVariableInternal_(variable, newName);
-}
+};
 
 /**
  * Create a variable with a given name, optional type, and optional id.
@@ -426,7 +426,7 @@ Blockly.Workspace.prototype.deleteVariableInternal_ = function(variable) {
  *     not present.
  * @deprecated April 2017
  */
-Blockly.Workspace.prototype.variableIndexOf = function(name) {
+Blockly.Workspace.prototype.variableIndexOf = function(/* name */) {
   console.warn(
       'Deprecated call to Blockly.Workspace.prototype.variableIndexOf');
   return -1;

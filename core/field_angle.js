@@ -150,10 +150,10 @@ Blockly.FieldAngle.prototype.showEditor_ = function() {
   this.gauge_ = Blockly.utils.createSvgElement('path',
       {'class': 'blocklyAngleGauge'}, svg);
   this.line_ = Blockly.utils.createSvgElement('line',{
-      'x1': Blockly.FieldAngle.HALF,
-      'y1': Blockly.FieldAngle.HALF,
-      'class': 'blocklyAngleLine',
-     }, svg);
+    'x1': Blockly.FieldAngle.HALF,
+    'y1': Blockly.FieldAngle.HALF,
+    'class': 'blocklyAngleLine'
+  }, svg);
   // Draw markers around the edge.
   for (var angle = 0; angle < 360; angle += 15) {
     Blockly.utils.createSvgElement('line', {

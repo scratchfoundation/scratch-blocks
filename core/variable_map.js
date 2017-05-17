@@ -32,8 +32,8 @@ goog.provide('Blockly.VariableMap');
  * variables are the type indicated by the key.
  * @constructor
  */
- Blockly.VariableMap = function() {
- /**
+Blockly.VariableMap = function() {
+  /**
    * @type {!Object<string, !Array.<Blockly.VariableModel>>}
    * A map from variable type to list of variable names.  The lists contain all
    * of the named variables in the workspace, including variables
