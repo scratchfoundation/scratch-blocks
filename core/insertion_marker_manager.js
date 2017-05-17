@@ -58,16 +58,20 @@ Blockly.InsertionMarkerManager = function(block) {
   this.workspace_ = block.workspace;
 
   /**
-   * TODO
-   * Set in initAvailableConnections, if at all
-   *
+   * The last connection on the stack, if it's not the last connection on the
+   * first block.
+   * Set in initAvailableConnections, if at all.
+   * @type {Blockly.RenderedConnection}
+   * @private
    */
   this.lastOnStack_ = null;
 
   /**
-   * TODO
+   * The insertion marker corresponding to the last block in the stack, if
+   * that's not the same as the first block in the stack.
    * Set in initAvailableConnections, if at all
-   *
+   * @type {Blockly.BlockSvg}
+   * @private
    */
   this.lastMarker_ = null;
 
@@ -79,7 +83,6 @@ Blockly.InsertionMarkerManager = function(block) {
    * @private
    */
   this.firstMarker_ = this.createMarkerBlock_(this.topBlock_);
-
 
   /**
    * The connection that this block would connect to if released immediately.
@@ -127,11 +130,11 @@ Blockly.InsertionMarkerManager = function(block) {
   this.highlightingBlock_ = false;
 
   /**
-   * TODO
+   * The block that is being highlighted for replacement, or null.
+   * @type {Blockly.BlockSvg}
+   * @private
    */
   this.highlightedBlock_ = null;
-
-  this.insertionMarkerConnected_ = false;
 
   /**
    * The connections on the dragging blocks that are available to connect to
@@ -162,6 +165,7 @@ Blockly.InsertionMarkerManager.prototype.dispose = function() {
     this.lastMarker_.dispose();
     this.lastMarker_ = null;
   }
+  this.highlightedBlock_ = null;
 };
 
 /**
@@ -610,8 +614,6 @@ Blockly.InsertionMarkerManager.prototype.connectMarker_ = function() {
 
   // Render disconnected from everything else so that we have a valid
   // connection location.
-  // TODO: Might not need the render, since there's no text (this can be done
-  // earlier, when it's invisible).
   imBlock.render();
   imBlock.rendered = true;
   imBlock.getSvgRoot().setAttribute('visibility', 'visible');
