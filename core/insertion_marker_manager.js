@@ -213,21 +213,19 @@ Blockly.InsertionMarkerManager.prototype.update = function(dxy, deleteArea) {
   var candidate = this.getCandidate_(dxy);
   var shouldUpdate = this.shouldUpdatePreviews_(candidate, dxy);
 
+  // Prefer connecting over dropping into the trash can, but prefer dragging to
+  // the toolbox over connecting to other blocks.
+  var wouldConnect = candidate && !!candidate.closest &&
+      deleteArea != Blockly.DELETE_AREA_TOOLBOX;
+  var wouldDelete = !!deleteArea && !this.topBlock_.getParent() &&
+      this.topBlock_.isDeletable();
+  this.wouldDeleteBlock_ = wouldDelete && !wouldConnect;
+
   if (shouldUpdate) {
     // Don't fire events for insertion marker creation or movement.
     Blockly.Events.disable();
     this.maybeHidePreview_(candidate);
-
-   // Prefer connecting over dropping into the trash can, but prefer dragging to
-   // the toolbox over connecting to other blocks.
-    var wouldConnect = candidate && !!candidate.closest &&
-        deleteArea != Blockly.DELETE_AREA_TOOLBOX;
-    var wouldDelete = !!deleteArea && !this.topBlock_.getParent() &&
-        this.topBlock_.isDeletable();
-    this.wouldDeleteBlock_ = wouldDelete && !wouldConnect;
-
     this.maybeShowPreview_(candidate);
-
     // Reenable events.
     Blockly.Events.enable();
   }

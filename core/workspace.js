@@ -26,6 +26,7 @@
 
 goog.provide('Blockly.Workspace');
 
+goog.require('Blockly.VariableMap');
 goog.require('goog.array');
 goog.require('goog.math');
 
@@ -202,7 +203,6 @@ Blockly.Workspace.prototype.clear = function() {
     Blockly.Events.setGroup(false);
   }
   this.variableMap_.clear();
-  this.variableList.length = 0;
   // Any block with a drop-down or WidgetDiv was disposed.
   if (Blockly.DropDownDiv) {
     Blockly.DropDownDiv.hideWithoutAnimation();
