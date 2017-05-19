@@ -211,22 +211,16 @@ Blockly.InsertionMarkerManager.prototype.applyConnections = function() {
  */
 Blockly.InsertionMarkerManager.prototype.update = function(dxy, deleteArea) {
   var candidate = this.getCandidate_(dxy);
-  var shouldUpdate = this.shouldUpdatePreviews_(candidate, dxy);
 
-  // Prefer connecting over dropping into the trash can, but prefer dragging to
-  // the toolbox over connecting to other blocks.
-  var wouldConnect = candidate && !!candidate.closest &&
-      deleteArea != Blockly.DELETE_AREA_TOOLBOX;
-  var wouldDelete = !!deleteArea && !this.topBlock_.getParent() &&
-      this.topBlock_.isDeletable();
-  this.wouldDeleteBlock_ = wouldDelete && !wouldConnect;
+  this.wouldDeleteBlock_ = this.shouldDelete_(candidate, deleteArea);
+  var shouldUpdate = this.wouldDeleteBlock_ ||
+      this.shouldUpdatePreviews_(candidate, dxy);
 
   if (shouldUpdate) {
     // Don't fire events for insertion marker creation or movement.
     Blockly.Events.disable();
     this.maybeHidePreview_(candidate);
     this.maybeShowPreview_(candidate);
-    // Reenable events.
     Blockly.Events.enable();
   }
 };
@@ -411,6 +405,28 @@ Blockly.InsertionMarkerManager.prototype.shouldReplace_ = function() {
   return false;
 };
 
+/**
+ * Whether ending the drag would delete the block.
+ * @param {!Object} candidate An object containing a local connection, a closest
+ *     connection, and a radius.
+ * @param {?number} deleteArea One of {@link Blockly.DELETE_AREA_TRASH},
+ *     {@link Blockly.DELETE_AREA_TOOLBOX}, or {@link Blockly.DELETE_AREA_NONE}.
+ * @return {boolean} True if dropping the block immediately would replace
+ *     delete the block.  False otherwise.
+ * @private
+ */
+Blockly.InsertionMarkerManager.prototype.shouldDelete_ = function(candidate,
+    deleteArea) {
+  // Prefer connecting over dropping into the trash can, but prefer dragging to
+  // the toolbox over connecting to other blocks.
+  var wouldConnect = candidate && !!candidate.closest &&
+      deleteArea != Blockly.DELETE_AREA_TOOLBOX;
+  var wouldDelete = !!deleteArea && !this.topBlock_.getParent() &&
+      this.topBlock_.isDeletable();
+
+  return wouldDelete && !wouldConnect;
+};
+
 /**** Begin preview visibility functions ****/
 
 /**
@@ -480,7 +496,8 @@ Blockly.InsertionMarkerManager.prototype.maybeHidePreview_ = function(candidate)
   var closestChanged = this.closestConnection_ != candidate.closest;
   var localChanged = this.localConnection_ != candidate.local;
 
-  if (hadPreview && (closestChanged || localChanged)) {
+  // Also hide if we had a preview before but now we're going to delete instead.
+  if (hadPreview && (closestChanged || localChanged || this.wouldDeleteBlock_)) {
     this.hidePreview_();
   }
 
