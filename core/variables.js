@@ -90,7 +90,7 @@ Blockly.Variables.allUsedVariables = function(root) {
  * Find all variables that the user has created through the workspace or
  * toolbox.  For use by generators.
  * @param {!Blockly.Workspace} root The workspace to inspect.
- * @return {!Array.<string>} Array of variable names.
+ * @return {!Array.<Blockly.VariableModel>} Array of variable models.
  */
 Blockly.Variables.allVariables = function(root) {
   if (root instanceof Blockly.Block) {
@@ -98,8 +98,9 @@ Blockly.Variables.allVariables = function(root) {
     console.warn('Deprecated call to Blockly.Variables.allVariables ' +
                  'with a block instead of a workspace.  You may want ' +
                  'Blockly.Variables.allUsedVariables');
+    return {};
   }
-  return root.variableList;
+  return root.getAllVariables();
 };
 
 /**
@@ -108,8 +109,12 @@ Blockly.Variables.allVariables = function(root) {
  * @return {!Array.<!Element>} Array of XML block elements.
  */
 Blockly.Variables.flyoutCategory = function(workspace) {
-  var variableList = workspace.variableList;
-  variableList.sort(goog.string.caseInsensitiveCompare);
+  var variableNameList = [];
+  var variableModelList = workspace.getVariablesOfType('');
+  for (var i = 0; i < variableModelList.length; i++) {
+    variableNameList.push(variableModelList[i].name);
+  }
+  variableNameList.sort(goog.string.caseInsensitiveCompare);
 
   var xmlList = [];
   var button = goog.dom.createDom('button');
@@ -122,8 +127,7 @@ Blockly.Variables.flyoutCategory = function(workspace) {
 
   xmlList.push(button);
 
-
-  for (var i = 0; i < variableList.length; i++) {
+  for (var i = 0; i < variableNameList.length; i++) {
     if (Blockly.Blocks['data_variable']) {
       // <block type="data_variable">
       //    <field name="VARIABLE">variablename</field>
@@ -132,7 +136,7 @@ Blockly.Variables.flyoutCategory = function(workspace) {
       block.setAttribute('type', 'data_variable');
       block.setAttribute('gap', 8);
 
-      var field = goog.dom.createDom('field', null, variableList[i]);
+      var field = goog.dom.createDom('field', null, variableNameList[i]);
       field.setAttribute('name', 'VARIABLE');
       block.appendChild(field);
 
@@ -157,7 +161,7 @@ Blockly.Variables.flyoutCategory = function(workspace) {
       var block = goog.dom.createDom('block');
       block.setAttribute('type', 'data_setvariableto');
       block.setAttribute('gap', 8);
-      block.appendChild(Blockly.Variables.createVariableDom_(variableList[0]));
+      block.appendChild(Blockly.Variables.createVariableDom_(variableNameList[0]));
       block.appendChild(Blockly.Variables.createTextDom_());
       xmlList.push(block);
     }
@@ -175,7 +179,7 @@ Blockly.Variables.flyoutCategory = function(workspace) {
       var block = goog.dom.createDom('block');
       block.setAttribute('type', 'data_changevariableby');
       block.setAttribute('gap', 8);
-      block.appendChild(Blockly.Variables.createVariableDom_(variableList[0]));
+      block.appendChild(Blockly.Variables.createVariableDom_(variableNameList[0]));
       block.appendChild(Blockly.Variables.createMathNumberDom_());
       xmlList.push(block);
     }
@@ -188,7 +192,7 @@ Blockly.Variables.flyoutCategory = function(workspace) {
       var block = goog.dom.createDom('block');
       block.setAttribute('type', 'data_showvariable');
       block.setAttribute('gap', 8);
-      block.appendChild(Blockly.Variables.createVariableDom_(variableList[0]));
+      block.appendChild(Blockly.Variables.createVariableDom_(variableNameList[0]));
       xmlList.push(block);
     }
     if (Blockly.Blocks['data_hidevariable']) {
@@ -199,7 +203,7 @@ Blockly.Variables.flyoutCategory = function(workspace) {
       // </block>
       var block = goog.dom.createDom('block');
       block.setAttribute('type', 'data_hidevariable');
-      block.appendChild(Blockly.Variables.createVariableDom_(variableList[0]));
+      block.appendChild(Blockly.Variables.createVariableDom_(variableNameList[0]));
       xmlList.push(block);
     }
   }
@@ -307,7 +311,7 @@ Blockly.Variables.noVariableText = function() {
 * @return {string} New variable name.
 */
 Blockly.Variables.generateUniqueName = function(workspace) {
-  var variableList = workspace.variableList;
+  var variableList = workspace.getAllVariables();
   var newName = '';
   if (variableList.length) {
     var nameSuffix = 1;
@@ -317,7 +321,7 @@ Blockly.Variables.generateUniqueName = function(workspace) {
     while (!newName) {
       var inUse = false;
       for (var i = 0; i < variableList.length; i++) {
-        if (variableList[i].toLowerCase() == potName) {
+        if (variableList[i].name.toLowerCase() == potName) {
           // This potential name is already used.
           inUse = true;
           break;
@@ -360,13 +364,21 @@ Blockly.Variables.createVariable = function(workspace, opt_callback) {
     Blockly.Variables.promptName(Blockly.Msg.NEW_VARIABLE_TITLE, defaultName,
       function(text) {
         if (text) {
-          if (workspace.variableIndexOf(text) != -1) {
+          if (workspace.getVariable(text)) {
             Blockly.alert(Blockly.Msg.VARIABLE_ALREADY_EXISTS.replace('%1',
                 text.toLowerCase()),
                 function() {
                   promptAndCheckWithAlert(text);  // Recurse
                 });
-          } else {
+          }
+          else if (!Blockly.Procedures.isLegalName_(text, workspace)) {
+            Blockly.alert(Blockly.Msg.PROCEDURE_ALREADY_EXISTS.replace('%1',
+                text.toLowerCase()),
+                function() {
+                  promptAndCheckWithAlert(text);  // Recurse
+                });
+          }
+          else {
             workspace.createVariable(text);
             if (opt_callback) {
               opt_callback(text);

@@ -240,12 +240,6 @@ Blockly.Connection.prototype.dispose = function() {
   if (this.inDB_) {
     this.db_.removeConnection_(this);
   }
-  if (Blockly.highlightedConnection_ == this) {
-    Blockly.highlightedConnection_ = null;
-  }
-  if (Blockly.localConnection_ == this) {
-    Blockly.localConnection_ = null;
-  }
   this.db_ = null;
   this.dbOpposite_ = null;
 };
@@ -379,8 +373,7 @@ Blockly.Connection.prototype.isConnectionAllowed = function(candidate) {
           // If the other side of this connection is the active insertion marker
           // connection, we've obviously already decided that this is a good
           // connection.
-          if (candidate.targetConnection ==
-              Blockly.insertionMarkerConnection_) {
+          if (candidate.targetBlock().isInsertionMarker()) {
             return true;
           } else {
             return false;
