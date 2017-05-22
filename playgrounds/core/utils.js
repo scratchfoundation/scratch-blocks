@@ -281,7 +281,7 @@ Blockly.utils.getRelativeXY.XY_2D_REGEX_ =
  * @param {Element} parent Optional parent on which to append the element.
  * @return {!SVGElement} Newly created SVG element.
  */
-Blockly.utils.createSvgElement = function(name, attrs, parent) {
+Blockly.utils.createSvgElement = function(name, attrs, parent /*, opt_workspace */) {
   var e = /** @type {!SVGElement} */ (
       document.createElementNS(Blockly.SVG_NS, name));
   for (var key in attrs) {

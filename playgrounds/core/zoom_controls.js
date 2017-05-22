@@ -196,6 +196,14 @@ Blockly.ZoomControls.prototype.createDom = function() {
   );
 
   // Attach event listeners.
+  Blockly.bindEventWithChecks_(zoomresetSvg, 'mousedown', null, function(e) {
+    workspace.markFocused();
+    workspace.setScale(workspace.options.zoomOptions.startScale);
+    workspace.scrollCenter();
+    Blockly.Touch.clearTouchIdentifier();  // Don't block future drags.
+    e.stopPropagation();  // Don't start a workspace scroll.
+    e.preventDefault();  // Stop double-clicking from selecting text.
+  });
   Blockly.bindEventWithChecks_(zoominSvg, 'mousedown', null, function(e) {
     workspace.markFocused();
     workspace.zoomCenter(1);
@@ -206,14 +214,6 @@ Blockly.ZoomControls.prototype.createDom = function() {
   Blockly.bindEventWithChecks_(zoomoutSvg, 'mousedown', null, function(e) {
     workspace.markFocused();
     workspace.zoomCenter(-1);
-    Blockly.Touch.clearTouchIdentifier();  // Don't block future drags.
-    e.stopPropagation();  // Don't start a workspace scroll.
-    e.preventDefault();  // Stop double-clicking from selecting text.
-  });
-  Blockly.bindEventWithChecks_(zoomresetSvg, 'mousedown', null, function(e) {
-    workspace.markFocused();
-    workspace.setScale(workspace.options.zoomOptions.startScale);
-    workspace.scrollCenter();
     Blockly.Touch.clearTouchIdentifier();  // Don't block future drags.
     e.stopPropagation();  // Don't start a workspace scroll.
     e.preventDefault();  // Stop double-clicking from selecting text.
