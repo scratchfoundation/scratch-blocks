@@ -535,6 +535,7 @@ Blockly.Toolbox.Category.prototype.parseContents_ = function(domTree) {
       case 'SHADOW':
       case 'LABEL':
       case 'BUTTON':
+      case 'SEP':
       case 'TEXT':
         this.contents_.push(child);
         break;
