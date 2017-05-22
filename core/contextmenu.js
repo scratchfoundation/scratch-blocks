@@ -50,6 +50,7 @@ Blockly.ContextMenu.currentBlock = null;
  * @param {boolean} rtl True if RTL, false if LTR.
  */
 Blockly.ContextMenu.show = function(e, options, rtl) {
+  var menuHeight = 0;
   Blockly.WidgetDiv.show(Blockly.ContextMenu, rtl, null);
   if (!options.length) {
     Blockly.ContextMenu.hide();
@@ -108,8 +109,11 @@ Blockly.ContextMenu.show = function(e, options, rtl) {
       x -= menuSize.width;
     }
   }
-  Blockly.WidgetDiv.position(x, y, windowSize, scrollOffset, rtl);
-
+  menu.children_.forEach(function(element) {
+    menuHeight += element.element_.clientHeight;
+  });
+  Blockly.WidgetDiv.position(x, y, {height: menuHeight, width: windowSize}, scrollOffset, rtl);
+  
   menu.setAllowAutoFocus(true);
   // 1ms delay is required for focusing on context menus because some other
   // mouse event is still waiting in the queue and clears focus.
