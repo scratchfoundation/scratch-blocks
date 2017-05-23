@@ -424,7 +424,8 @@ Blockly.VerticalFlyout.prototype.layout_ = function(contents, gaps) {
 
       var moveX = this.RTL ? newX - oldX : margin;
       if (block.hasCheckboxInFlyout()) {
-        this.createCheckbox_(block, cursorX, cursorY, blockHW);
+        var defaultState = Blockly.Blocks.getCheckboxState(block.id);
+        this.createCheckbox_(block, cursorX, cursorY, blockHW, defaultState);
         if (this.RTL) {
           moveX -= (this.CHECKBOX_SIZE + this.CHECKBOX_MARGIN);
         } else {
@@ -500,7 +501,7 @@ Blockly.VerticalFlyout.prototype.createRect_ = function(block, x, y,
  * @private
  */
 Blockly.VerticalFlyout.prototype.createCheckbox_ = function(block, cursorX,
-     cursorY, blockHW) {
+     cursorY, blockHW, defaultCheckboxState) {
   var svgRoot = block.getSvgRoot();
   var extraSpace = this.CHECKBOX_SIZE + this.CHECKBOX_MARGIN;
   var width = this.RTL ? this.getWidth() / this.workspace_.scale - extraSpace : cursorX;
@@ -522,7 +523,12 @@ Blockly.VerticalFlyout.prototype.createCheckbox_ = function(block, cursorX,
       'class': 'blocklyFlyoutCheckboxPath',
       'd': this.CHECKMARK_PATH
     }, checkboxGroup);
-  var checkboxObj = {svgRoot: checkboxGroup, clicked: false, block: block};
+  var checkboxObj = {svgRoot: checkboxGroup, clicked: defaultCheckboxState, block: block};
+
+  if (defaultCheckboxState) {
+    Blockly.utils.addClass((checkboxObj.svgRoot), 'checked');
+  }
+
   block.flyoutCheckbox = checkboxObj;
   this.workspace_.getCanvas().insertBefore(checkboxGroup, svgRoot);
   this.checkboxes_.push(checkboxObj);

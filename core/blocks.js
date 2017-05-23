@@ -35,3 +35,12 @@ goog.provide('Blockly.Blocks');
  * @type {!Object<string,Object>}
  */
 Blockly.Blocks = new Object(null);
+
+/**
+ * Get the default checkbox state of a given block. To be overridden.
+ * @param {string} blockId Id of the block in question.
+ * @return {boolean} Whether the blocks checkbox should be checked by default.
+ */
+Blockly.Blocks.getCheckboxState = function(/* blockId */) {
+  return false;
+};
