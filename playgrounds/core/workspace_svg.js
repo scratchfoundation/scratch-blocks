@@ -232,30 +232,7 @@ Blockly.WorkspaceSvg.prototype.isDragSurfaceActive_ = false;
  * @type {Date}
  * @private
  */
-Blockly.WorkspaceSvg.prototype.inverseScreenCTM_ = null;
-
-/**
- * Getter for the inverted screen CTM.
- * @return {SVGMatrix} The matrix to use in mouseToSvg
- */
-Blockly.WorkspaceSvg.prototype.getInverseScreenCTM = function() {
-  return this.inverseScreenCTM_;
-};
-
-/**
- * Update the inverted screen CTM.
- */
-Blockly.WorkspaceSvg.prototype.updateInverseScreenCTM = function() {
-  this.inverseScreenCTM_ = this.getParentSvg().getScreenCTM().inverse();
-};
-
-/**
- * Save resize handler data so we can delete it later in dispose.
- * @param {!Array.<!Array>} handler Data that can be passed to unbindEvent_.
- */
-Blockly.WorkspaceSvg.prototype.setResizeHandlerWrapper = function(handler) {
-  this.resizeHandlerWrapper_ = handler;
-};
+Blockly.WorkspaceSvg.prototype.lastSound_ = null;
 
 /**
  * Last known position of the page scroll.
