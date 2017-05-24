@@ -66,12 +66,12 @@ Blockly.Blocks.defaultToolbox = '<xml id="toolbox-categories" style="display: no
     '</block>'+
     '<block type="motion_gotoxy" id="motion_gotoxy">'+
       '<value name="X">'+
-        '<shadow type="math_number">'+
+        '<shadow id="movex" type="math_number">'+
           '<field name="NUM">0</field>'+
         '</shadow>'+
       '</value>'+
       '<value name="Y">'+
-        '<shadow type="math_number">'+
+        '<shadow id="movey" type="math_number">'+
           '<field name="NUM">0</field>'+
         '</shadow>'+
       '</value>'+
@@ -89,12 +89,12 @@ Blockly.Blocks.defaultToolbox = '<xml id="toolbox-categories" style="display: no
         '</shadow>'+
       '</value>'+
       '<value name="X">'+
-        '<shadow type="math_number">'+
+        '<shadow id="glidex" type="math_number">'+
           '<field name="NUM">0</field>'+
         '</shadow>'+
       '</value>'+
       '<value name="Y">'+
-        '<shadow type="math_number">'+
+        '<shadow id="glidey" type="math_number">'+
           '<field name="NUM">0</field>'+
         '</shadow>'+
       '</value>'+
@@ -108,7 +108,7 @@ Blockly.Blocks.defaultToolbox = '<xml id="toolbox-categories" style="display: no
     '</block>'+
     '<block type="motion_setx" id="motion_setx">'+
       '<value name="X">'+
-        '<shadow type="math_number">'+
+        '<shadow id="setx" type="math_number">'+
           '<field name="NUM">0</field>'+
         '</shadow>'+
       '</value>'+
@@ -122,7 +122,7 @@ Blockly.Blocks.defaultToolbox = '<xml id="toolbox-categories" style="display: no
     '</block>'+
     '<block type="motion_sety" id="motion_sety">'+
       '<value name="Y">'+
-        '<shadow type="math_number">'+
+        '<shadow id="sety" type="math_number">'+
           '<field name="NUM">0</field>'+
         '</shadow>'+
       '</value>'+
