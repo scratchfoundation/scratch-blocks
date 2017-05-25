@@ -26,6 +26,9 @@
 
 goog.provide('Blockly.VariableModel');
 
+goog.require('goog.string');
+
+
 /**
  * Class for a variable model.
  * Holds information for the variable including name, id, and type.
@@ -72,4 +75,14 @@ Blockly.VariableModel = function(name, opt_type, opt_id) {
  */
 Blockly.VariableModel.prototype.getId = function() {
   return this.id_;
+};
+
+/**
+ * A custom compare function for the VariableModel objects.
+ * @param {Blockly.VariableModel} var1 First variable to compare.
+ * @param {Blockly.VariableModel} var2 Second variable to compare.
+ * @package
+ */
+Blockly.VariableModel.compareByName = function(var1, var2) {
+  return goog.string.caseInsensitiveCompare(var1.name, var2.name);
 };

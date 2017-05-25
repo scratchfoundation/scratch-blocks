@@ -300,7 +300,7 @@ Blockly.BlockSvg.metricsAreEquivalent_ = function(first, second) {
  * Play some UI effects (sound) after a connection has been established.
  */
 Blockly.BlockSvg.prototype.connectionUiEffect = function() {
-  this.workspace.playAudio('click');
+  this.workspace.getAudioManager().play('click');
 };
 
 /**

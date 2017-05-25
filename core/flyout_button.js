@@ -123,6 +123,13 @@ Blockly.FlyoutButton.prototype.height = 40; // Can't be computed like the width
 Blockly.FlyoutButton.prototype.onMouseUpWrapper_ = null;
 
 /**
+ * Opaque data that can be passed to Blockly.unbindEvent_.
+ * @type {Array.<!Array>}
+ * @private
+ */
+Blockly.FlyoutButton.prototype.onMouseUpWrapper_ = null;
+
+/**
  * Create the button elements.
  * @return {!Element} The button's SVG group.
  */

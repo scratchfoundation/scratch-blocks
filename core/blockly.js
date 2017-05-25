@@ -179,6 +179,7 @@ Blockly.onKeyDown_ = function(e) {
     // When focused on an HTML text input widget, don't trap any keys.
     return;
   }
+  var deleteBlock = false;
   if (e.keyCode == 27) {
     // Pressing esc closes the context menu and any drop-down
     Blockly.hideChaff();
@@ -190,6 +191,9 @@ Blockly.onKeyDown_ = function(e) {
     // Don't delete while dragging.  Jeez.
     if (Blockly.mainWorkspace.isDragging()) {
       return;
+    }
+    if (Blockly.selected && Blockly.selected.isDeletable()) {
+      deleteBlock = true;
     }
   } else if (e.altKey || e.ctrlKey || e.metaKey) {
     // Don't use meta keys during drags.
@@ -221,6 +225,13 @@ Blockly.onKeyDown_ = function(e) {
       Blockly.hideChaff();
       Blockly.mainWorkspace.undo(e.shiftKey);
     }
+  }
+  if (deleteBlock) {
+    // Common code for delete and cut.
+    Blockly.Events.setGroup(true);
+    Blockly.hideChaff();
+    Blockly.selected.dispose(/* heal */ true, true);
+    Blockly.Events.setGroup(false);
   }
 };
 

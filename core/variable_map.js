@@ -26,9 +26,6 @@
 
 goog.provide('Blockly.VariableMap');
 
-goog.require('Blockly.VariableModel');
-
-
 /**
  * Class for a variable map.  This contains a dictionary data structure with
  * variable types as keys and lists of variables as values.  The list of
