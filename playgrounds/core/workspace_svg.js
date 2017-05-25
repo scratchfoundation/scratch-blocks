@@ -1016,9 +1016,6 @@ Blockly.WorkspaceSvg.prototype.isDeleteArea = function(e) {
  * @private
  */
 Blockly.WorkspaceSvg.prototype.onMouseDown_ = function(e) {
-  // TODO (fenichel): Move this to gesture.
-  Blockly.DropDownDiv.hide();
-
   var gesture = this.getGesture(e);
   if (gesture) {
     gesture.handleWsStart(e, this);
