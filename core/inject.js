@@ -372,9 +372,13 @@ Blockly.inject.bindDocumentEvents_ = function() {
 Blockly.inject.loadSounds_ = function(pathToMedia, workspace) {
   var audioMgr = workspace.getAudioManager();
   audioMgr.load(
-      [pathToMedia + 'click.wav'], 'click');
+      [pathToMedia + 'click.mp3',
+       pathToMedia + 'click.wav',
+       pathToMedia + 'click.ogg'], 'click');
   audioMgr.load(
-      [pathToMedia + 'delete.wav'], 'delete');
+      [pathToMedia + 'delete.mp3',
+       pathToMedia + 'delete.ogg',
+       pathToMedia + 'delete.wav'], 'delete');
 
   // Bind temporary hooks that preload the sounds.
   var soundBinds = [];
