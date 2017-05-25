@@ -261,7 +261,7 @@ Blockly.Workspace.prototype.renameVariableInternal_ = function(variable, newName
 
   // If they are different types, throw an error.
   if (variable && newVariable && variable.type != newVariable.type) {
-    throw Error('Variable "' + oldName + '" is type "' + variable.type +
+    throw Error('Variable "' + variable.name + '" is type "' + variable.type +
          '" and variable "' + newName + '" is type "' + newVariable.type +
          '". Both must be the same type.');
   }
@@ -308,7 +308,7 @@ Blockly.Workspace.prototype.renameVariable = function(oldName, newName) {
 Blockly.Workspace.prototype.renameVariableById = function(id, newName) {
   var variable = this.getVariableById(id);
   this.renameVariableInternal_(variable, newName);
-}
+};
 
 /**
  * Create a variable with a given name, optional type, and optional id.
@@ -563,73 +563,12 @@ Blockly.Workspace.prototype.getBlockById = function(id) {
 };
 
 /**
- * Checks whether all value and statement inputs in the workspace are filled
- * with blocks.
- * @param {boolean=} opt_shadowBlocksAreFilled An optional argument controlling
- *     whether shadow blocks are counted as filled. Defaults to true.
- * @return {boolean} True if all inputs are filled, false otherwise.
- */
-Blockly.Workspace.prototype.allInputsFilled = function(opt_shadowBlocksAreFilled) {
-  var blocks = this.getTopBlocks(false);
-  for (var i = 0, block; block = blocks[i]; i++) {
-    if (!block.allInputsFilled(opt_shadowBlocksAreFilled)) {
-      return false;
-    }
-  }
-  return true;
-};
-
-/**
  * Getter for the flyout associated with this workspace.  This is null in a
  * non-rendered workspace, but may be overriden by subclasses.
  * @return {Blockly.Flyout} The flyout on this workspace.
  */
 Blockly.Workspace.prototype.getFlyout = function() {
   return null;
-};
-
-/**
- * Checks whether all value and statement inputs in the workspace are filled
- * with blocks.
- * @param {boolean=} opt_shadowBlocksAreFilled An optional argument controlling
- *     whether shadow blocks are counted as filled. Defaults to true.
- * @return {boolean} True if all inputs are filled, false otherwise.
- */
-Blockly.Workspace.prototype.allInputsFilled = function(opt_shadowBlocksAreFilled) {
-  var blocks = this.getTopBlocks(false);
-  for (var i = 0, block; block = blocks[i]; i++) {
-    if (!block.allInputsFilled(opt_shadowBlocksAreFilled)) {
-      return false;
-    }
-  }
-  return true;
-};
-
-/**
- * Find the variable with the specified type. If type is null, return list of
- *     variables with empty string type.
- * @param {?string} type Type of the variables to find.
- * @return {Array.<Blockly.VariableModel>} The sought after variables of the
- *     passed in type. An empty array if none are found.
- */
-Blockly.Workspace.prototype.getVariablesOfType = function(type) {
-  return this.variableMap_.getVariablesOfType(type);
-};
-
-/**
- * Return all variable types.
- * @return {!Array.<string>} List of variable types.
- */
-Blockly.Workspace.prototype.getVariableTypes = function() {
-  return this.variableMap_.getVariableTypes();
-};
-
-/**
- * Return all variables of all types.
- * @return {!Array.<Blockly.VariableModel>} List of variable models.
- */
-Blockly.Workspace.prototype.getAllVariables = function() {
-  return this.variableMap_.getAllVariables();
 };
 
 /**

@@ -87,7 +87,6 @@ Blockly.longStart_ = function(e, gesture) {
     if (gesture) {
       gesture.handleRightClick(e);
     }
-
   }, Blockly.LONGPRESS);
 };
 

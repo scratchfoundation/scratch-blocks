@@ -76,14 +76,6 @@ Blockly.BlockSvg = function(workspace, prototypeName, opt_id) {
    */
   this.useDragSurface_ = Blockly.utils.is3dSupported() && !!workspace.blockDragSurface_;
 
-  /**
-   * Whether to move the block to the drag surface when it is dragged.
-   * True if it should move, false if it should be translated directly.
-   * @type {boolean}
-   * @private
-   */
-  this.useDragSurface_ = Blockly.utils.is3dSupported() && !!workspace.blockDragSurface_;
-
   Blockly.Tooltip.bindMouseEvents(this.svgPath_);
   Blockly.BlockSvg.superClass_.constructor.call(this,
       workspace, prototypeName, opt_id);
@@ -397,82 +389,6 @@ Blockly.BlockSvg.prototype.moveBy = function(dx, dy) {
     Blockly.Events.fire(event);
   }
   this.workspace.resizeContents();
-};
-
-/**
- * Transforms a block by setting the translation on the transform attribute
- * of the block's SVG.
- * @param {number} x The x coordinate of the translation in workspace units.
- * @param {number} y The y coordinate of the translation in workspace units.
- */
-Blockly.BlockSvg.prototype.translate = function(x, y) {
-  this.getSvgRoot().setAttribute('transform',
-      'translate(' + x + ',' + y + ')');
-};
-
-/**
- * Move this block to its workspace's drag surface, accounting for positioning.
- * Generally should be called at the same time as setDragging_(true).
- * Does nothing if useDragSurface_ is false.
- * @private
- */
-Blockly.BlockSvg.prototype.moveToDragSurface_ = function() {
-  if (!this.useDragSurface_) {
-    return;
-  }
-  // The translation for drag surface blocks,
-  // is equal to the current relative-to-surface position,
-  // to keep the position in sync as it move on/off the surface.
-  // This is in workspace coordinates.
-  var xy = this.getRelativeToSurfaceXY();
-  this.clearTransformAttributes_();
-  this.workspace.blockDragSurface_.translateSurface(xy.x, xy.y);
-  // Execute the move on the top-level SVG component
-  this.workspace.blockDragSurface_.setBlocksAndShow(this.getSvgRoot());
-};
-
-/**
- * Move this block back to the workspace block canvas.
- * Generally should be called at the same time as setDragging_(false).
- * Does nothing if useDragSurface_ is false.
- * @param {!goog.math.Coordinate} newXY The position the block should take on
- *     on the workspace canvas, in workspace coordinates.
- * @private
- */
-Blockly.BlockSvg.prototype.moveOffDragSurface_ = function(newXY) {
-  if (!this.useDragSurface_) {
-    return;
-  }
-  // Translate to current position, turning off 3d.
-  this.translate(newXY.x, newXY.y);
-  this.workspace.blockDragSurface_.clearAndHide(this.workspace.getCanvas());
-};
-
-/**
- * Move this block during a drag, taking into account whether we are using a
- * drag surface to translate blocks.
- * This block must be a top-level block.
- * @param {!goog.math.Coordinate} newLoc The location to translate to, in
- *     workspace coordinates.
- * @package
- */
-Blockly.BlockSvg.prototype.moveDuringDrag = function(newLoc) {
-  if (this.useDragSurface_) {
-    this.workspace.blockDragSurface_.translateSurface(newLoc.x, newLoc.y);
-  } else {
-    this.svgGroup_.translate_ = 'translate(' + newLoc.x + ',' + newLoc.y + ')';
-    this.svgGroup_.setAttribute('transform',
-        this.svgGroup_.translate_ + this.svgGroup_.skew_);
-  }
-};
-
-/**
- * Clear the block of transform="..." attributes.
- * Used when the block is switching from 3d to 2d transform or vice versa.
- * @private
- */
-Blockly.BlockSvg.prototype.clearTransformAttributes_ = function() {
-  Blockly.utils.removeAttribute(this.getSvgRoot(), 'transform');
 };
 
 /**
