@@ -238,38 +238,6 @@ Blockly.WorkspaceSvg.prototype.useWorkspaceDragSurface_ = false;
 Blockly.WorkspaceSvg.prototype.isDragSurfaceActive_ = false;
 
 /**
- * Time that the last sound was played.
- * @type {Date}
- * @private
- */
-Blockly.WorkspaceSvg.prototype.blockDragSurface_ = null;
-
-/**
- * This workspace's drag surface, if it exists.
- * @type {Blockly.WorkspaceDragSurfaceSvg}
- * @private
- */
-Blockly.WorkspaceSvg.prototype.workspaceDragSurface_ = null;
-
-/**
-  * Whether to move workspace to the drag surface when it is dragged.
-  * True if it should move, false if it should be translated directly.
-  * @type {boolean}
-  * @private
-  */
-Blockly.WorkspaceSvg.prototype.useWorkspaceDragSurface_ = false;
-
-/**
- * Whether the drag surface is actively in use. When true, calls to
- * translate will translate the drag surface instead of the translating the
- * workspace directly.
- * This is set to true in setupDragSurface and to false in resetDragSurface.
- * @type {boolean}
- * @private
- */
-Blockly.WorkspaceSvg.prototype.isDragSurfaceActive_ = false;
-
-/**
  * Last known position of the page scroll.
  * This is used to determine whether we have recalculated screen coordinate
  * stuff since the page scrolled.
