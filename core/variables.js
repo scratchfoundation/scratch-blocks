@@ -234,7 +234,7 @@ Blockly.Variables.createShadowDom_ = function(type) {
 
 /**
  * Create a dom element for value tag with a shadow variable inside.
- * @param {string} name The name of the variable to select.
+ * @param {Blockly.VariableModel} variableModel The variable to use.
  * @return {!Element} An XML element.
  */
 Blockly.Variables.createVariableDom_ = function(variableModel) {
@@ -417,19 +417,4 @@ Blockly.Variables.promptName = function(promptText, defaultText, callback) {
     }
     callback(newVar);
   });
-};
-
-/**
- * Generate XML string for variable field.
- * @param {!Blockly.VariableModel} variableModel The variable model to generate
- *     an XML string from.
- * @return {string} The generated XML.
- * @private
- */
-Blockly.Variables.generateVariableFieldXml_ = function(variableModel) {
-  var xmlString = '<field name="VAR" ' + 'variableType="' +
-      variableModel.type + '" id="' + variableModel.getId() + '">'+
-      variableModel.name +
-      '</field>';
-  return xmlString;
 };

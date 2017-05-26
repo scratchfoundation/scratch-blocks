@@ -81,6 +81,8 @@ Blockly.VariableModel.prototype.getId = function() {
  * A custom compare function for the VariableModel objects.
  * @param {Blockly.VariableModel} var1 First variable to compare.
  * @param {Blockly.VariableModel} var2 Second variable to compare.
+ * @return {number} -1 if name of var1 is less than name of var2, 0 if equal,
+ * and 1 if greater.
  * @package
  */
 Blockly.VariableModel.compareByName = function(var1, var2) {
