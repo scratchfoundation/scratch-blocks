@@ -40,13 +40,6 @@ Blockly.DRAG_RADIUS = 3;
 Blockly.FLYOUT_DRAG_RADIUS = 10;
 
 /**
- * Number of pixels the mouse must move before a drag/scroll starts from the
- * flyout.  Because the drag-intention is determined when this is reached, it is
- * larger than Blockly.DRAG_RADIUS so that the drag-direction is clearer.
- */
-Blockly.FLYOUT_DRAG_RADIUS = 10;
-
-/**
  * Maximum misalignment between connections for them to snap together.
  */
 Blockly.SNAP_RADIUS = 48;
