@@ -239,6 +239,14 @@ Blockly.Scrollbar = function(workspace, horizontal, opt_pair, opt_class) {
 Blockly.Scrollbar.prototype.origin_ = new goog.math.Coordinate(0, 0);
 
 /**
+   * Whether or not the origin of the scrollbar has changed. Used
+   * to help decide whether or not the reflow/resize calls need to happen.
+   * @type {boolean}
+   * @private
+   */
+Blockly.Scrollbar.prototype.originHasChanged_ = true;
+
+/**
  * The size of the area within which the scrollbar handle can move.
  * Coordinate system: pixel coordinates.
  * @type {number}
@@ -841,5 +849,8 @@ Blockly.Scrollbar.prototype.set = function(value) {
  * @param {number} y The y coordinate of the scrollbar's origin.
  */
 Blockly.Scrollbar.prototype.setOrigin = function(x, y) {
-  this.origin_ = new goog.math.Coordinate(x, y);
+  if (x != this.origin_.x || y != this.origin_.y) {
+    this.origin_ = new goog.math.Coordinate(x, y);
+    this.originHasChanged_ = true;
+  }
 };
