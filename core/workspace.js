@@ -228,8 +228,8 @@ Blockly.Workspace.prototype.updateVariableStore = function(clear) {
     // Get variable model with the used variable name.
     var tempVar = this.getVariable(name);
     if (tempVar) {
-       varList.push({'name': tempVar.name, 'type': tempVar.type,
-                     'id': tempVar.getId()});
+      varList.push({'name': tempVar.name, 'type': tempVar.type,
+                    'id': tempVar.getId()});
     }
     else {
       varList.push({'name': name, 'type': null, 'id': null});
@@ -322,6 +322,9 @@ Blockly.Workspace.prototype.renameVariableById = function(id, newName) {
  * @return {?Blockly.VariableModel} The newly created variable.
  */
 Blockly.Workspace.prototype.createVariable = function(name, opt_type, opt_id) {
+  if (name.toLowerCase() == Blockly.Variables.noVariableText()) {
+    return;
+  }
   return this.variableMap_.createVariable(name, opt_type, opt_id);
 };
 
