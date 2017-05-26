@@ -608,8 +608,8 @@ Blockly.Gesture.prototype.doBlockClick_ = function() {
     if (!Blockly.Events.getGroup()) {
       Blockly.Events.setGroup(true);
     }
-  var newBlock = this.flyout_.createBlock(this.targetBlock_);
-  newBlock.scheduleSnapAndBump();
+    var newBlock = this.flyout_.createBlock(this.targetBlock_);
+    newBlock.scheduleSnapAndBump();
   } else {
     // A field is being edited if either the WidgetDiv or DropDownDiv is currently open.
     // If a field is being edited, don't fire any click events.
