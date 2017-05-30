@@ -767,6 +767,10 @@ Blockly.Css.CONTENT = [
     'vertical-align: middle;',
   '}',
 
+  '.blocklyToolboxDelete .blocklyTreeLabel {',
+    'cursor: url("<<<PATH>>>/handdelete.cur"), auto;',
+  '}',
+
   '.blocklyTreeSelected .blocklyTreeLabel {',
     'color: #fff;',
   '}',

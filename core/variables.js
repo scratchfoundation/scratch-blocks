@@ -32,6 +32,7 @@ goog.provide('Blockly.Variables');
 
 goog.require('Blockly.Blocks');
 goog.require('Blockly.constants');
+goog.require('Blockly.VariableModel');
 goog.require('Blockly.Workspace');
 goog.require('goog.string');
 
@@ -109,12 +110,8 @@ Blockly.Variables.allVariables = function(root) {
  * @return {!Array.<!Element>} Array of XML block elements.
  */
 Blockly.Variables.flyoutCategory = function(workspace) {
-  var variableNameList = [];
   var variableModelList = workspace.getVariablesOfType('');
-  for (var i = 0; i < variableModelList.length; i++) {
-    variableNameList.push(variableModelList[i].name);
-  }
-  variableNameList.sort(goog.string.caseInsensitiveCompare);
+  variableModelList.sort(Blockly.VariableModel.compareByName);
 
   var xmlList = [];
   var button = goog.dom.createDom('button');
@@ -127,17 +124,19 @@ Blockly.Variables.flyoutCategory = function(workspace) {
 
   xmlList.push(button);
 
-  for (var i = 0; i < variableNameList.length; i++) {
+  for (var i = 0; i < variableModelList.length; i++) {
     if (Blockly.Blocks['data_variable']) {
       // <block type="data_variable">
-      //    <field name="VARIABLE">variablename</field>
+      //    <field name="VARIABLE" variableType="" id="">variablename</field>
       // </block>
       var block = goog.dom.createDom('block');
       block.setAttribute('type', 'data_variable');
       block.setAttribute('gap', 8);
 
-      var field = goog.dom.createDom('field', null, variableNameList[i]);
+      var field = goog.dom.createDom('field', null, variableModelList[i].name);
       field.setAttribute('name', 'VARIABLE');
+      field.setAttribute('variableType', variableModelList[i].type);
+      field.setAttribute('id', variableModelList[i].getId());
       block.appendChild(field);
 
       xmlList.push(block);
@@ -161,7 +160,7 @@ Blockly.Variables.flyoutCategory = function(workspace) {
       var block = goog.dom.createDom('block');
       block.setAttribute('type', 'data_setvariableto');
       block.setAttribute('gap', 8);
-      block.appendChild(Blockly.Variables.createVariableDom_(variableNameList[0]));
+      block.appendChild(Blockly.Variables.createVariableDom_(variableModelList[0]));
       block.appendChild(Blockly.Variables.createTextDom_());
       xmlList.push(block);
     }
@@ -179,7 +178,7 @@ Blockly.Variables.flyoutCategory = function(workspace) {
       var block = goog.dom.createDom('block');
       block.setAttribute('type', 'data_changevariableby');
       block.setAttribute('gap', 8);
-      block.appendChild(Blockly.Variables.createVariableDom_(variableNameList[0]));
+      block.appendChild(Blockly.Variables.createVariableDom_(variableModelList[0]));
       block.appendChild(Blockly.Variables.createMathNumberDom_());
       xmlList.push(block);
     }
@@ -192,7 +191,7 @@ Blockly.Variables.flyoutCategory = function(workspace) {
       var block = goog.dom.createDom('block');
       block.setAttribute('type', 'data_showvariable');
       block.setAttribute('gap', 8);
-      block.appendChild(Blockly.Variables.createVariableDom_(variableNameList[0]));
+      block.appendChild(Blockly.Variables.createVariableDom_(variableModelList[0]));
       xmlList.push(block);
     }
     if (Blockly.Blocks['data_hidevariable']) {
@@ -203,7 +202,7 @@ Blockly.Variables.flyoutCategory = function(workspace) {
       // </block>
       var block = goog.dom.createDom('block');
       block.setAttribute('type', 'data_hidevariable');
-      block.appendChild(Blockly.Variables.createVariableDom_(variableNameList[0]));
+      block.appendChild(Blockly.Variables.createVariableDom_(variableModelList[0]));
       xmlList.push(block);
     }
   }
@@ -235,10 +234,10 @@ Blockly.Variables.createShadowDom_ = function(type) {
 
 /**
  * Create a dom element for value tag with a shadow variable inside.
- * @param {string} name The name of the variable to select.
+ * @param {Blockly.VariableModel} variableModel The variable to use.
  * @return {!Element} An XML element.
  */
-Blockly.Variables.createVariableDom_ = function(name) {
+Blockly.Variables.createVariableDom_ = function(variableModel) {
   //   <value name="VARIABLE">
   //     <shadow type="data_variablemenu">
   //       <field name="VARIABLE">variablename
@@ -247,8 +246,10 @@ Blockly.Variables.createVariableDom_ = function(name) {
   //   </value>
   var value = Blockly.Variables.createValueDom_('VARIABLE');
   var shadow = Blockly.Variables.createShadowDom_('data_variablemenu');
-  var field = goog.dom.createDom('field', null, name);
+  var field = goog.dom.createDom('field', null, variableModel.name);
   field.setAttribute('name', 'VARIABLE');
+  field.setAttribute('variableType', variableModel.type);
+  field.setAttribute('id', variableModel.getId());
   shadow.appendChild(field);
   value.appendChild(shadow);
   return value;

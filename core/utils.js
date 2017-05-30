@@ -57,13 +57,6 @@ Blockly.utils.removeAttribute = function(element, attributeName) {
 };
 
 /**
- * Cached value for whether 3D is supported
- * @type {boolean}
- * @private
- */
-Blockly.cache3dSupported_ = null;
-
-/**
  * Add a CSS class to a element.
  * Similar to Closure's goog.dom.classes.add, except it handles SVG elements.
  * @param {!Element} element DOM element to add class to.

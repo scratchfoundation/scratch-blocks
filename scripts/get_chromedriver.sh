@@ -5,6 +5,8 @@ if [ ! -d $chromedriver_dir ]; then
   mkdir $chromedriver_dir
 fi
 
+echo "downloading chromedriver"
+
 if [[ $os_name == 'Linux' && ! -f $chromedriver_dir/chromedriver ]]; then
   cd chromedriver  && curl -L https://chromedriver.storage.googleapis.com/2.29/chromedriver_linux64.zip > tmp.zip &&  unzip -o tmp.zip && rm tmp.zip
   # wait until download finish
