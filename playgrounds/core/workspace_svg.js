@@ -33,14 +33,15 @@ goog.require('Blockly.ConnectionDB');
 goog.require('Blockly.constants');
 goog.require('Blockly.DropDownDiv');
 goog.require('Blockly.Events');
-//goog.require('Blockly.HorizontalFlyout');
 goog.require('Blockly.Gesture');
+goog.require('Blockly.Grid');
 goog.require('Blockly.Options');
 goog.require('Blockly.ScrollbarPair');
 goog.require('Blockly.Touch');
 goog.require('Blockly.Trashcan');
 //goog.require('Blockly.VerticalFlyout');
 goog.require('Blockly.Workspace');
+goog.require('Blockly.WorkspaceAudio');
 goog.require('Blockly.WorkspaceDragSurfaceSvg');
 goog.require('Blockly.Xml');
 goog.require('Blockly.ZoomControls');
@@ -83,18 +84,27 @@ Blockly.WorkspaceSvg = function(options, opt_blockDragSurface, opt_wsDragSurface
       this.workspaceDragSurface_ && Blockly.utils.is3dSupported();
 
   /**
-   * Database of pre-loaded sounds.
-   * @private
-   * @const
-   */
-  this.SOUNDS_ = Object.create(null);
-  /**
    * List of currently highlighted blocks.  Block highlighting is often used to
    * visually mark blocks currently being executed.
    * @type !Array.<!Blockly.BlockSvg>
    * @private
    */
   this.highlightedBlocks_ = [];
+
+  /**
+   * Object in charge of loading, storing, and playing audio for a workspace.
+   * @type {Blockly.WorkspaceAudio}
+   * @private
+   */
+  this.audioManager_ = new Blockly.WorkspaceAudio(options.parentWorkspace);
+
+  /**
+   * This workspace's grid object or null.
+   * @type {Blockly.Grid}
+   * @private
+   */
+  this.grid_ = this.options.gridPattern ?
+      new Blockly.Grid(options.gridPattern, options.gridOptions) : null;
 
   this.registerToolboxCategoryCallback(Blockly.VARIABLE_CATEGORY_NAME,
       Blockly.Variables.flyoutCategory);
@@ -228,13 +238,6 @@ Blockly.WorkspaceSvg.prototype.useWorkspaceDragSurface_ = false;
 Blockly.WorkspaceSvg.prototype.isDragSurfaceActive_ = false;
 
 /**
- * Time that the last sound was played.
- * @type {Date}
- * @private
- */
-Blockly.WorkspaceSvg.prototype.lastSound_ = null;
-
-/**
  * Last known position of the page scroll.
  * This is used to determine whether we have recalculated screen coordinate
  * stuff since the page scrolled.
@@ -352,9 +355,9 @@ Blockly.WorkspaceSvg.prototype.createDom = function(opt_backgroundClass) {
         {'height': '100%', 'width': '100%', 'class': opt_backgroundClass},
         this.svgGroup_);
 
-    if (opt_backgroundClass == 'blocklyMainBackground') {
+    if (opt_backgroundClass == 'blocklyMainBackground' && this.grid_) {
       this.svgBackground_.style.fill =
-          'url(#' + this.options.gridPattern.id + ')';
+          'url(#' + this.grid_.getPatternId() + ')';
     }
   }
   /** @type {SVGElement} */
@@ -390,8 +393,9 @@ Blockly.WorkspaceSvg.prototype.createDom = function(opt_backgroundClass) {
      */
     this.toolbox_ = new Blockly.Toolbox(this);
   }
-  this.updateGridPattern_();
-  this.updateStackGlowScale_();
+  if (this.grid_) {
+    this.grid_.update(this.scale);
+  }
   this.recordDeleteAreas();
   return this.svgGroup_;
 };
@@ -432,6 +436,16 @@ Blockly.WorkspaceSvg.prototype.dispose = function() {
   if (this.zoomControls_) {
     this.zoomControls_.dispose();
     this.zoomControls_ = null;
+  }
+
+  if (this.audioManager_) {
+    this.audioManager_.dispose();
+    this.audioManager_ = null;
+  }
+
+  if (this.grid_) {
+    this.grid_.dispose();
+    this.grid_ = null;
   }
 
   if (this.toolboxCategoryCallbacks_) {
@@ -966,13 +980,15 @@ Blockly.WorkspaceSvg.prototype.renameVariable = function(oldName, newName) {
  *     variable immediately.
  * TODO: #468
  * @param {string} name The new variable's name.
+ * @return {?Blockly.VariableModel} The newly created variable.
  */
 Blockly.WorkspaceSvg.prototype.createVariable = function(name) {
-  Blockly.WorkspaceSvg.superClass_.createVariable.call(this, name);
+  var newVar = Blockly.WorkspaceSvg.superClass_.createVariable.call(this, name);
   // Don't refresh the toolbox if there's a drag in progress.
   if (this.toolbox_ && this.toolbox_.flyout_ && !this.currentGesture_) {
     this.toolbox_.refreshSelection();
   }
+  return newVar;
 };
 
 /**
@@ -1309,96 +1325,6 @@ Blockly.WorkspaceSvg.prototype.showContextMenu_ = function(e) {
 };
 
 /**
- * Load an audio file.  Cache it, ready for instantaneous playing.
- * @param {!Array.<string>} filenames List of file types in decreasing order of
- *   preference (i.e. increasing size).  E.g. ['media/go.mp3', 'media/go.wav']
- *   Filenames include path from Blockly's root.  File extensions matter.
- * @param {string} name Name of sound.
- * @private
- */
-Blockly.WorkspaceSvg.prototype.loadAudio_ = function(filenames, name) {
-  if (!filenames.length) {
-    return;
-  }
-  try {
-    var audioTest = new window['Audio']();
-  } catch(e) {
-    // No browser support for Audio.
-    // IE can throw an error even if the Audio object exists.
-    return;
-  }
-  var sound;
-  for (var i = 0; i < filenames.length; i++) {
-    var filename = filenames[i];
-    var ext = filename.match(/\.(\w+)$/);
-    if (ext && audioTest.canPlayType('audio/' + ext[1])) {
-      // Found an audio format we can play.
-      sound = new window['Audio'](filename);
-      break;
-    }
-  }
-  if (sound && sound.play) {
-    this.SOUNDS_[name] = sound;
-  }
-};
-
-/**
- * Preload all the audio files so that they play quickly when asked for.
- * @private
- */
-Blockly.WorkspaceSvg.prototype.preloadAudio_ = function() {
-  for (var name in this.SOUNDS_) {
-    var sound = this.SOUNDS_[name];
-    sound.volume = .01;
-    sound.play();
-    sound.pause();
-    // iOS can only process one sound at a time.  Trying to load more than one
-    // corrupts the earlier ones.  Just load one and leave the others uncached.
-    if (goog.userAgent.IPAD || goog.userAgent.IPHONE) {
-      break;
-    }
-  }
-};
-
-/**
- * Play a named sound at specified volume.  If volume is not specified,
- * use full volume (1).
- * @param {string} name Name of sound.
- * @param {number=} opt_volume Volume of sound (0-1).
- */
-Blockly.WorkspaceSvg.prototype.playAudio = function(name, opt_volume) {
-  // Send a UI event in case we wish to play the sound externally
-  var event = new Blockly.Events.Ui(null, 'sound', null, name);
-  event.workspaceId = this.id;
-  Blockly.Events.fire(event);
-  var sound = this.SOUNDS_[name];
-  if (sound) {
-    // Don't play one sound on top of another.
-    var now = new Date;
-    if (now - this.lastSound_ < Blockly.SOUND_LIMIT) {
-      return;
-    }
-    this.lastSound_ = now;
-    var mySound;
-    var ie9 = goog.userAgent.DOCUMENT_MODE &&
-              goog.userAgent.DOCUMENT_MODE === 9;
-    if (ie9 || goog.userAgent.IPAD || goog.userAgent.ANDROID) {
-      // Creating a new audio node causes lag in IE9, Android and iPad. Android
-      // and IE9 refetch the file from the server, iPad uses a singleton audio
-      // node which must be deleted and recreated for each new audio tag.
-      mySound = sound;
-    } else {
-      mySound = sound.cloneNode();
-    }
-    mySound.volume = (opt_volume === undefined ? 1 : opt_volume);
-    mySound.play();
-  } else if (this.options.parentWorkspace) {
-    // Maybe a workspace on a lower level knows about this sound.
-    this.options.parentWorkspace.playAudio(name, opt_volume);
-  }
-};
-
-/**
  * Modify the block tree on the existing toolbox.
  * @param {Node|string} tree DOM tree of blocks, or text representation of same.
  */
@@ -1588,11 +1514,9 @@ Blockly.WorkspaceSvg.prototype.setScale = function(newScale) {
     newScale = this.options.zoomOptions.minScale;
   }
   this.scale = newScale;
-  this.updateStackGlowScale_();
-  this.updateGridPattern_();
-  // Hide the WidgetDiv without animation (zoom makes field out of place with div)
-  Blockly.WidgetDiv.hide(true);
-  Blockly.DropDownDiv.hideWithoutAnimation();
+  if (this.grid_) {
+    this.grid_.update(this.scale);
+  }
   if (this.scrollbar) {
     this.scrollbar.resize();
   } else {
@@ -1626,42 +1550,6 @@ Blockly.WorkspaceSvg.prototype.scroll = function(x, y) {
   // Move the scrollbars and the page will scroll automatically.
   this.scrollbar.set(-x - metrics.contentLeft,
                      -y - metrics.contentTop);
-};
-
-/**
- * Updates the grid pattern.
- * @private
- */
-Blockly.WorkspaceSvg.prototype.updateGridPattern_ = function() {
-  if (!this.options.gridPattern) {
-    return;  // No grid.
-  }
-  // MSIE freaks if it sees a 0x0 pattern, so set empty patterns to 100x100.
-  var safeSpacing = (this.options.gridOptions['spacing'] * this.scale) || 100;
-  this.options.gridPattern.setAttribute('width', safeSpacing);
-  this.options.gridPattern.setAttribute('height', safeSpacing);
-  var half = Math.floor(this.options.gridOptions['spacing'] / 2) + 0.5;
-  var start = half - this.options.gridOptions['length'] / 2;
-  var end = half + this.options.gridOptions['length'] / 2;
-  var line1 = this.options.gridPattern.firstChild;
-  var line2 = line1 && line1.nextSibling;
-  half *= this.scale;
-  start *= this.scale;
-  end *= this.scale;
-  if (line1) {
-    line1.setAttribute('stroke-width', this.scale);
-    line1.setAttribute('x1', start);
-    line1.setAttribute('y1', half);
-    line1.setAttribute('x2', end);
-    line1.setAttribute('y2', half);
-  }
-  if (line2) {
-    line2.setAttribute('stroke-width', this.scale);
-    line2.setAttribute('x1', half);
-    line2.setAttribute('y1', start);
-    line2.setAttribute('x2', half);
-    line2.setAttribute('y2', end);
-  }
 };
 
 /**
@@ -1792,14 +1680,8 @@ Blockly.WorkspaceSvg.setTopLevelWorkspaceMetrics_ = function(xyRatio) {
   var x = this.scrollX + metrics.absoluteLeft;
   var y = this.scrollY + metrics.absoluteTop;
   this.translate(x, y);
-  if (this.options.gridPattern) {
-    this.options.gridPattern.setAttribute('x', x);
-    this.options.gridPattern.setAttribute('y', y);
-    if (goog.userAgent.IE || goog.userAgent.EDGE) {
-      // IE/Edge doesn't notice that the x/y offsets have changed.
-      // Force an update.
-      this.updateGridPattern_();
-    }
+  if (this.grid_) {
+    this.grid_.moveTo(x, y);
   }
 };
 
@@ -1950,6 +1832,24 @@ Blockly.WorkspaceSvg.prototype.cancelCurrentGesture = function() {
   if (this.currentGesture_) {
     this.currentGesture_.cancel();
   }
+};
+
+/**
+ * Get the audio manager for this workspace.
+ * @return {Blockly.WorkspaceAudio} The audio manager for this workspace.
+ * @package
+ */
+Blockly.WorkspaceSvg.prototype.getAudioManager = function() {
+  return this.audioManager_;
+};
+
+/**
+ * Get the grid object for this workspace, or null if there is none.
+ * @return {Blockly.Grid} The grid object for this workspace.
+ * @package
+ */
+Blockly.WorkspaceSvg.prototype.getGrid = function() {
+  return this.grid_;
 };
 
 // Export symbols that would otherwise be renamed by Closure compiler.
