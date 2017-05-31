@@ -498,6 +498,7 @@ Blockly.VerticalFlyout.prototype.createRect_ = function(block, x, y,
  * @param {number} cursorY The y position of the cursor during this layout pass.
  * @param {!{height: number, width: number}} blockHW The height and width of the
  *     block.
+ * @param {boolean} defaultCheckboxState Whether the checkbox should be checked.
  * @private
  */
 Blockly.VerticalFlyout.prototype.createCheckbox_ = function(block, cursorX,
