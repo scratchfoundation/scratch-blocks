@@ -136,53 +136,54 @@ Blockly.Blocks['data_changevariableby'] = {
   }
 };
 
-Blockly.Blocks['data_showvariable'] = {
-  /**
-   * Block to show a variable
-   * @this Blockly.Block
-   */
-  init: function() {
-    this.jsonInit({
-      "message0": "show variable %1",
-      "args0": [
-        {
-          "type": "input_value",
-          "name": "VARIABLE"
-        }
-      ],
-      "previousStatement": null,
-      "nextStatement": null,
-      "category": Blockly.Categories.data,
-      "colour": Blockly.Colours.data.primary,
-      "colourSecondary": Blockly.Colours.data.secondary,
-      "colourTertiary": Blockly.Colours.data.tertiary
-    });
-  }
-};
-
-Blockly.Blocks['data_hidevariable'] = {
-  /**
-   * Block to hide a variable
-   * @this Blockly.Block
-   */
-  init: function() {
-    this.jsonInit({
-      "message0": "hide variable %1",
-      "args0": [
-        {
-          "type": "input_value",
-          "name": "VARIABLE"
-        }
-      ],
-      "previousStatement": null,
-      "nextStatement": null,
-      "category": Blockly.Categories.data,
-      "colour": Blockly.Colours.data.primary,
-      "colourSecondary": Blockly.Colours.data.secondary,
-      "colourTertiary": Blockly.Colours.data.tertiary
-    });
-  }
-};
+// @todo reinstate when there are implementations for these
+// Blockly.Blocks['data_showvariable'] = {
+//   /**
+//    * Block to show a variable
+//    * @this Blockly.Block
+//    */
+//   init: function() {
+//     this.jsonInit({
+//       "message0": "show variable %1",
+//       "args0": [
+//         {
+//           "type": "input_value",
+//           "name": "VARIABLE"
+//         }
+//       ],
+//       "previousStatement": null,
+//       "nextStatement": null,
+//       "category": Blockly.Categories.data,
+//       "colour": Blockly.Colours.data.primary,
+//       "colourSecondary": Blockly.Colours.data.secondary,
+//       "colourTertiary": Blockly.Colours.data.tertiary
+//     });
+//   }
+// };
+//
+// Blockly.Blocks['data_hidevariable'] = {
+//   /**
+//    * Block to hide a variable
+//    * @this Blockly.Block
+//    */
+//   init: function() {
+//     this.jsonInit({
+//       "message0": "hide variable %1",
+//       "args0": [
+//         {
+//           "type": "input_value",
+//           "name": "VARIABLE"
+//         }
+//       ],
+//       "previousStatement": null,
+//       "nextStatement": null,
+//       "category": Blockly.Categories.data,
+//       "colour": Blockly.Colours.data.primary,
+//       "colourSecondary": Blockly.Colours.data.secondary,
+//       "colourTertiary": Blockly.Colours.data.tertiary
+//     });
+//   }
+// };
 
 Blockly.Blocks['data_listcontents'] = {
   /**
