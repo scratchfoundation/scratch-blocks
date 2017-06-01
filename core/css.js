@@ -152,6 +152,7 @@ Blockly.Css.CONTENT = [
     'height: 100%;',
     'position: relative;',
     'overflow: hidden;', /* So blocks in drag surface disappear at edges */
+    'touch-action: none',
   '}',
 
   '.blocklyNonSelectable {',
@@ -764,6 +765,10 @@ Blockly.Css.CONTENT = [
     'font-size: 16px;',
     'padding: 0 3px;',
     'vertical-align: middle;',
+  '}',
+
+  '.blocklyToolboxDelete .blocklyTreeLabel {',
+    'cursor: url("<<<PATH>>>/handdelete.cur"), auto;',
   '}',
 
   '.blocklyTreeSelected .blocklyTreeLabel {',

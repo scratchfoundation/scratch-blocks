@@ -30,6 +30,7 @@ goog.require('Blockly.BlockDragSurfaceSvg');
 goog.require('Blockly.Css');
 goog.require('Blockly.constants');
 goog.require('Blockly.DropDownDiv');
+goog.require('Blockly.Grid');
 goog.require('Blockly.Options');
 goog.require('Blockly.WorkspaceSvg');
 goog.require('Blockly.WorkspaceDragSurfaceSvg');
@@ -166,7 +167,6 @@ Blockly.createDom_ = function(container, options) {
        'operator': 'in', 'result': 'outGlow'}, replacementGlowFilter);
   Blockly.utils.createSvgElement('feComposite',
       {'in': 'SourceGraphic', 'in2': 'outGlow', 'operator': 'over'}, replacementGlowFilter);
-
   /*
     <pattern id="blocklyDisabledPattern837493" patternUnits="userSpaceOnUse"
              width="10" height="10">
@@ -184,27 +184,7 @@ Blockly.createDom_ = function(container, options) {
       {'d': 'M 0 0 L 10 10 M 10 0 L 0 10', 'stroke': '#cc0'}, disabledPattern);
   options.disabledPatternId = disabledPattern.id;
 
-  /*
-    <pattern id="blocklyGridPattern837493" patternUnits="userSpaceOnUse">
-      <rect stroke="#888" />
-      <rect stroke="#888" />
-    </pattern>
-  */
-  var gridPattern = Blockly.utils.createSvgElement('pattern',
-      {'id': 'blocklyGridPattern' + rnd,
-       'patternUnits': 'userSpaceOnUse'}, defs);
-  if (options.gridOptions['length'] > 0 && options.gridOptions['spacing'] > 0) {
-    Blockly.utils.createSvgElement('line',
-        {'stroke': options.gridOptions['colour']},
-        gridPattern);
-    if (options.gridOptions['length'] > 1) {
-      Blockly.utils.createSvgElement('line',
-          {'stroke': options.gridOptions['colour']},
-          gridPattern);
-    }
-    // x1, y1, x1, x2 properties will be set later in updateGridPattern_.
-  }
-  options.gridPattern = gridPattern;
+  options.gridPattern = Blockly.Grid.createDom(rnd, options.gridOptions, defs);
   return svg;
 };
 
@@ -237,7 +217,7 @@ Blockly.createMainWorkspace_ = function(svg, options, blockDragSurface, workspac
 
   if (!options.readOnly && !options.hasScrollbars) {
     var workspaceChanged = function() {
-      if (Blockly.dragMode_ == Blockly.DRAG_NONE) {
+      if (!mainWorkspace.isDragging()) {
         var metrics = mainWorkspace.getMetrics();
         var edgeLeft = metrics.viewLeft + metrics.absoluteLeft;
         var edgeTop = metrics.viewTop + metrics.absoluteTop;
@@ -371,10 +351,6 @@ Blockly.inject.bindDocumentEvents_ = function() {
     // should run regardless of what other touch event handlers have run.
     Blockly.bindEvent_(document, 'touchend', null, Blockly.longStop_);
     Blockly.bindEvent_(document, 'touchcancel', null, Blockly.longStop_);
-    // Don't use bindEvent_ for document's mouseup since that would create a
-    // corresponding touch handler that would squelch the ability to interact
-    // with non-Blockly elements.
-    document.addEventListener('mouseup', Blockly.onMouseUp_, false);
     // Some iPad versions don't fire resize after portrait to landscape change.
     if (goog.userAgent.IPAD) {
       Blockly.bindEventWithChecks_(window, 'orientationchange', document,
@@ -394,10 +370,15 @@ Blockly.inject.bindDocumentEvents_ = function() {
  * @private
  */
 Blockly.inject.loadSounds_ = function(pathToMedia, workspace) {
-  workspace.loadAudio_(
-      [pathToMedia + 'click.wav'], 'click');
-  workspace.loadAudio_(
-      [pathToMedia + 'delete.wav'], 'delete');
+  var audioMgr = workspace.getAudioManager();
+  audioMgr.load(
+      [pathToMedia + 'click.mp3',
+       pathToMedia + 'click.wav',
+       pathToMedia + 'click.ogg'], 'click');
+  audioMgr.load(
+      [pathToMedia + 'delete.mp3',
+       pathToMedia + 'delete.ogg',
+       pathToMedia + 'delete.wav'], 'delete');
 
   // Bind temporary hooks that preload the sounds.
   var soundBinds = [];
@@ -405,7 +386,7 @@ Blockly.inject.loadSounds_ = function(pathToMedia, workspace) {
     while (soundBinds.length) {
       Blockly.unbindEvent_(soundBinds.pop());
     }
-    workspace.preloadAudio_();
+    audioMgr.preload();
   };
 
   // opt_noCaptureIdentifier is true because this is an action to take on a

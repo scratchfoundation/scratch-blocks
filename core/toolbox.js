@@ -116,7 +116,6 @@ Blockly.Toolbox.prototype.init = function() {
   // Clicking on toolbox closes popups.
   Blockly.bindEventWithChecks_(this.HtmlDiv, 'mousedown', this,
       function(e) {
-        Blockly.DropDownDiv.hide();
         if (Blockly.utils.isRightButton(e) || e.target == this.HtmlDiv) {
           // Close flyout.
           Blockly.hideChaff(false);
@@ -517,6 +516,7 @@ Blockly.Toolbox.Category.prototype.parseContents_ = function(domTree) {
       case 'SHADOW':
       case 'LABEL':
       case 'BUTTON':
+      case 'SEP':
       case 'TEXT':
         this.contents_.push(child);
         break;

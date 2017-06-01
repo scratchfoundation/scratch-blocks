@@ -33,6 +33,13 @@ goog.provide('Blockly.constants');
 Blockly.DRAG_RADIUS = 3;
 
 /**
+ * Number of pixels the mouse must move before a drag/scroll starts from the
+ * flyout.  Because the drag-intention is determined when this is reached, it is
+ * larger than Blockly.DRAG_RADIUS so that the drag-direction is clearer.
+ */
+Blockly.FLYOUT_DRAG_RADIUS = 10;
+
+/**
  * Maximum misalignment between connections for them to snap together.
  */
 Blockly.SNAP_RADIUS = 48;
@@ -269,6 +276,13 @@ Blockly.Categories = {
 };
 
 /**
+ * ENUM representing that an event is not in any delete areas.
+ * Null for backwards compatibility reasons.
+ * @const
+ */
+Blockly.DELETE_AREA_NONE = null;
+
+/**
  * ENUM representing that an event is in the delete area of the trash can.
  * @const
  */
@@ -296,3 +310,19 @@ Blockly.VARIABLE_CATEGORY_NAME = 'VARIABLE';
  * @const {string}
  */
 Blockly.PROCEDURE_CATEGORY_NAME = 'PROCEDURE';
+
+/**
+ * String for use in the dropdown created in field_variable.
+ * This string indicates that this option in the dropdown is 'Rename
+ * variable...' and if selected, should trigger the prompt to rename a variable.
+ * @const {string}
+ */
+Blockly.RENAME_VARIABLE_ID = 'RENAME_VARIABLE_ID';
+
+/**
+ * String for use in the dropdown created in field_variable.
+ * This string indicates that this option in the dropdown is 'Delete the "%1"
+ * variable' and if selected, should trigger the prompt to delete a variable.
+ * @const {string}
+ */
+Blockly.DELETE_VARIABLE_ID = 'DELETE_VARIABLE_ID';

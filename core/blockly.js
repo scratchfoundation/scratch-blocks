@@ -80,57 +80,11 @@ Blockly.mainWorkspace = null;
 Blockly.selected = null;
 
 /**
- * Currently highlighted connection (during a drag).
- * @type {Blockly.Connection}
- * @private
- */
-Blockly.highlightedConnection_ = null;
-
-/**
- * Connection on dragged block that matches the highlighted connection.
- * @type {Blockly.Connection}
- * @private
- */
-Blockly.localConnection_ = null;
-
-/**
  * All of the connections on blocks that are currently being dragged.
  * @type {!Array.<!Blockly.Connection>}
  * @private
  */
 Blockly.draggingConnections_ = [];
-
-/**
- * Connection on the insertion marker block that matches
- * Blockly.localConnection_ on the dragged block.
- * @type {Blockly.Connection}
- * @private
- */
-Blockly.insertionMarkerConnection_ = null;
-
-/**
- * Grayed-out block that indicates to the user what will happen if they release
- * a drag immediately.
- * @type {Blockly.Block}
- * @private
- */
-Blockly.insertionMarker_ = null;
-
-/**
- * The block that will be replaced if the drag is released immediately.  Should
- * be visually highlighted to indicate this to the user.
- * @type {Blockly.Block}
- * @private
- */
-Blockly.replacementMarker_ = null;
-
-/**
- * Connection that was bumped out of the way by an insertion marker, and may
- * need to be put back as the drag continues.
- * @type {Blockly.Connection}
- * @private
- */
-Blockly.bumpedConnection_ = null;
 
 /**
  * Contents of the local clipboard.
@@ -145,15 +99,6 @@ Blockly.clipboardXml_ = null;
  * @private
  */
 Blockly.clipboardSource_ = null;
-
-/**
- * Is the mouse dragging a block?
- * DRAG_NONE - No drag operation.
- * DRAG_STICKY - Still inside the sticky DRAG_RADIUS.
- * DRAG_FREE - Freely draggable.
- * @private
- */
-Blockly.dragMode_ = Blockly.DRAG_NONE;
 
 /**
  * Cached value for whether 3D is supported.
@@ -242,7 +187,15 @@ Blockly.onKeyDown_ = function(e) {
     // Delete or backspace.
     // Stop the browser from going back to the previous page.
     e.preventDefault();
+    // Don't delete while dragging.  Jeez.
+    if (Blockly.mainWorkspace.isDragging()) {
+      return;
+    }
   } else if (e.altKey || e.ctrlKey || e.metaKey) {
+    // Don't use meta keys during drags.
+    if (Blockly.mainWorkspace.isDragging()) {
+      return;
+    }
     if (Blockly.selected &&
         Blockly.selected.isDeletable() && Blockly.selected.isMovable()) {
       if (e.keyCode == 67) {
@@ -253,12 +206,7 @@ Blockly.onKeyDown_ = function(e) {
         // 'x' for cut.
         Blockly.copy_(Blockly.selected);
         Blockly.hideChaff();
-        var heal = Blockly.dragMode_ != Blockly.DRAG_FREE;
-        Blockly.selected.dispose(heal, true);
-        if (Blockly.highlightedConnection_) {
-          Blockly.highlightedConnection_.unhighlight();
-          Blockly.highlightedConnection_ = null;
-        }
+        Blockly.selected.dispose(/* heal */ true, true);
       }
     }
     if (e.keyCode == 86) {
@@ -274,15 +222,6 @@ Blockly.onKeyDown_ = function(e) {
       Blockly.mainWorkspace.undo(e.shiftKey);
     }
   }
-};
-
-/**
- * Stop binding to the global mouseup and mousemove events.
- * @private
- */
-Blockly.terminateDrag_ = function() {
-  Blockly.BlockSvg.terminateDrag();
-  Blockly.Flyout.terminateDrag_();
 };
 
 /**
@@ -337,7 +276,8 @@ Blockly.onContextMenu_ = function(e) {
  */
 Blockly.hideChaff = function(opt_allowToolbox) {
   Blockly.Tooltip.hide();
-  Blockly.WidgetDiv.hide();
+  Blockly.WidgetDiv.hide(true);
+  Blockly.DropDownDiv.hideWithoutAnimation();
   if (!opt_allowToolbox) {
     var workspace = Blockly.getMainWorkspace();
     if (workspace.toolbox_ &&

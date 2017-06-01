@@ -142,6 +142,8 @@ Blockly.Block = function(workspace, prototypeName, opt_id) {
   this.category_ = null;
 
   /**
+   * The block's position in workspace units.  (0, 0) is at the workspace's
+   * origin; scale does not change this value.
    * @type {!goog.math.Coordinate}
    * @private
    */
@@ -339,7 +341,7 @@ Blockly.Block.prototype.getConnections_ = function() {
 /**
  * Walks down a stack of blocks and finds the last next connection on the stack.
  * @return {Blockly.Connection} The last next connection on the stack, or null.
- * @private
+ * @package
  */
 Blockly.Block.prototype.lastConnectionInStack = function() {
   var nextConnection = this.nextConnection;
@@ -360,7 +362,6 @@ Blockly.Block.prototype.lastConnectionInStack = function() {
  * connected should not coincidentally line up on screen.
  * @private
  */
-// TODO: Refactor to return early in headless mode.
 Blockly.Block.prototype.bumpNeighbours_ = function() {
   console.warn('Not expected to reach this bumpNeighbours_ function. The ' +
     'BlockSvg function for bumpNeighbours_ was expected to be called instead.');
@@ -1239,10 +1240,14 @@ Blockly.Block.prototype.interpolate_ = function(message, args, lastDummyAlign) {
   for (var i = 0; i < tokens.length; i++) {
     var token = tokens[i];
     if (typeof token == 'number') {
-      goog.asserts.assert(token > 0 && token <= args.length,
-          'Message index %%s out of range.', token);
-      goog.asserts.assert(!indexDup[token],
-          'Message index %%s duplicated.', token);
+      if (token <= 0 || token > args.length) {
+        throw new Error('Block \"' + this.type + '\": ' +
+            'Message index %' + token + ' out of range.');
+      }
+      if (indexDup[token]) {
+        throw new Error('Block \"' + this.type + '\": ' +
+            'Message index %' + token + ' duplicated.');
+      }
       indexDup[token] = true;
       indexCount++;
       elements.push(args[token - 1]);
@@ -1253,8 +1258,10 @@ Blockly.Block.prototype.interpolate_ = function(message, args, lastDummyAlign) {
       }
     }
   }
-  goog.asserts.assert(indexCount == args.length,
-      'block "%s": Message does not reference all %s arg(s).', this.type, args.length);
+  if(indexCount != args.length) {
+    throw new Error('Block \"' + this.type + '\": ' +
+        'Message does not reference all ' + args.length + ' arg(s).');
+  }
   // Add last dummy input if needed.
   if (elements.length && (typeof elements[elements.length - 1] == 'string' ||
       goog.string.startsWith(elements[elements.length - 1]['type'],
