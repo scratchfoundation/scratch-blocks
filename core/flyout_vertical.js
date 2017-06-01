@@ -424,8 +424,7 @@ Blockly.VerticalFlyout.prototype.layout_ = function(contents, gaps) {
 
       var moveX = this.RTL ? newX - oldX : margin;
       if (block.hasCheckboxInFlyout()) {
-        var defaultState = Blockly.Blocks.getCheckboxState(block.id);
-        this.createCheckbox_(block, cursorX, cursorY, blockHW, defaultState);
+        this.createCheckbox_(block, cursorX, cursorY, blockHW);
         if (this.RTL) {
           moveX -= (this.CHECKBOX_SIZE + this.CHECKBOX_MARGIN);
         } else {
