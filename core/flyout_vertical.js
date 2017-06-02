@@ -728,6 +728,7 @@ Blockly.VerticalFlyout.prototype.reflowInternal_ = function(/* blocks */) {
  * Gets the checkbox state for a block
  * @param {string} blockId The ID of the block in question.
  * @return {boolean} Whether the block is checked.
+ * @public
  */
 Blockly.VerticalFlyout.getCheckboxState = function(/* blockId */) {
   return false;
