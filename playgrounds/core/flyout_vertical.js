@@ -504,6 +504,7 @@ Blockly.VerticalFlyout.prototype.createRect_ = function(block, x, y,
  */
 Blockly.VerticalFlyout.prototype.createCheckbox_ = function(block, cursorX,
      cursorY, blockHW) {
+  var checkboxState = Blockly.VerticalFlyout.getCheckboxState(block.id);
   var svgRoot = block.getSvgRoot();
   var extraSpace = this.CHECKBOX_SIZE + this.CHECKBOX_MARGIN;
   var width = this.RTL ? this.getWidth() / this.workspace_.scale - extraSpace : cursorX;
@@ -525,7 +526,12 @@ Blockly.VerticalFlyout.prototype.createCheckbox_ = function(block, cursorX,
       'class': 'blocklyFlyoutCheckboxPath',
       'd': this.CHECKMARK_PATH
     }, checkboxGroup);
-  var checkboxObj = {svgRoot: checkboxGroup, clicked: false, block: block};
+  var checkboxObj = {svgRoot: checkboxGroup, clicked: checkboxState, block: block};
+
+  if (checkboxState) {
+    Blockly.utils.addClass((checkboxObj.svgRoot), 'checked');
+  }
+
   block.flyoutCheckbox = checkboxObj;
   this.workspace_.getCanvas().insertBefore(checkboxGroup, svgRoot);
   this.checkboxes_.push(checkboxObj);
@@ -716,4 +722,14 @@ Blockly.VerticalFlyout.prototype.getClientRect = function() {
 Blockly.VerticalFlyout.prototype.reflowInternal_ = function(/* blocks */) {
   // This is a no-op because the flyout is a fixed size.
   return;
+};
+
+/**
+ * Gets the checkbox state for a block
+ * @param {string} blockId The ID of the block in question.
+ * @return {boolean} Whether the block is checked.
+ * @public
+ */
+Blockly.VerticalFlyout.getCheckboxState = function(/* blockId */) {
+  return false;
 };
