@@ -546,13 +546,12 @@ Blockly.VerticalFlyout.prototype.createCheckbox_ = function(block, cursorX,
  * @private
  */
 Blockly.VerticalFlyout.prototype.checkboxClicked_ = function(checkboxObj) {
-  var context = this;
   return function(e) {
-    context.setCheckboxState(checkboxObj.block.id, !checkboxObj.clicked);
+    this.setCheckboxState(checkboxObj.block.id, !checkboxObj.clicked);
     // This event has been handled.  No need to bubble up to the document.
     e.stopPropagation();
     e.preventDefault();
-  };
+  }.bind(this);
 };
 
 /**
