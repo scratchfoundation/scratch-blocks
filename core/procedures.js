@@ -54,35 +54,16 @@ Blockly.Procedures.NAME_TYPE = Blockly.PROCEDURE_CATEOGORY_NAME;
  */
 Blockly.Procedures.allProcedures = function(root) {
   var blocks = root.getAllBlocks();
-  var proceduresReturn = [];
   var proceduresNoReturn = [];
   for (var i = 0; i < blocks.length; i++) {
-    if (blocks[i].getProcedureDef) {
-      var tuple = blocks[i].getProcedureDef();
-      if (tuple) {
-        if (tuple[2]) {
-          proceduresReturn.push(tuple);
-        } else {
-          proceduresNoReturn.push(tuple);
-        }
+    if (blocks[i].type == "procedures_defnoreturn") {
+      if (blocks[i]._procCode) {
+        var procCode = blocks[i]._procCode;
+        proceduresNoReturn.push(procCode);
       }
     }
   }
-  proceduresNoReturn.sort(Blockly.Procedures.procTupleComparator_);
-  proceduresReturn.sort(Blockly.Procedures.procTupleComparator_);
-  return [proceduresNoReturn, proceduresReturn];
-};
-
-/**
- * Comparison function for case-insensitive sorting of the first element of
- * a tuple.
- * @param {!Array} ta First tuple.
- * @param {!Array} tb Second tuple.
- * @return {number} -1, 0, or 1 to signify greater than, equality, or less than.
- * @private
- */
-Blockly.Procedures.procTupleComparator_ = function(ta, tb) {
-  return ta[0].toLowerCase().localeCompare(tb[0].toLowerCase());
+  return proceduresNoReturn;
 };
 
 /**
@@ -125,39 +106,16 @@ Blockly.Procedures.isLegalName_ = function(name, workspace, opt_exclude) {
     if (blocks[i] == opt_exclude) {
       continue;
     }
-    if (blocks[i].getProcedureDef) {
-      var procName = blocks[i].getProcedureDef();
-      if (Blockly.Names.equals(procName[0], name)) {
-        return false;
+    if (blocks[i].type == "procedures_defnoreturn") {
+      if (blocks[i]._procCode) {
+        var procName = blocks[i]._procCode;
+        if (Blockly.Names.equals(procName[0], name)) {
+          return false;
+        }
       }
     }
   }
   return true;
-};
-
-/**
- * Rename a procedure.  Called by the editable field.
- * @param {string} name The proposed new name.
- * @return {string} The accepted name.
- * @this {Blockly.Field}
- */
-Blockly.Procedures.rename = function(name) {
-  // Strip leading and trailing whitespace.  Beyond this, all names are legal.
-  name = name.replace(/^[\s\xa0]+|[\s\xa0]+$/g, '');
-
-  // Ensure two identically-named procedures don't exist.
-  var legalName = Blockly.Procedures.findLegalName(name, this.sourceBlock_);
-  var oldName = this.text_;
-  if (oldName != name && oldName != legalName) {
-    // Rename any callers.
-    var blocks = this.sourceBlock_.workspace.getAllBlocks();
-    for (var i = 0; i < blocks.length; i++) {
-      if (blocks[i].renameProcedure) {
-        blocks[i].renameProcedure(oldName, legalName);
-      }
-    }
-  }
-  return legalName;
 };
 
 /**
@@ -167,48 +125,9 @@ Blockly.Procedures.rename = function(name) {
  */
 Blockly.Procedures.flyoutCategory = function(workspace) {
   var xmlList = [];
-  if (Blockly.Blocks['procedures_defnoreturn']) {
-    // <block type="procedures_defnoreturn" gap="16">
-    //     <field name="NAME">do something</field>
-    // </block>
-    var block = goog.dom.createDom('block');
-    block.setAttribute('type', 'procedures_defnoreturn');
-    block.setAttribute('gap', 16);
-    var nameField = goog.dom.createDom('field', null,
-        Blockly.Msg.PROCEDURES_DEFNORETURN_PROCEDURE);
-    nameField.setAttribute('name', 'NAME');
-    block.appendChild(nameField);
-    xmlList.push(block);
-  }
-  if (Blockly.Blocks['procedures_defreturn']) {
-    // <block type="procedures_defreturn" gap="16">
-    //     <field name="NAME">do something</field>
-    // </block>
-    var block = goog.dom.createDom('block');
-    block.setAttribute('type', 'procedures_defreturn');
-    block.setAttribute('gap', 16);
-    var nameField = goog.dom.createDom('field', null,
-        Blockly.Msg.PROCEDURES_DEFRETURN_PROCEDURE);
-    nameField.setAttribute('name', 'NAME');
-    block.appendChild(nameField);
-    xmlList.push(block);
-  }
-  if (Blockly.Blocks['procedures_report']) {
-    // <block type="procedures_ifreturn" gap="16"></block>
-    var block = goog.dom.createDom('block');
-    block.setAttribute('type', 'procedures_report');
-    block.setAttribute('gap', 16);
-    xmlList.push(block);
-  }
-  if (xmlList.length) {
-    // Add slightly larger gap between system blocks and user calls.
-    xmlList[xmlList.length - 1].setAttribute('gap', 24);
-  }
-
   function populateProcedures(procedureList, templateName) {
     for (var i = 0; i < procedureList.length; i++) {
-      var name = procedureList[i][0];
-      var args = procedureList[i][1];
+      var name = procedureList[i];
       // <block type="procedures_callnoreturn" gap="16">
       //   <mutation name="do something">
       //     <arg name="x"></arg>
@@ -216,91 +135,14 @@ Blockly.Procedures.flyoutCategory = function(workspace) {
       // </block>
       var block = goog.dom.createDom('block');
       block.setAttribute('type', templateName);
-      block.setAttribute('gap', 16);
       var mutation = goog.dom.createDom('mutation');
-      mutation.setAttribute('name', name);
+      mutation.setAttribute('proccode', name);
       block.appendChild(mutation);
-      for (var j = 0; j < args.length; j++) {
-        var arg = goog.dom.createDom('arg');
-        arg.setAttribute('name', args[j]);
-        mutation.appendChild(arg);
-      }
       xmlList.push(block);
     }
   }
 
   var tuple = Blockly.Procedures.allProcedures(workspace);
-  populateProcedures(tuple[0], 'procedures_callnoreturn');
-  populateProcedures(tuple[1], 'procedures_callreturn');
+  populateProcedures(tuple, 'procedures_callnoreturn');
   return xmlList;
-};
-
-/**
- * Find all the callers of a named procedure.
- * @param {string} name Name of procedure.
- * @param {!Blockly.Workspace} workspace The workspace to find callers in.
- * @return {!Array.<!Blockly.Block>} Array of caller blocks.
- */
-Blockly.Procedures.getCallers = function(name, workspace) {
-  var callers = [];
-  var blocks = workspace.getAllBlocks();
-  // Iterate through every block and check the name.
-  for (var i = 0; i < blocks.length; i++) {
-    if (blocks[i].getProcedureCall) {
-      var procName = blocks[i].getProcedureCall();
-      // Procedure name may be null if the block is only half-built.
-      if (procName && Blockly.Names.equals(procName, name)) {
-        callers.push(blocks[i]);
-      }
-    }
-  }
-  return callers;
-};
-
-/**
- * When a procedure definition changes its parameters, find and edit all its
- * callers.
- * @param {!Blockly.Block} defBlock Procedure definition block.
- */
-Blockly.Procedures.mutateCallers = function(defBlock) {
-  var oldRecordUndo = Blockly.Events.recordUndo;
-  var name = defBlock.getProcedureDef()[0];
-  var xmlElement = defBlock.mutationToDom(true);
-  var callers = Blockly.Procedures.getCallers(name, defBlock.workspace);
-  for (var i = 0, caller; caller = callers[i]; i++) {
-    var oldMutationDom = caller.mutationToDom();
-    var oldMutation = oldMutationDom && Blockly.Xml.domToText(oldMutationDom);
-    caller.domToMutation(xmlElement);
-    var newMutationDom = caller.mutationToDom();
-    var newMutation = newMutationDom && Blockly.Xml.domToText(newMutationDom);
-    if (oldMutation != newMutation) {
-      // Fire a mutation on every caller block.  But don't record this as an
-      // undo action since it is deterministically tied to the procedure's
-      // definition mutation.
-      Blockly.Events.recordUndo = false;
-      Blockly.Events.fire(new Blockly.Events.Change(
-          caller, 'mutation', null, oldMutation, newMutation));
-      Blockly.Events.recordUndo = oldRecordUndo;
-    }
-  }
-};
-
-/**
- * Find the definition block for the named procedure.
- * @param {string} name Name of procedure.
- * @param {!Blockly.Workspace} workspace The workspace to search.
- * @return {Blockly.Block} The procedure definition block, or null not found.
- */
-Blockly.Procedures.getDefinition = function(name, workspace) {
-  // Assume that a procedure definition is a top block.
-  var blocks = workspace.getTopBlocks(false);
-  for (var i = 0; i < blocks.length; i++) {
-    if (blocks[i].getProcedureDef) {
-      var tuple = blocks[i].getProcedureDef();
-      if (tuple && Blockly.Names.equals(tuple[0], name)) {
-        return blocks[i];
-      }
-    }
-  }
-  return null;
 };
