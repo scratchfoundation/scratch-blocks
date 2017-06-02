@@ -132,6 +132,7 @@ Blockly.Variables.flyoutCategory = function(workspace) {
       var block = goog.dom.createDom('block');
       block.setAttribute('type', 'data_variable');
       block.setAttribute('gap', 8);
+      block.setAttribute('id', 'VAR_' + variableModelList[i].name);
 
       var field = goog.dom.createDom('field', null, variableModelList[i].name);
       field.setAttribute('name', 'VARIABLE');
