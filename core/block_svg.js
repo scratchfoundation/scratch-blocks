@@ -672,8 +672,45 @@ Blockly.BlockSvg.prototype.showContextMenu_ = function(e) {
     var duplicateOption = {
       text: Blockly.Msg.DUPLICATE_BLOCK,
       enabled: true,
-      callback: function() {
-        Blockly.duplicate_(block);
+      callback: function(e) {
+        Blockly.duplicate_(block, e);
+
+        /*** HAX ***/
+        console.log("HERE GO THE HAX");
+        setTimeout(function() {
+          // e is from the click on the context menu, but is not a mouse event.
+          // it's something closure built.
+          var newBlock = Blockly.selected;
+          var fakeEvent = {
+            clientX: 1000,
+            clientY: 300,
+            type: 'mousedown',
+            preventDefault: function() {
+              e.preventDefault();
+            },
+            stopPropagation: function() {
+              e.stopPropagation();
+            },
+            target: e.target
+          };
+
+          Blockly.Touch.clearTouchIdentifier();
+          // e.preventDefault();
+          // e.stopPropagation();
+          // Also sets the touch identifier
+          if (!Blockly.Touch.checkTouchIdentifier(fakeEvent)) {
+            console.log('something went wrong while setting the touch identifier');
+          }
+          var gesture = block.workspace.getGesture(fakeEvent);
+          gesture.handleBlockStart(fakeEvent, newBlock);
+          gesture.handleWsStart(fakeEvent, block.workspace);
+          // Should be internal.
+          gesture.isDraggingBlock_ = true;
+          gesture.hasExceededDragRadius_ = true;
+          gesture.startDraggingBlock_();
+          console.log("HAX HAVE BEEN SET UP");
+        }, 0);
+        /*** NO MORE HAX ***/
       }
     };
     menuOptions.push(duplicateOption);
