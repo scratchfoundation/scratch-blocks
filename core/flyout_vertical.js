@@ -649,7 +649,7 @@ Blockly.VerticalFlyout.prototype.placeNewBlock_ = function(originBlock) {
   var xml = Blockly.Xml.blockToDom(originBlock);
   // The target workspace would normally resize during domToBlock, which will
   // lead to weird jumps.  Save it for terminateDrag.
-  targetWorkspace.setResizesEnabled(false);
+  targetWorkspace.setIsUpdating(true);
   var block = Blockly.Xml.domToBlock(xml, targetWorkspace);
   var svgRootNew = block.getSvgRoot();
   if (!svgRootNew) {

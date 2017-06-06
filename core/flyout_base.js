@@ -488,7 +488,7 @@ Blockly.Flyout.prototype.hide = function() {
  *     Variables and procedures have a custom set of blocks.
  */
 Blockly.Flyout.prototype.show = function(xmlList) {
-  this.workspace_.setResizesEnabled(false);
+  this.workspace_.setIsUpdating(true);
   this.hide();
   this.clearOldBlocks_();
 
@@ -563,7 +563,7 @@ Blockly.Flyout.prototype.show = function(xmlList) {
   this.listeners_.push(Blockly.bindEvent_(this.svgBackground_, 'mouseover',
       this, deselectAll));
 
-  this.workspace_.setResizesEnabled(true);
+  this.workspace_.setIsUpdating(false);
   this.reflow();
 
   // Correctly position the flyout's scrollbar when it opens.
@@ -851,7 +851,7 @@ Blockly.Flyout.prototype.createBlockFunc_ = function(originBlock) {
     // Disable workspace resizing. Reenable at the end of the drag. This avoids
     // a spurious resize between creating the new block and placing it in the
     // workspace.
-    flyout.targetWorkspace_.setResizesEnabled(false);
+    flyout.targetWorkspace_.setIsUpdating(true);
     try {
       var block = flyout.placeNewBlock_(originBlock);
     } finally {

@@ -347,7 +347,7 @@ Blockly.BlockSvg.terminateDrag = function() {
       selected.moveOffDragSurface_();
       selected.render();
       // Re-enable workspace resizing.
-      selected.workspace.setResizesEnabled(true);
+      selected.workspace.setIsUpdating(false);
       // Ensure that any snap and bump are part of this move's event group.
       var group = Blockly.Events.getGroup();
       setTimeout(function() {
@@ -1090,7 +1090,7 @@ Blockly.BlockSvg.prototype.onMouseMove_ = function(e) {
       Blockly.longStop_();
 
       // Disable workspace resizing as an optimization.
-      this.workspace.setResizesEnabled(false);
+      this.workspace.setIsUpdating(true);
       // Clear WidgetDiv/DropDownDiv without animating, in case blocks are moved
       // around
       Blockly.WidgetDiv.hide(true);

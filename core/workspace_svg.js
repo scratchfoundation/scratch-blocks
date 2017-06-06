@@ -965,7 +965,8 @@ Blockly.WorkspaceSvg.prototype.paste = function(xmlBlock) {
 Blockly.WorkspaceSvg.prototype.renameVariable = function(oldName, newName) {
   Blockly.WorkspaceSvg.superClass_.renameVariable.call(this, oldName, newName);
   // Refresh the toolbox unless there's a drag in progress.
-  if (this.toolbox_ && this.toolbox_.flyout_ && !Blockly.Flyout.startFlyout_) {
+  if (this.toolbox_ && this.toolbox_.flyout_ && !Blockly.Flyout.startFlyout_
+      && !this.isUpdating_) {
     this.toolbox_.refreshSelection();
   }
 };
@@ -979,7 +980,8 @@ Blockly.WorkspaceSvg.prototype.renameVariable = function(oldName, newName) {
 Blockly.WorkspaceSvg.prototype.createVariable = function(name) {
   Blockly.WorkspaceSvg.superClass_.createVariable.call(this, name);
   // Don't refresh the toolbox if there's a drag in progress.
-  if (this.toolbox_ && this.toolbox_.flyout_ && !Blockly.Flyout.startFlyout_) {
+  if (this.toolbox_ && this.toolbox_.flyout_ && !Blockly.Flyout.startFlyout_
+      && !this.isUpdating_) {
     this.toolbox_.refreshSelection();
   }
 };
@@ -1825,18 +1827,24 @@ Blockly.WorkspaceSvg.setTopLevelWorkspaceMetrics_ = function(xyRatio) {
 };
 
 /**
- * Update whether this workspace has resizes enabled.
- * If enabled, workspace will resize when appropriate.
- * If disabled, workspace will not resize until re-enabled.
- * Use to avoid resizing during a batch operation, for performance.
+ * Set whether this workspace is currently updating it's contents.
+ * If updating, workspace will not resize until no longer updating.
+ * If not updating, workspace will resize when appropriate.
+ * Use to avoid resizing and other logic during a batch operation, for
+ * performance.
  * @param {boolean} enabled Whether resizes should be enabled.
  */
-Blockly.WorkspaceSvg.prototype.setResizesEnabled = function(enabled) {
-  var reenabled = (!this.resizesEnabled_ && enabled);
-  this.resizesEnabled_ = enabled;
-  if (reenabled) {
-    // Newly enabled.  Trigger a resize.
+Blockly.WorkspaceSvg.prototype.setIsUpdating = function(isUpdating) {
+  var stoppedUpdating = (this.isUpdating_ && !isUpdating);
+  this.isUpdating_ = isUpdating;
+  if (stoppedUpdating) {
+    // Stopped updating.  Trigger a resize.
     this.resizeContents();
+
+    // Refresh the toolbox selection
+    if (this.toolbox_) {
+      this.toolbox_.refreshSelection();
+    }
   }
 };
 
@@ -1844,9 +1852,9 @@ Blockly.WorkspaceSvg.prototype.setResizesEnabled = function(enabled) {
  * Dispose of all blocks in workspace, with an optimization to prevent resizes.
  */
 Blockly.WorkspaceSvg.prototype.clear = function() {
-  this.setResizesEnabled(false);
+  this.setIsUpdating(true);
   Blockly.WorkspaceSvg.superClass_.clear.call(this);
-  this.setResizesEnabled(true);
+  this.setIsUpdating(false);
 };
 
 /**
