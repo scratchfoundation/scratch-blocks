@@ -433,6 +433,14 @@ Blockly.Block.prototype.getNextBlock = function() {
 };
 
 /**
+ * Return the previous statement block directly connected to this block.
+ * @return {Blockly.Block} The previous statement block or null.
+ */
+Blockly.Block.prototype.getPreviousBlock = function() {
+  return this.previousConnection && this.previousConnection.targetBlock();
+};
+
+/**
  * Return the connection on the first statement input on this block, or null if
  * there are none.
  * @return {Blockly.Connection} The first statement connection or null.
