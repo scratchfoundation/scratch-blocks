@@ -345,6 +345,60 @@ Blockly.Connection.prototype.checkConnection_ = function(target) {
  * Check if the two connections can be dragged to connect to each other.
  * This is used by the connection database when searching for the closest
  * connection.
+ * @param {!Blockly.Connection} candidate A nearby connection to check, which
+ *     must be a previous connection.
+ * @return {boolean} True if the connection is allowed, false otherwise.
+ */
+Blockly.Connection.prototype.canConnectToPrevious_ = function(candidate) {
+  if (this.targetConnection) {
+    // This connection is already occupied.
+    // A next connection will never disconnect itself mid-drag.
+    return false;
+  }
+
+  // Don't let blocks try to connect to themselves or ones they nest.
+  if (Blockly.draggingConnections_.indexOf(candidate) != -1) {
+    return false;
+  }
+
+  var firstStatementConnection =
+      this.sourceBlock_.getFirstStatementConnection();
+  // Is it a C-shaped (e.g. repeat) or E-shaped (e.g. if-else) block?
+  var isComplexStatement = firstStatementConnection != null;
+  var isFirstStatementConnection = this == firstStatementConnection;
+  var isNextConnection = this == this.sourceBlock_.nextConnection;
+
+  // Scratch-specific behaviour: can connect to the first statement input of a
+  // C-shaped or E-shaped block, or to the next connection of any statement
+  // block, but not to the second statement input of an E-shaped block.
+  if (isComplexStatement && !isFirstStatementConnection && !isNextConnection) {
+    return false;
+  }
+
+  if (isFirstStatementConnection) {
+    return true;
+  } else if (isNextConnection) {
+    // If the candidate is the first connection in a stack, we can connect.
+    if (!candidate.targetConnection) {
+      return true;
+    }
+
+    var targetBlock = candidate.targetBlock();
+    // If it is connected a real block, game over.
+    if (!targetBlock.isInsertionMarker()) {
+      return false;
+    }
+    // If it's connected to an insertion marker but that insertion marker
+    // is the first block in a stack, it's still fine.  If that insertion
+    // marker is in the middle of a stack, it won't work.
+    return !targetBlock.getPreviousBlock();
+  }
+};
+
+/**
+ * Check if the two connections can be dragged to connect to each other.
+ * This is used by the connection database when searching for the closest
+ * connection.
  * @param {!Blockly.Connection} candidate A nearby connection to check.
  * @return {boolean} True if the connection is allowed, false otherwise.
  */
@@ -364,43 +418,8 @@ Blockly.Connection.prototype.isConnectionAllowed = function(candidate) {
   var firstStatementConnection =
       this.sourceBlock_.getFirstStatementConnection();
   switch (candidate.type) {
-    case Blockly.PREVIOUS_STATEMENT: {
-      if (!firstStatementConnection || this != firstStatementConnection) {
-        if (this.targetConnection) {
-          return false;
-        }
-        if (candidate.targetConnection) {
-          // If the other side of this connection is the active insertion marker
-          // connection, we've obviously already decided that this is a good
-          // connection.
-          if (candidate.targetBlock().isInsertionMarker()) {
-            return true;
-          } else {
-            return false;
-          }
-        }
-      }
-
-      // Scratch-specific behaviour:
-      // If this is a c-shaped block, statement blocks cannot be connected
-      // anywhere other than inside the first statement input.
-      if (firstStatementConnection) {
-        // Can't connect if there is already a block inside the first statement
-        // input.
-        if (this == firstStatementConnection) {
-          if (this.targetConnection) {
-            return false;
-          }
-        }
-        // Can't connect this block's next connection unless we're connecting
-        // in front of the first block on a stack.
-        else if (this == this.sourceBlock_.nextConnection &&
-            candidate.isConnectedToNonInsertionMarker()) {
-          return false;
-        }
-      }
-      break;
-    }
+    case Blockly.PREVIOUS_STATEMENT:
+      return this.canConnectToPrevious_(candidate);
     case Blockly.OUTPUT_VALUE: {
       // Can't drag an input to an output--you have to move the inferior block.
       return false;
