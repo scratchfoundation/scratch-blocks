@@ -1693,7 +1693,7 @@ Blockly.WorkspaceSvg.setTopLevelWorkspaceMetrics_ = function(xyRatio) {
  * If not updating, workspace will resize when appropriate.
  * Use to avoid resizing and other logic during a batch operation, for
  * performance.
- * @param {boolean} enabled Whether resizes should be enabled.
+ * @param {boolean} isUpdating Whether the workspace is updating.
  */
 Blockly.WorkspaceSvg.prototype.setIsUpdating = function(isUpdating) {
   var stoppedUpdating = (this.isUpdating_ && !isUpdating);
