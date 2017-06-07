@@ -596,7 +596,7 @@ Blockly.Flyout.prototype.onMouseDown_ = function(e) {
 Blockly.Flyout.prototype.createBlock = function(originalBlock) {
   var newBlock = null;
   Blockly.Events.disable();
-  flyout.targetWorkspace_.setIsUpdating(true);
+  this.targetWorkspace_.setIsUpdating(true);
   try {
     newBlock = this.placeNewBlock_(originalBlock);
     //Force a render on IE and Edge to get around the issue described in
