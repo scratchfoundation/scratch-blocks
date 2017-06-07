@@ -206,6 +206,13 @@ Blockly.WorkspaceSvg.prototype.dragDeltaXY_ = null;
 Blockly.WorkspaceSvg.prototype.scale = 1;
 
 /**
+ * Whether workspace is visible
+ * @type {boolean}
+ * @private
+ */
+Blockly.WorkspaceSvg.prototype.visible_ = true;
+
+/**
  * The workspace's trashcan (if any).
  * @type {Blockly.Trashcan}
  */
@@ -774,6 +781,10 @@ Blockly.WorkspaceSvg.prototype.getWidth = function() {
  * @param {boolean} isVisible True if workspace should be visible.
  */
 Blockly.WorkspaceSvg.prototype.setVisible = function(isVisible) {
+  if (this.visible_ === isVisible) {
+    return;
+  }
+  this.visible_ = isVisible;
 
   // Tell the scrollbar whether its container is visible so it can
   // tell when to hide itself.
@@ -801,6 +812,14 @@ Blockly.WorkspaceSvg.prototype.setVisible = function(isVisible) {
     Blockly.hideChaff(true);
     Blockly.DropDownDiv.hideWithoutAnimation();
   }
+};
+
+/**
+ * Whether the workspace is visible.
+ * @return {boolean} true if workspace is visible, false if hidden.
+ */
+Blockly.WorkspaceSvg.prototype.isVisible = function() {
+  return this.visible_;
 };
 
 /**

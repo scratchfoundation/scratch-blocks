@@ -568,6 +568,11 @@ Blockly.BlockSvg.prototype.getHeightWidth = function() {
  *   If true, also render block's parent, grandparent, etc.  Defaults to true.
  */
 Blockly.BlockSvg.prototype.render = function(opt_bubble) {
+  // No need to render if the workspace is hidden.
+  if (!this.workspace.isVisible) {
+    return;
+  }
+  
   Blockly.Field.startCache();
   this.rendered = true;
 

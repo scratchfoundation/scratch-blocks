@@ -347,7 +347,7 @@ Blockly.Field.prototype.getSvgRoot = function() {
  * @private
  */
 Blockly.Field.prototype.render_ = function() {
-  if (this.visible_ && this.textElement_) {
+  if (this.visible_ && this.sourceBlock_.workspace.isVisible() && this.textElement_) {
     // Replace the text.
     goog.dom.removeChildren(/** @type {!Element} */ (this.textElement_));
     var textNode = document.createTextNode(this.getDisplayText_());
