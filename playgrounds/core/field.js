@@ -179,7 +179,7 @@ Blockly.Field.prototype.init = function() {
   this.render_();
   this.size_.width = 0;
   this.mouseDownWrapper_ =
-      Blockly.bindEventWithChecks_(this.fieldGroup_, 'mousedown', this,
+      Blockly.bindEventWithChecks_(this.getClickTarget_(), 'mousedown', this,
       this.onMouseDown_);
 };
 
