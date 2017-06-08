@@ -768,9 +768,9 @@ Blockly.WorkspaceSvg.prototype.setVisible = function(isVisible) {
   }
   if (isVisible) {
     this.render();
-    if (this.toolbox_) {
-      this.toolbox_.position();
-    }
+    // The window may have changed size while the workspace was hidden.
+    // Resize recalculates scrollbar position, delete areas, etc.
+    this.resize();
   } else {
     Blockly.hideChaff(true);
     Blockly.DropDownDiv.hideWithoutAnimation();
