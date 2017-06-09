@@ -901,14 +901,30 @@ Blockly.WorkspaceSvg.prototype.paste = function(xmlBlock) {
   Blockly.Events.disable();
   try {
     var block = Blockly.Xml.domToBlock(xmlBlock, this);
-    // Rerender to get around problem with IE and Edge not measuring text
-    // correctly when it is hidden.
-    if (goog.userAgent.IE || goog.userAgent.EDGE) {
-      var blocks = block.getDescendants();
-      for (var i = blocks.length - 1; i >= 0; i--) {
-        blocks[i].render(false);
+
+    var blocks = block.getDescendants();
+    for (var i = blocks.length - 1; i >= 0; i--) {
+      var descendant = blocks[i];
+
+      // Scratch-specific: Give shadow dom new IDs to prevent duplicating on paste
+      for(var j = 0; j < descendant.inputList.length; j++) {
+        if (descendant.inputList[j].connection) {
+          var connection = descendant.inputList[j].connection;
+          if (connection && connection.getShadowDom()) {
+            var shadowDom = connection.getShadowDom();
+            shadowDom.setAttribute('id', Blockly.utils.genUid());
+            connection.setShadowDom(shadowDom);
+          }
+        }
+      }
+
+      // Rerender to get around problem with IE and Edge not measuring text
+      // correctly when it is hidden.
+      if (goog.userAgent.IE || goog.userAgent.EDGE) {
+        descendant.render(false);
       }
     }
+
     // Move the duplicate to original position.
     var blockX = parseInt(xmlBlock.getAttribute('x'), 10);
     var blockY = parseInt(xmlBlock.getAttribute('y'), 10);
