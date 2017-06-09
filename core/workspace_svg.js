@@ -907,9 +907,9 @@ Blockly.WorkspaceSvg.prototype.paste = function(xmlBlock) {
       var descendant = blocks[i];
 
       // Scratch-specific: Give shadow dom new IDs to prevent duplicating on paste
-      for(var j = 0; j < descendant.inputList.length; j++) {
-        if (descendant.inputList[j].connection) {
-          var connection = descendant.inputList[j].connection;
+      for (var j = 0; j < descendant.inputList.length; j++) {
+        var connection = descendant.inputList[j].connection;
+        if (connection) {
           var shadowDom = connection.getShadowDom();
           if (shadowDom) {
             shadowDom.setAttribute('id', Blockly.utils.genUid());
