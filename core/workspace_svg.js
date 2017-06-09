@@ -910,8 +910,8 @@ Blockly.WorkspaceSvg.prototype.paste = function(xmlBlock) {
       for(var j = 0; j < descendant.inputList.length; j++) {
         if (descendant.inputList[j].connection) {
           var connection = descendant.inputList[j].connection;
-          if (connection && connection.getShadowDom()) {
-            var shadowDom = connection.getShadowDom();
+          var shadowDom = connection.getShadowDom();
+          if (shadowDom) {
             shadowDom.setAttribute('id', Blockly.utils.genUid());
             connection.setShadowDom(shadowDom);
           }
