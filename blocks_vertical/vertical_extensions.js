@@ -27,7 +27,17 @@ goog.require('Blockly.constants');
 goog.require('Blockly.Extensions');
 
 
+/**
+ * Helper function that generates an extension based on a category name.
+ * The generated function with set primary, secondary, and tertiary colours
+ * based on the category name.
+ * @param {String} category The name of the category to set colours for.
+ */
 Blockly.ScratchBlocks.VerticalExtensions.colourHelper = function(category) {
+  var colours = Blockly.Colours[category];
+  if (!(colours.primary && colours.secondary && colours.tertiary)) {
+    return function() { };
+  }
   return function() {
     var colours = Blockly.Colours[category];
     this.setColourFromRawValues_(colours.primary, colours.secondary,
@@ -46,15 +56,43 @@ Blockly.ScratchBlocks.VerticalExtensions.SHAPE_STATEMENT = function() {
   this.setNextStatement(true, null);
 };
 
+/**
+ * Extension to make a block be shaped as a hat block, regardless of its
+ * inputs.  That means the block should have a next connection and have inline
+ * inputs, but have no previous connection.
+ */
+Blockly.ScratchBlocks.VerticalExtensions.SHAPE_HAT = function() {
+  this.setInputsInline(true);
+  this.setNextStatement(true, null);
+};
 
-Blockly.Extensions.register('colours_control',
-    Blockly.ScratchBlocks.VerticalExtensions.colourHelper("control"));
+/**
+ * Extension to make a block be shaped as an end block, regardless of its
+ * inputs.  That means the block should have a previous connection and have
+ * inline inputs, but have no next connection.
+ */
+Blockly.ScratchBlocks.VerticalExtensions.SHAPE_END = function() {
+  this.setInputsInline(true);
+  this.setPreviousStatement(true, null);
+};
 
-Blockly.Extensions.register('colours_data',
-    Blockly.ScratchBlocks.VerticalExtensions.colourHelper("data"));
+Blockly.ScratchBlocks.VerticalExtensions.registerAll = function() {
+  var categoryNames =
+      ['control', 'data', 'sounds', 'motion', 'looks', 'event', 'sensing',
+      'pen', 'operators', 'more'];
+  // Register functions for all category colours.
+  for (var i = 0; i < categoryNames.length; i++) {
+    name = categoryNames[i];
+    Blockly.Extensions.register('colours_' + name,
+      Blockly.ScratchBlocks.VerticalExtensions.colourHelper(name));
+  }
+  // Register extensions for common block shapes.
+  Blockly.Extensions.register('shape_statement',
+      Blockly.ScratchBlocks.VerticalExtensions.SHAPE_STATEMENT);
+  Blockly.Extensions.register('shape_hat',
+      Blockly.ScratchBlocks.VerticalExtensions.SHAPE_HAT);
+  Blockly.Extensions.register('shape_end',
+      Blockly.ScratchBlocks.VerticalExtensions.SHAPE_END);
+};
 
-Blockly.Extensions.register('colours_sounds',
-    Blockly.ScratchBlocks.VerticalExtensions.colourHelper("sounds"));
-
-Blockly.Extensions.register('shape_statement',
-    Blockly.ScratchBlocks.VerticalExtensions.SHAPE_STATEMENT);
+Blockly.ScratchBlocks.VerticalExtensions.registerAll();

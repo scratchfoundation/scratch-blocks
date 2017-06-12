@@ -56,10 +56,8 @@ Blockly.Blocks['control_forever'] = {
           "flip_rtl": true
         }
       ],
-      "inputsInline": true,
-      "previousStatement": null,
       "category": Blockly.Categories.control,
-      "extensions": ["colours_control"]
+      "extensions": ["colours_control", "shape_end"]
     });
   }
 };
@@ -309,10 +307,8 @@ Blockly.Blocks['control_start_as_clone'] = {
       "message0": "when I start as a clone",
       "args0": [
       ],
-      "inputsInline": true,
-      "nextStatement": null,
       "category": Blockly.Categories.control,
-      "extensions": ["colours_control"]
+      "extensions": ["colours_control", "shape_hat"]
     });
   }
 };
@@ -374,10 +370,8 @@ Blockly.Blocks['control_delete_this_clone'] = {
       "message0": "delete this clone",
       "args0": [
       ],
-      "inputsInline": true,
-      "previousStatement": null,
       "category": Blockly.Categories.control,
-      "extensions": ["colours_control"]
+      "extensions": ["colours_control", "shape_end"]
     });
   }
 };
