@@ -25,6 +25,7 @@ goog.provide('Blockly.Blocks.looks');
 goog.require('Blockly.Blocks');
 goog.require('Blockly.Colours');
 goog.require('Blockly.constants');
+goog.require('Blockly.ScratchBlocks.VerticalExtensions');
 
 
 Blockly.Blocks['looks_sayforsecs'] = {

@@ -25,6 +25,7 @@ goog.provide('Blockly.Blocks.pen');
 goog.require('Blockly.Blocks');
 goog.require('Blockly.Colours');
 goog.require('Blockly.constants');
+goog.require('Blockly.ScratchBlocks.VerticalExtensions');
 
 
 Blockly.Blocks['pen_clear'] = {
