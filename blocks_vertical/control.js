@@ -331,10 +331,7 @@ Blockly.Blocks['control_create_clone_of_menu'] = {
             ]
           }
         ],
-        "inputsInline": true,
-        "output": "String",
-        "outputShape": Blockly.OUTPUT_SHAPE_ROUND,
-        "extensions": ["colours_control"]
+        "extensions": ["colours_control", "output_string"]
       });
   }
 };

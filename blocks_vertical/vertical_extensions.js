@@ -76,6 +76,26 @@ Blockly.ScratchBlocks.VerticalExtensions.SHAPE_END = function() {
   this.setPreviousStatement(true, null);
 };
 
+
+Blockly.ScratchBlocks.VerticalExtensions.OUTPUT_NUMBER = function() {
+  this.setInputsInline(true);
+  this.setOutputShape(Blockly.OUTPUT_SHAPE_ROUND);
+  this.setOutput(true, 'Number');
+};
+
+Blockly.ScratchBlocks.VerticalExtensions.OUTPUT_STRING = function() {
+  this.setInputsInline(true);
+  this.setOutputShape(Blockly.OUTPUT_SHAPE_ROUND);
+  this.setOutput(true, 'String');
+};
+
+Blockly.ScratchBlocks.VerticalExtensions.OUTPUT_BOOLEAN = function() {
+  this.setInputsInline(true);
+  this.setOutputShape(Blockly.OUTPUT_SHAPE_HEXAGONAL);
+  this.setOutput(true, 'Boolean');
+};
+
+
 Blockly.ScratchBlocks.VerticalExtensions.registerAll = function() {
   var categoryNames =
       ['control', 'data', 'sounds', 'motion', 'looks', 'event', 'sensing',
@@ -93,6 +113,13 @@ Blockly.ScratchBlocks.VerticalExtensions.registerAll = function() {
       Blockly.ScratchBlocks.VerticalExtensions.SHAPE_HAT);
   Blockly.Extensions.register('shape_end',
       Blockly.ScratchBlocks.VerticalExtensions.SHAPE_END);
+  // Output shapes and types are related.
+  Blockly.Extensions.register('output_number',
+      Blockly.ScratchBlocks.VerticalExtensions.OUTPUT_NUMBER);
+  Blockly.Extensions.register('output_string',
+      Blockly.ScratchBlocks.VerticalExtensions.OUTPUT_STRING);
+  Blockly.Extensions.register('output_boolean',
+      Blockly.ScratchBlocks.VerticalExtensions.OUTPUT_BOOLEAN);
 };
 
 Blockly.ScratchBlocks.VerticalExtensions.registerAll();

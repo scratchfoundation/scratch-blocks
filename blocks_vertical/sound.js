@@ -54,12 +54,10 @@ Blockly.Blocks['sound_sounds_menu'] = {
             ]
           }
         ],
-        "inputsInline": true,
-        "output": "String",
         "colour": Blockly.Colours.sounds.secondary,
         "colourSecondary": Blockly.Colours.sounds.secondary,
         "colourTertiary": Blockly.Colours.sounds.tertiary,
-        "outputShape": Blockly.OUTPUT_SHAPE_ROUND
+        "extensions": ["output_string"]
       });
   }
 };
@@ -152,12 +150,10 @@ Blockly.Blocks['sound_drums_menu'] = {
             ]
           }
         ],
-        "inputsInline": true,
-        "output": "String",
         "colour": Blockly.Colours.sounds.secondary,
         "colourSecondary": Blockly.Colours.sounds.secondary,
         "colourTertiary": Blockly.Colours.sounds.tertiary,
-        "outputShape": Blockly.OUTPUT_SHAPE_ROUND
+        "extensions": ["output_string"]
       });
   }
 };
@@ -339,12 +335,10 @@ Blockly.Blocks['sound_instruments_menu'] = {
             ]
           }
         ],
-        "inputsInline": true,
-        "output": "String",
         "colour": Blockly.Colours.sounds.secondary,
         "colourSecondary": Blockly.Colours.sounds.secondary,
         "colourTertiary": Blockly.Colours.sounds.tertiary,
-        "outputShape": Blockly.OUTPUT_SHAPE_ROUND
+        "extensions": ["output_string"]
       });
   }
 };
@@ -418,10 +412,8 @@ Blockly.Blocks['sound_volume'] = {
     this.jsonInit({
       "message0": "volume",
       "category": Blockly.Categories.sound,
-      "extensions": ["colours_sounds"],
-      "output": "Number",
-      "outputShape": Blockly.OUTPUT_SHAPE_ROUND,
-      "checkboxInFlyout": true
+      "checkboxInFlyout": true,
+      "extensions": ["colours_sounds", "output_number"]
     });
   }
 };
@@ -475,10 +467,8 @@ Blockly.Blocks['sound_tempo'] = {
     this.jsonInit({
       "message0": "tempo",
       "category": Blockly.Categories.sound,
-      "extensions": ["colours_sounds"],
-      "output": "Number",
-      "outputShape": Blockly.OUTPUT_SHAPE_ROUND,
-      "checkboxInFlyout": true
+      "checkboxInFlyout": true,
+      "extensions": ["colours_sounds", "output_number"]
     });
   }
 };

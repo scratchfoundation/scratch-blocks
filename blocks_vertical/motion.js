@@ -137,12 +137,10 @@ Blockly.Blocks['motion_pointtowards_menu'] = {
             ]
           }
         ],
-        "inputsInline": true,
-        "output": "String",
         "colour": Blockly.Colours.motion.secondary,
         "colourSecondary": Blockly.Colours.motion.secondary,
         "colourTertiary": Blockly.Colours.motion.tertiary,
-        "outputShape": Blockly.OUTPUT_SHAPE_ROUND
+        "extensions": ["output_string"]
       });
   }
 };
@@ -186,12 +184,10 @@ Blockly.Blocks['motion_goto_menu'] = {
             ]
           }
         ],
-        "inputsInline": true,
-        "output": "String",
         "colour": Blockly.Colours.motion.secondary,
         "colourSecondary": Blockly.Colours.motion.secondary,
         "colourTertiary": Blockly.Colours.motion.tertiary,
-        "outputShape": Blockly.OUTPUT_SHAPE_ROUND
+        "extensions": ["output_string"]
       });
   }
 };
@@ -395,11 +391,9 @@ Blockly.Blocks['motion_xposition'] = {
   init: function() {
     this.jsonInit({
       "message0": "x position",
-      "output": "Number",
-      "outputShape": Blockly.OUTPUT_SHAPE_ROUND,
       "category": Blockly.Categories.motion,
       "checkboxInFlyout": true,
-      "extensions": ["colours_motion"]
+      "extensions": ["colours_motion", "output_number"]
     });
   }
 };
@@ -412,11 +406,9 @@ Blockly.Blocks['motion_yposition'] = {
   init: function() {
     this.jsonInit({
       "message0": "y position",
-      "output": "Number",
-      "outputShape": Blockly.OUTPUT_SHAPE_ROUND,
       "category": Blockly.Categories.motion,
       "checkboxInFlyout": true,
-      "extensions": ["colours_motion"]
+      "extensions": ["colours_motion", "output_number"]
     });
   }
 };
@@ -429,11 +421,9 @@ Blockly.Blocks['motion_direction'] = {
   init: function() {
     this.jsonInit({
       "message0": "direction",
-      "output": "Number",
-      "outputShape": Blockly.OUTPUT_SHAPE_ROUND,
       "category": Blockly.Categories.motion,
       "checkboxInFlyout": true,
-      "extensions": ["colours_motion"]
+      "extensions": ["colours_motion", "output_number"]
     });
   }
 };

@@ -162,12 +162,10 @@ Blockly.Blocks['event_broadcast_menu'] = {
             ]
           }
         ],
-        "inputsInline": true,
-        "output": "String",
         "colour": Blockly.Colours.event.secondary,
         "colourSecondary": Blockly.Colours.event.secondary,
         "colourTertiary": Blockly.Colours.event.tertiary,
-        "outputShape": Blockly.OUTPUT_SHAPE_ROUND
+        "extensions": ["output_string"]
       });
   }
 };

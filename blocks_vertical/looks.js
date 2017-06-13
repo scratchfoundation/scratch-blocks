@@ -268,10 +268,8 @@ Blockly.Blocks['looks_size'] = {
     this.jsonInit({
       "message0": "size",
       "category": Blockly.Categories.looks,
-      "output": "Number",
-      "outputShape": Blockly.OUTPUT_SHAPE_ROUND,
       "checkboxInFlyout": true,
-      "extensions": ["colours_looks"]
+      "extensions": ["colours_looks", "output_number"]
     });
   }
 };
@@ -295,12 +293,10 @@ Blockly.Blocks['looks_costume'] = {
             ]
           }
         ],
-        "inputsInline": true,
-        "output": "String",
         "colour": Blockly.Colours.looks.secondary,
         "colourSecondary": Blockly.Colours.looks.secondary,
         "colourTertiary": Blockly.Colours.looks.tertiary,
-        "outputShape": Blockly.OUTPUT_SHAPE_ROUND
+        "extensions": ["output_string"]
       });
   }
 };
@@ -378,12 +374,10 @@ Blockly.Blocks['looks_backdrops'] = {
           ]
         }
       ],
-      "inputsInline": true,
-      "output": "String",
       "colour": Blockly.Colours.looks.secondary,
       "colourSecondary": Blockly.Colours.looks.secondary,
       "colourTertiary": Blockly.Colours.looks.tertiary,
-      "outputShape": Blockly.OUTPUT_SHAPE_ROUND
+      "extensions": ["output_string"]
     });
   }
 };
@@ -432,10 +426,8 @@ Blockly.Blocks['looks_backdropname'] = {
     this.jsonInit({
       "message0": "backdrop name",
       "category": Blockly.Categories.looks,
-      "output": "Number",
-      "outputShape": Blockly.OUTPUT_SHAPE_ROUND,
       "checkboxInFlyout": true,
-      "extensions": ["colours_looks"]
+      "extensions": ["colours_looks", "output_number"]
     });
   }
 };
@@ -449,10 +441,8 @@ Blockly.Blocks['looks_costumeorder'] = {
     this.jsonInit({
       "message0": "costume #",
       "category": Blockly.Categories.looks,
-      "output": "Number",
-      "outputShape": Blockly.OUTPUT_SHAPE_ROUND,
       "checkboxInFlyout": true,
-      "extensions": ["colours_looks"]
+      "extensions": ["colours_looks", "output_number"]
     });
   }
 };
@@ -466,10 +456,8 @@ Blockly.Blocks['looks_backdroporder'] = {
     this.jsonInit({
       "message0": "backdrop #",
       "category": Blockly.Categories.looks,
-      "output": "Number",
-      "outputShape": Blockly.OUTPUT_SHAPE_ROUND,
       "checkboxInFlyout": true,
-      "extensions": ["colours_looks"]
+      "extensions": ["colours_looks", "output_number"]
     });
   }
 };
