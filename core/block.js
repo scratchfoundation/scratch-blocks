@@ -1124,7 +1124,18 @@ Blockly.Block.prototype.jsonInit = function(json) {
 
   // Set basic properties of block.
   if (json['colour'] !== undefined) {
-    this.setColourFromJson_(json);
+    // TODO: Consider a helper function here.
+    var rawValue = json['colour'];
+    var primary = goog.isString(rawValue) ?
+        Blockly.utils.replaceMessageReferences(rawValue) : rawValue;
+    rawValue = json['colourSecondary'];
+    var secondary = goog.isString(rawValue) ?
+        Blockly.utils.replaceMessageReferences(rawValue) : rawValue;
+    rawValue = json['colourTertiary'];
+    var tertiary = goog.isString(rawValue) ?
+        Blockly.utils.replaceMessageReferences(rawValue) : rawValue;
+
+    this.setColour(primary, secondary, tertiary);
   }
 
   // Interpolate the message blocks.
@@ -1217,39 +1228,6 @@ Blockly.Block.prototype.mixin = function(mixinObj, opt_disableCheck) {
     }
   }
   goog.mixin(this, mixinObj);
-};
-
-/**
- * Set the colour of the block from strings or string table references.
- * @param {string|?} primary Primary colour, which may be a string that contains
- *     string table references.
- * @param {string|?} secondary Secondary colour, which may be a string that
- *     contains string table references.
- * @param {string|?} tertiary Tertiary colour, which may be a string that
- *     contains string table references.
- * @private
- */
-Blockly.Block.prototype.setColourFromRawValues_ = function(primary, secondary,
-    tertiary) {
-  primary = goog.isString(primary) ?
-      Blockly.utils.replaceMessageReferences(primary) : primary;
-  secondary = goog.isString(secondary) ?
-      Blockly.utils.replaceMessageReferences(secondary) : secondary;
-  tertiary = goog.isString(tertiary) ?
-      Blockly.utils.replaceMessageReferences(tertiary) : tertiary;
-
-  this.setColour(primary, secondary, tertiary);
-};
-
-/**
- * Set the colour of the block from JSON, replacing message references as
- * needed.
- * @param {!Object} json Structured data describing the block.
- * @private
- */
-Blockly.Block.prototype.setColourFromJson_ = function(json) {
-  this.setColourFromRawValues_(json['colour'], json['colourSecondary'],
-      json['colourTertiary']);
 };
 
 /**
