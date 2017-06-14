@@ -26,7 +26,6 @@ goog.provide('Blockly.Constants.Data');
 goog.require('Blockly.Blocks');
 goog.require('Blockly.Colours');
 goog.require('Blockly.constants');
-goog.require('Blockly.ScratchBlocks.VerticalExtensions');
 
 
 Blockly.Blocks['data_variablemenu'] = {
@@ -70,10 +69,13 @@ Blockly.Blocks['data_variable'] = {
         }
       ],
       "category": Blockly.Categories.data,
+      "colour": Blockly.Colours.data.primary,
+      "colourSecondary": Blockly.Colours.data.secondary,
+      "colourTertiary": Blockly.Colours.data.tertiary,
       "output": "String",
       "outputShape": Blockly.OUTPUT_SHAPE_ROUND,
       "checkboxInFlyout": true,
-      "extensions": ["contextMenu_getVariableBlock", "colours_data"]
+      "extensions": ["contextMenu_getVariableBlock"]
     });
   }
 };
@@ -96,8 +98,12 @@ Blockly.Blocks['data_setvariableto'] = {
           "name": "VALUE"
         }
       ],
+      "previousStatement": null,
+      "nextStatement": null,
       "category": Blockly.Categories.data,
-      "extensions": ["colours_data", "shape_statement"]
+      "colour": Blockly.Colours.data.primary,
+      "colourSecondary": Blockly.Colours.data.secondary,
+      "colourTertiary": Blockly.Colours.data.tertiary
     });
   }
 };
@@ -120,8 +126,12 @@ Blockly.Blocks['data_changevariableby'] = {
           "name": "VALUE"
         }
       ],
+      "previousStatement": null,
+      "nextStatement": null,
       "category": Blockly.Categories.data,
-      "extensions": ["colours_data", "shape_statement"]
+      "colour": Blockly.Colours.data.primary,
+      "colourSecondary": Blockly.Colours.data.secondary,
+      "colourTertiary": Blockly.Colours.data.tertiary
     });
   }
 };
@@ -191,7 +201,9 @@ Blockly.Blocks['data_listcontents'] = {
         }
       ],
       "category": Blockly.Categories.data,
-      "extensions": ["colours_data"],
+      "colour": Blockly.Colours.data.primary,
+      "colourSecondary": Blockly.Colours.data.secondary,
+      "colourTertiary": Blockly.Colours.data.tertiary,
       "output": "String",
       "outputShape": Blockly.OUTPUT_SHAPE_ROUND,
       "checkboxInFlyout": true
@@ -277,8 +289,12 @@ Blockly.Blocks['data_addtolist'] = {
           "name": "LIST"
         }
       ],
+      "previousStatement": null,
+      "nextStatement": null,
       "category": Blockly.Categories.data,
-      "extensions": ["colours_data", "shape_statement"]
+      "colour": Blockly.Colours.data.primary,
+      "colourSecondary": Blockly.Colours.data.secondary,
+      "colourTertiary": Blockly.Colours.data.tertiary
     });
   }
 };
@@ -301,8 +317,12 @@ Blockly.Blocks['data_deleteoflist'] = {
           "name": "LIST"
         }
       ],
+      "previousStatement": null,
+      "nextStatement": null,
       "category": Blockly.Categories.data,
-      "extensions": ["colours_data", "shape_statement"]
+      "colour": Blockly.Colours.data.primary,
+      "colourSecondary": Blockly.Colours.data.secondary,
+      "colourTertiary": Blockly.Colours.data.tertiary
     });
   }
 };
@@ -329,8 +349,12 @@ Blockly.Blocks['data_insertatlist'] = {
           "name": "LIST"
         }
       ],
+      "previousStatement": null,
+      "nextStatement": null,
       "category": Blockly.Categories.data,
-      "extensions": ["colours_data", "shape_statement"]
+      "colour": Blockly.Colours.data.primary,
+      "colourSecondary": Blockly.Colours.data.secondary,
+      "colourTertiary": Blockly.Colours.data.tertiary
     });
   }
 };
@@ -357,8 +381,12 @@ Blockly.Blocks['data_replaceitemoflist'] = {
           "name": "ITEM"
         }
       ],
+      "previousStatement": null,
+      "nextStatement": null,
       "category": Blockly.Categories.data,
-      "extensions": ["colours_data", "shape_statement"]
+      "colour": Blockly.Colours.data.primary,
+      "colourSecondary": Blockly.Colours.data.secondary,
+      "colourTertiary": Blockly.Colours.data.tertiary
     });
   }
 };
@@ -383,7 +411,9 @@ Blockly.Blocks['data_itemoflist'] = {
       ],
       "output": null,
       "category": Blockly.Categories.data,
-      "extensions": ["colours_data"],
+      "colour": Blockly.Colours.data.primary,
+      "colourSecondary": Blockly.Colours.data.secondary,
+      "colourTertiary": Blockly.Colours.data.tertiary,
       "outputShape": Blockly.OUTPUT_SHAPE_ROUND
     });
   }
@@ -405,7 +435,9 @@ Blockly.Blocks['data_lengthoflist'] = {
       ],
       "output": "Number",
       "category": Blockly.Categories.data,
-      "extensions": ["colours_data"],
+      "colour": Blockly.Colours.data.primary,
+      "colourSecondary": Blockly.Colours.data.secondary,
+      "colourTertiary": Blockly.Colours.data.tertiary,
       "outputShape": Blockly.OUTPUT_SHAPE_ROUND
     });
   }
@@ -432,7 +464,9 @@ Blockly.Blocks['data_listcontainsitem'] = {
       "output": "Boolean",
       "outputShape": Blockly.OUTPUT_SHAPE_HEXAGONAL,
       "category": Blockly.Categories.data,
-      "extensions": ["colours_data"]
+      "colour": Blockly.Colours.data.primary,
+      "colourSecondary": Blockly.Colours.data.secondary,
+      "colourTertiary": Blockly.Colours.data.tertiary
     });
   }
 };
@@ -451,8 +485,12 @@ Blockly.Blocks['data_showlist'] = {
           "name": "LIST"
         }
       ],
+      "previousStatement": null,
+      "nextStatement": null,
       "category": Blockly.Categories.data,
-      "extensions": ["colours_data", "shape_statement"]
+      "colour": Blockly.Colours.data.primary,
+      "colourSecondary": Blockly.Colours.data.secondary,
+      "colourTertiary": Blockly.Colours.data.tertiary
     });
   }
 };
@@ -471,8 +509,12 @@ Blockly.Blocks['data_hidelist'] = {
           "name": "LIST"
         }
       ],
+      "previousStatement": null,
+      "nextStatement": null,
       "category": Blockly.Categories.data,
-      "extensions": ["colours_data", "shape_statement"]
+      "colour": Blockly.Colours.data.primary,
+      "colourSecondary": Blockly.Colours.data.secondary,
+      "colourTertiary": Blockly.Colours.data.tertiary
     });
   }
 };
