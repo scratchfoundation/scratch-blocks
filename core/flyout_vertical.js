@@ -558,25 +558,6 @@ Blockly.VerticalFlyout.prototype.checkboxClicked_ = function(checkboxObj) {
 };
 
 /**
- * Explicitly set the clicked state of the checkbox for the given block.
- * @param {string} blockId ID of block whose checkbox should be changed.
- * @param {boolean} clicked True if the box should be marked clicked.
- */
-Blockly.VerticalFlyout.prototype.setCheckboxState = function(blockId, clicked) {
-  var block = this.workspace_.getBlockById(blockId);
-  if (!block) {
-    throw 'No block found in the flyout for id ' + blockId;
-  }
-  var checkboxObj = block.flyoutCheckbox;
-  checkboxObj.clicked = clicked;
-  if (checkboxObj.clicked) {
-    Blockly.addClass_((checkboxObj.svgRoot), 'checked');
-  } else {
-    Blockly.removeClass_((checkboxObj.svgRoot), 'checked');
-  }
-};
-
-/**
  * Handle a mouse-move to vertically drag the flyout.
  * @param {!Event} e Mouse move event.
  * @private
