@@ -24,7 +24,6 @@ goog.provide('Blockly.ScratchBlocks.VerticalExtensions');
 
 goog.require('Blockly.Colours');
 goog.require('Blockly.constants');
-goog.require('Blockly.Extensions');
 
 
 Blockly.ScratchBlocks.VerticalExtensions.colourHelper = function(category) {
