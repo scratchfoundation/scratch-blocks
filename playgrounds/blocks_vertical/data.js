@@ -27,32 +27,6 @@ goog.require('Blockly.Blocks');
 goog.require('Blockly.Colours');
 goog.require('Blockly.constants');
 
-
-Blockly.Blocks['data_variablemenu'] = {
-  /**
-   * Variable menu.
-   * @this Blockly.Block
-   */
-  init: function() {
-    this.jsonInit(
-      {
-        "message0": "%1",
-        "args0": [
-          {
-            "type": "field_variable",
-            "name": "VARIABLE"
-          }
-        ],
-        "inputsInline": true,
-        "output": "String",
-        "colour": Blockly.Colours.data.secondary,
-        "colourSecondary": Blockly.Colours.data.secondary,
-        "colourTertiary": Blockly.Colours.data.tertiary,
-        "outputShape": Blockly.OUTPUT_SHAPE_ROUND
-      });
-  }
-};
-
 Blockly.Blocks['data_variable'] = {
   /**
    * Block of Variables
@@ -90,7 +64,7 @@ Blockly.Blocks['data_setvariableto'] = {
       "message0": "set %1 to %2",
       "args0": [
         {
-          "type": "input_value",
+          "type": "field_variable",
           "name": "VARIABLE"
         },
         {
@@ -118,7 +92,7 @@ Blockly.Blocks['data_changevariableby'] = {
       "message0": "change %1 by %2",
       "args0": [
         {
-          "type": "input_value",
+          "type": "field_variable",
           "name": "VARIABLE"
         },
         {
