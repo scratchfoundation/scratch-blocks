@@ -95,15 +95,13 @@ Blockly.Xml.blockToDomWithXY = function(block, opt_noId) {
  */
 Blockly.Xml.blockToDom = function(block, opt_noId) {
   if (block.type === "undefined_block" && block.undefinedData) {
-    block.undefinedData.getElementsByTagName("next");
     return block.undefinedData;
   } else {
     var element = goog.dom.createDom(block.isShadow() ? 'shadow' : 'block');
     var shapeData = [];
     shapeData[0] = Boolean(block.previousConnection);
-    shapeData[1] = Boolean(block.nextConnection);
-    shapeData[2] = Boolean(block.outputConnection);
-    shapeData[3] = block.getOutputShape();
+    shapeData[1] = Boolean(block.outputConnection);
+    shapeData[2] = block.getOutputShape();
     element.setAttribute('undefined_shape', shapeData.join("-"));
     element.setAttribute('type', block.type);
     if (!opt_noId) {
