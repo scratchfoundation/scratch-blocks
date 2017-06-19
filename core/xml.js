@@ -98,6 +98,12 @@ Blockly.Xml.blockToDom = function(block, opt_noId) {
     return block.undefinedData;
   } else {
     var element = goog.dom.createDom(block.isShadow() ? 'shadow' : 'block');
+    var shapeData = [];
+    shapeData[0] = Boolean(block.previousConnection);
+    shapeData[1] = Boolean(block.nextConnection);
+    shapeData[2] = Boolean(block.outputConnection);
+    shapeData[3] = block.getOutputShape();
+    element.setAttribute('undefinedShape', shapeData.join("-"));
     element.setAttribute('type', block.type);
     if (!opt_noId) {
       element.setAttribute('id', block.id);
