@@ -48,5 +48,11 @@ Blockly.Blocks['undefined_block'] = {
       "colourSecondary": "#FF7474",
       "colourTertiary":"#FFA2A2"
     });
+  },
+  updateUndefinedShape: function(data) {
+    this.setOutput(data[0]);
+    this.setOutputShape(data[1]);
+    this.setPreviousStatement(data[2]);
+    this.setNextStatement(data[3]);
   }
 };
