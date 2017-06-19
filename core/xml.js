@@ -94,7 +94,7 @@ Blockly.Xml.blockToDomWithXY = function(block, opt_noId) {
  * @return {!Element} Tree of XML elements.
  */
 Blockly.Xml.blockToDom = function(block, opt_noId) {
-  if (block.type === "undefined" && block.undefinedData) {
+  if (block.type === "undefined_block" && block.undefinedData) {
     return block.undefinedData;
   } else {
     var element = goog.dom.createDom(block.isShadow() ? 'shadow' : 'block');
@@ -535,9 +535,10 @@ Blockly.Xml.domToBlockHeadless_ = function(xmlBlock, workspace) {
   var id = xmlBlock.getAttribute('id');
   if (Blockly.Blocks[prototypeName]) {
     block = workspace.newBlock(prototypeName, id);
-  } else {
+  } else if (xmlBlock.getAttribute('undefinedShape')) {
     block = workspace.newBlock("undefined", id);
-    block.undefinedData = xmlBlock;
+    block.undefinedData = xmlBlock.cloneNode(true);
+    block.updateUndefinedShape(xmlBlock.getAttribute('undefinedShape').split("-"));
   }
 
   var blockChild = null;
