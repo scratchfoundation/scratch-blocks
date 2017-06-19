@@ -468,10 +468,10 @@ Blockly.Constants.Data.CUSTOM_CONTEXT_MENU_GET_VARIABLE_MIXIN = {
    */
   customContextMenu: function(options) {
     if (!this.isCollapsed()) {
-      var variablesList = this.workspace.variableList;
+      var variablesList = this.workspace.getVariablesOfType('');
       for (var i = 0; i < variablesList.length; i++) {
         var option = {enabled: true};
-        option.text = variablesList[i];
+        option.text = variablesList[i].name;
 
         option.callback =
             Blockly.Constants.Data.VARIABLE_OPTION_CALLBACK_FACTORY(this,
