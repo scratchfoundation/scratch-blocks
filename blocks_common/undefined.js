@@ -50,7 +50,7 @@ Blockly.Blocks['undefined_block'] = {
   },
   updateUndefinedShape: function(data) {
     this.setPreviousStatement(eval(data[0]));
-    this.setOutput(eval(data[1]));Blockly.Colours.more.primary
-    this.setOutputShape(data[2]);
+    this.setOutput(eval(data[1]));
+    this.setOutputShape(eval(data[2]));
   }
 };
