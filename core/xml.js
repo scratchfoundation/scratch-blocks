@@ -542,7 +542,7 @@ Blockly.Xml.domToBlockHeadless_ = function(xmlBlock, workspace) {
   if (Blockly.Blocks[prototypeName]) {
     block = workspace.newBlock(prototypeName, id);
   } else if (xmlBlock.getAttribute('undefinedShape')) {
-    block = workspace.newBlock("undefined", id);
+    block = workspace.newBlock("undefined_block", id);
     block.undefinedData = xmlBlock.cloneNode(true);
     block.updateUndefinedShape(xmlBlock.getAttribute('undefinedShape').split("-"));
   }
