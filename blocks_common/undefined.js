@@ -43,14 +43,14 @@ Blockly.Blocks['undefined_block'] = {
       "inputsInline": true,
       "previousStatement": null,
       "category": "undefined",
-      "colour": "#FF0000",
-      "colourSecondary": "#FF7474",
-      "colourTertiary":"#FFA2A2"
+      "colour": Blockly.Colours.more.primary,
+      "colourSecondary": Blockly.Colours.more.secondary,
+      "colourTertiary": Blockly.Colours.more.tertiary
     });
   },
   updateUndefinedShape: function(data) {
     this.setPreviousStatement(eval(data[0]));
-    this.setOutput(eval(data[1]));
+    this.setOutput(eval(data[1]));Blockly.Colours.more.primary
     this.setOutputShape(data[2]);
   }
 };
