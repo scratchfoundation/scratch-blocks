@@ -103,7 +103,7 @@ Blockly.Xml.blockToDom = function(block, opt_noId) {
     shapeData[1] = Boolean(block.nextConnection);
     shapeData[2] = Boolean(block.outputConnection);
     shapeData[3] = block.getOutputShape();
-    element.setAttribute('undefinedShape', shapeData.join("-"));
+    element.setAttribute('undefined_shape', shapeData.join("-"));
     element.setAttribute('type', block.type);
     if (!opt_noId) {
       element.setAttribute('id', block.id);
@@ -541,10 +541,10 @@ Blockly.Xml.domToBlockHeadless_ = function(xmlBlock, workspace) {
   var id = xmlBlock.getAttribute('id');
   if (Blockly.Blocks[prototypeName]) {
     block = workspace.newBlock(prototypeName, id);
-  } else if (xmlBlock.getAttribute('undefinedShape')) {
+  } else {
     block = workspace.newBlock("undefined_block", id);
     block.undefinedData = xmlBlock.cloneNode(true);
-    block.updateUndefinedShape(xmlBlock.getAttribute('undefinedShape').split("-"));
+    block.updateUndefinedShape(xmlBlock.getAttribute('undefined_shape').split("-"));
   }
 
   var blockChild = null;
