@@ -94,112 +94,116 @@ Blockly.Xml.blockToDomWithXY = function(block, opt_noId) {
  * @return {!Element} Tree of XML elements.
  */
 Blockly.Xml.blockToDom = function(block, opt_noId) {
-  var element = goog.dom.createDom(block.isShadow() ? 'shadow' : 'block');
-  element.setAttribute('type', block.type);
-  if (!opt_noId) {
-    element.setAttribute('id', block.id);
-  }
-  if (block.mutationToDom) {
-    // Custom data for an advanced block.
-    var mutation = block.mutationToDom();
-    if (mutation && (mutation.hasChildNodes() || mutation.hasAttributes())) {
-      element.appendChild(mutation);
+  if (block.type === "undefined" && block.undefinedData) {
+    return block.undefinedData;
+  } else {
+    var element = goog.dom.createDom(block.isShadow() ? 'shadow' : 'block');
+    element.setAttribute('type', block.type);
+    if (!opt_noId) {
+      element.setAttribute('id', block.id);
     }
-  }
-  function fieldToDom(field) {
-    if (field.name && field.EDITABLE) {
-      var container = goog.dom.createDom('field', null, field.getValue());
-      container.setAttribute('name', field.name);
-      if (field instanceof Blockly.FieldVariable) {
-        var variable = block.workspace.getVariable(field.getValue());
-        if (variable) {
-          container.setAttribute('id', variable.getId());
-          container.setAttribute('variableType', variable.type);
+    if (block.mutationToDom) {
+      // Custom data for an advanced block.
+      var mutation = block.mutationToDom();
+      if (mutation && (mutation.hasChildNodes() || mutation.hasAttributes())) {
+        element.appendChild(mutation);
+      }
+    }
+    function fieldToDom(field) {
+      if (field.name && field.EDITABLE) {
+        var container = goog.dom.createDom('field', null, field.getValue());
+        container.setAttribute('name', field.name);
+        if (field instanceof Blockly.FieldVariable) {
+          var variable = block.workspace.getVariable(field.getValue());
+          if (variable) {
+            container.setAttribute('id', variable.getId());
+            container.setAttribute('variableType', variable.type);
+          }
+        }
+        element.appendChild(container);
+      }
+    }
+    for (var i = 0, input; input = block.inputList[i]; i++) {
+      for (var j = 0, field; field = input.fieldRow[j]; j++) {
+        fieldToDom(field);
+      }
+    }
+
+    var commentText = block.getCommentText();
+    if (commentText) {
+      var commentElement = goog.dom.createDom('comment', null, commentText);
+      if (typeof block.comment == 'object') {
+        commentElement.setAttribute('pinned', block.comment.isVisible());
+        var hw = block.comment.getBubbleSize();
+        commentElement.setAttribute('h', hw.height);
+        commentElement.setAttribute('w', hw.width);
+      }
+      element.appendChild(commentElement);
+    }
+
+    if (block.data) {
+      var dataElement = goog.dom.createDom('data', null, block.data);
+      element.appendChild(dataElement);
+    }
+
+    for (var i = 0, input; input = block.inputList[i]; i++) {
+      var container;
+      var empty = true;
+      if (input.type == Blockly.DUMMY_INPUT) {
+        continue;
+      } else {
+        var childBlock = input.connection.targetBlock();
+        if (input.type == Blockly.INPUT_VALUE) {
+          container = goog.dom.createDom('value');
+        } else if (input.type == Blockly.NEXT_STATEMENT) {
+          container = goog.dom.createDom('statement');
+        }
+        var shadow = input.connection.getShadowDom();
+        if (shadow && (!childBlock || !childBlock.isShadow())) {
+          container.appendChild(Blockly.Xml.cloneShadow_(shadow));
+        }
+        if (childBlock) {
+          container.appendChild(Blockly.Xml.blockToDom(childBlock, opt_noId));
+          empty = false;
         }
       }
+      container.setAttribute('name', input.name);
+      if (!empty) {
+        element.appendChild(container);
+      }
+    }
+    if (block.inputsInlineDefault != block.inputsInline) {
+      element.setAttribute('inline', block.inputsInline);
+    }
+    if (block.isCollapsed()) {
+      element.setAttribute('collapsed', true);
+    }
+    if (block.disabled) {
+      element.setAttribute('disabled', true);
+    }
+    if (!block.isDeletable() && !block.isShadow()) {
+      element.setAttribute('deletable', false);
+    }
+    if (!block.isMovable() && !block.isShadow()) {
+      element.setAttribute('movable', false);
+    }
+    if (!block.isEditable()) {
+      element.setAttribute('editable', false);
+    }
+
+    var nextBlock = block.getNextBlock();
+    if (nextBlock) {
+      var container = goog.dom.createDom('next', null,
+          Blockly.Xml.blockToDom(nextBlock, opt_noId));
       element.appendChild(container);
     }
-  }
-  for (var i = 0, input; input = block.inputList[i]; i++) {
-    for (var j = 0, field; field = input.fieldRow[j]; j++) {
-      fieldToDom(field);
+    var shadow = block.nextConnection && block.nextConnection.getShadowDom();
+    if (shadow && (!nextBlock || !nextBlock.isShadow())) {
+      container.appendChild(Blockly.Xml.cloneShadow_(shadow));
     }
-  }
 
-  var commentText = block.getCommentText();
-  if (commentText) {
-    var commentElement = goog.dom.createDom('comment', null, commentText);
-    if (typeof block.comment == 'object') {
-      commentElement.setAttribute('pinned', block.comment.isVisible());
-      var hw = block.comment.getBubbleSize();
-      commentElement.setAttribute('h', hw.height);
-      commentElement.setAttribute('w', hw.width);
-    }
-    element.appendChild(commentElement);
+    return element;
   }
-
-  if (block.data) {
-    var dataElement = goog.dom.createDom('data', null, block.data);
-    element.appendChild(dataElement);
-  }
-
-  for (var i = 0, input; input = block.inputList[i]; i++) {
-    var container;
-    var empty = true;
-    if (input.type == Blockly.DUMMY_INPUT) {
-      continue;
-    } else {
-      var childBlock = input.connection.targetBlock();
-      if (input.type == Blockly.INPUT_VALUE) {
-        container = goog.dom.createDom('value');
-      } else if (input.type == Blockly.NEXT_STATEMENT) {
-        container = goog.dom.createDom('statement');
-      }
-      var shadow = input.connection.getShadowDom();
-      if (shadow && (!childBlock || !childBlock.isShadow())) {
-        container.appendChild(Blockly.Xml.cloneShadow_(shadow));
-      }
-      if (childBlock) {
-        container.appendChild(Blockly.Xml.blockToDom(childBlock, opt_noId));
-        empty = false;
-      }
-    }
-    container.setAttribute('name', input.name);
-    if (!empty) {
-      element.appendChild(container);
-    }
-  }
-  if (block.inputsInlineDefault != block.inputsInline) {
-    element.setAttribute('inline', block.inputsInline);
-  }
-  if (block.isCollapsed()) {
-    element.setAttribute('collapsed', true);
-  }
-  if (block.disabled) {
-    element.setAttribute('disabled', true);
-  }
-  if (!block.isDeletable() && !block.isShadow()) {
-    element.setAttribute('deletable', false);
-  }
-  if (!block.isMovable() && !block.isShadow()) {
-    element.setAttribute('movable', false);
-  }
-  if (!block.isEditable()) {
-    element.setAttribute('editable', false);
-  }
-
-  var nextBlock = block.getNextBlock();
-  if (nextBlock) {
-    var container = goog.dom.createDom('next', null,
-        Blockly.Xml.blockToDom(nextBlock, opt_noId));
-    element.appendChild(container);
-  }
-  var shadow = block.nextConnection && block.nextConnection.getShadowDom();
-  if (shadow && (!nextBlock || !nextBlock.isShadow())) {
-    container.appendChild(Blockly.Xml.cloneShadow_(shadow));
-  }
-
-  return element;
 };
 
 /**
@@ -529,7 +533,12 @@ Blockly.Xml.domToBlockHeadless_ = function(xmlBlock, workspace) {
   goog.asserts.assert(prototypeName, 'Block type unspecified: %s',
                       xmlBlock.outerHTML);
   var id = xmlBlock.getAttribute('id');
-  block = workspace.newBlock(prototypeName, id);
+  if (Blockly.Blocks[prototypeName]) {
+    block = workspace.newBlock(prototypeName, id);
+  } else {
+    block = workspace.newBlock("undefined", id);
+    block.undefinedData = xmlBlock;
+  }
 
   var blockChild = null;
   for (var i = 0, xmlChild; xmlChild = xmlBlock.childNodes[i]; i++) {
