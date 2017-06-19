@@ -42,7 +42,6 @@ Blockly.Blocks['undefined_block'] = {
       "message0": "undefined",
       "inputsInline": true,
       "previousStatement": null,
-      "nextStatement": null,
       "category": "undefined",
       "colour": "#FF0000",
       "colourSecondary": "#FF7474",
@@ -51,8 +50,7 @@ Blockly.Blocks['undefined_block'] = {
   },
   updateUndefinedShape: function(data) {
     this.setPreviousStatement(eval(data[0]));
-    this.setNextStatement(eval(data[1]));
-    this.setOutput(eval(data[2]));
-    this.setOutputShape(data[3]);
+    this.setOutput(eval(data[1]));
+    this.setOutputShape(data[2]);
   }
 };
