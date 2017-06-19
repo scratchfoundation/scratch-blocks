@@ -95,6 +95,7 @@ Blockly.Xml.blockToDomWithXY = function(block, opt_noId) {
  */
 Blockly.Xml.blockToDom = function(block, opt_noId) {
   if (block.type === "undefined_block" && block.undefinedData) {
+    block.undefinedData.getElementsByTagName("next");
     return block.undefinedData;
   } else {
     var element = goog.dom.createDom(block.isShadow() ? 'shadow' : 'block');
