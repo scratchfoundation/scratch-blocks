@@ -50,9 +50,9 @@ Blockly.Blocks['undefined_block'] = {
     });
   },
   updateUndefinedShape: function(data) {
-    this.setPreviousStatement(data[0]);
-    this.setNextStatement(data[1]);
-    this.setOutput(data[2]);
+    this.setPreviousStatement(eval(data[0]));
+    this.setNextStatement(eval(data[1]));
+    this.setOutput(eval(data[2]));
     this.setOutputShape(data[3]);
   }
 };
