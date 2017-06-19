@@ -24,7 +24,7 @@
  */
 'use strict';
 
-goog.provide('Blockly.Blocks.undefined');
+goog.provide('Blockly.Blocks.undefined_block');
 
 goog.require('Blockly.Blocks');
 
