@@ -24,7 +24,7 @@
  */
 'use strict';
 
-goog.provide('Blockly.Blocks.undefined_blocks');
+goog.provide('Blockly.Blocks.undefined');
 
 goog.require('Blockly.Blocks');
 
@@ -32,7 +32,7 @@ goog.require('Blockly.Colours');
 
 goog.require('Blockly.constants');
 
-Blockly.Blocks['motion_movesteps'] = {
+Blockly.Blocks['undefined_block'] = {
   /**
    * Undefined Block
    * @this Blockly.Block
@@ -44,9 +44,9 @@ Blockly.Blocks['motion_movesteps'] = {
       "previousStatement": null,
       "nextStatement": null,
       "category": "undefined",
-      "colour": Blockly.Colours.motion.primary,
-      "colourSecondary": Blockly.Colours.motion.secondary,
-      "colourTertiary": Blockly.Colours.motion.tertiary
+      "colour": "#FF0000",
+      "colourSecondary": "#FF7474",
+      "colourTertiary":"#FFA2A2"
     });
   }
 };
