@@ -232,11 +232,7 @@ Blockly.Blocks['sound_playnoteforbeats'] = {
 
 Blockly.Blocks['sound_effects_menu_options'] = [
   ['pitch', 'PITCH'],
-  ['pan left/right', 'PAN'],
-  ['echo', 'ECHO'],
-  ['reverb', 'REVERB'],
-  ['fuzz', 'FUZZ'],
-  ['robot', 'ROBOT']
+  ['pan left/right', 'PAN']
 ];
 
 Blockly.Blocks['sound_seteffectto'] = {
