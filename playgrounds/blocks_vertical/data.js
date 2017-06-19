@@ -28,6 +28,7 @@ goog.require('Blockly.Colours');
 goog.require('Blockly.constants');
 goog.require('Blockly.ScratchBlocks.VerticalExtensions');
 
+
 Blockly.Blocks['data_variable'] = {
   /**
    * Block of Variables
@@ -44,10 +45,8 @@ Blockly.Blocks['data_variable'] = {
         }
       ],
       "category": Blockly.Categories.data,
-      "output": "String",
-      "outputShape": Blockly.OUTPUT_SHAPE_ROUND,
       "checkboxInFlyout": true,
-      "extensions": ["contextMenu_getVariableBlock", "colours_data"]
+      "extensions": ["contextMenu_getVariableBlock", "colours_data", "output_string"]
     });
   }
 };
@@ -165,9 +164,7 @@ Blockly.Blocks['data_listcontents'] = {
         }
       ],
       "category": Blockly.Categories.data,
-      "extensions": ["colours_data"],
-      "output": "String",
-      "outputShape": Blockly.OUTPUT_SHAPE_ROUND,
+      "extensions": ["colours_data", "output_string"],
       "checkboxInFlyout": true
     });
   }
@@ -195,10 +192,9 @@ Blockly.Blocks['data_listindexall'] = {
           ]
         }
       ],
-      "output": "String",
       "category": Blockly.Categories.data,
-      "outputShape": Blockly.OUTPUT_SHAPE_ROUND,
-      "colour": Blockly.Colours.textField
+      "colour": Blockly.Colours.textField,
+      "extensions": ["output_string"]
     });
   }
 };
@@ -225,10 +221,9 @@ Blockly.Blocks['data_listindexrandom'] = {
           ]
         }
       ],
-      "output": "String",
       "category": Blockly.Categories.data,
-      "outputShape": Blockly.OUTPUT_SHAPE_ROUND,
-      "colour": Blockly.Colours.textField
+      "colour": Blockly.Colours.textField,
+      "extensions": ["output_string"]
     });
   }
 };
@@ -377,10 +372,8 @@ Blockly.Blocks['data_lengthoflist'] = {
           "name": "LIST"
         }
       ],
-      "output": "Number",
       "category": Blockly.Categories.data,
-      "extensions": ["colours_data"],
-      "outputShape": Blockly.OUTPUT_SHAPE_ROUND
+      "extensions": ["colours_data", "output_number"]
     });
   }
 };
@@ -403,10 +396,8 @@ Blockly.Blocks['data_listcontainsitem'] = {
           "name": "ITEM"
         }
       ],
-      "output": "Boolean",
-      "outputShape": Blockly.OUTPUT_SHAPE_HEXAGONAL,
       "category": Blockly.Categories.data,
-      "extensions": ["colours_data"]
+      "extensions": ["colours_data", "output_boolean"]
     });
   }
 };
