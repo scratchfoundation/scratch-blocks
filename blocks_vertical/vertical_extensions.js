@@ -58,6 +58,7 @@ Blockly.ScratchBlocks.VerticalExtensions.colourHelper = function(category) {
   return function() {
     this.setColourFromRawValues_(colours.primary, colours.secondary,
         colours.tertiary);
+    this.setCategory(Blockly.Categories[category]);
   };
 };
 

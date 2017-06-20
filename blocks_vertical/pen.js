@@ -23,203 +23,115 @@
 goog.provide('Blockly.Blocks.pen');
 
 goog.require('Blockly.Blocks');
-goog.require('Blockly.Colours');
-goog.require('Blockly.constants');
 goog.require('Blockly.ScratchBlocks.VerticalExtensions');
 
-
-Blockly.Blocks['pen_clear'] = {
-  /**
-   * Block to clear drawing.
-   * @this Blockly.Block
-   */
-  init: function() {
-    this.jsonInit({
-      "message0": "clear",
-      "category": Blockly.Categories.pen,
-      "extensions": ["colours_pen", "shape_statement"]
-    });
+Blockly.defineBlocksWithJsonArray([
+  // Block to clear drawing.
+  {
+    "type": "pen_clear",
+    "extensions": ["colours_pen", "shape_statement"],
+    "message0": "clear"
+  },
+  // Block to stamp a sprite
+  {
+    "type": "pen_stamp",
+    "extensions": ["colours_pen", "shape_statement"],
+    "message0": "stamp"
+  },
+  // Block to pull down the sprite's pen.
+  {
+    "type": "pen_pendown",
+    "extensions": ["colours_pen", "shape_statement"],
+    "message0": "pen down"
+  },
+  // Block to pull up the sprite's pen.
+  {
+    "type": "pen_penup",
+    "extensions": ["colours_pen", "shape_statement"],
+    "message0": "pen up"
+  },
+  // Block to set the pen's color to the value.
+  {
+    "type": "pen_setpencolortocolor",
+    "extensions": ["colours_pen", "shape_statement"],
+    "message0": "set pen color to %1",
+    "args0": [
+      {
+        "type": "input_value",
+        "name": "COLOR"
+      }
+    ]
+  },
+  // Block to change the pen's color by the value.
+  {
+    "type": "pen_changepencolorby",
+    "extensions": ["colours_pen", "shape_statement"],
+    "message0": "change pen color by %1",
+    "args0": [
+      {
+        "type": "input_value",
+        "name": "COLOR"
+      }
+    ]
+  },
+  // Block to set the pen's color to the value.
+  {
+    "type": "pen_setpencolortonum",
+    "extensions": ["colours_pen", "shape_statement"],
+    "message0": "set pen color to %1",
+    "args0": [
+      {
+        "type": "input_value",
+        "name": "COLOR"
+      }
+    ]
+  },
+  // Block to change the pen's shade by the value.
+  {
+    "type": "pen_changepenshadeby",
+    "extensions": ["colours_pen", "shape_statement"],
+    "message0": "change pen shade by %1",
+    "args0": [
+      {
+        "type": "input_value",
+        "name": "SHADE"
+      }
+    ]
+  },
+  // Block to set the pen's shade to the value.
+  {
+    "type": "pen_setpenshadeto",
+    "extensions": ["colours_pen", "shape_statement"],
+    "message0": "set pen shade to %1",
+    "args0": [
+      {
+        "type": "input_value",
+        "name": "SHADE"
+      }
+    ]
+  },
+  // Block to change the pen's size by the value.
+  {
+    "type": "pen_changepensizeby",
+    "extensions": ["colours_pen", "shape_statement"],
+    "message0": "change pen size by %1",
+    "args0": [
+      {
+        "type": "input_value",
+        "name": "SIZE"
+      }
+    ]
+  },
+  // Block to set the pen's size to the value.
+  {
+    "type": "pen_setpensizeto",
+    "extensions": ["colours_pen", "shape_statement"],
+    "message0": "set pen size to %1",
+    "args0": [
+      {
+        "type": "input_value",
+        "name": "SIZE"
+      }
+    ]
   }
-};
-
-Blockly.Blocks['pen_stamp'] = {
-  /**
-   * Block to stamp a sprite.
-   * @this Blockly.Block
-   */
-  init: function() {
-    this.jsonInit({
-      "message0": "stamp",
-      "category": Blockly.Categories.pen,
-      "extensions": ["colours_pen", "shape_statement"]
-    });
-  }
-};
-
-Blockly.Blocks['pen_pendown'] = {
-  /**
-   * Block to pull down the sprite's pen.
-   * @this Blockly.Block
-   */
-  init: function() {
-    this.jsonInit({
-      "message0": "pen down",
-      "category": Blockly.Categories.pen,
-      "extensions": ["colours_pen", "shape_statement"]
-    });
-  }
-};
-
-Blockly.Blocks['pen_penup'] = {
-  /**
-   * Block to pull up the sprite's pen.
-   * @this Blockly.Block
-   */
-  init: function() {
-    this.jsonInit({
-      "message0": "pen up",
-      "category": Blockly.Categories.pen,
-      "extensions": ["colours_pen", "shape_statement"]
-    });
-  }
-};
-
-Blockly.Blocks['pen_setpencolortocolor'] = {
-  /**
-   * Block to set the pen's color to the value.
-   * @this Blockly.Block
-   */
-  init: function() {
-    this.jsonInit({
-      "message0": "set pen color to %1",
-      "args0": [
-        {
-          "type": "input_value",
-          "name": "COLOR"
-        }
-      ],
-      "category": Blockly.Categories.pen,
-      "extensions": ["colours_pen", "shape_statement"]
-    });
-  }
-};
-
-Blockly.Blocks['pen_changepencolorby'] = {
-  /**
-   * Block to change the pen's color by the value.
-   * @this Blockly.Block
-   */
-  init: function() {
-    this.jsonInit({
-      "message0": "change pen color by %1",
-      "args0": [
-        {
-          "type": "input_value",
-          "name": "COLOR"
-        }
-      ],
-      "category": Blockly.Categories.pen,
-      "extensions": ["colours_pen", "shape_statement"]
-    });
-  }
-};
-
-Blockly.Blocks['pen_setpencolortonum'] = {
-  /**
-   * Block to set the pen's color to the value.
-   * @this Blockly.Block
-   */
-  init: function() {
-    this.jsonInit({
-      "message0": "set pen color to %1",
-      "args0": [
-        {
-          "type": "input_value",
-          "name": "COLOR"
-        }
-      ],
-      "category": Blockly.Categories.pen,
-      "extensions": ["colours_pen", "shape_statement"]
-    });
-  }
-};
-
-Blockly.Blocks['pen_changepenshadeby'] = {
-  /**
-   * Block to change the pen's shade by the value.
-   * @this Blockly.Block
-   */
-  init: function() {
-    this.jsonInit({
-      "message0": "change pen shade by %1",
-      "args0": [
-        {
-          "type": "input_value",
-          "name": "SHADE"
-        }
-      ],
-      "category": Blockly.Categories.pen,
-      "extensions": ["colours_pen", "shape_statement"]
-    });
-  }
-};
-
-Blockly.Blocks['pen_setpenshadeto'] = {
-  /**
-   * Block to set the pen's shade to the value.
-   * @this Blockly.Block
-   */
-  init: function() {
-    this.jsonInit({
-      "message0": "set pen shade to %1",
-      "args0": [
-        {
-          "type": "input_value",
-          "name": "SHADE"
-        }
-      ],
-      "category": Blockly.Categories.pen,
-      "extensions": ["colours_pen", "shape_statement"]
-    });
-  }
-};
-
-Blockly.Blocks['pen_changepensizeby'] = {
-  /**
-   * Block to change the pen's size by the value.
-   * @this Blockly.Block
-   */
-  init: function() {
-    this.jsonInit({
-      "message0": "change pen size by %1",
-      "args0": [
-        {
-          "type": "input_value",
-          "name": "SIZE"
-        }
-      ],
-      "category": Blockly.Categories.pen,
-      "extensions": ["colours_pen", "shape_statement"]
-    });
-  }
-};
-
-Blockly.Blocks['pen_setpensizeto'] = {
-  /**
-   * Block to set the pen's size to the value.
-   * @this Blockly.Block
-   */
-  init: function() {
-    this.jsonInit({
-      "message0": "set pen size to %1",
-      "args0": [
-        {
-          "type": "input_value",
-          "name": "SIZE"
-        }
-      ],
-      "category": Blockly.Categories.pen,
-      "extensions": ["colours_pen", "shape_statement"]
-    });
-  }
-};
+]);
