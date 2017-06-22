@@ -107,8 +107,23 @@ Blockly.FieldVariable.prototype.getValue = function() {
  */
 Blockly.FieldVariable.prototype.setValue = function(newValue) {
   if (this.sourceBlock_ && Blockly.Events.isEnabled()) {
-    Blockly.Events.fire(new Blockly.Events.Change(
+    Blockly.Events.fire(new Blockly.Events.BlockChange(
         this.sourceBlock_, 'field', this.name, this.value_, newValue));
+  }
+  if (this.sourceBlock_) {
+    var variable = this.sourceBlock_.workspace.getVariableById(newValue);
+    if (variable) {
+      this.setText(variable.name);
+      this.value_ = newValue;
+      return;
+    }
+    // TODO(marisaleung): Remove name lookup after converting all Field Variable
+    //     instances to use id instead of name.
+    else if (variable = this.sourceBlock_.workspace.getVariable(newValue)) {
+      this.setText(newValue);
+      this.value_ = variable.getId();
+      return;
+    }
   }
   this.value_ = newValue;
   this.setText(newValue);

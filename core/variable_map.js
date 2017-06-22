@@ -32,10 +32,11 @@ goog.require('Blockly.VariableModel');
  * Class for a variable map.  This contains a dictionary data structure with
  * variable types as keys and lists of variables as values.  The list of
  * variables are the type indicated by the key.
+ * @param {!Blockly.Workspace} workspace The workspace this map belongs to.
  * @constructor
  */
-Blockly.VariableMap = function() {
-  /**
+Blockly.VariableMap = function(workspace) {
+ /**
    * @type {!Object<string, !Array.<Blockly.VariableModel>>}
    * A map from variable type to list of variable names.  The lists contain all
    * of the named variables in the workspace, including variables
@@ -43,6 +44,12 @@ Blockly.VariableMap = function() {
    * @private
    */
   this.variableMap_ = {};
+
+  /**
+   * The workspace this map belongs to.
+   * @type {!Blockly.Workspace}
+   */
+  this.workspace = workspace;
 };
 
 /**
@@ -54,7 +61,6 @@ Blockly.VariableMap.prototype.clear = function() {
 
 /**
  * Rename the given variable by updating its name in the variable map.
- * TODO: #468
  * @param {?Blockly.VariableModel} variable Variable to rename.
  * @param {string} newName New variable name.
  */
@@ -81,11 +87,19 @@ Blockly.VariableMap.prototype.renameVariable = function(variable, newName) {
   } else if (variableIndex == newVariableIndex ||
       variableIndex != -1 && newVariableIndex == -1) {
     // Only changing case, or renaming to a completely novel name.
-    this.variableMap_[type][variableIndex].name = newName;
+    var variableToRename = this.variableMap_[type][variableIndex];
+    Blockly.Events.fire(new Blockly.Events.VarRename(variableToRename,
+      newName));
+    variableToRename.name = newName;
   } else if (variableIndex != -1 && newVariableIndex != -1) {
     // Renaming one existing variable to another existing variable.
     // The case might have changed, so we update the destination ID.
-    this.variableMap_[type][newVariableIndex].name = newName;
+    var variableToRename = this.variableMap_[type][newVariableIndex];
+    Blockly.Events.fire(new Blockly.Events.VarRename(variableToRename,
+      newName));
+    var variableToDelete = this.variableMap_[type][variableIndex];
+    Blockly.Events.fire(new Blockly.Events.VarDelete(variableToDelete));
+    variableToRename.name = newName;
     this.variableMap_[type].splice(variableIndex, 1);
   }
 };
@@ -123,7 +137,7 @@ Blockly.VariableMap.prototype.createVariable = function(name, opt_type, opt_id) 
   opt_id = opt_id || Blockly.utils.genUid();
   opt_type = opt_type || '';
 
-  variable = new Blockly.VariableModel(name, opt_type, opt_id);
+  variable = new Blockly.VariableModel(this.workspace, name, opt_type, opt_id);
   // If opt_type is not a key, create a new list.
   if (!this.variableMap_[opt_type]) {
     this.variableMap_[opt_type] = [variable];
@@ -143,6 +157,7 @@ Blockly.VariableMap.prototype.deleteVariable = function(variable) {
   for (var i = 0, tempVar; tempVar = variableList[i]; i++) {
     if (tempVar.getId() == variable.getId()) {
       variableList.splice(i, 1);
+      Blockly.Events.fire(new Blockly.Events.VarDelete(variable));
       return;
     }
   }

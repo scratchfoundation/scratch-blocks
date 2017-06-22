@@ -399,8 +399,6 @@ Blockly.Field.prototype.render_ = function() {
  **/
 Blockly.Field.prototype.updateWidth = function() {
   var width = Blockly.Field.getCachedWidth(this.textElement_);
-  // Calculate width of field
-  width = Blockly.Field.getCachedWidth(this.textElement_);
 
   // Add padding to left and right of text.
   if (this.EDITABLE) {
@@ -623,7 +621,7 @@ Blockly.Field.prototype.setValue = function(newValue) {
     return;
   }
   if (this.sourceBlock_ && Blockly.Events.isEnabled()) {
-    Blockly.Events.fire(new Blockly.Events.Change(
+    Blockly.Events.fire(new Blockly.Events.BlockChange(
         this.sourceBlock_, 'field', this.name, oldValue, newValue));
   }
   this.setText(newValue);

@@ -19,9 +19,7 @@
  */
 
 /**
- * @fileoverview Base class for a file tray containing blocks that may be
- * dragged into the workspace.  Defines basic interactions that are shared
- * between vertical and horizontal flyouts.
+ * @fileoverview Flyout tray containing blocks which may be created.
  * @author fraser@google.com (Neil Fraser)
  */
 'use strict';
@@ -278,6 +276,13 @@ Blockly.Flyout.prototype.init = function(targetWorkspace) {
   // A flyout connected to a workspace doesn't have its own current gesture.
   this.workspace_.getGesture =
       this.targetWorkspace_.getGesture.bind(this.targetWorkspace_);
+
+  // Get variables from the main workspace rather than the target workspace.
+  this.workspace_.getVariable =
+      this.targetWorkspace_.getVariable.bind(this.targetWorkspace_);
+
+  this.workspace_.getVariableById =
+      this.targetWorkspace_.getVariableById.bind(this.targetWorkspace_);
 };
 
 /**
@@ -529,7 +534,7 @@ Blockly.Flyout.prototype.clearOldBlocks_ = function() {
 
 /**
  * Add listeners to a block that has been added to the flyout.
- * @param {Element} root The root node of the SVG group the block is in.
+ * @param {!Element} root The root node of the SVG group the block is in.
  * @param {!Blockly.Block} block The block to add listeners for.
  * @param {!Element} rect The invisible rectangle under the block that acts as
  *     a button for that block.
@@ -631,7 +636,6 @@ Blockly.Flyout.prototype.reflow = function() {
     this.workspace_.removeChangeListener(this.reflowWrapper_);
   }
   var blocks = this.workspace_.getTopBlocks(false);
-
   this.reflowInternal_(blocks);
   if (this.reflowWrapper_) {
     this.workspace_.addChangeListener(this.reflowWrapper_);
