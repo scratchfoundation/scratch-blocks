@@ -89,7 +89,7 @@ Blockly.Workspace = function(opt_options) {
    * that are not currently in use.
    * @private
    */
-  this.variableMap_ = new Blockly.VariableMap();
+  this.variableMap_ = new Blockly.VariableMap(this);
 };
 
 /**
@@ -251,7 +251,6 @@ Blockly.Workspace.prototype.updateVariableStore = function(clear) {
 /**
  * Rename a variable by updating its name in the variable map. Identify the
  * variable to rename with the given variable.
- * TODO: #468
  * @param {?Blockly.VariableModel} variable Variable to rename.
  * @param {string} newName New variable name.
  */
@@ -280,16 +279,13 @@ Blockly.Workspace.prototype.renameVariableInternal_ = function(variable, newName
       blocks[i].renameVar(oldCase, newName);
     }
   }
-  Blockly.Events.setGroup(false);
-
   this.variableMap_.renameVariable(variable, newName);
+  Blockly.Events.setGroup(false);
 };
-
 
 /**
  * Rename a variable by updating its name in the variable map. Identify the
  * variable to rename with the given name.
- * TODO: #468
  * @param {string} oldName Variable to rename.
  * @param {string} newName New variable name.
  */
@@ -343,7 +339,7 @@ Blockly.Workspace.prototype.getVariableUses = function(name) {
       for (var j = 0; j < blockVariables.length; j++) {
         var varName = blockVariables[j];
         // Variable name may be null if the block is only half-built.
-        if (varName && Blockly.Names.equals(varName, name)) {
+        if (varName && name && Blockly.Names.equals(varName, name)) {
           uses.push(blocks[i]);
         }
       }
@@ -399,6 +395,8 @@ Blockly.Workspace.prototype.deleteVariableById = function(id) {
   var variable = this.getVariableById(id);
   if (variable) {
     this.deleteVariableInternal_(variable);
+  } else {
+    console.warn("Can't delete non-existant variable: " + id);
   }
 };
 
@@ -414,9 +412,8 @@ Blockly.Workspace.prototype.deleteVariableInternal_ = function(variable) {
   for (var i = 0; i < uses.length; i++) {
     uses[i].dispose(true, false);
   }
-  Blockly.Events.setGroup(false);
-
   this.variableMap_.deleteVariable(variable);
+  Blockly.Events.setGroup(false);
 };
 
 /**
@@ -498,10 +495,14 @@ Blockly.Workspace.prototype.undo = function(redo) {
   }
   events = Blockly.Events.filter(events, redo);
   Blockly.Events.recordUndo = false;
-  for (var i = 0, event; event = events[i]; i++) {
-    event.run(redo);
+  try {
+    for (var i = 0, event; event = events[i]; i++) {
+      event.run(redo);
+    }
   }
-  Blockly.Events.recordUndo = true;
+  finally {
+    Blockly.Events.recordUndo = true;
+  }
 };
 
 /**

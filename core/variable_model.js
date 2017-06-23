@@ -32,6 +32,7 @@ goog.require('goog.string');
 /**
  * Class for a variable model.
  * Holds information for the variable including name, id, and type.
+ * @param {!Blockly.Workspace} workspace The variable's workspace.
  * @param {!string} name The name of the variable. This must be unique across
  *     variables and procedures.
  * @param {?string} opt_type The type of the variable like 'int' or 'string'.
@@ -42,7 +43,13 @@ goog.require('goog.string');
  * @see {Blockly.FieldVariable}
  * @constructor
  */
-Blockly.VariableModel = function(name, opt_type, opt_id) {
+Blockly.VariableModel = function(workspace, name, opt_type, opt_id) {
+  /**
+   * The workspace the variable is in.
+   * @type {!Blockly.Workspace}
+   */
+  this.workspace = workspace;
+
   /**
    * The name of the variable, typically defined by the user. It must be
    * unique across all names used for procedures and variables. It may be
@@ -68,6 +75,8 @@ Blockly.VariableModel = function(name, opt_type, opt_id) {
    * @private
    */
   this.id_ = opt_id || Blockly.utils.genUid();
+
+  Blockly.Events.fire(new Blockly.Events.VarCreate(this));
 };
 
 /**
