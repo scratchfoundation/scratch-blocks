@@ -972,7 +972,7 @@ Blockly.WorkspaceSvg.prototype.paste = function(xmlBlock) {
     Blockly.Events.enable();
   }
   if (Blockly.Events.isEnabled() && !block.isShadow()) {
-    Blockly.Events.fire(new Blockly.Events.Create(block));
+    Blockly.Events.fire(new Blockly.Events.BlockCreate(block));
   }
   block.select();
 };
@@ -1036,7 +1036,6 @@ Blockly.WorkspaceSvg.prototype.deleteVariableById = function(id) {
 /**
  * Create a new variable with the given name.  Update the flyout to show the new
  *     variable immediately.
- * TODO: #468
  * @param {string} name The new variable's name.
  * @param {string=} opt_type The type of the variable like 'int' or 'string'.
  *     Does not need to be unique. Field_variable can filter variables based on

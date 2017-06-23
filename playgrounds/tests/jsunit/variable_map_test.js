@@ -24,29 +24,18 @@ goog.require('goog.testing.MockControl');
 
 var variable_map;
 var mockControl_;
+var workspace;
 
 function variableMapTest_setUp() {
-  variable_map = new Blockly.VariableMap();
+  workspace = new Blockly.Workspace();
+  variable_map = new Blockly.VariableMap(workspace);
   mockControl_ = new goog.testing.MockControl();
 }
 
 function variableMapTest_tearDown() {
+  workspace.dispose();
   mockControl_.$tearDown();
   variable_map = null;
-}
-
-/**
- * Check if a variable with the given values exists.
- * @param {!string} name The expected name of the variable.
- * @param {!string} type The expected type of the variable.
- * @param {!string} id The expected id of the variable.
- */
-function variableMapTest_checkVariableValues(name, type, id) {
-  var variable = variable_map.getVariable(name);
-  assertNotUndefined(variable);
-  assertEquals(name, variable.name);
-  assertEquals(type, variable.type);
-  assertEquals(id, variable.getId());
 }
 
 function test_getVariable_Trivial() {
@@ -96,14 +85,14 @@ function test_getVariableById_NotFound() {
 function test_createVariableTrivial() {
   variableMapTest_setUp();
   variable_map.createVariable('name1', 'type1', 'id1');
-  variableMapTest_checkVariableValues('name1', 'type1', 'id1')
+  checkVariableValues(variable_map, 'name1', 'type1', 'id1');
   variableMapTest_tearDown();
 }
 
 function test_createVariableAlreadyExists() {
   // Expect that when the variable already exists, the variableMap_ is unchanged.
   variableMapTest_setUp();
-  var var_1 = variable_map.createVariable('name1', 'type1', 'id1');
+  variable_map.createVariable('name1', 'type1', 'id1');
 
   // Assert there is only one variable in the variable_map.
   var keys = Object.keys(variable_map.variableMap_);
@@ -112,7 +101,7 @@ function test_createVariableAlreadyExists() {
   assertEquals(1, varMapLength);
 
   variable_map.createVariable('name1');
-  variableMapTest_checkVariableValues('name1', 'type1', 'id1');
+  checkVariableValues(variable_map, 'name1', 'type1', 'id1');
   // Check that the size of the variableMap_ did not change.
   keys = Object.keys(variable_map.variableMap_);
   assertEquals(1, keys.length);
@@ -126,18 +115,17 @@ function test_createVariableNullAndUndefinedType() {
   variable_map.createVariable('name1', null, 'id1');
   variable_map.createVariable('name2', undefined, 'id2');
 
-  variableMapTest_checkVariableValues('name1', '', 'id1');
-  variableMapTest_checkVariableValues('name2', '', 'id2');
+  checkVariableValues(variable_map, 'name1', '', 'id1');
+  checkVariableValues(variable_map, 'name2', '', 'id2');
   variableMapTest_tearDown();
 }
 
 function test_createVariableNullId() {
   variableMapTest_setUp();
-  var mockGenUid = setUpMockMethod(Blockly.utils, 'genUid', null, '1');
+  setUpMockMethod(mockControl_, Blockly.utils, 'genUid', null, ['1', '2']);
   try {
     variable_map.createVariable('name1', 'type1', null);
-    mockGenUid.$verify();
-    variableMapTest_checkVariableValues('name1', 'type1', '1');
+    checkVariableValues(variable_map, 'name1', 'type1', '1');
   }
   finally {
     variableMapTest_tearDown();
@@ -146,11 +134,10 @@ function test_createVariableNullId() {
 
 function test_createVariableUndefinedId() {
   variableMapTest_setUp();
-  var mockGenUid = setUpMockMethod(Blockly.utils, 'genUid', null, '1');
+  setUpMockMethod(mockControl_, Blockly.utils, 'genUid', null, ['1', '2']);
   try {
     variable_map.createVariable('name1', 'type1', undefined);
-    mockGenUid.$verify();
-    variableMapTest_checkVariableValues('name1', 'type1', '1');
+    checkVariableValues(variable_map, 'name1', 'type1', '1');
   }
   finally {
     variableMapTest_tearDown();
@@ -192,8 +179,8 @@ function test_createVariableTwoSameTypes() {
   variable_map.createVariable('name1', 'type1', 'id1');
   variable_map.createVariable('name2', 'type1', 'id2');
 
-  variableMapTest_checkVariableValues('name1', 'type1', 'id1');
-  variableMapTest_checkVariableValues('name2', 'type1', 'id2');
+  checkVariableValues(variable_map, 'name1', 'type1', 'id1');
+  checkVariableValues(variable_map, 'name2', 'type1', 'id2');
   variableMapTest_tearDown();
 }
 
@@ -205,8 +192,8 @@ function test_getVariablesOfType_Trivial() {
   variable_map.createVariable('name4', 'type3', 'id4');
   var result_array_1 = variable_map.getVariablesOfType('type1');
   var result_array_2 = variable_map.getVariablesOfType('type5');
-  this.isEqualArrays([var_1, var_2], result_array_1);
-  this.isEqualArrays([], result_array_2);
+  isEqualArrays([var_1, var_2], result_array_1);
+  isEqualArrays([], result_array_2);
   variableMapTest_tearDown();
 }
 
@@ -217,7 +204,7 @@ function test_getVariablesOfType_Null() {
   var var_3 = variable_map.createVariable('name3', '', 'id3');
   variable_map.createVariable('name4', 'type1', 'id4');
   var result_array = variable_map.getVariablesOfType(null);
-  this.isEqualArrays([var_1, var_2, var_3], result_array);
+  isEqualArrays([var_1, var_2, var_3], result_array);
   variableMapTest_tearDown();
 }
 
@@ -226,7 +213,7 @@ function test_getVariablesOfType_EmptyString() {
   var var_1 = variable_map.createVariable('name1', null, 'id1');
   var var_2 = variable_map.createVariable('name2', null, 'id2');
   var result_array = variable_map.getVariablesOfType('');
-  this.isEqualArrays([var_1, var_2], result_array);
+  isEqualArrays([var_1, var_2], result_array);
   variableMapTest_tearDown();
 }
 
@@ -235,14 +222,14 @@ function test_getVariablesOfType_Deleted() {
   var variable = variable_map.createVariable('name1', null, 'id1');
   variable_map.deleteVariable(variable);
   var result_array = variable_map.getVariablesOfType('');
-  this.isEqualArrays([], result_array);
+  isEqualArrays([], result_array);
   variableMapTest_tearDown();
 }
 
 function test_getVariablesOfType_DoesNotExist() {
   variableMapTest_setUp();
   var result_array = variable_map.getVariablesOfType('type1');
-  this.isEqualArrays([], result_array);
+  isEqualArrays([], result_array);
   variableMapTest_tearDown();
 }
 
@@ -253,14 +240,14 @@ function test_getVariableTypes_Trivial() {
   variable_map.createVariable('name3', 'type2', 'id3');
   variable_map.createVariable('name4', 'type3', 'id4');
   var result_array = variable_map.getVariableTypes();
-  this.isEqualArrays(['type1', 'type2', 'type3'], result_array);
+  isEqualArrays(['type1', 'type2', 'type3'], result_array);
   variableMapTest_tearDown();
 }
 
 function test_getVariableTypes_None() {
   variableMapTest_setUp();
   var result_array = variable_map.getVariableTypes();
-  this.isEqualArrays([], result_array);
+  isEqualArrays([], result_array);
   variableMapTest_tearDown();
 }
 
@@ -270,13 +257,13 @@ function test_getAllVariables_Trivial() {
   var var_2 = variable_map.createVariable('name2', 'type1', 'id2');
   var var_3 = variable_map.createVariable('name3', 'type2', 'id3');
   var result_array = variable_map.getAllVariables();
-  this.isEqualArrays([var_1, var_2, var_3], result_array);
+  isEqualArrays([var_1, var_2, var_3], result_array);
   variableMapTest_tearDown();
 }
 
 function test_getAllVariables_None() {
   variableMapTest_setUp();
   var result_array = variable_map.getAllVariables();
-  this.isEqualArrays([], result_array);
+  isEqualArrays([], result_array);
   variableMapTest_tearDown();
 }
