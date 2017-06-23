@@ -193,8 +193,7 @@ Blockly.Blocks['data_listindexall'] = {
         }
       ],
       "category": Blockly.Categories.data,
-      "colour": Blockly.Colours.textField,
-      "extensions": ["output_string"]
+      "extensions": ["colours_textfield", "output_string"]
     });
   }
 };
@@ -222,8 +221,7 @@ Blockly.Blocks['data_listindexrandom'] = {
         }
       ],
       "category": Blockly.Categories.data,
-      "colour": Blockly.Colours.textField,
-      "extensions": ["output_string"]
+      "extensions": ["colours_textfield", "output_string"]
     });
   }
 };

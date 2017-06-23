@@ -35,7 +35,7 @@ goog.require('Blockly.constants');
 
 /**
  * Helper function that generates an extension based on a category name.
- * The generated function with set primary, secondary, and tertiary colours
+ * The generated function will set primary, secondary, and tertiary colours
  * based on the category name.
  * @param {String} category The name of the category to set colours for.
  * @return {function} An extension function that sets colours based on the given
@@ -43,12 +43,8 @@ goog.require('Blockly.constants');
  */
 Blockly.ScratchBlocks.VerticalExtensions.colourHelper = function(category) {
   var colours = Blockly.Colours[category];
-  if (!(colours.primary && colours.secondary && colours.tertiary)) {
-    /**
-     * Return an empty function, rather than throwing an error later.
-     * @this {Blockly.Block}
-     */
-    return function() { };
+  if (!(colours && colours.primary && colours.secondary && colours.tertiary)) {
+    throw new Error('Could not find colours for category "' + category + '"');
   }
   /**
    * Set the primary, secondary, and tertiary colours on this block for the
@@ -59,6 +55,14 @@ Blockly.ScratchBlocks.VerticalExtensions.colourHelper = function(category) {
     this.setColourFromRawValues_(colours.primary, colours.secondary,
         colours.tertiary);
   };
+};
+
+/**
+ * Extension to set the colours of a text field, which are all the same.
+ */
+Blockly.ScratchBlocks.VerticalExtensions.COLOUR_TEXTFIELD = function() {
+  this.setColourFromRawValues_(Blockly.Colours.textField,
+      Blockly.Colours.textField, Blockly.Colours.textField);
 };
 
 /**
@@ -151,6 +155,11 @@ Blockly.ScratchBlocks.VerticalExtensions.registerAll = function() {
     Blockly.Extensions.register('colours_' + name,
         Blockly.ScratchBlocks.VerticalExtensions.colourHelper(name));
   }
+
+  // Text fields transcend categories.
+  Blockly.Extensions.register('colours_textfield',
+      Blockly.ScratchBlocks.VerticalExtensions.COLOUR_TEXTFIELD);
+
   // Register extensions for common block shapes.
   Blockly.Extensions.register('shape_statement',
       Blockly.ScratchBlocks.VerticalExtensions.SHAPE_STATEMENT);

@@ -26,6 +26,7 @@
 
 goog.provide('Blockly.InsertionMarkerManager');
 
+goog.require('Blockly.Events');
 goog.require('Blockly.RenderedConnection');
 
 goog.require('goog.math.Coordinate');
@@ -157,14 +158,21 @@ Blockly.InsertionMarkerManager.prototype.dispose = function() {
   this.availableConnections_.length = 0;
   this.closestConnection_ = null;
   this.localConnection_ = null;
-  if (this.firstMarker_) {
-    this.firstMarker_.dispose();
-    this.firstMarker_ = null;
+
+  Blockly.Events.disable();
+  try {
+    if (this.firstMarker_) {
+      this.firstMarker_.dispose();
+      this.firstMarker_ = null;
+    }
+    if (this.lastMarker_) {
+      this.lastMarker_.dispose();
+      this.lastMarker_ = null;
+    }
+  } finally {
+    Blockly.Events.enable();
   }
-  if (this.lastMarker_) {
-    this.lastMarker_.dispose();
-    this.lastMarker_ = null;
-  }
+
   this.highlightedBlock_ = null;
 };
 
@@ -237,13 +245,20 @@ Blockly.InsertionMarkerManager.prototype.update = function(dxy, deleteArea) {
  */
 Blockly.InsertionMarkerManager.prototype.createMarkerBlock_ = function(sourceBlock) {
   var imType = sourceBlock.type;
-  var result = this.workspace_.newBlock(imType);
-  if (sourceBlock.mutationToDom) {
-    var oldMutationDom = sourceBlock.mutationToDom();
-    result.domToMutation(oldMutationDom);
+
+  Blockly.Events.disable();
+  try {
+    var result = this.workspace_.newBlock(imType);
+    if (sourceBlock.mutationToDom) {
+      var oldMutationDom = sourceBlock.mutationToDom();
+      result.domToMutation(oldMutationDom);
+    }
+    result.setInsertionMarker(true, sourceBlock.width);
+    result.initSvg();
+  } finally {
+    Blockly.Events.enable();
   }
-  result.setInsertionMarker(true, sourceBlock.width);
-  result.initSvg();
+
   return result;
 };
 
