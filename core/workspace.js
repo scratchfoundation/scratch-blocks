@@ -283,7 +283,6 @@ Blockly.Workspace.prototype.renameVariableInternal_ = function(variable, newName
   Blockly.Events.setGroup(false);
 };
 
-
 /**
  * Rename a variable by updating its name in the variable map. Identify the
  * variable to rename with the given name.
@@ -295,7 +294,6 @@ Blockly.Workspace.prototype.renameVariable = function(oldName, newName) {
   var variable = this.getVariable(oldName);
   this.renameVariableInternal_(variable, newName);
 };
-
 
 /**
  * Rename a variable by updating its name in the variable map. Identify the
