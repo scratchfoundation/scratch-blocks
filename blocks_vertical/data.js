@@ -456,7 +456,10 @@ Blockly.Constants.Data.CUSTOM_CONTEXT_MENU_GET_VARIABLE_MIXIN = {
    * @this Blockly.Block
    */
   customContextMenu: function(options) {
-    if (!this.isCollapsed()) {
+    if (this.isCollapsed()) {
+      return;
+    }
+    if (!this.isInFlyout) {
       var variablesList = this.workspace.getVariablesOfType('');
       for (var i = 0; i < variablesList.length; i++) {
         var option = {enabled: true};
@@ -467,6 +470,20 @@ Blockly.Constants.Data.CUSTOM_CONTEXT_MENU_GET_VARIABLE_MIXIN = {
             option.text);
         options.push(option);
       }
+    } else {
+      var renameOption = {
+        text: Blockly.Msg.RENAME_VARIABLE,
+        enabled: true,
+        callback: Blockly.Constants.Data.RENAME_OPTION_CALLBACK_FACTORY(this)
+      };
+      var name = this.inputList[0].fieldRow[0].text_;
+      var deleteOption = {
+        text: Blockly.Msg.DELETE_VARIABLE.replace('%1', name),
+        enabled: true,
+        callback: Blockly.Constants.Data.DELETE_OPTION_CALLBACK_FACTORY(this)
+      };
+      options.push(renameOption);
+      options.push(deleteOption);
     }
   }
 };
@@ -492,3 +509,32 @@ Blockly.Constants.Data.VARIABLE_OPTION_CALLBACK_FACTORY = function(block, name) 
     variableField.setText(name);
   };
 };
+
+/**
+ * Callback for rename variable dropdown menu option associated with a
+ * variable getter block.
+ * @param {!Blockly.Block} block The block with the variable to rename.
+ * @return {!function()} A function that renames the variable.
+ */
+Blockly.Constants.Data.RENAME_OPTION_CALLBACK_FACTORY = function(block) {
+  return function() {
+    var workspace = block.workspace;
+    var currentName = block.inputList[0].fieldRow[0].text_;
+    Blockly.FieldVariable.renameVariablePrompt(workspace, currentName);
+  };
+};
+
+/**
+ * Callback for delete variable dropdown menu option associated with a
+ * variable getter block.
+ * @param {!Blockly.Block} block The block with the variable to delete.
+ * @return {!function()} A function that deletes the variable.
+ */
+Blockly.Constants.Data.DELETE_OPTION_CALLBACK_FACTORY = function(block) {
+  return function() {
+    var workspace = block.workspace;
+    var name = block.inputList[0].fieldRow[0].text_;
+    workspace.deleteVariable(name);
+  };
+};
+
