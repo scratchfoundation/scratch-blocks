@@ -45,6 +45,13 @@ goog.require('goog.string');
 Blockly.Variables.NAME_TYPE = Blockly.VARIABLE_CATEGORY_NAME;
 
 /**
+ * Allow disabled variables to be enabled.
+ * @type {boolean}
+ * @private
+ */
+Blockly.Variables.allowEnable = true;
+
+/**
  * Find all user-created variables that are in use in the workspace.
  * For use by generators.
  * @param {!Blockly.Block|!Blockly.Workspace} root Root block or workspace.
@@ -123,8 +130,19 @@ Blockly.Variables.flyoutCategory = function(workspace) {
   });
 
   xmlList.push(button);
-
+  var firstVariable;
   for (var i = 0; i < variableModelList.length; i++) {
+    if (!variableModelList[i].isEnabled()) {
+      if (Blockly.Variables.allowEnable) {
+        variableModelList[i].enable();
+      } else {
+        continue;
+      }
+    }
+    if (!firstVariable) {
+      firstVariable = variableModelList[i];
+    }
+
     if (Blockly.Blocks['data_variable']) {
       // <block type="data_variable">
       //    <field name="VARIABLE" variableType="" id="">variablename</field>
@@ -161,7 +179,7 @@ Blockly.Variables.flyoutCategory = function(workspace) {
       var block = goog.dom.createDom('block');
       block.setAttribute('type', 'data_setvariableto');
       block.setAttribute('gap', 8);
-      block.appendChild(Blockly.Variables.createVariableDom_(variableModelList[0]));
+      block.appendChild(Blockly.Variables.createVariableDom_(firstVariable));
       block.appendChild(Blockly.Variables.createTextDom_());
       xmlList.push(block);
     }
@@ -179,7 +197,7 @@ Blockly.Variables.flyoutCategory = function(workspace) {
       var block = goog.dom.createDom('block');
       block.setAttribute('type', 'data_changevariableby');
       block.setAttribute('gap', 8);
-      block.appendChild(Blockly.Variables.createVariableDom_(variableModelList[0]));
+      block.appendChild(Blockly.Variables.createVariableDom_(firstVariable));
       block.appendChild(Blockly.Variables.createMathNumberDom_());
       xmlList.push(block);
     }
@@ -192,7 +210,7 @@ Blockly.Variables.flyoutCategory = function(workspace) {
       var block = goog.dom.createDom('block');
       block.setAttribute('type', 'data_showvariable');
       block.setAttribute('gap', 8);
-      block.appendChild(Blockly.Variables.createVariableDom_(variableModelList[0]));
+      block.appendChild(Blockly.Variables.createVariableDom_(firstVariable));
       xmlList.push(block);
     }
     if (Blockly.Blocks['data_hidevariable']) {
@@ -203,10 +221,11 @@ Blockly.Variables.flyoutCategory = function(workspace) {
       // </block>
       var block = goog.dom.createDom('block');
       block.setAttribute('type', 'data_hidevariable');
-      block.appendChild(Blockly.Variables.createVariableDom_(variableModelList[0]));
+      block.appendChild(Blockly.Variables.createVariableDom_(firstVariable));
       xmlList.push(block);
     }
   }
+  Blockly.Variables.allowEnable = true;
   return xmlList;
 };
 

@@ -370,20 +370,7 @@ Blockly.Workspace.prototype.deleteVariable = function(name) {
 
   var workspace = this;
   var variable = workspace.getVariable(name);
-  if (uses.length > 1) {
-    // Confirm before deleting multiple blocks.
-    Blockly.confirm(
-        Blockly.Msg.DELETE_VARIABLE_CONFIRMATION.replace('%1', uses.length).
-        replace('%2', name),
-        function(ok) {
-          if (ok) {
-            workspace.deleteVariableInternal_(variable);
-          }
-        });
-  } else {
-    // No confirmation necessary for a single block.
-    this.deleteVariableInternal_(variable);
-  }
+  this.deleteVariableInternal_(variable);
 };
 
 /**
@@ -401,6 +388,17 @@ Blockly.Workspace.prototype.deleteVariableById = function(id) {
 };
 
 /**
+ * Delete a disabled variable if there are no more uses of it.
+ * @param {Blockly.VariableModel} variable Variable to delete.
+ */
+Blockly.Workspace.prototype.deleteDisabledVariableIfUnused = function(variable) {
+  var uses = this.getVariableUses(variable.name);
+  if (uses.length == 0) {
+    this.deleteVariableInternal_(variable);
+  }
+};
+
+/**
  * Deletes a variable and all of its uses from this workspace without asking the
  * user for confirmation.
  * @param {Blockly.VariableModel} variable Variable to delete.
@@ -408,12 +406,19 @@ Blockly.Workspace.prototype.deleteVariableById = function(id) {
  */
 Blockly.Workspace.prototype.deleteVariableInternal_ = function(variable) {
   var uses = this.getVariableUses(variable.name);
-  Blockly.Events.setGroup(true);
-  for (var i = 0; i < uses.length; i++) {
-    uses[i].dispose(true, false);
+  // If the variable is disabled, the delete occurs with another event such as
+  // removing the last workspace instance of the variable.
+  if (variable.isEnabled()) {
+    Blockly.Events.setGroup(true);
   }
-  this.variableMap_.deleteVariable(variable);
-  Blockly.Events.setGroup(false);
+  if (uses.length > 0) {
+    variable.disable();
+  } else {
+    this.variableMap_.deleteVariable(variable);
+  }
+  if (variable.isEnabled()) {
+    Blockly.Events.setGroup(false);
+  }
 };
 
 /**
