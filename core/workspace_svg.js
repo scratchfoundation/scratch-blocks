@@ -31,6 +31,7 @@ goog.provide('Blockly.WorkspaceSvg');
 goog.require('Blockly.Colours');
 goog.require('Blockly.ConnectionDB');
 goog.require('Blockly.constants');
+goog.require('Blockly.DataCategory');
 goog.require('Blockly.DropDownDiv');
 goog.require('Blockly.Events');
 goog.require('Blockly.Gesture');
@@ -107,7 +108,7 @@ Blockly.WorkspaceSvg = function(options, opt_blockDragSurface, opt_wsDragSurface
       new Blockly.Grid(options.gridPattern, options.gridOptions) : null;
 
   this.registerToolboxCategoryCallback(Blockly.VARIABLE_CATEGORY_NAME,
-      Blockly.Variables.flyoutCategory);
+      Blockly.DataCategory);
   this.registerToolboxCategoryCallback(Blockly.PROCEDURE_CATEGORY_NAME,
       Blockly.Procedures.flyoutCategory);
 };
