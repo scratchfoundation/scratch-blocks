@@ -654,11 +654,19 @@ Blockly.BlockSvg.prototype.showHelp_ = function() {
   }
 };
 
-Blockly.BlockSvg.prototype.hax_ = function() {
+/**
+ * Callback function for a click on the "duplicate" context menu option in
+ * Scratch Blocks.  The block is duplicated and attached to the mouse, which
+ * acts as though it were pressed and mid-drag.  Clicking the mouse releases the
+ * new dragging block.
+ * @return {Function} A callback function that duplicates the block and starts a
+ *     drag.
+ * @private
+ */
+Blockly.BlockSvg.prototype.duplicateAndDrag_ = function() {
   var oldBlock = this;
   return function(e) {
-    /*** HAX ***/
-    console.log("HERE GO THE HAX");
+    // Give the context menu a chance to close.
     setTimeout(function() {
       var ws = oldBlock.workspace;
       var svgRootOld = oldBlock.getSvgRoot();
@@ -668,41 +676,51 @@ Blockly.BlockSvg.prototype.hax_ = function() {
 
       // Create the new block by cloning the block in the flyout (via XML).
       var xml = Blockly.Xml.blockToDom(oldBlock);
-      // The target workspace would normally resize during domToBlock, which will
-      // lead to weird jumps.  Save it for terminateDrag.
+      // The target workspace would normally resize during domToBlock, which
+      // will lead to weird jumps.  Save it for terminateDrag.
       ws.setResizesEnabled(false);
 
-      // Using domToBlock instead of domToWorkspace means that the new block will be
-      // placed at position (0, 0) in main workspace units.
+      // Using domToBlock instead of domToWorkspace means that the new block
+      // will be placed at position (0, 0) in main workspace units.
       var block = Blockly.Xml.domToBlock(xml, ws);
       var svgRootNew = block.getSvgRoot();
       if (!svgRootNew) {
         throw 'block is not rendered.';
       }
 
-      // The offset in pixels between the main workspace's origin and the upper left
-      // corner of the injection div.
-      var mainOffsetPixels = ws.getOriginOffsetInPixels();
-
       // The position of the old block in workspace coordinates.
       var oldBlockPosWs = oldBlock.getRelativeToSurfaceXY();
+
+      // Place the new block as the same position as the old block.
+      // TODO: Offset by the difference between the mouse position and the upper
+      // left corner of the block.
       block.moveBy(oldBlockPosWs.x, oldBlockPosWs.y);
-      console.log('old block pos workspace units ' + oldBlockPosWs);
+
       // The position of the old block in pixels relative to the main
       // workspace's origin.
       var oldBlockPosPixels = oldBlockPosWs.scale(ws.scale);
+
+      // The offset in pixels between the main workspace's origin and the upper left
+      // corner of the injection div.
+      var mainOffsetPixels = ws.getOriginOffsetInPixels();
 
       // The position of the old block in pixels relative to the upper left corner
       // of the injection div.
       var finalOffsetPixels = goog.math.Coordinate.sum(mainOffsetPixels,
           oldBlockPosPixels);
 
-      var injectionDivOffsetTop = 15;
-      var injectionDivOffsetLeft = 346;
+      var injectionDiv = ws.getInjectionDiv();
+      // Bounding rect coordinates are in client coordinates, meaning that they
+      // are in pixels relative to the upper left corner of the visible browser
+      // window.  These coordinates change when you scroll the browser window.
+      var boundingRect = injectionDiv.getBoundingClientRect();
 
+      // e is not a real mouseEvent/touchEvent/pointerEvent.  It's an event
+      // created by the context menu and doesn't have the correct coordinates.
+      // But it does have some information that we need.
       var fakeEvent = {
-        clientX: finalOffsetPixels.x + injectionDivOffsetLeft,
-        clientY: finalOffsetPixels.y + injectionDivOffsetTop,
+        clientX: finalOffsetPixels.x + boundingRect.left,
+        clientY: finalOffsetPixels.y + boundingRect.top,
         type: 'mousedown',
         preventDefault: function() {
           e.preventDefault();
@@ -712,23 +730,9 @@ Blockly.BlockSvg.prototype.hax_ = function() {
         },
         target: e.target
       };
-
-      Blockly.Touch.clearTouchIdentifier();
-      // Also sets the touch identifier
-      if (!Blockly.Touch.checkTouchIdentifier(fakeEvent)) {
-        console.log('something went wrong while setting the touch identifier');
-      }
-      var gesture = block.workspace.getGesture(fakeEvent);
-      gesture.handleBlockStart(fakeEvent, block);
-      gesture.handleWsStart(fakeEvent, block.workspace);
-      // Should be internal.
-      gesture.isDraggingBlock_ = true;
-      gesture.hasExceededDragRadius_ = true;
-      gesture.startDraggingBlock_();
-      console.log("HAX HAVE BEEN SET UP");
+      ws.startDragWithFakeEvent(fakeEvent, block);
     }, 0);
   };
-  /*** NO MORE HAX ***/
 };
 
 /**
@@ -749,9 +753,7 @@ Blockly.BlockSvg.prototype.showContextMenu_ = function(e) {
     var duplicateOption = {
       text: Blockly.Msg.DUPLICATE_BLOCK,
       enabled: true,
-      //callback: function(e) {
-      callback: block.hax_()
-      //}
+      callback: block.duplicateAndDrag_()
     };
     menuOptions.push(duplicateOption);
 
