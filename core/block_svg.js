@@ -470,7 +470,7 @@ Blockly.BlockSvg.prototype.clearTransformAttributes_ = function() {
 /**
  * Snap this block to the nearest grid point.
  */
-Blockly.BlockSvg.prototype.snapToGrid = function() {
+Blockly.BlockSvg.prototype.snapToGrid  = function() {
   if (!this.workspace) {
     return;  // Deleted block.
   }
@@ -654,6 +654,83 @@ Blockly.BlockSvg.prototype.showHelp_ = function() {
   }
 };
 
+Blockly.BlockSvg.prototype.hax_ = function() {
+  var oldBlock = this;
+  return function(e) {
+    /*** HAX ***/
+    console.log("HERE GO THE HAX");
+    setTimeout(function() {
+      var ws = oldBlock.workspace;
+      var svgRootOld = oldBlock.getSvgRoot();
+      if (!svgRootOld) {
+        throw 'oldBlock is not rendered.';
+      }
+
+      // Create the new block by cloning the block in the flyout (via XML).
+      var xml = Blockly.Xml.blockToDom(oldBlock);
+      // The target workspace would normally resize during domToBlock, which will
+      // lead to weird jumps.  Save it for terminateDrag.
+      ws.setResizesEnabled(false);
+
+      // Using domToBlock instead of domToWorkspace means that the new block will be
+      // placed at position (0, 0) in main workspace units.
+      var block = Blockly.Xml.domToBlock(xml, ws);
+      var svgRootNew = block.getSvgRoot();
+      if (!svgRootNew) {
+        throw 'block is not rendered.';
+      }
+
+      // The offset in pixels between the main workspace's origin and the upper left
+      // corner of the injection div.
+      var mainOffsetPixels = ws.getOriginOffsetInPixels();
+
+      // The position of the old block in workspace coordinates.
+      var oldBlockPosWs = oldBlock.getRelativeToSurfaceXY();
+      block.moveBy(oldBlockPosWs.x, oldBlockPosWs.y);
+      console.log('old block pos workspace units ' + oldBlockPosWs);
+      // The position of the old block in pixels relative to the main
+      // workspace's origin.
+      var oldBlockPosPixels = oldBlockPosWs.scale(ws.scale);
+
+      // The position of the old block in pixels relative to the upper left corner
+      // of the injection div.
+      var finalOffsetPixels = goog.math.Coordinate.sum(mainOffsetPixels,
+          oldBlockPosPixels);
+
+      var injectionDivOffsetTop = 15;
+      var injectionDivOffsetLeft = 346;
+
+      var fakeEvent = {
+        clientX: finalOffsetPixels.x + injectionDivOffsetLeft,
+        clientY: finalOffsetPixels.y + injectionDivOffsetTop,
+        type: 'mousedown',
+        preventDefault: function() {
+          e.preventDefault();
+        },
+        stopPropagation: function() {
+          e.stopPropagation();
+        },
+        target: e.target
+      };
+
+      Blockly.Touch.clearTouchIdentifier();
+      // Also sets the touch identifier
+      if (!Blockly.Touch.checkTouchIdentifier(fakeEvent)) {
+        console.log('something went wrong while setting the touch identifier');
+      }
+      var gesture = block.workspace.getGesture(fakeEvent);
+      gesture.handleBlockStart(fakeEvent, block);
+      gesture.handleWsStart(fakeEvent, block.workspace);
+      // Should be internal.
+      gesture.isDraggingBlock_ = true;
+      gesture.hasExceededDragRadius_ = true;
+      gesture.startDraggingBlock_();
+      console.log("HAX HAVE BEEN SET UP");
+    }, 0);
+  };
+  /*** NO MORE HAX ***/
+};
+
 /**
  * Show the context menu for this block.
  * @param {!Event} e Mouse event.
@@ -672,46 +749,9 @@ Blockly.BlockSvg.prototype.showContextMenu_ = function(e) {
     var duplicateOption = {
       text: Blockly.Msg.DUPLICATE_BLOCK,
       enabled: true,
-      callback: function(e) {
-        Blockly.duplicate_(block, e);
-
-        /*** HAX ***/
-        console.log("HERE GO THE HAX");
-        setTimeout(function() {
-          // e is from the click on the context menu, but is not a mouse event.
-          // it's something closure built.
-          var newBlock = Blockly.selected;
-          var fakeEvent = {
-            clientX: 1000,
-            clientY: 300,
-            type: 'mousedown',
-            preventDefault: function() {
-              e.preventDefault();
-            },
-            stopPropagation: function() {
-              e.stopPropagation();
-            },
-            target: e.target
-          };
-
-          Blockly.Touch.clearTouchIdentifier();
-          // e.preventDefault();
-          // e.stopPropagation();
-          // Also sets the touch identifier
-          if (!Blockly.Touch.checkTouchIdentifier(fakeEvent)) {
-            console.log('something went wrong while setting the touch identifier');
-          }
-          var gesture = block.workspace.getGesture(fakeEvent);
-          gesture.handleBlockStart(fakeEvent, newBlock);
-          gesture.handleWsStart(fakeEvent, block.workspace);
-          // Should be internal.
-          gesture.isDraggingBlock_ = true;
-          gesture.hasExceededDragRadius_ = true;
-          gesture.startDraggingBlock_();
-          console.log("HAX HAVE BEEN SET UP");
-        }, 0);
-        /*** NO MORE HAX ***/
-      }
+      //callback: function(e) {
+      callback: block.hax_()
+      //}
     };
     menuOptions.push(duplicateOption);
 

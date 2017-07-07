@@ -67,7 +67,7 @@ Blockly.Gesture = function(e, creatorWorkspace) {
    * @type {goog.math.Coordinate}
    * private
    */
-  this.currentDragDeltaXY_ = 0;
+  this.currentDragDeltaXY_ = new goog.math.Coordinate(0, 0);
 
   /**
    * The field that the gesture started on, or null if it did not start on a
