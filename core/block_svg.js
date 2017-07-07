@@ -470,7 +470,7 @@ Blockly.BlockSvg.prototype.clearTransformAttributes_ = function() {
 /**
  * Snap this block to the nearest grid point.
  */
-Blockly.BlockSvg.prototype.snapToGrid  = function() {
+Blockly.BlockSvg.prototype.snapToGrid = function() {
   if (!this.workspace) {
     return;  // Deleted block.
   }
@@ -655,15 +655,15 @@ Blockly.BlockSvg.prototype.showHelp_ = function() {
 };
 
 /**
- * Callback function for a click on the "duplicate" context menu option in
- * Scratch Blocks.  The block is duplicated and attached to the mouse, which
- * acts as though it were pressed and mid-drag.  Clicking the mouse releases the
- * new dragging block.
+ * Creates a callback function for a click on the "duplicate" context menu
+ * option in Scratch Blocks.  The block is duplicated and attached to the mouse,
+ * which acts as though it were pressed and mid-drag.  Clicking the mouse
+ * releases the new dragging block.
  * @return {Function} A callback function that duplicates the block and starts a
  *     drag.
  * @private
  */
-Blockly.BlockSvg.prototype.duplicateAndDrag_ = function() {
+Blockly.BlockSvg.prototype.duplicateAndDragCallback_ = function() {
   var oldBlock = this;
   return function(e) {
     // Give the context menu a chance to close.
@@ -753,7 +753,7 @@ Blockly.BlockSvg.prototype.showContextMenu_ = function(e) {
     var duplicateOption = {
       text: Blockly.Msg.DUPLICATE_BLOCK,
       enabled: true,
-      callback: block.duplicateAndDrag_()
+      callback: block.duplicateAndDragCallback_()
     };
     menuOptions.push(duplicateOption);
 
