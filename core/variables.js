@@ -132,7 +132,8 @@ Blockly.Variables.flyoutCategory = function(workspace) {
       var block = goog.dom.createDom('block');
       block.setAttribute('type', 'data_variable');
       block.setAttribute('gap', 8);
-      block.setAttribute('id', 'VAR_' + variableModelList[i].name);
+      // Block ID must match variable ID for syncing reasons
+      block.setAttribute('id', variableModelList[i].getId());
 
       var field = goog.dom.createDom('field', null, variableModelList[i].name);
       field.setAttribute('name', 'VARIABLE');
@@ -377,7 +378,7 @@ Blockly.Variables.createVariable = function(workspace, opt_callback) {
             var variable = workspace.createVariable(text);
 
             var flyout = workspace.getFlyout();
-            var variableBlockId = 'VAR_' + variable.name;
+            var variableBlockId = variable.getId();
             if (flyout.setCheckboxState) {
               flyout.setCheckboxState(variableBlockId, true);
             }
