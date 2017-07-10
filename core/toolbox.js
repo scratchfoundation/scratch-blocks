@@ -385,6 +385,8 @@ Blockly.Toolbox.CategoryMenu.prototype.createDom = function() {
  * @param {Node} domTree DOM tree of blocks, or null.
  */
 Blockly.Toolbox.CategoryMenu.prototype.populate = function(domTree) {
+  console.log('populate toolbox');
+
   if (!domTree) {
     return;
   }
@@ -400,20 +402,16 @@ Blockly.Toolbox.CategoryMenu.prototype.populate = function(domTree) {
     }
     categories.push(child);
   }
-  // Create categories one row at a time.
-  // Note that this involves skipping around by `columnSeparator` in the DOM tree.
-  var columnSeparator = Math.ceil(categories.length / 2);
-  for (var i = 0; i < columnSeparator; i += 1) {
-    child = categories[i];
+
+  // Create single column of categories
+  for (var i = 0; i < categories.length; i++) {
+    var child = categories[i];
+    console.log(child);
     var row = goog.dom.createDom('tr', 'scratchCategoryMenuRow');
     this.table.appendChild(row);
     if (child) {
       this.categories_.push(new Blockly.Toolbox.Category(this, row,
           child));
-    }
-    if (categories[i + columnSeparator]) {
-      this.categories_.push(new Blockly.Toolbox.Category(this, row,
-          categories[i + columnSeparator]));
     }
   }
   this.height_ = this.table.offsetHeight;
