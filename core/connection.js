@@ -381,7 +381,9 @@ Blockly.Connection.prototype.canConnectToPrevious_ = function(candidate) {
 
   if (isFirstStatementConnection && sourceHasPreviousConn) {
     return true;
-  } else if (isNextConnection ||
+  }
+
+  if (isNextConnection ||
       (isFirstStatementConnection && !sourceHasPreviousConn)) {
     // If the candidate is the first connection in a stack, we can connect.
     if (!candidate.targetConnection) {
