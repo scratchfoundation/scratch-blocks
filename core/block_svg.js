@@ -671,21 +671,22 @@ Blockly.BlockSvg.prototype.duplicateAndDragCallback_ = function() {
       var ws = oldBlock.workspace;
       var svgRootOld = oldBlock.getSvgRoot();
       if (!svgRootOld) {
-        throw 'oldBlock is not rendered.';
+        throw new Error('oldBlock is not rendered.');
       }
 
       // Create the new block by cloning the block in the flyout (via XML).
       var xml = Blockly.Xml.blockToDom(oldBlock);
       // The target workspace would normally resize during domToBlock, which
-      // will lead to weird jumps.  Save it for terminateDrag.
+      // will lead to weird jumps.
+      // Resizing will be enabled when the drag ends.
       ws.setResizesEnabled(false);
 
       // Using domToBlock instead of domToWorkspace means that the new block
       // will be placed at position (0, 0) in main workspace units.
-      var block = Blockly.Xml.domToBlock(xml, ws);
-      var svgRootNew = block.getSvgRoot();
+      var newBlock = Blockly.Xml.domToBlock(xml, ws);
+      var svgRootNew = newBlock.getSvgRoot();
       if (!svgRootNew) {
-        throw 'block is not rendered.';
+        throw new Error('newBlock is not rendered.');
       }
 
       // The position of the old block in workspace coordinates.
@@ -694,7 +695,7 @@ Blockly.BlockSvg.prototype.duplicateAndDragCallback_ = function() {
       // Place the new block as the same position as the old block.
       // TODO: Offset by the difference between the mouse position and the upper
       // left corner of the block.
-      block.moveBy(oldBlockPosWs.x, oldBlockPosWs.y);
+      newBlock.moveBy(oldBlockPosWs.x, oldBlockPosWs.y);
 
       // The position of the old block in pixels relative to the main
       // workspace's origin.
@@ -730,7 +731,7 @@ Blockly.BlockSvg.prototype.duplicateAndDragCallback_ = function() {
         },
         target: e.target
       };
-      ws.startDragWithFakeEvent(fakeEvent, block);
+      ws.startDragWithFakeEvent(fakeEvent, newBlock);
     }, 0);
   };
 };

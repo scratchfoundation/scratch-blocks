@@ -1951,10 +1951,7 @@ Blockly.WorkspaceSvg.prototype.cancelCurrentGesture = function() {
 Blockly.WorkspaceSvg.prototype.startDragWithFakeEvent = function(fakeEvent,
     block) {
   Blockly.Touch.clearTouchIdentifier();
-  // Also sets the touch identifier
-  if (!Blockly.Touch.checkTouchIdentifier(fakeEvent)) {
-    console.log('something went wrong while setting the touch identifier');
-  }
+  Blockly.Touch.checkTouchIdentifier(fakeEvent);
   var gesture = block.workspace.getGesture(fakeEvent);
   gesture.forceStartBlockDrag(fakeEvent, block);
 };
