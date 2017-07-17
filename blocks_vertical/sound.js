@@ -69,7 +69,7 @@ Blockly.Blocks['sound_play'] = {
    */
   init: function() {
     this.jsonInit({
-      "message0": "play sound %1",
+      "message0": "start sound %1",
       "args0": [
         {
           "type": "input_value",
