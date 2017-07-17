@@ -67,7 +67,7 @@ Blockly.Gesture = function(e, creatorWorkspace) {
    * @type {goog.math.Coordinate}
    * private
    */
-  this.currentDragDeltaXY_ = 0;
+  this.currentDragDeltaXY_ = new goog.math.Coordinate(0, 0);
 
   /**
    * The field that the gesture started on, or null if it did not start on a
@@ -787,4 +787,22 @@ Blockly.Gesture.prototype.isDragging = function() {
  */
 Blockly.Gesture.prototype.hasStarted = function() {
   return this.hasStarted_;
+};
+
+/**
+ * Don't even think about using this function before talking to rachel-fenichel.
+ *
+ * Force a drag to start without clicking and dragging the block itself.  Used
+ * to attach duplicated blocks to the mouse pointer.
+ * @param {!Object} fakeEvent An object with the properties needed to start a
+ *     drag, including clientX and clientY.
+ * @param {!Blockly.BlockSvg} block The block to start dragging.
+ * @package
+ */
+Blockly.Gesture.prototype.forceStartBlockDrag = function(fakeEvent, block) {
+  this.handleBlockStart(fakeEvent, block);
+  this.handleWsStart(fakeEvent, block.workspace);
+  this.isDraggingBlock_ = true;
+  this.hasExceededDragRadius_ = true;
+  this.startDraggingBlock_();
 };
