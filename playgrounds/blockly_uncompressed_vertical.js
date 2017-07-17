@@ -52,7 +52,6 @@ goog.addDependency("../../../" + dir + "/core/connection.js", ['Blockly.Connecti
 goog.addDependency("../../../" + dir + "/core/connection_db.js", ['Blockly.ConnectionDB'], ['Blockly.Connection']);
 goog.addDependency("../../../" + dir + "/core/constants.js", ['Blockly.constants'], []);
 goog.addDependency("../../../" + dir + "/core/contextmenu.js", ['Blockly.ContextMenu'], ['goog.dom', 'goog.events', 'goog.style', 'goog.ui.Menu', 'goog.ui.MenuItem']);
-goog.addDependency("../../../" + dir + "/core/css.js", ['Blockly.Css'], ['Blockly.Colours', 'goog.userAgent']);
 goog.addDependency("../../../" + dir + "/core/dragged_connection_manager.js", ['Blockly.DraggedConnectionManager'], ['Blockly.RenderedConnection', 'goog.math.Coordinate']);
 goog.addDependency("../../../" + dir + "/core/dropdowndiv.js", ['Blockly.DropDownDiv'], ['goog.dom', 'goog.style']);
 goog.addDependency("../../../" + dir + "/core/events.js", ['Blockly.Events'], ['goog.array', 'goog.math.Coordinate']);
@@ -108,6 +107,7 @@ goog.addDependency("../../../" + dir + "/core/workspace_dragger.js", ['Blockly.W
 goog.addDependency("../../../" + dir + "/core/workspace_svg.js", ['Blockly.WorkspaceSvg'], ['Blockly.Colours', 'Blockly.ConnectionDB', 'Blockly.constants', 'Blockly.DropDownDiv', 'Blockly.Events', 'Blockly.Gesture', 'Blockly.Grid', 'Blockly.Options', 'Blockly.ScrollbarPair', 'Blockly.Touch', 'Blockly.Trashcan', 'Blockly.Workspace', 'Blockly.WorkspaceAudio', 'Blockly.WorkspaceDragSurfaceSvg', 'Blockly.Xml', 'Blockly.ZoomControls', 'goog.array', 'goog.dom', 'goog.math.Coordinate', 'goog.userAgent']);
 goog.addDependency("../../../" + dir + "/core/xml.js", ['Blockly.Xml'], ['goog.asserts', 'goog.dom', 'goog.userAgent']);
 goog.addDependency("../../../" + dir + "/core/zoom_controls.js", ['Blockly.ZoomControls'], ['Blockly.Touch', 'goog.dom']);
+goog.addDependency("../../../" + dir + "/core/css.js", ['Blockly.Css'], ['Blockly.Colours', 'goog.userAgent']);
 goog.addDependency("../../protractor_spec.js", [], []);
 goog.addDependency("../../protractor.conf.js", [], []);
 goog.addDependency("../../alltests.js", [], []);
