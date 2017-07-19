@@ -340,32 +340,6 @@ Blockly.WorkspaceSvg.prototype.getOriginOffsetInPixels = function() {
 };
 
 /**
-<<<<<<< HEAD
- * Return the injection div that is a parent of this workspace.
- * Walks the DOM the first time it's called, then returns a cached value.
- * @return {!Element} The first parent div with 'injectionDiv' in the name.
- * @package
- */
-Blockly.WorkspaceSvg.prototype.getInjectionDiv = function() {
-  // NB: it would be better to pass this in at createDom, but is more likely to
-  // break existing uses of Blockly.
-  if (!this.injectionDiv_) {
-    var element = this.svgGroup_;
-    while (element) {
-      var classes = element.getAttribute('class') || '';
-      if ((' ' + classes + ' ').indexOf(' injectionDiv ') != -1) {
-        this.injectionDiv_ = element;
-        break;
-      }
-      element = element.parentNode;
-    }
-  }
-  return this.injectionDiv_;
-};
-
-/**
-=======
->>>>>>> google/develop
  * Save resize handler data so we can delete it later in dispose.
  * @param {!Array.<!Array>} handler Data that can be passed to unbindEvent_.
  */
