@@ -106,11 +106,8 @@ Blockly.FieldColour.prototype.setValue = function(colour) {
   }
   this.colour_ = colour;
   if (this.sourceBlock_) {
-    this.sourceBlock_.setColour(
-      colour,
-      this.sourceBlock_.getColourSecondary(),
-      this.sourceBlock_.getColourTertiary()
-    );
+    // Set the primary, secondary and tertiary colour to this value.
+    this.sourceBlock_.setColour(colour, colour, colour);
   }
 };
 
