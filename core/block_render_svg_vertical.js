@@ -626,7 +626,9 @@ Blockly.BlockSvg.prototype.renderFields_ =
     // In blocks with a notch, non-label fields should be bumped to a min X,
     // to avoid overlapping with the notch.
     if (this.previousConnection && !(field instanceof Blockly.FieldLabel)) {
-      cursorX = Math.max(cursorX, Blockly.BlockSvg.INPUT_AND_FIELD_MIN_X);
+      cursorX = this.RTL ?
+        Math.min(cursorX, -Blockly.BlockSvg.INPUT_AND_FIELD_MIN_X) :
+        Math.max(cursorX, Blockly.BlockSvg.INPUT_AND_FIELD_MIN_X);
     }
     // Offset the field upward by half its height.
     // This vertically centers the fields around cursorY.
