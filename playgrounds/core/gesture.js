@@ -606,11 +606,13 @@ Blockly.Gesture.prototype.doFieldClick_ = function() {
 Blockly.Gesture.prototype.doBlockClick_ = function() {
   // Block click in an autoclosing flyout.
   if (this.flyout_ && this.flyout_.autoClose) {
-    if (!Blockly.Events.getGroup()) {
-      Blockly.Events.setGroup(true);
+    if (!this.targetBlock_.disabled) {
+      if (!Blockly.Events.getGroup()) {
+        Blockly.Events.setGroup(true);
+      }
+      var newBlock = this.flyout_.createBlock(this.targetBlock_);
+      newBlock.scheduleSnapAndBump();
     }
-    var newBlock = this.flyout_.createBlock(this.targetBlock_);
-    newBlock.scheduleSnapAndBump();
   } else {
     // A field is being edited if either the WidgetDiv or DropDownDiv is currently open.
     // If a field is being edited, don't fire any click events.
