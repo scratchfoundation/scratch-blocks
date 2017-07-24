@@ -156,7 +156,6 @@ Blockly.WidgetDiv.hide = function(opt_noAnimate) {
       Blockly.WidgetDiv.owner_ = null;
       Blockly.WidgetDiv.hideAndClearDom_();
     }
-    Blockly.Events.setGroup(false);
   }
 };
 
