@@ -193,7 +193,11 @@
 
       function sprinkles(n) {
         var prototypes = [];
-        var toolbox = getToolboxElement();
+        var toolbox = workspace.options.languageTree;
+        if (!toolbox) {
+          console.error('Toolbox not found; add a toolbox element to the DOM.');
+          return;
+        }
         var blocks = toolbox.getElementsByTagName('block');
         for (var i = 0; i < n; i++) {
           var blockXML = blocks[Math.floor(Math.random() * blocks.length)];
