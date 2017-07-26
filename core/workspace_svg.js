@@ -818,6 +818,7 @@ Blockly.WorkspaceSvg.prototype.setVisible = function(isVisible) {
     Blockly.hideChaff(true);
     Blockly.DropDownDiv.hideWithoutAnimation();
   }
+  this.rendered = isVisible;
 };
 
 /**
