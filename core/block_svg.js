@@ -684,6 +684,23 @@ Blockly.BlockSvg.prototype.duplicateAndDragCallback_ = function() {
       // Using domToBlock instead of domToWorkspace means that the new block
       // will be placed at position (0, 0) in main workspace units.
       var newBlock = Blockly.Xml.domToBlock(xml, ws);
+
+      // Scratch-specific: Give shadow dom new IDs to prevent duplicating on paste
+      var blocks = newBlock.getDescendants();
+      for (var i = blocks.length - 1; i >= 0; i--) {
+        var descendant = blocks[i];
+        for (var j = 0; j < descendant.inputList.length; j++) {
+          var connection = descendant.inputList[j].connection;
+          if (connection) {
+            var shadowDom = connection.getShadowDom();
+            if (shadowDom) {
+              shadowDom.setAttribute('id', Blockly.utils.genUid());
+              connection.setShadowDom(shadowDom);
+            }
+          }
+        }
+      }
+
       var svgRootNew = newBlock.getSvgRoot();
       if (!svgRootNew) {
         throw new Error('newBlock is not rendered.');
