@@ -165,8 +165,9 @@ Blockly.Trashcan.prototype.createDom = function() {
   */
   this.svgGroup_ = Blockly.utils.createSvgElement('g',
       {'class': 'blocklyTrash'}, null);
+  var clip;
   var rnd = String(Math.random()).substring(2);
-  var clip = Blockly.utils.createSvgElement('clipPath',
+  clip = Blockly.utils.createSvgElement('clipPath',
       {'id': 'blocklyTrashBodyClipPath' + rnd},
       this.svgGroup_);
   Blockly.utils.createSvgElement('rect',
@@ -181,7 +182,7 @@ Blockly.Trashcan.prototype.createDom = function() {
   body.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href',
       this.workspace_.options.pathToMedia + Blockly.SPRITE.url);
 
-  var clip = Blockly.utils.createSvgElement('clipPath',
+  clip = Blockly.utils.createSvgElement('clipPath',
       {'id': 'blocklyTrashLidClipPath' + rnd},
       this.svgGroup_);
   Blockly.utils.createSvgElement('rect',

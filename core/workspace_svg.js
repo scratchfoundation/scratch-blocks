@@ -1957,7 +1957,6 @@ Blockly.WorkspaceSvg.prototype.startDragWithFakeEvent = function(fakeEvent,
 /**
  * Get the audio manager for this workspace.
  * @return {Blockly.WorkspaceAudio} The audio manager for this workspace.
- * @package
  */
 Blockly.WorkspaceSvg.prototype.getAudioManager = function() {
   return this.audioManager_;

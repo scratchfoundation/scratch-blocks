@@ -997,10 +997,8 @@ Blockly.BlockSvg.disposeUiStep_ = function(clone, rtl, start, workspaceScale) {
     var scale = (1 - percent) * workspaceScale;
     clone.setAttribute('transform', 'translate(' + x + ',' + y + ')' +
         ' scale(' + scale + ')');
-    var closure = function() {
-      Blockly.BlockSvg.disposeUiStep_(clone, rtl, start, workspaceScale);
-    };
-    setTimeout(closure, 10);
+    setTimeout(Blockly.BlockSvg.disposeUiStep_, 10, clone, rtl, start,
+               workspaceScale);
   }
 };
 
