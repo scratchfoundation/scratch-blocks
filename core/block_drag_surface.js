@@ -129,9 +129,10 @@ Blockly.BlockDragSurfaceSvg.prototype.createDom = function() {
  * @return {string} ID for the filter element
  */
 Blockly.BlockDragSurfaceSvg.prototype.createDropShadowDom_ = function(defs) {
+  var rnd = String(Math.random()).substring(2);
   // Adjust these width/height, x/y properties to prevent the shadow from clipping
   var dragShadowFilter = Blockly.utils.createSvgElement('filter',
-    {'id': 'blocklyDragShadowFilter', 'height': '140%', 'width': '140%', y: '-20%', x: '-20%'}, defs);
+    {'id': 'blocklyDragShadowFilter' + rnd, 'height': '140%', 'width': '140%', y: '-20%', x: '-20%'}, defs);
   Blockly.utils.createSvgElement('feGaussianBlur',
     {'in': 'SourceAlpha', 'stdDeviation': Blockly.BlockDragSurfaceSvg.SHADOW_STD_DEVIATION}, dragShadowFilter);
   var componentTransfer = Blockly.utils.createSvgElement('feComponentTransfer',
