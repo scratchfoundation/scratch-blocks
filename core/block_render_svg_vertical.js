@@ -1123,14 +1123,14 @@ Blockly.BlockSvg.prototype.renderDrawRight_ = function(steps,
         fieldY += row.height / 2;
 
         // Align inline field rows (left/right/centre).
-        if (input.align != Blockly.ALIGN_LEFT) {
-          var fieldRightX = inputRows.rightEdge - input.fieldWidth -
-              (2 * Blockly.BlockSvg.SEP_SPACE_X);
-          if (input.align == Blockly.ALIGN_RIGHT) {
-            fieldX += fieldRightX;
-          } else if (input.align == Blockly.ALIGN_CENTRE) {
-            fieldX += fieldRightX / 2;
-          }
+        if (input.align === Blockly.ALIGN_RIGHT) {
+          fieldX += inputRows.rightEdge - input.fieldWidth -
+            (2 * Blockly.BlockSvg.SEP_SPACE_X);
+        } else if (input.align === Blockly.ALIGN_CENTRE) {
+          fieldX = Math.max(
+            inputRows.rightEdge / 2 - input.fieldWidth / 2,
+            fieldX
+          );
         }
 
         cursorX = this.renderFields_(input.fieldRow, fieldX, fieldY);
