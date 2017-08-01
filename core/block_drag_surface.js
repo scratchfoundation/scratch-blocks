@@ -90,6 +90,20 @@ Blockly.BlockDragSurfaceSvg.prototype.scale_ = 1;
 Blockly.BlockDragSurfaceSvg.prototype.surfaceXY_ = null;
 
 /**
+ * ID for the drag shadow filter, set in createDom.
+ * @type {string}
+ * @private
+ */
+Blockly.BlockDragSurfaceSvg.prototype.dragShadowFilterId_ = '';
+
+/**
+ * Standard deviation for gaussian blur on drag shadow, in px.
+ * @type {number}
+ * @const
+ */
+Blockly.BlockDragSurfaceSvg.SHADOW_STD_DEVIATION = 6;
+
+/**
  * Create the drag surface and inject it into the container.
  */
 Blockly.BlockDragSurfaceSvg.prototype.createDom = function() {
@@ -103,7 +117,33 @@ Blockly.BlockDragSurfaceSvg.prototype.createDom = function() {
     'version': '1.1',
     'class': 'blocklyBlockDragSurface'
   }, this.container_);
+  var defs = Blockly.utils.createSvgElement('defs', {}, this.SVG_);
+  this.dragShadowFilterId_ = this.createDropShadowDom_(defs);
   this.dragGroup_ = Blockly.utils.createSvgElement('g', {}, this.SVG_);
+  this.dragGroup_.setAttribute('filter', 'url(#' + this.dragShadowFilterId_ + ')');
+};
+
+/**
+ * Scratch-specific: Create the SVG def for the drop shadow.
+ * @param {Element} defs Defs element to insert the shadow filter definition
+ * @return {string} ID for the filter element
+ */
+Blockly.BlockDragSurfaceSvg.prototype.createDropShadowDom_ = function(defs) {
+  var rnd = String(Math.random()).substring(2);
+  // Adjust these width/height, x/y properties to prevent the shadow from clipping
+  var dragShadowFilter = Blockly.utils.createSvgElement('filter',
+    {'id': 'blocklyDragShadowFilter' + rnd, 'height': '140%', 'width': '140%', y: '-20%', x: '-20%'}, defs);
+  Blockly.utils.createSvgElement('feGaussianBlur',
+    {'in': 'SourceAlpha', 'stdDeviation': Blockly.BlockDragSurfaceSvg.SHADOW_STD_DEVIATION}, dragShadowFilter);
+  var componentTransfer = Blockly.utils.createSvgElement('feComponentTransfer',
+    {'result': 'offsetBlur'}, dragShadowFilter);
+  // Shadow opacity is specified in the adjustable colour library,
+  // since the darkness of the shadow largely depends on the workspace colour.
+  Blockly.utils.createSvgElement('feFuncA',
+    {'type': 'linear', 'slope': Blockly.Colours.dragShadowOpacity}, componentTransfer);
+  Blockly.utils.createSvgElement('feComposite',
+    {'in': 'SourceGraphic', 'in2': 'offsetBlur', 'operator': 'over'}, dragShadowFilter);
+  return dragShadowFilter.id;
 };
 
 /**
