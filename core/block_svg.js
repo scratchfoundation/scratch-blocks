@@ -624,16 +624,9 @@ Blockly.BlockSvg.prototype.tab = function(start, forward) {
     if (outputBlock) {
       outputBlock.tab(this, forward);
     } else { // Otherwise, go to next / previous block, depending on value of `forward`
-      if (forward) {
-        var nextBlock = this.nextConnection && this.nextConnection.targetBlock();
-        if (nextBlock) {
-          nextBlock.tab(this, forward);
-        }
-      } else {
-        var previousBlock = this.previousConnection && this.previousConnection.targetBlock();
-        if (previousBlock) {
-          previousBlock.tab(this, forward);
-        }
+      var block = forward ? this.getNextBlock() : this.getPreviousBlock();
+      if (block) {
+        block.tab(this, forward);
       }
     }
   } else if (target instanceof Blockly.Field) {
