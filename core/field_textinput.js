@@ -286,11 +286,14 @@ Blockly.FieldTextInput.prototype.onHtmlInputKeyDown_ = function(e) {
   var tabKey = 9, enterKey = 13, escKey = 27;
   if (e.keyCode == enterKey) {
     Blockly.WidgetDiv.hide();
+    Blockly.DropDownDiv.hideWithoutAnimation();
   } else if (e.keyCode == escKey) {
     htmlInput.value = htmlInput.defaultValue;
     Blockly.WidgetDiv.hide();
+    Blockly.DropDownDiv.hideWithoutAnimation();
   } else if (e.keyCode == tabKey) {
     Blockly.WidgetDiv.hide();
+    Blockly.DropDownDiv.hideWithoutAnimation();
     this.sourceBlock_.tab(this, !e.shiftKey);
     e.preventDefault();
   }
