@@ -162,6 +162,8 @@ Blockly.Flyout.prototype.CORNER_RADIUS = 0;
  */
 Blockly.Flyout.prototype.MARGIN = 12;
 
+// TODO: Move GAP_X and GAP_Y to their appropriate files.
+
 /**
  * Gap between items in horizontal flyouts. Can be overridden with the "sep"
  * element.
