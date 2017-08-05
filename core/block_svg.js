@@ -686,20 +686,7 @@ Blockly.BlockSvg.prototype.duplicateAndDragCallback_ = function() {
       var newBlock = Blockly.Xml.domToBlock(xml, ws);
 
       // Scratch-specific: Give shadow dom new IDs to prevent duplicating on paste
-      var blocks = newBlock.getDescendants();
-      for (var i = blocks.length - 1; i >= 0; i--) {
-        var descendant = blocks[i];
-        for (var j = 0; j < descendant.inputList.length; j++) {
-          var connection = descendant.inputList[j].connection;
-          if (connection) {
-            var shadowDom = connection.getShadowDom();
-            if (shadowDom) {
-              shadowDom.setAttribute('id', Blockly.utils.genUid());
-              connection.setShadowDom(shadowDom);
-            }
-          }
-        }
-      }
+      Blockly.utils.changeObscuredShadowIds(newBlock);
 
       var svgRootNew = newBlock.getSvgRoot();
       if (!svgRootNew) {
