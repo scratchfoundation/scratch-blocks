@@ -945,22 +945,12 @@ Blockly.WorkspaceSvg.prototype.paste = function(xmlBlock) {
   try {
     var block = Blockly.Xml.domToBlock(xmlBlock, this);
 
+    // Scratch-specific: Give shadow dom new IDs to prevent duplicating on paste
+    Blockly.utils.changeObscuredShadowIds(block);
+
     var blocks = block.getDescendants();
     for (var i = blocks.length - 1; i >= 0; i--) {
       var descendant = blocks[i];
-
-      // Scratch-specific: Give shadow dom new IDs to prevent duplicating on paste
-      for (var j = 0; j < descendant.inputList.length; j++) {
-        var connection = descendant.inputList[j].connection;
-        if (connection) {
-          var shadowDom = connection.getShadowDom();
-          if (shadowDom) {
-            shadowDom.setAttribute('id', Blockly.utils.genUid());
-            connection.setShadowDom(shadowDom);
-          }
-        }
-      }
-
       // Rerender to get around problem with IE and Edge not measuring text
       // correctly when it is hidden.
       if (goog.userAgent.IE || goog.userAgent.EDGE) {

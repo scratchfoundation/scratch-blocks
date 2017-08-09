@@ -931,3 +931,26 @@ Blockly.utils.setCssTransform = function(node, transform) {
   node.style['transform'] = transform;
   node.style['-webkit-transform'] = transform;
 };
+
+
+/**
+ * Re-assign obscured shadow blocks new IDs to prevent collisions
+ * Scratch specific to help the VM handle deleting obscured shadows.
+ * @param {Blockly.Block} block the root block to be processed.
+ */
+Blockly.utils.changeObscuredShadowIds = function(block) {
+  var blocks = block.getDescendants();
+  for (var i = blocks.length - 1; i >= 0; i--) {
+    var descendant = blocks[i];
+    for (var j = 0; j < descendant.inputList.length; j++) {
+      var connection = descendant.inputList[j].connection;
+      if (connection) {
+        var shadowDom = connection.getShadowDom();
+        if (shadowDom) {
+          shadowDom.setAttribute('id', Blockly.utils.genUid());
+          connection.setShadowDom(shadowDom);
+        }
+      }
+    }
+  }
+};
