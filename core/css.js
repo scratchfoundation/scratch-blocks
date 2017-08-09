@@ -1108,6 +1108,11 @@ Blockly.Css.CONTENT = [
     'width: 50%;',
     'cursor: pointer;',
   '}',
+  '.scratchCategoryMenuItemH {',
+    'padding: 4px;',
+    /*'width: 50%;',*/
+    'cursor: pointer;',
+  '}',
 
   '.scratchCategoryMenuItem.categorySelected {',
     'background: $colour_toolboxSelected;',

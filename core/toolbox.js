@@ -128,7 +128,7 @@ Blockly.Toolbox.prototype.init = function() {
 
   this.createFlyout_();
   this.categoryMenu_ = new Blockly.Toolbox.CategoryMenu(this, this.HtmlDiv);
-  this.populate_(workspace.options.languageTree);
+  this.populate_(workspace.options);
   this.position();
 };
 
@@ -216,8 +216,13 @@ Blockly.Toolbox.prototype.position = function() {
     this.height = treeDiv.offsetHeight;
     if (this.toolboxPosition == Blockly.TOOLBOX_AT_TOP) {  // Top
       treeDiv.style.top = '0';
+      treeDiv.style.width = '100%';
+      treeDiv.style.height = '10px';
     } else {  // Bottom
+      console.log('bottomm positioning')
       treeDiv.style.bottom = '0';
+      treeDiv.style.width = '100%';
+      treeDiv.style.height = '30px';
     }
   } else {
     if (this.toolboxPosition == Blockly.TOOLBOX_AT_RIGHT) {  // Right
@@ -384,7 +389,8 @@ Blockly.Toolbox.CategoryMenu.prototype.createDom = function() {
  * {Blockly.Toolbox.Category} for every category tag in the toolbox xml.
  * @param {Node} domTree DOM tree of blocks, or null.
  */
-Blockly.Toolbox.CategoryMenu.prototype.populate = function(domTree) {
+Blockly.Toolbox.CategoryMenu.prototype.populate = function(options) {
+  var domTree = options.languageTree;
   if (!domTree) {
     return;
   }
@@ -402,18 +408,32 @@ Blockly.Toolbox.CategoryMenu.prototype.populate = function(domTree) {
   }
   // Create categories one row at a time.
   // Note that this involves skipping around by `columnSeparator` in the DOM tree.
-  var columnSeparator = Math.ceil(categories.length / 2);
-  for (var i = 0; i < columnSeparator; i += 1) {
-    child = categories[i];
+  if (options.horizontalLayout) {
+    var columnSeparator = categories.length;
     var row = goog.dom.createDom('tr', 'scratchCategoryMenuRow');
     this.table.appendChild(row);
-    if (child) {
-      this.categories_.push(new Blockly.Toolbox.Category(this, row,
-          child));
+    for (var i = 0; i < columnSeparator; i += 1) {
+      child = categories[i];
+      
+      if (child) {
+        this.categories_.push(new Blockly.Toolbox.Category(this, row,
+            child));
+      }
     }
-    if (categories[i + columnSeparator]) {
-      this.categories_.push(new Blockly.Toolbox.Category(this, row,
-          categories[i + columnSeparator]));
+  } else {
+    var columnSeparator = Math.ceil(categories.length / 2);
+    for (var i = 0; i < columnSeparator; i += 1) {
+      child = categories[i];
+      var row = goog.dom.createDom('tr', 'scratchCategoryMenuRow');
+      this.table.appendChild(row);
+      if (child) {
+        this.categories_.push(new Blockly.Toolbox.Category(this, row,
+            child));
+      }
+      if (categories[i + columnSeparator]) {
+        this.categories_.push(new Blockly.Toolbox.Category(this, row,
+            categories[i + columnSeparator]));
+      }
     }
   }
   this.height_ = this.table.offsetHeight;
