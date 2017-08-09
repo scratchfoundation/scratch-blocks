@@ -163,9 +163,11 @@ Blockly.FieldVariable.dropdownCreate = function() {
   }
   variableModelList.sort(Blockly.VariableModel.compareByName);
   var options = [];
-  for (var i = 0; i < variableModelList.length; i++) {
+  for (var i = 0, variable; variable = variableModelList[i]; i++) {
+    if (variable.isEnabled() || this.getValue() == variable.name) {
     // Set the uuid as the internal representation of the variable.
-    options[i] = [variableModelList[i].name, variableModelList[i].getId()];
+      options.push([variableModelList[i].name, variableModelList[i].getId()]);
+    }
   }
   options.push([Blockly.Msg.RENAME_VARIABLE, Blockly.RENAME_VARIABLE_ID]);
   options.push([Blockly.Msg.DELETE_VARIABLE.replace('%1', name),
@@ -181,6 +183,7 @@ Blockly.FieldVariable.dropdownCreate = function() {
  * @param {!goog.ui.MenuItem} menuItem The MenuItem selected within menu.
  */
 Blockly.FieldVariable.prototype.onItemSelected = function(menu, menuItem) {
+  var priorSelectedVariable;
   var id = menuItem.getValue();
   // TODO(marisaleung): change setValue() to take in an id as the parameter.
   // Then remove itemText.
@@ -188,9 +191,15 @@ Blockly.FieldVariable.prototype.onItemSelected = function(menu, menuItem) {
   if (this.sourceBlock_ && this.sourceBlock_.workspace) {
     var workspace = this.sourceBlock_.workspace;
     var variable = workspace.getVariableById(id);
+    priorSelectedVariable = workspace.getVariableById(this.value_);
     // If the item selected is a variable, set itemText to the variable name.
     if (variable) {
       itemText = variable.name;
+      // If the field is disabled, enable it.
+      if (!variable.isEnabled()) {
+        variable.enable();
+        this.sourceBlock_.workspace.refreshToolboxSelection_();
+      }
     }
     else if (id == Blockly.RENAME_VARIABLE_ID) {
       // Rename variable.
@@ -207,7 +216,12 @@ Blockly.FieldVariable.prototype.onItemSelected = function(menu, menuItem) {
     itemText = this.callValidator(itemText);
   }
   if (itemText !== null) {
+    Blockly.Events.setGroup(true);
     this.setValue(itemText);
+    if (priorSelectedVariable && !priorSelectedVariable.isEnabled()) {
+      workspace.deleteDisabledVariableIfUnused(priorSelectedVariable);
+    }
+    Blockly.Events.setGroup(false);
   }
 };
 

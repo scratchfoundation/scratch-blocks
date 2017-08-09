@@ -229,6 +229,8 @@ Blockly.Block.prototype.dispose = function(healStack) {
     // Already deleted.
     return;
   }
+  var variableField = this.getField('VARIABLE');
+  var workspace = this.workspace;
   // Terminate onchange event calls.
   if (this.onchangeWrapper_) {
     this.workspace.removeChangeListener(this.onchangeWrapper_);
@@ -278,6 +280,12 @@ Blockly.Block.prototype.dispose = function(healStack) {
     }
   } finally {
     Blockly.Events.enable();
+    if (variableField) {
+      var variable = workspace.getVariable(variableField.text_);
+      if (variable && !variable.isEnabled()) {
+        workspace.deleteDisabledVariableIfUnused(variable);
+      }
+    }
   }
 };
 

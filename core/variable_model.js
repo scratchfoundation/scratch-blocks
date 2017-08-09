@@ -76,6 +76,14 @@ Blockly.VariableModel = function(workspace, name, opt_type, opt_id) {
    */
   this.id_ = opt_id || Blockly.utils.genUid();
 
+  /**
+   * The enabled status of the variable. If enabled is false, the variable
+   * will not appear in dropdowns or the toolbox. Otherwise it will appear.
+   * @type {boolean}
+   * @private
+   */
+  this.enabled_ = true;
+
   Blockly.Events.fire(new Blockly.Events.VarCreate(this));
 };
 
@@ -84,6 +92,30 @@ Blockly.VariableModel = function(workspace, name, opt_type, opt_id) {
  */
 Blockly.VariableModel.prototype.getId = function() {
   return this.id_;
+};
+
+/**
+ * Disable the variable.
+ */
+Blockly.VariableModel.prototype.disable = function() {
+  this.enabled_ = false;
+  Blockly.Variables.allowEnable = false;
+  Blockly.Events.fire(new Blockly.Events.VarDisable(this));
+};
+
+/**
+ * Enable the variable.
+ */
+Blockly.VariableModel.prototype.enable = function() {
+  this.enabled_ = true;
+  Blockly.Events.fire(new Blockly.Events.VarEnable(this));
+};
+
+/**
+ * @return {boolean} True if the variable is enabled, false otherwise.
+ */
+Blockly.VariableModel.prototype.isEnabled = function() {
+  return this.enabled_;
 };
 
 /**
