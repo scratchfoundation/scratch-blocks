@@ -633,21 +633,32 @@ Blockly.BlockSvg.prototype.renderFields_ =
     // Offset the field upward by half its height.
     // This vertically centers the fields around cursorY.
     var yOffset = -field.getSize().height / 2;
+    var translateX, translateY;
+    var scale = '';
     if (this.RTL) {
       cursorX -= field.renderSep + field.renderWidth;
-      root.setAttribute('transform',
-          'translate(' + cursorX + ',' + (cursorY + yOffset) + ')');
+      translateX = cursorX;
+      translateY = cursorY + yOffset;
       if (field.renderWidth) {
         cursorX -= Blockly.BlockSvg.SEP_SPACE_X;
       }
     } else {
-      root.setAttribute('transform',
-          'translate(' + (cursorX + field.renderSep) + ',' + (cursorY + yOffset) + ')');
+      translateX = cursorX + field.renderSep;
+      translateY = cursorY + yOffset;
       if (field.renderWidth) {
         cursorX += field.renderSep + field.renderWidth +
             Blockly.BlockSvg.SEP_SPACE_X;
       }
     }
+    if (this.RTL &&
+        field instanceof Blockly.FieldImage &&
+        field.getFlipRTL()) {
+      scale = 'scale(-1 1)';
+      translateX += field.renderWidth;
+    }
+    root.setAttribute('transform',
+      'translate(' + translateX + ', ' + translateY + ') ' + scale
+    );
     // Fields are invisible on insertion marker.
     if (this.isInsertionMarker()) {
       root.setAttribute('display', 'none');
