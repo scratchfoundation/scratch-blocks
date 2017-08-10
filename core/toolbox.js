@@ -216,12 +216,12 @@ Blockly.Toolbox.prototype.position = function() {
     this.height = treeDiv.offsetHeight;
     if (this.toolboxPosition == Blockly.TOOLBOX_AT_TOP) {  // Top
       treeDiv.style.top = '0';
-      /*treeDiv.style.width = '100%';
-      treeDiv.style.height = '10px';*/
+      treeDiv.style.width = '100%';
+      //treeDiv.style.height = '10px';
     } else {  // Bottom
       console.log('bottomm positioning')
       treeDiv.style.bottom = '0';
-      //treeDiv.style.width = '100%';
+      treeDiv.style.width = '100%';
       //treeDiv.style.height = '30px';
     }
   } else {
