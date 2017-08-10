@@ -366,6 +366,31 @@ Blockly.Blocks['operator_length'] = {
   }
 };
 
+Blockly.Blocks['operator_contains'] = {
+  /**
+   * Block for _ contains _ operator
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.jsonInit(
+      {
+        "message0": "%1 contains %2?",
+        "args0": [
+          {
+            "type": "input_value",
+            "name": "STRING1"
+          },
+          {
+            "type": "input_value",
+            "name": "STRING2"
+          }
+        ],
+        "category": Blockly.Categories.operators,
+        "extensions": ["colours_operators", "output_boolean"]
+      });
+  }
+};
+
 Blockly.Blocks['operator_mod'] = {
   /**
    * Block for mod two numbers.
