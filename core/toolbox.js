@@ -211,18 +211,18 @@ Blockly.Toolbox.prototype.position = function() {
   var svgSize = Blockly.svgSize(svg);
   if (this.horizontalLayout_) {
     treeDiv.style.left = '0';
-    treeDiv.style.height = 'auto';
-    treeDiv.style.width = svgSize.width + 'px';
+    //treeDiv.style.height = 'auto';
+    //treeDiv.style.width = svgSize.width + 'px';
     this.height = treeDiv.offsetHeight;
     if (this.toolboxPosition == Blockly.TOOLBOX_AT_TOP) {  // Top
       treeDiv.style.top = '0';
-      treeDiv.style.width = '100%';
-      treeDiv.style.height = '10px';
+      /*treeDiv.style.width = '100%';
+      treeDiv.style.height = '10px';*/
     } else {  // Bottom
       console.log('bottomm positioning')
       treeDiv.style.bottom = '0';
-      treeDiv.style.width = '100%';
-      treeDiv.style.height = '30px';
+      //treeDiv.style.width = '100%';
+      //treeDiv.style.height = '30px';
     }
   } else {
     if (this.toolboxPosition == Blockly.TOOLBOX_AT_RIGHT) {  // Right
@@ -380,7 +380,12 @@ Blockly.Toolbox.CategoryMenu.prototype.createDom = function() {
   <table class="scratchCategoryMenu">
   </table>
   */
-  this.table = goog.dom.createDom('table', 'scratchCategoryMenu');
+  var toolbox = this.parent_;
+  if (toolbox.horizontalLayout_) {
+    this.table = goog.dom.createDom('table', 'scratchCategoryMenuH');
+  } else {
+    this.table = goog.dom.createDom('table', 'scratchCategoryMenu');
+  }
   this.parentHtml_.appendChild(this.table);
 };
 
@@ -494,9 +499,15 @@ Blockly.Toolbox.Category.prototype.dispose = function() {
  */
 Blockly.Toolbox.Category.prototype.createDom = function() {
   var toolbox = this.parent_.parent_;
-  this.item_ = goog.dom.createDom('td',
+  if (toolbox.horizontalLayout_) {
+    this.item_ = goog.dom.createDom('td',
+      {'class': 'scratchCategoryMenuItemH'},
+      this.name_);  
+  } else {
+    this.item_ = goog.dom.createDom('td',
       {'class': 'scratchCategoryMenuItem'},
       this.name_);
+  }
   this.bubble_ = goog.dom.createDom('div', {
     'class': (toolbox.RTL) ? 'scratchCategoryItemBubbleRTL' :
     'scratchCategoryItemBubbleLTR'});
@@ -513,10 +524,19 @@ Blockly.Toolbox.Category.prototype.createDom = function() {
  * @param {boolean} selected Whether this category is selected.
  */
 Blockly.Toolbox.Category.prototype.setSelected = function(selected) {
+  var toolbox = this.parent_.parent_;
   if (selected) {
-    this.item_.className = 'scratchCategoryMenuItem categorySelected';
+    if (toolbox.horizontalLayout_) {
+      this.item_.className = 'scratchCategoryMenuItemH categorySelected';
+    }else{
+      this.item_.className = 'scratchCategoryMenuItem categorySelected';
+    }
   } else {
-    this.item_.className = 'scratchCategoryMenuItem';
+    if (toolbox.horizontalLayout_) {
+      this.item_.className = 'scratchCategoryMenuItemH';
+    }else{
+      this.item_.className = 'scratchCategoryMenuItem';
+    }
   }
 };
 
