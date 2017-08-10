@@ -607,13 +607,4 @@ Blockly.Blocks.defaultToolbox = '<xml id="toolbox-categories" style="display: no
       '</value>'+
     '</block>'+
   '</category>'+
-  '<category name="Jibo" colour="#295BE2" secondaryColour="#1842b4">' +
-        '<block type="jibo_say">' +
-            '<value name="TEXT2SAY">' +
-                '<shadow type="text">' +
-                    '<field name="TEXT">Hi</field>' +
-                '</shadow>' +
-            '</value>' +
-        '</block>' +
-    '</category>' +
   '</xml>';

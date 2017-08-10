@@ -1103,6 +1103,7 @@ Blockly.Css.CONTENT = [
     'color: $colour_toolboxText;',
     'font-size: .9em;',
     'user-select: none;',
+    'white-space: nowrap;',
     '-webkit-user-select: none;',
     '-moz-user-select: none;',
     '-ms-user-select: none;',
@@ -1120,6 +1121,7 @@ Blockly.Css.CONTENT = [
   '.scratchCategoryMenuItemH {',
     'padding: 4px;',
     /*'width: 50%;',*/
+    'display: inline-block;',
     'cursor: pointer;',
   '}',
 
