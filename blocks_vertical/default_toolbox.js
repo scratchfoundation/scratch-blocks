@@ -580,6 +580,13 @@ Blockly.Blocks.defaultToolbox = '<xml id="toolbox-categories" style="display: no
         '</shadow>'+
       '</value>'+
     '</block>'+
+    '<block type="operator_contains" id="operator_contains">'+
+      '<value name="STRING1">'+
+        '<shadow type="text">'+
+          '<field name="TEXT">hello world</field>'+
+        '</shadow>'+
+      '</value>'+
+    '</block>'+
     '<block type="operator_mod" id="operator_mod">'+
       '<value name="NUM1">'+
         '<shadow type="math_number">'+
