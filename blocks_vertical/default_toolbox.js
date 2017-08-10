@@ -99,6 +99,17 @@ Blockly.Blocks.defaultToolbox = '<xml id="toolbox-categories" style="display: no
         '</shadow>'+
       '</value>'+
     '</block>'+
+    '<block type="motion_glideto" id="motion_glideto">'+
+      '<value name="SECS">'+
+        '<shadow type="math_number">'+
+          '<field name="SECS">1</field>'+
+        '</shadow>'+
+      '</value>'+
+      '<value name="TO">'+
+        '<shadow type="motion_glideto_menu">'+
+        '</shadow>'+
+      '</value>'+
+    '</block>'+
     '<block type="motion_changexby" id="motion_changexby">'+
       '<value name="DX">'+
         '<shadow type="math_number">'+
