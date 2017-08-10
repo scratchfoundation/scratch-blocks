@@ -583,12 +583,12 @@ Blockly.Blocks.defaultToolbox = '<xml id="toolbox-categories" style="display: no
     '<block type="operator_contains" id="operator_contains">'+
       '<value name="STRING1">'+
         '<shadow type="text">'+
-          '<field name="TEXT">hello world</field>'+
+          '<field name="TEXT">hello</field>'+
         '</shadow>'+
       '</value>'+
       '<value name="STRING2">'+
         '<shadow type="text">'+
-          '<field name="TEXT">hello</field>'+
+          '<field name="TEXT">world</field>'+
         '</shadow>'+
       '</value>'+
     '</block>'+
