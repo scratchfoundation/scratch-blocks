@@ -237,7 +237,7 @@ Blockly.VerticalFlyout.prototype.setMetrics_ = function(xyRatio) {
   this.workspace_.translate(this.workspace_.scrollX + metrics.absoluteLeft,
       this.workspace_.scrollY + metrics.absoluteTop);
 
-  this.clipRect_.setAttribute('height', metrics.viewHeight + 'px');
+  this.clipRect_.setAttribute('height', Math.max(0, metrics.viewHeight) + 'px');
   this.clipRect_.setAttribute('width', metrics.viewWidth + 'px');
 };
 
@@ -269,7 +269,7 @@ Blockly.VerticalFlyout.prototype.position = function() {
   }
 
   // Record the height for Blockly.Flyout.getMetrics_
-  this.height_ = targetWorkspaceMetrics.viewHeight - y;
+  this.height_ = Math.max(0, targetWorkspaceMetrics.viewHeight - y);
 
   this.setBackgroundPath_(this.width_, this.height_);
 
