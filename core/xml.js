@@ -606,11 +606,12 @@ Blockly.Xml.domToBlockHeadless_ = function(xmlBlock, workspace) {
       case 'field':
         var field = block.getField(name);
         var text = xmlChild.textContent;
-        if (field instanceof Blockly.FieldVariable) {
+        if (field instanceof Blockly.FieldVariable ||
+          field instanceof Blockly.FieldVariableGetter) {
           // TODO (marisaleung): When we change setValue and getValue to
           // interact with id's instead of names, update this so that we get
           // the variable based on id instead of textContent.
-          var type = xmlChild.getAttribute('variabletype') || '';
+          var type = xmlChild.getAttribute('variableType') || '';
           var variable = workspace.getVariable(text);
           if (!variable) {
             variable = workspace.createVariable(text, type,
