@@ -64,7 +64,7 @@ Blockly.FieldAngle.ROUND = 15;
 /**
  * Half the width of protractor image.
  */
-Blockly.FieldAngle.HALF = 100 / 2;
+Blockly.FieldAngle.HALF = 120 / 2;
 
 /* The following two settings work together to set the behaviour of the angle
  * picker.  While many combinations are possible, two modes are typical:
@@ -96,10 +96,20 @@ Blockly.FieldAngle.OFFSET = 90;
 Blockly.FieldAngle.WRAP = 180;
 
 /**
+ * Radius of drag handle
+ */
+Blockly.FieldAngle.HANDLE_RADIUS = 8;
+
+/**
  * Radius of protractor circle.  Slightly smaller than protractor size since
  * otherwise SVG crops off half the border at the edges.
  */
-Blockly.FieldAngle.RADIUS = Blockly.FieldAngle.HALF - 1;
+Blockly.FieldAngle.RADIUS = Blockly.FieldAngle.HALF - Blockly.FieldAngle.HANDLE_RADIUS - 1;
+
+/**
+ * Radius of central dot circle.
+ */
+Blockly.FieldAngle.CENTER_RADIUS = 2;
 
 /**
  * Clean up this FieldAngle, as well as the inherited FieldTextInput.
@@ -154,38 +164,61 @@ Blockly.FieldAngle.prototype.showEditor_ = function() {
     'y1': Blockly.FieldAngle.HALF,
     'class': 'blocklyAngleLine'
   }, svg);
+  Blockly.utils.createSvgElement('line', {
+    'x1': Blockly.FieldAngle.HALF,
+    'y1': Blockly.FieldAngle.HALF,
+    'x2': Blockly.FieldAngle.HALF,
+    'y2': Blockly.FieldAngle.HALF - Blockly.FieldAngle.RADIUS,
+    'class': 'blocklyAngleLine'
+  }, svg);
   // Draw markers around the edge.
   for (var angle = 0; angle < 360; angle += 15) {
     Blockly.utils.createSvgElement('line', {
-      'x1': Blockly.FieldAngle.HALF + Blockly.FieldAngle.RADIUS,
+      'x1': Blockly.FieldAngle.HALF + Blockly.FieldAngle.RADIUS - 13,
       'y1': Blockly.FieldAngle.HALF,
-      'x2': Blockly.FieldAngle.HALF + Blockly.FieldAngle.RADIUS -
-          (angle % 45 == 0 ? 10 : 5),
+      'x2': Blockly.FieldAngle.HALF + Blockly.FieldAngle.RADIUS - 7,
       'y2': Blockly.FieldAngle.HALF,
       'class': 'blocklyAngleMarks',
       'transform': 'rotate(' + angle + ',' +
           Blockly.FieldAngle.HALF + ',' + Blockly.FieldAngle.HALF + ')'
     }, svg);
   }
+  Blockly.utils.createSvgElement('circle', {
+    'cx': Blockly.FieldAngle.HALF, 'cy': Blockly.FieldAngle.HALF,
+    'r': Blockly.FieldAngle.CENTER_RADIUS,
+    'class': 'blocklyAngleCenterPoint'
+  }, svg);
+  this.handle_ = Blockly.utils.createSvgElement('circle', {
+    'r': Blockly.FieldAngle.HANDLE_RADIUS,
+    'class': 'blocklyAngleDragHandle'
+  }, svg);
 
   Blockly.DropDownDiv.setColour(this.sourceBlock_.parentBlock_.getColour(),
       this.sourceBlock_.getColourTertiary());
   Blockly.DropDownDiv.setCategory(this.sourceBlock_.parentBlock_.getCategory());
   Blockly.DropDownDiv.showPositionedByBlock(this, this.sourceBlock_);
 
-  // The angle picker is different from other fields in that it updates on
-  // mousemove even if it's not in the middle of a drag.  In future we may
-  // change this behavior.  For now, using bindEvent_ instead of
-  // bindEventWithChecks_ allows it to work without a mousedown/touchstart.
-  this.clickWrapper_ =
-      Blockly.bindEvent_(svg, 'click', this, function() {
-        Blockly.WidgetDiv.hide();
-        Blockly.DropDownDiv.hide();
-        Blockly.unbindEvent_(this.moveWrapper_);
-      });
-  this.moveWrapper_ =
-      Blockly.bindEvent_(svg, 'mousemove', this, this.onMouseMove);
+  this.dragWrapper_ =
+      Blockly.bindEvent_(this.handle_, 'mousedown', this, this.onMouseDown);
+
   this.updateGraph_();
+};
+/**
+ * Set the angle to match the mouse's position.
+ * @param {!Event} e Mouse move event.
+ */
+Blockly.FieldAngle.prototype.onMouseDown = function() {
+  this.moveWrapper_ = Blockly.bindEvent_(document.body, 'mousemove', this, this.onMouseMove);
+  this.mouseUpWrapper_ = Blockly.bindEvent_(document.body, 'mouseup', this, this.onMouseUp);
+};
+
+/**
+ * Set the angle to match the mouse's position.
+ * @param {!Event} e Mouse move event.
+ */
+Blockly.FieldAngle.prototype.onMouseUp = function() {
+  Blockly.unbindEvent_(this.moveWrapper_);
+  Blockly.unbindEvent_(this.mouseUpWrapper_);
 };
 
 /**
@@ -193,6 +226,7 @@ Blockly.FieldAngle.prototype.showEditor_ = function() {
  * @param {!Event} e Mouse move event.
  */
 Blockly.FieldAngle.prototype.onMouseMove = function(e) {
+  e.preventDefault();
   var bBox = this.gauge_.ownerSVGElement.getBoundingClientRect();
   var dx = e.clientX - bBox.left - Blockly.FieldAngle.HALF;
   var dy = e.clientY - bBox.top - Blockly.FieldAngle.HALF;
@@ -274,6 +308,9 @@ Blockly.FieldAngle.prototype.updateGraph_ = function() {
   this.gauge_.setAttribute('d', path.join(''));
   this.line_.setAttribute('x2', x2);
   this.line_.setAttribute('y2', y2);
+
+  this.handle_.setAttribute('cx', x2);
+  this.handle_.setAttribute('cy', y2);
 };
 
 /**
