@@ -62,7 +62,8 @@ Blockly.DataCategory = function(workspace) {
   }
 
   // Now add list variables to the flyout
-  Blockly.DataCategory.addCreateButton(xmlList, workspace, 'LIST');
+  // Disable new list button until it is supported in scratch-vm
+  // Blockly.DataCategory.addCreateButton(xmlList, workspace, 'LIST');
   variableModelList = workspace.getVariablesOfType('list');
   variableModelList.sort(Blockly.VariableModel.compareByName);
   for (var i = 0; i < variableModelList.length; i++) {
