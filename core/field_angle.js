@@ -98,7 +98,12 @@ Blockly.FieldAngle.WRAP = 180;
 /**
  * Radius of drag handle
  */
-Blockly.FieldAngle.HANDLE_RADIUS = 8;
+Blockly.FieldAngle.HANDLE_RADIUS = 10;
+
+/**
+ * Width of drag handle arrow
+ */
+Blockly.FieldAngle.ARROW_WIDTH = Blockly.FieldAngle.HANDLE_RADIUS;
 
 /**
  * Radius of protractor circle.  Slightly smaller than protractor size since
@@ -112,6 +117,11 @@ Blockly.FieldAngle.RADIUS = Blockly.FieldAngle.HALF - Blockly.FieldAngle.HANDLE_
 Blockly.FieldAngle.CENTER_RADIUS = 2;
 
 /**
+ * Path to the arrow svg icon.
+ */
+Blockly.FieldAngle.ARROW_SVG_PATH = 'icons/arrow.svg';
+
+/**
  * Clean up this FieldAngle, as well as the inherited FieldTextInput.
  * @return {!Function} Closure to call on destruction of the WidgetDiv.
  * @private
@@ -121,11 +131,14 @@ Blockly.FieldAngle.prototype.dispose_ = function() {
   return function() {
     Blockly.FieldAngle.superClass_.dispose_.call(thisField)();
     thisField.gauge_ = null;
-    if (thisField.clickWrapper_) {
-      Blockly.unbindEvent_(thisField.clickWrapper_);
+    if (thisField.mouseDownWrapper_) {
+      Blockly.unbindEvent_(thisField.mouseDownWrapper_);
     }
-    if (thisField.moveWrapper_) {
-      Blockly.unbindEvent_(thisField.moveWrapper_);
+    if (thisField.mouseUpWrapper_) {
+      Blockly.unbindEvent_(thisField.mouseUpWrapper_);
+    }
+    if (thisField.mouseMoveWrapper_) {
+      Blockly.unbindEvent_(thisField.mouseMoveWrapper_);
     }
   };
 };
@@ -159,16 +172,19 @@ Blockly.FieldAngle.prototype.showEditor_ = function() {
   }, svg);
   this.gauge_ = Blockly.utils.createSvgElement('path',
       {'class': 'blocklyAngleGauge'}, svg);
+  // The moving line, x2 and y2 are set in updateGraph_
   this.line_ = Blockly.utils.createSvgElement('line',{
     'x1': Blockly.FieldAngle.HALF,
     'y1': Blockly.FieldAngle.HALF,
     'class': 'blocklyAngleLine'
   }, svg);
+  // The fixed vertical line at the offset
+  var offsetRadians = Math.PI * Blockly.FieldAngle.OFFSET / 180;
   Blockly.utils.createSvgElement('line', {
     'x1': Blockly.FieldAngle.HALF,
     'y1': Blockly.FieldAngle.HALF,
-    'x2': Blockly.FieldAngle.HALF,
-    'y2': Blockly.FieldAngle.HALF - Blockly.FieldAngle.RADIUS,
+    'x2': Blockly.FieldAngle.HALF + Blockly.FieldAngle.RADIUS * Math.cos(offsetRadians),
+    'y2': Blockly.FieldAngle.HALF - Blockly.FieldAngle.RADIUS * Math.sin(offsetRadians),
     'class': 'blocklyAngleLine'
   }, svg);
   // Draw markers around the edge.
@@ -183,22 +199,42 @@ Blockly.FieldAngle.prototype.showEditor_ = function() {
           Blockly.FieldAngle.HALF + ',' + Blockly.FieldAngle.HALF + ')'
     }, svg);
   }
+  // Center point
   Blockly.utils.createSvgElement('circle', {
     'cx': Blockly.FieldAngle.HALF, 'cy': Blockly.FieldAngle.HALF,
     'r': Blockly.FieldAngle.CENTER_RADIUS,
     'class': 'blocklyAngleCenterPoint'
   }, svg);
-  this.handle_ = Blockly.utils.createSvgElement('circle', {
+  // Handle group: a circle and the arrow image
+  this.handle_ = Blockly.utils.createSvgElement('g', {}, svg);
+  Blockly.utils.createSvgElement('circle', {
+    'cx': 0,
+    'cy': 0,
     'r': Blockly.FieldAngle.HANDLE_RADIUS,
     'class': 'blocklyAngleDragHandle'
-  }, svg);
+  }, this.handle_);
+  this.arrowSvg_ = Blockly.utils.createSvgElement(
+    'image',
+    {
+      'width': Blockly.FieldAngle.ARROW_WIDTH,
+      'height': Blockly.FieldAngle.ARROW_WIDTH,
+      'x': -Blockly.FieldAngle.ARROW_WIDTH / 2,
+      'y': -Blockly.FieldAngle.ARROW_WIDTH / 2
+    },
+    this.handle_
+  );
+  this.arrowSvg_.setAttributeNS(
+    'http://www.w3.org/1999/xlink',
+    'xlink:href',
+    Blockly.mainWorkspace.options.pathToMedia + Blockly.FieldAngle.ARROW_SVG_PATH
+  );
 
   Blockly.DropDownDiv.setColour(this.sourceBlock_.parentBlock_.getColour(),
       this.sourceBlock_.getColourTertiary());
   Blockly.DropDownDiv.setCategory(this.sourceBlock_.parentBlock_.getCategory());
   Blockly.DropDownDiv.showPositionedByBlock(this, this.sourceBlock_);
 
-  this.dragWrapper_ =
+  this.mouseDownWrapper_ =
       Blockly.bindEvent_(this.handle_, 'mousedown', this, this.onMouseDown);
 
   this.updateGraph_();
@@ -208,7 +244,7 @@ Blockly.FieldAngle.prototype.showEditor_ = function() {
  * @param {!Event} e Mouse move event.
  */
 Blockly.FieldAngle.prototype.onMouseDown = function() {
-  this.moveWrapper_ = Blockly.bindEvent_(document.body, 'mousemove', this, this.onMouseMove);
+  this.mouseMoveWrapper_ = Blockly.bindEvent_(document.body, 'mousemove', this, this.onMouseMove);
   this.mouseUpWrapper_ = Blockly.bindEvent_(document.body, 'mouseup', this, this.onMouseUp);
 };
 
@@ -217,7 +253,7 @@ Blockly.FieldAngle.prototype.onMouseDown = function() {
  * @param {!Event} e Mouse move event.
  */
 Blockly.FieldAngle.prototype.onMouseUp = function() {
-  Blockly.unbindEvent_(this.moveWrapper_);
+  Blockly.unbindEvent_(this.mouseMoveWrapper_);
   Blockly.unbindEvent_(this.mouseUpWrapper_);
 };
 
@@ -281,7 +317,8 @@ Blockly.FieldAngle.prototype.updateGraph_ = function() {
   if (!this.gauge_) {
     return;
   }
-  var angleDegrees = Number(this.getText()) + Blockly.FieldAngle.OFFSET;
+  var angleDegrees = Number(this.getText()) % 360 + Blockly.FieldAngle.OFFSET;
+  console.log('angle', angleDegrees)
   var angleRadians = goog.math.toRadians(angleDegrees);
   var path = ['M ', Blockly.FieldAngle.HALF, ',', Blockly.FieldAngle.HALF];
   var x2 = Blockly.FieldAngle.HALF;
@@ -295,22 +332,28 @@ Blockly.FieldAngle.prototype.updateGraph_ = function() {
     }
     x2 += Math.cos(angleRadians) * Blockly.FieldAngle.RADIUS;
     y2 -= Math.sin(angleRadians) * Blockly.FieldAngle.RADIUS;
-    // Don't ask how the flag calculations work.  They just do.
-    var largeFlag = Math.abs(Math.floor((angleRadians - angle1) / Math.PI) % 2);
-    if (Blockly.FieldAngle.CLOCKWISE) {
-      largeFlag = 1 - largeFlag;
-    }
+    // Use large arc only if input value is greater than wrap
+    var largeFlag = Math.abs(angleDegrees - Blockly.FieldAngle.OFFSET) > 180 ? 1 : 0;
     var sweepFlag = Number(Blockly.FieldAngle.CLOCKWISE);
+    if (angleDegrees < Blockly.FieldAngle.OFFSET) {
+      sweepFlag = 1 - sweepFlag; // Sweep opposite direction if less than the offset
+    }
     path.push(' l ', x1, ',', y1,
         ' A ', Blockly.FieldAngle.RADIUS, ',', Blockly.FieldAngle.RADIUS,
         ' 0 ', largeFlag, ' ', sweepFlag, ' ', x2, ',', y2, ' z');
+
+    // Image rotation needs to be set in degrees
+    if (Blockly.FieldAngle.CLOCKWISE) {
+        var imageRotation = angleDegrees + 2 * Blockly.FieldAngle.OFFSET;
+    } else {
+        var imageRotation = -angleDegrees;
+    }
+    this.arrowSvg_.setAttribute('transform', 'rotate(' + (imageRotation) + ')');
   }
   this.gauge_.setAttribute('d', path.join(''));
   this.line_.setAttribute('x2', x2);
   this.line_.setAttribute('y2', y2);
-
-  this.handle_.setAttribute('cx', x2);
-  this.handle_.setAttribute('cy', y2);
+  this.handle_.setAttribute('transform', 'translate(' + x2 + ',' + y2 +')');
 };
 
 /**
