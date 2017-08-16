@@ -318,7 +318,6 @@ Blockly.FieldAngle.prototype.updateGraph_ = function() {
     return;
   }
   var angleDegrees = Number(this.getText()) % 360 + Blockly.FieldAngle.OFFSET;
-  console.log('angle', angleDegrees)
   var angleRadians = goog.math.toRadians(angleDegrees);
   var path = ['M ', Blockly.FieldAngle.HALF, ',', Blockly.FieldAngle.HALF];
   var x2 = Blockly.FieldAngle.HALF;
@@ -344,9 +343,9 @@ Blockly.FieldAngle.prototype.updateGraph_ = function() {
 
     // Image rotation needs to be set in degrees
     if (Blockly.FieldAngle.CLOCKWISE) {
-        var imageRotation = angleDegrees + 2 * Blockly.FieldAngle.OFFSET;
+      var imageRotation = angleDegrees + 2 * Blockly.FieldAngle.OFFSET;
     } else {
-        var imageRotation = -angleDegrees;
+      var imageRotation = -angleDegrees;
     }
     this.arrowSvg_.setAttribute('transform', 'rotate(' + (imageRotation) + ')');
   }
