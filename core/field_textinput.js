@@ -509,22 +509,8 @@ Blockly.FieldTextInput.prototype.widgetDispose_ = function() {
     var div = Blockly.WidgetDiv.DIV;
     var htmlInput = Blockly.FieldTextInput.htmlInput_;
     // Save the edit (if it validates).
-    var text = htmlInput.value;
-    if (thisField.sourceBlock_) {
-      var text1 = thisField.callValidator(text);
-      if (text1 === null) {
-        // Invalid edit.
-        text = htmlInput.defaultValue;
-      } else {
-        // Validation function has changed the text.
-        text = text1;
-        if (thisField.onFinishEditing_) {
-          thisField.onFinishEditing_(text);
-        }
-      }
-    }
-    thisField.setText(text);
-    thisField.sourceBlock_.rendered && thisField.sourceBlock_.render();
+    thisField.maybeSaveEdit_();
+
     thisField.unbindEvents_(htmlInput);
     if (htmlInput.dropDownArrowMouseWrapper_) {
       Blockly.unbindEvent_(htmlInput.dropDownArrowMouseWrapper_);
@@ -563,6 +549,27 @@ Blockly.FieldTextInput.prototype.widgetDisposeAnimationFinished_ = function() {
     Blockly.FieldTextInput.htmlInput_.style.transition = '';
     Blockly.FieldTextInput.htmlInput_ = null;
   };
+};
+
+Blockly.FieldTextInput.prototype.maybeSaveEdit_ = function() {
+  var htmlInput = Blockly.FieldTextInput.htmlInput_;
+  // Save the edit (if it validates).
+  var text = htmlInput.value;
+  if (this.sourceBlock_) {
+    var text1 = this.callValidator(text);
+    if (text1 === null) {
+      // Invalid edit.
+      text = htmlInput.defaultValue;
+    } else {
+      // Validation function has changed the text.
+      text = text1;
+      if (this.onFinishEditing_) {
+        this.onFinishEditing_(text);
+      }
+    }
+  }
+  this.setText(text);
+  this.sourceBlock_.rendered && this.sourceBlock_.render();
 };
 
 /**
