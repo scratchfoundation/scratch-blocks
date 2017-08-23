@@ -37,6 +37,7 @@ goog.require('goog.dom');
 goog.require('goog.events');
 goog.require('goog.math.Rect');
 goog.require('goog.userAgent');
+goog.require('goog.dom.animationFrame.polyfill');
 
 
 /**
@@ -332,11 +333,41 @@ Blockly.VerticalFlyout.prototype.scrollToStart = function() {
 };
 
 /**
+ * Scroll the flyout to a position.
+ * @param {Number} pos The targeted scroll position.
+ */
+Blockly.VerticalFlyout.prototype.scrollTo = function(pos) {
+  this.scrollTarget = pos * this.workspace_.scale;
+  this.step();
+};
+
+/**
+ * Step the scrolling animation by scrolling a fraction of the way to
+ * a scroll target, and request the next frame if necessary.
+ */
+Blockly.VerticalFlyout.prototype.step = function() {
+  if (!this.scrollTarget) return;
+  var scrollYPos = -this.workspace_.scrollY;
+  var diff = this.scrollTarget - scrollYPos;
+  if (Math.abs(diff) < 1) {
+    this.scrollbar_.set(this.scrollTarget);
+    return;
+  }
+  this.scrollbar_.set(scrollYPos + diff * 0.3);
+
+  // Polyfilled by goog.dom.animationFrame.polyfill
+  requestAnimationFrame(this.step.bind(this));
+};
+
+/**
  * Scroll the flyout.
  * @param {!Event} e Mouse wheel scroll event.
  * @private
  */
 Blockly.VerticalFlyout.prototype.wheel_ = function(e) {
+  // remove scrollTarget to stop auto scrolling in step()
+  this.scrollTarget = null;
+
   var delta = e.deltaY;
 
   if (delta) {

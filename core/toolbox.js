@@ -325,18 +325,22 @@ Blockly.Toolbox.prototype.getSelectedItem = function() {
  */
 Blockly.Toolbox.prototype.setSelectedItem = function(item) {
   if (this.selectedItem_) {
-    // Don't do anything if they selected the already-open category.
-    if (this.selectedItem_ == item) {
-      return;
-    }
     // They selected a different category but one was already open.  Close it.
     this.selectedItem_.setSelected(false);
   }
   this.selectedItem_ = item;
   if (this.selectedItem_ != null) {
     this.selectedItem_.setSelected(true);
-    this.flyout_.show(item.getContents());
-    this.flyout_.scrollToStart();
+    // Scroll flyout to the top of the selected category
+    var categoryName = item.name_;
+    for (var i=0; i<this.flyout_.buttons_.length; i++) {
+      if (this.flyout_.buttons_[i].text_ === categoryName) {
+        this.flyout_.scrollTo(this.flyout_.buttons_[i].position_.y);
+        return;
+      }
+    }
+  }
+};
   }
 };
 
