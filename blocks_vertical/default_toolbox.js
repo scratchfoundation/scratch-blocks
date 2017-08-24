@@ -102,7 +102,7 @@ Blockly.Blocks.defaultToolbox = '<xml id="toolbox-categories" style="display: no
     '<block type="motion_glideto" id="motion_glideto">'+
       '<value name="SECS">'+
         '<shadow type="math_number">'+
-          '<field name="SECS">1</field>'+
+          '<field name="NUM">1</field>'+
         '</shadow>'+
       '</value>'+
       '<value name="TO">'+
