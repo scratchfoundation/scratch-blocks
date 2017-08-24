@@ -265,6 +265,56 @@ Blockly.Blocks['motion_glidesecstoxy'] = {
   }
 };
 
+Blockly.Blocks['motion_glideto_menu'] = {
+  /**
+   * Glide to drop-down menu
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.jsonInit({
+      "message0": "%1",
+      "args0": [
+        {
+          "type": "field_dropdown",
+          "name": "TO",
+          "options": [
+            ['mouse-pointer', '_mouse_'],
+            ['random position', '_random_']
+          ]
+        }
+      ],
+      "colour": Blockly.Colours.motion.secondary,
+      "colourSecondary": Blockly.Colours.motion.secondary,
+      "colourTertiary": Blockly.Colours.motion.tertiary,
+      "extensions": ["output_string"]
+    });
+  }
+};
+
+Blockly.Blocks['motion_glideto'] = {
+  /**
+   * Block to glide to a menu item
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.jsonInit({
+      "message0": "glide %1 secs to %2",
+      "args0": [
+        {
+          "type": "input_value",
+          "name": "SECS"
+        },
+        {
+          "type": "input_value",
+          "name": "TO"
+        }
+      ],
+      "category": Blockly.Categories.motion,
+      "extensions": ["colours_motion", "shape_statement"]
+    });
+  }
+};
+
 Blockly.Blocks['motion_changexby'] = {
   /**
    * Block to change X.
