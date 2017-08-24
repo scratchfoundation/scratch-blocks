@@ -623,9 +623,11 @@ Blockly.BlockSvg.prototype.renderFields_ =
     if (!root) {
       continue;
     }
-    // In blocks with a notch, non-label fields should be bumped to a min X,
-    // to avoid overlapping with the notch.
-    if (this.previousConnection && !(field instanceof Blockly.FieldLabel)) {
+    // In blocks with a notch, fields should be bumped to a min X,
+    // to avoid overlapping with the notch. Label and image fields are
+    // excluded.
+    if (this.previousConnection && !(field instanceof Blockly.FieldLabel) &&
+        !(field instanceof Blockly.FieldImage)) {
       cursorX = this.RTL ?
         Math.min(cursorX, -Blockly.BlockSvg.INPUT_AND_FIELD_MIN_X) :
         Math.max(cursorX, Blockly.BlockSvg.INPUT_AND_FIELD_MIN_X);
