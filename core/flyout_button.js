@@ -166,15 +166,6 @@ Blockly.FlyoutButton.prototype.createDom = function() {
   rect.setAttribute('width', this.width);
   rect.setAttribute('height', this.height);
 
-  // Add underline to flyout labels
-  if (this.isLabel_) {
-    // var lineWidth = this.workspace_.getMetrics().contentWidth;
-    var lineWidth = 300;
-    var underline = Blockly.utils.createSvgElement('line',
-        {'x1':0, 'y1':this.height, 'x2':lineWidth, 'y2':this.height, 'stroke-width':1, 'stroke':'#ddd'},
-        this.svgGroup_);
-  }
-
   svgText.setAttribute('text-anchor', 'middle');
   svgText.setAttribute('alignment-baseline', 'central');
   svgText.setAttribute('x', this.width / 2);
