@@ -1114,10 +1114,27 @@ Blockly.Css.CONTENT = [
     '-ms-user-select: none;',
   '}',
 
+  '.scratchCategoryMenuHorizontal {',
+    'width: 100%;',
+    'height: 50px;',
+    'background: $colour_toolbox;',
+    'color: $colour_toolboxText;',
+    'font-size: .7em;',
+    'user-select: none;',
+    '-webkit-user-select: none;',
+    '-moz-user-select: none;',
+    '-ms-user-select: none;',
+  '}',
+
+  '.scratchCategoryMenuHorizontal .scratchCategoryMenuRow {',
+    'float: left;',
+    'margin: 3px;',
+  '}',
+
   '.scratchCategoryMenuRow {',
   '}',
 
-  '.scratchCategoryMenuRow + .scratchCategoryMenuRow:before {',
+  '.scratchCategoryMenu .scratchCategoryMenuRow + .scratchCategoryMenuRow:before {',
     'display: block;',
     'border-top: 1px solid #ddd;',
     'content: "";',
@@ -1130,6 +1147,10 @@ Blockly.Css.CONTENT = [
     'cursor: pointer;',
     'margin: 0px 2px;',
     'text-align: center;',
+  '}',
+
+  '.scratchCategoryMenuHorizontal .scratchCategoryMenuItem {',
+    'padding: 6px 5px;',
   '}',
 
   '.scratchCategoryMenuItem.categorySelected {',

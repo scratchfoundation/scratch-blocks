@@ -370,11 +370,8 @@ Blockly.Toolbox.CategoryMenu.prototype.getHeight = function() {
  * Create the DOM for the category menu.
  */
 Blockly.Toolbox.CategoryMenu.prototype.createDom = function() {
-  /*
-  <table class="scratchCategoryMenu">
-  </table>
-  */
-  this.table = goog.dom.createDom('div', 'scratchCategoryMenu');
+  this.table = goog.dom.createDom('div', this.parent_.horizontalLayout_ ?
+    'scratchCategoryMenuHorizontal' : 'scratchCategoryMenu');
   this.parentHtml_.appendChild(this.table);
 };
 
