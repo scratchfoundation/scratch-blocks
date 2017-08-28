@@ -342,7 +342,11 @@ Blockly.Toolbox.prototype.setSelectedItem = function(item) {
     var categoryName = item.name_;
     for (var i=0; i<this.flyout_.buttons_.length; i++) {
       if (this.flyout_.buttons_[i].text_ === categoryName) {
-        this.flyout_.scrollTo(this.flyout_.buttons_[i].position_.y);
+        if (this.horizontalLayout_) {
+          this.flyout_.scrollTo(this.flyout_.buttons_[i].position_.x);
+        } else {
+          this.flyout_.scrollTo(this.flyout_.buttons_[i].position_.y);
+        }
         return;
       }
     }
