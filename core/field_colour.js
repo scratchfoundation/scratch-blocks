@@ -31,6 +31,7 @@ goog.require('goog.dom');
 goog.require('goog.events');
 goog.require('goog.style');
 goog.require('goog.ui.ColorPicker');
+goog.require('goog.ui.Button');
 
 
 /**
@@ -148,6 +149,13 @@ Blockly.FieldColour.COLOURS = goog.ui.ColorPicker.SIMPLE_GRID_COLORS;
 Blockly.FieldColour.COLUMNS = 7;
 
 /**
+ * Function to be called if eyedropper can be activated.
+ * If defined, an eyedropper button will be added to the color picker.
+ * The button calls this function with a callback to update the field value.
+ */
+Blockly.FieldColour.activateEyedropper = null;
+
+/**
  * Set a custom colour grid for this field.
  * @param {Array.<string>} colours Array of colours for this block,
  *     or null to use default (Blockly.FieldColour.COLOURS).
@@ -216,6 +224,19 @@ Blockly.FieldColour.prototype.showEditor_ = function() {
   Blockly.WidgetDiv.position(xy.x, xy.y, windowSize, scrollOffset,
                              this.sourceBlock_.RTL);
 
+  if (Blockly.FieldColour.activateEyedropper) {
+    var button = new goog.ui.Button('Eyedropper');
+    button.render(div);
+    var thisField = this;
+    Blockly.FieldColour.eyedropperEventKey_ = goog.events.listen(button,
+         goog.ui.Component.EventType.ACTION,
+         function() {
+           Blockly.FieldColour.activateEyedropper(function(value) {
+             thisField.setValue(value);
+           });
+         });
+  }
+
   // Configure event handler.
   var thisField = this;
   Blockly.FieldColour.changeEventKey_ = goog.events.listen(picker,
@@ -240,6 +261,9 @@ Blockly.FieldColour.prototype.showEditor_ = function() {
 Blockly.FieldColour.widgetDispose_ = function() {
   if (Blockly.FieldColour.changeEventKey_) {
     goog.events.unlistenByKey(Blockly.FieldColour.changeEventKey_);
+  }
+  if (Blockly.FieldColour.eyedropperEventKey_) {
+    goog.events.unlistenByKey(Blockly.FieldColour.eyedropperEventKey_);
   }
   Blockly.Events.setGroup(false);
 };
