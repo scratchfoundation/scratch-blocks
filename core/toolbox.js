@@ -193,7 +193,8 @@ Blockly.Toolbox.prototype.showAll = function() {
 
     // create a label node to go at the top of the category
     var parser = new DOMParser();
-    var labelString = `<label text="${category.name_}" web-class="categoryLabel"></label>`;
+    var labelString = '<label text="' + category.name_ +
+      '" web-class="categoryLabel"></label>';
     var labelXML = parser.parseFromString(labelString, 'text/xml');
     allContents.push(labelXML.children[0]);
 
