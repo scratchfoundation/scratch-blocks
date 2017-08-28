@@ -338,6 +338,13 @@ Blockly.VerticalFlyout.prototype.scrollToStart = function() {
  */
 Blockly.VerticalFlyout.prototype.scrollTo = function(pos) {
   this.scrollTarget = pos * this.workspace_.scale;
+
+  // Make sure not to set the scroll target below the lowest point we can
+  // scroll to, i.e. the content height minus the view height
+  var contentHeight = this.workspace_.getMetrics().contentHeight;
+  var viewHeight = this.workspace_.getMetrics().viewHeight;
+  this.scrollTarget = Math.min(this.scrollTarget, contentHeight - viewHeight);
+
   this.step();
 };
 
