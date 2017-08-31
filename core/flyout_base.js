@@ -529,7 +529,7 @@ Blockly.Flyout.prototype.show = function(xmlList) {
     if (category.isLabel_) {
       this.categoryScrollPositions.push({
         categoryName:category.text_,
-        position:category.position_.y
+        position:this.horizontalLayout_ ? category.position_.x : category.position_.y
       });
     }
   }
