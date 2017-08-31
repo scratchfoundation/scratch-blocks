@@ -303,12 +303,30 @@ Blockly.HorizontalFlyout.prototype.wheel_ = function(e) {
     // When the flyout moves from a wheel event, hide WidgetDiv and DropDownDiv.
     Blockly.WidgetDiv.hide(true);
     Blockly.DropDownDiv.hideWithoutAnimation();
+
+    this.selectCategoryByScrollPosition(pos);
   }
 
   // Don't scroll the page.
   e.preventDefault();
   // Don't propagate mousewheel event (zooming).
   e.stopPropagation();
+};
+
+/**
+ * Select a category using the scroll position
+ * @param  {number} pos The scroll position.
+ */
+Blockly.HorizontalFlyout.prototype.selectCategoryByScrollPosition = function(pos) {
+  var scaledPos = pos / this.workspace_.scale;
+  // Traverse the array of scroll positions in reverse, so we can select the lowest
+  // category that the scroll position is below
+  for (var i=this.categoryScrollPositions.length-1; i>=0; i--) {
+    if (scaledPos > this.categoryScrollPositions[i].position) {
+      this.parentToolbox_.selectCategoryByName(this.categoryScrollPositions[i].categoryName);
+      return;
+    }
+  }
 };
 
 /**
