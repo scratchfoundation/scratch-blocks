@@ -298,62 +298,6 @@ Blockly.Blocks.defaultToolbox = '<xml id="toolbox-categories" style="display: no
     '</block>'+
     '<block type="sound_tempo" id="sound_tempo"></block>'+
   '</category>'+
-  '<category name="Pen" colour="#00B295" secondaryColour="#0B8E69">'+
-    '<block type="pen_clear" id="pen_clear"></block>'+
-    '<block type="pen_stamp" id="pen_stamp"></block>'+
-    '<block type="pen_pendown" id="pen_pendown"></block>'+
-    '<block type="pen_penup" id="pen_penup"></block>'+
-    '<block type="pen_setpencolortocolor" id="pen_setpencolortocolor">'+
-      '<value name="COLOR">'+
-        '<shadow type="colour_picker">'+
-        '</shadow>'+
-      '</value>'+
-    '</block>'+
-    '<block type="pen_changepencolorby" id="pen_changepencolorby">'+
-      '<value name="COLOR">'+
-        '<shadow type="math_number">'+
-          '<field name="NUM">10</field>'+
-        '</shadow>'+
-      '</value>'+
-    '</block>'+
-    '<block type="pen_setpencolortonum" id="pen_setpencolortonum">'+
-      '<value name="COLOR">'+
-        '<shadow type="math_number">'+
-          '<field name="NUM">0</field>'+
-        '</shadow>'+
-      '</value>'+
-    '</block>'+
-    '<block type="pen_changepenshadeby" id="pen_changepenshadeby">'+
-      '<value name="SHADE">'+
-        '<shadow type="math_number">'+
-          '<field name="NUM">10</field>'+
-        '</shadow>'+
-      '</value>'+
-    '</block>'+
-    '<block type="pen_setpenshadeto" id="pen_setpenshadeto">'+
-      '<value name="SHADE">'+
-        '<shadow type="math_number">'+
-          '<field name="NUM">50</field>'+
-        '</shadow>'+
-      '</value>'+
-    '</block>'+
-    '<block type="pen_changepensizeby" id="pen_changepensizeby">'+
-      '<value name="SIZE">'+
-        '<shadow type="math_number">'+
-          '<field name="NUM">1</field>'+
-        '</shadow>'+
-      '</value>'+
-    '</block>'+
-    '<block type="pen_setpensizeto" id="pen_setpensizeto">'+
-      '<value name="SIZE">'+
-        '<shadow type="math_number">'+
-          '<field name="NUM">1</field>'+
-        '</shadow>'+
-      '</value>'+
-    '</block>'+
-  '</category>'+
-  '<category name="Data" colour="#FF8C1A" secondaryColour="#DB6E00" custom="VARIABLE">' +
-  '</category>' +
   '<category name="Events" colour="#FFD500" secondaryColour="#CC9900">'+
     '<block type="event_whenflagclicked" id="event_whenflagclicked"></block>'+
     '<block type="event_whenkeypressed" id="event_whenkeypressed">'+
@@ -434,31 +378,85 @@ Blockly.Blocks.defaultToolbox = '<xml id="toolbox-categories" style="display: no
         '<shadow type="sensing_distancetomenu"></shadow>'+
       '</value>'+
     '</block>'+
-  '<block type="sensing_keypressed" id="sensing_keypressed">'+
-      '<value name="KEY_OPTION">'+
-        '<shadow type="sensing_keyoptions"></shadow>'+
+    '<block type="sensing_keypressed" id="sensing_keypressed">'+
+        '<value name="KEY_OPTION">'+
+          '<shadow type="sensing_keyoptions"></shadow>'+
+        '</value>'+
+    '</block>'+
+    '<block type="sensing_mousedown" id="sensing_mousedown"></block>'+
+    '<block type="sensing_mousex" id="sensing_mousex"></block>'+
+    '<block type="sensing_mousey" id="sensing_mousey"></block>'+
+    '<block type="sensing_loudness" id="sensing_loudness"></block>'+
+    '<block type="sensing_timer" id="sensing_timer"></block>'+
+    '<block type="sensing_resettimer" id="sensing_resettimer"></block>'+
+    '<block type="sensing_of" id="sensing_of">'+
+      '<value name="PROPERTY">'+
+        '<shadow type="sensing_of_property_menu"></shadow>'+
       '</value>'+
-  '</block>'+
-  '<block type="sensing_mousedown" id="sensing_mousedown"></block>'+
-  '<block type="sensing_mousex" id="sensing_mousex"></block>'+
-  '<block type="sensing_mousey" id="sensing_mousey"></block>'+
-  '<block type="sensing_loudness" id="sensing_loudness"></block>'+
-  '<block type="sensing_timer" id="sensing_timer"></block>'+
-  '<block type="sensing_resettimer" id="sensing_resettimer"></block>'+
-  '<block type="sensing_of" id="sensing_of">'+
-    '<value name="PROPERTY">'+
-      '<shadow type="sensing_of_property_menu"></shadow>'+
-    '</value>'+
-    '<value name="OBJECT">'+
-      '<shadow type="sensing_of_object_menu"></shadow>'+
-    '</value>'+
-  '</block>'+
-  '<block type="sensing_current" id="sensing_current">'+
-    '<value name="CURRENTMENU">'+
-      '<shadow type="sensing_currentmenu"></shadow>'+
-    '</value>'+
-  '</block>'+
-  '<block type="sensing_dayssince2000" id="sensing_dayssince2000"></block>'+
+      '<value name="OBJECT">'+
+        '<shadow type="sensing_of_object_menu"></shadow>'+
+      '</value>'+
+    '</block>'+
+    '<block type="sensing_current" id="sensing_current">'+
+      '<value name="CURRENTMENU">'+
+        '<shadow type="sensing_currentmenu"></shadow>'+
+      '</value>'+
+    '</block>'+
+    '<block type="sensing_dayssince2000" id="sensing_dayssince2000"></block>'+
+  '</category>'+
+  '<category name="Pen" colour="#00B295" secondaryColour="#0B8E69">'+
+    '<block type="pen_clear" id="pen_clear"></block>'+
+    '<block type="pen_stamp" id="pen_stamp"></block>'+
+    '<block type="pen_pendown" id="pen_pendown"></block>'+
+    '<block type="pen_penup" id="pen_penup"></block>'+
+    '<block type="pen_setpencolortocolor" id="pen_setpencolortocolor">'+
+      '<value name="COLOR">'+
+        '<shadow type="colour_picker">'+
+        '</shadow>'+
+      '</value>'+
+    '</block>'+
+    '<block type="pen_changepencolorby" id="pen_changepencolorby">'+
+      '<value name="COLOR">'+
+        '<shadow type="math_number">'+
+          '<field name="NUM">10</field>'+
+        '</shadow>'+
+      '</value>'+
+    '</block>'+
+    '<block type="pen_setpencolortonum" id="pen_setpencolortonum">'+
+      '<value name="COLOR">'+
+        '<shadow type="math_number">'+
+          '<field name="NUM">0</field>'+
+        '</shadow>'+
+      '</value>'+
+    '</block>'+
+    '<block type="pen_changepenshadeby" id="pen_changepenshadeby">'+
+      '<value name="SHADE">'+
+        '<shadow type="math_number">'+
+          '<field name="NUM">10</field>'+
+        '</shadow>'+
+      '</value>'+
+    '</block>'+
+    '<block type="pen_setpenshadeto" id="pen_setpenshadeto">'+
+      '<value name="SHADE">'+
+        '<shadow type="math_number">'+
+          '<field name="NUM">50</field>'+
+        '</shadow>'+
+      '</value>'+
+    '</block>'+
+    '<block type="pen_changepensizeby" id="pen_changepensizeby">'+
+      '<value name="SIZE">'+
+        '<shadow type="math_number">'+
+          '<field name="NUM">1</field>'+
+        '</shadow>'+
+      '</value>'+
+    '</block>'+
+    '<block type="pen_setpensizeto" id="pen_setpensizeto">'+
+      '<value name="SIZE">'+
+        '<shadow type="math_number">'+
+          '<field name="NUM">1</field>'+
+        '</shadow>'+
+      '</value>'+
+    '</block>'+
   '</category>'+
   '<category name="Operators" colour="#40BF4A" secondaryColour="#389438">'+
     '<block type="operator_add" id="operator_add">'+
@@ -630,4 +628,6 @@ Blockly.Blocks.defaultToolbox = '<xml id="toolbox-categories" style="display: no
       '</value>'+
     '</block>'+
   '</category>'+
+  '<category name="Data" colour="#FF8C1A" secondaryColour="#DB6E00" custom="VARIABLE">' +
+  '</category>' +
   '</xml>';
