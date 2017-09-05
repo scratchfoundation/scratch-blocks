@@ -184,11 +184,11 @@ Blockly.FieldColour.prototype.setColumns = function(columns) {
  * Activate the eyedropper, passing in a callback for setting the field value.
  * @private
  */
-Blockly.FieldColour.prototype.activateEyedropperInternal_ = function () {
-    var thisField = this;
-    Blockly.FieldColour.activateEyedropper(function(value) {
-      thisField.setValue(value);
-    });
+Blockly.FieldColour.prototype.activateEyedropperInternal_ = function() {
+  var thisField = this;
+  Blockly.FieldColour.activateEyedropper(function(value) {
+    thisField.setValue(value);
+  });
 };
 
 /**
