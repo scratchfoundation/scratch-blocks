@@ -31,8 +31,6 @@ goog.require('goog.dom');
 goog.require('goog.events');
 goog.require('goog.style');
 goog.require('goog.ui.ColorPicker');
-goog.require('goog.ui.Button');
-
 
 /**
  * Class for a colour input field.
@@ -156,6 +154,11 @@ Blockly.FieldColour.COLUMNS = 7;
 Blockly.FieldColour.activateEyedropper = null;
 
 /**
+ * Path to the eyedropper svg icon.
+ */
+Blockly.FieldColour.EYEDROPPER_PATH = 'eyedropper.svg';
+
+/**
  * Set a custom colour grid for this field.
  * @param {Array.<string>} colours Array of colours for this block,
  *     or null to use default (Blockly.FieldColour.COLOURS).
@@ -175,6 +178,17 @@ Blockly.FieldColour.prototype.setColours = function(colours) {
 Blockly.FieldColour.prototype.setColumns = function(columns) {
   this.columns_ = columns;
   return this;
+};
+
+/**
+ * Activate the eyedropper, passing in a callback for setting the field value.
+ * @private
+ */
+Blockly.FieldColour.prototype.activateEyedropperInternal_ = function () {
+    var thisField = this;
+    Blockly.FieldColour.activateEyedropper(function(value) {
+      thisField.setValue(value);
+    });
 };
 
 /**
@@ -225,16 +239,16 @@ Blockly.FieldColour.prototype.showEditor_ = function() {
                              this.sourceBlock_.RTL);
 
   if (Blockly.FieldColour.activateEyedropper) {
-    var button = new goog.ui.Button('Eyedropper');
-    button.render(div);
-    var thisField = this;
-    Blockly.FieldColour.eyedropperEventKey_ = goog.events.listen(button,
-         goog.ui.Component.EventType.ACTION,
-         function() {
-           Blockly.FieldColour.activateEyedropper(function(value) {
-             thisField.setValue(value);
-           });
-         });
+    var button = document.createElement('button');
+    var image = document.createElement('img');
+    image.src = Blockly.mainWorkspace.options.pathToMedia + Blockly.FieldColour.EYEDROPPER_PATH;
+    button.appendChild(image);
+    div.appendChild(button);
+    Blockly.FieldColour.eyedropperEventData_ = Blockly.bindEventWithChecks_(button,
+      'mousedown',
+      this,
+      this.activateEyedropperInternal_
+    );
   }
 
   // Configure event handler.
@@ -262,8 +276,8 @@ Blockly.FieldColour.widgetDispose_ = function() {
   if (Blockly.FieldColour.changeEventKey_) {
     goog.events.unlistenByKey(Blockly.FieldColour.changeEventKey_);
   }
-  if (Blockly.FieldColour.eyedropperEventKey_) {
-    goog.events.unlistenByKey(Blockly.FieldColour.eyedropperEventKey_);
+  if (Blockly.FieldColour.eyedropperEventData_) {
+    Blockly.unbindEvent_(Blockly.FieldColour.eyedropperEventData_);
   }
   Blockly.Events.setGroup(false);
 };
