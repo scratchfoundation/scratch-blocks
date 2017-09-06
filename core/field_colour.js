@@ -150,8 +150,9 @@ Blockly.FieldColour.COLUMNS = 7;
  * Function to be called if eyedropper can be activated.
  * If defined, an eyedropper button will be added to the color picker.
  * The button calls this function with a callback to update the field value.
+ * BEWARE: This is not a stable API, so it is being marked as private. It may change.
  */
-Blockly.FieldColour.activateEyedropper = null;
+Blockly.FieldColour.activateEyedropper_ = null;
 
 /**
  * Path to the eyedropper svg icon.
@@ -186,7 +187,7 @@ Blockly.FieldColour.prototype.setColumns = function(columns) {
  */
 Blockly.FieldColour.prototype.activateEyedropperInternal_ = function() {
   var thisField = this;
-  Blockly.FieldColour.activateEyedropper(function(value) {
+  Blockly.FieldColour.activateEyedropper_(function(value) {
     thisField.setValue(value);
   });
 };
@@ -238,7 +239,7 @@ Blockly.FieldColour.prototype.showEditor_ = function() {
   Blockly.WidgetDiv.position(xy.x, xy.y, windowSize, scrollOffset,
                              this.sourceBlock_.RTL);
 
-  if (Blockly.FieldColour.activateEyedropper) {
+  if (Blockly.FieldColour.activateEyedropper_) {
     var button = document.createElement('button');
     var image = document.createElement('img');
     image.src = Blockly.mainWorkspace.options.pathToMedia + Blockly.FieldColour.EYEDROPPER_PATH;
