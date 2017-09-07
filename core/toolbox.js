@@ -293,7 +293,7 @@ Blockly.Toolbox.prototype.getClientRect = function() {
   var x = toolboxRect.left;
   var y = toolboxRect.top;
   var width = this.getWidth();
-  var height = toolboxRect.height;
+  var height = toolboxRect.height + this.flyout_.height_;
 
   // Assumes that the toolbox is on the SVG edge.  If this changes
   // (e.g. toolboxes in mutators) then this code will need to be more complex.
@@ -306,7 +306,7 @@ Blockly.Toolbox.prototype.getClientRect = function() {
     return new goog.math.Rect(-BIG_NUM, -BIG_NUM, 2 * BIG_NUM,
         BIG_NUM + y + height);
   } else {  // Bottom
-    return new goog.math.Rect(0, y, 2 * BIG_NUM, BIG_NUM + width);
+    return new goog.math.Rect(0, y - height, 2 * BIG_NUM, BIG_NUM);
   }
 };
 
