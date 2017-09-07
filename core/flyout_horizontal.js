@@ -284,7 +284,7 @@ Blockly.HorizontalFlyout.prototype.step = function() {
  * @private
  */
 Blockly.HorizontalFlyout.prototype.wheel_ = function(e) {
-    // remove scrollTarget to stop auto scrolling in step()
+  // remove scrollTarget to stop auto scrolling in step()
   this.scrollTarget = null;
 
   var delta = e.deltaX;
