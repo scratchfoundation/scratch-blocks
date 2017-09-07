@@ -289,6 +289,12 @@ Blockly.HorizontalFlyout.prototype.wheel_ = function(e) {
 
   var delta = e.deltaX;
 
+  // If we're scrolling more vertically than horizontally,
+  // use the vertical scroll delta instead
+  if (Math.abs(e.deltaY) > Math.abs(delta)) {
+    delta = e.deltaY;
+  }
+
   if (delta) {
     // Firefox's mouse wheel deltas are a tenth that of Chrome/Safari.
     // DeltaMode is 1 for a mouse wheel, but not for a trackpad scroll event
