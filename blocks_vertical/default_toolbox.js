@@ -457,6 +457,20 @@ Blockly.Blocks.defaultToolbox = '<xml id="toolbox-categories" style="display: no
         '</shadow>'+
       '</value>'+
     '</block>'+
+    '<block type="pen_changepentransparencyby" id="pen_changepentransparencyby">'+
+      '<value name="TRANSPARENCY">'+
+        '<shadow type="math_number">'+
+          '<field name="NUM">10</field>'+
+        '</shadow>'+
+      '</value>'+
+    '</block>'+
+    '<block type="pen_setpentransparencyto" id="pen_setpentransparencyto">'+
+      '<value name="TRANSPARENCY">'+
+        '<shadow type="math_number">'+
+          '<field name="NUM">50</field>'+
+        '</shadow>'+
+      '</value>'+
+    '</block>'+
   '</category>'+
   '<category name="Operators" colour="#40BF4A" secondaryColour="#389438">'+
     '<block type="operator_add" id="operator_add">'+
