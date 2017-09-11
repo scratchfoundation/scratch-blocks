@@ -58,6 +58,10 @@ Blockly.inject = function(container, opt_options) {
   var subContainer = goog.dom.createDom('div', 'injectionDiv');
   container.appendChild(subContainer);
 
+  // Open the Field text cache and leave it open. See this issue for more information
+  // https://github.com/LLK/scratch-blocks/issues/1004
+  Blockly.Field.startCache();
+
   var svg = Blockly.createDom_(subContainer, options);
 
   // Create surfaces for dragging things. These are optimizations
