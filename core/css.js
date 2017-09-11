@@ -827,6 +827,7 @@ Blockly.Css.CONTENT = [
     'position: relative;',
     'height: 13px;',
     'width: 15px;',
+    'border: 1px solid #ccc;',
   '}',
 
   '.blocklyWidgetDiv .goog-palette-cell-hover .goog-palette-colorswatch {',
