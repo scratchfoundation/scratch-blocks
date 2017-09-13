@@ -342,13 +342,10 @@ Blockly.Toolbox.prototype.setSelectedItem = function(item) {
     this.selectedItem_.setSelected(true);
     // Scroll flyout to the top of the selected category
     var categoryName = item.name_;
-    for (var i=0; i<this.flyout_.buttons_.length; i++) {
-      if (this.flyout_.buttons_[i].text_ === categoryName) {
-        if (this.horizontalLayout_) {
-          this.flyout_.scrollTo(this.flyout_.buttons_[i].position_.x);
-        } else {
-          this.flyout_.scrollTo(this.flyout_.buttons_[i].position_.y);
-        }
+    var scrollPositions = this.flyout_.categoryScrollPositions;
+    for (var i=0; i<scrollPositions.length; i++) {
+      if (categoryName === scrollPositions[i].categoryName) {
+        this.flyout_.scrollTo(scrollPositions[i].position);
         return;
       }
     }
