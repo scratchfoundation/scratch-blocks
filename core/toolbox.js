@@ -188,7 +188,7 @@ Blockly.Toolbox.prototype.populate_ = function(newTree) {
  */
 Blockly.Toolbox.prototype.showAll = function() {
   var allContents = [];
-  for (var i=0; i<this.categoryMenu_.categories_.length; i++) {
+  for (var i = 0; i < this.categoryMenu_.categories_.length; i++) {
     var category = this.categoryMenu_.categories_[i];
 
     // create a label node to go at the top of the category
@@ -343,7 +343,7 @@ Blockly.Toolbox.prototype.setSelectedItem = function(item) {
     // Scroll flyout to the top of the selected category
     var categoryName = item.name_;
     var scrollPositions = this.flyout_.categoryScrollPositions;
-    for (var i=0; i<scrollPositions.length; i++) {
+    for (var i = 0; i < scrollPositions.length; i++) {
       if (categoryName === scrollPositions[i].categoryName) {
         this.flyout_.scrollTo(scrollPositions[i].position);
         return;
@@ -357,7 +357,7 @@ Blockly.Toolbox.prototype.setSelectedItem = function(item) {
  * @param {string} name The name of the category to select.
  */
 Blockly.Toolbox.prototype.selectCategoryByName = function(name) {
-  for (var i=0; i<this.categoryMenu_.categories_.length; i++) {
+  for (var i = 0; i < this.categoryMenu_.categories_.length; i++) {
     var category = this.categoryMenu_.categories_[i];
     if (name === category.name_) {
       this.selectedItem_.setSelected(false);
