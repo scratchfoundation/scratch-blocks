@@ -74,6 +74,13 @@ Blockly.FlyoutButton = function(workspace, targetWorkspace, xml, isLabel) {
   this.isLabel_ = isLabel;
 
   /**
+   * Whether this button is a label at the top of a category.
+   * @type {boolean}
+   * @private
+   */
+  this.isCategoryLabel_ = xml.getAttribute('category-label') === 'true';
+
+  /**
    * Function to call when this button is clicked.
    * @type {function(!Blockly.FlyoutButton)}
    * @private
