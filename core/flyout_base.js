@@ -522,15 +522,23 @@ Blockly.Flyout.prototype.show = function(xmlList) {
   this.reflowWrapper_ = this.reflow.bind(this);
   this.workspace_.addChangeListener(this.reflowWrapper_);
 
-  // make a map of scrollbar positions to category names
-  // so that scrolling the flyout can cause a category to be selected
+  this.recordCategoryScrollPositions_();
+};
+
+/**
+ * Store an array of with category names and scrollbar positions.
+ * This is used when scrolling the flyout to cause a category to be selected.
+ * @private
+ */
+Blockly.Flyout.prototype.recordCategoryScrollPositions_ = function() {
   this.categoryScrollPositions = [];
   for (var i=0; i<this.buttons_.length; i++) {
-    var category = this.buttons_[i];
-    if (category.isLabel_) {
+    if (this.buttons_[i].isCategoryLabel_) {
+      var categoryLabel = this.buttons_[i];
       this.categoryScrollPositions.push({
-        categoryName:category.text_,
-        position:this.horizontalLayout_ ? category.position_.x : category.position_.y
+        categoryName: categoryLabel.text_,
+        position: this.horizontalLayout_ ?
+          categoryLabel.position_.x : categoryLabel.position_.y
       });
     }
   }
