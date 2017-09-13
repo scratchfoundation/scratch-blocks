@@ -447,16 +447,17 @@ Blockly.Flyout.prototype.show = function(xmlList) {
   var gaps = [];
   this.permanentlyDisabled_.length = 0;
   for (var i = 0, xml; xml = xmlList[i]; i++) {
-    // Handle the dynamic category for variables, represented by a name instead of a list of XML.
+    // Handle dynamic categories, represented by a name instead of a list of XML.
     // Look up the correct category generation function and call that to get a
     // valid XML list.
     if (typeof xmlList[i] === 'string') {
       var fnToApply = this.workspace_.targetWorkspace.getToolboxCategoryCallback(
           xmlList[i]);
       var newList = fnToApply(this.workspace_.targetWorkspace);
-      // insert the new list of variable blocks in the middle of the list
-      // we use splice to insert at index i, and remove a single element (the placeholder string)
-      // because the spread operator (...) is not available, use apply and concat the array
+      // Insert the new list of blocks in the middle of the list.
+      // We use splice to insert at index i, and remove a single element
+      // (the placeholder string). Because the spread operator (...) is not available,
+      // use apply and concat the array.
       xmlList.splice.apply(xmlList, [i, 1].concat(newList));
       xml = xmlList[i];
     }
