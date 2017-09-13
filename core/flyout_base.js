@@ -456,8 +456,8 @@ Blockly.Flyout.prototype.show = function(xmlList) {
       var newList = fnToApply(this.workspace_.targetWorkspace);
       // Insert the new list of blocks in the middle of the list.
       // We use splice to insert at index i, and remove a single element
-      // (the placeholder string). Because the spread operator (...) is not available,
-      // use apply and concat the array.
+      // (the placeholder string). Because the spread operator (...) is not
+      // available, use apply and concat the array.
       xmlList.splice.apply(xmlList, [i, 1].concat(newList));
       xml = xmlList[i];
     }
