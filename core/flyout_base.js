@@ -532,7 +532,7 @@ Blockly.Flyout.prototype.show = function(xmlList) {
  */
 Blockly.Flyout.prototype.recordCategoryScrollPositions_ = function() {
   this.categoryScrollPositions = [];
-  for (var i=0; i<this.buttons_.length; i++) {
+  for (var i = 0; i < this.buttons_.length; i++) {
     if (this.buttons_[i].isCategoryLabel_) {
       var categoryLabel = this.buttons_[i];
       this.categoryScrollPositions.push({

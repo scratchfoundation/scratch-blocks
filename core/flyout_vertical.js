@@ -410,7 +410,7 @@ Blockly.VerticalFlyout.prototype.selectCategoryByScrollPosition = function(pos) 
   var scaledPos = pos / this.workspace_.scale;
   // Traverse the array of scroll positions in reverse, so we can select the lowest
   // category that the scroll position is below
-  for (var i=this.categoryScrollPositions.length-1; i>=0; i--) {
+  for (var i = this.categoryScrollPositions.length - 1; i >= 0; i--) {
     if (scaledPos > this.categoryScrollPositions[i].position) {
       this.parentToolbox_.selectCategoryByName(this.categoryScrollPositions[i].categoryName);
       return;
