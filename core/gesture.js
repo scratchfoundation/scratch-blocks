@@ -510,8 +510,10 @@ Blockly.Gesture.prototype.cancel = function() {
   // Disposing of a block cancels in-progress drags, but dragging to a delete
   // area disposes of a block and leads to recursive disposal. Break that cycle.
   if (this.isEnding_) {
+    console.log('Trying to cancel a gesture recursively.');
     return;
   }
+  this.isEnding_ = true;
   Blockly.longStop_();
   if (this.isDraggingBlock_) {
     this.blockDragger_.endBlockDrag(this.mostRecentEvent_,
