@@ -246,7 +246,7 @@ Blockly.HorizontalFlyout.prototype.scrollToStart = function() {
 
 /**
  * Scroll the flyout to a position.
- * @param {Number} pos The targeted scroll position.
+ * @param {number} pos The targeted scroll position.
  */
 Blockly.HorizontalFlyout.prototype.scrollTo = function(pos) {
   this.scrollTarget = pos * this.workspace_.scale;
