@@ -124,7 +124,7 @@ Blockly.Toolbox.prototype.init = function() {
           Blockly.hideChaff(true);
         }
         Blockly.Touch.clearTouchIdentifier();  // Don't block future drags.
-      });
+      }, /*opt_noCaptureIdentifier*/ false, /*opt_noPreventDefault*/ true);
 
   this.createFlyout_();
   this.categoryMenu_ = new Blockly.Toolbox.CategoryMenu(this, this.HtmlDiv);
@@ -540,7 +540,7 @@ Blockly.Toolbox.Category.prototype.createDom = function() {
   this.item_.appendChild(this.bubble_);
   this.item_.appendChild(this.label_);
   this.parentHtml_.appendChild(this.item_);
-  Blockly.bindEvent_(this.item_, 'mousedown', toolbox,
+  Blockly.bindEvent_(this.item_, 'mouseup', toolbox,
     toolbox.setSelectedItemFactory(this));
 };
 
