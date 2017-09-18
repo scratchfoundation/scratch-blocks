@@ -229,6 +229,14 @@ Blockly.Flyout.prototype.verticalOffset_ = 0;
 Blockly.Flyout.prototype.dragAngleRange_ = 70;
 
 /**
+ * The fraction of the distance to the scroll target to move the flyout on
+ * each animation frame, when auto-scrolling. Values closer to 1.0 will make
+ * the scroll animation complete faster. Use 1.0 for no animation.
+ * @type {number}
+ */
+Blockly.Flyout.prototype.scrollAnimationFraction = 0.3;
+
+/**
  * Creates the flyout's DOM.  Only needs to be called once. The flyout can
  * either exist as its own svg element or be a g element nested inside a
  * separate svg element.
@@ -560,7 +568,7 @@ Blockly.Flyout.prototype.stepScrollAnimation = function() {
     this.scrollbar_.set(this.scrollTarget);
     return;
   }
-  this.scrollbar_.set(scrollPos + diff * 0.3);
+  this.scrollbar_.set(scrollPos + diff * this.scrollAnimationFraction);
 
   // Polyfilled by goog.dom.animationFrame.polyfill
   requestAnimationFrame(this.stepScrollAnimation.bind(this));
