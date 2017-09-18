@@ -553,6 +553,23 @@ Blockly.Flyout.prototype.recordCategoryScrollPositions_ = function() {
 };
 
 /**
+ * Select a category using the scroll position.
+ * @param  {number} pos The scroll position.
+ * @package
+ */
+Blockly.Flyout.prototype.selectCategoryByScrollPosition = function(pos) {
+  var scaledPos = pos / this.workspace_.scale;
+  // Traverse the array of scroll positions in reverse, so we can select the furthest
+  // category that the scroll position is beyond
+  for (var i = this.categoryScrollPositions.length - 1; i >= 0; i--) {
+    if (scaledPos > this.categoryScrollPositions[i].position) {
+      this.parentToolbox_.selectCategoryByName(this.categoryScrollPositions[i].categoryName);
+      return;
+    }
+  }
+};
+
+/**
  * Step the scrolling animation by scrolling a fraction of the way to
  * a scroll target, and request the next frame if necessary.
  * @package

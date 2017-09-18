@@ -307,22 +307,6 @@ Blockly.HorizontalFlyout.prototype.wheel_ = function(e) {
 };
 
 /**
- * Select a category using the scroll position
- * @param  {number} pos The scroll position.
- */
-Blockly.HorizontalFlyout.prototype.selectCategoryByScrollPosition = function(pos) {
-  var scaledPos = pos / this.workspace_.scale;
-  // Traverse the array of scroll positions in reverse, so we can select the lowest
-  // category that the scroll position is below
-  for (var i = this.categoryScrollPositions.length - 1; i >= 0; i--) {
-    if (scaledPos > this.categoryScrollPositions[i].position) {
-      this.parentToolbox_.selectCategoryByName(this.categoryScrollPositions[i].categoryName);
-      return;
-    }
-  }
-};
-
-/**
  * Lay out the blocks in the flyout.
  * @param {!Array.<!Object>} contents The blocks and buttons to lay out.
  * @param {!Array.<number>} gaps The visible gaps between blocks.
