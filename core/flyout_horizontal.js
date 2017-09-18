@@ -272,8 +272,11 @@ Blockly.HorizontalFlyout.prototype.wheel_ = function(e) {
 
   var delta = e.deltaX;
 
-  // If we're scrolling more vertically than horizontally,
-  // use the vertical scroll delta instead
+  // If we're scrolling more vertically than horizontally, use the vertical
+  // scroll delta instead. This allows people using a mouse wheel (which can
+  // only scroll vertically) to scroll the horizontal flyout. It also allows
+  // trackpad users to scroll it by scrolling either horizontally or
+  // vertically.
   if (Math.abs(e.deltaY) > Math.abs(delta)) {
     delta = e.deltaY;
   }
