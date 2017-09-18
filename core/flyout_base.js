@@ -547,6 +547,7 @@ Blockly.Flyout.prototype.recordCategoryScrollPositions_ = function() {
 /**
  * Step the scrolling animation by scrolling a fraction of the way to
  * a scroll target, and request the next frame if necessary.
+ * @package
  */
 Blockly.Flyout.prototype.stepScrollAnimation = function() {
   if (!this.scrollTarget) {
