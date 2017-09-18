@@ -346,25 +346,7 @@ Blockly.VerticalFlyout.prototype.scrollTo = function(pos) {
   var viewHeight = metrics.viewHeight;
   this.scrollTarget = Math.min(this.scrollTarget, contentHeight - viewHeight);
 
-  this.step();
-};
-
-/**
- * Step the scrolling animation by scrolling a fraction of the way to
- * a scroll target, and request the next frame if necessary.
- */
-Blockly.VerticalFlyout.prototype.step = function() {
-  if (!this.scrollTarget) return;
-  var scrollYPos = -this.workspace_.scrollY;
-  var diff = this.scrollTarget - scrollYPos;
-  if (Math.abs(diff) < 1) {
-    this.scrollbar_.set(this.scrollTarget);
-    return;
-  }
-  this.scrollbar_.set(scrollYPos + diff * 0.3);
-
-  // Polyfilled by goog.dom.animationFrame.polyfill
-  requestAnimationFrame(this.step.bind(this));
+  this.stepScrollAnimation();
 };
 
 /**

@@ -545,6 +545,27 @@ Blockly.Flyout.prototype.recordCategoryScrollPositions_ = function() {
 };
 
 /**
+ * Step the scrolling animation by scrolling a fraction of the way to
+ * a scroll target, and request the next frame if necessary.
+ */
+Blockly.Flyout.prototype.stepScrollAnimation = function() {
+  if (!this.scrollTarget) {
+    return;
+  }
+  var scrollPos = this.horizontalLayout_ ?
+    -this.workspace_.scrollX : -this.workspace_.scrollY;
+  var diff = this.scrollTarget - scrollPos;
+  if (Math.abs(diff) < 1) {
+    this.scrollbar_.set(this.scrollTarget);
+    return;
+  }
+  this.scrollbar_.set(scrollPos + diff * 0.3);
+
+  // Polyfilled by goog.dom.animationFrame.polyfill
+  requestAnimationFrame(this.stepScrollAnimation.bind(this));
+};
+
+/**
  * Delete blocks and background buttons from a previous showing of the flyout.
  * @private
  */
