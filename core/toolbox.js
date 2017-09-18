@@ -185,6 +185,7 @@ Blockly.Toolbox.prototype.populate_ = function(newTree) {
 
 /**
  * Show all blocks for all categories in the flyout
+ * @private
  */
 Blockly.Toolbox.prototype.showAll = function() {
   var allContents = [];
