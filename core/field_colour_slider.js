@@ -123,6 +123,8 @@ Blockly.FieldColourSlider.prototype.createColourStops_ = function(channel) {
       case 'brightness':
         stops.push(goog.color.hsvToHex(hsv[0], hsv[1], 255 * n / 360));
         break;
+      default:
+        throw new Error("Unknown channel for colour sliders: " + channel);
     }
   }
   return stops;
