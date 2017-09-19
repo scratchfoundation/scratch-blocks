@@ -296,6 +296,9 @@ Blockly.Toolbox.prototype.getClientRect = function() {
   var x = toolboxRect.left;
   var y = toolboxRect.top;
   var width = this.getWidth();
+  // The height here is the combined height of the category menu and flyout.
+  // It is used get a correct delete area when the toolbox is in horizontal
+  // mode (on the top or bottom).
   var height = toolboxRect.height + this.flyout_.height_;
 
   // Assumes that the toolbox is on the SVG edge.  If this changes
