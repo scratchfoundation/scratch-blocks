@@ -359,6 +359,7 @@ Blockly.Toolbox.prototype.setSelectedItem = function(item) {
 /**
  * Select a category by name.
  * @param {string} name The name of the category to select.
+ * @package
  */
 Blockly.Toolbox.prototype.selectCategoryByName = function(name) {
   for (var i = 0; i < this.categoryMenu_.categories_.length; i++) {
