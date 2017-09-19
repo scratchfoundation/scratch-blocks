@@ -107,6 +107,7 @@ Blockly.FieldColourSlider.prototype.setValue = function(colour, opt_fromSliders)
  * Create the hue, saturation or value CSS gradient for the slide backgrounds.
  * @param {string} channel – Either "hue", "saturation" or "value".
  * @return {string} Array colour hex colour stops for the given channel
+ * @private
  */
 Blockly.FieldColourSlider.prototype.createColourStops_ = function(channel) {
   var hsv = goog.color.hexToHsv(this.getValue());
@@ -131,23 +132,25 @@ Blockly.FieldColourSlider.prototype.createColourStops_ = function(channel) {
  * Set the gradient CSS properties for the given node and channel
  * @param {Node} node - The DOM node the gradient will be set on.
  * @param {string} channel – Either "hue", "saturation" or "value".
+ * @private
  */
 Blockly.FieldColourSlider.prototype.setGradient_ = function(node, channel) {
-  var stops = this.createColourStops_(channel);
+  var gradient = this.createColourStops_(channel).join(',');
   goog.style.setStyle(node, 'background',
-        '-moz-linear-gradient(left, ' + stops.join(',') + ')');
+        '-moz-linear-gradient(left, ' + gradient + ')');
   goog.style.setStyle(node, 'background',
-        '-webkit-linear-gradient(left, ' + stops.join(',') + ')');
+        '-webkit-linear-gradient(left, ' + gradient + ')');
   goog.style.setStyle(node, 'background',
-        '-o-linear-gradient(left, ' + stops.join(',') + ')');
+        '-o-linear-gradient(left, ' + gradient + ')');
   goog.style.setStyle(node, 'background',
-        '-ms-linear-gradient(left, ' + stops.join(',') + ')');
+        '-ms-linear-gradient(left, ' + gradient + ')');
   goog.style.setStyle(node, 'background',
-        'linear-gradient(left, ' + stops.join(',') + ')');
+        'linear-gradient(left, ' + gradient + ')');
 };
 
 /**
  * Update the readouts and slider backgrounds after value has changed.
+ * @private
  */
 Blockly.FieldColourSlider.prototype.updateDom_ = function() {
   if (this.hueSlider_) {
