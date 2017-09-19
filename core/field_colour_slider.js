@@ -335,11 +335,7 @@ Blockly.FieldColourSlider.prototype.showEditor_ = function() {
   this.setValue(this.getValue());
 };
 
-/**
- * Hide the colour palette.
- * @private
- */
-Blockly.FieldColourSlider.widgetDispose_ = function() {
+Blockly.FieldColourSlider.prototype.dispose = function() {
   if (Blockly.FieldColourSlider.hueChangeEventKey_) {
     goog.events.unlistenByKey(Blockly.FieldColourSlider.hueChangeEventKey_);
   }
@@ -353,4 +349,5 @@ Blockly.FieldColourSlider.widgetDispose_ = function() {
     Blockly.unbindEvent_(Blockly.FieldColourSlider.eyedropperEventData_);
   }
   Blockly.Events.setGroup(false);
+  Blockly.FieldColourSlider.superClass_.dispose.call(this);
 };
