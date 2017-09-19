@@ -823,18 +823,18 @@ Blockly.Css.CONTENT = [
     'cursor: pointer;',
   '}',
 
-  '.scratchColorPickerLabel {',
+  '.scratchColourPickerLabel {',
     'font-family: "Helvetica Neue", Helvetica, sans-serif;',
     'font-size: 0.65rem;',
     'color: $colour_toolboxText;',
     'margin: 8px;',
   '}',
 
-  '.scratchColorPickerLabelText {',
+  '.scratchColourPickerLabelText {',
     'font-weight: bold;',
   '}',
 
-  '.scratchColorPickerReadout {',
+  '.scratchColourPickerReadout {',
     'margin-left: 10px;',
   '}',
 

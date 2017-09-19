@@ -468,7 +468,8 @@ Blockly.BlockSvg.prototype.updateColour = function() {
     // Special case: if we contain a colour field, set to a special stroke colour.
     if (this.inputList[0] &&
         this.inputList[0].fieldRow[0] &&
-        this.inputList[0].fieldRow[0] instanceof Blockly.FieldColour) {
+        (this.inputList[0].fieldRow[0] instanceof Blockly.FieldColour ||
+        this.inputList[0].fieldRow[0] instanceof Blockly.FieldColourSlider)) {
       strokeColour = Blockly.Colours.colourPickerStroke;
     }
   }
