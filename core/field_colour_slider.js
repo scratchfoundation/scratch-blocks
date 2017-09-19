@@ -51,12 +51,15 @@ Blockly.FieldColourSlider = function(colour, opt_validator) {
 };
 goog.inherits(Blockly.FieldColourSlider, Blockly.Field);
 
+
 /**
  * Function to be called if eyedropper can be activated.
- * If defined, an eyedropper button will be added to the colour picker.
+ * If defined, an eyedropper button will be added to the color picker.
  * The button calls this function with a callback to update the field value.
+ * BEWARE: This is not a stable API, so it is being marked as private. It may change.
+ * @private
  */
-Blockly.FieldColourSlider.activateEyedropper = null;
+Blockly.FieldColourSlider.activateEyedropper_ = null;
 
 /**
  * Path to the eyedropper svg icon.
@@ -196,19 +199,6 @@ Blockly.FieldColourSlider.prototype.getText = function() {
 };
 
 /**
- * Function to be called if eyedropper can be activated.
- * If defined, an eyedropper button will be added to the colour picker.
- * The button calls this function with a callback to update the field value.
- * BEWARE: This is not a stable API, so it is being marked as private. It may change.
- */
-Blockly.FieldColourSlider.activateEyedropper_ = null;
-
-/**
- * Path to the eyedropper svg icon.
- */
-Blockly.FieldColourSlider.EYEDROPPER_PATH = 'eyedropper.svg';
-
-/**
  * Create label and readout DOM elements, returning the readout
  * @param {string} labelText - Text for the label
  * @return {Array} The container node and the readout node.
@@ -319,6 +309,7 @@ Blockly.FieldColourSlider.prototype.showEditor_ = function() {
 
   if (Blockly.FieldColourSlider.activateEyedropper_) {
     var button = document.createElement('button');
+    button.setAttribute('class', 'scratchEyedropper');
     var image = document.createElement('img');
     image.src = Blockly.mainWorkspace.options.pathToMedia + Blockly.FieldColourSlider.EYEDROPPER_PATH;
     button.appendChild(image);
