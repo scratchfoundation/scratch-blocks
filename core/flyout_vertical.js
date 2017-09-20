@@ -355,7 +355,7 @@ Blockly.VerticalFlyout.prototype.scrollTo = function(pos) {
  * @private
  */
 Blockly.VerticalFlyout.prototype.wheel_ = function(e) {
-  // remove scrollTarget to stop auto scrolling in step()
+  // remove scrollTarget to stop auto scrolling in stepScrollAnimation
   this.scrollTarget = null;
 
   var delta = e.deltaY;
