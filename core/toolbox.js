@@ -179,7 +179,7 @@ Blockly.Toolbox.prototype.createFlyout_ = function() {
  */
 Blockly.Toolbox.prototype.populate_ = function(newTree) {
   this.categoryMenu_.populate(newTree);
-  this.showAll();
+  this.showAll_();
   this.setSelectedItem(this.categoryMenu_.categories_[0]);
 };
 
@@ -187,7 +187,7 @@ Blockly.Toolbox.prototype.populate_ = function(newTree) {
  * Show all blocks for all categories in the flyout
  * @private
  */
-Blockly.Toolbox.prototype.showAll = function() {
+Blockly.Toolbox.prototype.showAll_ = function() {
   var allContents = [];
   for (var i = 0; i < this.categoryMenu_.categories_.length; i++) {
     var category = this.categoryMenu_.categories_[i];
@@ -322,7 +322,7 @@ Blockly.Toolbox.prototype.getClientRect = function() {
  * procedures.
  */
 Blockly.Toolbox.prototype.refreshSelection = function() {
-  this.showAll();
+  this.showAll_();
 };
 
 /**
