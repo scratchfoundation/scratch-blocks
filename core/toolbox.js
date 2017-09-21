@@ -351,6 +351,7 @@ Blockly.Toolbox.prototype.setSelectedItem = function(item) {
     var scrollPositions = this.flyout_.categoryScrollPositions;
     for (var i = 0; i < scrollPositions.length; i++) {
       if (categoryName === scrollPositions[i].categoryName) {
+        this.flyout_.setVisible(true);
         this.flyout_.scrollTo(scrollPositions[i].position);
         return;
       }
