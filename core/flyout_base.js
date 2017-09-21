@@ -118,6 +118,14 @@ Blockly.Flyout = function(workspaceOptions) {
    * @private
    */
   this.parentToolbox_ = null;
+
+  /**
+   * The target position for the flyout scroll animation in pixels.
+   * Is a number while animating, null otherwise.
+   * @type {?number}
+   * @package
+   */
+  this.scrollTarget = null;
 };
 
 /**
@@ -458,7 +466,7 @@ Blockly.Flyout.prototype.show = function(xmlList) {
     // Handle dynamic categories, represented by a name instead of a list of XML.
     // Look up the correct category generation function and call that to get a
     // valid XML list.
-    if (typeof xmlList[i] === 'string') {
+    if (typeof xml === 'string') {
       var fnToApply = this.workspace_.targetWorkspace.getToolboxCategoryCallback(
           xmlList[i]);
       var newList = fnToApply(this.workspace_.targetWorkspace);
@@ -554,15 +562,15 @@ Blockly.Flyout.prototype.recordCategoryScrollPositions_ = function() {
 
 /**
  * Select a category using the scroll position.
- * @param  {number} pos The scroll position.
+ * @param {number} pos The scroll position in pixels.
  * @package
  */
 Blockly.Flyout.prototype.selectCategoryByScrollPosition = function(pos) {
-  var scaledPos = pos / this.workspace_.scale;
+  var workspacePos = pos / this.workspace_.scale;
   // Traverse the array of scroll positions in reverse, so we can select the furthest
-  // category that the scroll position is beyond
+  // category that the scroll position is beyond.
   for (var i = this.categoryScrollPositions.length - 1; i >= 0; i--) {
-    if (scaledPos > this.categoryScrollPositions[i].position) {
+    if (workspacePos > this.categoryScrollPositions[i].position) {
       this.parentToolbox_.selectCategoryByName(this.categoryScrollPositions[i].categoryName);
       return;
     }

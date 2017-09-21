@@ -33,6 +33,7 @@ goog.require('Blockly.FlyoutButton');
 goog.require('Blockly.Flyout');
 goog.require('Blockly.WorkspaceSvg');
 goog.require('goog.dom');
+goog.require('goog.dom.animationFrame.polyfill');
 goog.require('goog.events');
 goog.require('goog.math.Rect');
 goog.require('goog.userAgent');
@@ -247,6 +248,7 @@ Blockly.HorizontalFlyout.prototype.scrollToStart = function() {
 /**
  * Scroll the flyout to a position.
  * @param {number} pos The targeted scroll position.
+ * @package
  */
 Blockly.HorizontalFlyout.prototype.scrollTo = function(pos) {
   this.scrollTarget = pos * this.workspace_.scale;
