@@ -312,7 +312,7 @@ Blockly.Toolbox.prototype.getClientRect = function() {
     return new goog.math.Rect(-BIG_NUM, -BIG_NUM, 2 * BIG_NUM,
         BIG_NUM + y + height);
   } else {  // Bottom
-    return new goog.math.Rect(0, y - height, 2 * BIG_NUM, BIG_NUM);
+    return new goog.math.Rect(0, y, 2 * BIG_NUM, BIG_NUM);
   }
 };
 
