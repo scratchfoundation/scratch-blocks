@@ -287,6 +287,11 @@ Blockly.Toolbox.prototype.getClientRect = function() {
     return null;
   }
 
+  // If not an auto closing flyout, always use the (larger) flyout client rect
+  if (!this.flyout_.autoClose) {
+    return this.flyout_.getClientRect();
+  }
+
   // BIG_NUM is offscreen padding so that blocks dragged beyond the toolbox
   // area are still deleted.  Must be smaller than Infinity, but larger than
   // the largest screen size.
@@ -295,11 +300,8 @@ Blockly.Toolbox.prototype.getClientRect = function() {
 
   var x = toolboxRect.left;
   var y = toolboxRect.top;
-  var width = this.getWidth();
-  // The height here is the combined height of the category menu and flyout.
-  // It is used get a correct delete area when the toolbox is in horizontal
-  // mode (on the top or bottom).
-  var height = toolboxRect.height + this.flyout_.height_;
+  var width = toolboxRect.width;
+  var height = toolboxRect.height;
 
   // Assumes that the toolbox is on the SVG edge.  If this changes
   // (e.g. toolboxes in mutators) then this code will need to be more complex.
