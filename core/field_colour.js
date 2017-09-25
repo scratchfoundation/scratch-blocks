@@ -147,19 +147,6 @@ Blockly.FieldColour.COLOURS = goog.ui.ColorPicker.SIMPLE_GRID_COLORS;
 Blockly.FieldColour.COLUMNS = 7;
 
 /**
- * Function to be called if eyedropper can be activated.
- * If defined, an eyedropper button will be added to the color picker.
- * The button calls this function with a callback to update the field value.
- * BEWARE: This is not a stable API, so it is being marked as private. It may change.
- */
-Blockly.FieldColour.activateEyedropper_ = null;
-
-/**
- * Path to the eyedropper svg icon.
- */
-Blockly.FieldColour.EYEDROPPER_PATH = 'eyedropper.svg';
-
-/**
  * Set a custom colour grid for this field.
  * @param {Array.<string>} colours Array of colours for this block,
  *     or null to use default (Blockly.FieldColour.COLOURS).
@@ -179,17 +166,6 @@ Blockly.FieldColour.prototype.setColours = function(colours) {
 Blockly.FieldColour.prototype.setColumns = function(columns) {
   this.columns_ = columns;
   return this;
-};
-
-/**
- * Activate the eyedropper, passing in a callback for setting the field value.
- * @private
- */
-Blockly.FieldColour.prototype.activateEyedropperInternal_ = function() {
-  var thisField = this;
-  Blockly.FieldColour.activateEyedropper_(function(value) {
-    thisField.setValue(value);
-  });
 };
 
 /**
@@ -239,19 +215,6 @@ Blockly.FieldColour.prototype.showEditor_ = function() {
   Blockly.WidgetDiv.position(xy.x, xy.y, windowSize, scrollOffset,
                              this.sourceBlock_.RTL);
 
-  if (Blockly.FieldColour.activateEyedropper_) {
-    var button = document.createElement('button');
-    var image = document.createElement('img');
-    image.src = Blockly.mainWorkspace.options.pathToMedia + Blockly.FieldColour.EYEDROPPER_PATH;
-    button.appendChild(image);
-    div.appendChild(button);
-    Blockly.FieldColour.eyedropperEventData_ = Blockly.bindEventWithChecks_(button,
-      'mousedown',
-      this,
-      this.activateEyedropperInternal_
-    );
-  }
-
   // Configure event handler.
   var thisField = this;
   Blockly.FieldColour.changeEventKey_ = goog.events.listen(picker,
@@ -276,9 +239,6 @@ Blockly.FieldColour.prototype.showEditor_ = function() {
 Blockly.FieldColour.widgetDispose_ = function() {
   if (Blockly.FieldColour.changeEventKey_) {
     goog.events.unlistenByKey(Blockly.FieldColour.changeEventKey_);
-  }
-  if (Blockly.FieldColour.eyedropperEventData_) {
-    Blockly.unbindEvent_(Blockly.FieldColour.eyedropperEventData_);
   }
   Blockly.Events.setGroup(false);
 };

@@ -1360,6 +1360,9 @@ Blockly.Block.prototype.interpolate_ = function(message, args, lastDummyAlign) {
             case 'field_colour':
               field = new Blockly.FieldColour(element['colour']);
               break;
+            case 'field_colour_slider':
+              field = new Blockly.FieldColourSlider(element['colour']);
+              break;
             case 'field_variable':
               field = Blockly.Block.newFieldVariableFromJson_(element);
               break;
