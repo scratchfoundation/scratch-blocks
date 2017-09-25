@@ -49,7 +49,7 @@ Blockly.Blocks['colour_picker'] = {
       "message0": "%1",
       "args0": [
         {
-          "type": "field_colour",
+          "type": "field_colour_slider",
           "name": "COLOUR",
           "colour": randomColour()
         }

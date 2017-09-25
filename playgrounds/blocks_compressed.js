@@ -8,7 +8,7 @@ Blockly.INPUT_VALUE=1;Blockly.OUTPUT_VALUE=2;Blockly.NEXT_STATEMENT=3;Blockly.PR
 Blockly.OPPOSITE_TYPE[Blockly.PREVIOUS_STATEMENT]=Blockly.NEXT_STATEMENT;Blockly.TOOLBOX_AT_TOP=0;Blockly.TOOLBOX_AT_BOTTOM=1;Blockly.TOOLBOX_AT_LEFT=2;Blockly.TOOLBOX_AT_RIGHT=3;Blockly.OUTPUT_SHAPE_HEXAGONAL=1;Blockly.OUTPUT_SHAPE_ROUND=2;Blockly.OUTPUT_SHAPE_SQUARE=3;Blockly.STACK_GLOW_RADIUS=1.3;Blockly.REPLACEMENT_GLOW_RADIUS=2;Blockly.Categories={motion:"motion",looks:"looks",sound:"sounds",pen:"pen",data:"data",event:"events",control:"control",sensing:"sensing",operators:"operators",more:"more"};
 Blockly.DELETE_AREA_NONE=null;Blockly.DELETE_AREA_TRASH=1;Blockly.DELETE_AREA_TOOLBOX=2;Blockly.VARIABLE_CATEGORY_NAME="VARIABLE";Blockly.PROCEDURE_CATEGORY_NAME="PROCEDURE";Blockly.RENAME_VARIABLE_ID="RENAME_VARIABLE_ID";Blockly.DELETE_VARIABLE_ID="DELETE_VARIABLE_ID";
 // Copyright 2012 Google Inc.  Apache License 2.0
-Blockly.Blocks.colour={};function randomColour(){return"#"+("00000"+Math.floor(Math.random()*Math.pow(2,24)).toString(16)).substr(-6)}Blockly.Blocks.colour_picker={init:function(){this.jsonInit({message0:"%1",args0:[{type:"field_colour",name:"COLOUR",colour:randomColour()}],outputShape:Blockly.OUTPUT_SHAPE_ROUND,output:"Colour"})}};/*
+Blockly.Blocks.colour={};function randomColour(){return"#"+("00000"+Math.floor(Math.random()*Math.pow(2,24)).toString(16)).substr(-6)}Blockly.Blocks.colour_picker={init:function(){this.jsonInit({message0:"%1",args0:[{type:"field_colour_slider",name:"COLOUR",colour:randomColour()}],outputShape:Blockly.OUTPUT_SHAPE_ROUND,output:"Colour"})}};/*
 
  Visual Blocks Editor
 

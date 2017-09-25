@@ -790,54 +790,52 @@ Blockly.Css.CONTENT = [
     'color: #fff;',
   '}',
 
-  /* Copied from: goog/css/colorpicker-simplegrid.css */
-  /*
-   * Copyright 2007 The Closure Library Authors. All Rights Reserved.
-   *
-   * Use of this source code is governed by the Apache License, Version 2.0.
-   * See the COPYING file for details.
-   */
-
-  /* Author: pupius@google.com (Daniel Pupius) */
-
-  /*
-    Styles to make the colorpicker look like the old gmail color picker
-    NOTE: without CSS scoping this will override styles defined in palette.css
-  */
-  '.blocklyWidgetDiv .goog-palette {',
-    'outline: none;',
-    'cursor: default;',
-  '}',
-
-  '.blocklyWidgetDiv .goog-palette-table {',
-    'border-collapse: collapse;',
-  '}',
-
-  '.blocklyWidgetDiv .goog-palette-cell {',
-    'height: 13px;',
-    'width: 15px;',
-    'margin: 0;',
-    'border: 0;',
-    'text-align: center;',
-    'vertical-align: middle;',
-    'font-size: 1px;',
-  '}',
-
-  '.blocklyWidgetDiv .goog-palette-colorswatch {',
+  '.blocklyDropDownDiv .goog-slider-horizontal {',
+    'margin: 8px;',
+    'height: 22px;',
+    'width: 150px;',
     'position: relative;',
-    'height: 13px;',
-    'width: 15px;',
+    'outline: none;',
+    'border-radius: 11px;',
+    'margin-bottom: 20px;',
   '}',
 
-  '.blocklyWidgetDiv .goog-palette-cell-hover .goog-palette-colorswatch {',
-    'border: 1px solid #FFF;',
-    'box-sizing: border-box;',
+  '.blocklyDropDownDiv .goog-slider-horizontal .goog-slider-thumb {',
+    'width: 26px;',
+    'height: 26px;',
+    'margin-top: -1px;',
+    'position: absolute;',
+    'background-color: white;',
+    'border-radius: 100%;',
+    '-webkit-box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.15);',
+    '-moz-box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.15);',
+    'box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.15);',
   '}',
 
-  '.blocklyWidgetDiv .goog-palette-cell-selected .goog-palette-colorswatch {',
-    'border: 1px solid #000;',
-    'box-sizing: border-box;',
-    'color: #fff;',
+  '.scratchEyedropper {',
+    'background: none;',
+    'outline: none;',
+    'border: none;',
+    'width: 100%;',
+    'text-align: center;',
+    'border-top: 1px solid #ddd;',
+    'padding-top: 5px;',
+    'cursor: pointer;',
+  '}',
+
+  '.scratchColourPickerLabel {',
+    'font-family: "Helvetica Neue", Helvetica, sans-serif;',
+    'font-size: 0.65rem;',
+    'color: $colour_toolboxText;',
+    'margin: 8px;',
+  '}',
+
+  '.scratchColourPickerLabelText {',
+    'font-weight: bold;',
+  '}',
+
+  '.scratchColourPickerReadout {',
+    'margin-left: 10px;',
   '}',
 
   /* Copied from: goog/css/menu.css */
