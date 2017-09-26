@@ -225,6 +225,7 @@ Blockly.FlyoutButton.prototype.getTargetWorkspace = function() {
 /**
  * Get whether this button is a label at the top of a category.
  * @return {boolean} True if it is a category label.
+ * @package
  */
 Blockly.FlyoutButton.prototype.getIsCategoryLabel = function() {
   return this.isCategoryLabel_;
@@ -233,15 +234,16 @@ Blockly.FlyoutButton.prototype.getIsCategoryLabel = function() {
 /**
  * Get the text of this button.
  * @return {string} The text on the button.
+ * @package
  */
 Blockly.FlyoutButton.prototype.getText = function() {
   return this.text_;
 };
 
-
 /**
  * Get the position of this button.
  * @return {!goog.math.Coordinate} The button position.
+ * @package
  */
 Blockly.FlyoutButton.prototype.getPosition = function() {
   return this.position_;
