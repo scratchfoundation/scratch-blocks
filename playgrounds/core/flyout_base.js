@@ -118,13 +118,21 @@ Blockly.Flyout = function(workspaceOptions) {
    * @private
    */
   this.parentToolbox_ = null;
+
+  /**
+   * The target position for the flyout scroll animation in pixels.
+   * Is a number while animating, null otherwise.
+   * @type {?number}
+   * @package
+   */
+  this.scrollTarget = null;
 };
 
 /**
  * Does the flyout automatically close when a block is created?
  * @type {boolean}
  */
-Blockly.Flyout.prototype.autoClose = true;
+Blockly.Flyout.prototype.autoClose = false;
 
 /**
  * Whether the flyout is visible.
@@ -227,6 +235,14 @@ Blockly.Flyout.prototype.verticalOffset_ = 0;
  * @private
 */
 Blockly.Flyout.prototype.dragAngleRange_ = 70;
+
+/**
+ * The fraction of the distance to the scroll target to move the flyout on
+ * each animation frame, when auto-scrolling. Values closer to 1.0 will make
+ * the scroll animation complete faster. Use 1.0 for no animation.
+ * @type {number}
+ */
+Blockly.Flyout.prototype.scrollAnimationFraction = 0.3;
 
 /**
  * Creates the flyout's DOM.  Only needs to be called once. The flyout can
@@ -441,25 +457,26 @@ Blockly.Flyout.prototype.show = function(xmlList) {
   this.hide();
   this.clearOldBlocks_();
 
-  // Handle dynamic categories, represented by a name instead of a list of XML.
-  // Look up the correct category generation function and call that to get a
-  // valid XML list.
-  if (typeof xmlList == 'string') {
-    var fnToApply = this.workspace_.targetWorkspace.getToolboxCategoryCallback(
-        xmlList);
-    goog.asserts.assert(goog.isFunction(fnToApply),
-        'Couldn\'t find a callback function when opening a toolbox category.');
-    xmlList = fnToApply(this.workspace_.targetWorkspace);
-    goog.asserts.assert(goog.isArray(xmlList),
-        'The result of a toolbox category callback must be an array.');
-  }
-
   this.setVisible(true);
   // Create the blocks to be shown in this flyout.
   var contents = [];
   var gaps = [];
   this.permanentlyDisabled_.length = 0;
   for (var i = 0, xml; xml = xmlList[i]; i++) {
+    // Handle dynamic categories, represented by a name instead of a list of XML.
+    // Look up the correct category generation function and call that to get a
+    // valid XML list.
+    if (typeof xml === 'string') {
+      var fnToApply = this.workspace_.targetWorkspace.getToolboxCategoryCallback(
+          xmlList[i]);
+      var newList = fnToApply(this.workspace_.targetWorkspace);
+      // Insert the new list of blocks in the middle of the list.
+      // We use splice to insert at index i, and remove a single element
+      // (the placeholder string). Because the spread operator (...) is not
+      // available, use apply and concat the array.
+      xmlList.splice.apply(xmlList, [i, 1].concat(newList));
+      xml = xmlList[i];
+    }
     if (xml.tagName) {
       var tagName = xml.tagName.toUpperCase();
       var default_gap = this.horizontalLayout_ ? this.GAP_X : this.GAP_Y;
@@ -520,6 +537,66 @@ Blockly.Flyout.prototype.show = function(xmlList) {
 
   this.reflowWrapper_ = this.reflow.bind(this);
   this.workspace_.addChangeListener(this.reflowWrapper_);
+
+  this.recordCategoryScrollPositions_();
+};
+
+/**
+ * Store an array of category names and scrollbar positions.
+ * This is used when scrolling the flyout to cause a category to be selected.
+ * @private
+ */
+Blockly.Flyout.prototype.recordCategoryScrollPositions_ = function() {
+  this.categoryScrollPositions = [];
+  for (var i = 0; i < this.buttons_.length; i++) {
+    if (this.buttons_[i].getIsCategoryLabel()) {
+      var categoryLabel = this.buttons_[i];
+      this.categoryScrollPositions.push({
+        categoryName: categoryLabel.getText(),
+        position: this.horizontalLayout_ ?
+          categoryLabel.getPosition().x : categoryLabel.getPosition().y
+      });
+    }
+  }
+};
+
+/**
+ * Select a category using the scroll position.
+ * @param {number} pos The scroll position in pixels.
+ * @package
+ */
+Blockly.Flyout.prototype.selectCategoryByScrollPosition = function(pos) {
+  var workspacePos = pos / this.workspace_.scale;
+  // Traverse the array of scroll positions in reverse, so we can select the furthest
+  // category that the scroll position is beyond.
+  for (var i = this.categoryScrollPositions.length - 1; i >= 0; i--) {
+    if (workspacePos > this.categoryScrollPositions[i].position) {
+      this.parentToolbox_.selectCategoryByName(this.categoryScrollPositions[i].categoryName);
+      return;
+    }
+  }
+};
+
+/**
+ * Step the scrolling animation by scrolling a fraction of the way to
+ * a scroll target, and request the next frame if necessary.
+ * @package
+ */
+Blockly.Flyout.prototype.stepScrollAnimation = function() {
+  if (!this.scrollTarget) {
+    return;
+  }
+  var scrollPos = this.horizontalLayout_ ?
+    -this.workspace_.scrollX : -this.workspace_.scrollY;
+  var diff = this.scrollTarget - scrollPos;
+  if (Math.abs(diff) < 1) {
+    this.scrollbar_.set(this.scrollTarget);
+    return;
+  }
+  this.scrollbar_.set(scrollPos + diff * this.scrollAnimationFraction);
+
+  // Polyfilled by goog.dom.animationFrame.polyfill
+  requestAnimationFrame(this.stepScrollAnimation.bind(this));
 };
 
 /**
