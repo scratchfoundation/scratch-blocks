@@ -33,6 +33,7 @@ goog.require('Blockly.FlyoutButton');
 goog.require('Blockly.Flyout');
 goog.require('Blockly.WorkspaceSvg');
 goog.require('goog.dom');
+goog.require('goog.dom.animationFrame.polyfill');
 goog.require('goog.events');
 goog.require('goog.math.Rect');
 goog.require('goog.userAgent');
@@ -245,16 +246,47 @@ Blockly.HorizontalFlyout.prototype.scrollToStart = function() {
 };
 
 /**
+ * Scroll the flyout to a position.
+ * @param {number} pos The targeted scroll position.
+ * @package
+ */
+Blockly.HorizontalFlyout.prototype.scrollTo = function(pos) {
+  this.scrollTarget = pos * this.workspace_.scale;
+
+  // Make sure not to set the scroll target past the farthest point we can
+  // scroll to, i.e. the content width minus the view width
+  var metrics = this.workspace_.getMetrics();
+  var contentWidth = metrics.contentWidth;
+  var viewWidth = metrics.viewWidth;
+  this.scrollTarget = Math.min(this.scrollTarget, contentWidth - viewWidth);
+
+  this.stepScrollAnimation();
+};
+
+/**
  * Scroll the flyout.
  * @param {!Event} e Mouse wheel scroll event.
  * @private
  */
 Blockly.HorizontalFlyout.prototype.wheel_ = function(e) {
+  // remove scrollTarget to stop auto scrolling in stepScrollAnimation
+  this.scrollTarget = null;
+
   var delta = e.deltaX;
 
+  // If we're scrolling more vertically than horizontally, use the vertical
+  // scroll delta instead. This allows people using a mouse wheel (which can
+  // only scroll vertically) to scroll the horizontal flyout. It also allows
+  // trackpad users to scroll it by scrolling either horizontally or
+  // vertically.
+  if (Math.abs(e.deltaY) > Math.abs(delta)) {
+    delta = e.deltaY;
+  }
+
   if (delta) {
-    if (goog.userAgent.GECKO) {
-      // Firefox's deltas are a tenth that of Chrome/Safari.
+    // Firefox's mouse wheel deltas are a tenth that of Chrome/Safari.
+    // DeltaMode is 1 for a mouse wheel, but not for a trackpad scroll event
+    if (goog.userAgent.GECKO && (e.deltaMode === 1)) {
       delta *= 10;
     }
     var metrics = this.getMetrics_();
@@ -266,6 +298,8 @@ Blockly.HorizontalFlyout.prototype.wheel_ = function(e) {
     // When the flyout moves from a wheel event, hide WidgetDiv and DropDownDiv.
     Blockly.WidgetDiv.hide(true);
     Blockly.DropDownDiv.hideWithoutAnimation();
+
+    this.selectCategoryByScrollPosition(pos);
   }
 
   // Don't scroll the page.
