@@ -13,6 +13,18 @@ module.exports = [{
     filename: '[name].js'
   }
 }, {
+  entry: {
+    horizontal: './shim/horizontal.js',
+    vertical: './shim/vertical.js'
+  },
+  output: {
+    library: 'Blockly',
+    libraryTarget: 'umd',
+    path: path.resolve(__dirname, 'dist', 'web'),
+    filename: '[name].js'
+  }
+},
+{
   output: {
     filename: '[name].js',
     path: path.resolve(__dirname, 'gh-pages')
