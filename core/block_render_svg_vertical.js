@@ -1265,18 +1265,7 @@ Blockly.BlockSvg.prototype.renderDrawRight_ = function(steps,
     }
     cursorY += row.height;
   }
-  if (this.edgeShape_) {
-    // Draw the right-side edge shape.
-    if (this.edgeShape_ === Blockly.OUTPUT_SHAPE_ROUND) {
-      // Draw a rounded arc.
-      steps.push('a ' + this.edgeShapeWidth_ + ' ' + this.edgeShapeWidth_ +
-          ' 0 0 1 0 ' + this.edgeShapeWidth_ * 2);
-    } else if (this.edgeShape_ === Blockly.OUTPUT_SHAPE_HEXAGONAL) {
-      // Draw an half-hexagon.
-      steps.push('l ' + this.edgeShapeWidth_ + ' ' + this.edgeShapeWidth_ +
-          ' l ' + -this.edgeShapeWidth_ + ' ' + this.edgeShapeWidth_);
-    }
-  }
+  this.drawEdgeShapeRight_(steps);
   if (!inputRows.length) {
     cursorY = Blockly.BlockSvg.MIN_BLOCK_Y;
     steps.push('V', cursorY);
@@ -1413,6 +1402,27 @@ Blockly.BlockSvg.prototype.renderDrawLeft_ = function(steps, connectionsXY) {
     }
   }
   steps.push('z');
+};
+
+/**
+ * Draw the edge shape (rounded or hexagonal) on the right side of a block with
+ * an output.
+ * @param {!Array.<string>} steps Path of block outline.
+ * @private
+ */
+Blockly.BlockSvg.prototype.drawEdgeShapeRight_ = function(steps) {
+  if (this.edgeShape_) {
+    // Draw the right-side edge shape.
+    if (this.edgeShape_ === Blockly.OUTPUT_SHAPE_ROUND) {
+      // Draw a rounded arc.
+      steps.push('a ' + this.edgeShapeWidth_ + ' ' + this.edgeShapeWidth_ +
+          ' 0 0 1 0 ' + this.edgeShapeWidth_ * 2);
+    } else if (this.edgeShape_ === Blockly.OUTPUT_SHAPE_HEXAGONAL) {
+      // Draw an half-hexagon.
+      steps.push('l ' + this.edgeShapeWidth_ + ' ' + this.edgeShapeWidth_ +
+          ' l ' + -this.edgeShapeWidth_ + ' ' + this.edgeShapeWidth_);
+    }
+  }
 };
 
 /**
