@@ -1240,25 +1240,10 @@ Blockly.BlockSvg.prototype.renderDrawRight_ = function(steps,
       var fieldX = cursorX;
       var fieldY = cursorY;
       this.renderFields_(input.fieldRow, fieldX, fieldY);
-
-      steps.push(Blockly.BlockSvg.BOTTOM_RIGHT_CORNER);
       // Move to the start of the notch.
       cursorX = inputRows.statementEdge + Blockly.BlockSvg.NOTCH_WIDTH;
-      steps.push('H', cursorX + Blockly.BlockSvg.STATEMENT_INPUT_INNER_SPACE +
-        2 * Blockly.BlockSvg.CORNER_RADIUS);
-      steps.push(Blockly.BlockSvg.NOTCH_PATH_RIGHT);
-      steps.push('h', '-' + Blockly.BlockSvg.STATEMENT_INPUT_INNER_SPACE);
-      steps.push(Blockly.BlockSvg.INNER_TOP_LEFT_CORNER);
-
-      steps.push('v', row.height - 2 * Blockly.BlockSvg.CORNER_RADIUS);
-
-      steps.push(Blockly.BlockSvg.INNER_BOTTOM_LEFT_CORNER);
-      // Bottom notch
-      if (row.statementNotchAtBottom) {
-        steps.push('h ', Blockly.BlockSvg.STATEMENT_INPUT_INNER_SPACE);
-        steps.push(Blockly.BlockSvg.NOTCH_PATH_LEFT);
-      }
-      steps.push('H', inputRows.rightEdge - Blockly.BlockSvg.CORNER_RADIUS);
+      Blockly.BlockSvg.drawStatementInputFromTopRight_(steps, cursorX,
+          inputRows.rightEdge, row);
 
       // Create statement connection.
       connectionX = connectionsXY.x + (this.RTL ? -cursorX : cursorX);
@@ -1454,3 +1439,59 @@ Blockly.BlockSvg.prototype.positionNewBlock =
     newBlock.moveBy(dx, dy);
   }
 };  /* eslint-enable indent */
+
+/**
+ * Draw the outline of a statement input, starting at the top right corner.
+ * @param {!Array.<string>} steps Path of block outline.
+ * @param {number} cursorX The x position of the start of the notch at the top
+ *     of the input.
+ * @param {number} rightEdge The far right edge of the block, which determines
+ *     how wide the statement input is.
+ * @param {!Array.<!Object>} row An object containing information about the
+ *     current row, including its height and whether it should have a notch at
+ *     the bottom.
+ * @private
+ */
+Blockly.BlockSvg.drawStatementInputFromTopRight_ = function(steps, cursorX,
+    rightEdge, row) {
+  Blockly.BlockSvg.drawStatementInputTop_(steps, cursorX);
+  steps.push('v', row.height - 2 * Blockly.BlockSvg.CORNER_RADIUS);
+  Blockly.BlockSvg.drawStatementInputBottom_(steps, rightEdge, row);
+};
+
+/**
+ * Draw the top of the outline of a statement input, starting at the top right
+ * corner.
+ * @param {!Array.<string>} steps Path of block outline.
+ * @param {number} cursorX The x position of the start of the notch at the top
+ *     of the input.
+ * @private
+ */
+Blockly.BlockSvg.drawStatementInputTop_ = function(steps, cursorX) {
+  steps.push(Blockly.BlockSvg.BOTTOM_RIGHT_CORNER);
+  steps.push('H', cursorX + Blockly.BlockSvg.STATEMENT_INPUT_INNER_SPACE +
+    2 * Blockly.BlockSvg.CORNER_RADIUS);
+  steps.push(Blockly.BlockSvg.NOTCH_PATH_RIGHT);
+  steps.push('h', '-' + Blockly.BlockSvg.STATEMENT_INPUT_INNER_SPACE);
+  steps.push(Blockly.BlockSvg.INNER_TOP_LEFT_CORNER);
+};
+
+/**
+ * Draw the bottom of the outline of a statement input, starting at the inner
+ * left corner.
+ * @param {!Array.<string>} steps Path of block outline.
+ * @param {number} rightEdge The far right edge of the block, which determines
+ *     how wide the statement input is.
+ * @param {!Array.<!Object>} row An object containing information about the
+ *     current row, including its height and whether it should have a notch at
+ *     the bottom.
+ * @private
+ */
+Blockly.BlockSvg.drawStatementInputBottom_ = function(steps, rightEdge, row) {
+  steps.push(Blockly.BlockSvg.INNER_BOTTOM_LEFT_CORNER);
+  if (row.statementNotchAtBottom) {
+    steps.push('h ', Blockly.BlockSvg.STATEMENT_INPUT_INNER_SPACE);
+    steps.push(Blockly.BlockSvg.NOTCH_PATH_LEFT);
+  }
+  steps.push('H', rightEdge - Blockly.BlockSvg.CORNER_RADIUS);
+};
