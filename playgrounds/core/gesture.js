@@ -202,6 +202,14 @@ Blockly.Gesture = function(e, creatorWorkspace) {
    * @private
    */
   this.isEnding_ = false;
+
+  /**
+   * True if dragging from the target block should duplicate the target block
+   * and drag the duplicate instead.  This has a lot of side effects.
+   * @type {boolean}
+   * @private
+   */
+  this.shouldDuplicateOnDrag_ = false;
 };
 
 /**
@@ -329,7 +337,7 @@ Blockly.Gesture.prototype.updateIsDraggingBlock_ = function() {
 
   if (this.flyout_) {
     this.isDraggingBlock_ = this.updateIsDraggingFromFlyout_();
-  } else if (this.targetBlock_.isMovable()){
+  } else if (this.targetBlock_.isMovable() || this.shouldDuplicateOnDrag_){
     this.isDraggingBlock_ = true;
   }
 
@@ -391,6 +399,9 @@ Blockly.Gesture.prototype.updateIsDragging_ = function() {
  * @private
  */
 Blockly.Gesture.prototype.startDraggingBlock_ = function() {
+  if (this.shouldDuplicateOnDrag_) {
+    this.duplicateOnDrag_();
+  }
   this.blockDragger_ = new Blockly.BlockDragger(this.targetBlock_,
       this.startWorkspace_);
   this.blockDragger_.startBlockDrag(this.currentDragDeltaXY_);
@@ -683,6 +694,7 @@ Blockly.Gesture.prototype.setStartField = function(field) {
 Blockly.Gesture.prototype.setStartBlock = function(block) {
   if (!this.startBlock_) {
     this.startBlock_ = block;
+    this.setShouldDuplicateOnDrag_(block);
     if (block.isInFlyout && block != block.getRootBlock()) {
       this.setTargetBlock_(block.getRootBlock());
     } else {
@@ -699,7 +711,7 @@ Blockly.Gesture.prototype.setStartBlock = function(block) {
  * @private
  */
 Blockly.Gesture.prototype.setTargetBlock_ = function(block) {
-  if (block.isShadow()) {
+  if (block.isShadow() && !this.shouldDuplicateOnDrag_) {
     this.setTargetBlock_(block.getParent());
   } else {
     this.targetBlock_ = block;
@@ -828,6 +840,7 @@ Blockly.Gesture.prototype.duplicateOnDrag_ = function() {
     // Move the duplicate to original position.
     var xy = this.targetBlock_.getRelativeToSurfaceXY();
     newBlock.moveBy(xy.x, xy.y);
+    newBlock.setShadow(false);
   } finally {
     Blockly.Events.enable();
   }
@@ -841,4 +854,19 @@ Blockly.Gesture.prototype.duplicateOnDrag_ = function() {
   }
   newBlock.select();
   this.targetBlock_ = newBlock;
+};
+
+/**
+ * Set whether to duplicate the target block at the beginning of a drag.  This
+ * can be used to drag a shadow block out of a parent block and leave a copy
+ * in place, e.g. in a for custom block argument reporters in Scratch.
+ * As a side effect, the target block is set to be the start block instead of
+ * the first non-shadow parent.
+ * @param {!Blockly.BlockSvg} block The block that should be used to make this
+ *     decision.
+ * @private
+ */
+Blockly.Gesture.prototype.setShouldDuplicateOnDrag_ = function(block) {
+  this.shouldDuplicateOnDrag_ =
+      block.isShadow() && block.type == 'argument_reporter_boolean';
 };
