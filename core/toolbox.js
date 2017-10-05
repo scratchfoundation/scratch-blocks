@@ -351,6 +351,16 @@ Blockly.Toolbox.prototype.setSelectedItem = function(item) {
     this.scrollToCategoryByName(categoryName);
   }
 };
+
+/**
+ * Select and scroll to a category by name.
+ * @param {string} name The name of the category to select and scroll to.
+ */
+Blockly.Toolbox.prototype.setSelectedCategoryByName = function(name) {
+  this.selectCategoryByName(name);
+  this.scrollToCategoryByName(name);
+};
+
 /**
  * Scroll to a category by name.
  * @param {string} name The name of the category to scroll to.
