@@ -348,13 +348,21 @@ Blockly.Toolbox.prototype.setSelectedItem = function(item) {
     this.selectedItem_.setSelected(true);
     // Scroll flyout to the top of the selected category
     var categoryName = item.name_;
-    var scrollPositions = this.flyout_.categoryScrollPositions;
-    for (var i = 0; i < scrollPositions.length; i++) {
-      if (categoryName === scrollPositions[i].categoryName) {
-        this.flyout_.setVisible(true);
-        this.flyout_.scrollTo(scrollPositions[i].position);
-        return;
-      }
+    this.scrollToCategoryByName(categoryName);
+  }
+};
+/**
+ * Scroll to a category by name.
+ * @param {string} name The name of the category to scroll to.
+ * @package
+ */
+Blockly.Toolbox.prototype.scrollToCategoryByName = function(name) {
+  var scrollPositions = this.flyout_.categoryScrollPositions;
+  for (var i = 0; i < scrollPositions.length; i++) {
+    if (name === scrollPositions[i].categoryName) {
+      this.flyout_.setVisible(true);
+      this.flyout_.scrollTo(scrollPositions[i].position);
+      return;
     }
   }
 };
