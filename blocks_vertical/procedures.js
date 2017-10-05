@@ -179,3 +179,12 @@ Blockly.Blocks['procedures_param'] = {
     }
   }
 };
+
+Blockly.Blocks['argument_reporter_boolean'] = {
+  init: function() {
+    this.jsonInit({
+      "message0": "boolean1",
+      "extensions": ["colours_control", "output_boolean"]
+    });
+  }
+};
