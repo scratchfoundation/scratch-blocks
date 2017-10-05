@@ -566,6 +566,11 @@ Blockly.Flyout.prototype.recordCategoryScrollPositions_ = function() {
  * @package
  */
 Blockly.Flyout.prototype.selectCategoryByScrollPosition = function(pos) {
+  // If we are currently auto-scrolling, due to selecting a category by clicking on it,
+  // do not update the category selection.
+  if (this.scrollTarget) {
+    return;
+  }
   var workspacePos = pos / this.workspace_.scale;
   // Traverse the array of scroll positions in reverse, so we can select the furthest
   // category that the scroll position is beyond.
@@ -591,6 +596,7 @@ Blockly.Flyout.prototype.stepScrollAnimation = function() {
   var diff = this.scrollTarget - scrollPos;
   if (Math.abs(diff) < 1) {
     this.scrollbar_.set(this.scrollTarget);
+    this.scrollTarget = null;
     return;
   }
   this.scrollbar_.set(scrollPos + diff * this.scrollAnimationFraction);
