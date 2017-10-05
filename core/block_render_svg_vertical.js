@@ -457,6 +457,34 @@ Blockly.BlockSvg.SHAPE_IN_SHAPE_PADDING = {
   }
 };
 
+Blockly.BlockSvg.DEFINE_HAT_CORNER_RADIUS = 4 * Blockly.BlockSvg.CORNER_RADIUS;
+
+/**
+ * SVG path for drawing the rounded top-left corner.
+ * @const
+ */
+Blockly.BlockSvg.TOP_LEFT_CORNER_DEFINE_HAT =
+    'a ' + Blockly.BlockSvg.DEFINE_HAT_CORNER_RADIUS + ',' +
+    Blockly.BlockSvg.DEFINE_HAT_CORNER_RADIUS + ' 0 0,1 ' +
+    Blockly.BlockSvg.DEFINE_HAT_CORNER_RADIUS + ',-' +
+    Blockly.BlockSvg.DEFINE_HAT_CORNER_RADIUS;
+
+/**
+ * SVG path for drawing the rounded top-left corner.
+ * @const
+ */
+Blockly.BlockSvg.TOP_RIGHT_CORNER_DEFINE_HAT =
+    'a ' + Blockly.BlockSvg.DEFINE_HAT_CORNER_RADIUS + ',' +
+    Blockly.BlockSvg.DEFINE_HAT_CORNER_RADIUS + ' 0 0,1 ' +
+    Blockly.BlockSvg.DEFINE_HAT_CORNER_RADIUS + ',' +
+    Blockly.BlockSvg.DEFINE_HAT_CORNER_RADIUS;
+
+/**
+ * The type of all define blocks, which have custom rendering.
+ * @cost
+ */
+Blockly.BlockSvg.DEFINE_BLOCK_TYPE = 'procedures_defnoreturn';
+
 /**
  * Change the colour of a block.
  */
@@ -1113,35 +1141,40 @@ Blockly.BlockSvg.prototype.renderClassify_ = function() {
 Blockly.BlockSvg.prototype.renderDrawTop_ =
     function(steps, connectionsXY, rightEdge) {
   /* eslint-disable indent */
-  // Position the cursor at the top-left starting point.
-  if (this.squareTopLeftCorner_) {
-    steps.push('m 0,0');
-    if (this.startHat_) {
-      steps.push(Blockly.BlockSvg.START_HAT_PATH);
-    }
-    // Skip space for the output shape
-    if (this.edgeShapeWidth_) {
-      steps.push('m ' + this.edgeShapeWidth_ + ',0');
-    }
+  if (this.type == Blockly.BlockSvg.DEFINE_BLOCK_TYPE) {
+    steps.push('m 0, 0');
+    steps.push('v', -2 * Blockly.BlockSvg.GRID_UNIT);
+    steps.push(Blockly.BlockSvg.TOP_LEFT_CORNER_DEFINE_HAT);
   } else {
-    steps.push(Blockly.BlockSvg.TOP_LEFT_CORNER_START);
-    // Top-left rounded corner.
-    steps.push(Blockly.BlockSvg.TOP_LEFT_CORNER);
-  }
+    // Position the cursor at the top-left starting point.
+    if (this.squareTopLeftCorner_) {
+      steps.push('m 0,0');
+      if (this.startHat_) {
+        steps.push(Blockly.BlockSvg.START_HAT_PATH);
+      }
+      // Skip space for the output shape
+      if (this.edgeShapeWidth_) {
+        steps.push('m ' + this.edgeShapeWidth_ + ',0');
+      }
+    } else {
+      steps.push(Blockly.BlockSvg.TOP_LEFT_CORNER_START);
+      // Top-left rounded corner.
+      steps.push(Blockly.BlockSvg.TOP_LEFT_CORNER);
+    }
 
-  // Top edge.
-  if (this.previousConnection) {
-    // Space before the notch
-    steps.push('H', Blockly.BlockSvg.NOTCH_START_PADDING);
-    steps.push(Blockly.BlockSvg.NOTCH_PATH_LEFT);
-    // Create previous block connection.
-    var connectionX = connectionsXY.x + (this.RTL ?
-        -Blockly.BlockSvg.NOTCH_WIDTH : Blockly.BlockSvg.NOTCH_WIDTH);
-    var connectionY = connectionsXY.y;
-    this.previousConnection.moveTo(connectionX, connectionY);
-    // This connection will be tightened when the parent renders.
+    // Top edge.
+    if (this.previousConnection) {
+      // Space before the notch
+      steps.push('H', Blockly.BlockSvg.NOTCH_START_PADDING);
+      steps.push(Blockly.BlockSvg.NOTCH_PATH_LEFT);
+      // Create previous block connection.
+      var connectionX = connectionsXY.x + (this.RTL ?
+          -Blockly.BlockSvg.NOTCH_WIDTH : Blockly.BlockSvg.NOTCH_WIDTH);
+      var connectionY = connectionsXY.y;
+      this.previousConnection.moveTo(connectionX, connectionY);
+      // This connection will be tightened when the parent renders.
+    }
   }
-
   this.width = rightEdge;
 };  /* eslint-enable indent */
 
@@ -1238,12 +1271,20 @@ Blockly.BlockSvg.prototype.renderDrawRight_ = function(steps,
       // Nested statement.
       var input = row[0];
       var fieldX = cursorX;
+      // Align fields vertically within the row.
+      // In renderFields_, the field is further centered by its own height.
       var fieldY = cursorY;
+      fieldY += Blockly.BlockSvg.MIN_STATEMENT_INPUT_HEIGHT;
       this.renderFields_(input.fieldRow, fieldX, fieldY);
       // Move to the start of the notch.
       cursorX = inputRows.statementEdge + Blockly.BlockSvg.NOTCH_WIDTH;
-      Blockly.BlockSvg.drawStatementInputFromTopRight_(steps, cursorX,
-          inputRows.rightEdge, row);
+
+      if (this.type == Blockly.BlockSvg.DEFINE_BLOCK_TYPE) {
+        this.renderDefineBlock_(steps, inputRows, input, row);
+      } else {
+        Blockly.BlockSvg.drawStatementInputFromTopRight_(steps, cursorX,
+            inputRows.rightEdge, row);
+      }
 
       // Create statement connection.
       connectionX = connectionsXY.x + (this.RTL ? -cursorX : cursorX);
@@ -1254,8 +1295,9 @@ Blockly.BlockSvg.prototype.renderDrawRight_ = function(steps,
         this.width = Math.max(this.width, inputRows.statementEdge +
           input.connection.targetBlock().getHeightWidth().width);
       }
-      if (y == inputRows.length - 1 ||
-          inputRows[y + 1].type == Blockly.NEXT_STATEMENT) {
+      if (this.type != Blockly.BlockSvg.DEFINE_BLOCK_TYPE &&
+        (y == inputRows.length - 1 ||
+          inputRows[y + 1].type == Blockly.NEXT_STATEMENT)) {
         // If the final input is a statement stack, add a small row underneath.
         // Consecutive statement stacks are also separated by a small divider.
         steps.push(Blockly.BlockSvg.TOP_RIGHT_CORNER);
@@ -1504,4 +1546,41 @@ Blockly.BlockSvg.drawStatementInputBottom_ = function(steps, rightEdge, row) {
     steps.push(Blockly.BlockSvg.NOTCH_PATH_LEFT);
   }
   steps.push('H', rightEdge - Blockly.BlockSvg.CORNER_RADIUS);
+};
+
+/**
+ * Render part of the hat and the right side of the define block to fully wrap
+ * the connected statement block.
+ * Scratch-specific.
+ * @param {!Array.<string>} steps Path of block outline.
+ * @param {!Array.<!Array.<!Object>>} inputRows 2D array of objects, each
+ *     containing position information.
+ * @param {!Blockly.Input} input The input that is currently being rendered.
+ * @param {!Array.<!Object>} row An object containing information about the
+ *     current row, including its height and whether it should have a notch at
+ *     the bottom.
+ * @private
+ */
+Blockly.BlockSvg.prototype.renderDefineBlock_ = function(steps, inputRows,
+    input, row) {
+  // Figure out where the right side of the block is.
+  var rightSide = inputRows.rightEdge;
+  if (input.connection && input.connection.targetBlock()) {
+    rightSide = inputRows.statementEdge +
+        input.connection.targetBlock().getHeightWidth().width;
+  } else {
+    rightSide = Blockly.BlockSvg.MIN_BLOCK_X_WITH_STATEMENT;
+  }
+  rightSide -= Blockly.BlockSvg.DEFINE_HAT_CORNER_RADIUS / 2;
+
+  // Draw the top and the right corner of the hat.
+  steps.push('H', rightSide);
+  steps.push(Blockly.BlockSvg.TOP_RIGHT_CORNER_DEFINE_HAT);
+  // Draw the right side of the hat.
+  steps.push('v', 2 * Blockly.BlockSvg.GRID_UNIT);
+  // Draw the right side of the block around the statement input.
+  steps.push('v', row.height + 3 * Blockly.BlockSvg.GRID_UNIT);
+
+  // row.height will be used to update the cursor in the calling function.
+  row.height += 4 * Blockly.BlockSvg.GRID_UNIT;
 };
