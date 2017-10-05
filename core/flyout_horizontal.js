@@ -134,6 +134,10 @@ Blockly.HorizontalFlyout.prototype.setMetrics_ = function(xyRatio) {
 
   this.workspace_.translate(this.workspace_.scrollX + metrics.absoluteLeft,
       this.workspace_.scrollY + metrics.absoluteTop);
+
+  if (this.categoryScrollPositions) {
+    this.selectCategoryByScrollPosition(-this.workspace_.scrollX);
+  }
 };
 
 /**
@@ -298,8 +302,6 @@ Blockly.HorizontalFlyout.prototype.wheel_ = function(e) {
     // When the flyout moves from a wheel event, hide WidgetDiv and DropDownDiv.
     Blockly.WidgetDiv.hide(true);
     Blockly.DropDownDiv.hideWithoutAnimation();
-
-    this.selectCategoryByScrollPosition(pos);
   }
 
   // Don't scroll the page.
