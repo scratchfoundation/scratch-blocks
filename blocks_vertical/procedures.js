@@ -43,7 +43,7 @@ Blockly.Blocks['procedures_defnoreturn'] = {
           "name": "custom_block"
         }
       ],
-      "extensions": ["colours_control", "shape_hat"]
+      "extensions": ["colours_more", "shape_hat"]
     });
   }
 };
