@@ -52,30 +52,12 @@ goog.inherits(Blockly.FieldLabelEditable, Blockly.FieldLabel);
 Blockly.FieldLabelEditable.prototype.EDITABLE = true;
 
 /**
- * Returns the height and width of the field.
- * @return {!goog.math.Size} Height and width.
- */
-Blockly.FieldLabelEditable.prototype.getSize = function() {
-  if (!this.size_.width) {
-    this.render_();
-  }
-  return this.size_;
-};
-
-/**
  * Updates the width of the field. This calls getCachedWidth which won't cache
  * the approximated width on IE/Edge when `getComputedTextLength` fails. Once
  * it eventually does succeed, the result will be cached.
  **/
 Blockly.FieldLabelEditable.prototype.updateWidth = function() {
-  // Calculate width of field
-  var width = Blockly.Field.getCachedWidth(this.textElement_);
-
-  // Add padding to any drawn box.
-  if (this.box_) {
-    width += 2 * Blockly.BlockSvg.BOX_FIELD_PADDING;
-  }
-
   // Set width of the field.
-  this.size_.width = width;
+  // Unlike a the base Field class, this doesn't add space to editable fields.
+  this.size_.width = Blockly.Field.getCachedWidth(this.textElement_);
 };
