@@ -842,9 +842,6 @@ Blockly.Gesture.prototype.duplicateOnDrag_ = function() {
     var xy = this.targetBlock_.getRelativeToSurfaceXY();
     newBlock.moveBy(xy.x, xy.y);
     newBlock.setShadow(false);
-    // Preserve the label when copying
-    //newBlock.getField("VALUE").setValue(this.targetBlock_.getFieldValue("VALUE"));
-    //newBlock.getField("VALUE").EDITABLE = true;
   } finally {
     Blockly.Events.enable();
   }
