@@ -828,6 +828,7 @@ Blockly.Gesture.prototype.forceStartBlockDrag = function(fakeEvent, block) {
 /**
  * Duplicate the target block and start dragging the duplicated block.
  * This should be done once we are sure that it is a block drag, and no earlier.
+ * Specifically for argument reporters in custom block defintions.
  * @private
  */
 Blockly.Gesture.prototype.duplicateOnDrag_ = function() {
@@ -868,5 +869,6 @@ Blockly.Gesture.prototype.duplicateOnDrag_ = function() {
  */
 Blockly.Gesture.prototype.setShouldDuplicateOnDrag_ = function(block) {
   this.shouldDuplicateOnDrag_ =
-      block.isShadow() && block.type == 'argument_reporter_boolean';
+      block.isShadow() && (block.type == 'argument_reporter_boolean' ||
+      block.type == 'argument_reporter_string_number');
 };
