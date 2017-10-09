@@ -1202,24 +1202,14 @@ Blockly.BlockSvg.prototype.renderDrawRight_ = function(steps,
     if (row.type == Blockly.BlockSvg.INLINE) {
       // Inline inputs.
       for (var x = 0, input; input = row[x]; x++) {
-        var fieldX = cursorX;
-        var fieldY = cursorY;
         // Align fields vertically within the row.
         // Moves the field to half of the row's height.
         // In renderFields_, the field is further centered
         // by its own rendered height.
-        fieldY += row.height / 2;
+        var fieldY = cursorY + row.height / 2;
 
-        // Align inline field rows (left/right/centre).
-        if (input.align === Blockly.ALIGN_RIGHT) {
-          fieldX += inputRows.rightEdge - input.fieldWidth -
-            (2 * Blockly.BlockSvg.SEP_SPACE_X);
-        } else if (input.align === Blockly.ALIGN_CENTRE) {
-          fieldX = Math.max(
-            inputRows.rightEdge / 2 - input.fieldWidth / 2,
-            fieldX
-          );
-        }
+        var fieldX = Blockly.BlockSvg.getAlignedCursor_(cursorX, input,
+            inputRows.rightEdge);
 
         cursorX = this.renderFields_(input.fieldRow, fieldX, fieldY);
         if (input.type == Blockly.INPUT_VALUE) {
@@ -1602,4 +1592,25 @@ Blockly.BlockSvg.getInputShapeInfo_ = function(shape) {
     argType: inputShapeArgType,
     width: inputShapeWidth
   };
+};
+
+/**
+ * Get the correct cursor position for the given input, based on alignment,
+ * the total size of the block, and the size of the input.
+ * @param {number} cursorX The minimum x value of the cursor.
+ * @param {!Blockly.Input} input The input to align the fields for.
+ * @param {number} rightEdge The maximum width of the block.  Right-aligned
+ *     fields are positioned based on this number.
+ * @return {number} The new cursor position.
+ * @private
+ */
+Blockly.BlockSvg.getAlignedCursor_ = function(cursorX, input, rightEdge) {
+  // Align inline field rows (left/right/centre).
+  if (input.align === Blockly.ALIGN_RIGHT) {
+    cursorX += rightEdge - input.fieldWidth -
+      (2 * Blockly.BlockSvg.SEP_SPACE_X);
+  } else if (input.align === Blockly.ALIGN_CENTRE) {
+    cursorX = Math.max(cursorX, rightEdge / 2 - input.fieldWidth / 2);
+  }
+  return cursorX;
 };
