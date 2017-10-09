@@ -1329,44 +1329,24 @@ Blockly.BlockSvg.prototype.renderInputShape_ = function(input, x, y) {
     // No input shape for this input - e.g., the block is an insertion marker.
     return;
   }
-  var inputShapeWidth = 0;
   // Input shapes are only visibly rendered on non-connected slots.
   if (input.connection.targetConnection) {
     inputShape.setAttribute('style', 'visibility: hidden');
   } else {
     var inputShapeX = 0, inputShapeY = 0;
-    // If the input connection is not connected, draw a hole shape.
-    var inputShapePath = null;
-    var inputShapeArgType = null;
-    switch (input.connection.getOutputShape()) {
-      case Blockly.OUTPUT_SHAPE_HEXAGONAL:
-        inputShapePath = Blockly.BlockSvg.INPUT_SHAPE_HEXAGONAL;
-        inputShapeWidth = Blockly.BlockSvg.INPUT_SHAPE_HEXAGONAL_WIDTH;
-        inputShapeArgType = 'boolean';
-        break;
-      case Blockly.OUTPUT_SHAPE_ROUND:
-        inputShapePath = Blockly.BlockSvg.INPUT_SHAPE_ROUND;
-        inputShapeWidth = Blockly.BlockSvg.INPUT_SHAPE_ROUND_WIDTH;
-        inputShapeArgType = 'round';
-        break;
-      case Blockly.OUTPUT_SHAPE_SQUARE:
-      default:
-        inputShapePath = Blockly.BlockSvg.INPUT_SHAPE_SQUARE;
-        inputShapeWidth = Blockly.BlockSvg.INPUT_SHAPE_SQUARE_WIDTH;
-        inputShapeArgType = 'square';
-        break;
-    }
+    var inputShapeInfo =
+        Blockly.BlockSvg.getInputShapeInfo_(input.connection.outputShape());
     if (this.RTL) {
-      inputShapeX = -x - inputShapeWidth;
+      inputShapeX = -x - inputShapeInfo.width;
     } else {
       inputShapeX = x;
     }
     inputShapeY = y - (Blockly.BlockSvg.INPUT_SHAPE_HEIGHT / 2);
-    inputShape.setAttribute('d', inputShapePath);
+    inputShape.setAttribute('d', inputShapeInfo.path);
     inputShape.setAttribute('transform',
       'translate(' + inputShapeX + ',' + inputShapeY + ')'
     );
-    inputShape.setAttribute('data-argument-type', inputShapeArgType);
+    inputShape.setAttribute('data-argument-type', inputShapeInfo.argType);
     inputShape.setAttribute('style', 'visibility: visible');
   }
 };
@@ -1583,4 +1563,43 @@ Blockly.BlockSvg.prototype.renderDefineBlock_ = function(steps, inputRows,
 
   // row.height will be used to update the cursor in the calling function.
   row.height += 4 * Blockly.BlockSvg.GRID_UNIT;
+};
+
+/**
+ * Get some information about the input shape to draw, based on the type of the
+ * connection.
+ * @param {number} shape An enum representing the shape of the connection we're
+ *     drawing around.
+ * @return {!Object} An object containing an SVG path, a string representation
+ *     of the argument type, and a width.
+ * @private
+ */
+Blockly.BlockSvg.getInputShapeInfo_ = function(shape) {
+  var inputShapePath = null;
+  var inputShapeArgType = null;
+  var inputShapeWidth = 0;
+
+  switch (shape) {
+    case Blockly.OUTPUT_SHAPE_HEXAGONAL:
+      inputShapePath = Blockly.BlockSvg.INPUT_SHAPE_HEXAGONAL;
+      inputShapeWidth = Blockly.BlockSvg.INPUT_SHAPE_HEXAGONAL_WIDTH;
+      inputShapeArgType = 'boolean';
+      break;
+    case Blockly.OUTPUT_SHAPE_ROUND:
+      inputShapePath = Blockly.BlockSvg.INPUT_SHAPE_ROUND;
+      inputShapeWidth = Blockly.BlockSvg.INPUT_SHAPE_ROUND_WIDTH;
+      inputShapeArgType = 'round';
+      break;
+    case Blockly.OUTPUT_SHAPE_SQUARE:
+    default:  // If the input connection is not connected, draw a hole shape.
+      inputShapePath = Blockly.BlockSvg.INPUT_SHAPE_SQUARE;
+      inputShapeWidth = Blockly.BlockSvg.INPUT_SHAPE_SQUARE_WIDTH;
+      inputShapeArgType = 'square';
+      break;
+  }
+  return {
+    path: inputShapePath,
+    argType: inputShapeArgType,
+    width: inputShapeWidth
+  };
 };
