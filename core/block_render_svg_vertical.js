@@ -27,6 +27,7 @@
 goog.provide('Blockly.BlockSvg.render');
 
 goog.require('Blockly.BlockSvg');
+goog.require('Blockly.utils');
 
 
 // UI constants for rendering blocks.
@@ -490,7 +491,10 @@ Blockly.BlockSvg.DEFINE_BLOCK_TYPE = 'procedures_defnoreturn';
  */
 Blockly.BlockSvg.prototype.updateColour = function() {
   var strokeColour = this.getColourTertiary();
-  if (this.isShadow() && this.parentBlock_) {
+  var renderShadowed =
+      this.isShadow() && !Blockly.utils.isShadowArgumentReporter(this);
+
+  if (renderShadowed && this.parentBlock_) {
     // Pull shadow block stroke colour from parent block's tertiary if possible.
     strokeColour = this.parentBlock_.getColourTertiary();
     // Special case: if we contain a colour field, set to a special stroke colour.
@@ -506,8 +510,11 @@ Blockly.BlockSvg.prototype.updateColour = function() {
   this.svgPath_.setAttribute('stroke', strokeColour);
 
   // Render block fill
-  var fillColour = (this.isGlowingBlock_ || this.isShadow()) ?
-      this.getColourSecondary() : this.getColour();
+  if (this.isGlowingBlock_ || renderShadowed) {
+    var fillColour = this.getColourSecondary();
+  } else {
+    var fillColour = this.getColour();
+  }
   this.svgPath_.setAttribute('fill', fillColour);
 
   // Render opacity
