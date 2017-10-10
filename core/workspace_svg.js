@@ -1818,7 +1818,7 @@ Blockly.WorkspaceSvg.prototype.setBulkUpdate = function(enabled) {
   // This will trigger a resize if necessary.
   this.setResizesEnabled(enabled);
   var stoppedUpdating = (this.isBulkUpdating_ && !enabled);
-  this.isBulkUpdating_ = stoppedUpdating;
+  this.isBulkUpdating_ = enabled;
   if (stoppedUpdating) {
     // Refresh the toolbox.
     if (this.toolbox_) {
