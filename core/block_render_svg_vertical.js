@@ -1202,24 +1202,14 @@ Blockly.BlockSvg.prototype.renderDrawRight_ = function(steps,
     if (row.type == Blockly.BlockSvg.INLINE) {
       // Inline inputs.
       for (var x = 0, input; input = row[x]; x++) {
-        var fieldX = cursorX;
-        var fieldY = cursorY;
         // Align fields vertically within the row.
         // Moves the field to half of the row's height.
         // In renderFields_, the field is further centered
         // by its own rendered height.
-        fieldY += row.height / 2;
+        var fieldY = cursorY + row.height / 2;
 
-        // Align inline field rows (left/right/centre).
-        if (input.align === Blockly.ALIGN_RIGHT) {
-          fieldX += inputRows.rightEdge - input.fieldWidth -
-            (2 * Blockly.BlockSvg.SEP_SPACE_X);
-        } else if (input.align === Blockly.ALIGN_CENTRE) {
-          fieldX = Math.max(
-            inputRows.rightEdge / 2 - input.fieldWidth / 2,
-            fieldX
-          );
-        }
+        var fieldX = Blockly.BlockSvg.getAlignedCursor_(cursorX, input,
+            inputRows.rightEdge);
 
         cursorX = this.renderFields_(input.fieldRow, fieldX, fieldY);
         if (input.type == Blockly.INPUT_VALUE) {
@@ -1329,44 +1319,24 @@ Blockly.BlockSvg.prototype.renderInputShape_ = function(input, x, y) {
     // No input shape for this input - e.g., the block is an insertion marker.
     return;
   }
-  var inputShapeWidth = 0;
   // Input shapes are only visibly rendered on non-connected slots.
   if (input.connection.targetConnection) {
     inputShape.setAttribute('style', 'visibility: hidden');
   } else {
     var inputShapeX = 0, inputShapeY = 0;
-    // If the input connection is not connected, draw a hole shape.
-    var inputShapePath = null;
-    var inputShapeArgType = null;
-    switch (input.connection.getOutputShape()) {
-      case Blockly.OUTPUT_SHAPE_HEXAGONAL:
-        inputShapePath = Blockly.BlockSvg.INPUT_SHAPE_HEXAGONAL;
-        inputShapeWidth = Blockly.BlockSvg.INPUT_SHAPE_HEXAGONAL_WIDTH;
-        inputShapeArgType = 'boolean';
-        break;
-      case Blockly.OUTPUT_SHAPE_ROUND:
-        inputShapePath = Blockly.BlockSvg.INPUT_SHAPE_ROUND;
-        inputShapeWidth = Blockly.BlockSvg.INPUT_SHAPE_ROUND_WIDTH;
-        inputShapeArgType = 'round';
-        break;
-      case Blockly.OUTPUT_SHAPE_SQUARE:
-      default:
-        inputShapePath = Blockly.BlockSvg.INPUT_SHAPE_SQUARE;
-        inputShapeWidth = Blockly.BlockSvg.INPUT_SHAPE_SQUARE_WIDTH;
-        inputShapeArgType = 'square';
-        break;
-    }
+    var inputShapeInfo =
+        Blockly.BlockSvg.getInputShapeInfo_(input.connection.getOutputShape());
     if (this.RTL) {
-      inputShapeX = -x - inputShapeWidth;
+      inputShapeX = -x - inputShapeInfo.width;
     } else {
       inputShapeX = x;
     }
     inputShapeY = y - (Blockly.BlockSvg.INPUT_SHAPE_HEIGHT / 2);
-    inputShape.setAttribute('d', inputShapePath);
+    inputShape.setAttribute('d', inputShapeInfo.path);
     inputShape.setAttribute('transform',
       'translate(' + inputShapeX + ',' + inputShapeY + ')'
     );
-    inputShape.setAttribute('data-argument-type', inputShapeArgType);
+    inputShape.setAttribute('data-argument-type', inputShapeInfo.argType);
     inputShape.setAttribute('style', 'visibility: visible');
   }
 };
@@ -1583,4 +1553,64 @@ Blockly.BlockSvg.prototype.renderDefineBlock_ = function(steps, inputRows,
 
   // row.height will be used to update the cursor in the calling function.
   row.height += 4 * Blockly.BlockSvg.GRID_UNIT;
+};
+
+/**
+ * Get some information about the input shape to draw, based on the type of the
+ * connection.
+ * @param {number} shape An enum representing the shape of the connection we're
+ *     drawing around.
+ * @return {!Object} An object containing an SVG path, a string representation
+ *     of the argument type, and a width.
+ * @private
+ */
+Blockly.BlockSvg.getInputShapeInfo_ = function(shape) {
+  var inputShapePath = null;
+  var inputShapeArgType = null;
+  var inputShapeWidth = 0;
+
+  switch (shape) {
+    case Blockly.OUTPUT_SHAPE_HEXAGONAL:
+      inputShapePath = Blockly.BlockSvg.INPUT_SHAPE_HEXAGONAL;
+      inputShapeWidth = Blockly.BlockSvg.INPUT_SHAPE_HEXAGONAL_WIDTH;
+      inputShapeArgType = 'boolean';
+      break;
+    case Blockly.OUTPUT_SHAPE_ROUND:
+      inputShapePath = Blockly.BlockSvg.INPUT_SHAPE_ROUND;
+      inputShapeWidth = Blockly.BlockSvg.INPUT_SHAPE_ROUND_WIDTH;
+      inputShapeArgType = 'round';
+      break;
+    case Blockly.OUTPUT_SHAPE_SQUARE:
+    default:  // If the input connection is not connected, draw a hole shape.
+      inputShapePath = Blockly.BlockSvg.INPUT_SHAPE_SQUARE;
+      inputShapeWidth = Blockly.BlockSvg.INPUT_SHAPE_SQUARE_WIDTH;
+      inputShapeArgType = 'square';
+      break;
+  }
+  return {
+    path: inputShapePath,
+    argType: inputShapeArgType,
+    width: inputShapeWidth
+  };
+};
+
+/**
+ * Get the correct cursor position for the given input, based on alignment,
+ * the total size of the block, and the size of the input.
+ * @param {number} cursorX The minimum x value of the cursor.
+ * @param {!Blockly.Input} input The input to align the fields for.
+ * @param {number} rightEdge The maximum width of the block.  Right-aligned
+ *     fields are positioned based on this number.
+ * @return {number} The new cursor position.
+ * @private
+ */
+Blockly.BlockSvg.getAlignedCursor_ = function(cursorX, input, rightEdge) {
+  // Align inline field rows (left/right/centre).
+  if (input.align === Blockly.ALIGN_RIGHT) {
+    cursorX += rightEdge - input.fieldWidth -
+      (2 * Blockly.BlockSvg.SEP_SPACE_X);
+  } else if (input.align === Blockly.ALIGN_CENTRE) {
+    cursorX = Math.max(cursorX, rightEdge / 2 - input.fieldWidth / 2);
+  }
+  return cursorX;
 };
