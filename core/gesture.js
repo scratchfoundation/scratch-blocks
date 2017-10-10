@@ -694,7 +694,7 @@ Blockly.Gesture.prototype.setStartField = function(field) {
 Blockly.Gesture.prototype.setStartBlock = function(block) {
   if (!this.startBlock_) {
     this.startBlock_ = block;
-    this.shouldDuplicateOnDrag_ = Blockly.utils.shouldDuplicateOnDrag(block);
+    this.shouldDuplicateOnDrag_ = Blockly.utils.isShadowArgumentReporter(block);
     if (block.isInFlyout && block != block.getRootBlock()) {
       this.setTargetBlock_(block.getRootBlock());
     } else {

@@ -874,7 +874,7 @@ Blockly.BlockSvg.prototype.computeInputWidth_ = function(input) {
 Blockly.BlockSvg.prototype.computeInputHeight_ = function(input, row,
     previousRow) {
   if (this.inputList.length === 1 && this.outputConnection &&
-      (this.isShadow() &&  !Blockly.utils.shouldDuplicateOnDrag(this))) {
+      (this.isShadow() &&  !Blockly.utils.isShadowArgumentReporter(this))) {
     // "Lone" field blocks are smaller.
     return Blockly.BlockSvg.MIN_BLOCK_Y_SINGLE_FIELD_OUTPUT;
   } else if (this.outputConnection) {
@@ -954,7 +954,7 @@ Blockly.BlockSvg.prototype.computeRightEdge_ = function(curEdge, hasStatement) {
 Blockly.BlockSvg.prototype.computeOutputPadding_ = function(inputRows) {
   // Only apply to blocks with outputs and not single fields (shadows).
   if (!this.getOutputShape() || !this.outputConnection ||
-      (this.isShadow() && !Blockly.utils.shouldDuplicateOnDrag(this))) {
+      (this.isShadow() && !Blockly.utils.isShadowArgumentReporter(this))) {
     return;
   }
   // Blocks with outputs must have single row to be padded.

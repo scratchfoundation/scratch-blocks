@@ -955,17 +955,16 @@ Blockly.utils.changeObscuredShadowIds = function(block) {
 };
 
 /**
- * Whether to duplicate this block at the beginning of a drag.  This can be used
- * to drag a shadow block out of a parent block and leave a copy in place, e.g.
- * for custom block argument reporters in Scratch.
- * As a side effect, the target block is set to be the start block instead of
- * the first non-shadow parent.
+ * Whether a block is both a shadow block and an argument reporter.  These
+ * blocks have special behaviour in scratch-blocks: they're duplicated when
+ * dragged, and they are rendered slightly differently from normal shadow
+ * blocks.
  * @param {!Blockly.BlockSvg} block The block that should be used to make this
  *     decision.
  * @return {boolean} True if the block should be duplicated on drag.
  * @package
  */
-Blockly.utils.shouldDuplicateOnDrag = function(block) {
+Blockly.utils.isShadowArgumentReporter = function(block) {
   return (block.isShadow() && (block.type == 'argument_reporter_boolean' ||
       block.type == 'argument_reporter_string_number'));
 };
