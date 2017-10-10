@@ -58,6 +58,6 @@ Blockly.FieldLabelEditable.prototype.EDITABLE = true;
  **/
 Blockly.FieldLabelEditable.prototype.updateWidth = function() {
   // Set width of the field.
-  // Unlike a the base Field class, this doesn't add space to editable fields.
+  // Unlike the base Field class, this doesn't add space to editable fields.
   this.size_.width = Blockly.Field.getCachedWidth(this.textElement_);
 };

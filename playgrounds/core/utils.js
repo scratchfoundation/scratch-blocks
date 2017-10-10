@@ -932,7 +932,6 @@ Blockly.utils.setCssTransform = function(node, transform) {
   node.style['-webkit-transform'] = transform;
 };
 
-
 /**
  * Re-assign obscured shadow blocks new IDs to prevent collisions
  * Scratch specific to help the VM handle deleting obscured shadows.
@@ -953,4 +952,19 @@ Blockly.utils.changeObscuredShadowIds = function(block) {
       }
     }
   }
+};
+
+/**
+ * Whether a block is both a shadow block and an argument reporter.  These
+ * blocks have special behaviour in scratch-blocks: they're duplicated when
+ * dragged, and they are rendered slightly differently from normal shadow
+ * blocks.
+ * @param {!Blockly.BlockSvg} block The block that should be used to make this
+ *     decision.
+ * @return {boolean} True if the block should be duplicated on drag.
+ * @package
+ */
+Blockly.utils.isShadowArgumentReporter = function(block) {
+  return (block.isShadow() && (block.type == 'argument_reporter_boolean' ||
+      block.type == 'argument_reporter_string_number'));
 };
