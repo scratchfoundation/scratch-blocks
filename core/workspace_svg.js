@@ -1816,7 +1816,7 @@ Blockly.WorkspaceSvg.prototype.setResizesEnabled = function(enabled) {
  */
 Blockly.WorkspaceSvg.prototype.setBulkUpdate = function(enabled) {
   // This will trigger a resize if necessary.
-  this.setResizesEnabled(enabled);
+  this.setResizesEnabled(!enabled); // Disable resizes when enabling bulk update
   var stoppedUpdating = (this.isBulkUpdating_ && !enabled);
   this.isBulkUpdating_ = enabled;
   if (stoppedUpdating) {
