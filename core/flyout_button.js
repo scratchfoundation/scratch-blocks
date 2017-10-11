@@ -178,8 +178,6 @@ Blockly.FlyoutButton.prototype.createDom = function() {
   svgText.setAttribute('x', this.width / 2);
   svgText.setAttribute('y', this.height / 2);
 
-  this.updateTransform_();
-
   this.mouseUpWrapper_ = Blockly.bindEventWithChecks_(this.svgGroup_, 'mouseup',
       this, this.onMouseUp_);
   return this.svgGroup_;
