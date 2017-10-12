@@ -1,7 +1,7 @@
 {
 	"@metadata": {
 		"author": "Ellen Spertus <ellen.spertus@gmail.com>",
-		"lastupdated": "2017-10-12 17:05:31.045665",
+		"lastupdated": "2017-10-12 17:19:58.832925",
 		"locale": "en",
 		"messagedocumentation" : "qqq"
 	},
@@ -25,6 +25,7 @@
 	"HELP": "Help",
 	"UNDO": "Undo",
 	"REDO": "Redo",
+	"EDIT_PROCEDURE": "Edit",
 	"CHANGE_VALUE_TITLE": "Change value:",
 	"RENAME_VARIABLE": "Rename variable...",
 	"RENAME_VARIABLE_TITLE": "Rename all '%1' variables to:",
