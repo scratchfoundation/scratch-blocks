@@ -54,13 +54,10 @@ Blockly.Blocks['procedures_callnoreturn'] = {
    * @this Blockly.Block
    */
   init: function() {
-    this.setPreviousStatement(true);
-    this.setNextStatement(true);
-    this.setCategory(Blockly.Categories.more);
-    this.setColour(Blockly.Colours.more.primary,
-      Blockly.Colours.more.secondary,
-      Blockly.Colours.more.tertiary);
-    this._procCode = '';
+    this.jsonInit({
+      "extensions": ["colours_more", "shape_statement", "procedure_call_contextmenu"]
+    });
+    this.procCode_ = '';
   },
   /**
    * Create XML to represent the (non-editable) name and arguments.
@@ -69,7 +66,7 @@ Blockly.Blocks['procedures_callnoreturn'] = {
    */
   mutationToDom: function() {
     var container = document.createElement('mutation');
-    container.setAttribute('proccode', this._procCode);
+    container.setAttribute('proccode', this.procCode_);
     return container;
   },
   /**
@@ -78,12 +75,12 @@ Blockly.Blocks['procedures_callnoreturn'] = {
    * @this Blockly.Block
    */
   domToMutation: function(xmlElement) {
-    this._procCode = xmlElement.getAttribute('proccode');
+    this.procCode_ = xmlElement.getAttribute('proccode');
     this._updateDisplay();
   },
   _updateDisplay: function() {
     // Split the proc into components, by %n, %b, and %s (ignoring escaped).
-    var procComponents = this._procCode.split(/(?=[^\\]\%[nbs])/);
+    var procComponents = this.procCode_.split(/(?=[^\\]\%[nbs])/);
     procComponents = procComponents.map(function(c) {
       return c.trim(); // Strip whitespace.
     });
