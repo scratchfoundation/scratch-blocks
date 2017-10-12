@@ -162,7 +162,7 @@ Blockly.ScratchBlocks.VerticalExtensions.PROCEDURE_DEF_CONTEXTMENU = {
     // Add the edit option at the end.
     var editOption = {
       enabled: true,
-      text: Blockly.Msg.EDIT_FUNCTION,
+      text: Blockly.Msg.EDIT_PROCEDURE,
       callback: function() {
         alert('TODO(#603): implement function editing');
       }

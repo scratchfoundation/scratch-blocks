@@ -109,8 +109,8 @@ Blockly.Msg.HELP = 'Help';
 Blockly.Msg.UNDO = 'Undo';
 /// context menu - Undo the previous undo action.\n{{Identical|Redo}}
 Blockly.Msg.REDO = 'Redo';
-/// context menu - Edit the currently selected function
-Blockly.Msg.EDIT_FUNCTION = 'Edit';
+/// context menu - Edit the currently selected procedure.
+Blockly.Msg.EDIT_PROCEDURE = 'Edit';
 
 // Variable renaming.
 /// prompt - This message is only seen in the Opera browser.  With most browsers, users can edit numeric values in blocks by just clicking and typing.  Opera does not allows this, so we have to open a new window and prompt users with this message to chanage a value.
