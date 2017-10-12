@@ -141,6 +141,52 @@ Blockly.ScratchBlocks.VerticalExtensions.OUTPUT_BOOLEAN = function() {
   this.setOutput(true, 'Boolean');
 };
 
+
+
+/**
+ * Mixin to add a context menu for a procedure definition block.
+ * It adds the "edit" option and removes the "duplicate" option.
+ * @mixin
+ * @augments Blockly.Block
+ * @package
+ * @readonly
+ */
+Blockly.ScratchBlocks.VerticalExtensions.PROCEDURE_DEF_CONTEXTMENU = {
+  /**
+   * Add the "edit" option and removes the "duplicate" option from the context
+   * menu.
+   * @param {!Array.<!Object>} menuOptions List of menu options to edit.
+   * @this Blockly.Block
+   */
+  customContextMenu: function(menuOptions) {
+    // Add the edit option at the end.
+    var editOption = {
+      enabled: true,
+      text: Blockly.Msg.EDIT_PROCEDURE,
+      callback: function() {
+        alert('TODO(#603): implement function editing');
+      }
+    };
+    menuOptions.push(editOption);
+
+    // Find the delete option and update its callback to be specific to functions.
+    for (var i = 0, option; option = menuOptions[i]; i++) {
+      if (option.text == Blockly.Msg.DELETE_BLOCK) {
+        option.callback = function() {
+          alert('TODO(#1130): implement function deletion');
+        };
+      }
+    }
+    // Find and remove the duplicate option
+    for (var i = 0, option; option = menuOptions[i]; i++) {
+      if (option.text == Blockly.Msg.DUPLICATE_BLOCK) {
+        menuOptions.splice(i, 1);
+        break;
+      }
+    }
+  }
+};
+
 /**
  * Register all extensions for scratch-blocks.
  * @package
@@ -175,6 +221,10 @@ Blockly.ScratchBlocks.VerticalExtensions.registerAll = function() {
       Blockly.ScratchBlocks.VerticalExtensions.OUTPUT_STRING);
   Blockly.Extensions.register('output_boolean',
       Blockly.ScratchBlocks.VerticalExtensions.OUTPUT_BOOLEAN);
+
+  // Custom procedures have interesting context menus.
+  Blockly.Extensions.registerMixin('procedure_def_contextmenu',
+      Blockly.ScratchBlocks.VerticalExtensions.PROCEDURE_DEF_CONTEXTMENU);
 };
 
 Blockly.ScratchBlocks.VerticalExtensions.registerAll();

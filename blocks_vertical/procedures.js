@@ -43,11 +43,10 @@ Blockly.Blocks['procedures_defnoreturn'] = {
           "name": "custom_block"
         }
       ],
-      "extensions": ["colours_more", "shape_hat"]
+      "extensions": ["colours_more", "shape_hat", "procedure_def_contextmenu"]
     });
   }
 };
-
 
 Blockly.Blocks['procedures_callnoreturn'] = {
   /**
@@ -122,6 +121,7 @@ Blockly.Blocks['procedures_callnoreturn'] = {
     }
   }
 };
+
 Blockly.Blocks['procedures_callnoreturn_internal'] = {
   /**
    * Block for calling a procedure with no return value, for rendering inside
