@@ -1156,7 +1156,6 @@ Blockly.BlockSvg.prototype.renderDrawTop_ = function(steps, rightEdge) {
   /* eslint-disable indent */
   if (this.type == Blockly.BlockSvg.DEFINE_BLOCK_TYPE) {
     steps.push('m 0, 0');
-    //steps.push('v', -2 * Blockly.BlockSvg.GRID_UNIT);
     steps.push(Blockly.BlockSvg.TOP_LEFT_CORNER_DEFINE_HAT);
   } else {
     // Position the cursor at the top-left starting point.
