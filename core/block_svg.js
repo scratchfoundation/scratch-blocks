@@ -760,63 +760,17 @@ Blockly.BlockSvg.prototype.showContextMenu_ = function(e) {
   var menuOptions = [];
 
   if (this.isDeletable() && this.isMovable() && !block.isInFlyout) {
-    // Option to duplicate this block.
-    var duplicateOption = {
-      text: Blockly.Msg.DUPLICATE_BLOCK,
-      enabled: true,
-      callback: block.duplicateAndDragCallback_()
-    };
-    menuOptions.push(duplicateOption);
-
+    menuOptions.push(Blockly.BlockSvg.makeDuplicateOption_(block));
     if (this.isEditable() && this.workspace.options.comments) {
-      // Option to add/remove a comment.
-      var commentOption = {enabled: !goog.userAgent.IE};
-      if (this.comment) {
-        commentOption.text = Blockly.Msg.REMOVE_COMMENT;
-        commentOption.callback = function() {
-          block.setCommentText(null);
-        };
-      } else {
-        commentOption.text = Blockly.Msg.ADD_COMMENT;
-        commentOption.callback = function() {
-          block.setCommentText('');
-        };
-      }
-      menuOptions.push(commentOption);
+      menuOptions.push(Blockly.BlockSvg.makeCommentOption_(block));
     }
-
-    // Option to delete this block.
-    // Count the number of blocks that are nested in this block.
-    var descendantCount = this.getDescendants(true).length;
-    var nextBlock = this.getNextBlock();
-    if (nextBlock) {
-      // Blocks in the current stack would survive this block's deletion.
-      descendantCount -= nextBlock.getDescendants(true).length;
-    }
-    var deleteOption = {
-      text: descendantCount == 1 ? Blockly.Msg.DELETE_BLOCK :
-          Blockly.Msg.DELETE_X_BLOCKS.replace('%1', String(descendantCount)),
-      enabled: true,
-      callback: function() {
-        Blockly.Events.setGroup(true);
-        block.dispose(true, true);
-        Blockly.Events.setGroup(false);
-      }
-    };
-    menuOptions.push(deleteOption);
+    menuOptions.push(Blockly.BlockSvg.makeDeleteOption_(block));
   } else if (this.parentBlock_ && this.isShadow_) {
     this.parentBlock_.showContextMenu_(e);
     return;
   }
 
-  // Option to get help.
-  var url = goog.isFunction(this.helpUrl) ? this.helpUrl() : this.helpUrl;
-  var helpOption = {enabled: !!url};
-  helpOption.text = Blockly.Msg.HELP;
-  helpOption.callback = function() {
-    block.showHelp_();
-  };
-  menuOptions.push(helpOption);
+  menuOptions.push(Blockly.BlockSvg.makeHelpOption_(block));
 
   // Allow the block to add or modify menuOptions.
   if (this.customContextMenu) {
@@ -1492,3 +1446,93 @@ Blockly.BlockSvg.prototype.scheduleSnapAndBump = function() {
     Blockly.Events.setGroup(false);
   }, Blockly.BUMP_DELAY);
 };
+
+// Helper functions for context menus.
+
+/**
+ * Make a context menu option for deleting the current block.
+ * @param {!Blockly.BlockSvg} block The block where the right-click originated.
+ * @return {!Object} A menu option, containing text, enabled, and a callback.
+ * @private
+ */
+Blockly.BlockSvg.makeDeleteOption_ = function(block) {
+  // Option to delete this block but not blocks lower in the stack.
+  // Count the number of blocks that are nested in this block.
+  var descendantCount = block.getDescendants(true).length;
+  var nextBlock = block.getNextBlock();
+  if (nextBlock) {
+    // Blocks in the current stack would survive this block's deletion.
+    descendantCount -= nextBlock.getDescendants(true).length;
+  }
+  var deleteOption = {
+    text: descendantCount == 1 ? Blockly.Msg.DELETE_BLOCK :
+        Blockly.Msg.DELETE_X_BLOCKS.replace('%1', String(descendantCount)),
+    enabled: true,
+    callback: function() {
+      Blockly.Events.setGroup(true);
+      block.dispose(true, true);
+      Blockly.Events.setGroup(false);
+    }
+  };
+  return deleteOption;
+};
+
+/**
+ * Make a context menu option for showing help for the current block.
+ * @param {!Blockly.BlockSvg} block The block where the right-click originated.
+ * @return {!Object} A menu option, containing text, enabled, and a callback.
+ * @private
+ */
+Blockly.BlockSvg.makeHelpOption_ = function(block) {
+  var url = goog.isFunction(block.helpUrl) ? block.helpUrl() : block.helpUrl;
+  var helpOption = {
+    enabled: !!url,
+    text: Blockly.Msg.HELP,
+    callback: function() {
+      block.showHelp_();
+    }
+  };
+  return helpOption;
+};
+
+/**
+ * Make a context menu option for duplicating the current block.
+ * @param {!Blockly.BlockSvg} block The block where the right-click originated.
+ * @return {!Object} A menu option, containing text, enabled, and a callback.
+ * @private
+ */
+Blockly.BlockSvg.makeDuplicateOption_ = function(block) {
+  var duplicateOption = {
+    text: Blockly.Msg.DUPLICATE_BLOCK,
+    enabled: true,
+    callback: block.duplicateAndDragCallback_()
+  };
+  return duplicateOption;
+};
+
+/**
+ * Make a context menu option for adding or removing comments on the current
+ * block.
+ * @param {!Blockly.BlockSvg} block The block where the right-click originated.
+ * @return {!Object} A menu option, containing text, enabled, and a callback.
+ * @private
+ */
+Blockly.BlockSvg.makeCommentOption_ = function(block) {
+  var commentOption = {enabled: !goog.userAgent.IE};
+  // If there's already a comment, add an option to delete it.
+  if (block.comment) {
+    commentOption.text = Blockly.Msg.REMOVE_COMMENT;
+    commentOption.callback = function() {
+      block.setCommentText(null);
+    };
+  } else {
+    // If there's no comment, add an option to create a comment.
+    commentOption.text = Blockly.Msg.ADD_COMMENT;
+    commentOption.callback = function() {
+      block.setCommentText('');
+    };
+  }
+  return commentOption;
+};
+
+// End helper functions for context menus.
