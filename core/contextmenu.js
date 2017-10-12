@@ -196,9 +196,9 @@ Blockly.ContextMenu.callbackFactory = function(block, xml) {
  * Make a context menu option for deleting the current block.
  * @param {!Blockly.BlockSvg} block The block where the right-click originated.
  * @return {!Object} A menu option, containing text, enabled, and a callback.
- * @private
+ * @package
  */
-Blockly.ContextMenu.blockDeleteOption_ = function(block) {
+Blockly.ContextMenu.blockDeleteOption = function(block) {
   // Option to delete this block but not blocks lower in the stack.
   // Count the number of blocks that are nested in this block.
   var descendantCount = block.getDescendants(true).length;
@@ -224,9 +224,9 @@ Blockly.ContextMenu.blockDeleteOption_ = function(block) {
  * Make a context menu option for showing help for the current block.
  * @param {!Blockly.BlockSvg} block The block where the right-click originated.
  * @return {!Object} A menu option, containing text, enabled, and a callback.
- * @private
+ * @package
  */
-Blockly.ContextMenu.blockHelpOption_ = function(block) {
+Blockly.ContextMenu.blockHelpOption = function(block) {
   var url = goog.isFunction(block.helpUrl) ? block.helpUrl() : block.helpUrl;
   var helpOption = {
     enabled: !!url,
@@ -242,9 +242,9 @@ Blockly.ContextMenu.blockHelpOption_ = function(block) {
  * Make a context menu option for duplicating the current block.
  * @param {!Blockly.BlockSvg} block The block where the right-click originated.
  * @return {!Object} A menu option, containing text, enabled, and a callback.
- * @private
+ * @package
  */
-Blockly.ContextMenu.blockDuplicateOption_ = function(block) {
+Blockly.ContextMenu.blockDuplicateOption = function(block) {
   var duplicateOption = {
     text: Blockly.Msg.DUPLICATE_BLOCK,
     enabled: true,
@@ -258,9 +258,9 @@ Blockly.ContextMenu.blockDuplicateOption_ = function(block) {
  * block.
  * @param {!Blockly.BlockSvg} block The block where the right-click originated.
  * @return {!Object} A menu option, containing text, enabled, and a callback.
- * @private
+ * @package
  */
-Blockly.ContextMenu.blockCommentOption_ = function(block) {
+Blockly.ContextMenu.blockCommentOption = function(block) {
   var commentOption = {
     enabled: !goog.userAgent.IE
   };

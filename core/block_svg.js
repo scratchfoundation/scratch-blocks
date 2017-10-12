@@ -760,17 +760,17 @@ Blockly.BlockSvg.prototype.showContextMenu_ = function(e) {
   var menuOptions = [];
 
   if (this.isDeletable() && this.isMovable() && !block.isInFlyout) {
-    menuOptions.push(Blockly.ContextMenu.blockDuplicateOption_(block));
+    menuOptions.push(Blockly.ContextMenu.blockDuplicateOption(block));
     if (this.isEditable() && this.workspace.options.comments) {
-      menuOptions.push(Blockly.ContextMenu.blockCommentOption_(block));
+      menuOptions.push(Blockly.ContextMenu.blockCommentOption(block));
     }
-    menuOptions.push(Blockly.ContextMenu.blockDeleteOption_(block));
+    menuOptions.push(Blockly.ContextMenu.blockDeleteOption(block));
   } else if (this.parentBlock_ && this.isShadow_) {
     this.parentBlock_.showContextMenu_(e);
     return;
   }
 
-  menuOptions.push(Blockly.ContextMenu.blockHelpOption_(block));
+  menuOptions.push(Blockly.ContextMenu.blockHelpOption(block));
 
   // Allow the block to add or modify menuOptions.
   if (this.customContextMenu) {
