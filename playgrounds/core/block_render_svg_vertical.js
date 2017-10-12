@@ -458,7 +458,11 @@ Blockly.BlockSvg.SHAPE_IN_SHAPE_PADDING = {
   }
 };
 
-Blockly.BlockSvg.DEFINE_HAT_CORNER_RADIUS = 4 * Blockly.BlockSvg.CORNER_RADIUS;
+/**
+ * Corner radius of the hat on the define block.
+ * @const
+ */
+Blockly.BlockSvg.DEFINE_HAT_CORNER_RADIUS = 5 * Blockly.BlockSvg.GRID_UNIT;
 
 /**
  * SVG path for drawing the rounded top-left corner.
@@ -479,6 +483,12 @@ Blockly.BlockSvg.TOP_RIGHT_CORNER_DEFINE_HAT =
     Blockly.BlockSvg.DEFINE_HAT_CORNER_RADIUS + ' 0 0,1 ' +
     Blockly.BlockSvg.DEFINE_HAT_CORNER_RADIUS + ',' +
     Blockly.BlockSvg.DEFINE_HAT_CORNER_RADIUS;
+
+/**
+ * Padding on the right side of the internal block on the define block.
+ * @const
+ */
+Blockly.BlockSvg.DEFINE_BLOCK_PADDING_RIGHT = 2 * Blockly.BlockSvg.GRID_UNIT;
 
 /**
  * The type of all define blocks, which have custom rendering.
@@ -1146,7 +1156,6 @@ Blockly.BlockSvg.prototype.renderDrawTop_ = function(steps, rightEdge) {
   /* eslint-disable indent */
   if (this.type == Blockly.BlockSvg.DEFINE_BLOCK_TYPE) {
     steps.push('m 0, 0');
-    steps.push('v', -2 * Blockly.BlockSvg.GRID_UNIT);
     steps.push(Blockly.BlockSvg.TOP_LEFT_CORNER_DEFINE_HAT);
   } else {
     // Position the cursor at the top-left starting point.
@@ -1515,22 +1524,21 @@ Blockly.BlockSvg.prototype.renderDefineBlock_ = function(steps, inputRows,
   var rightSide = inputRows.rightEdge;
   if (input.connection && input.connection.targetBlock()) {
     rightSide = inputRows.statementEdge +
-        input.connection.targetBlock().getHeightWidth().width;
+        input.connection.targetBlock().getHeightWidth().width +
+        Blockly.BlockSvg.DEFINE_BLOCK_PADDING_RIGHT;
   } else {
     rightSide = Blockly.BlockSvg.MIN_BLOCK_X_WITH_STATEMENT;
   }
-  rightSide -= Blockly.BlockSvg.DEFINE_HAT_CORNER_RADIUS / 2;
+  rightSide -= Blockly.BlockSvg.DEFINE_HAT_CORNER_RADIUS;
 
   // Draw the top and the right corner of the hat.
   steps.push('H', rightSide);
   steps.push(Blockly.BlockSvg.TOP_RIGHT_CORNER_DEFINE_HAT);
-  // Draw the right side of the hat.
-  steps.push('v', 2 * Blockly.BlockSvg.GRID_UNIT);
-  // Draw the right side of the block around the statement input.
-  steps.push('v', row.height + 3 * Blockly.BlockSvg.GRID_UNIT);
-
   // row.height will be used to update the cursor in the calling function.
-  row.height += 4 * Blockly.BlockSvg.GRID_UNIT;
+  row.height += 3 * Blockly.BlockSvg.GRID_UNIT;
+  // Draw the right side of the block around the statement input.
+  steps.push('v', row.height);
+
 };
 
 /**
