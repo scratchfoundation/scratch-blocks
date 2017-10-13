@@ -84,6 +84,13 @@ Blockly.Field.cacheReference_ = 0;
 Blockly.Field.prototype.name = undefined;
 
 /**
+ * CSS class name for the text element.
+ * @type {string}
+ * @package
+ */
+Blockly.Field.prototype.className_ = 'blocklyText';
+
+/**
  * Visible text to display.
  * @type {string}
  * @private
@@ -166,7 +173,7 @@ Blockly.Field.prototype.init = function() {
   var fieldX = (this.sourceBlock_.RTL) ? -size.width / 2 : size.width / 2;
   /** @type {!Element} */
   this.textElement_ = Blockly.utils.createSvgElement('text',
-      {'class': 'blocklyText',
+      {'class': this.className_,
        'x': fieldX,
        'y': size.height / 2 + Blockly.BlockSvg.FIELD_TOP_PADDING,
        'dominant-baseline': 'middle',
@@ -575,9 +582,9 @@ Blockly.Field.prototype.updateTextNode_ = function() {
     // Truncate displayed string and add an ellipsis ('...').
     text = text.substring(0, this.maxDisplayLength - 2) + '\u2026';
     // Add special class for sizing font when truncated
-    this.textElement_.setAttribute('class', 'blocklyText blocklyTextTruncated');
+    this.textElement_.setAttribute('class', this.className_ + ' blocklyTextTruncated');
   } else {
-    this.textElement_.setAttribute('class', 'blocklyText');
+    this.textElement_.setAttribute('class', this.className_);
   }
   // Empty the text element.
   goog.dom.removeChildren(/** @type {!Element} */ (this.textElement_));
