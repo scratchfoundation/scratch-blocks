@@ -246,7 +246,7 @@ function test_updateVariableStore_ClearAndOneInUse() {
 function test_addTopBlock_TrivialFlyoutIsTrue() {
   workspaceTest_setUp();
   workspace.isFlyout = true;
-  var block = createMockBlock();
+  var block = createMockBlock('name1');
   workspace.removeTopBlock(block);
   setUpMockMethod(mockControl_, Blockly.Variables, 'allUsedVariables', [block],
     [['name1']]);
