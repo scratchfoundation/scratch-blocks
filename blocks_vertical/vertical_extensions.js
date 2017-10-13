@@ -141,8 +141,6 @@ Blockly.ScratchBlocks.VerticalExtensions.OUTPUT_BOOLEAN = function() {
   this.setOutput(true, 'Boolean');
 };
 
-
-
 /**
  * Mixin to add a context menu for a procedure definition block.
  * It adds the "edit" option and removes the "duplicate" option.
@@ -160,14 +158,7 @@ Blockly.ScratchBlocks.VerticalExtensions.PROCEDURE_DEF_CONTEXTMENU = {
    */
   customContextMenu: function(menuOptions) {
     // Add the edit option at the end.
-    var editOption = {
-      enabled: true,
-      text: Blockly.Msg.EDIT_PROCEDURE,
-      callback: function() {
-        alert('TODO(#603): implement function editing');
-      }
-    };
-    menuOptions.push(editOption);
+    menuOptions.push(Blockly.Procedures.makeEditOption(this));
 
     // Find the delete option and update its callback to be specific to functions.
     for (var i = 0, option; option = menuOptions[i]; i++) {
@@ -187,6 +178,25 @@ Blockly.ScratchBlocks.VerticalExtensions.PROCEDURE_DEF_CONTEXTMENU = {
   }
 };
 
+/**
+ * Mixin to add a context menu for a procedure call block.
+ * It adds the "edit" option and the "define" option.
+ * @mixin
+ * @augments Blockly.Block
+ * @package
+ * @readonly
+ */
+Blockly.ScratchBlocks.VerticalExtensions.PROCEDURE_CALL_CONTEXTMENU = {
+  /**
+   * Add the "edit" and "go to definition" options to the context menu.
+   * @param {!Array.<!Object>} menuOptions List of menu options to edit.
+   * @this Blockly.Block
+   */
+  customContextMenu: function(menuOptions) {
+    menuOptions.push(Blockly.Procedures.makeEditOption(this));
+    menuOptions.push(Blockly.Procedures.makeShowDefinitionOption(this));
+  }
+};
 /**
  * Register all extensions for scratch-blocks.
  * @package
@@ -225,6 +235,8 @@ Blockly.ScratchBlocks.VerticalExtensions.registerAll = function() {
   // Custom procedures have interesting context menus.
   Blockly.Extensions.registerMixin('procedure_def_contextmenu',
       Blockly.ScratchBlocks.VerticalExtensions.PROCEDURE_DEF_CONTEXTMENU);
+  Blockly.Extensions.registerMixin('procedure_call_contextmenu',
+      Blockly.ScratchBlocks.VerticalExtensions.PROCEDURE_CALL_CONTEXTMENU);
 };
 
 Blockly.ScratchBlocks.VerticalExtensions.registerAll();

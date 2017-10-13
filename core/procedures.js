@@ -316,3 +316,81 @@ Blockly.Procedures.getDefinition = function(name, workspace) {
   }
   return null;
 };
+
+/**
+ * Callback to open the modal for editing custom procedures.
+ * TODO(#603): Implement.
+ * @param {!Blockly.Block} block The block that was right-clicked.
+ * @private
+ */
+Blockly.Procedures.editProcedureCallback_ = function(block) {
+  if (block.type == 'procedures_defnoreturn') {
+    var input = block.getInput('custom_block');
+    if (!input) {
+      alert('Bad input'); // TODO: Decide what to do about this.
+      return;
+    }
+    var conn = input.connection;
+    if (!conn) {
+      alert('Bad connection'); // TODO: Decide what to do about this.
+      return;
+    }
+    var innerBlock = conn.targetBlock();
+    if (!innerBlock || !innerBlock.type == 'procedures_callnoreturn_internal') {
+      alert('Bad inner block'); // TODO: Decide what to do about this.
+      return;
+    }
+    block = innerBlock;
+  }
+  alert('TODO(#603): implement function editing (procCode was "' +
+      block.procCode_ + '")');
+};
+
+/**
+ * Make a context menu option for editing a custom procedure.
+ * This appears in the context menu for procedure definitions and procedure
+ * calls.
+ * @param {!Blockly.BlockSvg} block The block where the right-click originated.
+ * @return {!Object} A menu option, containing text, enabled, and a callback.
+ * @package
+ */
+Blockly.Procedures.makeEditOption = function(block) {
+  var editOption = {
+    enabled: true,
+    text: Blockly.Msg.EDIT_PROCEDURE,
+    callback: function() {
+      Blockly.Procedures.editProcedureCallback_(block);
+    }
+  };
+  return editOption;
+};
+
+/**
+ * Callback to show the procedure definition corresponding to a custom command
+ * block.
+ * TODO(#1136): Implement.
+ * @param {!Blockly.Block} block The block that was right-clicked.
+ * @private
+ */
+Blockly.Procedures.showProcedureDefCallback_ = function(block) {
+  alert('TODO(#1136): implement showing procedure definition (procCode was "' +
+      block.procCode_ + '")');
+};
+
+/**
+ * Make a context menu option for showing the definition for a custom procedure,
+ * based on a right-click on a custom command block.
+ * @param {!Blockly.BlockSvg} block The block where the right-click originated.
+ * @return {!Object} A menu option, containing text, enabled, and a callback.
+ * @package
+ */
+Blockly.Procedures.makeShowDefinitionOption = function(block) {
+  var option = {
+    enabled: true,
+    text: Blockly.Msg.SHOW_PROCEDURE_DEFINITION,
+    callback: function() {
+      Blockly.Procedures.showProcedureDefCallback_(block);
+    }
+  };
+  return option;
+};

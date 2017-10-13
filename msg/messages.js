@@ -112,6 +112,10 @@ Blockly.Msg.REDO = 'Redo';
 /// context menu - Edit the currently selected procedure.
 Blockly.Msg.EDIT_PROCEDURE = 'Edit';
 
+// TODO(#1136): Pick text for this.
+/// context menu - Bring the definition of the procedure into view.
+Blockly.Msg.SHOW_PROCEDURE_DEFINITION = 'Go to definition';
+
 // Variable renaming.
 /// prompt - This message is only seen in the Opera browser.  With most browsers, users can edit numeric values in blocks by just clicking and typing.  Opera does not allows this, so we have to open a new window and prompt users with this message to chanage a value.
 Blockly.Msg.CHANGE_VALUE_TITLE = 'Change value:';
