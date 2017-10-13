@@ -162,7 +162,7 @@ Blockly.FlyoutButton.prototype.createDom = function() {
       this.svgGroup_);
   svgText.textContent = this.text_;
 
-  this.width = svgText.getComputedTextLength();
+  this.width = Blockly.Field.getCachedWidth(svgText);
 
   if (!this.isLabel_) {
     this.width += 2 * Blockly.FlyoutButton.MARGIN;
@@ -177,8 +177,6 @@ Blockly.FlyoutButton.prototype.createDom = function() {
   svgText.setAttribute('alignment-baseline', 'central');
   svgText.setAttribute('x', this.width / 2);
   svgText.setAttribute('y', this.height / 2);
-
-  this.updateTransform_();
 
   this.mouseUpWrapper_ = Blockly.bindEventWithChecks_(this.svgGroup_, 'mouseup',
       this, this.onMouseUp_);
