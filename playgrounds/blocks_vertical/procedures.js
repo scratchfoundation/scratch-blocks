@@ -197,10 +197,14 @@ Blockly.Blocks['procedures_callnoreturn_internal'] = {
             break;
         }
         if (blockType) {
+          var argumentName = this.argumentNames_[inputCount];
+          var shadow = goog.dom.createDom('shadow');
+          shadow.setAttribute('type', blockType);
+          var field = goog.dom.createDom('field', null, argumentName);
+          field.setAttribute('name', 'VALUE');
+          shadow.appendChild(field);
           var input = this.appendValueInput(inputName);
-          var newBlock = this.workspace.newBlock(blockType);
-          newBlock.setShadow(true);
-          newBlock.setFieldValue(this.argumentNames_[inputCount], "VALUE");
+          var newBlock = Blockly.Xml.domToBlock(shadow, this.workspace);
           newBlock.outputConnection.connect(input.connection);
         }
         inputCount++;

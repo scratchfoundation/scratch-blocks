@@ -942,7 +942,7 @@ Blockly.BlockSvg.prototype.computeRightEdge_ = function(curEdge, hasStatement) {
     // Blocks with notches
     edge = Math.max(edge, Blockly.BlockSvg.MIN_BLOCK_X);
   } else if (this.outputConnection) {
-    if (this.isShadow()) {
+    if (this.isShadow() && !Blockly.utils.isShadowArgumentReporter(this)) {
       // Single-fields
       edge = Math.max(edge, Blockly.BlockSvg.MIN_BLOCK_X_SHADOW_OUTPUT);
     } else {
