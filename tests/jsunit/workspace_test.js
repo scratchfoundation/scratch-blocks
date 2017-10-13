@@ -214,7 +214,7 @@ function test_updateVariableStore_ClearAndOneInUse() {
   try {
     workspace.updateVariableStore(true);
     checkVariableValues(workspace, 'name1', 'type1', 'id1');
-    var variabe = workspace.getVariable('name2');
+    var variable = workspace.getVariable('name2');
     assertNull(variable);
   }
   finally {
