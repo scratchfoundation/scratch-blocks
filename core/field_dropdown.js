@@ -122,6 +122,7 @@ Blockly.FieldDropdown.prototype.init = function() {
   });
   this.arrow_.setAttributeNS('http://www.w3.org/1999/xlink',
       'xlink:href', Blockly.mainWorkspace.options.pathToMedia + 'dropdown-arrow.svg');
+  this.className_ += ' blocklyDropdownText';
 
   Blockly.FieldDropdown.superClass_.init.call(this);
   // If not in a shadow block, draw a box.
@@ -431,11 +432,6 @@ Blockly.FieldDropdown.prototype.setText = function(text) {
   this.updateTextNode_();
 
   if (this.textElement_) {
-    // Update class for dropdown text.
-    // This class is reset every time updateTextNode_ is called.
-    this.textElement_.setAttribute('class',
-        this.textElement_.getAttribute('class') + ' blocklyDropdownText'
-    );
     this.textElement_.parentNode.appendChild(this.arrow_);
   }
   if (this.sourceBlock_ && this.sourceBlock_.rendered) {
