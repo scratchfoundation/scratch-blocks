@@ -88,8 +88,8 @@ Blockly.Extensions.registerMixin = function(name, mixinObj) {
  * decompose are defined on the mixin.
  * @param {string} name The name of this mutator extension.
  * @param {!Object} mixinObj The values to mix in.
- * @param {(function())=} opt_helperFn An optional function to apply after mixing
- *     in the object.
+ * @param {(function())=} opt_helperFn An optional function to apply after
+ *     mixing in the object.
  * @param {Array.<string>=} opt_blockList A list of blocks to appear in the
  *     flyout of the mutator dialog.
  * @throws {Error} if the mutation is invalid or can't be applied to the block.
@@ -153,8 +153,8 @@ Blockly.Extensions.apply = function(name, block, isMutator) {
     Blockly.Extensions.checkBlockHasMutatorProperties_(errorPrefix, block);
   } else {
     if (!Blockly.Extensions.mutatorPropertiesMatch_(mutatorProperties, block)) {
-      throw new Error('Error when applying extension "' + name +
-          '": mutation properties changed when applying a non-mutator extension.');
+      throw new Error('Error when applying extension "' + name + '": ' +
+          'mutation properties changed when applying a non-mutator extension.');
     }
   }
 };
@@ -174,7 +174,7 @@ Blockly.Extensions.checkHasFunction_ = function(errorPrefix, func,
         'missing required property "' + propertyName + '"');
   } else if (typeof func != 'function') {
     throw new Error(errorPrefix +
-      '" required property "' + propertyName + '" must be a function');
+        '" required property "' + propertyName + '" must be a function');
   }
 };
 
@@ -214,9 +214,9 @@ Blockly.Extensions.checkMutatorDialog_ = function(object, errorPrefix) {
   var hasDecompose = object.decompose !== undefined;
 
   if (hasCompose && hasDecompose) {
-    if (typeof object.compose !== 'function') {
+    if (typeof object.compose != 'function') {
       throw new Error(errorPrefix + 'compose must be a function.');
-    } else if (typeof object.decompose !== 'function') {
+    } else if (typeof object.decompose != 'function') {
       throw new Error(errorPrefix + 'decompose must be a function.');
     }
     return true;
@@ -240,8 +240,9 @@ Blockly.Extensions.checkBlockHasMutatorProperties_ = function(errorPrefix,
   if (typeof block.domToMutation !== 'function') {
     throw new Error(errorPrefix + 'Applying a mutator didn\'t add "domToMutation"');
   }
-  if (typeof block.mutationToDom !== 'function') {
-    throw new Error(errorPrefix + 'Applying a mutator didn\'t add "mutationToDom"');
+  if (typeof block.mutationToDom != 'function') {
+    throw new Error(errorPrefix +
+                    'Applying a mutator didn\'t add "mutationToDom"');
   }
 
   // A block with a mutator isn't required to have a mutation dialog, but
@@ -285,19 +286,16 @@ Blockly.Extensions.getMutatorProperties_ = function(block) {
  * @private
  */
 Blockly.Extensions.mutatorPropertiesMatch_ = function(oldProperties, block) {
-  var match = true;
   var newProperties = Blockly.Extensions.getMutatorProperties_(block);
   if (newProperties.length != oldProperties.length) {
-    match = false;
-  } else {
-    for (var i = 0; i < newProperties.length; i++) {
-      if (oldProperties[i] != newProperties[i]) {
-        match = false;
-      }
+    return false;
+  }
+  for (var i = 0; i < newProperties.length; i++) {
+    if (oldProperties[i] != newProperties[i]) {
+      return false;
     }
   }
-
-  return match;
+  return true;
 };
 
 /**
@@ -343,7 +341,7 @@ Blockly.Extensions.buildTooltipForDropdown = function(dropdownName, lookupTable)
   var extensionFn = function() {
     if (this.type && blockTypesChecked.indexOf(this.type) === -1) {
       Blockly.Extensions.checkDropdownOptionsInTable_(
-        this, dropdownName, lookupTable);
+          this, dropdownName, lookupTable);
       blockTypesChecked.push(this.type);
     }
 
@@ -352,7 +350,7 @@ Blockly.Extensions.buildTooltipForDropdown = function(dropdownName, lookupTable)
       var tooltip = lookupTable[value];
       if (tooltip == null) {
         if (blockTypesChecked.indexOf(this.type) === -1) {
-          // Warn for missing values on generated tooltips
+          // Warn for missing values on generated tooltips.
           var warning = 'No tooltip mapping for value ' + value +
               ' of field ' + dropdownName;
           if (this.type != null) {
@@ -440,10 +438,8 @@ Blockly.Extensions.extensionParentTooltip_ = function() {
   this.tooltipWhenNotConnected_ = this.tooltip;
   this.setTooltip(function() {
     var parent = this.getParent();
-    return (parent &&
-      parent.getInputsInline() &&
-      parent.tooltip) ||
-      this.tooltipWhenNotConnected_;
+    return (parent && parent.getInputsInline() && parent.tooltip) ||
+        this.tooltipWhenNotConnected_;
   }.bind(this));
 };
 Blockly.Extensions.register('parent_tooltip_when_inline',
