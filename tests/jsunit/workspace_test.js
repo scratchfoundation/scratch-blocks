@@ -96,27 +96,6 @@ function test_flatWorkspace() {
   }
 }
 
-function test_maxBlocksWorkspace() {
-  workspaceTest_setUp();
-  try {
-    var blockA = workspace.newBlock('');
-    var blockB = workspace.newBlock('');
-    assertEquals('Infinite capacity.', Infinity, workspace.remainingCapacity());
-    workspace.options.maxBlocks = 3;
-    assertEquals('Three capacity.', 1, workspace.remainingCapacity());
-    workspace.options.maxBlocks = 2;
-    assertEquals('Two capacity.', 0, workspace.remainingCapacity());
-    workspace.options.maxBlocks = 1;
-    assertEquals('One capacity.', -1, workspace.remainingCapacity());
-    workspace.options.maxBlocks = 0;
-    assertEquals('Zero capacity.', -2, workspace.remainingCapacity());
-    workspace.clear();
-    assertEquals('Cleared capacity.', 0, workspace.remainingCapacity());
-  } finally {
-    workspaceTest_tearDown();
-  }
-}
-
 function test_getWorkspaceById() {
   var workspaceA = new Blockly.Workspace();
   var workspaceB = new Blockly.Workspace();
@@ -235,7 +214,7 @@ function test_updateVariableStore_ClearAndOneInUse() {
   try {
     workspace.updateVariableStore(true);
     checkVariableValues(workspace, 'name1', 'type1', 'id1');
-    var variabe = workspace.getVariable('name2');
+    var variable = workspace.getVariable('name2');
     assertNull(variable);
   }
   finally {
@@ -246,7 +225,7 @@ function test_updateVariableStore_ClearAndOneInUse() {
 function test_addTopBlock_TrivialFlyoutIsTrue() {
   workspaceTest_setUp();
   workspace.isFlyout = true;
-  var block = createMockBlock();
+  var block = createMockBlock('name1');
   workspace.removeTopBlock(block);
   setUpMockMethod(mockControl_, Blockly.Variables, 'allUsedVariables', [block],
     [['name1']]);
