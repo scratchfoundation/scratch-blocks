@@ -263,20 +263,23 @@ Blockly.Procedures.getCallers = function(name, ws, definitionRoot,
     allowRecursive) {
   var allBlocks = [];
   var topBlocks = ws.getTopBlocks();
+
+  // Start by deciding which stacks to investigate.
   for (var i = 0; i < topBlocks.length; i++) {
     var block = topBlocks[i];
     if (block.id == definitionRoot.id && !allowRecursive) {
       continue;
     }
-    allBlocks.push.apply(allBlocks, block.getChildren());
+    allBlocks.push.apply(allBlocks, block.getDescendants());
   }
 
   var callers = [];
   for (var i = 0; i < allBlocks.length; i++) {
+    var block = allBlocks[i];
     if (block.type == 'procedure_callnoreturn') {
       var procCode = block.getProcCode();
       if (procCode && procCode == name) {
-        callers.push[block];
+        callers.push(block);
       }
     }
   }
