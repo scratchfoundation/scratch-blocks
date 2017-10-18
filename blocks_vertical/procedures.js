@@ -60,6 +60,15 @@ Blockly.Blocks['procedures_callnoreturn'] = {
     this.procCode_ = '';
   },
   /**
+   * Returns the name of the procedure this block calls, or the empty string if
+   * it has not yet been set.
+   * @return {string} Procedure name.
+   * @this Blockly.Block
+   */
+  getProcCode: function() {
+    return this.procCode_;
+  },
+  /**
    * Create XML to represent the (non-editable) name and arguments.
    * @return {!Element} XML storage element.
    * @this Blockly.Block
