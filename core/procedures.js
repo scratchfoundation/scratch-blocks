@@ -248,21 +248,38 @@ Blockly.Procedures.flyoutCategory = function(workspace) {
 };
 
 /**
- * Find all the callers of a named procedure.
- * @param {string} name Name of procedure.
- * @param {!Blockly.Workspace} workspace The workspace to find callers in.
+ * Find all callers of a named procedure.
+ * @param {string} name Name of procedure (procCode in scratch-blocks).
+ * @param {!Blockly.Workspace} ws The workspace to find callers in.
+ * @param {!Blockly.Block} definitionRoot The root of the stack where the
+ *     procedure is defined.
+ * @param {boolean} allowRecursive True if the search should include recursive
+ *     procedure calls.  False if the search should ignore the stack starting
+ *     with definitionRoot.
  * @return {!Array.<!Blockly.Block>} Array of caller blocks.
+ * @package
  */
-Blockly.Procedures.getCallers = function(name, workspace) {
+Blockly.Procedures.getCallers = function(name, ws, definitionRoot,
+    allowRecursive) {
+  var allBlocks = [];
+  var topBlocks = ws.getTopBlocks();
+
+  // Start by deciding which stacks to investigate.
+  for (var i = 0; i < topBlocks.length; i++) {
+    var block = topBlocks[i];
+    if (block.id == definitionRoot.id && !allowRecursive) {
+      continue;
+    }
+    allBlocks.push.apply(allBlocks, block.getDescendants());
+  }
+
   var callers = [];
-  var blocks = workspace.getAllBlocks();
-  // Iterate through every block and check the name.
-  for (var i = 0; i < blocks.length; i++) {
-    if (blocks[i].getProcedureCall) {
-      var procName = blocks[i].getProcedureCall();
-      // Procedure name may be null if the block is only half-built.
-      if (procName && Blockly.Names.equals(procName, name)) {
-        callers.push(blocks[i]);
+  for (var i = 0; i < allBlocks.length; i++) {
+    var block = allBlocks[i];
+    if (block.type == 'procedure_callnoreturn') {
+      var procCode = block.getProcCode();
+      if (procCode && procCode == name) {
+        callers.push(block);
       }
     }
   }
@@ -275,6 +292,7 @@ Blockly.Procedures.getCallers = function(name, workspace) {
  * @param {!Blockly.Block} defBlock Procedure definition block.
  */
 Blockly.Procedures.mutateCallers = function(defBlock) {
+  // TODO(#1143) Update this for scratch procedures.
   var oldRecordUndo = Blockly.Events.recordUndo;
   var name = defBlock.getProcedureDef()[0];
   var xmlElement = defBlock.mutationToDom(true);
