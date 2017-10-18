@@ -110,18 +110,17 @@ Blockly.FieldColourSlider.prototype.setValue = function(colour) {
  * @private
  */
 Blockly.FieldColourSlider.prototype.createColourStops_ = function(channel) {
-  var hsv = goog.color.hexToHsv(this.getValue());
   var stops = [];
   for(var n = 0; n <= 360; n += 20) {
     switch (channel) {
       case 'hue':
-        stops.push(goog.color.hsvToHex(n, hsv[1], hsv[2]));
+        stops.push(goog.color.hsvToHex(n, this.saturation_, this.brightness_));
         break;
       case 'saturation':
-        stops.push(goog.color.hsvToHex(hsv[0], n / 360, hsv[2]));
+        stops.push(goog.color.hsvToHex(this.hue_, n / 360, this.brightness_));
         break;
       case 'brightness':
-        stops.push(goog.color.hsvToHex(hsv[0], hsv[1], 255 * n / 360));
+        stops.push(goog.color.hsvToHex(this.hue_, this.saturation_, 255 * n / 360));
         break;
       default:
         throw new Error("Unknown channel for colour sliders: " + channel);
@@ -162,10 +161,9 @@ Blockly.FieldColourSlider.prototype.updateDom_ = function() {
     this.setGradient_(this.brightnessSlider_.getElement(), 'brightness');
 
     // Update the readouts
-    var hsv = goog.color.hexToHsv(this.getValue());
-    this.hueReadout_.textContent = Math.floor(100 * hsv[0] / 360).toFixed(0);
-    this.saturationReadout_.textContent = Math.floor(100 * hsv[1]).toFixed(0);
-    this.brightnessReadout_.textContent = Math.floor(100 * hsv[2] / 255).toFixed(0);
+    this.hueReadout_.textContent = Math.floor(100 * this.hue_ / 360).toFixed(0);
+    this.saturationReadout_.textContent = Math.floor(100 * this.saturation_).toFixed(0);
+    this.brightnessReadout_.textContent = Math.floor(100 * this.brightness_ / 255).toFixed(0);
   }
 };
 
@@ -175,10 +173,9 @@ Blockly.FieldColourSlider.prototype.updateDom_ = function() {
  */
 Blockly.FieldColourSlider.prototype.updateSliderHandles_ = function() {
   if (this.hueSlider_) {
-    var hsv = goog.color.hexToHsv(this.getValue());
-    this.hueSlider_.setValue(hsv[0]);
-    this.saturationSlider_.setValue(hsv[1]);
-    this.brightnessSlider_.setValue(hsv[2]);
+    this.hueSlider_.setValue(this.hue_);
+    this.saturationSlider_.setValue(this.saturation_);
+    this.brightnessSlider_.setValue(this.brightness_);
   }
 };
 
@@ -228,13 +225,13 @@ Blockly.FieldColourSlider.prototype.sliderCallbackFactory_ = function(channel) {
     var hsv = goog.color.hexToHsv(thisField.getValue());
     switch (channel) {
       case 'hue':
-        hsv[0] = channelValue;
+        hsv[0] = thisField.hue_ = channelValue;
         break;
       case 'saturation':
-        hsv[1] = channelValue;
+        hsv[1] = thisField.saturation_ = channelValue;
         break;
       case 'brightness':
-        hsv[2] = channelValue;
+        hsv[2] = thisField.brightness_ = channelValue;
         break;
     }
     var colour = goog.color.hsvToHex(hsv[0], hsv[1], hsv[2]);
@@ -268,13 +265,20 @@ Blockly.FieldColourSlider.prototype.showEditor_ = function() {
   Blockly.DropDownDiv.clearContent();
   var div = Blockly.DropDownDiv.getContentDiv();
 
+  // Init color component values that are used while the editor is open
+  // in order to keep the slider values stable.
+  var hsv = goog.color.hexToHsv(this.getValue());
+  this.hue_ = hsv[0];
+  this.saturation_ = hsv[1];
+  this.brightness_ = hsv[2];
+
   var hueElements = this.createLabelDom_('Hue');
   div.appendChild(hueElements[0]);
   this.hueReadout_ = hueElements[1];
   this.hueSlider_ = new goog.ui.Slider();
   this.hueSlider_.setUnitIncrement(5);
   this.hueSlider_.setMinimum(0);
-  this.hueSlider_.setMaximum(359);
+  this.hueSlider_.setMaximum(360);
   this.hueSlider_.render(div);
 
   var saturationElements = this.createLabelDom_('Saturation');
@@ -283,8 +287,8 @@ Blockly.FieldColourSlider.prototype.showEditor_ = function() {
   this.saturationSlider_ = new goog.ui.Slider();
   this.saturationSlider_.setUnitIncrement(0.01);
   this.saturationSlider_.setStep(0.001);
-  this.saturationSlider_.setMinimum(0.01);
-  this.saturationSlider_.setMaximum(0.99);
+  this.saturationSlider_.setMinimum(0);
+  this.saturationSlider_.setMaximum(1.0);
   this.saturationSlider_.render(div);
 
   var brightnessElements = this.createLabelDom_('Brightness');
@@ -292,7 +296,7 @@ Blockly.FieldColourSlider.prototype.showEditor_ = function() {
   this.brightnessReadout_ = brightnessElements[1];
   this.brightnessSlider_ = new goog.ui.Slider();
   this.brightnessSlider_.setUnitIncrement(2);
-  this.brightnessSlider_.setMinimum(5);
+  this.brightnessSlider_.setMinimum(0);
   this.brightnessSlider_.setMaximum(255);
   this.brightnessSlider_.render(div);
 
