@@ -13,7 +13,10 @@
   "scripts": {
     "deploy": "gh-pages -t -d gh-pages -m \"Build for $(git log --pretty=format:%H -n1)\"",
     "prepublish": "python build.py && webpack",
-    "test": "eslint .",
+    "test:setup": "tests/scripts/test_setup.sh",
+    "test:unit": "node tests/jsunit/test_runner.js",
+    "test:lint": "eslint .",
+    "test": "npm run test:lint && npm run test:setup && npm run test:unit",
     "version": "json -f package.json -I -e \"this.repository.sha = '$(git log -n1 --pretty=format:%H)'\""
   },
   "devDependencies": {
@@ -21,11 +24,12 @@
     "eslint": "2.9.0",
     "exports-loader": "0.6.3",
     "gh-pages": "0.12.0",
-    "google-closure-library": "20160911.0.0",
+    "google-closure-library": "20170910.0.0",
     "graceful-fs": "4.1.11",
     "imports-loader": "0.6.5",
     "json": "9.0.4",
     "travis-after-all": "1.4.4",
+    "webdriverio": "4.8.0",
     "webpack": "1.13.2"
   }
 }
