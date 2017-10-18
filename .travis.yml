@@ -6,9 +6,17 @@ sudo: false
 cache:
   directories:
   - node_modules
+
 before_install:
 # Symlink closure library
 - ln -s $(npm root)/google-closure-library ../closure-library
+
+before_script:
+  - export DISPLAY=:99.0
+  - if [ "${TRAVIS_OS_NAME}" == "linux" ]; then ( scripts/setup_linux_env.sh  ) fi
+  - if [ "${TRAVIS_OS_NAME}" == "osx" ]; then ( scripts/setup_osx_env.sh ) fi
+  - sleep 2
+
 after_script:
 - |
   # RELEASE_BRANCHES and NPM_TOKEN defined in Travis settings panel
