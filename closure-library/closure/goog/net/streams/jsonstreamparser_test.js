@@ -70,10 +70,6 @@ function testEmptyStreamMore() {
   parser = new goog.net.streams.JsonStreamParser();
   assertThrows(function() { parser.parse(' a [   '); });
   assertThrows(function() { parser.parse(' [ ] '); });
-
-  parser = new goog.net.streams.JsonStreamParser();
-  parser.parse(' [   ');
-  assertThrows(function() { parser.parse(' ]  a   '); });
 }
 
 function testSingleMessage() {
@@ -235,4 +231,35 @@ function testRandomlyChunkedFuzzyMessages() {
   goog.array.forEach(data, function(elm, index) {
     assertObjectEquals(dataString + '\n@' + index, elm, result[index]);
   });
+}
+
+
+// TODO(user): add a fuzzy test for this.
+
+function testGetExtraInput() {
+  var parser = new goog.net.streams.JsonStreamParser();
+  var result = parser.parse('[] , [[1, 2, 3]]');
+  assertNull(result);
+  assertTrue(parser.done());
+  assertEquals(' , [[1, 2, 3]]', parser.getExtraInput());
+
+  parser = new goog.net.streams.JsonStreamParser();
+  assertFalse(parser.done());
+  parser.parse(' [{"a" : "b"}, {"c" : "d"   ');
+  assertFalse(parser.done());
+  parser.parse(' } ]  a   ');
+  assertTrue(parser.done());
+  assertEquals('  a   ', parser.getExtraInput());
+}
+
+
+function testDeliverMessageAsRawString() {
+  var parser = new goog.net.streams.JsonStreamParser(
+      {'deliverMessageAsRawString': true});
+  var result = parser.parse(' [{"a" : "b"}, {"c" : "d"},[],{}] ');
+  assertEquals(4, result.length);
+  assertEquals('{"a" : "b"}', result[0]);
+  assertEquals(' {"c" : "d"}', result[1]);
+  assertEquals('[]', result[2]);
+  assertEquals('{}', result[3]);
 }

@@ -99,7 +99,7 @@ goog.userAgent.getUserAgentString = function() {
 
 /**
  * TODO(nnaze): Change type to "Navigator" and update compilation targets.
- * @return {Object} The native navigator object.
+ * @return {?Object} The native navigator object.
  */
 goog.userAgent.getNavigator = function() {
   // Need a local navigator reference instead of using the global one,
@@ -384,6 +384,15 @@ goog.userAgent.IPOD = goog.userAgent.PLATFORM_KNOWN_ ?
     goog.userAgent.ASSUME_IPOD :
     goog.labs.userAgent.platform.isIpod();
 
+
+/**
+ * Whether the user agent is running on iOS.
+ * @type {boolean}
+ */
+goog.userAgent.IOS = goog.userAgent.PLATFORM_KNOWN_ ?
+    (goog.userAgent.ASSUME_IPHONE || goog.userAgent.ASSUME_IPAD ||
+     goog.userAgent.ASSUME_IPOD) :
+    goog.labs.userAgent.platform.isIos();
 
 /**
  * @return {string} The string that describes the version number of the user

@@ -269,10 +269,17 @@ goog.ui.ac.Renderer.prototype.target_;
 
 /**
  * The element on which to base the width of the autocomplete.
- * @type {Node}
- * @private
+ * @protected {Node}
  */
 goog.ui.ac.Renderer.prototype.widthProvider_;
+
+
+/**
+ * The border width of the autocomplete dropdown, only used in calculating the
+ * dropdown width.
+ * @private {number}
+ */
+goog.ui.ac.Renderer.prototype.borderWidth_ = 0;
 
 
 /**
@@ -303,9 +310,15 @@ goog.ui.ac.Renderer.prototype.getElement = function() {
  * Sets the width provider element. The provider is only used on redraw and as
  * such will not automatically update on resize.
  * @param {Node} widthProvider The element whose width should be mirrored.
+ * @param {number=} opt_borderWidth The with of the border of the autocomplete,
+ *     which will be subtracted from the width of the autocomplete dropdown.
  */
-goog.ui.ac.Renderer.prototype.setWidthProvider = function(widthProvider) {
+goog.ui.ac.Renderer.prototype.setWidthProvider = function(
+    widthProvider, opt_borderWidth) {
   this.widthProvider_ = widthProvider;
+  if (opt_borderWidth) {
+    this.borderWidth_ = opt_borderWidth;
+  }
 };
 
 
@@ -636,7 +649,7 @@ goog.ui.ac.Renderer.prototype.redraw = function() {
   }
 
   if (this.widthProvider_) {
-    var width = this.widthProvider_.clientWidth + 'px';
+    var width = this.widthProvider_.clientWidth - this.borderWidth_ + 'px';
     this.element_.style.minWidth = width;
   }
 

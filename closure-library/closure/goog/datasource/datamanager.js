@@ -179,7 +179,7 @@ goog.ds.DataManager.prototype.get = function() {
 
 /** @override */
 goog.ds.DataManager.prototype.set = function(value) {
-  throw Error('Can\'t set on DataManager');
+  throw new Error('Can\'t set on DataManager');
 };
 
 
@@ -476,7 +476,7 @@ goog.ds.DataManager.prototype.removeListenersByFunction_ = function(
  * @return {number} Number of listeners.
  */
 goog.ds.DataManager.prototype.getListenerCount = function() {
-  var count = 0;
+  var /** number */ count = 0;
   goog.object.forEach(this.listenerMap_, function(matchingListeners) {
     count += goog.structs.getCount(matchingListeners);
   });
@@ -496,7 +496,7 @@ goog.ds.DataManager.prototype.getListenerCount = function() {
  */
 goog.ds.DataManager.prototype.runWithoutFiringDataChanges = function(callback) {
   if (this.disableFiring_) {
-    throw Error('Can not nest calls to runWithoutFiringDataChanges');
+    throw new Error('Can not nest calls to runWithoutFiringDataChanges');
   }
 
   this.disableFiring_ = true;

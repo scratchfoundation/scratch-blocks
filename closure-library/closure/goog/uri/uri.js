@@ -322,7 +322,7 @@ goog.Uri.prototype.resolve = function(relativeUri) {
   }
 
   if (overridden) {
-    absoluteUri.setQueryData(relativeUri.getDecodedQuery());
+    absoluteUri.setQueryData(relativeUri.getQueryData().clone());
   } else {
     overridden = relativeUri.hasFragment();
   }
@@ -465,7 +465,7 @@ goog.Uri.prototype.setPort = function(newPort) {
   if (newPort) {
     newPort = Number(newPort);
     if (isNaN(newPort) || newPort < 0) {
-      throw Error('Bad port number ' + newPort);
+      throw new Error('Bad port number ' + newPort);
     }
     this.port_ = newPort;
   } else {
@@ -763,7 +763,7 @@ goog.Uri.prototype.isReadOnly = function() {
  */
 goog.Uri.prototype.enforceReadOnly = function() {
   if (this.isReadOnly_) {
-    throw Error('Tried to modify a read-only Uri');
+    throw new Error('Tried to modify a read-only Uri');
   }
 };
 
@@ -1135,7 +1135,7 @@ goog.Uri.QueryData.prototype.ensureKeyMapInitialized_ = function() {
 goog.Uri.QueryData.createFromMap = function(map, opt_uri, opt_ignoreCase) {
   var keys = goog.structs.getKeys(map);
   if (typeof keys == 'undefined') {
-    throw Error('Keys are undefined');
+    throw new Error('Keys are undefined');
   }
 
   var queryData = new goog.Uri.QueryData(null, null, opt_ignoreCase);
@@ -1169,7 +1169,7 @@ goog.Uri.QueryData.createFromMap = function(map, opt_uri, opt_ignoreCase) {
 goog.Uri.QueryData.createFromKeysValues = function(
     keys, values, opt_uri, opt_ignoreCase) {
   if (keys.length != values.length) {
-    throw Error('Mismatched lengths for keys/values');
+    throw new Error('Mismatched lengths for keys/values');
   }
   var queryData = new goog.Uri.QueryData(null, null, opt_ignoreCase);
   for (var i = 0; i < keys.length; i++) {
@@ -1272,6 +1272,24 @@ goog.Uri.QueryData.prototype.containsValue = function(value) {
   // iterators.
   var vals = this.getValues();
   return goog.array.contains(vals, value);
+};
+
+
+/**
+ * Runs a callback on every key-value pair in the map, including duplicate keys.
+ * This won't maintain original order when duplicate keys are interspersed (like
+ * getKeys() / getValues()).
+ * @param {function(this:SCOPE, ?, string, !goog.Uri.QueryData)} f
+ * @param {SCOPE=} opt_scope The value of "this" inside f.
+ * @template SCOPE
+ */
+goog.Uri.QueryData.prototype.forEach = function(f, opt_scope) {
+  this.ensureKeyMapInitialized_();
+  this.keyMap_.forEach(function(values, key) {
+    goog.array.forEach(values, function(value) {
+      f.call(opt_scope, value, key, this);
+    }, this);
+  }, this);
 };
 
 
@@ -1515,8 +1533,10 @@ goog.Uri.QueryData.prototype.setIgnoreCase = function(ignoreCase) {
  * Extends a query data object with another query data or map like object. This
  * operates 'in-place', it does not create a new QueryData object.
  *
- * @param {...(goog.Uri.QueryData|goog.structs.Map<?, ?>|Object)} var_args
+ * @param {...(?goog.Uri.QueryData|?goog.structs.Map<?, ?>|?Object)} var_args
  *     The object from which key value pairs will be copied.
+ * @suppress {deprecated} Use deprecated goog.structs.forEach to allow different
+ * types of parameters.
  */
 goog.Uri.QueryData.prototype.extend = function(var_args) {
   for (var i = 0; i < arguments.length; i++) {

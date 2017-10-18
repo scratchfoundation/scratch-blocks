@@ -39,9 +39,9 @@ goog.require('goog.editor.icontent.FieldStyleInfo');
 goog.require('goog.editor.node');
 goog.require('goog.events');
 goog.require('goog.events.EventType');
-goog.require('goog.html.uncheckedconversions');
+goog.require('goog.html.SafeHtml');
+goog.require('goog.html.legacyconversions');
 goog.require('goog.log');
-goog.require('goog.string.Const');
 goog.require('goog.style');
 
 
@@ -430,7 +430,8 @@ goog.editor.SeamlessField.prototype.inheritBlendedCSS = function() {
   // we're applying the 'blend' for the first time, or because we
   // *need* to recompute the blend.
   var newCSS = this.getIframeableCss(true);
-  goog.style.installStyles(newCSS, field);
+  goog.style.installSafeStyleSheet(
+      goog.html.legacyconversions.safeStyleSheetFromString(newCSS), field);
 };
 
 
@@ -558,7 +559,10 @@ goog.editor.SeamlessField.prototype.installStyles = function() {
   if (!this.usesIframe()) {
     if (!goog.editor.SeamlessField.haveInstalledCss_) {
       if (this.cssStyles) {
-        goog.style.installStyles(this.cssStyles, this.getElement());
+        goog.style.installSafeStyleSheet(
+            goog.html.legacyconversions.safeStyleSheetFromString(
+                this.cssStyles),
+            this.getElement());
       }
 
       // TODO(user): this should be reset to false when the editor is quit.
@@ -675,11 +679,8 @@ goog.editor.SeamlessField.prototype.attachIframe = function(iframe) {
     var doc = iframe.contentWindow.document;
     if (goog.editor.node.isStandardsMode(iframe.ownerDocument)) {
       doc.open();
-      var emptyHtml =
-          goog.html.uncheckedconversions
-              .safeHtmlFromStringKnownToSatisfyTypeContract(
-                  goog.string.Const.from('HTML from constant string'),
-                  '<!DOCTYPE HTML><html></html>');
+      var emptyHtml = goog.html.SafeHtml.concat(
+          goog.html.SafeHtml.DOCTYPE_HTML, goog.html.SafeHtml.create('html'));
       goog.dom.safe.documentWrite(doc, emptyHtml);
       doc.close();
     }
@@ -695,7 +696,7 @@ goog.editor.SeamlessField.prototype.getFieldFormatInfo = function(extraStyles) {
         this.id, goog.editor.node.isStandardsMode(originalElement), true,
         this.isFixedHeight(), extraStyles);
   }
-  throw Error('no field');
+  throw new Error('no field');
 };
 
 

@@ -17,12 +17,20 @@ goog.setTestOnly('goog.net.streams.XhrStreamReaderTest');
 
 goog.require('goog.net.ErrorCode');
 goog.require('goog.net.XmlHttp');
+goog.require('goog.net.streams.Base64PbStreamParser');
+goog.require('goog.net.streams.JsonStreamParser');
+goog.require('goog.net.streams.PbJsonStreamParser');
+goog.require('goog.net.streams.PbStreamParser');
 goog.require('goog.net.streams.XhrStreamReader');
 goog.require('goog.object');
 goog.require('goog.testing.asserts');
 goog.require('goog.testing.jsunit');
 goog.require('goog.testing.net.XhrIo');
 
+
+var Base64PbStreamParser =
+    goog.module.get('goog.net.streams.Base64PbStreamParser');
+var PbJsonStreamParser = goog.module.get('goog.net.streams.PbJsonStreamParser');
 
 var xhrReader;
 var xhrIo;
@@ -65,26 +73,90 @@ function testGetParserByResponseHeader() {
     if (key == CONTENT_TYPE_HEADER) return 'application/json';
     return null;
   };
-  assertNotNull(xhrReader.getParserByResponseHeader_());
+  assertTrue(
+      xhrReader.getParserByResponseHeader_() instanceof
+      goog.net.streams.JsonStreamParser);
 
   xhrIo.getStreamingResponseHeader = function(key) {
     if (key == CONTENT_TYPE_HEADER) return 'application/json; charset=utf-8';
     return null;
   };
-  assertNotNull(xhrReader.getParserByResponseHeader_());
+  assertTrue(
+      xhrReader.getParserByResponseHeader_() instanceof
+      goog.net.streams.JsonStreamParser);
 
   xhrIo.getStreamingResponseHeader = function(key) {
     if (key == CONTENT_TYPE_HEADER) return 'application/x-protobuf';
     return null;
   };
-  assertNotNull(xhrReader.getParserByResponseHeader_());
+  assertTrue(
+      xhrReader.getParserByResponseHeader_() instanceof
+      goog.net.streams.PbStreamParser);
 
   xhrIo.getStreamingResponseHeader = function(key) {
     if (key == CONTENT_TYPE_HEADER) return 'application/x-protobuf';
     if (key == CONTENT_TRANSFER_ENCODING) return 'BASE64';
     return null;
   };
-  assertNotNull(xhrReader.getParserByResponseHeader_());
+  assertTrue(
+      xhrReader.getParserByResponseHeader_() instanceof Base64PbStreamParser);
+
+  xhrIo.getStreamingResponseHeader = function(key) {
+    if (key == CONTENT_TYPE_HEADER) return 'application/json+protobuf';
+    return null;
+  };
+  assertTrue(
+      xhrReader.getParserByResponseHeader_() instanceof PbJsonStreamParser);
+}
+
+
+function testNoData() {
+  xhrReader.setDataHandler(function(messages) {
+    fail('Received unexpected messages: ' + messages);
+  });
+
+  var streamStatus = [];
+  var httpStatus = [];
+  xhrReader.setStatusHandler(function() {
+    streamStatus.push(xhrReader.getStatus());
+    httpStatus.push(xhrIo.getStatus());
+  });
+
+  var headers = {'Content-Type': 'application/json'};
+  xhrIo.send('/foo/bar');
+  xhrIo.simulateResponse(goog.net.HttpStatus.OK, '', headers);
+
+  assertElementsEquals([Status.NO_DATA], streamStatus);
+  assertElementsEquals([goog.net.HttpStatus.OK], httpStatus);
+}
+
+
+function testRetrieveHttpStatusInStatusHandler() {
+  var received = [];
+  xhrReader.setDataHandler(function(messages) {
+    received.push(messages);
+  });
+
+  var streamStatus = [];
+  var httpStatus = [];
+  xhrReader.setStatusHandler(function() {
+    console.log('in setStatusHandler');
+    streamStatus.push(xhrReader.getStatus());
+    httpStatus.push(xhrIo.getStatus());
+  });
+
+  var headers = {'Content-Type': 'application/json'};
+  xhrIo.send('/foo/bar');
+  xhrIo.simulateResponse(goog.net.HttpStatus.OK, '[{"1" : "b"}]', headers);
+
+  assertEquals(1, received.length);
+  assertEquals(1, received[0].length);
+  assertElementsEquals(['1'], goog.object.getKeys(received[0][0]));
+  assertElementsEquals('b', received[0][0][1]);
+
+  assertElementsEquals([Status.ACTIVE, Status.SUCCESS], streamStatus);
+  assertElementsEquals(
+      [goog.net.HttpStatus.OK, goog.net.HttpStatus.OK], httpStatus);
 }
 
 
@@ -97,7 +169,8 @@ function testParsingSingleMessage() {
     'Content-Type': 'application/x-protobuf',
     'Content-Transfer-Encoding': 'BASE64'
   };
-  xhrIo.simulateResponse(200, body, headers);
+  xhrIo.send('/foo/bar');
+  xhrIo.simulateResponse(goog.net.HttpStatus.OK, body, headers);
 
   assertEquals(1, received.length);
   assertEquals(1, received[0].length);
@@ -127,6 +200,8 @@ function testParsingMultipleMessages() {
     'Content-Type': 'application/x-protobuf',
     'Content-Transfer-Encoding': 'BASE64'
   };
+
+  xhrIo.send('/foo/bar');
 
   xhrIo.simulatePartialResponse(chunk1, headers);
   assertEquals(0, received.length);

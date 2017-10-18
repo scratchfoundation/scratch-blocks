@@ -39,6 +39,7 @@ goog.require('goog.net.XhrIo');
 goog.require('goog.net.XmlHttp');
 goog.require('goog.net.streams.Base64PbStreamParser');
 goog.require('goog.net.streams.JsonStreamParser');
+goog.require('goog.net.streams.PbJsonStreamParser');
 goog.require('goog.net.streams.PbStreamParser');
 goog.require('goog.string');
 goog.require('goog.userAgent');
@@ -47,6 +48,7 @@ goog.scope(function() {
 
 var Base64PbStreamParser =
     goog.module.get('goog.net.streams.Base64PbStreamParser');
+var PbJsonStreamParser = goog.module.get('goog.net.streams.PbJsonStreamParser');
 
 
 /**
@@ -222,6 +224,9 @@ goog.net.streams.XhrStreamReader.prototype.getParserByResponseHeader_ =
   contentType = contentType.toLowerCase();
 
   if (goog.string.startsWith(contentType, 'application/json')) {
+    if (goog.string.startsWith(contentType, 'application/json+protobuf')) {
+      return new PbJsonStreamParser();
+    }
     return new goog.net.streams.JsonStreamParser();
   }
 
@@ -299,7 +304,7 @@ goog.net.streams.XhrStreamReader.prototype.readyStateChangeHandler_ = function(
     event) {
   var xhr = /** @type {goog.net.XhrIo} */ (event.target);
 
-  /** @preserveTry */
+
   try {
     if (xhr == this.xhr_) {
       this.onReadyStateChanged_();
@@ -370,43 +375,37 @@ goog.net.streams.XhrStreamReader.prototype.onReadyStateChanged_ = function() {
     return;
   }
 
-  if (readyState == goog.net.XmlHttp.ReadyState.COMPLETE) {
-    this.clear_();
-  }
-
-  // parse and deliver any new data, with error status
-  if (readyState == goog.net.XmlHttp.ReadyState.COMPLETE &&
-      responseText.length == 0) {
-    this.updateStatus_(goog.net.streams.XhrStreamReader.Status.NO_DATA);
-  } else {
-    if (responseText.length > this.pos_) {
-      var newData = responseText.substr(this.pos_);
-      this.pos_ = responseText.length;
-      try {
-        var messages = this.parser_.parse(newData);
-        if (messages != null) {
-          if (this.dataHandler_) {
-            this.dataHandler_(messages);
-          }
+  // Parses and delivers any new data, with error status.
+  if (responseText.length > this.pos_) {
+    var newData = responseText.substr(this.pos_);
+    this.pos_ = responseText.length;
+    try {
+      var messages = this.parser_.parse(newData);
+      if (messages != null) {
+        if (this.dataHandler_) {
+          this.dataHandler_(messages);
         }
-      } catch (ex) {
-        goog.log.error(
-            this.logger_, 'Invalid response ' + ex + '\n' + responseText);
-        this.updateStatus_(goog.net.streams.XhrStreamReader.Status.BAD_DATA);
       }
+    } catch (ex) {
+      goog.log.error(
+          this.logger_, 'Invalid response ' + ex + '\n' + responseText);
+      this.updateStatus_(goog.net.streams.XhrStreamReader.Status.BAD_DATA);
+      this.clear_();
+      return;
     }
   }
 
-  if (this.status_ > goog.net.streams.XhrStreamReader.Status.SUCCESS) {
+  if (readyState == goog.net.XmlHttp.ReadyState.COMPLETE) {
+    if (responseText.length == 0) {
+      this.updateStatus_(goog.net.streams.XhrStreamReader.Status.NO_DATA);
+    } else {
+      this.updateStatus_(goog.net.streams.XhrStreamReader.Status.SUCCESS);
+    }
     this.clear_();
     return;
   }
 
-  if (readyState == goog.net.XmlHttp.ReadyState.COMPLETE) {
-    this.updateStatus_(goog.net.streams.XhrStreamReader.Status.SUCCESS);
-  } else {
-    this.updateStatus_(goog.net.streams.XhrStreamReader.Status.ACTIVE);
-  }
+  this.updateStatus_(goog.net.streams.XhrStreamReader.Status.ACTIVE);
 };
 
 

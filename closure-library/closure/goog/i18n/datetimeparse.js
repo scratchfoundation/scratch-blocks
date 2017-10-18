@@ -281,7 +281,7 @@ goog.i18n.DateTimeParse.prototype.parse = function(text, date, opt_start) {
 
 /**
  * Parse the given string and fill info into date object. This version will
- * validate the input and make sure it is a validate date/time.
+ * validate the input and make sure it is a valid date/time.
  * @param {string} text The string being parsed.
  * @param {goog.date.DateLike} date The Date object to hold the parsed date.
  * @param {number=} opt_start The position from where parse should begin.
@@ -1052,6 +1052,11 @@ goog.i18n.DateTimeParse.MyDate_.prototype.setTwoDigitYear_ = function(year) {
  */
 goog.i18n.DateTimeParse.MyDate_.prototype.calcDate_ = function(
     date, validation) {
+  // Throw exception if date if null.
+  if (date == null) {
+    throw new Error('Parameter \'date\' should not be null.');
+  }
+
   // year 0 is 1 BC, and so on.
   if (this.era != undefined && this.year != undefined && this.era == 0 &&
       this.year > 0) {

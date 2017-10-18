@@ -47,11 +47,12 @@ var isBorderBox = goog.dom.isCss1CompatMode() ?
     (goog.userAgent.IE && !goog.userAgent.isVersionOrHigher('6')) :
     true;
 var EPSILON = 2;
-var expectedFailures = new goog.testing.ExpectedFailures();
+var expectedFailures;
 var $ = goog.dom.getElement;
 var mockUserAgent;
 
 function setUpPage() {
+  expectedFailures = new goog.testing.ExpectedFailures();
   // TODO(b/25875505): Fix unreported assertions (go/failonunreportedasserts).
   goog.testing.TestCase.getActiveTestCase().failOnUnreportedAsserts = false;
 
@@ -841,7 +842,12 @@ function testGetSizeSvgDocument() {
   var doc = goog.dom.getFrameContentDocument(frame);
   var rect = doc.getElementById('rect');
   var dims = goog.style.getSize(rect);
-  if (!goog.userAgent.EDGE_OR_IE) {
+  if (goog.userAgent.GECKO && goog.userAgent.isVersionOrHigher(53)) {
+    // Firefox >= 53 auto-scales iframe SVG content to fit the frame
+    // b/38432885 | https://bugzilla.mozilla.org/show_bug.cgi?id=1366126
+    assertEquals(75, dims.width);
+    assertEquals(75, dims.height);
+  } else if (!goog.userAgent.EDGE_OR_IE) {
     assertEquals(50, dims.width);
     assertEquals(50, dims.height);
   } else {
@@ -924,20 +930,6 @@ function testGetBounds() {
   assertEquals(pos.y, rect.top);
 }
 
-function testInstallStyles() {
-  var el = $('installTest0');
-  var originalBackground = goog.style.getBackgroundColor(el);
-
-  // Uses background-color because it's easy to get the computed value
-  var result = goog.style.installStyles(
-      '#installTest0 { background-color: rgb(255, 192, 203); }');
-
-  assertColorRgbEquals('rgb(255,192,203)', goog.style.getBackgroundColor(el));
-
-  goog.style.uninstallStyles(result);
-  assertEquals(originalBackground, goog.style.getBackgroundColor(el));
-}
-
 function testInstallSafeStyleSheet() {
   var el = $('installTest0');
   var originalBackground = goog.style.getBackgroundColor(el);
@@ -951,21 +943,6 @@ function testInstallSafeStyleSheet() {
 
   goog.style.uninstallStyles(result);
   assertEquals(originalBackground, goog.style.getBackgroundColor(el));
-}
-
-function testSetStyles() {
-  var el = $('installTest1');
-
-  // Change to pink
-  var ss = goog.style.installStyles(
-      '#installTest1 { background-color: rgb(255, 192, 203); }');
-
-  assertColorRgbEquals('rgb(255,192,203)', goog.style.getBackgroundColor(el));
-
-  // Now change to orange
-  goog.style.setStyles(
-      ss, '#installTest1 { background-color: rgb(255, 255, 0); }');
-  assertColorRgbEquals('rgb(255,255,0)', goog.style.getBackgroundColor(el));
 }
 
 function testSetSafeStyleSheet() {
@@ -1009,9 +986,13 @@ function testIsUnselectable() {
   assertEquals(
       goog.userAgent.IE || goog.userAgent.OPERA,
       goog.style.isUnselectable($('unselectable-ie')));
-  assertEquals(
-      goog.userAgent.WEBKIT || goog.userAgent.EDGE,
-      goog.style.isUnselectable($('unselectable-webkit')));
+  // Note: Firefox can go either way here - newer versions see -webkit-*
+  // properties and automatically add Moz* to the style object.
+  if (!goog.userAgent.GECKO) {
+    assertEquals(
+        goog.userAgent.WEBKIT || goog.userAgent.EDGE,
+        goog.style.isUnselectable($('unselectable-webkit')));
+  }
 }
 
 function testSetUnselectable() {

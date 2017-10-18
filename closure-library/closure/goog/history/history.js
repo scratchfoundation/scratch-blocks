@@ -176,6 +176,7 @@ goog.require('goog.history.Event');
 goog.require('goog.history.EventType');
 goog.require('goog.html.SafeHtml');
 goog.require('goog.html.TrustedResourceUrl');
+goog.require('goog.html.legacyconversions');
 goog.require('goog.labs.userAgent.device');
 goog.require('goog.memoize');
 goog.require('goog.string');
@@ -234,7 +235,8 @@ goog.History = function(
   goog.events.EventTarget.call(this);
 
   if (opt_invisible && !opt_blankPageUrl) {
-    throw Error('Can\'t use invisible history without providing a blank page.');
+    throw new Error(
+        'Can\'t use invisible history without providing a blank page.');
   }
 
   var input;
@@ -734,7 +736,8 @@ goog.History.prototype.setHash_ = function(token, opt_replace) {
     if (opt_replace) {
       loc.replace(url);
     } else {
-      loc.href = url;
+      goog.dom.safe.setLocationHref(
+          loc, goog.html.legacyconversions.safeUrlFromString(url));
     }
   }
 };
@@ -788,7 +791,7 @@ goog.History.prototype.setIframeToken_ = function(
         if (opt_replace) {
           contentWindow.location.replace(url);
         } else {
-          contentWindow.location.href = url;
+          goog.dom.safe.setLocationHref(contentWindow.location, url);
         }
       }
     }
@@ -818,7 +821,7 @@ goog.History.prototype.getIframeToken_ = function() {
     var contentWindow = this.iframe_.contentWindow;
     if (contentWindow) {
       var hash;
-      /** @preserveTry */
+
       try {
         // Iframe tokens are urlEncoded
         hash = goog.string.urlDecode(this.getLocationFragment_(contentWindow));
@@ -988,8 +991,6 @@ goog.History.EventType = goog.history.EventType;
 
 /**
  * Constant for the history change event type.
- * @param {string} token The string identifying the new history state.
- * @extends {goog.events.Event}
  * @constructor
  * @deprecated Use goog.history.Event.
  * @final

@@ -983,6 +983,19 @@ function testRemoveAll() {
   assertEquals('Original string', 'barbazbarbaz', str);
 }
 
+function testReplaceAll() {
+  var str = 'foobarbazbarfoobazfoo';
+  str = goog.string.replaceAll(str, 'foo', 'test');
+  assertEquals(
+      'Replace all occurrences of foo with test', 'testbarbazbartestbaztest',
+      str);
+  var str2 = 'foobarbazbar^foo$baz^foo$';
+  str2 = goog.string.replaceAll(str2, '^foo', '$&test');
+  assertEquals(
+      'Replace all occurrences of ^foo with $&test',
+      'foobarbazbar$&test$baz$&test$', str2);
+}
+
 function testRegExpEscape() {
   var spec = '()[]{}+-?*.$^|,:#<!\\';
   var escapedSpec = '\\' + spec.split('').join('\\');
@@ -993,10 +1006,10 @@ function testRegExpEscape() {
   var re = new RegExp('^' + goog.string.regExpEscape(s) + '$');
   assertTrue('All ASCII', re.test(s));
   s = '';
-  var re = new RegExp('^' + goog.string.regExpEscape(s) + '$');
+  re = new RegExp('^' + goog.string.regExpEscape(s) + '$');
   assertTrue('empty string', re.test(s));
   s = allChars(0, 10000);
-  var re = new RegExp('^' + goog.string.regExpEscape(s) + '$');
+  re = new RegExp('^' + goog.string.regExpEscape(s) + '$');
   assertTrue('Unicode', re.test(s));
 }
 

@@ -16,6 +16,9 @@ goog.provide('goog.soy.dataTest');
 goog.setTestOnly('goog.soy.dataTest');
 
 goog.require('goog.html.SafeHtml');
+goog.require('goog.html.SafeStyleSheet');
+goog.require('goog.html.SafeUrl');
+goog.require('goog.html.TrustedResourceUrl');
 /** @suppress {extraRequire} */
 goog.require('goog.soy.testHelper');
 goog.require('goog.testing.jsunit');
@@ -30,4 +33,27 @@ function testToSafeHtml() {
 
   html = example.sanitizedHtmlTemplate().toSafeHtml();
   assertEquals('Hello <b>World</b>', goog.html.SafeHtml.unwrap(html));
+}
+
+function testToSafeUrl() {
+  var url;
+
+  url = example.sanitizedSmsUrlTemplate().toSafeUrl();
+  assertEquals('sms:123456789', goog.html.SafeUrl.unwrap(url));
+
+  url = example.sanitizedHttpUrlTemplate().toSafeUrl();
+  assertEquals('https://google.com/foo?n=917', goog.html.SafeUrl.unwrap(url));
+}
+
+function testToSafeStyleSheet() {
+  var url = example.sanitizedCssTemplate().toSafeStyleSheet();
+  assertEquals('html{display:none}', goog.html.SafeStyleSheet.unwrap(url));
+}
+
+function testToTrustedResourceUrl() {
+  var url;
+
+  url = example.sanitizedTrustedResourceUriTemplate({}).toTrustedResourceUrl();
+  assertEquals(
+      'https://google.com/a.js', goog.html.TrustedResourceUrl.unwrap(url));
 }

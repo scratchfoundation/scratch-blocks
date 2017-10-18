@@ -29,6 +29,11 @@ goog.require('goog.testing.jsunit');
 goog.require('goog.userAgent');
 goog.require('goog.userAgent.product');
 
+function shouldRunTests() {
+  // This test has not yet been updated to run on IE8 and up. See b/2997691.
+  return !goog.userAgent.IE || !goog.userAgent.isVersionOrHigher(8);
+}
+
 var SAVED_HTML;
 var FIELDMOCK;
 var FORMATTER;
@@ -1040,6 +1045,50 @@ function testCustomKeyboardShortcut_default() {
   var e = {};
   var key = ' ';
   FORMATTER.setKeyboardShortcutKey('\\');
+  var result = FORMATTER.handleKeyboardShortcut(e, key, true);
+  assertFalse(result);
+
+  FIELDMOCK.$verify();
+}
+
+function testKeyboardShortcut_withBothModifierKeys() {
+  FIELDMOCK.$reset();
+  FIELDMOCK.$replay();
+
+  var e = {};
+  e.metaKey = true;
+  e.ctrlKey = true;
+  var key = ' ';
+  var result = FORMATTER.handleKeyboardShortcut(e, key, true);
+  assertFalse(result);
+
+  FIELDMOCK.$verify();
+}
+
+
+function testKeyboardShortcut_withMetaKeyAndShiftKey() {
+  FIELDMOCK.$reset();
+  FIELDMOCK.$replay();
+
+  var e = {};
+  e.metaKey = true;
+  e.shiftKey = true;
+  var key = ' ';
+  var result = FORMATTER.handleKeyboardShortcut(e, key, true);
+  assertFalse(result);
+
+  FIELDMOCK.$verify();
+}
+
+
+function testKeyboardShortcut_withCtrlKeyAndShiftKey() {
+  FIELDMOCK.$reset();
+  FIELDMOCK.$replay();
+
+  var e = {};
+  e.ctrlKey = true;
+  e.shiftKey = true;
+  var key = ' ';
   var result = FORMATTER.handleKeyboardShortcut(e, key, true);
   assertFalse(result);
 

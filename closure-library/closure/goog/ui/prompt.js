@@ -226,11 +226,11 @@ goog.ui.Prompt.prototype.setRows = function(rows) {
   if (this.isInDocument()) {
     if (this.userInputEl_.tagName == goog.dom.TagName.INPUT) {
       if (rows > 1) {
-        throw Error(goog.ui.Component.Error.ALREADY_RENDERED);
+        throw new Error(goog.ui.Component.Error.ALREADY_RENDERED);
       }
     } else {
       if (rows <= 1) {
-        throw Error(goog.ui.Component.Error.ALREADY_RENDERED);
+        throw new Error(goog.ui.Component.Error.ALREADY_RENDERED);
       }
       this.userInputEl_.rows = rows;
     }
@@ -281,14 +281,12 @@ goog.ui.Prompt.prototype.createDom = function() {
   var cls = this.getClass();
 
   // add input box to the content
-  var attrs = {
-    'className': goog.getCssName(cls, 'userInput'),
-    'value': this.defaultValue_
-  };
   if (this.rows_ == 1) {
     // If rows == 1 then use an input element.
-    this.userInputEl_ =
-        this.getDomHelper().createDom(goog.dom.TagName.INPUT, attrs);
+    this.userInputEl_ = this.getDomHelper().createDom(goog.dom.TagName.INPUT, {
+      'className': goog.getCssName(cls, 'userInput'),
+      'value': this.defaultValue_
+    });
     this.userInputEl_.type = goog.dom.InputType.TEXT;
     if (this.cols_) {
       this.userInputEl_.size = this.cols_;
@@ -296,7 +294,10 @@ goog.ui.Prompt.prototype.createDom = function() {
   } else {
     // If rows > 1 then use a textarea.
     this.userInputEl_ =
-        this.getDomHelper().createDom(goog.dom.TagName.TEXTAREA, attrs);
+        this.getDomHelper().createDom(goog.dom.TagName.TEXTAREA, {
+          'className': goog.getCssName(cls, 'userInput'),
+          'value': this.defaultValue_
+        });
     this.userInputEl_.rows = this.rows_;
     if (this.cols_) {
       this.userInputEl_.cols = this.cols_;

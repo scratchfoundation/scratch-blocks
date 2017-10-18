@@ -34,13 +34,18 @@ function testEmptyPattern() {
 }
 
 function testMissingLeftCurlyBrace() {
-  var err =
-      assertThrows(function() { new goog.i18n.MessageFormat('\'\'{}}'); });
+  var err = assertThrows(function() {
+    var fmt = new goog.i18n.MessageFormat('\'\'{}}');
+    fmt.format({});
+  });
   assertEquals('Assertion failed: No matching { for }.', err.message);
 }
 
 function testTooManyLeftCurlyBraces() {
-  var err = assertThrows(function() { new goog.i18n.MessageFormat('{} {'); });
+  var err = assertThrows(function() {
+    var fmt = new goog.i18n.MessageFormat('{} {');
+    fmt.format({});
+  });
   assertEquals(
       'Assertion failed: There are mismatched { or } in the pattern.',
       err.message);
@@ -162,6 +167,10 @@ function testLiteralClosedCurlyBrace() {
   assertEquals(
       "Anna's house has {0} and # in the roof and 5 cows.",
       fmt.format({'NUM_COWS': '5'}));
+  // Regression for: b/34764827
+  assertEquals(
+      'Anna\'s house has {0} and # in the roof and 8 cows.',
+      fmt.format({'NUM_COWS': '8'}));
 }
 
 function testLiteralPoundSign() {
@@ -170,6 +179,10 @@ function testLiteralPoundSign() {
   assertEquals(
       "Anna's house has {0} and # in the roof and 5 cows.",
       fmt.format({'NUM_COWS': '5'}));
+  // Regression for: b/34764827
+  assertEquals(
+      'Anna\'s house has {0} and # in the roof and 10 cows.',
+      fmt.format({'NUM_COWS': '10'}));
 }
 
 function testNoLiteralsForSingleQuotes() {

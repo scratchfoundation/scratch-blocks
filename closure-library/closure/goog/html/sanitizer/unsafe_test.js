@@ -16,13 +16,14 @@
  * @fileoverview Unit Test for the unsafe API of the HTML Sanitizer.
  */
 
+goog.provide('goog.html.UnsafeTest');
 goog.setTestOnly();
 
 goog.require('goog.html.SafeHtml');
 goog.require('goog.html.sanitizer.HtmlSanitizer');
-
 goog.require('goog.html.sanitizer.TagBlacklist');
 goog.require('goog.html.sanitizer.unsafe');
+
 goog.require('goog.string.Const');
 goog.require('goog.testing.dom');
 goog.require('goog.testing.jsunit');
@@ -167,6 +168,14 @@ function testAllowOverwriteAttrPolicy() {
 }
 
 
+function testAllowDAttribute() {
+  var input = '<path d="1.5 1.5 1.5 14.5 14.5 14.5 14.5 1.5"/>';
+  var expected = '<path d="1.5 1.5 1.5 14.5 14.5 14.5 14.5 1.5"/>';
+  assertSanitizedHtml(
+      input, expected, ['path'], [{tagName: 'path', attributeName: 'd'}]);
+}
+
+
 function testWhitelistAliasing() {
   var builder = new goog.html.sanitizer.HtmlSanitizer.Builder();
   goog.html.sanitizer.unsafe.alsoAllowTags(just, builder, ['QqQ']);
@@ -218,4 +227,31 @@ function testTemplateUnsanitizedThrowsIE() {
   assertThrows(function() {
     goog.html.sanitizer.unsafe.keepUnsanitizedTemplateContents(just, builder);
   });
+}
+
+
+function testAllowRelaxExistingAttributePolicyWildcard() {
+  var input = '<a href="javascript:alert(1)"></a>';
+  // define a tag-specific one, takes precedence
+  assertSanitizedHtml(
+      input, input, null,
+      [{tagName: 'a', attributeName: 'href', policy: goog.functions.identity}]);
+  // overwrite the global one
+  assertSanitizedHtml(
+      input, input, null,
+      [{tagName: '*', attributeName: 'href', policy: goog.functions.identity}]);
+}
+
+
+function testAllowRelaxExistingAttributePolicySpecific() {
+  var input = '<a target="foo"></a>';
+  var expected = '<a></a>';
+  // overwrite the global one, the specific one still has precedence
+  assertSanitizedHtml(input, expected, null, [
+    {tagName: '*', attributeName: 'target', policy: goog.functions.identity}
+  ]);
+  // overwrite the tag-specific one, this one should take precedence
+  assertSanitizedHtml(input, input, null, [
+    {tagName: 'a', attributeName: 'target', policy: goog.functions.identity}
+  ]);
 }

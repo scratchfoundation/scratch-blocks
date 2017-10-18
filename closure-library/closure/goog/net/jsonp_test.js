@@ -84,7 +84,7 @@ function newCleanupGuard() {
           'script cleanup', bodyChildCount, document.body.childNodes.length);
       assertEquals('window jsonp array empty', 0, propCounter);
     }, 0);
-  }
+  };
 }
 
 function getScriptElement(result) {
@@ -300,7 +300,7 @@ function testNonce() {
   var script = getScriptElement(result);
   assertEquals(
       'Nonce attribute should have been added to script element.', 'foo',
-      script.getAttribute('nonce'));
+      (script['nonce'] || script.getAttribute('nonce')));
 
   checkCleanup();
   timeoutHandler();

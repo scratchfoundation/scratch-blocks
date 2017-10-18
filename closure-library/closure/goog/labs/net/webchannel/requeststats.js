@@ -17,6 +17,7 @@
  * ChannelRequest.
  *
  * @visibility {:internal}
+ * @visibility {:legacy_users}
  */
 
 
@@ -367,7 +368,7 @@ requestStats.onEndExecution = function() {
  */
 requestStats.setTimeout = function(fn, ms) {
   if (!goog.isFunction(fn)) {
-    throw Error('Fn must not be null and must be a function');
+    throw new Error('Fn must not be null and must be a function');
   }
   return goog.global.setTimeout(function() {
     requestStats.onStartExecution();

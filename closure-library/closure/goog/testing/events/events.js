@@ -137,7 +137,8 @@ goog.testing.events.assertEventTarget_ = function(target) {
  */
 goog.testing.events.setEventClientXY_ = function(event, opt_coords) {
   if (!opt_coords && event.target &&
-      event.target.nodeType == goog.dom.NodeType.ELEMENT) {
+      /** @type {!Node} */ (event.target).nodeType ==
+          goog.dom.NodeType.ELEMENT) {
     try {
       opt_coords =
           goog.style.getClientPosition(/** @type {!Element} **/ (event.target));
@@ -224,16 +225,17 @@ goog.testing.events.fireDoubleClickSequence = function(
  * if preventDefault is called on the keydown, the keypress will not fire.
  *
  * @param {EventTarget} target The target for the event.
- * @param {number} keyCode The keycode of the key pressed.
+ * @param {string|number} keyOrKeyCode The key value or keycode of the key
+ *     pressed.
  * @param {Object=} opt_eventProperties Event properties to be mixed into the
  *     BrowserEvent.
  * @return {boolean} The returnValue of the sequence: false if preventDefault()
  *     was called on any of the events, true otherwise.
  */
 goog.testing.events.fireKeySequence = function(
-    target, keyCode, opt_eventProperties) {
+    target, keyOrKeyCode, opt_eventProperties) {
   return goog.testing.events.fireNonAsciiKeySequence(
-      target, keyCode, keyCode, opt_eventProperties);
+      target, keyOrKeyCode, keyOrKeyCode, opt_eventProperties);
 };
 
 
@@ -243,23 +245,30 @@ goog.testing.events.fireKeySequence = function(
  * if preventDefault is called on the keydown.
  *
  * @param {EventTarget} target The target for the event.
- * @param {number} keyCode The keycode of the keydown and keyup events.
- * @param {number} keyPressKeyCode The keycode of the keypress event.
+ * @param {string|number} keyOrKeyCode The key value or keycode of the keydown
+ *     and keyup events.
+ * @param {string|number} keyPressKeyOrKeyCode The key value or keycode of the
+ *     keypress event.
  * @param {Object=} opt_eventProperties Event properties to be mixed into the
  *     BrowserEvent.
  * @return {boolean} The returnValue of the sequence: false if preventDefault()
  *     was called on any of the events, true otherwise.
  */
 goog.testing.events.fireNonAsciiKeySequence = function(
-    target, keyCode, keyPressKeyCode, opt_eventProperties) {
+    target, keyOrKeyCode, keyPressKeyOrKeyCode, opt_eventProperties) {
   var keydown =
       new goog.testing.events.Event(goog.events.EventType.KEYDOWN, target);
   var keyup =
       new goog.testing.events.Event(goog.events.EventType.KEYUP, target);
   var keypress =
       new goog.testing.events.Event(goog.events.EventType.KEYPRESS, target);
-  keydown.keyCode = keyup.keyCode = keyCode;
-  keypress.keyCode = keyPressKeyCode;
+  if (goog.isString(keyOrKeyCode)) {
+    keydown.key = keyup.key = /** @type {string} */ (keyOrKeyCode);
+    keypress.key = /** @type {string} */ (keyPressKeyOrKeyCode);
+  } else {
+    keydown.keyCode = keyup.keyCode = /** @type {number} */ (keyOrKeyCode);
+    keypress.keyCode = /** @type {number} */ (keyPressKeyOrKeyCode);
+  }
 
   if (opt_eventProperties) {
     goog.object.extend(keydown, opt_eventProperties);
@@ -273,11 +282,17 @@ goog.testing.events.fireNonAsciiKeySequence = function(
   if (!goog.testing.events.isBrokenGeckoMacActionKey_(keydown)) {
     result = goog.testing.events.fireBrowserEvent(keydown);
   }
-  if (goog.events.KeyCodes.firesKeyPressEvent(
-          keyCode, undefined, keydown.shiftKey, keydown.ctrlKey,
-          keydown.altKey) &&
-      result) {
-    result &= goog.testing.events.fireBrowserEvent(keypress);
+  if (goog.isString(keyOrKeyCode)) {
+    if (/** @type {string} */ (keyPressKeyOrKeyCode) != '' && result) {
+      result &= goog.testing.events.fireBrowserEvent(keypress);
+    }
+  } else {
+    if (goog.events.KeyCodes.firesKeyPressEvent(
+            /** @type {number} */ (keyOrKeyCode), undefined, keydown.shiftKey,
+            keydown.ctrlKey, keydown.altKey) &&
+        result) {
+      result &= goog.testing.events.fireBrowserEvent(keypress);
+    }
   }
   return !!(result & goog.testing.events.fireBrowserEvent(keyup));
 };
@@ -412,7 +427,7 @@ goog.testing.events.fireMouseDownEvent = function(
 
   var button = opt_button || goog.events.BrowserEvent.MouseButton.LEFT;
   button = !goog.events.BrowserFeature.HAS_W3C_BUTTON ?
-      goog.events.BrowserEvent.IEButtonMap[button] :
+      goog.events.BrowserEvent.IE_BUTTON_MAP[button] :
       button;
   return goog.testing.events.fireMouseButtonEvent_(
       goog.events.EventType.MOUSEDOWN, target, button, opt_coords,
@@ -436,7 +451,7 @@ goog.testing.events.fireMouseUpEvent = function(
     target, opt_button, opt_coords, opt_eventProperties) {
   var button = opt_button || goog.events.BrowserEvent.MouseButton.LEFT;
   button = !goog.events.BrowserFeature.HAS_W3C_BUTTON ?
-      goog.events.BrowserEvent.IEButtonMap[button] :
+      goog.events.BrowserEvent.IE_BUTTON_MAP[button] :
       button;
   return goog.testing.events.fireMouseButtonEvent_(
       goog.events.EventType.MOUSEUP, target, button, opt_coords,
@@ -529,7 +544,7 @@ goog.testing.events.fireContextMenuEvent = function(target, opt_coords) {
   var contextmenu =
       new goog.testing.events.Event(goog.events.EventType.CONTEXTMENU, target);
   contextmenu.button = !goog.events.BrowserFeature.HAS_W3C_BUTTON ?
-      goog.events.BrowserEvent.IEButtonMap[button] :
+      goog.events.BrowserEvent.IE_BUTTON_MAP[button] :
       button;
   contextmenu.ctrlKey = goog.userAgent.MAC;
   goog.testing.events.setEventClientXY_(contextmenu, opt_coords);

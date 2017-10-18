@@ -23,7 +23,10 @@
 goog.provide('goog.html.sanitizer.CssSanitizer');
 
 goog.require('goog.array');
+goog.require('goog.dom');
+goog.require('goog.dom.TagName');
 goog.require('goog.html.SafeStyle');
+goog.require('goog.html.SafeUrl');
 goog.require('goog.html.uncheckedconversions');
 goog.require('goog.object');
 goog.require('goog.string');
@@ -71,13 +74,13 @@ goog.html.sanitizer.CssSanitizer.normalizeUrlChar_ = function(ch) {
 
 
 /**
- * Constructs a safe URI from a given uri and prop using a given uriRewriter
+ * Constructs a safe URI from a given URI and prop using a given uriRewriter
  * function.
- * @param {string} uri Uri to be sanitized.
- * @param {string} propName Property name which contained the Uri.
- * @param {?function(string, string):?string} uriRewriter A URI rewriter that
- *    returns an unwrapped goog.html.SafeUrl.
- * @return {?string} Safe Uri for use in CSS.
+ * @param {string} uri URI to be sanitized.
+ * @param {string} propName Property name which contained the URI.
+ * @param {?function(string, string):?goog.html.SafeUrl} uriRewriter A URI
+ *    rewriter that returns a goog.html.SafeUrl.
+ * @return {?string} Safe URI for use in CSS.
  * @private
  */
 goog.html.sanitizer.CssSanitizer.getSafeUri_ = function(
@@ -86,15 +89,32 @@ goog.html.sanitizer.CssSanitizer.getSafeUri_ = function(
     return null;
   }
   var safeUri = uriRewriter(uri, propName);
-  if (safeUri) {
+  if (safeUri &&
+      goog.html.SafeUrl.unwrap(safeUri) != goog.html.SafeUrl.INNOCUOUS_STRING) {
     return 'url("' +
-        safeUri.replace(
+        goog.html.SafeUrl.unwrap(safeUri).replace(
             goog.html.sanitizer.CssSanitizer.NORM_URL_REGEXP_,
             goog.html.sanitizer.CssSanitizer.normalizeUrlChar_) +
         '")';
   }
   return null;
 };
+
+
+/**
+ * Used to detect the beginning of the argument list of a CSS property value
+ * containing a CSS function call.
+ * @private @const {string}
+ */
+goog.html.sanitizer.CssSanitizer.FUNCTION_ARGUMENTS_BEGIN_ = '(';
+
+
+/**
+ * Used to detect the end of the argument list of a CSS property value
+ * containing a CSS function call.
+ * @private @const {string}
+ */
+goog.html.sanitizer.CssSanitizer.FUNCTION_ARGUMENTS_END_ = ')';
 
 
 /**
@@ -155,50 +175,61 @@ goog.html.sanitizer.CssSanitizer.withoutVendorPrefix_ = function(propName) {
 
 
 /**
- * Given a browser-parsed CSS value sanitizes the value.
+ * Sanitizes the value for a given a browser-parsed CSS value.
  * @param {string} propName A property name.
  * @param {string} propValue Value of the property as parsed by the browser.
- * @param {function(string, string)=} opt_uriRewriter A URI rewriter that
- *    returns an unwrapped goog.html.SafeUrl.
+ * @param {function(string, string):?goog.html.SafeUrl=} opt_uriRewriter A URI
+ *     rewriter that returns an unwrapped goog.html.SafeUrl.
  * @return {?string} Sanitized property value or null.
  * @private
  */
 goog.html.sanitizer.CssSanitizer.sanitizeProperty_ = function(
     propName, propValue, opt_uriRewriter) {
-  var propertyValue = goog.string.trim(propValue).toLowerCase();
-  if (propertyValue === '') {
+  var outputPropValue = goog.string.trim(propValue);
+  if (outputPropValue == '') {
     return null;
   }
 
-  if (goog.string.startsWith(propertyValue, 'url(')) {
-    // Handle url("...") by rewriting the body.
-    if (opt_uriRewriter) {
-      // Preserve original case
-      propertyValue = goog.string.trim(propValue);
-      // TODO(danesh): Check if we need to resolve this Uri.
-      var uri = goog.string.stripQuotes(
-          propertyValue.substring(4, propertyValue.length - 1), '"\'');
-
-      propertyValue = goog.html.sanitizer.CssSanitizer.getSafeUri_(
-          uri, propName, opt_uriRewriter);
-    } else {
-      propertyValue = null;
+  if (goog.string.caseInsensitiveStartsWith(outputPropValue, 'url(')) {
+    // Urls are rewritten according to the policy implemented in
+    // opt_uriRewriter.
+    // TODO(pelizzi): use HtmlSanitizerUrlPolicy for opt_uriRewriter.
+    if (!opt_uriRewriter) {
+      return null;
     }
-  } else if (propertyValue.indexOf('(') > 0) {
-    if (goog.string.countOf(propertyValue, '(') > 1 ||
+    // TODO(danesh): Check if we need to resolve this URI.
+    var uri = goog.string.stripQuotes(
+        outputPropValue.substring(4, outputPropValue.length - 1), '"\'');
+
+    return goog.html.sanitizer.CssSanitizer.getSafeUri_(
+        uri, propName, opt_uriRewriter);
+  } else if (outputPropValue.indexOf('(') > 0) {
+    // Functions are filtered through a whitelist. Nesting whitelisted functions
+    // is not supported.
+    if (goog.string.countOf(
+            outputPropValue,
+            goog.html.sanitizer.CssSanitizer.FUNCTION_ARGUMENTS_BEGIN_) > 1 ||
         !(goog.array.contains(
               goog.html.sanitizer.CssSanitizer.ALLOWED_FUNCTIONS_,
-              propertyValue.substring(0, propertyValue.indexOf('('))) &&
-          goog.string.endsWith(propertyValue, ')'))) {
-      // Functions start at a token like "name(" and end with a ")" taking
-      // into account nesting.
-      // TODO(danesh): Handle functions that may need recursing or that may
+              outputPropValue
+                  .substring(
+                      0,
+                      outputPropValue.indexOf(goog.html.sanitizer.CssSanitizer
+                                                  .FUNCTION_ARGUMENTS_BEGIN_))
+                  .toLowerCase()) &&
+          goog.string.endsWith(
+              outputPropValue,
+              goog.html.sanitizer.CssSanitizer.FUNCTION_ARGUMENTS_END_))) {
+      // TODO(b/34222379): Handle functions that may need recursing or that may
       // appear in the middle of a string. For now, just allow functions which
       // aren't nested.
-      propertyValue = null;
+      return null;
     }
+    return outputPropValue;
+  } else {
+    // Everything else is allowed.
+    return outputPropValue;
   }
-  return propertyValue;
 };
 
 
@@ -207,8 +238,8 @@ goog.html.sanitizer.CssSanitizer.sanitizeProperty_ = function(
  * their individual elements. Note: The sanitizer does not output vendor
  * prefixed styles.
  * @param {?CSSStyleDeclaration} cssStyle A CSS style object.
- * @param {function(string, string)=} opt_uriRewriter A URI rewriter that
- *    returns an unwrapped goog.html.SafeUrl.
+ * @param {function(string, string):?goog.html.SafeUrl=} opt_uriRewriter A URI
+ *     rewriter that returns a goog.html.SafeUrl.
  * @return {!goog.html.SafeStyle} A sanitized inline cssText.
  */
 goog.html.sanitizer.CssSanitizer.sanitizeInlineStyle = function(
@@ -246,8 +277,8 @@ goog.html.sanitizer.CssSanitizer.sanitizeInlineStyle = function(
  * browser support is not available, such as for IE9 and below, a
  * SafeStyle-wrapped empty string is returned.
  * @param {string} cssText CSS text to be sanitized.
- * @param {function(string, string)=} opt_uriRewriter A URI rewriter that
- *    returns an unwrapped goog.html.SafeUrl.
+ * @param {function(string, string):?goog.html.SafeUrl=} opt_uriRewriter A URI
+ *     rewriter that returns a goog.html.SafeUrl.
  * @return {!goog.html.SafeStyle} A sanitized inline cssText.
  */
 goog.html.sanitizer.CssSanitizer.sanitizeInlineStyleString = function(
@@ -280,7 +311,8 @@ goog.html.sanitizer.CssSanitizer.createInertDocument_ = function() {
   // document. See https://github.com/cure53/DOMPurify/issues/47.
   var doc = document;
   if (typeof HTMLTemplateElement === 'function') {
-    doc = document.createElement('template').content.ownerDocument;
+    doc =
+        goog.dom.createElement(goog.dom.TagName.TEMPLATE).content.ownerDocument;
   }
   return doc.implementation.createHTMLDocument('');
 };
@@ -297,11 +329,13 @@ goog.html.sanitizer.CssSanitizer.getCssPropNames_ = function(cssStyle) {
   if (goog.isArrayLike(cssStyle)) {
     // Gets property names via item().
     // https://drafts.csswg.org/cssom/#dom-cssstyledeclaration-item
-    propNames = Array.prototype.slice.call(cssStyle);
+    propNames = goog.array.toArray(cssStyle);
   } else {
-    // In IE8 and other older browers we have to iterate over all the property
-    // names.
+    // In IE8 and other older browsers we have to iterate over all the property
+    // names. We skip cssText because it contains the unsanitized CSS, which
+    // defeats the purpose.
     propNames = goog.object.getKeys(cssStyle);
+    goog.array.remove(propNames, 'cssText');
   }
   return propNames;
 };
@@ -325,7 +359,7 @@ goog.html.sanitizer.CssSanitizer.getCssValue_ = function(cssStyle, propName) {
     return getPropDescriptor.value.call(cssStyle, propName) || '';
   } else if (cssStyle.getAttribute) {
     // In IE8 and other older browers we make a direct call to getAttribute.
-    return String(cssStyle.getAttribute(propName));
+    return String(cssStyle.getAttribute(propName) || '');
   } else {
     // Unsupported, likely quite old, browser.
     return '';

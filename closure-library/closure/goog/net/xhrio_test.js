@@ -36,10 +36,16 @@ goog.require('goog.userAgent.product');
 
 function MockXmlHttp() {
   /**
-   * The headers for this XmlHttpRequest.
+   * The request headers for this XmlHttpRequest.
    * @type {!Object<string>}
    */
-  this.headers = {};
+  this.requestHeaders = {};
+
+  /**
+   * The response headers for this XmlHttpRequest.
+   * @type {!Object<string>}
+   */
+  this.responseHeaders = {};
 
   /**
    * The upload object associated with this XmlHttpRequest.
@@ -82,7 +88,15 @@ MockXmlHttp.prototype.open = function(verb, uri, async) {};
 MockXmlHttp.prototype.abort = function() {};
 
 MockXmlHttp.prototype.setRequestHeader = function(key, value) {
-  this.headers[key] = value;
+  this.requestHeaders[key] = value;
+};
+
+/**
+ * @param {string} key
+ * @return {?string}
+ */
+MockXmlHttp.prototype.getResponseHeader = function(key) {
+  return key in this.responseHeaders ? this.responseHeaders[key] : null;
 };
 
 var lastMockXmlHttp;
@@ -528,8 +542,9 @@ function testProtectEntryPointCalledOnAsyncSend() {
   goog.net.XhrIo.protectEntryPoints(errorHandler);
 
   var x = new goog.net.XhrIo;
-  goog.events.listen(
-      x, goog.net.EventType.READY_STATE_CHANGE, function(e) { throw Error(); });
+  goog.events.listen(x, goog.net.EventType.READY_STATE_CHANGE, function(e) {
+    throw new Error();
+  });
 
   x.send('url');
   assertThrows(function() { lastMockXmlHttp.complete(); });
@@ -544,8 +559,9 @@ function testXHRIsDiposedEvenIfAListenerThrowsAnExceptionOnComplete() {
 
   var x = new goog.net.XhrIo;
 
-  goog.events.listen(
-      x, goog.net.EventType.COMPLETE, function(e) { throw Error(); }, false, x);
+  goog.events.listen(x, goog.net.EventType.COMPLETE, function(e) {
+    throw new Error();
+  }, false, x);
 
   x.send('url');
   assertThrows(function() { lastMockXmlHttp.complete(); });
@@ -589,7 +605,7 @@ function testPostSetsContentTypeHeader() {
   var x = new goog.net.XhrIo;
 
   x.send('url', 'POST', 'content');
-  var headers = lastMockXmlHttp.headers;
+  var headers = lastMockXmlHttp.requestHeaders;
   assertEquals(1, goog.object.getCount(headers));
   assertEquals(
       headers[goog.net.XhrIo.CONTENT_TYPE_HEADER],
@@ -600,7 +616,7 @@ function testNonPostSetsContentTypeHeader() {
   var x = new goog.net.XhrIo;
 
   x.send('url', 'PUT', 'content');
-  headers = lastMockXmlHttp.headers;
+  headers = lastMockXmlHttp.requestHeaders;
   assertEquals(1, goog.object.getCount(headers));
   assertEquals(
       headers[goog.net.XhrIo.CONTENT_TYPE_HEADER],
@@ -615,7 +631,7 @@ function testContentTypeIsTreatedCaseInsensitively() {
   assertObjectEquals(
       'Headers should not be modified since they already contain a ' +
           'content type definition',
-      {'content-type': 'testing'}, lastMockXmlHttp.headers);
+      {'content-type': 'testing'}, lastMockXmlHttp.requestHeaders);
 }
 
 function testIsContentTypeHeader_() {
@@ -633,7 +649,7 @@ function testPostFormDataDoesNotSetContentTypeHeader() {
 
   var x = new goog.net.XhrIo;
   x.send('url', 'POST', new FakeFormData());
-  var headers = lastMockXmlHttp.headers;
+  var headers = lastMockXmlHttp.requestHeaders;
   assertTrue(goog.object.isEmpty(headers));
 }
 
@@ -644,7 +660,7 @@ function testNonPostFormDataDoesNotSetContentTypeHeader() {
 
   var x = new goog.net.XhrIo;
   x.send('url', 'PUT', new FakeFormData());
-  headers = lastMockXmlHttp.headers;
+  headers = lastMockXmlHttp.requestHeaders;
   assertTrue(goog.object.isEmpty(headers));
 }
 
@@ -812,6 +828,26 @@ function testGetResponse() {
 
   x.xhr_.response = 'resp';
   assertEquals('resp', x.getResponse());
+}
+
+function testGetResponseHeader() {
+  var x = new goog.net.XhrIo();
+  x.send('http://foo');
+
+  x.xhr_.responseHeaders['foo'] = null;
+  x.xhr_.responseHeaders['bar'] = 'xyz';
+  x.xhr_.responseHeaders['baz'] = '';
+
+  // All headers should be undefined prior to the request completing.
+  assertUndefined(x.getResponseHeader('foo'));
+  assertUndefined(x.getResponseHeader('bar'));
+  assertUndefined(x.getResponseHeader('baz'));
+
+  x.xhr_.readyState = goog.net.XmlHttp.ReadyState.COMPLETE;
+
+  assertUndefined(x.getResponseHeader('foo'));
+  assertEquals('xyz', x.getResponseHeader('bar'));
+  assertEquals('', x.getResponseHeader('baz'));
 }
 
 function testGetResponseHeaders() {

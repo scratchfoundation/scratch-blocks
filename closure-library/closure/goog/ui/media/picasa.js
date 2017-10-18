@@ -149,8 +149,6 @@ goog.ui.media.PicasaAlbum.prototype.createDom = function(c) {
 
   var picasaAlbum =
       /** @type {goog.ui.media.PicasaAlbumModel} */ (control.getDataModel());
-  var authParam =
-      picasaAlbum.getAuthKey() ? ('&authkey=' + picasaAlbum.getAuthKey()) : '';
   var flash = new goog.ui.media.FlashObject(
       picasaAlbum.getPlayer().getTrustedResourceUrl(), control.getDomHelper());
   flash.addFlashVars(picasaAlbum.getPlayer().getVars());
@@ -268,7 +266,8 @@ goog.ui.media.PicasaAlbumModel.newInstance = function(
     return new goog.ui.media.PicasaAlbumModel(
         data[1], data[2], data[3], opt_caption, opt_description, opt_autoplay);
   }
-  throw Error('failed to parse user and album from picasa url: ' + picasaUrl);
+  throw new Error(
+      'failed to parse user and album from picasa url: ' + picasaUrl);
 };
 
 

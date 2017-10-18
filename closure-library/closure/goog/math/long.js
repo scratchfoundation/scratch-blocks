@@ -21,6 +21,7 @@
 
 goog.provide('goog.math.Long');
 
+goog.require('goog.asserts');
 goog.require('goog.reflect');
 
 
@@ -84,6 +85,109 @@ goog.math.Long.IntCache_ = {};
  */
 goog.math.Long.valueCache_ = {};
 
+/**
+ * Returns a cached long number representing the given (32-bit) integer value.
+ * @param {number} value The 32-bit integer in question.
+ * @return {!goog.math.Long} The corresponding Long value.
+ * @private
+ */
+goog.math.Long.getCachedIntValue_ = function(value) {
+  return goog.reflect.cache(goog.math.Long.IntCache_, value, function(val) {
+    return new goog.math.Long(val, val < 0 ? -1 : 0);
+  });
+};
+
+/**
+ * The array of maximum values of a Long in string representation for a given
+ * radix between 2 and 36, inclusive.
+ * @private @const {!Array<string>}
+ */
+goog.math.Long.MAX_VALUE_FOR_RADIX_ = [
+  '', '',  // unused
+  '111111111111111111111111111111111111111111111111111111111111111',
+  // base 2
+  '2021110011022210012102010021220101220221',  // base 3
+  '13333333333333333333333333333333',          // base 4
+  '1104332401304422434310311212',              // base 5
+  '1540241003031030222122211',                 // base 6
+  '22341010611245052052300',                   // base 7
+  '777777777777777777777',                     // base 8
+  '67404283172107811827',                      // base 9
+  '9223372036854775807',                       // base 10
+  '1728002635214590697',                       // base 11
+  '41a792678515120367',                        // base 12
+  '10b269549075433c37',                        // base 13
+  '4340724c6c71dc7a7',                         // base 14
+  '160e2ad3246366807',                         // base 15
+  '7fffffffffffffff',                          // base 16
+  '33d3d8307b214008',                          // base 17
+  '16agh595df825fa7',                          // base 18
+  'ba643dci0ffeehh',                           // base 19
+  '5cbfjia3fh26ja7',                           // base 20
+  '2heiciiie82dh97',                           // base 21
+  '1adaibb21dckfa7',                           // base 22
+  'i6k448cf4192c2',                            // base 23
+  'acd772jnc9l0l7',                            // base 24
+  '64ie1focnn5g77',                            // base 25
+  '3igoecjbmca687',                            // base 26
+  '27c48l5b37oaop',                            // base 27
+  '1bk39f3ah3dmq7',                            // base 28
+  'q1se8f0m04isb',                             // base 29
+  'hajppbc1fc207',                             // base 30
+  'bm03i95hia437',                             // base 31
+  '7vvvvvvvvvvvv',                             // base 32
+  '5hg4ck9jd4u37',                             // base 33
+  '3tdtk1v8j6tpp',                             // base 34
+  '2pijmikexrxp7',                             // base 35
+  '1y2p0ij32e8e7'                              // base 36
+];
+
+
+/**
+ * The array of minimum values of a Long in string representation for a given
+ * radix between 2 and 36, inclusive.
+ * @private @const {!Array<string>}
+ */
+goog.math.Long.MIN_VALUE_FOR_RADIX_ = [
+  '', '',  // unused
+  '-1000000000000000000000000000000000000000000000000000000000000000',
+  // base 2
+  '-2021110011022210012102010021220101220222',  // base 3
+  '-20000000000000000000000000000000',          // base 4
+  '-1104332401304422434310311213',              // base 5
+  '-1540241003031030222122212',                 // base 6
+  '-22341010611245052052301',                   // base 7
+  '-1000000000000000000000',                    // base 8
+  '-67404283172107811828',                      // base 9
+  '-9223372036854775808',                       // base 10
+  '-1728002635214590698',                       // base 11
+  '-41a792678515120368',                        // base 12
+  '-10b269549075433c38',                        // base 13
+  '-4340724c6c71dc7a8',                         // base 14
+  '-160e2ad3246366808',                         // base 15
+  '-8000000000000000',                          // base 16
+  '-33d3d8307b214009',                          // base 17
+  '-16agh595df825fa8',                          // base 18
+  '-ba643dci0ffeehi',                           // base 19
+  '-5cbfjia3fh26ja8',                           // base 20
+  '-2heiciiie82dh98',                           // base 21
+  '-1adaibb21dckfa8',                           // base 22
+  '-i6k448cf4192c3',                            // base 23
+  '-acd772jnc9l0l8',                            // base 24
+  '-64ie1focnn5g78',                            // base 25
+  '-3igoecjbmca688',                            // base 26
+  '-27c48l5b37oaoq',                            // base 27
+  '-1bk39f3ah3dmq8',                            // base 28
+  '-q1se8f0m04isc',                             // base 29
+  '-hajppbc1fc208',                             // base 30
+  '-bm03i95hia438',                             // base 31
+  '-8000000000000',                             // base 32
+  '-5hg4ck9jd4u38',                             // base 33
+  '-3tdtk1v8j6tpq',                             // base 34
+  '-2pijmikexrxp8',                             // base 35
+  '-1y2p0ij32e8e8'                              // base 36
+];
+
 
 /**
  * Returns a Long representing the given (32-bit) integer value.
@@ -91,12 +195,13 @@ goog.math.Long.valueCache_ = {};
  * @return {!goog.math.Long} The corresponding Long value.
  */
 goog.math.Long.fromInt = function(value) {
-  if (-128 <= value && value < 128) {
-    return goog.reflect.cache(goog.math.Long.IntCache_, value, function(val) {
-      return new goog.math.Long(val | 0, val < 0 ? -1 : 0);
-    });
+  var intValue = value | 0;
+  goog.asserts.assert(value === intValue, 'value should be a 32-bit integer');
+
+  if (-128 <= intValue && intValue < 128) {
+    return goog.math.Long.getCachedIntValue_(intValue);
   } else {
-    return new goog.math.Long(value | 0, value < 0 ? -1 : 0);
+    return new goog.math.Long(intValue, intValue < 0 ? -1 : 0);
   }
 };
 
@@ -146,18 +251,18 @@ goog.math.Long.fromBits = function(lowBits, highBits) {
  */
 goog.math.Long.fromString = function(str, opt_radix) {
   if (str.length == 0) {
-    throw Error('number format error: empty string');
+    throw new Error('number format error: empty string');
   }
 
   var radix = opt_radix || 10;
   if (radix < 2 || 36 < radix) {
-    throw Error('radix out of range: ' + radix);
+    throw new Error('radix out of range: ' + radix);
   }
 
   if (str.charAt(0) == '-') {
     return goog.math.Long.fromString(str.substring(1), radix).negate();
   } else if (str.indexOf('-') >= 0) {
-    throw Error('number format error: interior "-" character: ' + str);
+    throw new Error('number format error: interior "-" character: ' + str);
   }
 
   // Do several (8) digits each time through the loop, so as to
@@ -179,6 +284,32 @@ goog.math.Long.fromString = function(str, opt_radix) {
   return result;
 };
 
+/**
+ * Returns the boolean value of whether the input string is within a Long's
+ * range. Assumes an input string containing only numeric characters with an
+ * optional preceding '-'.
+ * @param {string} str The textual representation of the Long.
+ * @param {number=} opt_radix The radix in which the text is written.
+ * @return {boolean} Whether the string is within the range of a Long.
+ */
+goog.math.Long.isStringInRange = function(str, opt_radix) {
+  var radix = opt_radix || 10;
+  if (radix < 2 || 36 < radix) {
+    throw new Error('radix out of range: ' + radix);
+  }
+
+  var extremeValue = (str.charAt(0) == '-') ?
+      goog.math.Long.MIN_VALUE_FOR_RADIX_[radix] :
+      goog.math.Long.MAX_VALUE_FOR_RADIX_[radix];
+
+  if (str.length < extremeValue.length) {
+    return true;
+  } else if (str.length == extremeValue.length && str <= extremeValue) {
+    return true;
+  } else {
+    return false;
+  }
+};
 
 // NOTE: the compiler should inline these constant values below and then remove
 // these variables, so there should be no runtime penalty for these.
@@ -221,9 +352,7 @@ goog.math.Long.TWO_PWR_63_DBL_ = goog.math.Long.TWO_PWR_64_DBL_ / 2;
  * @public
  */
 goog.math.Long.getZero = function() {
-  return goog.reflect.cache(
-      goog.math.Long.valueCache_, goog.math.Long.ValueCacheId_.ZERO,
-      function() { return goog.math.Long.fromInt(0); });
+  return goog.math.Long.getCachedIntValue_(0);
 };
 
 
@@ -232,9 +361,7 @@ goog.math.Long.getZero = function() {
  * @public
  */
 goog.math.Long.getOne = function() {
-  return goog.reflect.cache(
-      goog.math.Long.valueCache_, goog.math.Long.ValueCacheId_.ONE,
-      function() { return goog.math.Long.fromInt(1); });
+  return goog.math.Long.getCachedIntValue_(1);
 };
 
 
@@ -243,9 +370,7 @@ goog.math.Long.getOne = function() {
  * @public
  */
 goog.math.Long.getNegOne = function() {
-  return goog.reflect.cache(
-      goog.math.Long.valueCache_, goog.math.Long.ValueCacheId_.NEG_ONE,
-      function() { return goog.math.Long.fromInt(-1); });
+  return goog.math.Long.getCachedIntValue_(-1);
 };
 
 
@@ -305,7 +430,7 @@ goog.math.Long.prototype.toNumber = function() {
 goog.math.Long.prototype.toString = function(opt_radix) {
   var radix = opt_radix || 10;
   if (radix < 2 || 36 < radix) {
-    throw Error('radix out of range: ' + radix);
+    throw new Error('radix out of range: ' + radix);
   }
 
   if (this.isZero()) {
@@ -630,7 +755,7 @@ goog.math.Long.prototype.multiply = function(other) {
  */
 goog.math.Long.prototype.div = function(other) {
   if (other.isZero()) {
-    throw Error('division by zero');
+    throw new Error('division by zero');
   } else if (this.isZero()) {
     return goog.math.Long.getZero();
   }
@@ -836,8 +961,5 @@ goog.math.Long.prototype.shiftRightUnsigned = function(numBits) {
 goog.math.Long.ValueCacheId_ = {
   MAX_VALUE: 1,
   MIN_VALUE: 2,
-  ZERO: 3,
-  ONE: 4,
-  NEG_ONE: 5,
   TWO_PWR_24: 6
 };

@@ -186,7 +186,7 @@ goog.messaging.AbstractChannel.prototype.decodePayload = function(
     serviceName, payload, objectPayload) {
   if (objectPayload && goog.isString(payload)) {
     try {
-      return goog.json.parse(payload);
+      return /** @type {!Object} */ (JSON.parse(payload));
     } catch (err) {
       goog.log.warning(
           this.logger, 'Expected JSON payload for ' + serviceName + ', was "' +
@@ -203,7 +203,6 @@ goog.messaging.AbstractChannel.prototype.decodePayload = function(
 /** @override */
 goog.messaging.AbstractChannel.prototype.disposeInternal = function() {
   goog.messaging.AbstractChannel.base(this, 'disposeInternal');
-  delete this.logger;
   delete this.services_;
   delete this.defaultService_;
 };

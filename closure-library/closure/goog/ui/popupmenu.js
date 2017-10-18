@@ -53,7 +53,6 @@ goog.require('goog.style');
 goog.require('goog.ui.Component');
 goog.require('goog.ui.Menu');
 goog.require('goog.ui.PopupBase');
-goog.require('goog.userAgent');
 
 
 
@@ -138,16 +137,6 @@ goog.ui.PopupMenu.prototype.enterDocument = function() {
   handler.listen(
       this.getDomHelper().getDocument(), goog.events.EventType.MOUSEDOWN,
       this.onDocClick, true);
-
-  // Webkit doesn't fire a mousedown event when opening the context menu,
-  // but we need one to update menu visibility properly. So in Safari handle
-  // contextmenu mouse events like mousedown.
-  // {@link http://bugs.webkit.org/show_bug.cgi?id=6595}
-  if (goog.userAgent.WEBKIT) {
-    handler.listen(
-        this.getDomHelper().getDocument(), goog.events.EventType.CONTEXTMENU,
-        this.onDocClick, true);
-  }
 };
 
 
@@ -360,7 +349,7 @@ goog.ui.PopupMenu.prototype.detachAll = function() {
  */
 goog.ui.PopupMenu.prototype.detach = function(element) {
   if (!this.isAttachTarget(element)) {
-    throw Error('Menu not attached to provided element, unable to detach.');
+    throw new Error('Menu not attached to provided element, unable to detach.');
   }
 
   var key = goog.getUid(element);

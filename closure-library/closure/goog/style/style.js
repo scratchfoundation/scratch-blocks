@@ -32,7 +32,6 @@ goog.require('goog.dom.NodeType');
 goog.require('goog.dom.TagName');
 goog.require('goog.dom.vendor');
 goog.require('goog.html.SafeStyleSheet');
-goog.require('goog.html.legacyconversions');
 goog.require('goog.math.Box');
 goog.require('goog.math.Coordinate');
 goog.require('goog.math.Rect');
@@ -42,7 +41,6 @@ goog.require('goog.reflect');
 goog.require('goog.string');
 goog.require('goog.userAgent');
 
-goog.forwardDeclare('goog.events.BrowserEvent');
 goog.forwardDeclare('goog.events.Event');
 
 
@@ -86,7 +84,8 @@ goog.style.setStyle_ = function(element, value, style) {
   var propertyName = goog.style.getVendorJsStyleName_(element, style);
 
   if (propertyName) {
-    element.style[propertyName] = value;
+    // TODO(johnlenz): coerce to string?
+    element.style[propertyName] = /** @type {?} */ (value);
   }
 };
 
@@ -220,7 +219,8 @@ goog.style.getComputedStyle = function(element, property) {
  */
 goog.style.getCascadedStyle = function(element, style) {
   // TODO(nicksantos): This should be documented to return null. #fixTypes
-  return element.currentStyle ? element.currentStyle[style] : null;
+  return /** @type {string} */ (
+      element.currentStyle ? element.currentStyle[style] : null);
 };
 
 
@@ -915,7 +915,7 @@ goog.style.setSize = function(element, w, opt_h) {
     w = w.width;
   } else {
     if (opt_h == undefined) {
-      throw Error('missing height argument');
+      throw new Error('missing height argument');
     }
     h = opt_h;
   }
@@ -1274,22 +1274,6 @@ goog.style.isElementShown = function(el) {
 
 
 /**
- * Installs the styles string into the window that contains opt_node.  If
- * opt_node is null, the main window is used.
- * @param {string} stylesString The style string to install.
- * @param {Node=} opt_node Node whose parent document should have the
- *     styles installed.
- * @return {!Element|!StyleSheet} The style element created.
- * @deprecated Use {@link #installSafeStyleSheet} instead.
- */
-goog.style.installStyles = function(stylesString, opt_node) {
-  return goog.style.installSafeStyleSheet(
-      goog.html.legacyconversions.safeStyleSheetFromString(stylesString),
-      opt_node);
-};
-
-
-/**
  * Installs the style sheet into the window that contains opt_node.  If
  * opt_node is null, the main window is used.
  * @param {!goog.html.SafeStyleSheet} safeStyleSheet The style sheet to install.
@@ -1344,21 +1328,6 @@ goog.style.uninstallStyles = function(styleSheet) {
 /**
  * Sets the content of a style element.  The style element can be any valid
  * style element.  This element will have its content completely replaced by
- * the stylesString.
- * @param {Element|StyleSheet} element A stylesheet element as returned by
- *     installStyles.
- * @param {string} stylesString The new content of the stylesheet.
- * @deprecated Use {@link #setSafeStyleSheet} instead.
- */
-goog.style.setStyles = function(element, stylesString) {
-  goog.style.setSafeStyleSheet(/** @type {!Element|!StyleSheet} */ (element),
-      goog.html.legacyconversions.safeStyleSheetFromString(stylesString));
-};
-
-
-/**
- * Sets the content of a style element.  The style element can be any valid
- * style element.  This element will have its content completely replaced by
  * the safeStyleSheet.
  * @param {!Element|!StyleSheet} element A stylesheet element as returned by
  *     installStyles.
@@ -1375,6 +1344,7 @@ goog.style.setSafeStyleSheet = function(element, safeStyleSheet) {
     // cssText is a defined property and otherwise fall back to innerHTML.
     element.cssText = stylesString;
   } else {
+    // Setting textContent doesn't work in Safari, see b/29340337.
     element.innerHTML = stylesString;
   }
 };
@@ -1571,9 +1541,11 @@ goog.style.getContentBoxSize = function(element) {
     // If IE in CSS1Compat mode than just use the width and height.
     // If we have a boxSizing then fall back on measuring the borders etc.
     var width = goog.style.getIePixelValue_(
-        element, ieCurrentStyle.width, 'width', 'pixelWidth');
+        element, /** @type {string} */ (ieCurrentStyle.width), 'width',
+        'pixelWidth');
     var height = goog.style.getIePixelValue_(
-        element, ieCurrentStyle.height, 'height', 'pixelHeight');
+        element, /** @type {string} */ (ieCurrentStyle.height), 'height',
+        'pixelHeight');
     return new goog.math.Size(width, height);
   } else {
     var borderBoxSize = goog.style.getBorderBoxSize(element);
@@ -1669,7 +1641,7 @@ goog.style.getIePixelValue_ = function(element, value, name, pixelName) {
     // restore
     element.style[name] = oldStyleValue;
     element.runtimeStyle[name] = oldRuntimeValue;
-    return pixelValue;
+    return +pixelValue;
   }
 };
 
@@ -1813,7 +1785,7 @@ goog.style.getFontFamily = function(el) {
   if (doc.body.createTextRange && goog.dom.contains(doc, el)) {
     var range = doc.body.createTextRange();
     range.moveToElementText(el);
-    /** @preserveTry */
+
     try {
       font = range.queryCommandValue('FontName');
     } catch (e) {

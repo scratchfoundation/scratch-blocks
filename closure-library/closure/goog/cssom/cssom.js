@@ -140,7 +140,8 @@ goog.cssom.getAllCssStyleSheets = function(
     // http://dev.w3.org/csswg/cssom/#the-stylesheetlist
     for (var i = 0, n = styleSheet.length; i < n; i++) {
       goog.array.extend(
-          styleSheetsOutput, goog.cssom.getAllCssStyleSheets(styleSheet[i]));
+          styleSheetsOutput, goog.cssom.getAllCssStyleSheets(
+              /** @type {!CSSStyleSheet} */ (styleSheet[i])));
     }
   } else {
     // We need to walk through rules in browsers which implement .cssRules
@@ -214,8 +215,8 @@ goog.cssom.getCssTextFromCssRule = function(cssRule) {
 goog.cssom.getCssRuleIndexInParentStyleSheet = function(
     cssRule, opt_parentStyleSheet) {
   // Look for our special style.ruleIndex property from getAllCss.
-  if (cssRule.style && cssRule.style['-closure-rule-index']) {
-    return cssRule.style['-closure-rule-index'];
+  if (cssRule.style && /** @type {!Object} */ (cssRule.style)['-closure-rule-index']) {
+    return (/** @type {!Object} */ (cssRule.style))['-closure-rule-index'];
   }
 
   var parentStyleSheet =
@@ -224,7 +225,7 @@ goog.cssom.getCssRuleIndexInParentStyleSheet = function(
   if (!parentStyleSheet) {
     // We could call getAllCssStyleRules() here to get our special indexes on
     // the style object, but that seems like it could be wasteful.
-    throw Error('Cannot find a parentStyleSheet.');
+    throw new Error('Cannot find a parentStyleSheet.');
   }
 
   var cssRuleList = goog.cssom.getCssRulesFromStyleSheet(parentStyleSheet);
@@ -249,7 +250,8 @@ goog.cssom.getCssRuleIndexInParentStyleSheet = function(
  */
 goog.cssom.getParentStyleSheet = function(cssRule) {
   return cssRule.parentStyleSheet ||
-      cssRule.style && cssRule.style['-closure-parent-stylesheet'];
+      cssRule.style &&
+      (/** @type {!Object} */ (cssRule.style))['-closure-parent-stylesheet'];
 };
 
 
@@ -279,10 +281,10 @@ goog.cssom.replaceCssRule = function(
       goog.cssom.removeCssRule(parentStyleSheet, index);
       goog.cssom.addCssRule(parentStyleSheet, cssText, index);
     } else {
-      throw Error('Cannot proceed without the index of the cssRule.');
+      throw new Error('Cannot proceed without the index of the cssRule.');
     }
   } else {
-    throw Error('Cannot proceed without the parentStyleSheet.');
+    throw new Error('Cannot proceed without the parentStyleSheet.');
   }
 };
 
@@ -321,7 +323,7 @@ goog.cssom.addCssRule = function(cssStyleSheet, cssText, opt_index) {
       var style = matches[2];
       cssStyleSheet.addRule(selector, style, index);
     } else {
-      throw Error('Your CSSRule appears to be ill-formatted.');
+      throw new Error('Your CSSRule appears to be ill-formatted.');
     }
   }
 };
@@ -428,7 +430,8 @@ goog.cssom.getAllCss_ = function(styleSheet, isTextOutput) {
             // Unfortunately we have to use the style object to store these
             // pieces of info since the rule object is read-only.
             if (!cssRule.parentStyleSheet) {
-              cssRule.style['-closure-parent-stylesheet'] = styleSheet;
+              (/** @type {!Object} */ (cssRule.style))[
+                '-closure-parent-stylesheet'] = styleSheet;
             }
 
             // This is a hack to help with possible removal of the rule later,
@@ -436,7 +439,7 @@ goog.cssom.getAllCss_ = function(styleSheet, isTextOutput) {
             // onto the style object as a property.
             // Unfortunately we have to use the style object to store these
             // pieces of info since the rule object is read-only.
-            cssRule.style['-closure-rule-index'] =
+            (/** @type {!Object} */ (cssRule.style))['-closure-rule-index'] =
                 isTextOutput ? undefined : ruleIndex;
           }
           cssOut.push(cssRule);

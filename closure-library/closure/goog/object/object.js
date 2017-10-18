@@ -266,7 +266,7 @@ goog.object.getKeys = function(obj) {
  *     (as strings, or numbers, for array-like objects).  Can also be
  *     specified as a single array of keys.
  * @return {*} The resulting value.  If, at any point, the value for a key
- *     is undefined, returns undefined.
+ *     in the current object is null or undefined, returns undefined.
  */
 goog.object.getValueByKeys = function(obj, var_args) {
   var isArrayLike = goog.isArrayLike(var_args);
@@ -274,10 +274,8 @@ goog.object.getValueByKeys = function(obj, var_args) {
 
   // Start with the 2nd parameter for the variable parameters syntax.
   for (var i = isArrayLike ? 0 : 1; i < keys.length; i++) {
+    if (obj == null) return undefined;
     obj = obj[keys[i]];
-    if (!goog.isDef(obj)) {
-      break;
-    }
   }
 
   return obj;
@@ -407,7 +405,7 @@ goog.object.remove = function(obj, key) {
  */
 goog.object.add = function(obj, key, val) {
   if (obj !== null && key in obj) {
-    throw Error('The object already contains the key "' + key + '"');
+    throw new Error('The object already contains the key "' + key + '"');
   }
   goog.object.set(obj, key, val);
 };
@@ -629,7 +627,7 @@ goog.object.extend = function(target, var_args) {
 /**
  * Creates a new object built from the key-value pairs provided as arguments.
  * @param {...*} var_args If only one argument is provided and it is an array
- *     then this is used as the arguments,  otherwise even arguments are used as
+ *     then this is used as the arguments, otherwise even arguments are used as
  *     the property names and odd arguments are used as the property values.
  * @return {!Object} The new object.
  * @throws {Error} If there are uneven number of arguments or there is only one
@@ -642,7 +640,7 @@ goog.object.create = function(var_args) {
   }
 
   if (argLength % 2) {
-    throw Error('Uneven number of arguments');
+    throw new Error('Uneven number of arguments');
   }
 
   var rv = {};
@@ -657,7 +655,7 @@ goog.object.create = function(var_args) {
  * Creates a new object where the property names come from the arguments but
  * the value is always set to true
  * @param {...*} var_args If only one argument is provided and it is an array
- *     then this is used as the arguments,  otherwise the arguments are used
+ *     then this is used as the arguments, otherwise the arguments are used
  *     as the property names.
  * @return {!Object} The new object.
  */
@@ -703,4 +701,49 @@ goog.object.createImmutableView = function(obj) {
  */
 goog.object.isImmutableView = function(obj) {
   return !!Object.isFrozen && Object.isFrozen(obj);
+};
+
+
+/**
+ * Get all properties names on a given Object regardless of enumerability.
+ *
+ * <p> If the browser does not support {@code Object.getOwnPropertyNames} nor
+ * {@code Object.getPrototypeOf} then this is equivalent to using {@code
+ * goog.object.getKeys}
+ *
+ * @param {?Object} obj The object to get the properties of.
+ * @param {boolean=} opt_includeObjectPrototype Whether properties defined on
+ *     {@code Object.prototype} should be included in the result.
+ * @param {boolean=} opt_includeFunctionPrototype Whether properties defined on
+ *     {@code Function.prototype} should be included in the result.
+ * @return {!Array<string>}
+ * @public
+ */
+goog.object.getAllPropertyNames = function(
+    obj, opt_includeObjectPrototype, opt_includeFunctionPrototype) {
+  if (!obj) {
+    return [];
+  }
+
+  // Naively use a for..in loop to get the property names if the browser doesn't
+  // support any other APIs for getting it.
+  if (!Object.getOwnPropertyNames || !Object.getPrototypeOf) {
+    return goog.object.getKeys(obj);
+  }
+
+  var visitedSet = {};
+
+  // Traverse the prototype chain and add all properties to the visited set.
+  var proto = obj;
+  while (proto &&
+         (proto !== Object.prototype || !!opt_includeObjectPrototype) &&
+         (proto !== Function.prototype || !!opt_includeFunctionPrototype)) {
+    var names = Object.getOwnPropertyNames(proto);
+    for (var i = 0; i < names.length; i++) {
+      visitedSet[names[i]] = true;
+    }
+    proto = Object.getPrototypeOf(proto);
+  }
+
+  return goog.object.getKeys(visitedSet);
 };

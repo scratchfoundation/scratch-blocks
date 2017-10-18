@@ -220,7 +220,7 @@ goog.math.angleDifference = function(startAngle, endAngle) {
  * @return {number} -1 when negative, 1 when positive, 0 when 0. Preserves
  *     signed zeros and NaN.
  */
-goog.math.sign = Math.sign || function(x) {
+goog.math.sign = function(x) {
   if (x > 0) {
     return 1;
   }
@@ -379,9 +379,10 @@ goog.math.isInt = function(num) {
  * Returns whether the supplied number is finite and not NaN.
  * @param {number} num The number to test.
  * @return {boolean} Whether {@code num} is a finite number.
+ * @deprecated Use {@link isFinite} instead.
  */
 goog.math.isFiniteNumber = function(num) {
-  return isFinite(num) && !isNaN(num);
+  return isFinite(num);
 };
 
 

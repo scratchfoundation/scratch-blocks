@@ -78,9 +78,9 @@ goog.storage.Storage.prototype.get = function(key) {
   if (goog.isNull(json)) {
     return undefined;
   }
-  /** @preserveTry */
+
   try {
-    return goog.json.parse(json);
+    return JSON.parse(json);
   } catch (e) {
     throw goog.storage.ErrorCode.INVALID_VALUE;
   }

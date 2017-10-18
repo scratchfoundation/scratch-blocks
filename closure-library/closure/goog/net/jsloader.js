@@ -28,8 +28,8 @@ goog.require('goog.async.Deferred');
 goog.require('goog.debug.Error');
 goog.require('goog.dom');
 goog.require('goog.dom.TagName');
+goog.require('goog.dom.safe');
 goog.require('goog.html.TrustedResourceUrl');
-goog.require('goog.html.legacyconversions');
 goog.require('goog.object');
 
 
@@ -89,23 +89,6 @@ goog.net.jsloader.scriptLoadingDeferred_;
 
 
 /**
- * This is deprecated, please use safeLoadMany.
- *
- * @param {Array<string>} uris The URIs to load.
- * @param {goog.net.jsloader.Options=} opt_options Optional parameters. See
- *     goog.net.jsloader.options documentation for details.
- * @return {!goog.async.Deferred} The deferred result, that may be used to add
- *     callbacks
- * @deprecated
- */
-goog.net.jsloader.loadMany = function(uris, opt_options) {
-  var trustedUris = goog.array.map(
-      uris, goog.html.legacyconversions.trustedResourceUrlFromString);
-  return goog.net.jsloader.safeLoadMany(trustedUris, opt_options);
-};
-
-
-/**
  * Loads and evaluates the JavaScript files at the specified URIs, guaranteeing
  * the order of script loads.
  *
@@ -114,7 +97,7 @@ goog.net.jsloader.loadMany = function(uris, opt_options) {
  * the network fetches in parallel.
  *
  * If you need to load a large number of scripts but dependency order doesn't
- * matter, you should just call goog.net.jsloader.load N times.
+ * matter, you should just call goog.net.jsloader.safeLoad N times.
  *
  * If you need to load a large number of scripts on the same domain,
  * you may want to use goog.module.ModuleLoader.
@@ -158,24 +141,6 @@ goog.net.jsloader.safeLoadMany = function(trustedUris, opt_options) {
   };
   goog.net.jsloader.scriptLoadingDeferred_ = popAndLoadNextScript();
   return goog.net.jsloader.scriptLoadingDeferred_;
-};
-
-
-/**
- * This is deprecated, please use safeLoad instead.
- *
- * @param {string} uri The URI of the JavaScript.
- * @param {goog.net.jsloader.Options=} opt_options Optional parameters. See
- *     goog.net.jsloader.Options documentation for details.
- * @return {!goog.async.Deferred} The deferred result, that may be used to add
- *     callbacks and/or cancel the transmission.
- *     The error callback will be called with a single goog.net.jsloader.Error
- *     parameter.
- */
-goog.net.jsloader.load = function(uri, opt_options) {
-  var trustedUri =
-      goog.html.legacyconversions.trustedResourceUrlFromString(uri);
-  return goog.net.jsloader.safeLoad(trustedUri, opt_options);
 };
 
 
@@ -241,42 +206,16 @@ goog.net.jsloader.safeLoad = function(trustedUri, opt_options) {
   };
 
   var properties = options.attributes || {};
-  goog.object.extend(properties, {
-    'type': 'text/javascript',
-    'charset': 'UTF-8',
-    // NOTE(user): Safari never loads the script if we don't set
-    // the src attribute before appending.
-    'src': uri
-  });
+  goog.object.extend(
+      properties, {'type': 'text/javascript', 'charset': 'UTF-8'});
   goog.dom.setProperties(script, properties);
+  // NOTE(user): Safari never loads the script if we don't set the src
+  // attribute before appending.
+  goog.dom.safe.setScriptSrc(script, trustedUri);
   var scriptParent = goog.net.jsloader.getScriptParentElement_(doc);
   scriptParent.appendChild(script);
 
   return deferred;
-};
-
-
-/**
- * This function is deprecated, please use safeLoadAndVerify instead.
- *
- * @param {string} uri The URI of the JavaScript.
- * @param {string} verificationObjName The name of the verification object that
- *     the loaded script should set.
- * @param {goog.net.jsloader.Options} options Optional parameters. See
- *     goog.net.jsloader.Options documentation for details.
- * @return {!goog.async.Deferred} The deferred result, that may be used to add
- *     callbacks and/or cancel the transmission.
- *     The success callback will be called with a single parameter containing
- *     the value of the verification object.
- *     The error callback will be called with a single goog.net.jsloader.Error
- *     parameter.
- * @deprecated
- */
-goog.net.jsloader.loadAndVerify = function(uri, verificationObjName, options) {
-  var trustedUri =
-      goog.html.legacyconversions.trustedResourceUrlFromString(uri);
-  return goog.net.jsloader.safeLoadAndVerify(
-      trustedUri, verificationObjName, options);
 };
 
 

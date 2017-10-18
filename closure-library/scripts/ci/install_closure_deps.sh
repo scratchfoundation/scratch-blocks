@@ -12,6 +12,21 @@ set -ex
 
 cd ..
 
+# Fetches Closure Compiler components from oss.sonatype.org
+fetch () {
+  local name="$1"
+  local snapshots="https://oss.sonatype.org/content/repositories/snapshots"
+  local repo="$snapshots/com/google/javascript"
+  local dir="$repo/$name/1.0-SNAPSHOT"
+  local jar="$name-1.0-SNAPSHOT.jar"
+  local url=$(
+    curl -o - "$dir/" |
+      sed -n 's+.*<a href="\('"$dir/$name"'-[-.0-9]*\.jar\)".*+\1+p' |
+      head -n 1)
+  [ -n $url ]
+  wget -O "$jar" "$url"
+}
+
 # Install clang-format.
 wget --quiet $CLANG_URL
 tar xf $CLANG_TAR
@@ -19,13 +34,10 @@ mv $CLANG_BUILD clang
 rm -f $CLANG_TAR
 
 # Install closure compiler and linter.
-if [ ! -d "closure-compiler" ]; then
-  git clone --depth 1 https://github.com/google/closure-compiler.git
-fi
-cd closure-compiler
-mvn install -DskipTests=true
+fetch closure-compiler
+fetch closure-compiler-linter
 
-cd ../closure-library
+cd closure-library
 
 # Installs node "devDependencies" found in package.json.
 npm install

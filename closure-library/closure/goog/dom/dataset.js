@@ -22,20 +22,27 @@
 
 goog.provide('goog.dom.dataset');
 
+goog.require('goog.labs.userAgent.browser');
 goog.require('goog.string');
 goog.require('goog.userAgent.product');
 
 
 /**
- * Whether using the dataset property is allowed.  In IE (up to and including
- * IE 11), setting element.dataset in JS does not propagate values to CSS,
- * breaking expressions such as `content: attr(data-content)` that would
- * otherwise work.
+ * Whether using the dataset property is allowed.
+ *
+ * In IE (up to and including IE 11), setting element.dataset in JS does not
+ * propagate values to CSS, breaking expressions such as
+ * `content: attr(data-content)` that would otherwise work.
  * See {@link https://github.com/google/closure-library/issues/396}.
+ *
+ * In Safari >= 9, reading from element.dataset sometimes returns
+ * undefined, even though the corresponding data- attribute has a value.
+ * See {@link https://bugs.webkit.org/show_bug.cgi?id=161454}.
  * @const
  * @private
  */
-goog.dom.dataset.ALLOWED_ = !goog.userAgent.product.IE;
+goog.dom.dataset.ALLOWED_ =
+    !goog.userAgent.product.IE && !goog.labs.userAgent.browser.isSafari();
 
 
 /**
@@ -49,6 +56,17 @@ goog.dom.dataset.PREFIX_ = 'data-';
 
 
 /**
+ * Returns whether a string is a valid dataset property name.
+ * @param {string} key Property name for the custom data attribute.
+ * @return {boolean} Whether the string is a valid dataset property name.
+ * @private
+ */
+goog.dom.dataset.isValidProperty_ = function(key) {
+  return !/-[a-z]/.test(key);
+};
+
+
+/**
  * Sets a custom data attribute on an element. The key should be
  * in camelCase format (e.g "keyName" for the "data-key-name" attribute).
  * @param {Element} element DOM node to set the custom data attribute on.
@@ -58,6 +76,10 @@ goog.dom.dataset.PREFIX_ = 'data-';
 goog.dom.dataset.set = function(element, key, value) {
   if (goog.dom.dataset.ALLOWED_ && element.dataset) {
     element.dataset[key] = value;
+  } else if (!goog.dom.dataset.isValidProperty_(key)) {
+    throw new Error(
+        goog.DEBUG ? '"' + key + '" is not a valid dataset property name.' :
+                     '');
   } else {
     element.setAttribute(
         goog.dom.dataset.PREFIX_ + goog.string.toSelectorCase(key), value);
@@ -73,13 +95,20 @@ goog.dom.dataset.set = function(element, key, value) {
  * @return {?string} The attribute value, if it exists.
  */
 goog.dom.dataset.get = function(element, key) {
+  // Edge, unlike other browsers, will do camel-case conversion when retrieving
+  // "dash-case" properties.
+  if (!goog.dom.dataset.isValidProperty_(key)) {
+    return null;
+  }
   if (goog.dom.dataset.ALLOWED_ && element.dataset) {
     // Android browser (non-chrome) returns the empty string for
     // element.dataset['doesNotExist'].
-    if (!(key in element.dataset)) {
+    if (goog.labs.userAgent.browser.isAndroidBrowser() &&
+        !(key in element.dataset)) {
       return null;
     }
-    return element.dataset[key];
+    var value = element.dataset[key];
+    return value === undefined ? null : value;
   } else {
     return element.getAttribute(
         goog.dom.dataset.PREFIX_ + goog.string.toSelectorCase(key));
@@ -94,6 +123,11 @@ goog.dom.dataset.get = function(element, key) {
  * @param {string} key Key for the custom data attribute.
  */
 goog.dom.dataset.remove = function(element, key) {
+  // Edge, unlike other browsers, will do camel-case conversion when removing
+  // "dash-case" properties.
+  if (!goog.dom.dataset.isValidProperty_(key)) {
+    return;
+  }
   if (goog.dom.dataset.ALLOWED_ && element.dataset) {
     // In strict mode Safari will trigger an error when trying to delete a
     // property which does not exist.
@@ -116,6 +150,11 @@ goog.dom.dataset.remove = function(element, key) {
  * @return {boolean} Whether the attribute exists.
  */
 goog.dom.dataset.has = function(element, key) {
+  // Edge, unlike other browsers, will do camel-case conversion when retrieving
+  // "dash-case" properties.
+  if (!goog.dom.dataset.isValidProperty_(key)) {
+    return false;
+  }
   if (goog.dom.dataset.ALLOWED_ && element.dataset) {
     return key in element.dataset;
   } else if (element.hasAttribute) {

@@ -175,11 +175,9 @@ goog.string.isEmptyString = function(str) {
 /**
  * Checks if a string is empty or contains only whitespaces.
  *
- * TODO(user): Deprecate this when clients have been switched over to
- * goog.string.isEmptyOrWhitespace.
- *
  * @param {string} str The string to check.
  * @return {boolean} Whether {@code str} is empty or whitespace only.
+ * @deprecated Use goog.string.isEmptyOrWhitespace instead.
  */
 goog.string.isEmpty = goog.string.isEmptyOrWhitespace;
 
@@ -200,12 +198,10 @@ goog.string.isEmptyOrWhitespaceSafe = function(str) {
 /**
  * Checks if a string is null, undefined, empty or contains only whitespaces.
  *
- * TODO(user): Deprecate this when clients have been switched over to
- * goog.string.isEmptyOrWhitespaceSafe.
- *
  * @param {*} str The string to check.
  * @return {boolean} Whether {@code str} is null, undefined, empty, or
  *     whitespace only.
+ * @deprecated Use goog.string.isEmptyOrWhitespace instead.
  */
 goog.string.isEmptySafe = goog.string.isEmptyOrWhitespaceSafe;
 
@@ -998,7 +994,7 @@ goog.string.quote = function(s) {
 
 
 /**
- * Takes a string and returns the escaped string for that character.
+ * Takes a string and returns the escaped string for that input string.
  * @param {string} str The string to escape.
  * @return {string} An escaped string representing {@code str}.
  */
@@ -1105,15 +1101,14 @@ goog.string.removeAt = function(s, index, stringLength) {
 
 
 /**
- *  Removes the first occurrence of a substring from a string.
- *  @param {string} s The base string from which to remove.
- *  @param {string} ss The string to remove.
- *  @return {string} A copy of {@code s} with {@code ss} removed or the full
- *      string if nothing is removed.
+ * Removes the first occurrence of a substring from a string.
+ * @param {string} str The base string from which to remove.
+ * @param {string} substr The string to remove.
+ * @return {string} A copy of {@code str} with {@code substr} removed or the
+ *     full string if nothing is removed.
  */
-goog.string.remove = function(s, ss) {
-  var re = new RegExp(goog.string.regExpEscape(ss), '');
-  return s.replace(re, '');
+goog.string.remove = function(str, substr) {
+  return str.replace(substr, '');
 };
 
 
@@ -1127,6 +1122,20 @@ goog.string.remove = function(s, ss) {
 goog.string.removeAll = function(s, ss) {
   var re = new RegExp(goog.string.regExpEscape(ss), 'g');
   return s.replace(re, '');
+};
+
+
+/**
+ *  Replaces all occurrences of a substring of a string with a new substring.
+ *  @param {string} s The base string from which to remove.
+ *  @param {string} ss The string to replace.
+ *  @param {string} replacement The replacement string.
+ *  @return {string} A copy of {@code s} with {@code ss} replaced by
+ *      {@code replacement} or the original string if nothing is replaced.
+ */
+goog.string.replaceAll = function(s, ss, replacement) {
+  var re = new RegExp(goog.string.regExpEscape(ss), 'g');
+  return s.replace(re, replacement.replace(/\$/g, '$$$$'));
 };
 
 

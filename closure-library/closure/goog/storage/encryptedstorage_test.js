@@ -20,15 +20,14 @@ goog.require('goog.storage.EncryptedStorage');
 goog.require('goog.storage.ErrorCode');
 goog.require('goog.storage.RichStorage');
 goog.require('goog.storage.collectableStorageTester');
-goog.require('goog.storage.storage_test');
+goog.require('goog.storage.storageTester');
 goog.require('goog.testing.MockClock');
 goog.require('goog.testing.PseudoRandom');
 goog.require('goog.testing.jsunit');
 goog.require('goog.testing.storage.FakeMechanism');
 
 function getEncryptedWrapper(storage, key) {
-  return goog.json.parse(
-      storage.mechanism.get(storage.hashKeyWithSecret_(key)));
+  return JSON.parse(storage.mechanism.get(storage.hashKeyWithSecret_(key)));
 }
 
 function getEncryptedData(storage, key) {
@@ -36,15 +35,14 @@ function getEncryptedData(storage, key) {
 }
 
 function decryptWrapper(storage, key, wrapper) {
-  return goog.json.parse(
-      storage.decryptValue_(
-          wrapper[goog.storage.EncryptedStorage.SALT_KEY], key,
-          wrapper[goog.storage.RichStorage.DATA_KEY]));
+  return JSON.parse(storage.decryptValue_(
+      wrapper[goog.storage.EncryptedStorage.SALT_KEY], key,
+      wrapper[goog.storage.RichStorage.DATA_KEY]));
 }
 
 function hammingDistance(a, b) {
   if (a.length != b.length) {
-    throw Error('Lengths must be the same for Hamming distance');
+    throw new Error('Lengths must be the same for Hamming distance');
   }
   var distance = 0;
   for (var i = 0; i < a.length; ++i) {
@@ -59,7 +57,7 @@ function hammingDistance(a, b) {
 function testBasicOperations() {
   var mechanism = new goog.testing.storage.FakeMechanism();
   var storage = new goog.storage.EncryptedStorage(mechanism, 'secret');
-  goog.storage.storage_test.runBasicTests(storage);
+  goog.storage.storageTester.runBasicTests(storage);
 }
 
 
@@ -117,8 +115,9 @@ function testEncryption() {
       storage.hashKeyWithSecret_('first'),
       goog.json.serialize(encryptedWrapper));
   assertEquals(
-      goog.storage.ErrorCode.DECRYPTION_ERROR,
-      assertThrows(function() { storage.get('first') }));
+      goog.storage.ErrorCode.DECRYPTION_ERROR, assertThrows(function() {
+        storage.get('first');
+      }));
 
   // Test garbage collection.
   storage.collect();

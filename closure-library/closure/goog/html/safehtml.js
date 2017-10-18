@@ -25,6 +25,7 @@ goog.require('goog.array');
 goog.require('goog.asserts');
 goog.require('goog.dom.TagName');
 goog.require('goog.dom.tags');
+goog.require('goog.html.SafeScript');
 goog.require('goog.html.SafeStyle');
 goog.require('goog.html.SafeStyleSheet');
 goog.require('goog.html.SafeUrl');
@@ -77,7 +78,7 @@ goog.html.SafeHtml = function() {
   /**
    * A type marker used to implement additional run-time type checking.
    * @see goog.html.SafeHtml#unwrap
-   * @const
+   * @const {!Object}
    * @private
    */
   this.SAFE_HTML_TYPE_MARKER_GOOG_HTML_SECURITY_PRIVATE_ =
@@ -319,7 +320,7 @@ goog.html.SafeHtml.NOT_ALLOWED_TAG_NAMES_ = goog.object.createSet(
 
 /**
  * @typedef {string|number|goog.string.TypedString|
- *     goog.html.SafeStyle.PropertyMap}
+ *     goog.html.SafeStyle.PropertyMap|undefined}
  */
 goog.html.SafeHtml.AttributeValue;
 
@@ -393,10 +394,10 @@ goog.html.SafeHtml.create = function(tagName, opt_attributes, opt_content) {
  */
 goog.html.SafeHtml.verifyTagName = function(tagName) {
   if (!goog.html.SafeHtml.VALID_NAMES_IN_TAG_.test(tagName)) {
-    throw Error('Invalid tag name <' + tagName + '>.');
+    throw new Error('Invalid tag name <' + tagName + '>.');
   }
   if (tagName.toUpperCase() in goog.html.SafeHtml.NOT_ALLOWED_TAG_NAMES_) {
-    throw Error('Tag name <' + tagName + '> is not allowed for SafeHtml.');
+    throw new Error('Tag name <' + tagName + '> is not allowed for SafeHtml.');
   }
 };
 
@@ -526,6 +527,12 @@ goog.html.SafeHtml.canUseSandboxIframe = function() {
  *     opt_attributes contains the src attribute.
  */
 goog.html.SafeHtml.createScriptSrc = function(src, opt_attributes) {
+  // TODO(mlourenco): The charset attribute should probably be blocked. If
+  // its value is attacker controlled, the script contains attacker controlled
+  // sub-strings (even if properly escaped) and the server does not set charset
+  // then XSS is likely possible.
+  // https://html.spec.whatwg.org/multipage/scripting.html#dom-script-charset
+
   // Check whether this is really TrustedResourceUrl.
   goog.html.TrustedResourceUrl.unwrap(src);
 
@@ -535,6 +542,44 @@ goog.html.SafeHtml.createScriptSrc = function(src, opt_attributes) {
       fixedAttributes, defaultAttributes, opt_attributes);
   return goog.html.SafeHtml.createSafeHtmlTagSecurityPrivateDoNotAccessOrElse(
       'script', attributes);
+};
+
+
+/**
+ * Creates a SafeHtml representing a script tag. Does not allow the language,
+ * src, text or type attributes to be set.
+ * @param {!goog.html.SafeScript|!Array<!goog.html.SafeScript>}
+ *     script Content to put inside the tag. Array elements are
+ *     concatenated.
+ * @param {?Object<string, ?goog.html.SafeHtml.AttributeValue>=} opt_attributes
+ *     Mapping from attribute names to their values. Only attribute names
+ *     consisting of [a-zA-Z0-9-] are allowed. Value of null or undefined causes
+ *     the attribute to be omitted.
+ * @return {!goog.html.SafeHtml} The SafeHtml content with the tag.
+ * @throws {Error} If invalid attribute name or attribute value is provided. If
+ *     opt_attributes contains the language, src, text or type attribute.
+ */
+goog.html.SafeHtml.createScript = function(script, opt_attributes) {
+  for (var attr in opt_attributes) {
+    var attrLower = attr.toLowerCase();
+    if (attrLower == 'language' || attrLower == 'src' || attrLower == 'text' ||
+        attrLower == 'type') {
+      throw new Error('Cannot set "' + attrLower + '" attribute');
+    }
+  }
+
+  var content = '';
+  script = goog.array.concat(script);
+  for (var i = 0; i < script.length; i++) {
+    content += goog.html.SafeScript.unwrap(script[i]);
+  }
+  // Convert to SafeHtml so that it's not HTML-escaped. This is safe because
+  // as part of its contract, SafeScript should have no dangerous '<'.
+  var htmlContent =
+      goog.html.SafeHtml.createSafeHtmlSecurityPrivateDoNotAccessOrElse(
+          content, goog.i18n.bidi.Dir.NEUTRAL);
+  return goog.html.SafeHtml.createSafeHtmlTagSecurityPrivateDoNotAccessOrElse(
+      'script', opt_attributes, htmlContent);
 };
 
 
@@ -634,10 +679,10 @@ goog.html.SafeHtml.getAttrNameAndValue_ = function(tagName, name, value) {
     value = goog.html.SafeHtml.getStyleValue_(value);
   } else if (/^on/i.test(name)) {
     // TODO(jakubvrana): Disallow more attributes with a special meaning.
-    throw Error(
+    throw new Error(
         'Attribute "' + name + '" requires goog.string.Const value, "' + value +
         '" given.');
-    // URL attributes handled differently accroding to tag.
+    // URL attributes handled differently according to tag.
   } else if (name.toLowerCase() in goog.html.SafeHtml.URL_ATTRIBUTES_) {
     if (value instanceof goog.html.TrustedResourceUrl) {
       value = goog.html.TrustedResourceUrl.unwrap(value);
@@ -646,7 +691,7 @@ goog.html.SafeHtml.getAttrNameAndValue_ = function(tagName, name, value) {
     } else if (goog.isString(value)) {
       value = goog.html.SafeUrl.sanitize(value).getTypedStringValue();
     } else {
-      throw Error(
+      throw new Error(
           'Attribute "' + name + '" on tag "' + tagName +
           '" requires goog.html.SafeUrl, goog.string.Const, or string,' +
           ' value "' + value + '" given.');
@@ -679,7 +724,7 @@ goog.html.SafeHtml.getAttrNameAndValue_ = function(tagName, name, value) {
  */
 goog.html.SafeHtml.getStyleValue_ = function(value) {
   if (!goog.isObject(value)) {
-    throw Error(
+    throw new Error(
         'The "style" attribute requires goog.html.SafeStyle or map ' +
         'of style properties, ' + (typeof value) + ' given: ' + value);
   }
@@ -867,7 +912,7 @@ goog.html.SafeHtml.stringifyAttributes = function(tagName, opt_attributes) {
   if (opt_attributes) {
     for (var name in opt_attributes) {
       if (!goog.html.SafeHtml.VALID_NAMES_IN_TAG_.test(name)) {
-        throw Error('Invalid attribute name "' + name + '".');
+        throw new Error('Invalid attribute name "' + name + '".');
       }
       var value = opt_attributes[name];
       if (!goog.isDefAndNotNull(value)) {
@@ -882,7 +927,7 @@ goog.html.SafeHtml.stringifyAttributes = function(tagName, opt_attributes) {
 
 
 /**
- * @param {!Object<string, string>} fixedAttributes
+ * @param {!Object<string, ?goog.html.SafeHtml.AttributeValue>} fixedAttributes
  * @param {!Object<string, string>} defaultAttributes
  * @param {?Object<string, ?goog.html.SafeHtml.AttributeValue>=} opt_attributes
  *     Optional attributes passed to create*().
@@ -908,7 +953,7 @@ goog.html.SafeHtml.combineAttributes = function(
   for (name in opt_attributes) {
     var nameLower = name.toLowerCase();
     if (nameLower in fixedAttributes) {
-      throw Error(
+      throw new Error(
           'Cannot override "' + nameLower + '" attribute, got "' + name +
           '" with value "' + opt_attributes[name] + '"');
     }

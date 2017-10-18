@@ -31,9 +31,11 @@
 
 goog.provide('goog.html.sanitizer.HtmlSanitizer');
 goog.provide('goog.html.sanitizer.HtmlSanitizer.Builder');
+goog.provide('goog.html.sanitizer.HtmlSanitizerAttributePolicy');
 goog.provide('goog.html.sanitizer.HtmlSanitizerPolicy');
 goog.provide('goog.html.sanitizer.HtmlSanitizerPolicyContext');
 goog.provide('goog.html.sanitizer.HtmlSanitizerPolicyHints');
+goog.provide('goog.html.sanitizer.HtmlSanitizerUrlPolicy');
 
 goog.require('goog.array');
 goog.require('goog.asserts');
@@ -43,6 +45,7 @@ goog.require('goog.functions');
 goog.require('goog.html.SafeHtml');
 goog.require('goog.html.SafeStyle');
 goog.require('goog.html.SafeUrl');
+goog.require('goog.html.sanitizer.AttributeSanitizedWhitelist');
 goog.require('goog.html.sanitizer.AttributeWhitelist');
 goog.require('goog.html.sanitizer.CssSanitizer');
 goog.require('goog.html.sanitizer.TagBlacklist');
@@ -84,6 +87,15 @@ goog.html.sanitizer.HtmlSanitizerPolicy;
 
 
 /**
+ * Type for a URL policy function.
+ *
+ * @typedef {function(string, !goog.html.sanitizer.HtmlSanitizerPolicyHints=):
+ *     ?goog.html.SafeUrl}
+ */
+goog.html.sanitizer.HtmlSanitizerUrlPolicy;
+
+
+/**
  * Type for attribute policy configuration.
  * @typedef {{
  *     tagName: string,
@@ -95,58 +107,49 @@ goog.html.sanitizer.HtmlSanitizerAttributePolicy;
 
 
 /**
- * Boolean for whether the HTML sanitizer is supported. For now mainly exclude
+ * Whether the HTML sanitizer is supported. For now mainly exclude
  * IE9 or below where we know the sanitizer is insecure.
- * @private {boolean}
- * @const
+ * @const @private {boolean}
  */
 goog.html.sanitizer.HTML_SANITIZER_SUPPORTED_ =
     !goog.userAgent.IE || document.documentMode >= 10;
 
 
 /**
- * Boolean for whether the template tag is supported.
- * @package
- * @const
+ * Whether the template tag is supported.
+ * @const @package
  */
 goog.html.sanitizer.HTML_SANITIZER_TEMPLATE_SUPPORTED =
-    !goog.userAgent.IE || !goog.isDefAndNotNull(document.documentMode);
+    !goog.userAgent.IE || document.documentMode == null;
 
 
 /**
  * Prefix used by all internal html sanitizer booking properties.
- * @private {string}
- * @const
+ * @const @private {string}
  */
 goog.html.sanitizer.HTML_SANITIZER_BOOKKEEPING_PREFIX_ = 'data-sanitizer-';
 
 
 /**
- * String defining the temporary attribute name in which html sanitizer uses for
- * bookkeeping.
- * @private {string}
- * @const
+ * Temporary attribute name in which html sanitizer uses for bookkeeping.
+ * @const @private {string}
  */
 goog.html.sanitizer.HTML_SANITIZER_BOOKKEEPING_ATTR_NAME_ =
     goog.html.sanitizer.HTML_SANITIZER_BOOKKEEPING_PREFIX_ + 'elem-num';
 
 
 /**
- * String defining the name of the attribute added to span tags that replace
- * unknown tags. The value of this attribute is the name of the tag before the
- * sanitization occurred.
- * @private
- * @const
+ * Attribute name added to span tags that replace unknown tags. The value of
+ * this attribute is the name of the tag before the sanitization occurred.
+ * @const @private
  */
 goog.html.sanitizer.HTML_SANITIZER_SANITIZED_ATTR_NAME_ =
     goog.html.sanitizer.HTML_SANITIZER_BOOKKEEPING_PREFIX_ + 'original-tag';
 
 
 /**
- * String defining the name of the attribute added to blacklisted tags to
- * then filter them from the output.
- * @private
- * @const
+ * Attribute name added to blacklisted tags to then filter them from the output.
+ * @const @private
  */
 goog.html.sanitizer.HTML_SANITIZER_BLACKLISTED_TAG_ =
     goog.html.sanitizer.HTML_SANITIZER_BOOKKEEPING_PREFIX_ + 'blacklisted-tag';
@@ -155,8 +158,7 @@ goog.html.sanitizer.HTML_SANITIZER_BLACKLISTED_TAG_ =
 /**
  * Map of property descriptors we use to avoid looking up the prototypes
  * multiple times.
- * @private {!Object<string, !ObjectPropertyDescriptor>}
- * @const
+ * @const @private {!Object<string, !ObjectPropertyDescriptor>}
  */
 goog.html.sanitizer.HTML_SANITIZER_PROPERTY_DESCRIPTORS_ =
     goog.html.sanitizer.HTML_SANITIZER_SUPPORTED_ ? {
@@ -179,49 +181,39 @@ goog.html.sanitizer.HTML_SANITIZER_PROPERTY_DESCRIPTORS_ =
 /**
  * Creates an HTML sanitizer.
  * @param {!goog.html.sanitizer.HtmlSanitizer.Builder=} opt_builder
- * @final
- * @constructor @struct
+ * @final @constructor @struct
  */
 goog.html.sanitizer.HtmlSanitizer = function(opt_builder) {
-  opt_builder = opt_builder || new goog.html.sanitizer.HtmlSanitizer.Builder();
+  var builder = opt_builder || new goog.html.sanitizer.HtmlSanitizer.Builder();
 
-  /**
-   * @private {boolean}
-   */
+  builder.installPolicies_();
+
+  /** @private {boolean} */
   this.shouldSanitizeTemplateContents_ =
-      opt_builder.shouldSanitizeTemplateContents_;
+      builder.shouldSanitizeTemplateContents_;
 
-  /**
-   * @private {!Object<string, !goog.html.sanitizer.HtmlSanitizerPolicy>}
-   */
-  this.attributeHandlers_ = goog.object.clone(opt_builder.attributeWhitelist_);
+  /** @private {!Object<string, !goog.html.sanitizer.HtmlSanitizerPolicy>} */
+  this.attributeHandlers_ = goog.object.clone(builder.attributeWhitelist_);
 
-  /**
-   * @private {!Object<string, boolean>}
-   */
-  this.tagBlacklist_ = goog.object.clone(opt_builder.tagBlacklist_);
+  /** @private {!Object<string, boolean>} */
+  this.tagBlacklist_ = goog.object.clone(builder.tagBlacklist_);
 
-  /**
-   * @private {!Object<string, boolean>}
-   */
-  this.tagWhitelist_ = goog.object.clone(opt_builder.tagWhitelist_);
+  /** @private {!Object<string, boolean>} */
+  this.tagWhitelist_ = goog.object.clone(builder.tagWhitelist_);
 
-  /**
-   * @private {boolean}
-   */
-  this.shouldAddOriginalTagNames_ = opt_builder.shouldAddOriginalTagNames_;
+  /** @private {boolean} */
+  this.shouldAddOriginalTagNames_ = builder.shouldAddOriginalTagNames_;
 
   // Add whitelist data-* attributes from the builder to the attributeHandlers
   // with a default cleanUpAttribute function. data-* attributes are inert as
   // per HTML5 specs, so not much sanitization needed.
-  goog.array.forEach(opt_builder.dataAttributeWhitelist_, function(dataAttr) {
-    // TODO(danesh): What if this is just data-, do we need to check data-\w+?
+  goog.array.forEach(builder.dataAttributeWhitelist_, function(dataAttr) {
     goog.asserts.assert(goog.string.startsWith(dataAttr, 'data-'));
     goog.asserts.assert(!goog.string.startsWith(
         dataAttr, goog.html.sanitizer.HTML_SANITIZER_BOOKKEEPING_PREFIX_));
 
     this.attributeHandlers_['* ' + dataAttr.toUpperCase()] =
-        /** @type {goog.html.sanitizer.HtmlSanitizerPolicy} */ (
+        /** @type {!goog.html.sanitizer.HtmlSanitizerPolicy} */ (
             goog.html.sanitizer.HtmlSanitizer.cleanUpAttribute_);
   }, this);
 };
@@ -229,9 +221,10 @@ goog.html.sanitizer.HtmlSanitizer = function(opt_builder) {
 
 
 /**
- * Returns a function which unwraps SafeUrl from an almost HtmlSanitizerPolicy.
- * @param {!function(string, goog.html.sanitizer.HtmlSanitizerPolicyHints=)
- *     :?goog.html.SafeUrl} customUrlPolicy
+ * Converts a HtmlSanitizerUrlPolicy to a HtmlSanitizerPolicy by calling the
+ * HtmlSanitizerUrlPolicy with the required arguments and unwrapping the
+ * returned SafeUrl.
+ * @param {!goog.html.sanitizer.HtmlSanitizerUrlPolicy} customUrlPolicy
  * @return {!goog.html.sanitizer.HtmlSanitizerPolicy}
  * @private
  */
@@ -253,9 +246,8 @@ goog.html.sanitizer.HtmlSanitizer.sanitizeUrl_ = function(customUrlPolicy) {
 
 
 /**
- * A builder class for the Html Sanitizer. All methods except build return this.
- * @final
- * @constructor @struct
+ * The builder for the HTML Sanitizer. All methods except build return this.
+ * @final @constructor @struct
  */
 goog.html.sanitizer.HtmlSanitizer.Builder = function() {
   /**
@@ -265,9 +257,30 @@ goog.html.sanitizer.HtmlSanitizer.Builder = function() {
    * generally not make a network request, but &lt;link href=""&gt; does), and
    * so when necessary a tag-specific handler can be used to override a
    * tag-agnostic one.
-   * @private {!Object<string, goog.html.sanitizer.HtmlSanitizerPolicy>}
+   * @private {!Object<string, !goog.html.sanitizer.HtmlSanitizerPolicy>}
    */
   this.attributeWhitelist_ = {};
+  goog.array.forEach(
+      [
+        goog.html.sanitizer.AttributeWhitelist,
+        goog.html.sanitizer.AttributeSanitizedWhitelist
+      ],
+      function(wl) {
+        goog.array.forEach(goog.object.getKeys(wl), function(attr) {
+          this.attributeWhitelist_[attr] =
+              /** @type {!goog.html.sanitizer.HtmlSanitizerPolicy} */
+              (goog.html.sanitizer.HtmlSanitizer.cleanUpAttribute_);
+        }, this);
+      },
+      this);
+
+  /**
+   * A set of attribute handlers that should not inherit their default policy
+   * during build().
+   * @private {!Object<string, boolean>}
+   */
+  this.attributeOverrideList_ = {};
+
 
   /**
    * Keeps track of whether we allow form tags.
@@ -304,14 +317,14 @@ goog.html.sanitizer.HtmlSanitizer.Builder = function() {
   this.tagWhitelist_ = goog.object.clone(goog.html.sanitizer.TagWhitelist);
 
   /**
-   * If true, non-whitelisted, non-blacklisted tags that have been converted
-   * to <span> tags will contain the original tag in a data attribute.
+   * Whether non-whitelisted and non-blacklisted tags that have been converted
+   * to &lt;span&rt; tags will contain the original tag in a data attribute.
    * @private {boolean}
    */
   this.shouldAddOriginalTagNames_ = false;
 
   /**
-   * A function to be applied to urls found on the parsing process which do not
+   * A function to be applied to URLs found on the parsing process which do not
    * trigger requests.
    * @private {!goog.html.sanitizer.HtmlSanitizerPolicy}
    */
@@ -340,17 +353,24 @@ goog.html.sanitizer.HtmlSanitizer.Builder = function() {
 
   /**
    * A function to sanitize inline CSS styles.
-   * @private {(undefined|function(goog.html.sanitizer.HtmlSanitizerPolicy,
-   * string,
-   *     goog.html.sanitizer.HtmlSanitizerPolicyHints,
-   *     goog.html.sanitizer.HtmlSanitizerPolicyContext):?string)}
+   * @private {(undefined|function(
+   *     !goog.html.sanitizer.HtmlSanitizerPolicy,
+   *     string,
+   *     !goog.html.sanitizer.HtmlSanitizerPolicyHints,
+   *     !goog.html.sanitizer.HtmlSanitizerPolicyContext):?string)}
    */
   this.sanitizeCssPolicy_ = undefined;
+
+  /**
+   * True iff policies have been installed for the instance.
+   * @private {boolean}
+   */
+  this.policiesInstalled_ = false;
 };
 
 
 /**
- * Allow specified data attributes.
+ * Extends the list of allowed data attributes.
  * @param {!Array<string>} dataAttributeWhitelist
  * @return {!goog.html.sanitizer.HtmlSanitizer.Builder}
  */
@@ -362,7 +382,7 @@ goog.html.sanitizer.HtmlSanitizer.Builder.prototype.allowDataAttributes =
 
 
 /**
- * Allow form tags in the HTML. Without this all form tags and content will be
+ * Allows form tags in the HTML. Without this all form tags and content will be
  * dropped.
  * @return {!goog.html.sanitizer.HtmlSanitizer.Builder}
  */
@@ -373,8 +393,7 @@ goog.html.sanitizer.HtmlSanitizer.Builder.prototype.allowFormTag = function() {
 
 
 /**
- * Package-internal utility method to extend the tag whitelist.
- *
+ * Extends the tag whitelist (Package-internal utility method only).
  * @param {!Array<string>} tags The list of tags to be added to the whitelist.
  * @return {!goog.html.sanitizer.HtmlSanitizer.Builder}
  * @package
@@ -389,8 +408,7 @@ goog.html.sanitizer.HtmlSanitizer.Builder.prototype
 
 
 /**
- * Package-internal utility method to extend the attribute whitelist.
- *
+ * Extends the attribute whitelist (Package-internal utility method only).
  * @param {!Array<(string|!goog.html.sanitizer.HtmlSanitizerAttributePolicy)>}
  *     attrs The list of attributes to be added to the whitelist.
  * @return {!goog.html.sanitizer.HtmlSanitizer.Builder}
@@ -402,20 +420,21 @@ goog.html.sanitizer.HtmlSanitizer.Builder.prototype
     if (goog.isString(attr)) {
       attr = {tagName: '*', attributeName: attr, policy: null};
     }
-    this.attributeWhitelist_[goog.html.sanitizer.HtmlSanitizer.attrIdentifier_(
-        attr.tagName, attr.attributeName)] = attr.policy ?
+    var handlerName = goog.html.sanitizer.HtmlSanitizer.attrIdentifier_(
+        attr.tagName, attr.attributeName);
+    this.attributeWhitelist_[handlerName] = attr.policy ?
         attr.policy :
         /** @type {!goog.html.sanitizer.HtmlSanitizerPolicy} */ (
             goog.html.sanitizer.HtmlSanitizer.cleanUpAttribute_);
+    this.attributeOverrideList_[handlerName] = true;
   }, this);
   return this;
 };
 
 
 /**
- * Package-internal utility method to turn off sanitization of template tag
- * contents and pass them unmodified.
- *
+ * Turns off sanitization of template tag contents and pass them unmodified
+ * (Package-internal utility method only).
  * @return {!goog.html.sanitizer.HtmlSanitizer.Builder}
  * @throws {!Error}
  * @package
@@ -461,9 +480,60 @@ goog.html.sanitizer.HtmlSanitizer.Builder.prototype.onlyAllowTags = function(
 
 
 /**
- * When unknown tags are sanitized to <span>, pass the original tag name in
- * the data attribute 'original-tag', so that caller can distinguish them from
- * actual <span> tags.
+ * Allows only the provided whitelist of attributes, possibly setting a custom
+ * policy for them. The set of tag/attribute combinations need to be a subset of
+ * the currently allowed combinations.
+ * <p>
+ * Note that you cannot define a generic handler for an attribute if only a
+ * tag-specific one is present, and vice versa. To configure the sanitizer to
+ * accept an attribute only for a specific tag when only a generic handler is
+ * whitelisted, use the goog.html.sanitizer.HtmlSanitizerPolicyHints parameter
+ * and simply reject the attribute in unwanted tags.
+ * <p>
+ * Also note that the sanitizer's policy is still called after the provided one,
+ * to ensure that supplying misconfigured policy cannot introduce
+ * vulnerabilities. To completely override an existing attribute policy or to
+ * allow new attributes, see the goog.html.sanitizer.unsafe package.
+ * @param {!Array<(string|!goog.html.sanitizer.HtmlSanitizerAttributePolicy)>}
+ *     attrWhitelist The subset of attributes that the sanitizer will accept.
+ *     Attributes can come in of two forms:
+ *     - string: allow all values for this attribute on all tags.
+ *     - HtmlSanitizerAttributePolicy: allows specifying a policy for a
+ *         particular tag. The tagName can be "*", which means all tags. If no
+ *         policy is passed, the default is to allow all values.
+ *     The tag and attribute names are case-insensitive.
+ *     Note that the policy for id, URLs, names etc is controlled separately
+ *     (using withCustom* methods).
+ * @return {!goog.html.sanitizer.HtmlSanitizer.Builder}
+ * @throws {Error} Thrown if an attempt is made to allow a non-whitelisted
+ *     attribute.
+ */
+goog.html.sanitizer.HtmlSanitizer.Builder.prototype.onlyAllowAttributes =
+    function(attrWhitelist) {
+  var oldWhitelist = this.attributeWhitelist_;
+  this.attributeWhitelist_ = {};
+  goog.array.forEach(attrWhitelist, function(attr) {
+    if (goog.typeOf(attr) === 'string') {
+      attr = {tagName: '*', attributeName: attr.toUpperCase(), policy: null};
+    }
+    var handlerName = goog.html.sanitizer.HtmlSanitizer.attrIdentifier_(
+        attr.tagName, attr.attributeName);
+    if (!oldWhitelist[handlerName]) {
+      throw new Error('Only whitelisted attributes can be allowed.');
+    }
+    this.attributeWhitelist_[handlerName] = attr.policy ?
+        attr.policy :
+        /** @type {goog.html.sanitizer.HtmlSanitizerPolicy} */ (
+            goog.html.sanitizer.HtmlSanitizer.cleanUpAttribute_);
+  }, this);
+  return this;
+};
+
+
+/**
+ * Adds the original tag name in the data attribute 'original-tag' when unknown
+ * tags are sanitized to &lt;span&rt;, so that caller can distinguish them from
+ * actual &lt;span&rt; tags.
  * @return {!goog.html.sanitizer.HtmlSanitizer.Builder}
  */
 goog.html.sanitizer.HtmlSanitizer.Builder.prototype.addOriginalTagNames =
@@ -475,8 +545,8 @@ goog.html.sanitizer.HtmlSanitizer.Builder.prototype.addOriginalTagNames =
 
 /**
  * Sets a custom network URL policy.
- * @param {!function(string, goog.html.sanitizer.HtmlSanitizerPolicyHints=)
- *     :?goog.html.SafeUrl} customNetworkReqUrlPolicy
+ * @param {!goog.html.sanitizer.HtmlSanitizerUrlPolicy}
+ *     customNetworkReqUrlPolicy
  * @return {!goog.html.sanitizer.HtmlSanitizer.Builder}
  */
 goog.html.sanitizer.HtmlSanitizer.Builder.prototype
@@ -489,8 +559,7 @@ goog.html.sanitizer.HtmlSanitizer.Builder.prototype
 
 /**
  * Sets a custom non-network URL policy.
- * @param {!function(string, goog.html.sanitizer.HtmlSanitizerPolicyHints=)
- *     :?goog.html.SafeUrl} customUrlPolicy
+ * @param {!goog.html.sanitizer.HtmlSanitizerUrlPolicy} customUrlPolicy
  * @return {!goog.html.sanitizer.HtmlSanitizer.Builder}
  */
 goog.html.sanitizer.HtmlSanitizer.Builder.prototype.withCustomUrlPolicy =
@@ -537,23 +606,82 @@ goog.html.sanitizer.HtmlSanitizer.Builder.prototype.allowCssStyles =
 
 
 /**
- * Build and return a goog.html.sanitizer.HtmlSanitizer object.
+ * Wraps a custom policy function with the sanitizer's default policy.
+ * @param {?goog.html.sanitizer.HtmlSanitizerPolicy} customPolicy The custom
+ *     policy for the tag/attribute combination.
+ * @param {!goog.html.sanitizer.HtmlSanitizerPolicy} defaultPolicy The
+ *     sanitizer's policy that is always called after the custom policy.
+ * @return {!goog.html.sanitizer.HtmlSanitizerPolicy}
+ * @private
+ */
+goog.html.sanitizer.HtmlSanitizer.wrapPolicy_ = function(
+    customPolicy, defaultPolicy) {
+  return /** @type {!goog.html.sanitizer.HtmlSanitizerPolicy} */ (function(
+      value, hints, ctx, policy) {
+    var result = customPolicy(value, hints, ctx, policy);
+    return result == null ? null : defaultPolicy(result, hints, ctx, policy);
+  });
+};
+
+
+/**
+ * Installs the sanitizer's default policy for a specific tag/attribute
+ * combination on the provided whitelist, but only if a policy already exists.
+ * @param {!Object<string, !goog.html.sanitizer.HtmlSanitizerPolicy>}
+ *     whitelist The whitelist to modify.
+ * @param {!Object<string, boolean>} overrideList The set of attributes handlers
+ *     that should not be wrapped with a default policy.
+ * @param {string} key The tag/attribute combination
+ * @param {!goog.html.sanitizer.HtmlSanitizerPolicy} defaultPolicy The
+ *     sanitizer's policy.
+ * @private
+ */
+goog.html.sanitizer.HtmlSanitizer.installDefaultPolicy_ = function(
+    whitelist, overrideList, key, defaultPolicy) {
+  if (whitelist[key] && !overrideList[key]) {
+    whitelist[key] = goog.html.sanitizer.HtmlSanitizer.wrapPolicy_(
+        whitelist[key], defaultPolicy);
+  }
+};
+
+
+/**
+ * Builds and returns a goog.html.sanitizer.HtmlSanitizer object.
  * @return {!goog.html.sanitizer.HtmlSanitizer}
  */
 goog.html.sanitizer.HtmlSanitizer.Builder.prototype.build = function() {
+  return new goog.html.sanitizer.HtmlSanitizer(this);
+};
+
+/**
+ * Installs the sanitization policies for the attributes.
+ * May only be called once.
+ * @private
+ */
+goog.html.sanitizer.HtmlSanitizer.Builder.prototype.installPolicies_ =
+    function() {
+  if (this.policiesInstalled_) {
+    throw new Error('HtmlSanitizer.Builder.build() can only be used once.');
+  }
+
   if (!this.allowFormTag_) {
     this.tagBlacklist_['FORM'] = true;
   }
 
+  var installPolicy = goog.html.sanitizer.HtmlSanitizer.installDefaultPolicy_;
+
   // Binding all the non-trivial attribute sanitizers to the appropriate,
   // potentially customizable, handling functions at build().
-  this.attributeWhitelist_['* USEMAP'] =
+  installPolicy(
+      this.attributeWhitelist_, this.attributeOverrideList_, '* USEMAP',
       /** @type {!goog.html.sanitizer.HtmlSanitizerPolicy} */ (
-          goog.html.sanitizer.HtmlSanitizer.sanitizeUrlFragment_);
+          goog.html.sanitizer.HtmlSanitizer.sanitizeUrlFragment_));
 
   var urlAttributes = ['* ACTION', '* CITE', '* HREF'];
   goog.array.forEach(urlAttributes, function(attribute) {
-    this.attributeWhitelist_[attribute] = this.urlPolicy_;
+    installPolicy(
+        this.attributeWhitelist_, this.attributeOverrideList_, attribute,
+        this.urlPolicy_);
   }, this);
 
   var networkUrlAttributes = [
@@ -561,37 +689,48 @@ goog.html.sanitizer.HtmlSanitizer.Builder.prototype.build = function() {
     '* LONGDESC', '* SRC', 'LINK HREF'
   ];
   goog.array.forEach(networkUrlAttributes, function(attribute) {
-    this.attributeWhitelist_[attribute] = this.networkRequestUrlPolicy_;
+    installPolicy(
+        this.attributeWhitelist_, this.attributeOverrideList_, attribute,
+        this.networkRequestUrlPolicy_);
   }, this);
 
   var nameAttributes = ['* FOR', '* HEADERS', '* NAME'];
   goog.array.forEach(nameAttributes, function(attribute) {
-    this.attributeWhitelist_[attribute] =
+    installPolicy(
+        this.attributeWhitelist_, this.attributeOverrideList_, attribute,
         /** @type {!goog.html.sanitizer.HtmlSanitizerPolicy} */ (goog.partial(
-            goog.html.sanitizer.HtmlSanitizer.sanitizeName_, this.namePolicy_));
+            goog.html.sanitizer.HtmlSanitizer.sanitizeName_,
+            this.namePolicy_)));
   }, this);
 
-  this.attributeWhitelist_['A TARGET'] =
+  installPolicy(
+      this.attributeWhitelist_, this.attributeOverrideList_, 'A TARGET',
       /** @type {!goog.html.sanitizer.HtmlSanitizerPolicy} */ (goog.partial(
           goog.html.sanitizer.HtmlSanitizer.allowedAttributeValues_,
-          ['_blank', '_self']));
+          ['_blank', '_self'])));
 
-  this.attributeWhitelist_['* CLASS'] =
+  installPolicy(
+      this.attributeWhitelist_, this.attributeOverrideList_, '* CLASS',
       /** @type {!goog.html.sanitizer.HtmlSanitizerPolicy} */ (goog.partial(
           goog.html.sanitizer.HtmlSanitizer.sanitizeClasses_,
-          this.tokenPolicy_));
+          this.tokenPolicy_)));
 
-  this.attributeWhitelist_['* ID'] =
+  installPolicy(
+      this.attributeWhitelist_, this.attributeOverrideList_, '* ID',
       /** @type {!goog.html.sanitizer.HtmlSanitizerPolicy} */ (goog.partial(
-          goog.html.sanitizer.HtmlSanitizer.sanitizeId_, this.tokenPolicy_));
+          goog.html.sanitizer.HtmlSanitizer.sanitizeId_, this.tokenPolicy_)));
 
   if (this.sanitizeCssPolicy_) {
-    this.attributeWhitelist_['* STYLE'] =
+    installPolicy(
+        this.attributeWhitelist_, this.attributeOverrideList_, '* STYLE',
         /** @type {!goog.html.sanitizer.HtmlSanitizerPolicy} */ (goog.partial(
-            this.sanitizeCssPolicy_, this.networkRequestUrlPolicy_));
+            this.sanitizeCssPolicy_, this.networkRequestUrlPolicy_)));
+  } else {
+    installPolicy(
+        this.attributeWhitelist_, this.attributeOverrideList_, '* STYLE',
+        goog.functions.NULL);
   }
-
-  return new goog.html.sanitizer.HtmlSanitizer(this);
+  this.policiesInstalled_ = true;
 };
 
 
@@ -666,12 +805,15 @@ goog.html.sanitizer.HtmlSanitizer.sanitizeCssBlock_ = function(
   if (!policyContext.cssStyle) {
     return null;
   }
-
-  var naiveUriRewriter = /** @type {function(string, string): string} */
-      (function(uri, prop) {
-        policyHints.cssProperty = prop;
-        return policySanitizeUrl(uri, policyHints);
-      });
+  var naiveUriRewriter = function(uri, prop) {
+    policyHints.cssProperty = prop;
+    return goog.html.uncheckedconversions
+        .safeUrlFromStringKnownToSatisfyTypeContract(
+            goog.string.Const.from(
+                'HtmlSanitizerPolicy created with networkRequestUrlPolicy_ ' +
+                'when installing \'* STYLE\' handler.'),
+            policySanitizeUrl(uri, policyHints) || '');
+  };
   var sanitizedStyle = goog.html.SafeStyle.unwrap(
       goog.html.sanitizer.CssSanitizer.sanitizeInlineStyle(
           policyContext.cssStyle, naiveUriRewriter));
@@ -680,8 +822,8 @@ goog.html.sanitizer.HtmlSanitizer.sanitizeCssBlock_ = function(
 
 
 /**
- * An attribute handler which "cleans up" attributes that we don't particularly
- * want to do anything to. At the moment we just trim the whitespace.
+ * Cleans up an attribute value that we don't particularly want to do anything
+ * to. At the moment we just trim the whitespace.
  * @param {string} attrValue
  * @param {goog.html.sanitizer.HtmlSanitizerPolicyHints} policyHints
  * @return {string} sanitizedAttrValue
@@ -694,34 +836,32 @@ goog.html.sanitizer.HtmlSanitizer.cleanUpAttribute_ = function(
 
 
 /**
- * An attribute handler which only allows a set of attribute values.
- * @param {!Array<string>} allowedAttrs Set of allowed attributes lowercased.
+ * Allows a set of attribute values.
+ * @param {!Array<string>} allowedValues Set of allowed values lowercased.
  * @param {string} attrValue
  * @param {goog.html.sanitizer.HtmlSanitizerPolicyHints} policyHints
  * @return {?string} sanitizedAttrValue
  * @private
  */
 goog.html.sanitizer.HtmlSanitizer.allowedAttributeValues_ = function(
-    allowedAttrs, attrValue, policyHints) {
-  attrValue = goog.string.trim(attrValue);
-  if (goog.array.contains(allowedAttrs, attrValue.toLowerCase())) {
-    return attrValue;
-  }
-  return null;
+    allowedValues, attrValue, policyHints) {
+  var trimmed = goog.string.trim(attrValue);
+  return goog.array.contains(allowedValues, trimmed.toLowerCase()) ? trimmed :
+                                                                     null;
 };
 
 
 /**
- * An attribute handler which sanitizes fragments.
- * @param {string} attrValue
+ * Sanitizes URL fragments.
+ * @param {string} urlFragment
  * @param {goog.html.sanitizer.HtmlSanitizerPolicyHints} policyHints
  * @return {?string} sanitizedAttrValue
  * @private
  */
 goog.html.sanitizer.HtmlSanitizer.sanitizeUrlFragment_ = function(
-    attrValue, policyHints) {
-  var trimmed = goog.string.trim(attrValue);
-  if (attrValue && trimmed.charAt(0) == '#') {
+    urlFragment, policyHints) {
+  var trimmed = goog.string.trim(urlFragment);
+  if (trimmed && trimmed.charAt(0) == '#') {
     // We do not apply the name or token policy to Url Fragments by design.
     return trimmed;
   }
@@ -730,16 +870,16 @@ goog.html.sanitizer.HtmlSanitizer.sanitizeUrlFragment_ = function(
 
 
 /**
- * An attribute handler which simply runs the value through the name policy.
+ * Runs an attribute name through a name policy.
  * @param {goog.html.sanitizer.HtmlSanitizerPolicy} namePolicy
- * @param {string} attrValue
+ * @param {string} attrName
  * @param {goog.html.sanitizer.HtmlSanitizerPolicyHints} policyHints
  * @return {?string} sanitizedAttrValue
  * @private
  */
 goog.html.sanitizer.HtmlSanitizer.sanitizeName_ = function(
-    namePolicy, attrValue, policyHints) {
-  var trimmed = goog.string.trim(attrValue);
+    namePolicy, attrName, policyHints) {
+  var trimmed = goog.string.trim(attrName);
   /* TODO(user): fail on names which contain illegal characters.
    * NOTE(jasvir):
    * There are two cases to be concerned about - escaped quotes in attribute
@@ -752,8 +892,8 @@ goog.html.sanitizer.HtmlSanitizer.sanitizeName_ = function(
 
 
 /**
- * An attribute handler which ensures that the class prefix is present on all
- * space-separated tokens (i.e. all class names).
+ * Ensures that the class prefix is present on all space-separated tokens
+ * (i.e. all class names).
  * @param {goog.html.sanitizer.HtmlSanitizerPolicy} tokenPolicy
  * @param {string} attrValue
  * @param {goog.html.sanitizer.HtmlSanitizerPolicyHints} policyHints
@@ -772,16 +912,12 @@ goog.html.sanitizer.HtmlSanitizer.sanitizeClasses_ = function(
       sanitizedClasses.push(sanitizedClass);
     }
   }
-  if (sanitizedClasses.length == 0) {
-    return null;
-  } else {
-    return sanitizedClasses.join(' ');
-  }
+  return sanitizedClasses.length == 0 ? null : sanitizedClasses.join(' ');
 };
 
 
 /**
- * An attribute handler which ensures that the id prefix is present.
+ * Ensures that the id prefix is present.
  * @param {goog.html.sanitizer.HtmlSanitizerPolicy} tokenPolicy
  * @param {string} attrValue
  * @param {goog.html.sanitizer.HtmlSanitizerPolicyHints} policyHints
@@ -797,8 +933,8 @@ goog.html.sanitizer.HtmlSanitizer.sanitizeId_ = function(
 
 
 /**
- * Takes a string of unsanitized HTML and parses it, providing an iterator over
- * the resulting DOM tree nodes. This DOM parsing must be wholly inert (that is,
+ * Parses a string of unsanitized HTML and provides an iterator over the
+ * resulting DOM tree nodes. This DOM parsing must be wholly inert (that is,
  * it does not cause execution of any active content or cause the browser to
  * issue any requests). The returned iterator is guaranteed to iterate over a
  * parent element before iterating over any of its children.
@@ -829,10 +965,9 @@ goog.html.sanitizer.HtmlSanitizer.getDomTreeWalker_ = function(
 // Element. Investigate.
 
 /**
- * Provides a way to get an element's attributes without falling prey to things
- * like &lt;form&gt;&lt;input name="attributes"&gt;
+ * Returns an element's attributes without falling prey to things like
+ * &lt;form&gt;&lt;input name="attributes"&gt;
  * &lt;input name="attributes"&gt;&lt;/form&gt;.
- * Usage: goog.html.sanitizer.HtmlSanitizer.getAttributes_(elem)
  * @param {!Node} node
  * @return {?NamedNodeMap}
  * @private
@@ -848,29 +983,27 @@ goog.html.sanitizer.HtmlSanitizer.getAttributes_ = function(node) {
 };
 
 /**
- * Provides a way to get a specific attribute from an element without falling
- * prey to clobbering.
- * Usage: goog.html.sanitizer.HtmlSanitizer.getAttribute(elem, attr_name)
+ * Returns a specific attribute from an element without falling prey to
+ * clobbering.
  * @param {!Node} node
- * @param {string} name
+ * @param {string} attrName
  * @return {string}
  * @private
  */
-goog.html.sanitizer.HtmlSanitizer.getAttribute_ = function(node, name) {
+goog.html.sanitizer.HtmlSanitizer.getAttribute_ = function(node, attrName) {
   var protoFn = Element.prototype.getAttribute;
-  if (protoFn) {
-    var ret = protoFn.call(/** @type {!Element} */ (node), name);
-    return ret ? ret : '';  // FF returns null
+  if (protoFn && node instanceof Element) {
+    var ret = protoFn.call(/** @type {!Element} */ (node), attrName);
+    return ret || '';  // FireFox returns null
   } else {
     return '';
   }
 };
 
 /**
- * Provides a way to set an element's attributes without falling prey to things
- * like &lt;form&gt;&lt;input name="attributes"&gt;
+ * Sets an element's attributes without falling prey to things like
+ * &lt;form&gt;&lt;input name="attributes"&gt;
  * &lt;input name="attributes"&gt;&lt;/form&gt;.
- * Usage: goog.html.sanitizer.HtmlSanitizer.attributes_(elem)
  * @param {!Node} node
  * @param {string} name
  * @param {string} value
@@ -880,14 +1013,21 @@ goog.html.sanitizer.HtmlSanitizer.setAttribute_ = function(node, name, value) {
   var attrDescriptor =
       goog.html.sanitizer.HTML_SANITIZER_PROPERTY_DESCRIPTORS_['setAttribute'];
   if (attrDescriptor && attrDescriptor.value) {
-    attrDescriptor.value.call(node, name, value);
+    try {
+      attrDescriptor.value.call(node, name, value);
+    } catch (e) {
+      // IE throws an exception if the src attribute contains HTTP credentials.
+      // However the attribute gets set anyway.
+      if (e.message.indexOf('A security problem occurred') == -1) {
+        throw e;
+      }
+    }
   }
 };
 
 
 /**
- * Provides a way to get to a node's innerHTML property value without falling
- * prey to clobbering.
+ * Returns a node's innerHTML property value without falling prey to clobbering.
  * @param {!Node} node
  * @return {string}
  * @private
@@ -904,10 +1044,9 @@ goog.html.sanitizer.HtmlSanitizer.getInnerHTML_ = function(node) {
 
 
 /**
- * Provides a way to get an element's style without falling prey to things
- * like &lt;form&gt;&lt;input name="style"&gt;
+ * Returns an element's style without falling prey to things like
+ * &lt;form&gt;&lt;input name="style"&gt;
  * &lt;input name="style"&gt;&lt;/form&gt;.
- * Usage: goog.html.sanitizer.HtmlSanitizer.getStyle_(elem)
  * @param {!Node} node
  * @return {?CSSStyleDeclaration}
  * @private
@@ -924,9 +1063,8 @@ goog.html.sanitizer.HtmlSanitizer.getStyle_ = function(node) {
 
 
 /**
- * Provides a way to get a node's nodeName without falling prey to things like
+ * Returns a node's nodeName without falling prey to things like
  * &lt;form&gt;&lt;input name="nodeName"&gt;&lt;/form&gt;.
- * Usage: goog.html.sanitizer.HtmlSanitizer.nodeName_(elem)
  * @param {!Node} node
  * @return {string}
  * @private
@@ -943,15 +1081,14 @@ goog.html.sanitizer.HtmlSanitizer.getNodeName_ = function(node) {
 
 
 /**
- * Provides a way to get a node's parentNode without falling prey to things
- * like &lt;form&gt;&lt;input name="parentNode"&gt;&lt;/form&gt;.
- * Usage: goog.html.sanitizer.HtmlSanitizer.parentNode_(elem)
+ * Returns a node's parentNode without falling prey to things like
+ * &lt;form&gt;&lt;input name="parentNode"&gt;&lt;/form&gt;.
  * @param {?Node} node
  * @return {?Node}
  * @private
  */
 goog.html.sanitizer.HtmlSanitizer.getParentNode_ = function(node) {
-  if (!goog.isDefAndNotNull(node)) {
+  if (node == null) {
     return null;
   }
   var parentNodeDescriptor =
@@ -976,8 +1113,7 @@ goog.html.sanitizer.HtmlSanitizer.getParentNode_ = function(node) {
 
 
 /**
- * Provides a way to get the value of node.childNodes without falling prey to
- * clobbering.
+ * Returns the value of node.childNodes without falling prey to clobbering.
  * @param {!Node} node
  * @return {?NodeList}
  * @private
@@ -994,10 +1130,9 @@ goog.html.sanitizer.HtmlSanitizer.getChildNodes_ = function(node) {
 
 
 /**
- * Causes the browser to parse the DOM tree of a given HTML string, then walks
- * the tree. For each element, it creates a new sanitized version, applies
- * sanitized attributes, and returns a SafeHtml object representing the
- * sanitized tree.
+ * Parses the DOM tree of a given HTML string, then walks the tree. For each
+ * element, it creates a new sanitized version, applies sanitized attributes,
+ * and returns a SafeHtml object representing the sanitized tree.
  * @param {?string} unsanitizedHtml
  * @return {!goog.html.SafeHtml} Sanitized HTML
  * @final
@@ -1008,7 +1143,7 @@ goog.html.sanitizer.HtmlSanitizer.prototype.sanitize = function(
   var sanitizedString = new XMLSerializer().serializeToString(sanitizedParent);
 
   // Remove the outer span added in sanitizeToDomNode. We could create an
-  // element from it and then pull out the innerHtml, but this is more
+  // element from it and then pull out the innerHTML, but this is more
   // performant.
   if (goog.string.startsWith(sanitizedString, '<span')) {
     if (goog.string.endsWith(sanitizedString, '</span>')) {
@@ -1026,10 +1161,9 @@ goog.html.sanitizer.HtmlSanitizer.prototype.sanitize = function(
 
 
 /**
- * Causes the browser to parse the DOM tree of a given HTML string, then walks
- * the tree. For each element, it creates a new sanitized version, applies
- * sanitized attributes, and returns a span element containing the sanitized
- * content.
+ * Parses the DOM tree of a given HTML string, then walks the tree. For each
+ * element, it creates a new sanitized version, applies sanitized attributes,
+ * and returns a span element containing the sanitized content.
  * @param {?string} unsanitizedHtml
  * @return {!HTMLSpanElement} Sanitized HTML
  * @final
@@ -1100,7 +1234,6 @@ goog.html.sanitizer.HtmlSanitizer.prototype.sanitizeToDomNode = function(
     }
 
     // Finds the parent to which cleanNode should be appended.
-    var target;
     var dirtyParent =
         goog.html.sanitizer.HtmlSanitizer.getParentNode_(dirtyNode);
     var isSanitizedParent = false;
@@ -1130,7 +1263,8 @@ goog.html.sanitizer.HtmlSanitizer.prototype.sanitizeToDomNode = function(
         }
       }
     }
-    if (isSanitizedParent || goog.isNull(dirtyParent)) {
+    var target;
+    if (isSanitizedParent || !dirtyParent) {
       target = sanitizedParent;
     } else {
       target = elementMap[goog.html.sanitizer.HtmlSanitizer.getAttribute_(
@@ -1215,17 +1349,15 @@ goog.html.sanitizer.HtmlSanitizer.prototype.sanitizeElement_ = function(
 goog.html.sanitizer.HtmlSanitizer.prototype.sanitizeAttrs_ = function(
     dirtyNode, cleanNode) {
   var attributes = goog.html.sanitizer.HtmlSanitizer.getAttributes_(dirtyNode);
-  if (!goog.isDefAndNotNull(attributes)) {
+  if (attributes == null) {
     return cleanNode;
   }
-  for (var i = 0; i < attributes.length; i++) {
-    var attrib = attributes[i];
-    if (attrib.specified) {
-      var cleanValue = this.sanitizeAttribute_(dirtyNode, attrib);
-      // at this point cleanValue should be null or a string
+  for (var i = 0, attribute; attribute = attributes[i]; i++) {
+    if (attribute.specified) {
+      var cleanValue = this.sanitizeAttribute_(dirtyNode, attribute);
       if (!goog.isNull(cleanValue)) {
         goog.html.sanitizer.HtmlSanitizer.setAttribute_(
-            cleanNode, attrib.name, cleanValue);
+            cleanNode, attribute.name, cleanValue);
       }
     }
   }
@@ -1243,11 +1375,10 @@ goog.html.sanitizer.HtmlSanitizer.prototype.sanitizeAttrs_ = function(
  */
 goog.html.sanitizer.HtmlSanitizer.prototype.sanitizeAttribute_ = function(
     dirtyNode, attribute) {
-
   var attributeName = attribute.name;
   if (goog.string.startsWith(
-          goog.html.sanitizer.HTML_SANITIZER_BOOKKEEPING_PREFIX_,
-          attributeName)) {
+          attributeName,
+          goog.html.sanitizer.HTML_SANITIZER_BOOKKEEPING_PREFIX_)) {
     return null;
   }
 
@@ -1275,9 +1406,6 @@ goog.html.sanitizer.HtmlSanitizer.prototype.sanitizeAttribute_ = function(
   if (genericHandlerIndex in this.attributeHandlers_) {
     var handler = this.attributeHandlers_[genericHandlerIndex];
     return handler(unsanitizedAttrValue, policyHints, policyContext);
-  } else if (genericHandlerIndex in goog.html.sanitizer.AttributeWhitelist) {
-    return goog.html.sanitizer.HtmlSanitizer.cleanUpAttribute_(
-        unsanitizedAttrValue, policyHints);
   }
   return null;
 };
@@ -1287,11 +1415,10 @@ goog.html.sanitizer.HtmlSanitizer.prototype.sanitizeAttribute_ = function(
  * Processes the contents of a template tag. These are not traversed through the
  * treewalker because they belong to a separate document, and thus require
  * special handling.
- *
+ * <p>
  * If the relevant builder option is enabled and the template tag is allowed,
  * this method copies the contents over to the output DOM tree without
  * sanitization, otherwise the template contents are sanitized recursively.
- *
  * @param {!Node} dirtyNode
  * @param {!Node} cleanNode
  * @private
@@ -1305,29 +1432,30 @@ goog.html.sanitizer.HtmlSanitizer.prototype.processTemplateContents_ = function(
     var dirtyNodeHTML =
         goog.html.sanitizer.HtmlSanitizer.getInnerHTML_(dirtyNode);
     var templateSpan = this.sanitizeToDomNode(dirtyNodeHTML);
+    // appendChild with a forEach instead of an innertHTML as the latter is
+    // slower.
     goog.array.forEach(templateSpan.childNodes, function(node) {
       cleanNode.appendChild(node);
     });
-    // Slower alternative, but safe
-    // cleanNode.innerHTML =
-    //     goog.html.SafeHtml.unwrap(this.sanitize(dirtyNode.innerHTML));
   } else {
-    var templateDoc = cleanNode.content.ownerDocument;
-    var dirtyCopy = templateDoc.importNode(dirtyNode, true);
+    var templateDoc =
+        /** @type {!HTMLTemplateElement} */ (cleanNode).content.ownerDocument;
+    var dirtyCopy =
+        goog.asserts.assert(templateDoc.importNode(dirtyNode, true));
     var dirtyCopyChildren =
         goog.html.sanitizer.HtmlSanitizer.getChildNodes_(dirtyCopy);
-    goog.array.forEach(
-        dirtyCopyChildren, function(node) { cleanNode.appendChild(node); });
-    // This might be vulnerable to mxss and slower
-    // cleanNode.innerHTML = dirtyNode.innerHTML;
+    // appendChild with a forEach instead of an innerHTML as the latter is
+    // slower and vulnerable to mXSS.
+    goog.array.forEach(dirtyCopyChildren, function(node) {
+      cleanNode.appendChild(node);
+    });
   }
-
 };
 
 
 /**
- * Function to retrieve HtmlSanitizerContext from a dirty node given an
- * attributeName and nodeName.
+ * Retrieves a HtmlSanitizerPolicyContext from a dirty node given an attribute
+ * name.
  * @param {string} attributeName
  * @param {!Node} dirtyNode
  * @return {!goog.html.sanitizer.HtmlSanitizerPolicyContext}
@@ -1345,8 +1473,7 @@ goog.html.sanitizer.HtmlSanitizer.getContext_ = function(
 
 
 /**
- * Static function to sanitize a string. Simply creates a new instance of the
- * sanitizer with default options and uses this to sanitize.
+ * Sanitizes a HTML string using a sanitizer with default options.
  * @param {string} unsanitizedHtml
  * @return {!goog.html.SafeHtml} sanitizedHtml
  */

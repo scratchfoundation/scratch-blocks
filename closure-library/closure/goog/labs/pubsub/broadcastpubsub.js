@@ -21,7 +21,6 @@ goog.require('goog.array');
 goog.require('goog.async.run');
 goog.require('goog.events.EventHandler');
 goog.require('goog.events.EventType');
-goog.require('goog.json');
 goog.require('goog.log');
 goog.require('goog.math');
 goog.require('goog.pubsub.PubSub');
@@ -135,7 +134,7 @@ goog.labs.pubsub.BroadcastPubSub.prototype.handleStorageEvent_ = function(e) {
     return;
   }
 
-  var data = goog.json.parse(browserEvent.newValue);
+  var data = JSON.parse(browserEvent.newValue);
   var args = goog.isObject(data) && data['args'];
   if (goog.isArray(args) && goog.array.every(args, goog.isString)) {
     this.dispatch_(args);
@@ -179,7 +178,7 @@ goog.labs.pubsub.BroadcastPubSub.prototype.publish = function(topic, var_args) {
     } else {
       // With IE8 we need to manage our own events queue.
       var events = null;
-      /** @preserveTry */
+
       try {
         events =
             this.storage_.get(goog.labs.pubsub.BroadcastPubSub.IE8_EVENTS_KEY_);
@@ -378,7 +377,7 @@ goog.labs.pubsub.BroadcastPubSub.IE8_TIMESTAMP_UNIQUE_OFFSET_MS_ = .01;
  * publish} function to make sure timestamps are unique even within the same
  * millisecond.
  *
- * @private @const
+ * @private @const {string}
  */
 goog.labs.pubsub.BroadcastPubSub.IE8_EVENTS_KEY_ =
     goog.labs.pubsub.BroadcastPubSub.IE8_EVENTS_KEY_PREFIX_ +
@@ -507,7 +506,7 @@ goog.labs.pubsub.BroadcastPubSub.prototype.handleIe8StorageEvent_ = function() {
     }
 
     var events = null;
-    /** @preserveTry */
+
     try {
       events = this.storage_.get(key);
     } catch (ex) {
@@ -531,7 +530,7 @@ goog.labs.pubsub.BroadcastPubSub.prototype.handleIe8StorageEvent_ = function() {
 goog.labs.pubsub.BroadcastPubSub.prototype.cleanupIe8StorageEvents_ = function(
     timestamp) {
   var events = null;
-  /** @preserveTry */
+
   try {
     events =
         this.storage_.get(goog.labs.pubsub.BroadcastPubSub.IE8_EVENTS_KEY_);

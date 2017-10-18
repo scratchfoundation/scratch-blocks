@@ -74,7 +74,6 @@ goog.require('goog.events');
 goog.require('goog.events.EventTarget');
 goog.require('goog.events.EventType');
 goog.require('goog.html.SafeHtml');
-goog.require('goog.json');
 goog.require('goog.log');
 goog.require('goog.net.EventType');
 goog.require('goog.net.HttpStatus');
@@ -170,7 +169,7 @@ if (goog.net.CrossDomainRpc.isInResponseIframe_()) {
   } else if (goog.userAgent.GECKO) {
     window.stop();
   } else {
-    throw Error('stopped');
+    throw new Error('stopped');
   }
 }
 
@@ -295,7 +294,7 @@ goog.net.CrossDomainRpc.getDummyResourceUri_ = function() {
   }
 
   if (!goog.net.CrossDomainRpc.useFallBackDummyResource_) {
-    throw Error(
+    throw new Error(
         'No suitable dummy resource specified or detected for this page');
   }
 
@@ -553,8 +552,8 @@ goog.net.CrossDomainRpc.prototype.detectResponse_ = function(
     this.status = Number(params.get('status'));
     this.responseText = responseData;
     this.responseTextIsJson_ = params.get('isDataJson') == 'true';
-    this.responseHeaders = goog.json.unsafeParse(
-        /** @type {string} */ (params.get('headers')));
+    this.responseHeaders = /** @type {?Object} */ (JSON.parse(
+        /** @type {string} */ (params.get('headers'))));
 
     this.dispatchEvent(goog.net.EventType.READY);
     this.dispatchEvent(goog.net.EventType.COMPLETE);
@@ -589,7 +588,7 @@ goog.net.CrossDomainRpc.prototype.detectResponse_ = function(
  * @private
  */
 goog.net.CrossDomainRpc.isResponseInfoFrame_ = function(frame) {
-  /** @preserveTry */
+
   try {
     return goog.net.CrossDomainRpc.getFramePayload_(frame).indexOf(
                goog.net.CrossDomainRpc.RESPONSE_INFO_MARKER_) == 1;
@@ -627,8 +626,9 @@ goog.net.CrossDomainRpc.getFramePayload_ = function(frame) {
  *     or undefined.
  */
 goog.net.CrossDomainRpc.prototype.getResponseJson = function() {
-  return this.responseTextIsJson_ ? goog.json.unsafeParse(this.responseText) :
-                                    undefined;
+  return this.responseTextIsJson_ ?
+      /** @type {?Object} */ (JSON.parse(this.responseText)) :
+      undefined;
 };
 
 

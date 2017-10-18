@@ -122,7 +122,7 @@ goog.iter.toIterator = function(iterable) {
 
 
   // TODO(arv): Should we fall back on goog.structs.getValues()?
-  throw Error('Not implemented');
+  throw new Error('Not implemented');
 };
 
 
@@ -146,7 +146,7 @@ goog.iter.toIterator = function(iterable) {
  */
 goog.iter.forEach = function(iterable, f, opt_obj) {
   if (goog.isArrayLike(iterable)) {
-    /** @preserveTry */
+
     try {
       // NOTES: this passes the index number to the second parameter
       // of the callback contrary to the documentation above.
@@ -159,7 +159,7 @@ goog.iter.forEach = function(iterable, f, opt_obj) {
     }
   } else {
     iterable = goog.iter.toIterator(iterable);
-    /** @preserveTry */
+
     try {
       while (true) {
         f.call(opt_obj, iterable.next(), undefined, iterable);
@@ -256,7 +256,7 @@ goog.iter.range = function(startOrStop, opt_stop, opt_step) {
     stop = opt_stop;
   }
   if (step == 0) {
-    throw Error('Range step argument must not be zero');
+    throw new Error('Range step argument must not be zero');
   }
 
   var newIter = new goog.iter.Iterator;
@@ -357,7 +357,7 @@ goog.iter.reduce = function(iterable, f, val, opt_obj) {
  */
 goog.iter.some = function(iterable, f, opt_obj) {
   iterable = goog.iter.toIterator(iterable);
-  /** @preserveTry */
+
   try {
     while (true) {
       if (f.call(opt_obj, iterable.next(), undefined, iterable)) {
@@ -391,7 +391,7 @@ goog.iter.some = function(iterable, f, opt_obj) {
  */
 goog.iter.every = function(iterable, f, opt_obj) {
   iterable = goog.iter.toIterator(iterable);
-  /** @preserveTry */
+
   try {
     while (true) {
       if (!f.call(opt_obj, iterable.next(), undefined, iterable)) {

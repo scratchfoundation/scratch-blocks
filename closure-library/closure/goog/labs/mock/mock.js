@@ -36,7 +36,7 @@ goog.require('goog.debug.Error');
 goog.require('goog.functions');
 goog.require('goog.labs.mock.verification');
 goog.require('goog.labs.mock.verification.VerificationMode');
-goog.require('goog.testing.MockUtil');
+goog.require('goog.object');
 
 goog.setTestOnly('goog.labs.mock');
 
@@ -145,7 +145,7 @@ goog.labs.mock.getFunctionName_ = function(func) {
 
 
 /**
- * Returns a nicely formatted, readble representation of a method call.
+ * Returns a nicely formatted, readable representation of a method call.
  * @private
  * @param {string} methodName The name of the method.
  * @param {Array<?>=} opt_args The method arguments.
@@ -214,7 +214,7 @@ goog.labs.mock.formatValue_ = function(obj, opt_id) {
       return output.replace(/\n/g, '\n');
     };
 
-    /** @preserveTry */
+
     try {
       if (!goog.isDef(obj)) {
         output.push('undefined');
@@ -236,7 +236,6 @@ goog.labs.mock.formatValue_ = function(obj, opt_id) {
         } else {
           previous.push(obj);
           output.push('{');
-          var inner_obj = [];
           for (var x in obj) {
             output.push(' ');
             output.push(
@@ -614,7 +613,7 @@ goog.labs.mock.MockObjectManager_ = function(objOrClass) {
   mockedItemCtor.prototype = obj;
   this.mockedItem = new mockedItemCtor();
 
-  var enumerableProperties = goog.testing.MockUtil.getAllProperties(obj);
+  var enumerableProperties = goog.object.getAllPropertyNames(obj);
   // The non enumerable properties are added due to the fact that IE8 does not
   // enumerate any of the prototype Object functions even when overriden and
   // mocking these is sometimes needed.
@@ -878,7 +877,7 @@ goog.labs.mock.StubBinderImpl_.prototype.thenReturn = function(value) {
  * goog.labs.mock.when(mockObj).getFoo(3)
  *     .thenReturn(4)
  *     .then(function() {
- *         throw Error('exceptional case');
+ *         throw new Error('exceptional case');
  *     });
  *
  * @param {!Object} mockObject The mocked object.

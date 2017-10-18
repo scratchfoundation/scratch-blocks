@@ -23,7 +23,6 @@ goog.require('goog.array');
 goog.require('goog.dom.xml');
 goog.require('goog.events');
 goog.require('goog.events.EventTarget');
-goog.require('goog.json');
 goog.require('goog.net.ErrorCode');
 goog.require('goog.net.EventType');
 goog.require('goog.net.HttpStatus');
@@ -32,8 +31,8 @@ goog.require('goog.net.XmlHttp');
 goog.require('goog.object');
 goog.require('goog.structs');
 goog.require('goog.structs.Map');
+goog.require('goog.testing.TestQueue');
 goog.require('goog.uri.utils');
-
 
 
 /**
@@ -62,6 +61,15 @@ goog.testing.net.XhrIo = function(opt_testQueue) {
   this.testQueue_ = opt_testQueue || null;
 };
 goog.inherits(goog.testing.net.XhrIo, goog.events.EventTarget);
+
+
+/**
+ * To emulate the behavior of the actual XhrIo, we do not allow access to the
+ * XhrIo's properties outside the event callbacks. For backwards compatibility,
+ * we allow tests to allow access by setting this value to true.
+ * @type {boolean}
+ */
+goog.testing.net.XhrIo.allowUnsafeAccessToXhrIoOutsideCallbacks = false;
 
 
 /**
@@ -409,6 +417,7 @@ goog.testing.net.XhrIo.prototype.abort = function(opt_failureCode) {
   if (this.active_) {
     try {
       this.active_ = false;
+      this.readyState_ = goog.net.XmlHttp.ReadyState.UNINITIALIZED;
       this.statusCode_ = -1;
       this.lastErrorCode_ = opt_failureCode || goog.net.ErrorCode.ABORT;
       this.dispatchEvent(goog.net.EventType.COMPLETE);
@@ -431,7 +440,7 @@ goog.testing.net.XhrIo.prototype.abort = function(opt_failureCode) {
 goog.testing.net.XhrIo.prototype.send = function(
     url, opt_method, opt_content, opt_headers) {
   if (this.xhr_) {
-    throw Error('[goog.net.XhrIo] Object is active with another request');
+    throw new Error('[goog.net.XhrIo] Object is active with another request');
   }
 
   this.lastUri_ = url;
@@ -477,7 +486,7 @@ goog.testing.net.XhrIo.prototype.createXhr = function() {
 goog.testing.net.XhrIo.prototype.simulateReadyStateChange = function(
     readyState) {
   if (readyState < this.readyState_) {
-    throw Error('Readystate cannot go backwards');
+    throw new Error('Readystate cannot go backwards');
   }
 
   // INTERACTIVE can be dispatched repeatedly as more data is reported.
@@ -522,6 +531,14 @@ goog.testing.net.XhrIo.prototype.simulatePartialResponse = function(
  */
 goog.testing.net.XhrIo.prototype.simulateResponse = function(
     statusCode, response, opt_headers) {
+  // This library allows a response to be simulated without send ever being
+  // called. If there are no send instances, then just pretend that xhr_ and
+  // active_ have been set to true.
+  if (!goog.testing.net.XhrIo.allowUnsafeAccessToXhrIoOutsideCallbacks &&
+      !goog.testing.net.XhrIo.sendInstances_.length) {
+    this.xhr_ = true;
+    this.active_ = true;
+  }
   this.statusCode_ = statusCode;
   this.response_ = response || '';
   this.responseHeaders_ = opt_headers || {};
@@ -703,12 +720,27 @@ goog.testing.net.XhrIo.prototype.getLastRequestHeaders = function() {
 
 
 /**
+ * Returns true if there is a valid xhr, or if
+ * allowUnsafeAccessToXhrIoOutsideCallbacks is false.
+ * @return {boolean}
+ * @private
+ */
+goog.testing.net.XhrIo.prototype.checkXhr_ = function() {
+  return (
+      goog.testing.net.XhrIo.allowUnsafeAccessToXhrIoOutsideCallbacks ||
+      !!this.xhr_);
+};
+
+
+/**
  * Gets the response text from the Xhr object.  Will only return correct result
  * when called from the context of a callback.
  * @return {string} Result from the server.
  */
 goog.testing.net.XhrIo.prototype.getResponseText = function() {
-  if (goog.isString(this.response_)) {
+  if (!this.checkXhr_()) {
+    return '';
+  } else if (goog.isString(this.response_)) {
     return this.response_;
   } else if (
       goog.global['ArrayBuffer'] && this.response_ instanceof ArrayBuffer) {
@@ -735,15 +767,20 @@ goog.testing.net.XhrIo.prototype.getResponseBody = function() {
  * @param {string=} opt_xssiPrefix Optional XSSI prefix string to use for
  *     stripping of the response before parsing. This needs to be set only if
  *     your backend server prepends the same prefix string to the JSON response.
- * @return {Object} JavaScript object.
+ * @return {Object|undefined} JavaScript object.
+ * @throws Error if s is invalid JSON.
  */
 goog.testing.net.XhrIo.prototype.getResponseJson = function(opt_xssiPrefix) {
+  if (!this.checkXhr_()) {
+    return undefined;
+  }
+
   var responseText = this.getResponseText();
   if (opt_xssiPrefix && responseText.indexOf(opt_xssiPrefix) == 0) {
     responseText = responseText.substring(opt_xssiPrefix.length);
   }
 
-  return goog.json.parse(responseText);
+  return /** @type {!Object} */ (JSON.parse(responseText));
 };
 
 
@@ -753,6 +790,9 @@ goog.testing.net.XhrIo.prototype.getResponseJson = function(opt_xssiPrefix) {
  * @return {Document} Result from the server if it was XML.
  */
 goog.testing.net.XhrIo.prototype.getResponseXml = function() {
+  if (!this.checkXhr_()) {
+    return null;
+  }
   // NOTE(user): I haven't found out how to check in Internet Explorer
   // whether the response is XML document, so I do it the other way around.
   return goog.isString(this.response_) ||
@@ -771,7 +811,7 @@ goog.testing.net.XhrIo.prototype.getResponseXml = function() {
  * @return {*} The response.
  */
 goog.testing.net.XhrIo.prototype.getResponse = function() {
-  return this.response_;
+  return this.checkXhr_() ? this.response_ : null;
 };
 
 
@@ -783,7 +823,10 @@ goog.testing.net.XhrIo.prototype.getResponse = function() {
  * @return {string|undefined} The value of the response-header named key.
  */
 goog.testing.net.XhrIo.prototype.getResponseHeader = function(key) {
-  return this.isComplete() ? this.responseHeaders_[key] : undefined;
+  if (!this.checkXhr_() || !this.isComplete()) {
+    return undefined;
+  }
+  return this.responseHeaders_[key];
 };
 
 
@@ -794,7 +837,7 @@ goog.testing.net.XhrIo.prototype.getResponseHeader = function(key) {
  * @return {string} The string containing all the response headers.
  */
 goog.testing.net.XhrIo.prototype.getAllResponseHeaders = function() {
-  if (!this.isComplete()) {
+  if (!this.checkXhr_() || !this.isComplete()) {
     return '';
   }
   return this.getAllStreamingResponseHeaders();
@@ -814,6 +857,9 @@ goog.testing.net.XhrIo.prototype.getAllResponseHeaders = function() {
  *     and header values as values.
  */
 goog.testing.net.XhrIo.prototype.getResponseHeaders = function() {
+  if (!this.checkXhr_() || !this.isComplete()) {
+    return {};
+  }
   var headersObject = {};
   goog.object.forEach(this.responseHeaders_, function(value, key) {
     if (headersObject[key]) {
@@ -835,6 +881,9 @@ goog.testing.net.XhrIo.prototype.getResponseHeaders = function() {
  *     unavailable.
  */
 goog.testing.net.XhrIo.prototype.getStreamingResponseHeader = function(key) {
+  if (!this.checkXhr_()) {
+    return null;
+  }
   return key in this.responseHeaders_ ? this.responseHeaders_[key] : null;
 };
 
@@ -846,6 +895,9 @@ goog.testing.net.XhrIo.prototype.getStreamingResponseHeader = function(key) {
  * @return {string} The value of the response headers or empty string.
  */
 goog.testing.net.XhrIo.prototype.getAllStreamingResponseHeaders = function() {
+  if (!this.checkXhr_()) {
+    return '';
+  }
   var headers = [];
   goog.object.forEach(this.responseHeaders_, function(value, name) {
     headers.push(name + ': ' + value);

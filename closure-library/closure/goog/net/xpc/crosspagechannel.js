@@ -66,7 +66,8 @@ goog.net.xpc.CrossPageChannel = function(cfg, opt_domHelper) {
 
   for (var i = 0, uriField; uriField = goog.net.xpc.UriCfgFields[i]; i++) {
     if (uriField in cfg && !/^https?:\/\//.test(cfg[uriField])) {
-      throw Error('URI ' + cfg[uriField] + ' is invalid for field ' + uriField);
+      throw new Error(
+          'URI ' + cfg[uriField] + ' is invalid for field ' + uriField);
     }
   }
 
@@ -371,7 +372,7 @@ goog.net.xpc.CrossPageChannel.prototype.createTransport_ = function() {
     goog.log.info(
         goog.net.xpc.logger, 'Transport created: ' + this.transport_.getName());
   } else {
-    throw Error('CrossPageChannel: No suitable transport found!');
+    throw new Error('CrossPageChannel: No suitable transport found!');
   }
 };
 
@@ -591,8 +592,8 @@ goog.net.xpc.CrossPageChannel.prototype.continueConnection_ = function() {
   if (!this.peerWindowObject_) {
     // throw an error if we are in the top window (== not in an iframe)
     if (window == window.top) {
-      throw Error(
-          "CrossPageChannel: Can't connect, peer window-object not set.");
+      throw new Error(
+          'CrossPageChannel: Can\'t connect, peer window-object not set.');
     } else {
       this.setPeerWindowObject(window.parent);
     }
@@ -710,7 +711,7 @@ goog.net.xpc.CrossPageChannel.prototype.xpcDeliver = function(
   }
 
   // Check whether the origin of the message is as expected.
-  if (!this.isMessageOriginAcceptable_(opt_origin)) {
+  if (!this.isMessageOriginAcceptable(opt_origin)) {
     goog.log.warning(
         goog.net.xpc.logger, 'Message received from unapproved origin "' +
             opt_origin + '" - rejected.');
@@ -816,9 +817,9 @@ goog.net.xpc.CrossPageChannel.prototype.updateChannelNameAndCatalog = function(
  * or the message is unacceptable.
  * @param {string=} opt_origin The origin associated with the incoming message.
  * @return {boolean} Whether the message is acceptable.
- * @private
+ * @package
  */
-goog.net.xpc.CrossPageChannel.prototype.isMessageOriginAcceptable_ = function(
+goog.net.xpc.CrossPageChannel.prototype.isMessageOriginAcceptable = function(
     opt_origin) {
   var peerHostname = this.cfg_[goog.net.xpc.CfgFields.PEER_HOSTNAME];
   return goog.string.isEmptyOrWhitespace(goog.string.makeSafe(opt_origin)) ||

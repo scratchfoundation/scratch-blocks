@@ -27,6 +27,9 @@ goog.require('goog.module');
 goog.require('goog.module.BaseModule');
 goog.require('goog.module.ModuleLoadCallback');
 
+// TODO(johnlenz): goog.module.ModuleManager.FailureType into its own file.
+goog.forwardDeclare('goog.module.ModuleManager.FailureType');
+
 
 
 /**
@@ -155,7 +158,7 @@ goog.module.ModuleInfo.prototype.setModuleConstructor = function(constructor) {
   if (this.moduleConstructor_ === goog.module.BaseModule) {
     this.moduleConstructor_ = constructor;
   } else {
-    throw Error('Cannot set module constructor more than once.');
+    throw new Error('Cannot set module constructor more than once.');
   }
 };
 

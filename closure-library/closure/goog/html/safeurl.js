@@ -22,6 +22,7 @@ goog.provide('goog.html.SafeUrl');
 
 goog.require('goog.asserts');
 goog.require('goog.fs.url');
+goog.require('goog.html.TrustedResourceUrl');
 goog.require('goog.i18n.bidi.Dir');
 goog.require('goog.i18n.bidi.DirectionalString');
 goog.require('goog.string');
@@ -38,10 +39,11 @@ goog.require('goog.string.TypedString');
  * when evaluated as a hyperlink URL in a browser.
  *
  * Values of this type are guaranteed to be safe to use in URL/hyperlink
- * contexts, such as, assignment to URL-valued DOM properties, or
- * interpolation into a HTML template in URL context (e.g., inside a href
- * attribute), in the sense that the use will not result in a
- * Cross-Site-Scripting vulnerability.
+ * contexts, such as assignment to URL-valued DOM properties, in the sense that
+ * the use will not result in a Cross-Site-Scripting vulnerability. Similarly,
+ * SafeUrls can be interpolated into the URL context of an HTML template (e.g.,
+ * inside a href attribute). However, appropriate HTML-escaping must still be
+ * applied.
  *
  * Note that, as documented in {@code goog.html.SafeUrl.unwrap}, this type's
  * contract does not guarantee that instances are safe to interpolate into HTML
@@ -79,7 +81,7 @@ goog.html.SafeUrl = function() {
   /**
    * A type marker used to implement additional run-time type checking.
    * @see goog.html.SafeUrl#unwrap
-   * @const
+   * @const {!Object}
    * @private
    */
   this.SAFE_URL_TYPE_MARKER_GOOG_HTML_SECURITY_PRIVATE_ =
@@ -241,21 +243,24 @@ goog.html.SafeUrl.fromConstant = function(url) {
 
 /**
  * A pattern that matches Blob or data types that can have SafeUrls created
- * from URL.createObjectURL(blob) or via a data: URI.  Only matches image and
- * video types, currently.
+ * from URL.createObjectURL(blob) or via a data: URI.
  * @const
  * @private
  */
-goog.html.SAFE_MIME_TYPE_PATTERN_ =
-    /^(?:image\/(?:bmp|gif|jpeg|jpg|png|tiff|webp)|video\/(?:mpeg|mp4|ogg|webm))$/i;
+goog.html.SAFE_MIME_TYPE_PATTERN_ = new RegExp(
+    '^(?:audio/(?:3gpp|3gpp2|aac|midi|mp4|mpeg|ogg|x-m4a|x-wav|webm)|' +
+        'image/(?:bmp|gif|jpeg|jpg|png|tiff|webp)|' +
+        'text/csv|' +
+        'video/(?:mpeg|mp4|ogg|webm))$',
+    'i');
 
 
 /**
  * Creates a SafeUrl wrapping a blob URL for the given {@code blob}.
  *
  * The blob URL is created with {@code URL.createObjectURL}. If the MIME type
- * for {@code blob} is not of a known safe image or video MIME type, then the
- * SafeUrl will wrap {@link #INNOCUOUS_STRING}.
+ * for {@code blob} is not of a known safe audio, image or video MIME type,
+ * then the SafeUrl will wrap {@link #INNOCUOUS_STRING}.
  *
  * @see http://www.w3.org/TR/FileAPI/#url
  * @param {!Blob} blob
@@ -280,10 +285,10 @@ goog.html.DATA_URL_PATTERN_ = /^data:([^;,]*);base64,[a-z0-9+\/]+=*$/i;
 
 /**
  * Creates a SafeUrl wrapping a data: URL, after validating it matches a
- * known-safe image or video MIME type.
+ * known-safe audio, image or video MIME type.
  *
  * @param {string} dataUrl A valid base64 data URL with one of the whitelisted
- *     image or video MIME types.
+ *     audio, image or video MIME types.
  * @return {!goog.html.SafeUrl} A matching safe URL, or {@link INNOCUOUS_STRING}
  *     wrapped as a SafeUrl if it does not pass.
  */
@@ -320,6 +325,19 @@ goog.html.SafeUrl.fromTelUrl = function(telUrl) {
 
 
 /**
+ * Creates a SafeUrl from TrustedResourceUrl. This is safe because
+ * TrustedResourceUrl is more tightly restricted than SafeUrl.
+ *
+ * @param {!goog.html.TrustedResourceUrl} trustedResourceUrl
+ * @return {!goog.html.SafeUrl}
+ */
+goog.html.SafeUrl.fromTrustedResourceUrl = function(trustedResourceUrl) {
+  return goog.html.SafeUrl.createSafeUrlSecurityPrivateDoNotAccessOrElse(
+      goog.html.TrustedResourceUrl.unwrap(trustedResourceUrl));
+};
+
+
+/**
  * A pattern that recognizes a commonly useful subset of URLs that satisfy
  * the SafeUrl contract.
  *
@@ -336,19 +354,11 @@ goog.html.SafeUrl.fromTelUrl = function(telUrl) {
  *     Otherwise, a colon after a double solidus (//) must be in the authority
  *     (before port).
  *
- * The pattern disallows &, used in HTML entity declarations before
- * one of the characters in [/?#]. This disallows HTML entities used in the
- * protocol name, which should never happen, e.g. "h&#116;tp" for "http".
- * It also disallows HTML entities in the first path part of a relative path,
- * e.g. "foo&lt;bar/baz".  Our existing escaping functions should not produce
- * that. More importantly, it disallows masking of a colon,
- * e.g. "javascript&#58;...".
- *
  * @private
  * @const {!RegExp}
  */
 goog.html.SAFE_URL_PATTERN_ =
-    /^(?:(?:https?|mailto|ftp):|[^&:/?#]*(?:[/?#]|$))/i;
+    /^(?:(?:https?|mailto|ftp):|[^:/?#]*(?:[/?#]|$))/i;
 
 
 /**
@@ -377,6 +387,38 @@ goog.html.SafeUrl.sanitize = function(url) {
   }
   return goog.html.SafeUrl.createSafeUrlSecurityPrivateDoNotAccessOrElse(url);
 };
+
+/**
+ * Creates a SafeUrl object from {@code url}. If {@code url} is a
+ * goog.html.SafeUrl then it is simply returned. Otherwise the input string is
+ * validated to match a pattern of commonly used safe URLs.
+ *
+ * {@code url} may be a URL with the http, https, mailto or ftp scheme,
+ * or a relative URL (i.e., a URL without a scheme; specifically, a
+ * scheme-relative, absolute-path-relative, or path-relative URL).
+ *
+ * This function asserts (using goog.asserts) that the URL matches this pattern.
+ * If it does not, in addition to failing the assert, an innocous URL will be
+ * returned.
+ *
+ * @see http://url.spec.whatwg.org/#concept-relative-url
+ * @param {string|!goog.string.TypedString} url The URL to validate.
+ * @return {!goog.html.SafeUrl} The validated URL, wrapped as a SafeUrl.
+ */
+goog.html.SafeUrl.sanitizeAssertUnchanged = function(url) {
+  if (url instanceof goog.html.SafeUrl) {
+    return url;
+  } else if (url.implementsGoogStringTypedString) {
+    url = url.getTypedStringValue();
+  } else {
+    url = String(url);
+  }
+  if (!goog.asserts.assert(goog.html.SAFE_URL_PATTERN_.test(url))) {
+    url = goog.html.SafeUrl.INNOCUOUS_STRING;
+  }
+  return goog.html.SafeUrl.createSafeUrlSecurityPrivateDoNotAccessOrElse(url);
+};
+
 
 
 /**

@@ -19,6 +19,7 @@
 goog.provide('goog.html.safeUrlTest');
 
 goog.require('goog.html.SafeUrl');
+goog.require('goog.html.TrustedResourceUrl');
 goog.require('goog.i18n.bidi.Dir');
 goog.require('goog.object');
 goog.require('goog.string.Const');
@@ -49,6 +50,7 @@ function testSafeUrlFromBlob_withSafeType() {
   if (isIE9OrLower()) {
     return;
   }
+  assertBlobTypeIsSafe('audio/ogg', true);
   assertBlobTypeIsSafe('image/png', true);
   assertBlobTypeIsSafe('iMage/pNg', true);
   assertBlobTypeIsSafe('video/mpeg', true);
@@ -103,6 +105,7 @@ function testSafeUrlFromDataUrl_withSafeType() {
       true);
   assertDataUrlIsSafe('dATa:iMage/pNg;bASe64,abc===', true);
   assertDataUrlIsSafe('data:image/webp;base64,abc===', true);
+  assertDataUrlIsSafe('data:audio/ogg;base64,abc', true);
   assertDataUrlIsSafe('data:video/mpeg;base64,abc', true);
   assertDataUrlIsSafe('data:video/ogg;base64,z=', true);
   assertDataUrlIsSafe('data:video/mp4;base64,z=', true);
@@ -117,10 +120,13 @@ function testSafeUrlFromDataUrl_withUnsafeType() {
   assertDataUrlIsSafe('data:', false);
   assertDataUrlIsSafe('not-data:image/png;base64,z=', false);
   assertDataUrlIsSafe(' data:image/png;base64,z=', false);
+  assertDataUrlIsSafe('data:image/;base64,z=', false);
   assertDataUrlIsSafe('data:image/png;base64,z= ', false);
   assertDataUrlIsSafe('data:ximage/png', false);
   assertDataUrlIsSafe('data:ximage/png;base64,z=', false);
   assertDataUrlIsSafe('data:image/pngx;base64,z=', false);
+  assertDataUrlIsSafe('data:audio/whatever;base64,z=', false);
+  assertDataUrlIsSafe('data:audio/;base64,z=', false);
   assertDataUrlIsSafe('data:video/whatever;base64,z=', false);
   assertDataUrlIsSafe('data:video/;base64,z=', false);
   assertDataUrlIsSafe('data:image/png;base64,', false);
@@ -130,6 +136,8 @@ function testSafeUrlFromDataUrl_withUnsafeType() {
   assertDataUrlIsSafe('data:video/mp4;baze64,z=', false);
   assertDataUrlIsSafe('data:video/mp4;,z=', false);
   assertDataUrlIsSafe('data:text/html,sdfsdfsdfsfsdfs;base64,anything', false);
+  // Valid base64 image URL, but with disallowed mime-type.
+  assertDataUrlIsSafe('data:image/svg+xml;base64,abc', false);
 }
 
 
@@ -179,6 +187,15 @@ function assertTelUrlIsSafe(url, isSafe) {
 }
 
 
+function testFromTrustedResourceUrl() {
+  var url = goog.string.Const.from('test');
+  var trustedResourceUrl = goog.html.TrustedResourceUrl.fromConstant(url);
+  var safeUrl = goog.html.SafeUrl.fromTrustedResourceUrl(trustedResourceUrl);
+  assertEquals(
+      goog.string.Const.unwrap(url), goog.html.SafeUrl.unwrap(safeUrl));
+}
+
+
 /** @suppress {checkTypes} */
 function testUnwrap() {
   var privateFieldName = 'privateDoNotAccessOrElseSafeHtmlWrappedValue_';
@@ -205,8 +222,10 @@ function assertGoodUrl(url) {
     expected = url.getTypedStringValue();
   }
   var safeUrl = goog.html.SafeUrl.sanitize(url);
+  var safeUrlAssertedUnchanged = goog.html.SafeUrl.sanitizeAssertUnchanged(url);
   var extracted = goog.html.SafeUrl.unwrap(safeUrl);
   assertEquals(expected, extracted);
+  assertEquals(expected, goog.html.SafeUrl.unwrap(safeUrlAssertedUnchanged));
 }
 
 
@@ -218,6 +237,9 @@ function assertBadUrl(url) {
   assertEquals(
       goog.html.SafeUrl.INNOCUOUS_STRING,
       goog.html.SafeUrl.unwrap(goog.html.SafeUrl.sanitize(url)));
+  assertThrows(function() {
+    goog.html.SafeUrl.sanitizeAssertUnchanged(url);
+  });
 }
 
 
@@ -244,8 +266,7 @@ function testSafeUrlSanitize_validatesUrl() {
   assertGoodUrl('p//ath');
   assertGoodUrl('p//ath?foo=bar#baz');
   assertGoodUrl('#baz');
-  // Restricted characters ('&', ':', \') after [/?#].
-  assertGoodUrl('/&');
+  // Restricted character ':' after [/?#].
   assertGoodUrl('?:');
 
   // .sanitize() works on program constants.
@@ -255,8 +276,7 @@ function testSafeUrlSanitize_validatesUrl() {
   assertBadUrl('javascript:evil();');
   assertBadUrl('javascript:evil();//\nhttp://good.com/');
   assertBadUrl('data:blah');
-  // Restricted characters before [/?#].
-  assertBadUrl('&');
+  // Restricted character before [/?#].
   assertBadUrl(':');
   // '\' is not treated like '/': no restricted characters allowed after it.
   assertBadUrl('\\:');

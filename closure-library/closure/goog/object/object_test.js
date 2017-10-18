@@ -15,6 +15,7 @@
 goog.provide('goog.objectTest');
 goog.setTestOnly('goog.objectTest');
 
+goog.require('goog.array');
 goog.require('goog.functions');
 goog.require('goog.object');
 goog.require('goog.testing.jsunit');
@@ -433,6 +434,9 @@ function createTestDeepObject() {
   obj.a.b.c = {};
   obj.a.b.c.fooArr = [5, 6, 7, 8];
   obj.a.b.c.knownNull = null;
+  obj.knownEmptyString = '';
+  obj.knownSingleCharacterString = '1';
+
   return obj;
 }
 
@@ -446,7 +450,14 @@ function testGetValueByKeys() {
       obj.a.b.c.d, goog.object.getValueByKeys(obj, 'a', 'b', 'c', 'd'));
   assertEquals(8, goog.object.getValueByKeys(obj, 'a', 'b', 'c', 'fooArr', 3));
   assertNull(goog.object.getValueByKeys(obj, 'a', 'b', 'c', 'knownNull'));
+  assertUndefined(
+      goog.object.getValueByKeys(obj, 'a', 'b', 'c', 'knownNull', 'd'));
   assertUndefined(goog.object.getValueByKeys(obj, 'e', 'f', 'g'));
+  assertEquals(
+      0, goog.object.getValueByKeys(obj, 'knownEmptyString', 'length'));
+  assertEquals(
+      1,
+      goog.object.getValueByKeys(obj, 'knownSingleCharacterString', 'length'));
 }
 
 function testGetValueByKeysArraySyntax() {
@@ -461,6 +472,8 @@ function testGetValueByKeysArraySyntax() {
   assertEquals(
       8, goog.object.getValueByKeys(obj, ['a', 'b', 'c', 'fooArr', 3]));
   assertNull(goog.object.getValueByKeys(obj, ['a', 'b', 'c', 'knownNull']));
+  assertUndefined(
+      goog.object.getValueByKeys(obj, ['a', 'b', 'c', 'knownNull', 'd']));
   assertUndefined(goog.object.getValueByKeys(obj, 'e', 'f', 'g'));
 }
 
@@ -555,4 +568,112 @@ function testIs() {
   assertFalse(goog.object.is('false', false));
   assertFalse(goog.object.is(0, '0'));
   assertFalse(goog.object.is('0', 0));
+}
+
+function testGetAllPropertyNames_enumerableProperties() {
+  var obj = {a: function() {}, b: 'b', c: function(x) {}};
+  assertSameElements(['a', 'b', 'c'], goog.object.getAllPropertyNames(obj));
+}
+
+function testGetAllPropertyNames_nonEnumerableProperties() {
+  var obj = {};
+  try {
+    Object.defineProperty(obj, 'foo', {value: 'bar', enumerable: false});
+  } catch (ex) {
+    // IE8 doesn't allow Object.defineProperty on non-DOM elements.
+    if (ex.message == 'Object doesn\'t support this action') {
+      return;
+    }
+  }
+
+  var expected = goog.isDef(Object.getOwnPropertyNames) ? ['foo'] : [];
+  assertSameElements(expected, goog.object.getAllPropertyNames(obj));
+}
+
+function testGetAllPropertyNames_inheritedProperties() {
+  var parent = function() {};
+  parent.prototype.a = null;
+
+  var child = function() {};
+  goog.inherits(child, parent);
+  child.prototype.b = null;
+
+  var expected = ['a', 'b'];
+  if (goog.isDef(Object.getOwnPropertyNames)) {
+    expected.push('constructor');
+  }
+
+  assertSameElements(
+      expected, goog.object.getAllPropertyNames(child.prototype));
+}
+
+function testGetAllPropertyNames_es6ClassProperties() {
+  // Create an ES6 class via eval so we can bail out if it's a syntax error in
+  // browsers that don't support ES6 classes.
+  try {
+    eval(
+        'var Foo = class {' +
+        '  a() {}' +
+        '};' +
+        'Foo.prototype.b = null;' +
+        'var Bar = class extends Foo {' +
+        '  c() {}' +
+        '  static d() {}' +
+        '};');
+  } catch (e) {
+    if (e instanceof SyntaxError) {
+      return;
+    }
+  }
+
+  assertSameElements(
+      ['a', 'b', 'constructor'],
+      goog.object.getAllPropertyNames(Foo.prototype));
+  assertSameElements(
+      ['a', 'b', 'c', 'constructor'],
+      goog.object.getAllPropertyNames(Bar.prototype));
+
+  var expectedBarProperties = ['d', 'prototype', 'length', 'name'];
+
+  // Some versions of Firefox don't find the name property via
+  // getOwnPropertyNames.
+  if (!goog.array.contains(Object.getOwnPropertyNames(Bar), 'name')) {
+    goog.array.remove(expectedBarProperties, 'name');
+  }
+
+  assertSameElements(
+      expectedBarProperties, goog.object.getAllPropertyNames(Bar));
+}
+
+function testGetAllPropertyNames_includeObjectPrototype() {
+  var obj = {a: function() {}, b: 'b', c: function(x) {}};
+
+  // There's slightly different behavior depending on what APIs the browser
+  // under test supports.
+  var additionalProps = !!Object.getOwnPropertyNames ?
+      Object.getOwnPropertyNames(Object.prototype) :
+      [];
+  // __proto__ is a bit special and should be excluded from the result set.
+  goog.array.remove(additionalProps, '__proto__');
+
+  assertSameElements(
+      ['a', 'b', 'c'].concat(additionalProps),
+      goog.object.getAllPropertyNames(obj, true));
+}
+
+function testGetAllPropertyNames_includeFunctionPrototype() {
+  var obj = function() {};
+  obj.a = function() {};
+
+  // There's slightly different behavior depending on what APIs the browser
+  // under test supports.
+  var additionalProps = !!Object.getOwnPropertyNames ?
+      Object.getOwnPropertyNames(Function.prototype).concat(['prototype']) :
+      [];
+
+  var expectedElements = ['a'].concat(additionalProps);
+  goog.array.removeDuplicates(expectedElements);
+
+  assertSameElements(
+      expectedElements, goog.object.getAllPropertyNames(obj, false, true));
 }

@@ -333,6 +333,9 @@ function testAssertObjectNotEquals() {
 
   // Check with obj5 and obj4 as first and second arguments respectively.
   assertObjectNotEquals(obj5, obj4);
+
+  assertObjectNotEquals(new Map([['a', '1']]), new Map([['b', '1']]));
+  assertObjectNotEquals(new Set(['a', 'b']), new Set(['a']));
 }
 
 function testAssertObjectEquals2() {
@@ -952,6 +955,19 @@ function testAssertObjectsRoughlyEquals() {
           'was more than 0.1 away');
 }
 
+function testAssertObjectRoughlyEqualsWithStrings() {
+  // Check that objects with string properties are compared properly.
+  var obj1 = {'description': [{'colName': 'x1'}]};
+  var obj2 = {'description': [{'colName': 'x2'}]};
+  assertThrowsJsUnitException(
+      function() {
+        assertObjectRoughlyEquals(obj1, obj2, 0.00001);
+      },
+      'Expected <[object Object]> (Object)' +
+          ' but was <[object Object]> (Object)' +
+          '\n   description[0].colName: Expected String "x1" but got "x2"');
+}
+
 function testFindDifferences_equal() {
   assertNull(goog.testing.asserts.findDifferences(true, true));
   assertNull(goog.testing.asserts.findDifferences(null, null));
@@ -964,6 +980,10 @@ function testFindDifferences_equal() {
       goog.testing.asserts.findDifferences([{a: 1, b: 2}], [{b: 2, a: 1}]));
   assertNull(goog.testing.asserts.findDifferences(null, null));
   assertNull(goog.testing.asserts.findDifferences(undefined, undefined));
+  assertNull(goog.testing.asserts.findDifferences(
+      new Map([['a', 1], ['b', 2]]), new Map([['b', 2], ['a', 1]])));
+  assertNull(goog.testing.asserts.findDifferences(
+      new Set(['a', 'b']), new Set(['b', 'a'])));
 }
 
 function testFindDifferences_unequal() {
@@ -974,6 +994,31 @@ function testFindDifferences_unequal() {
       goog.testing.asserts.findDifferences([{a: 1}], [{a: 1, b: [2]}]));
   assertNotNull(
       goog.testing.asserts.findDifferences([{a: 1, b: [2]}], [{a: 1}]));
+
+  assertNotNull(
+      'Second map is missing key "a"; first map is missing key "b"',
+      goog.testing.asserts.findDifferences(
+          new Map([['a', 1]]), new Map([['b', 2]])));
+  assertNotNull(
+      'Value for key "a" differs by value',
+      goog.testing.asserts.findDifferences(
+          new Map([['a', '1']]), new Map([['a', '2']])));
+  assertNotNull(
+      'Value for key "a" differs by type',
+      goog.testing.asserts.findDifferences(
+          new Map([['a', '1']]), new Map([['a', 1]])));
+
+  assertNotNull(
+      'Second set is missing key "a"',
+      goog.testing.asserts.findDifferences(
+          new Set(['a', 'b']), new Set(['b'])));
+  assertNotNull(
+      'First set is missing key "b"',
+      goog.testing.asserts.findDifferences(
+          new Set(['a']), new Set(['a', 'b'])));
+  assertNotNull(
+      'Values have different types"',
+      goog.testing.asserts.findDifferences(new Set(['1']), new Set([1])));
 }
 
 function testFindDifferences_objectsAndNull() {
@@ -1113,6 +1158,37 @@ function testStringSameSuffix() {
           'Difference was at position 0. Expected [xbc...] vs. actual [abc...]');
 }
 
+function testStringLongComparedValues() {
+  assertThrowsJsUnitException(
+      function() {
+        assertEquals(
+            'abcdefghijkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkklmnopqrstuvwxyz',
+            'abcdefghijkkkkkkkkkkkkkkkkkkkkkkkkkkkkkklmnopqrstuvwxyz');
+      },
+      'Expected\n' +
+          '<abcdefghijkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkklmnopqrstuvwxyz> (String)\n' +
+          'but was\n' +
+          '<abcdefghijkkkkkkkkkkkkkkkkkkkkkkkkkkkkkklmnopqrstuvwxyz> (String)\n' +
+          'Difference was at position 40. Expected [...kkklmnopqrstuvwxyz] vs. actual [...kklmnopqrstuvwxyz]');
+}
+
+function testStringLongDiff() {
+  assertThrowsJsUnitException(
+      function() {
+        assertEquals(
+            'abcdefghijkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkklmnopqrstuvwxyz',
+            'abc...xyz');
+      },
+      'Expected\n' +
+          '<abcdefghijkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkklmnopqrstuvwxyz> (String)\n' +
+          'but was\n' +
+          '<abc...xyz> (String)\n' +
+          'Difference was at position 3. Expected\n' +
+          '[...bcdefghijkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkklmnopqrstuvwxy...]\n' +
+          'vs. actual\n' +
+          '[...bc...xy...]');
+}
+
 function testStringDissimilarShort() {
   assertThrowsJsUnitException(function() {
     assertEquals('x', 'y');
@@ -1183,9 +1259,11 @@ function testDisplayStringForValue() {
 
 function testDisplayStringForValue_exception() {
   assertEquals(
-      '<toString failed: foo message> (Object)',
-      _displayStringForValue(
-          {toString: function() { throw Error('foo message'); }}));
+      '<toString failed: foo message> (Object)', _displayStringForValue({
+        toString: function() {
+          throw new Error('foo message');
+        }
+      }));
 }
 
 function testDisplayStringForValue_cycle() {

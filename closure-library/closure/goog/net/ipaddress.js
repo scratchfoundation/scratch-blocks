@@ -99,6 +99,18 @@ goog.net.IpAddress.prototype.toString = goog.abstractMethod;
 
 
 /**
+ * @return {boolean} Whether or not the address is site-local.
+ */
+goog.net.IpAddress.prototype.isSiteLocal = goog.abstractMethod;
+
+
+/**
+ * @return {boolean} Whether or not the address is link-local.
+ */
+goog.net.IpAddress.prototype.isLinkLocal = goog.abstractMethod;
+
+
+/**
  * Parses an IP Address in a string.
  * If the string is malformed, the function will simply return null
  * instead of raising an exception.
@@ -164,29 +176,36 @@ goog.net.IpAddress.fromUriString = function(address) {
  * @final
  */
 goog.net.Ipv4Address = function(address) {
+  /**
+   * The cached string representation of the IP Address.
+   * @type {?string}
+   * @private
+   */
+  this.ipStr_ = null;
+
   var ip = goog.math.Integer.ZERO;
   if (address instanceof goog.math.Integer) {
     if (address.getSign() != 0 || address.lessThan(goog.math.Integer.ZERO) ||
         address.greaterThan(goog.net.Ipv4Address.MAX_ADDRESS_)) {
-      throw Error('The address does not look like an IPv4.');
+      throw new Error('The address does not look like an IPv4.');
     } else {
       ip = goog.object.clone(address);
     }
   } else {
     if (!goog.net.Ipv4Address.REGEX_.test(address)) {
-      throw Error(address + ' does not look like an IPv4 address.');
+      throw new Error(address + ' does not look like an IPv4 address.');
     }
 
     var octets = address.split('.');
     if (octets.length != 4) {
-      throw Error(address + ' does not look like an IPv4 address.');
+      throw new Error(address + ' does not look like an IPv4 address.');
     }
 
     for (var i = 0; i < octets.length; i++) {
       var parsedOctet = goog.string.toNumber(octets[i]);
       if (isNaN(parsedOctet) || parsedOctet < 0 || parsedOctet > 255 ||
           (octets[i].length != 1 && goog.string.startsWith(octets[i], '0'))) {
-        throw Error('In ' + address + ', octet ' + i + ' is not valid');
+        throw new Error('In ' + address + ', octet ' + i + ' is not valid');
       }
       var intOctet = goog.math.Integer.fromNumber(parsedOctet);
       ip = ip.shiftLeft(8).or(intOctet);
@@ -255,6 +274,27 @@ goog.net.Ipv4Address.prototype.toUriString = function() {
 };
 
 
+/**
+ * @override
+ */
+goog.net.Ipv4Address.prototype.isSiteLocal = function() {
+  // Check for prefix 10/8, 172.16/12, or 192.168/16.
+  var ipInt = this.ip_.toInt();
+  return (((ipInt >>> 24) & 0xff) == 10) ||
+      ((((ipInt >>> 24) & 0xff) == 172) && (((ipInt >>> 16) & 0xf0) == 16)) ||
+      ((((ipInt >>> 24) & 0xff) == 192) && (((ipInt >>> 16) & 0xff) == 168));
+};
+
+
+/**
+ * @override
+ */
+goog.net.Ipv4Address.prototype.isLinkLocal = function() {
+  // Check for prefix 169.254/16.
+  var ipInt = this.ip_.toInt();
+  return (((ipInt >>> 24) & 0xff) == 169) && (((ipInt >>> 16) & 0xff) == 254);
+};
+
 
 /**
  * Takes a string or a number and returns an IPv6 Address.
@@ -267,17 +307,24 @@ goog.net.Ipv4Address.prototype.toUriString = function() {
  * @final
  */
 goog.net.Ipv6Address = function(address) {
+  /**
+   * The cached string representation of the IP Address.
+   * @type {?string}
+   * @private
+   */
+  this.ipStr_ = null;
+
   var ip = goog.math.Integer.ZERO;
   if (address instanceof goog.math.Integer) {
     if (address.getSign() != 0 || address.lessThan(goog.math.Integer.ZERO) ||
         address.greaterThan(goog.net.Ipv6Address.MAX_ADDRESS_)) {
-      throw Error('The address does not look like a valid IPv6.');
+      throw new Error('The address does not look like a valid IPv6.');
     } else {
       ip = goog.object.clone(address);
     }
   } else {
     if (!goog.net.Ipv6Address.REGEX_.test(address)) {
-      throw Error(address + ' is not a valid IPv6 address.');
+      throw new Error(address + ' is not a valid IPv6 address.');
     }
 
     var splitColon = address.split(':');
@@ -292,7 +339,7 @@ goog.net.Ipv6Address = function(address) {
     var splitDoubleColon = address.split('::');
     if (splitDoubleColon.length > 2 ||
         (splitDoubleColon.length == 1 && splitColon.length != 8)) {
-      throw Error(address + ' is not a valid IPv6 address.');
+      throw new Error(address + ' is not a valid IPv6 address.');
     }
 
     var ipArr;
@@ -303,14 +350,15 @@ goog.net.Ipv6Address = function(address) {
     }
 
     if (ipArr.length != 8) {
-      throw Error(address + ' is not a valid IPv6 address');
+      throw new Error(address + ' is not a valid IPv6 address');
     }
 
     for (var i = 0; i < ipArr.length; i++) {
       var parsedHextet = goog.math.Integer.fromString(ipArr[i], 16);
       if (parsedHextet.lessThan(goog.math.Integer.ZERO) ||
           parsedHextet.greaterThan(goog.net.Ipv6Address.MAX_HEXTET_VALUE_)) {
-        throw Error(ipArr[i] + ' in ' + address + ' is not a valid hextet.');
+        throw new Error(
+            ipArr[i] + ' in ' + address + ' is not a valid hextet.');
       }
       ip = ip.shiftLeft(16).or(parsedHextet);
     }
@@ -386,6 +434,28 @@ goog.net.Ipv6Address.prototype.toString = function() {
  */
 goog.net.Ipv6Address.prototype.toUriString = function() {
   return '[' + this.toString() + ']';
+};
+
+
+/**
+ * @override
+ */
+goog.net.Ipv6Address.prototype.isSiteLocal = function() {
+  // Check for prefix fd00::/8.
+  var firstDWord = this.ip_.getBitsUnsigned(3);
+  var firstHextet = firstDWord >>> 16;
+  return (firstHextet & 0xff00) == 0xfd00;
+};
+
+
+/**
+ * @override
+ */
+goog.net.Ipv6Address.prototype.isLinkLocal = function() {
+  // Check for prefix fe80::/10.
+  var firstDWord = this.ip_.getBitsUnsigned(3);
+  var firstHextet = firstDWord >>> 16;
+  return (firstHextet & 0xffc0) == 0xfe80;
 };
 
 
