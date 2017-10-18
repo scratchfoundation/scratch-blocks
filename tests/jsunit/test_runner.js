@@ -30,9 +30,11 @@ var browser = webdriverio
 
 browser
   .url("file://" + path + "/tests/jsunit/vertical_tests.html").pause(5000)
-  .getHTML('body').then(testHtml)
+  .getHTML("#closureTestRunnerLog")
+  .then(testHtml)
   .url("file://" + path + "/tests/jsunit/horizontal_tests.html").pause(5000)
-  .getHTML('body').then(testHtml)
+  .getHTML("#closureTestRunnerLog")
+  .then(testHtml)
   .catch(function(err) {
     console.log(err);
     browser.end();
