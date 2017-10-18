@@ -13,7 +13,7 @@
   "scripts": {
     "deploy": "gh-pages -t -d gh-pages -m \"Build for $(git log --pretty=format:%H -n1)\"",
     "prepublish": "python build.py && webpack",
-    "test:setup": "scripts/test_setup.sh",
+    "test:setup": "tests/scripts/test_setup.sh",
     "test:unit": "node tests/jsunit/test_runner.js",
     "test:lint": "eslint .",
     "test": "npm run test:lint && npm run test:setup && npm run test:unit",
