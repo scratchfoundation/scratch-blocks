@@ -276,7 +276,7 @@ Blockly.Procedures.getCallers = function(name, ws, definitionRoot,
   var callers = [];
   for (var i = 0; i < allBlocks.length; i++) {
     var block = allBlocks[i];
-    if (block.type == 'procedure_callnoreturn') {
+    if (block.type == 'procedures_callnoreturn') {
       var procCode = block.getProcCode();
       if (procCode && procCode == name) {
         callers.push(block);
@@ -411,4 +411,20 @@ Blockly.Procedures.makeShowDefinitionOption = function(block) {
     }
   };
   return option;
+};
+
+Blockly.Procedures.deleteProcedureDefCallback = function(procCode,
+    definitionRoot) {
+  var callers = Blockly.Procedures.getCallers(procCode,
+      definitionRoot.workspace, definitionRoot, false /* allowRecursive */);
+  if (callers.length > 0) {
+    // TODO(#1151)
+    alert('Can\'t delete function because there were ' + callers.length +
+       ' non-recursive calls');
+    return;
+  }
+  // Delete the whole stack.
+  Blockly.Events.setGroup(true);
+  definitionRoot.dispose();
+  Blockly.Events.setGroup(false);
 };
