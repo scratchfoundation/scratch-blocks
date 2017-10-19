@@ -26,18 +26,17 @@
 
 goog.provide('Blockly.Blocks.colour');
 
-goog.require('goog.color');
-
 goog.require('Blockly.Blocks');
 
 goog.require('Blockly.constants');
 
 /**
- * Pick a random colour that has full saturation and brightness.
+ * Pick a random colour.
  * @return {string} #RRGGBB for random colour.
  */
 function randomColour() {
-  return goog.color.hsvToHex(360 * Math.random(), 1, 255);
+  var num = Math.floor(Math.random() * Math.pow(2, 24));
+  return '#' + ('00000' + num.toString(16)).substr(-6);
 }
 
 Blockly.Blocks['colour_picker'] = {
