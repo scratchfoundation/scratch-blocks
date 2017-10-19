@@ -954,7 +954,8 @@ Blockly.WorkspaceSvg.prototype.paste = function(xmlBlock) {
   try {
     var block = Blockly.Xml.domToBlock(xmlBlock, this);
     // Scratch-specific: Give shadow dom new IDs to prevent duplicating on paste
-    Blockly.utils.changeObscuredShadowIds(block);    // Move the duplicate to original position.
+    Blockly.utils.changeObscuredShadowIds(block);
+    // Move the duplicate to original position.
     var blockX = parseInt(xmlBlock.getAttribute('x'), 10);
     var blockY = parseInt(xmlBlock.getAttribute('y'), 10);
     if (!isNaN(blockX) && !isNaN(blockY)) {
