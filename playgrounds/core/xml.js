@@ -397,7 +397,7 @@ Blockly.Xml.appendDomToWorkspace = function(xml, workspace) {
     var savetab = Blockly.BlockSvg.TAB_WIDTH;
     try {
       Blockly.BlockSvg.TAB_WIDTH = 0;
-      var bbox = workspace.getBlocksBoundingBox();
+      bbox = workspace.getBlocksBoundingBox();
     } finally {
       Blockly.BlockSvg.TAB_WIDTH = savetab;
     }
@@ -473,21 +473,6 @@ Blockly.Xml.domToBlock = function(xmlBlock, workspace) {
         setTimeout(function() {
           if (topBlock.workspace) {  // Check that the block hasn't been deleted.
             topBlock.setConnectionsHidden(false);
-            // Force a render on IE and Edge to get around the issue described in
-            // Blockly.Field.getCachedWidth
-            if (goog.userAgent.IE || goog.userAgent.EDGE) {
-              topBlock.render();
-            }
-          }
-        }, 1);
-      } else {
-        setTimeout(function() {
-          if (topBlock.workspace) {  // Check that the block hasn't been deleted.
-            // Force a render on IE and Edge to get around the issue described in
-            // Blockly.Field.getCachedWidth
-            if (goog.userAgent.IE || goog.userAgent.EDGE) {
-              topBlock.render();
-            }
           }
         }, 1);
       }
