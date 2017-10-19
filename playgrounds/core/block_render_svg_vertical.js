@@ -1534,10 +1534,11 @@ Blockly.BlockSvg.prototype.renderDefineBlock_ = function(steps, inputRows,
   // Draw the top and the right corner of the hat.
   steps.push('H', rightSide);
   steps.push(Blockly.BlockSvg.TOP_RIGHT_CORNER_DEFINE_HAT);
-  // row.height will be used to update the cursor in the calling function.
   row.height += 3 * Blockly.BlockSvg.GRID_UNIT;
   // Draw the right side of the block around the statement input.
   steps.push('v', row.height);
+  // row.height will be used to update the cursor in the calling function.
+  row.height += Blockly.BlockSvg.GRID_UNIT;
 
 };
 
