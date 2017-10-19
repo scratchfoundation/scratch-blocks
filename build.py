@@ -338,14 +338,13 @@ class Gen_compressed(threading.Thread):
       code = HEADER + "\n" + json_data["compiledCode"]
       code = code.replace(remove, "")
 
-      # Trim down Google's Apache licences.
-      # The Closure Compiler used to preserve these until August 2015.
-      # Delete this in a few months if the licences don't return.
+      # Trim down Google's (and only Google's) Apache licences.
+      # The Closure Compiler preserves these.
       LICENSE = re.compile("""/\\*
 
  [\w ]+
 
- (Copyright \\d+ Google Inc.)
+ Copyright \\d+ Google Inc.
  https://developers.google.com/blockly/
 
  Licensed under the Apache License, Version 2.0 \(the "License"\);
@@ -360,7 +359,7 @@ class Gen_compressed(threading.Thread):
  See the License for the specific language governing permissions and
  limitations under the License.
 \\*/""")
-      code = re.sub(LICENSE, r"\n// \1  Apache License 2.0", code)
+      code = re.sub(LICENSE, "", code)
 
       stats = json_data["statistics"]
       original_b = stats["originalSize"]

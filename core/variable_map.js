@@ -37,10 +37,10 @@ goog.require('Blockly.VariableModel');
  */
 Blockly.VariableMap = function(workspace) {
  /**
-   * @type {!Object<string, !Array.<Blockly.VariableModel>>}
    * A map from variable type to list of variable names.  The lists contain all
    * of the named variables in the workspace, including variables
    * that are not currently in use.
+   * @type {!Object<string, !Array.<Blockly.VariableModel>>}
    * @private
    */
   this.variableMap_ = {};

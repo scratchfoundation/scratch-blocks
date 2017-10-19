@@ -46,21 +46,12 @@ goog.require('goog.string');
 Blockly.Extensions.ALL_ = {};
 
 /**
- * The set of properties on a block that may only be set by a mutator.
- * @type {!Array.<string>}
- * @private
- * @constant
- */
-Blockly.Extensions.MUTATOR_PROPERTIES_ =
-    ['domToMutation', 'mutationToDom', 'compose', 'decompose'];
-
-/**
  * Registers a new extension function. Extensions are functions that help
  * initialize blocks, usually adding dynamic behavior such as onchange
  * handlers and mutators. These are applied using Block.applyExtension(), or
  * the JSON "extensions" array attribute.
  * @param {string} name The name of this extension.
- * @param {function} initFn The function to initialize an extended block.
+ * @param {Function} initFn The function to initialize an extended block.
  * @throws {Error} if the extension name is empty, the extension is already
  *     registered, or extensionFn is not a function.
  */
@@ -97,8 +88,8 @@ Blockly.Extensions.registerMixin = function(name, mixinObj) {
  * decompose are defined on the mixin.
  * @param {string} name The name of this mutator extension.
  * @param {!Object} mixinObj The values to mix in.
- * @param {function()=} opt_helperFn An optional function to apply after mixing
- *     in the object.
+ * @param {(function())=} opt_helperFn An optional function to apply after
+ *     mixing in the object.
  * @param {Array.<string>=} opt_blockList A list of blocks to appear in the
  *     flyout of the mutator dialog.
  * @throws {Error} if the mutation is invalid or can't be applied to the block.
@@ -108,8 +99,10 @@ Blockly.Extensions.registerMutator = function(name, mixinObj, opt_helperFn,
   var errorPrefix = 'Error when registering mutator "' + name + '": ';
 
   // Sanity check the mixin object before registering it.
-  Blockly.Extensions.checkHasFunction_(errorPrefix, mixinObj, 'domToMutation');
-  Blockly.Extensions.checkHasFunction_(errorPrefix, mixinObj, 'mutationToDom');
+  Blockly.Extensions.checkHasFunction_(errorPrefix, mixinObj.domToMutation,
+                                       'domToMutation');
+  Blockly.Extensions.checkHasFunction_(errorPrefix, mixinObj.mutationToDom,
+                                       'mutationToDom');
 
   var hasMutatorDialog = Blockly.Extensions.checkMutatorDialog_(mixinObj,
     errorPrefix);
@@ -157,32 +150,31 @@ Blockly.Extensions.apply = function(name, block, isMutator) {
 
   if (isMutator) {
     var errorPrefix = 'Error after applying mutator "' + name + '": ';
-    Blockly.Extensions.checkBlockHasMutatorProperties_(name, block, errorPrefix);
+    Blockly.Extensions.checkBlockHasMutatorProperties_(errorPrefix, block);
   } else {
     if (!Blockly.Extensions.mutatorPropertiesMatch_(mutatorProperties, block)) {
-      throw new Error('Error when applying extension "' + name +
-          '": mutation properties changed when applying a non-mutator extension.');
+      throw new Error('Error when applying extension "' + name + '": ' +
+          'mutation properties changed when applying a non-mutator extension.');
     }
   }
 };
 
 /**
- * Check that the given object has a property with the given name, and that the
- * property is a function.
+ * Check that the given value is a function.
  * @param {string} errorPrefix The string to prepend to any error message.
- * @param {!Object} object The object to check.
+ * @param {*} func Function to check.
  * @param {string} propertyName Which property to check.
  * @throws {Error} if the property does not exist or is not a function.
  * @private
  */
-Blockly.Extensions.checkHasFunction_ = function(errorPrefix, object,
+Blockly.Extensions.checkHasFunction_ = function(errorPrefix, func,
     propertyName) {
-  if (!object.hasOwnProperty(propertyName)) {
+  if (!func) {
     throw new Error(errorPrefix +
         'missing required property "' + propertyName + '"');
-  } else if (typeof object[propertyName] !== "function") {
+  } else if (typeof func != 'function') {
     throw new Error(errorPrefix +
-      '" required property "' + propertyName + '" must be a function');
+        '" required property "' + propertyName + '" must be a function');
   }
 };
 
@@ -197,13 +189,11 @@ Blockly.Extensions.checkHasFunction_ = function(errorPrefix, object,
  * @private
  */
 Blockly.Extensions.checkNoMutatorProperties_ = function(mutationName, block) {
-  for (var i = 0; i < Blockly.Extensions.MUTATOR_PROPERTIES_.length; i++) {
-    var propertyName = Blockly.Extensions.MUTATOR_PROPERTIES_[i];
-    if (block.hasOwnProperty(propertyName)) {
-      throw new Error('Error: tried to apply mutation "' + mutationName +
-          '" to a block that already has a "' + propertyName +
-          '" function.  Block id: ' + block.id);
-    }
+  var properties = Blockly.Extensions.getMutatorProperties_(block);
+  if (properties.length) {
+    throw new Error('Error: tried to apply mutation "' + mutationName +
+        '" to a block that already has mutator functions.' +
+        '  Block id: ' + block.id);
   }
 };
 
@@ -220,13 +210,13 @@ Blockly.Extensions.checkNoMutatorProperties_ = function(mutationName, block) {
  * @private
  */
 Blockly.Extensions.checkMutatorDialog_ = function(object, errorPrefix) {
-  var hasCompose = object.hasOwnProperty('compose');
-  var hasDecompose = object.hasOwnProperty('decompose');
+  var hasCompose = object.compose !== undefined;
+  var hasDecompose = object.decompose !== undefined;
 
   if (hasCompose && hasDecompose) {
-    if (typeof object['compose'] !== "function") {
+    if (typeof object.compose != 'function') {
       throw new Error(errorPrefix + 'compose must be a function.');
-    } else if (typeof object['decompose'] !== "function") {
+    } else if (typeof object.decompose != 'function') {
       throw new Error(errorPrefix + 'decompose must be a function.');
     }
     return true;
@@ -247,11 +237,12 @@ Blockly.Extensions.checkMutatorDialog_ = function(object, errorPrefix) {
  */
 Blockly.Extensions.checkBlockHasMutatorProperties_ = function(errorPrefix,
     block) {
-  if (!block.hasOwnProperty('domToMutation')) {
+  if (typeof block.domToMutation !== 'function') {
     throw new Error(errorPrefix + 'Applying a mutator didn\'t add "domToMutation"');
   }
-  if (!block.hasOwnProperty('mutationToDom')) {
-    throw new Error(errorPrefix + 'Applying a mutator didn\'t add "mutationToDom"');
+  if (typeof block.mutationToDom != 'function') {
+    throw new Error(errorPrefix +
+                    'Applying a mutator didn\'t add "mutationToDom"');
   }
 
   // A block with a mutator isn't required to have a mutation dialog, but
@@ -262,14 +253,25 @@ Blockly.Extensions.checkBlockHasMutatorProperties_ = function(errorPrefix,
 /**
  * Get a list of values of mutator properties on the given block.
  * @param {!Blockly.Block} block The block to inspect.
- * @return {!Array.<Object>} a list with all of the properties, which should be
- *     functions or undefined, but are not guaranteed to be.
+ * @return {!Array.<Object>} a list with all of the defined properties, which
+ *     should be functions, but may be anything other than undefined.
  * @private
  */
 Blockly.Extensions.getMutatorProperties_ = function(block) {
   var result = [];
-  for (var i = 0; i < Blockly.Extensions.MUTATOR_PROPERTIES_.length; i++) {
-    result.push(block[Blockly.Extensions.MUTATOR_PROPERTIES_[i]]);
+  // List each function explicitly by reference to allow for renaming
+  // during compilation.
+  if (block.domToMutation !== undefined) {
+    result.push(block.domToMutation);
+  }
+  if (block.mutationToDom !== undefined) {
+    result.push(block.mutationToDom);
+  }
+  if (block.compose !== undefined) {
+    result.push(block.compose);
+  }
+  if (block.decompose !== undefined) {
+    result.push(block.decompose);
   }
   return result;
 };
@@ -284,19 +286,16 @@ Blockly.Extensions.getMutatorProperties_ = function(block) {
  * @private
  */
 Blockly.Extensions.mutatorPropertiesMatch_ = function(oldProperties, block) {
-  var match = true;
   var newProperties = Blockly.Extensions.getMutatorProperties_(block);
   if (newProperties.length != oldProperties.length) {
-    match = false;
-  } else {
-    for (var i = 0; i < newProperties.length; i++) {
-      if (oldProperties[i] != newProperties[i]) {
-        match = false;
-      }
+    return false;
+  }
+  for (var i = 0; i < newProperties.length; i++) {
+    if (oldProperties[i] != newProperties[i]) {
+      return false;
     }
   }
-
-  return match;
+  return true;
 };
 
 /**
@@ -342,7 +341,7 @@ Blockly.Extensions.buildTooltipForDropdown = function(dropdownName, lookupTable)
   var extensionFn = function() {
     if (this.type && blockTypesChecked.indexOf(this.type) === -1) {
       Blockly.Extensions.checkDropdownOptionsInTable_(
-        this, dropdownName, lookupTable);
+          this, dropdownName, lookupTable);
       blockTypesChecked.push(this.type);
     }
 
@@ -351,7 +350,7 @@ Blockly.Extensions.buildTooltipForDropdown = function(dropdownName, lookupTable)
       var tooltip = lookupTable[value];
       if (tooltip == null) {
         if (blockTypesChecked.indexOf(this.type) === -1) {
-          // Warn for missing values on generated tooltips
+          // Warn for missing values on generated tooltips.
           var warning = 'No tooltip mapping for value ' + value +
               ' of field ' + dropdownName;
           if (this.type != null) {
@@ -439,10 +438,8 @@ Blockly.Extensions.extensionParentTooltip_ = function() {
   this.tooltipWhenNotConnected_ = this.tooltip;
   this.setTooltip(function() {
     var parent = this.getParent();
-    return (parent &&
-      parent.getInputsInline() &&
-      parent.tooltip) ||
-      this.tooltipWhenNotConnected_;
+    return (parent && parent.getInputsInline() && parent.tooltip) ||
+        this.tooltipWhenNotConnected_;
   }.bind(this));
 };
 Blockly.Extensions.register('parent_tooltip_when_inline',
