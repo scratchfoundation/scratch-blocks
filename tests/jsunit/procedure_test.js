@@ -251,3 +251,80 @@ function test_findCallers_multipleCallers() {
     procedureTest_tearDown();
   }
 }
+
+function test_deleteProcedure_noCallers() {
+  // If there are no callers, the stack should be deleted.
+  procedureTest_setUp();
+  var xml = '<xml xmlns="http://www.w3.org/1999/xhtml">' +
+    '<block type="procedures_callnoreturn" id="test_1" x="301" y="516"></block>' +
+    '<block type="foo" id="test_2"></block>' +
+    '<block type="foo" id="test_3"></block>' +
+    '</block>' +
+  '</xml>';
+  try {
+    Blockly.Xml.domToWorkspace(Blockly.Xml.textToDom(xml), workspace);
+    workspace.getBlockById('test_1').procCode_ = 'test_procedure';
+    var rootBlock = workspace.getBlockById('test_1');
+    assertTrue(Blockly.Procedures.deleteProcedureDefCallback('test_procedure',
+        rootBlock));
+    // The other two blocks should stick around.
+    assertEquals(2, workspace.getTopBlocks().length);
+  }
+  finally {
+    procedureTest_tearDown();
+  }
+}
+
+function test_deleteProcedure_recursiveCaller() {
+  // If there is a caller but it's a part of stack starting with definitionRoot,
+  // the stack should be deleted.
+
+  procedureTest_setUp();
+
+  var xml = '<xml xmlns="http://www.w3.org/1999/xhtml">' +
+    '<block type="loop" id="test_1">' +
+      '<statement name="SUBSTACK">' +
+        '<block type="foo" id="test_2">' +
+          '<next>' +
+            '<block type="procedures_callnoreturn" id="test_3"></block>' +
+          '</next></block>' +
+      '</statement>' +
+    '</block>' +
+    '</block>' +
+  '</xml>';
+  try {
+    Blockly.Xml.domToWorkspace(Blockly.Xml.textToDom(xml), workspace);
+    workspace.getBlockById('test_3').procCode_ = 'test_procedure';
+    var rootBlock = workspace.getBlockById('test_1');
+    assertTrue(Blockly.Procedures.deleteProcedureDefCallback('test_procedure',
+        rootBlock));
+    assertEquals(0, workspace.getTopBlocks().length);
+  }
+  finally {
+    procedureTest_tearDown();
+  }
+}
+
+function test_deleteProcedure_nonRecursiveCaller() {
+  // If there is a caller and it's not part of the procedure definition, the
+  // stack should not be deleted.
+
+  procedureTest_setUp();
+  var xml = '<xml xmlns="http://www.w3.org/1999/xhtml">' +
+    '<block type="procedures_callnoreturn" id="test_1" x="301" y="516"></block>' +
+    '<block type="foo" id="test_2"></block>' +
+    '<block type="foo" id="test_3"></block>' +
+  '</xml>';
+  try {
+    Blockly.Xml.domToWorkspace(Blockly.Xml.textToDom(xml), workspace);
+    workspace.getBlockById('test_1').procCode_ = 'test_procedure';
+    var rootBlock = workspace.getBlockById('test_2');
+    assertFalse(Blockly.Procedures.deleteProcedureDefCallback('test_procedure',
+        rootBlock));
+    // All blocks should stay on the workspace.
+    assertEquals(3, workspace.getTopBlocks().length);
+  }
+  finally {
+    procedureTest_tearDown();
+  }
+}

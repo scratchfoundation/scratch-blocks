@@ -173,7 +173,12 @@ Blockly.ScratchBlocks.VerticalExtensions.PROCEDURE_DEF_CONTEXTMENU = {
         }
         var rootBlock = this;
         option.callback = function() {
-          Blockly.Procedures.deleteProcedureDefCallback(procCode, rootBlock);
+          var didDelete = Blockly.Procedures.deleteProcedureDefCallback(
+              procCode, rootBlock);
+          if (!didDelete) {
+            // TODO:(#1151)
+            alert('To delete a block definition, first remove all uses of the block');
+          }
         };
       }
     }
