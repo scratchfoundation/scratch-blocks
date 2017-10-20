@@ -96,3 +96,12 @@ Blockly.FieldLabelEditable.prototype.render_ = function() {
     this.textElement_.setAttribute('x', centerTextX);
   }
 };
+
+
+/**
+ * Click events should not treat this like an editable field.
+ * Suppress default editable field behaviour.
+ */
+Blockly.FieldLabelEditable.prototype.isCurrentlyEditable = function() {
+  return false;
+};

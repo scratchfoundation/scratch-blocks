@@ -90,3 +90,11 @@ Blockly.FieldVariableGetter.prototype.showEditor_ = function() {
 Blockly.FieldVariableGetter.prototype.updateEditable = function() {
   // nop.
 };
+
+/**
+ * Click events should not treat this like an editable field.
+ * Suppress default editable field behaviour.
+ */
+Blockly.FieldVariableGetter.prototype.isCurrentlyEditable = function() {
+  return false;
+};
