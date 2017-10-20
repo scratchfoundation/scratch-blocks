@@ -48,8 +48,14 @@ function test_fieldvariablegetter_isEditableBlock() {
 
   field.sourceBlock_ = editableBlock;
 
-  // EDITABLE is true by default, but without a source block a field can't be
-  // edited.
-  assertTrue('Variable getter field on a block is editable',
+  // Variable getter fields aren't user editable.
+  assertFalse('Variable getter field should not be editable',
       field.isCurrentlyEditable());
+}
+
+function test_fieldvariablegetter_isSerializable() {
+  var field = new Blockly.FieldVariableGetter('text', 'name');
+  // Variable getter fields are serializable by default.
+  assertTrue('Variable getter field should be serializable',
+      field.SERIALIZABLE);
 }

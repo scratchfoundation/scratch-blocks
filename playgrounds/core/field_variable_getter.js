@@ -45,9 +45,20 @@ Blockly.FieldVariableGetter = function(text, name) {
 goog.inherits(Blockly.FieldVariableGetter, Blockly.Field);
 
 /**
- * Editable fields are saved by the XML renderer, non-editable fields are not.
+ * Editable fields usually show some sort of UI for the user to change them.
+ * This field should be serialized, but only edited programmatically.
+ * @type {boolean}
+ * @public
  */
-Blockly.FieldVariableGetter.prototype.EDITABLE = true;
+Blockly.FieldVariableGetter.prototype.EDITABLE = false;
+
+/**
+ * Serializable fields are saved by the XML renderer, non-serializable fields
+ * are not.  This field should be serialized, but only edited programmatically.
+ * @type {boolean}
+ * @public
+ */
+Blockly.FieldVariableGetter.prototype.SERIALIZABLE = true;
 
 /**
  * Install this field on a block.
