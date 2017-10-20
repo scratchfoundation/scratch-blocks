@@ -77,7 +77,7 @@ function test_appendDomToWorkspace() {
   try {
     var dom = Blockly.Xml.textToDom(
       '<xml xmlns="http://www.w3.org/1999/xhtml">' +
-      '  <block type="math_random_float" inline="true" x="21" y="23">' +
+      '  <block type="looks_show" inline="true" x="21" y="23">' +
       '  </block>' +
       '</xml>');
     Blockly.Xml.appendDomToWorkspace(dom, workspace);
