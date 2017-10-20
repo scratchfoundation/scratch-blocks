@@ -94,6 +94,7 @@ Blockly.FieldVariableGetter.prototype.updateEditable = function() {
 /**
  * Click events should not treat this like an editable field.
  * Suppress default editable field behaviour.
+ * @returns {boolean} - false.
  */
 Blockly.FieldVariableGetter.prototype.isCurrentlyEditable = function() {
   return false;

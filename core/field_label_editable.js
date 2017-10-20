@@ -101,6 +101,7 @@ Blockly.FieldLabelEditable.prototype.render_ = function() {
 /**
  * Click events should not treat this like an editable field.
  * Suppress default editable field behaviour.
+ * @returns {boolean} - false.
  */
 Blockly.FieldLabelEditable.prototype.isCurrentlyEditable = function() {
   return false;
