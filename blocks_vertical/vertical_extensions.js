@@ -160,11 +160,25 @@ Blockly.ScratchBlocks.VerticalExtensions.PROCEDURE_DEF_CONTEXTMENU = {
     // Add the edit option at the end.
     menuOptions.push(Blockly.Procedures.makeEditOption(this));
 
-    // Find the delete option and update its callback to be specific to functions.
+    // Find the delete option and update its callback to be specific to
+    // functions.
     for (var i = 0, option; option = menuOptions[i]; i++) {
       if (option.text == Blockly.Msg.DELETE_BLOCK) {
+        var input = this.getInput('custom_block');
+        // this is the root block, not the shadow block.
+        if (input && input.connection && input.connection.targetBlock()) {
+          var procCode = input.connection.targetBlock().getProcCode();
+        } else {
+          return;
+        }
+        var rootBlock = this;
         option.callback = function() {
-          alert('TODO(#1130): implement function deletion');
+          var didDelete = Blockly.Procedures.deleteProcedureDefCallback(
+              procCode, rootBlock);
+          if (!didDelete) {
+            // TODO:(#1151)
+            alert('To delete a block definition, first remove all uses of the block');
+          }
         };
       }
     }
