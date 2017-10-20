@@ -67,7 +67,22 @@ function xmlTest_setUpWithMockBlocks() {
         'name': 'VAR',
         'variable': 'item'
       }
-    ],
+    ]
+  },
+  {
+    'type': 'field_serializable_test_block',
+    'message0': '%1 %2',
+    'args0': [
+      {
+        'type': 'field_label_serializable',
+        'name': 'FIELD'
+      },
+      {
+        "type": "field_input",
+        "name": "TEXTINPUT",
+        "text": "default"
+      }
+    ]
   }]);
 }
 
@@ -367,4 +382,29 @@ function test_variablesToDom_noVariables() {
   var resultDom = Blockly.Xml.variablesToDom(workspace.getAllVariables());
   assertEquals(1, resultDom.children.length);
   xmlTest_tearDown();
+}
+
+function test_fieldIsSerialized() {
+  xmlTest_setUpWithMockBlocks();
+  var block = new Blockly.Block(workspace, 'field_serializable_test_block');
+  block.getField('FIELD').setValue('serialized');
+
+  var resultDom = Blockly.Xml.blockToDom(block).childNodes[0];
+  assertEquals('serialized', resultDom.textContent);
+  assertEquals('FIELD', resultDom.getAttribute('name'));
+
+  xmlTest_tearDownWithMockBlocks();
+}
+
+function test_fieldIsNotSerialized() {
+  xmlTest_setUpWithMockBlocks();
+  var block = new Blockly.Block(workspace, 'field_serializable_test_block');
+  block.getField('FIELD').SERIALIZABLE = false;
+  block.getField('FIELD').setValue('serialized');
+
+  var resultDom = Blockly.Xml.blockToDom(block).childNodes[0];
+  assertEquals('default', resultDom.textContent);
+  assertEquals('TEXTINPUT', resultDom.getAttribute('name'));
+
+  xmlTest_tearDownWithMockBlocks();
 }

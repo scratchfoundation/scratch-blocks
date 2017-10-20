@@ -144,7 +144,7 @@ Blockly.Field.prototype.EDITABLE = true;
  * @type {boolean}
  * @public
  */
-Blockly.Field.prototype.SERIALIZABLE = Blockly.Field.prototype.EDITABLE;
+Blockly.Field.prototype.SERIALIZABLE = true;
 
 /**
  * Attach this field to a block.

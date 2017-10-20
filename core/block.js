@@ -1336,7 +1336,7 @@ Blockly.Block.prototype.interpolate_ = function(message, args, lastDummyAlign) {
             case 'field_label':
               field = Blockly.Block.newFieldLabelFromJson_(element);
               break;
-            case 'field_label_editable':
+            case 'field_label_serializable':
               field = Blockly.Block.newFieldLabelSerializableFromJson_(element);
               break;
             case 'field_input':
