@@ -132,9 +132,19 @@ Blockly.Field.prototype.validator_ = null;
 Blockly.Field.NBSP = '\u00A0';
 
 /**
- * Editable fields are saved by the XML renderer, non-editable fields are not.
+ * Editable fields usually show some sort of UI for the user to change them.
+ * @type {boolean}
+ * @public
  */
 Blockly.Field.prototype.EDITABLE = true;
+
+/**
+ * Serializable fields are saved by the XML renderer, non-serializable fields
+ * are not.  Editable fields should be serialized.
+ * @type {boolean}
+ * @public
+ */
+Blockly.Field.prototype.SERIALIZABLE = Blockly.Field.prototype.EDITABLE;
 
 /**
  * Attach this field to a block.
