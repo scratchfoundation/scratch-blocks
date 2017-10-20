@@ -343,3 +343,62 @@ function testCheckConnection_Okay() {
 
   connectionTest_tearDown();
 }
+
+function test_canConnectWithReason_Procedures_WrongBlockType() {
+  var sharedWorkspace = {};
+  var one = helper_createConnection(0, 0, Blockly.NEXT_STATEMENT);
+  one.sourceBlock_ = helper_makeSourceBlock(sharedWorkspace);
+  one.sourceBlock_.type = 'procedures_defnoreturn';
+  // Make one be the connection on its source block's input.
+  one.sourceBlock_.getInput = function() {
+    return {
+      connection: one
+    };
+  };
+
+  var two = helper_createConnection(0, 0, Blockly.PREVIOUS_STATEMENT);
+  two.sourceBlock_ = helper_makeSourceBlock(sharedWorkspace);
+  // Fail because two's source block is the wrong type.
+  two.sourceBlock_.type = 'wrong_type';
+  assertEquals(Blockly.Connection.REASON_CUSTOM_PROCEDURE,
+      one.canConnectWithReason_(two));
+}
+
+function test_canConnectWithReason_Procedures_Pass() {
+  var sharedWorkspace = {};
+  var one = helper_createConnection(0, 0, Blockly.NEXT_STATEMENT);
+  one.sourceBlock_ = helper_makeSourceBlock(sharedWorkspace);
+  one.sourceBlock_.type = 'procedures_defnoreturn';
+  // Make one be the connection on its source block's input.
+  one.sourceBlock_.getInput = function() {
+    return {
+      connection: one
+    };
+  };
+  var two = helper_createConnection(0, 0, Blockly.PREVIOUS_STATEMENT);
+  two.sourceBlock_ = helper_makeSourceBlock(sharedWorkspace);
+  two.sourceBlock_.type = 'procedures_callnoreturn_internal';
+  assertEquals(Blockly.Connection.CAN_CONNECT,
+      one.canConnectWithReason_(two));
+}
+
+function test_canConnectWithReason_Procedures_NextConnection() {
+  var sharedWorkspace = {};
+  var one = helper_createConnection(0, 0, Blockly.NEXT_STATEMENT);
+  one.sourceBlock_ = helper_makeSourceBlock(sharedWorkspace);
+  one.sourceBlock_.type = 'procedures_defnoreturn';
+  // One is the next connection, not an input connection
+  one.sourceBlock_.nextConnection = one;
+  one.sourceBlock_.getInput = function() {
+    return {
+      connection: null
+    };
+  };
+  var two = helper_createConnection(0, 0, Blockly.PREVIOUS_STATEMENT);
+  two.sourceBlock_ = helper_makeSourceBlock(sharedWorkspace);
+  // It should be okay, even if two's source block has the wrong type, because
+  // it's not trying to connect to the input.
+  two.sourceBlock_.type = 'wrong_type';
+  assertEquals(Blockly.Connection.CAN_CONNECT,
+      one.canConnectWithReason_(two));
+}
