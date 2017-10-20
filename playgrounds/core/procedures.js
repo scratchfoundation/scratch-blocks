@@ -276,7 +276,7 @@ Blockly.Procedures.getCallers = function(name, ws, definitionRoot,
   var callers = [];
   for (var i = 0; i < allBlocks.length; i++) {
     var block = allBlocks[i];
-    if (block.type == 'procedure_callnoreturn') {
+    if (block.type == 'procedures_callnoreturn') {
       var procCode = block.getProcCode();
       if (procCode && procCode == name) {
         callers.push(block);
@@ -411,4 +411,26 @@ Blockly.Procedures.makeShowDefinitionOption = function(block) {
     }
   };
   return option;
+};
+
+/**
+ * Callback to try to delete a custom block definitions.
+ * @param {string} procCode The identifier of the procedure to delete.
+ * @param {!Blockly.Block} definitionRoot The root block of the stack that
+ *     defines the custom procedure.
+ * @return {boolean} True if the custom procedure was deleted, false otherwise.
+ * @package
+ */
+Blockly.Procedures.deleteProcedureDefCallback = function(procCode,
+    definitionRoot) {
+  var callers = Blockly.Procedures.getCallers(procCode,
+      definitionRoot.workspace, definitionRoot, false /* allowRecursive */);
+  if (callers.length > 0) {
+    return false;
+  }
+  // Delete the whole stack.
+  Blockly.Events.setGroup(true);
+  definitionRoot.dispose();
+  Blockly.Events.setGroup(false);
+  return true;
 };

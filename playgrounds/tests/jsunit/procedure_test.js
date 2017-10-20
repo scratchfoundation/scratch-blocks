@@ -26,7 +26,7 @@ var workspace;
 //var mockControl_;
 
 function procedureTest_setUp() {
-  Blockly.Blocks['procedure_callnoreturn'] = {
+  Blockly.Blocks['procedures_callnoreturn'] = {
     init: function() {
       this.procCode_ = '';
       this.setPreviousStatement(true);
@@ -64,7 +64,7 @@ function procedureTest_setUp() {
 }
 
 function procedureTest_tearDown() {
-  delete Blockly.Blocks['procedure_callnoreturn'];
+  delete Blockly.Blocks['procedures_callnoreturn'];
   delete Blockly.Blocks['foo'];
   delete Blockly.Blocks['loop'];
   //mockControl_.$tearDown();
@@ -74,7 +74,7 @@ function procedureTest_tearDown() {
 function test_findCallers_simple_oneCaller() {
   var xml = '<xml xmlns="http://www.w3.org/1999/xhtml">' +
     '<variables></variables>' +
-    '<block type="procedure_callnoreturn" id="test_1" x="301" y="516">' +
+    '<block type="procedures_callnoreturn" id="test_1" x="301" y="516">' +
     '</block>' +
   '</xml>';
   procedureTest_setUp();
@@ -94,7 +94,7 @@ function test_findCallers_simple_oneCaller() {
 function test_findCallers_noRecursion() {
   var xml = '<xml xmlns="http://www.w3.org/1999/xhtml">' +
     '<variables></variables>' +
-    '<block type="procedure_callnoreturn" id="test_1" x="301" y="516">' +
+    '<block type="procedures_callnoreturn" id="test_1" x="301" y="516">' +
     '</block>' +
   '</xml>';
   procedureTest_setUp();
@@ -117,7 +117,7 @@ function test_findCallers_noRecursion() {
 function test_findCallers_allowRecursion() {
   var xml = '<xml xmlns="http://www.w3.org/1999/xhtml">' +
     '<variables></variables>' +
-    '<block type="procedure_callnoreturn" id="test_1" x="301" y="516">' +
+    '<block type="procedures_callnoreturn" id="test_1" x="301" y="516">' +
     '</block>' +
   '</xml>';
   procedureTest_setUp();
@@ -150,7 +150,7 @@ function test_findCallers_simple_noCallers() {
     var callers = Blockly.Procedures.getCallers('test_procedure', workspace,
         {id: ''}, false);
 
-    // There weren't even blocks of type procedure_callnoreturn.
+    // There weren't even blocks of type procedures_callnoreturn.
     assertEquals(0, callers.length);
   }
   finally {
@@ -161,7 +161,7 @@ function test_findCallers_simple_noCallers() {
 function test_findCallers_wrongProcCode() {
   var xml = '<xml xmlns="http://www.w3.org/1999/xhtml">' +
     '<variables></variables>' +
-    '<block type="procedure_callnoreturn" id="test_1" x="301" y="516">' +
+    '<block type="procedures_callnoreturn" id="test_1" x="301" y="516">' +
     '</block>' +
   '</xml>';
   procedureTest_setUp();
@@ -185,7 +185,7 @@ function test_findCallers_onStatementInput() {
       '<statement name="SUBSTACK">' +
         '<block type="foo" id="test_2">' +
           '<next>' +
-            '<block type="procedure_callnoreturn" id="test_3"></block>' +
+            '<block type="procedures_callnoreturn" id="test_3"></block>' +
           '</next></block>' +
       '</statement>' +
     '</block>' +
@@ -209,7 +209,7 @@ function test_findCallers_onStatementInput() {
 function test_findCallers_multipleStacks() {
   var xml = '<xml xmlns="http://www.w3.org/1999/xhtml">' +
     '<block type="foo" id="test_1"></block>' +
-    '<block type="procedure_callnoreturn" id="test_2"></block>'+
+    '<block type="procedures_callnoreturn" id="test_2"></block>'+
     '<block type="foo" id="test_1"></block>' +
   '</xml>';
   procedureTest_setUp();
@@ -230,8 +230,8 @@ function test_findCallers_multipleStacks() {
 
 function test_findCallers_multipleCallers() {
   var xml = '<xml xmlns="http://www.w3.org/1999/xhtml">' +
-    '<block type="procedure_callnoreturn" id="test_1"></block>' +
-    '<block type="procedure_callnoreturn" id="test_2"></block>'+
+    '<block type="procedures_callnoreturn" id="test_1"></block>' +
+    '<block type="procedures_callnoreturn" id="test_2"></block>'+
   '</xml>';
   procedureTest_setUp();
   try {
@@ -246,6 +246,83 @@ function test_findCallers_multipleCallers() {
     // Order doesn't matter.
     assertTrue(callers[0].id == 'test_1' || callers[0].id == 'test_2');
     assertTrue(callers[1].id == 'test_1' || callers[1].id == 'test_2');
+  }
+  finally {
+    procedureTest_tearDown();
+  }
+}
+
+function test_deleteProcedure_noCallers() {
+  // If there are no callers, the stack should be deleted.
+  procedureTest_setUp();
+  var xml = '<xml xmlns="http://www.w3.org/1999/xhtml">' +
+    '<block type="procedures_callnoreturn" id="test_1" x="301" y="516"></block>' +
+    '<block type="foo" id="test_2"></block>' +
+    '<block type="foo" id="test_3"></block>' +
+    '</block>' +
+  '</xml>';
+  try {
+    Blockly.Xml.domToWorkspace(Blockly.Xml.textToDom(xml), workspace);
+    workspace.getBlockById('test_1').procCode_ = 'test_procedure';
+    var rootBlock = workspace.getBlockById('test_1');
+    assertTrue(Blockly.Procedures.deleteProcedureDefCallback('test_procedure',
+        rootBlock));
+    // The other two blocks should stick around.
+    assertEquals(2, workspace.getTopBlocks().length);
+  }
+  finally {
+    procedureTest_tearDown();
+  }
+}
+
+function test_deleteProcedure_recursiveCaller() {
+  // If there is a caller but it's a part of stack starting with definitionRoot,
+  // the stack should be deleted.
+
+  procedureTest_setUp();
+
+  var xml = '<xml xmlns="http://www.w3.org/1999/xhtml">' +
+    '<block type="loop" id="test_1">' +
+      '<statement name="SUBSTACK">' +
+        '<block type="foo" id="test_2">' +
+          '<next>' +
+            '<block type="procedures_callnoreturn" id="test_3"></block>' +
+          '</next></block>' +
+      '</statement>' +
+    '</block>' +
+    '</block>' +
+  '</xml>';
+  try {
+    Blockly.Xml.domToWorkspace(Blockly.Xml.textToDom(xml), workspace);
+    workspace.getBlockById('test_3').procCode_ = 'test_procedure';
+    var rootBlock = workspace.getBlockById('test_1');
+    assertTrue(Blockly.Procedures.deleteProcedureDefCallback('test_procedure',
+        rootBlock));
+    assertEquals(0, workspace.getTopBlocks().length);
+  }
+  finally {
+    procedureTest_tearDown();
+  }
+}
+
+function test_deleteProcedure_nonRecursiveCaller() {
+  // If there is a caller and it's not part of the procedure definition, the
+  // stack should not be deleted.
+
+  procedureTest_setUp();
+  var xml = '<xml xmlns="http://www.w3.org/1999/xhtml">' +
+    '<block type="procedures_callnoreturn" id="test_1" x="301" y="516"></block>' +
+    '<block type="foo" id="test_2"></block>' +
+    '<block type="foo" id="test_3"></block>' +
+  '</xml>';
+  try {
+    Blockly.Xml.domToWorkspace(Blockly.Xml.textToDom(xml), workspace);
+    workspace.getBlockById('test_1').procCode_ = 'test_procedure';
+    var rootBlock = workspace.getBlockById('test_2');
+    assertFalse(Blockly.Procedures.deleteProcedureDefCallback('test_procedure',
+        rootBlock));
+    // All blocks should stay on the workspace.
+    assertEquals(3, workspace.getTopBlocks().length);
   }
   finally {
     procedureTest_tearDown();
