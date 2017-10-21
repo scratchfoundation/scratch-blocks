@@ -19,6 +19,9 @@
  */
 'use strict';
 
+goog.require('goog.testing');
+goog.require('goog.testing.MockControl');
+
 function helper_createWorkspaceWithToolbox() {
   var toolbox = document.getElementById('toolbox-categories');
   return Blockly.inject('blocklyDiv', {toolbox: toolbox});
@@ -89,6 +92,43 @@ function test_appendDomToWorkspace() {
     assertEquals('Block 1 position y',23,blocks[0].getRelativeToSurfaceXY().y);
     assertEquals('Block 2 position x',21,blocks[1].getRelativeToSurfaceXY().x);
     assertEquals('Block 2 position y',23 + blocks[0].getHeightWidth().height + Blockly.BlockSvg.SEP_SPACE_Y,blocks[1].getRelativeToSurfaceXY().y);
+  } finally {
+    workspace.dispose();
+  }
+}
+
+function test_addNewVariableRefreshToolbox() {
+  var workspace = helper_createWorkspaceWithToolbox();
+
+  var mockControl = new goog.testing.MockControl();
+  var mockMethod = mockControl.createMethodMock(Blockly.WorkspaceSvg.prototype,
+    'refreshToolboxSelection_');
+  try {
+    mockMethod().$once();
+    mockControl.$replayAll();
+  
+    workspace.createVariable('name1', 'type1', 'id1');
+    mockControl.$verifyAll();
+  } finally {
+    workspace.dispose();
+  }
+}
+
+function test_addDuplicateVariableDoNotRefreshToolbox() {
+  var workspace = helper_createWorkspaceWithToolbox();
+  
+  var mockControl = new goog.testing.MockControl();
+  var mockMethod = mockControl.createMethodMock(Blockly.WorkspaceSvg.prototype,
+    'refreshToolboxSelection_');
+  try {
+    mockMethod().$once();
+    mockControl.$replayAll();
+    // Create same variable twice. The first should refresh the toolbox,
+    // the second should not.
+    workspace.createVariable('name1', 'type1', 'id1');
+    workspace.createVariable('name1', 'type1', 'id1');
+
+    mockControl.$verifyAll();
   } finally {
     workspace.dispose();
   }
