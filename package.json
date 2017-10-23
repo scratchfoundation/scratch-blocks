@@ -11,7 +11,7 @@
   },
   "main": "./dist/vertical.js",
   "scripts": {
-    "deploy": "gh-pages -t -d gh-pages -m \"Build for $(git log --pretty=format:%H -n1)\"",
+    "deploy": "rimraf gh-pages/closure-library/scripts/ci/CloseAdobeDialog.exe && gh-pages -t -d gh-pages -m \"Build for $(git log --pretty=format:%H -n1)\"",
     "prepublish": "python build.py && webpack",
     "test:setup": "tests/scripts/test_setup.sh",
     "test:unit": "node tests/jsunit/test_runner.js",
@@ -28,6 +28,7 @@
     "graceful-fs": "4.1.11",
     "imports-loader": "0.6.5",
     "json": "9.0.4",
+    "rimraf": "2.6.2",
     "travis-after-all": "1.4.4",
     "webdriverio": "4.8.0",
     "webpack": "1.13.2"
