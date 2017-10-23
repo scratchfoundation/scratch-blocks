@@ -151,14 +151,6 @@ Blockly.WorkspaceSvg.prototype.isMutator = false;
 Blockly.WorkspaceSvg.prototype.resizesEnabled_ = true;
 
 /**
- * Whether this workspace is in the middle of a bulk update.
- * Turn on during batch operations for a performance improvement.
- * @type {boolean}
- * @private
- */
-Blockly.WorkspaceSvg.prototype.isBulkUpdating_ = false;
-
-/**
  * Current horizontal scrolling offset in pixel units.
  * @type {number}
  */
@@ -1012,8 +1004,7 @@ Blockly.WorkspaceSvg.prototype.paste = function(xmlBlock) {
  * @private
  */
 Blockly.WorkspaceSvg.prototype.refreshToolboxSelection_ = function() {
-  if (this.toolbox_ && this.toolbox_.flyout_ && !this.currentGesture_ &&
-     !this.isBulkUpdating_) {
+  if (this.toolbox_ && this.toolbox_.flyout_ && !this.currentGesture_) {
     this.toolbox_.refreshSelection();
   }
 };
@@ -1870,35 +1861,14 @@ Blockly.WorkspaceSvg.prototype.setResizesEnabled = function(enabled) {
   }
 };
 
-/**
- * Set whether this workspace is currently doing a bulk update.
- * A bulk update pauses workspace resizing but also pauses other expensive
- * operations, such as refreshing the toolbox as variables are added and
- * removed.
- * @param {boolean} enabled True if a bulk update is starting, false if a bulk
- *     update is ending.
- * @package
- */
-Blockly.WorkspaceSvg.prototype.setBulkUpdate = function(enabled) {
-  // This will trigger a resize if necessary.
-  this.setResizesEnabled(!enabled); // Disable resizes when enabling bulk update
-  var stoppedUpdating = (this.isBulkUpdating_ && !enabled);
-  this.isBulkUpdating_ = enabled;
-  if (stoppedUpdating) {
-    // Refresh the toolbox.
-    if (this.toolbox_) {
-      this.toolbox_.refreshSelection();
-    }
-  }
-};
 
 /**
  * Dispose of all blocks in workspace, with an optimization to prevent resizes.
  */
 Blockly.WorkspaceSvg.prototype.clear = function() {
-  this.setBulkUpdate(true);
+  this.setResizesEnabled(false);
   Blockly.WorkspaceSvg.superClass_.clear.call(this);
-  this.setBulkUpdate(false);
+  this.setResizesEnabled(true);
 };
 
 /**
