@@ -692,9 +692,9 @@ Blockly.BlockSvg.prototype.duplicateAndDragCallback_ = function() {
 
       // Create the new block by cloning the block in the flyout (via XML).
       var xml = Blockly.Xml.blockToDom(oldBlock);
-      // The target workspace would normally resize during domToBlock, which    
-      // will lead to weird jumps.    
-      // Resizing will be enabled when the drag ends.   
+      // The target workspace would normally resize during domToBlock, which
+      // will lead to weird jumps.
+      // Resizing will be enabled when the drag ends.
       ws.setResizesEnabled(false);
       // Using domToBlock instead of domToWorkspace means that the new block
       // will be placed at position (0, 0) in main workspace units.
