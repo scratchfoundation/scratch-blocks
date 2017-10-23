@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Custom Procedure Playground</title>
+    <script src="../blockly_uncompressed_vertical.js"></script>
+    <script src="../msg/messages.js"></script>
+    <script src="../blocks_vertical/vertical_extensions.js"></script>
+    <script src="../blocks_common/math.js"></script>
+    <script src="../blocks_common/text.js"></script>
+    <script src="../blocks_common/colour.js"></script>
+    <script src="../blocks_vertical/control.js"></script>
+    <script src="../blocks_vertical/event.js"></script>
+    <script src="../blocks_vertical/motion.js"></script>
+    <script src="../blocks_vertical/looks.js"></script>
+    <script src="../blocks_vertical/procedures.js"></script>
+    <script src="../blocks_vertical/operators.js"></script>
+    <script src="../blocks_vertical/pen.js"></script>
+    <script src="../blocks_vertical/sound.js"></script>
+    <script src="../blocks_vertical/sensing.js"></script>
+    <script src="../blocks_vertical/data.js"></script>
+  <style>
+    body {
+      background-color: #fff;
+      font-family: sans-serif;
+    }
+    h1 {
+      font-weight: normal;
+      font-size: 140%;
+    }
+  </style>
+</head>
+<body>
+
+  <p>This page has two workspaces.  The workspace on the left (primaryWorkspace) will be the custom procedure editing workspace, which will hold a single non-deletable block.  The workspace on the right will hold the resulting procedure definition and call blocks.</p>
+
+
+  <table width="100%">
+    <tr>
+      <td>
+        <div id="primaryDiv" style="height: 480px; width: 600px;"></div>
+      </td>
+      <td>
+        <div id="secondaryDiv" style="height: 480px; width: 430px;"></div>
+      </td>
+    </tr>
+  </table>
+
+  <xml id="toolbox" style="display: none">
+    <block type="pen_clear"></block>
+    <block type="pen_stamp"></block>
+    <block type="pen_pendown"></block>
+    <block type="pen_penup"></block>
+  </xml>
+
+  <script>
+    // Inject primary workspace.
+    var primaryWorkspace = Blockly.inject('primaryDiv',
+        {media: '../../media/',
+         toolbox: document.getElementById('toolbox')});
+    // Inject secondary workspace.
+    var secondaryWorkspace = Blockly.inject('secondaryDiv',
+        {media: '../../media/',
+         readOnly: true});
+</script>
+
+</body>
+</html>
