@@ -1,7 +1,7 @@
 {
 	"@metadata": {
 		"author": "Ellen Spertus <ellen.spertus@gmail.com>",
-		"lastupdated": "2017-10-23 20:52:39.682227",
+		"lastupdated": "2017-10-23 21:09:26.972384",
 		"locale": "en",
 		"messagedocumentation" : "qqq"
 	},
@@ -56,6 +56,9 @@
 	"COLOUR_BLEND_COLOUR2": "colour 2",
 	"COLOUR_BLEND_RATIO": "ratio",
 	"COLOUR_BLEND_TOOLTIP": "Blends two colours together with a given ratio (0.0 - 1.0).",
+	"COLOUR_HUE_LABEL": "Color",
+	"COLOUR_SATURATION_LABEL": "Saturation",
+	"COLOUR_BRIGHTNESS_LABEL": "Brightness",
 	"CONTROLS_REPEAT_HELPURL": "https://en.wikipedia.org/wiki/For_loop",
 	"CONTROLS_REPEAT_TITLE": "repeat %1 times",
 	"CONTROLS_REPEAT_INPUT_DO": "do",

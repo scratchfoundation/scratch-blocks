@@ -183,6 +183,12 @@ Blockly.Msg.COLOUR_BLEND_COLOUR2 = 'colour 2';
 Blockly.Msg.COLOUR_BLEND_RATIO = 'ratio';
 /// tooltip - See [https://github.com/google/blockly/wiki/Colour#blending-colours https://github.com/google/blockly/wiki/Colour#blending-colours].
 Blockly.Msg.COLOUR_BLEND_TOOLTIP = 'Blends two colours together with a given ratio (0.0 - 1.0).';
+/// dropdown - Label of the "hue" color component slider
+Blockly.Msg.COLOUR_HUE_LABEL = 'Color';
+/// dropdown - Label of the "saturation" color component slider
+Blockly.Msg.COLOUR_SATURATION_LABEL = 'Saturation';
+/// dropdown - Label of the "brightness" color component slider
+Blockly.Msg.COLOUR_BRIGHTNESS_LABEL = 'Brightness';
 
 // Loop Blocks.
 /// url - Describes 'repeat loops' in computer programs; consider using the translation of the page [https://en.wikipedia.org/wiki/Control_flow http://en.wikipedia.org/wiki/Control_flow].
