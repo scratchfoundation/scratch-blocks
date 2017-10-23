@@ -293,7 +293,7 @@ Blockly.Blocks['argument_reporter_boolean'] = {
     this.jsonInit({ "message0": " %1",
       "args0": [
         {
-          "type": "field_label_editable",
+          "type": "field_label_serializable",
           "name": "VALUE",
           "text": ""
         }
@@ -308,7 +308,7 @@ Blockly.Blocks['argument_reporter_string_number'] = {
     this.jsonInit({ "message0": " %1",
       "args0": [
         {
-          "type": "field_label_editable",
+          "type": "field_label_serializable",
           "name": "VALUE",
           "text": ""
         }
