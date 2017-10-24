@@ -65,25 +65,51 @@
   </xml>
 
   <xml id="mutator_blocks" style="display:none">
+    <block type="procedures_mutator_root" x="25" y="25" deletable="false">
+    </block>
   </xml>
 
   <xml id="main_ws_blocks" style="display:none">
-    <block type="procedure_defnoreturn">
-
-    </block>
-    <block type="procedure_callnoreturn">
-    </block>
+    <block id="]){{Y!7N9ezN+j@Vr`8p" type="procedures_defnoreturn" x="25" y="25">
+      <statement name="custom_block">
+          <shadow type="procedures_callnoreturn_internal">
+              <mutation proccode="say %s %n times if %b" argumentnames="[&quot;something&quot;,&quot;this many&quot;,&quot;this is true&quot;]" argumentdefaults="[&quot;&quot;,1,false]" warp="false"/>
+          </shadow>
+      </statement>
+      <next>
+          <block id="tIVT2u+!X}IS8z4nu1x9" type="procedures_callnoreturn">
+              <mutation proccode="say %s %n times if %b"/>
+              <value name="input0">
+                  <shadow id="V0~M:TxRk0Ua%osjGzh," type="text">
+                      <field name="TEXT"/>
+                  </shadow>
+              </value>
+              <value name="input1">
+                  <shadow id="uPx3si(KkbL1)-XpbXoQ" type="math_number">
+                      <field name="NUM">1</field>
+                  </shadow>
+              </value>
+          </block>
+      </next>
+  </block>
   </xml>
+
 
   <script>
     // Inject primary workspace.
     var primaryWorkspace = Blockly.inject('primaryDiv',
-        {media: '../../media/',
-         toolbox: document.getElementById('toolbox')});
+        {media: '../../media/'});
+
+    Blockly.Xml.domToWorkspace(document.getElementById('mutator_blocks'),
+        primaryWorkspace);
+
     // Inject secondary workspace.
     var secondaryWorkspace = Blockly.inject('secondaryDiv',
         {media: '../../media/',
          readOnly: true});
+
+    Blockly.Xml.domToWorkspace(document.getElementById('main_ws_blocks'),
+        secondaryWorkspace);
 </script>
 
 </body>

@@ -317,3 +317,16 @@ Blockly.Blocks['argument_reporter_string_number'] = {
     });
   }
 };
+
+Blockly.Blocks['procedures_mutator_root'] = {
+  /**
+   * Block for calling a procedure with no return value.
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.jsonInit({
+      "extensions": ["colours_more", "shape_statement", "procedure_call_contextmenu"]
+    });
+    this.procCode_ = '';
+  }
+};
