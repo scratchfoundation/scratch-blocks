@@ -302,6 +302,22 @@ Blockly.Xml.textToDom = function(text) {
 };
 
 /**
+ * Clear the given workspace then decode an XML DOM and
+ * create blocks on the workspace.
+ * @param {!Element} xml XML DOM.
+ * @param {!Blockly.Workspace} workspace The workspace.
+ * @return {Array.<string>} An array containing new block ids.
+ */
+Blockly.Xml.clearWorkspaceAndLoadFromXml = function(xml, workspace) {
+  workspace.setResizesEnabled(false);
+  workspace.setToolboxRefreshEnabled(false);
+  workspace.clear();
+  var blockIds = Blockly.Xml.domToWorkspace(xml, workspace);
+  workspace.setResizesEnabled(true);
+  workspace.setToolboxRefreshEnabled(true);
+  return blockIds;
+};
+/**
  * Decode an XML DOM and create blocks on the workspace.
  * @param {!Element} xml XML DOM.
  * @param {!Blockly.Workspace} workspace The workspace.
