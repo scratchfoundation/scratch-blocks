@@ -151,6 +151,14 @@ Blockly.WorkspaceSvg.prototype.isMutator = false;
 Blockly.WorkspaceSvg.prototype.resizesEnabled_ = true;
 
 /**
+ * Whether this workspace has toolbox/flyout refreshes enabled.
+ * Disable during batch operations for a performance improvement.
+ * @type {boolean}
+ * @private
+ */
+Blockly.WorkspaceSvg.prototype.toolboxRefreshEnabled_ = true;
+
+/**
  * Current horizontal scrolling offset in pixel units.
  * @type {number}
  */
@@ -1004,7 +1012,10 @@ Blockly.WorkspaceSvg.prototype.paste = function(xmlBlock) {
  * @private
  */
 Blockly.WorkspaceSvg.prototype.refreshToolboxSelection_ = function() {
-  if (this.toolbox_ && this.toolbox_.flyout_ && !this.currentGesture_) {
+  // Updating the toolbox can be expensive. Don't do it when when it is
+  // disabled.
+  if (this.toolbox_ && this.toolbox_.flyout_ && !this.currentGesture_ &&
+      this.toolboxRefreshEnabled_) {
     this.toolbox_.refreshSelection();
   }
 };
@@ -1863,6 +1874,22 @@ Blockly.WorkspaceSvg.prototype.setResizesEnabled = function(enabled) {
   if (reenabled) {
     // Newly enabled.  Trigger a resize.
     this.resizeContents();
+  }
+};
+
+/**
+ * Update whether this workspace has toolbox refreshes enabled.
+ * If enabled, the toolbox will refresh when appropriate.
+ * If disabled, workspace will not refresh until re-enabled.
+ * Use to avoid refreshing during a batch operation, for performance.
+ * @param {boolean} enabled Whether refreshes should be enabled.
+ */
+Blockly.WorkspaceSvg.prototype.setToolboxRefreshEnabled = function(enabled) {
+  var reenabled = (!this.toolboxRefreshEnabled_ && enabled);
+  this.toolboxRefreshEnabled_ = enabled;
+  if (reenabled) {
+    // Newly enabled.  Trigger a refresh.
+    this.refreshToolboxSelection_();
   }
 };
 
