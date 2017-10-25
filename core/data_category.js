@@ -94,7 +94,7 @@ Blockly.DataCategory = function(workspace) {
  * @param {?Blockly.VariableModel} variable Variable to select in the field.
  */
 Blockly.DataCategory.addDataVariable = function(xmlList, variable) {
-  // <block type="data_variable">
+  // <block id="variableId" type="data_variable">
   //    <field name="VARIABLE">variablename</field>
   // </block>
   Blockly.DataCategory.addBlock(xmlList, variable, 'data_variable', 'VARIABLE');
