@@ -46,7 +46,7 @@ Blockly.Options = function(options) {
     var hasDisable = false;
     var hasSounds = false;
   } else {
-    if (!options['toolbox']) {
+    if (!options['toolbox'] && Blockly.Blocks.defaultToolbox) {
       var oParser = new DOMParser();
       var dom = oParser.parseFromString(Blockly.Blocks.defaultToolbox, 'text/xml');
       options['toolbox'] = dom.documentElement;
