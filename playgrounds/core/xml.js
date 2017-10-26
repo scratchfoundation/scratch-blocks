@@ -317,6 +317,7 @@ Blockly.Xml.clearWorkspaceAndLoadFromXml = function(xml, workspace) {
   workspace.setToolboxRefreshEnabled(true);
   return blockIds;
 };
+
 /**
  * Decode an XML DOM and create blocks on the workspace.
  * @param {!Element} xml XML DOM.
@@ -744,3 +745,5 @@ goog.global['Blockly']['Xml']['domToText'] = Blockly.Xml.domToText;
 goog.global['Blockly']['Xml']['domToWorkspace'] = Blockly.Xml.domToWorkspace;
 goog.global['Blockly']['Xml']['textToDom'] = Blockly.Xml.textToDom;
 goog.global['Blockly']['Xml']['workspaceToDom'] = Blockly.Xml.workspaceToDom;
+goog.global['Blockly']['Xml']['clearWorkspaceAndLoadFromXml'] =
+  Blockly.Xml.clearWorkspaceAndLoadFromXml;
