@@ -42,7 +42,7 @@
         <div id="primaryDiv" style="height: 480px; width: 600px;"></div>
       </td>
       <td>
-        <div id="secondaryDiv" style="height: 480px; width: 430px;"></div>
+        <div id="secondaryDiv" style="height: 480px; width: 600px;"></div>
       </td>
     </tr>
     <tr>
@@ -51,7 +51,7 @@
         <button id="boolean">Add boolean input</button>
         <button id="label">Add label</button>
         <button id="cancelButton">cancel</button>
-        <button id="okButton">ok</button>
+        <button id="okButton" onclick="applyMutation()">ok</button>
       </td>
       <td></td>
     </tr>
@@ -66,18 +66,19 @@
 
   <xml id="mutator_blocks" style="display:none">
     <block type="procedures_mutator_root" x="25" y="25" deletable="false">
+    <mutation proccode="say %s %n times if %b" argumentnames="[&quot;something&quot;,&quot;this many&quot;,&quot;this is true&quot;]" argumentdefaults="[&quot;&quot;,1,false]" warp="false"/>
     </block>
   </xml>
 
   <xml id="main_ws_blocks" style="display:none">
     <block id="]){{Y!7N9ezN+j@Vr`8p" type="procedures_defnoreturn" x="25" y="25">
       <statement name="custom_block">
-          <shadow type="procedures_callnoreturn_internal">
+          <shadow type="procedures_callnoreturn_internal" id="caller_internal">
               <mutation proccode="say %s %n times if %b" argumentnames="[&quot;something&quot;,&quot;this many&quot;,&quot;this is true&quot;]" argumentdefaults="[&quot;&quot;,1,false]" warp="false"/>
           </shadow>
       </statement>
       <next>
-          <block id="tIVT2u+!X}IS8z4nu1x9" type="procedures_callnoreturn">
+          <block id="caller_external" type="procedures_callnoreturn">
               <mutation proccode="say %s %n times if %b"/>
               <value name="input0">
                   <shadow id="V0~M:TxRk0Ua%osjGzh," type="text">
@@ -94,22 +95,41 @@
   </block>
   </xml>
 
+  <xml id="main_ws_blocks_simpler" style="display:none">
+    <block id="]){{Y!7N9ezN+j@Vr`8p" type="procedures_defnoreturn" x="25" y="25">
+      <statement name="custom_block">
+          <shadow type="procedures_callnoreturn_internal" id="caller_internal">
+              <mutation proccode="say %s %n times if %b" argumentnames="[&quot;something&quot;,&quot;this many&quot;,&quot;this is true&quot;]" argumentdefaults="[&quot;&quot;,1,false]" warp="false"/>
+          </shadow>
+      </statement>
+      <next>
+          <block id="caller_external" type="procedures_callnoreturn">
+          </block>
+      </next>
+  </block>
+  </xml>
+
 
   <script>
     // Inject primary workspace.
     var primaryWorkspace = Blockly.inject('primaryDiv',
-        {media: '../../media/'});
+        {media: '../media/'});
 
     Blockly.Xml.domToWorkspace(document.getElementById('mutator_blocks'),
         primaryWorkspace);
 
     // Inject secondary workspace.
     var secondaryWorkspace = Blockly.inject('secondaryDiv',
-        {media: '../../media/',
-         readOnly: true});
+        {media: '../media/'});
 
-    Blockly.Xml.domToWorkspace(document.getElementById('main_ws_blocks'),
+    Blockly.Xml.domToWorkspace(document.getElementById('main_ws_blocks_simpler'),
         secondaryWorkspace);
+
+    function applyMutation() {
+      var mutation = primaryWorkspace.getTopBlocks()[0].mutationToDom();
+      console.log(mutation);
+      secondaryWorkspace.getBlockById('caller_external').domToMutation(mutation);
+    }
 </script>
 
 </body>
