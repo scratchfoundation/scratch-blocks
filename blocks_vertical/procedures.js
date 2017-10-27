@@ -136,11 +136,9 @@ Blockly.Blocks['procedures_callnoreturn'] = {
       this.appendDummyInput().appendField(newLabel.replace(/\\%/, '%'));
     }
     this.rendered = wasRendered;
-    if (wasRendered) {
+    if (wasRendered && !this.isInsertionMarker()) {
       this.initSvg();
-      if (!this.isInsertionMarker()) {
-        this.render();
-      }
+      this.render();
     }
   }
 };
