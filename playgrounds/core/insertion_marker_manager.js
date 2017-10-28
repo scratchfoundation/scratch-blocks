@@ -252,11 +252,11 @@ Blockly.InsertionMarkerManager.prototype.createMarkerBlock_ = function(sourceBlo
   Blockly.Events.disable();
   try {
     var result = this.workspace_.newBlock(imType);
+    result.setInsertionMarker(true, sourceBlock.width);
     if (sourceBlock.mutationToDom) {
       var oldMutationDom = sourceBlock.mutationToDom();
       result.domToMutation(oldMutationDom);
     }
-    result.setInsertionMarker(true, sourceBlock.width);
     result.initSvg();
   } finally {
     Blockly.Events.enable();
