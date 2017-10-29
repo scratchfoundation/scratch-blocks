@@ -2,7 +2,6 @@
 'use strict';
 
 
-// Copyright 2014 Google Inc.  Apache License 2.0
 Blockly.Dart=new Blockly.Generator("Dart");Blockly.Dart.addReservedWords("assert,break,case,catch,class,const,continue,default,do,else,enum,extends,false,final,finally,for,if,in,is,new,null,rethrow,return,super,switch,this,throw,true,try,var,void,while,with,print,identityHashCode,identical,BidirectionalIterator,Comparable,double,Function,int,Invocation,Iterable,Iterator,List,Map,Match,num,Pattern,RegExp,Set,StackTrace,String,StringSink,Type,bool,DateTime,Deprecated,Duration,Expando,Null,Object,RuneIterator,Runes,Stopwatch,StringBuffer,Symbol,Uri,Comparator,AbstractClassInstantiationError,ArgumentError,AssertionError,CastError,ConcurrentModificationError,CyclicInitializationError,Error,Exception,FallThroughError,FormatException,IntegerDivisionByZeroException,NoSuchMethodError,NullThrownError,OutOfMemoryError,RangeError,StackOverflowError,StateError,TypeError,UnimplementedError,UnsupportedError");
 Blockly.Dart.ORDER_ATOMIC=0;Blockly.Dart.ORDER_UNARY_POSTFIX=1;Blockly.Dart.ORDER_UNARY_PREFIX=2;Blockly.Dart.ORDER_MULTIPLICATIVE=3;Blockly.Dart.ORDER_ADDITIVE=4;Blockly.Dart.ORDER_SHIFT=5;Blockly.Dart.ORDER_BITWISE_AND=6;Blockly.Dart.ORDER_BITWISE_XOR=7;Blockly.Dart.ORDER_BITWISE_OR=8;Blockly.Dart.ORDER_RELATIONAL=9;Blockly.Dart.ORDER_EQUALITY=10;Blockly.Dart.ORDER_LOGICAL_AND=11;Blockly.Dart.ORDER_LOGICAL_OR=12;Blockly.Dart.ORDER_IF_NULL=13;Blockly.Dart.ORDER_CONDITIONAL=14;
 Blockly.Dart.ORDER_CASCADE=15;Blockly.Dart.ORDER_ASSIGNMENT=16;Blockly.Dart.ORDER_NONE=99;
