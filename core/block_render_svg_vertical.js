@@ -713,7 +713,7 @@ Blockly.BlockSvg.prototype.renderFields_ =
       root.setAttribute('display', 'none');
     }
   }
-  if (this.isInsertionMarker()) {
+  if (this.isInsertionMarker() && this.getFirstStatementConnection() === null) {
     var connection = this.workspace.currentGesture_.blockDragger_.draggedConnectionManager_.closestConnection_;
     var connectionY = connection.y_;
     var dragBlock = this.workspace.currentGesture_.targetBlock_;
