@@ -713,6 +713,47 @@ Blockly.BlockSvg.prototype.renderFields_ =
       root.setAttribute('display', 'none');
     }
   }
+  if (this.isInsertionMarker() && this.getFirstStatementConnection() === null) {
+    var connection = this.workspace.currentGesture_.blockDragger_.draggedConnectionManager_.closestConnection_;
+    var connectionY = connection.y_;
+    var dragBlock = this.workspace.currentGesture_.targetBlock_;
+    var dragY = dragBlock.getRelativeToSurfaceXY().y;
+    if (connection.sourceBlock_.previousConnection === connection) {
+      dragY += dragBlock.height;
+    }
+    var distance = connectionY - dragY;
+    // 0% = touching, 100% = 3/4 block height away
+    var fraction = Math.min(1, Math.abs(distance / dragBlock.height * 4 / 3));
+    // Eyes are opaque 1/2 of the time and fading 1/2 the time
+    var totalOpacity = fraction < .5 ? 1 : 1 - (fraction - .5) * 2;
+    // Body is fading 1/2 the time and not visible 1/2 the time
+    var outlineOpacity = fraction > .5 ? 0 : .75 - (fraction * 3 / 2);
+
+    // add ghost eyes
+    if (!Blockly.insertionMarkerGhostEyes) {
+      var group = Blockly.utils.createSvgElement('g', {}, null);
+      Blockly.utils.makeGhostEye(12, group);
+      Blockly.utils.makeGhostEye(29, group);
+
+      Blockly.utils.createSvgElement('path',
+      {
+        'd': 'M 0 25 V 0 a1,1 0 1,1 40,0  H 40 V 25 ' +
+            'L 35,20 L 30,25 L 25,20 L 20,25 L 15,20 L 10,25 L5,20 L 0,25 z',
+        'style': 'fill:none; stroke:black; stroke-width: 2;'
+      }, group);
+      Blockly.insertionMarkerGhostEyes = {
+        group: group
+      };
+    }
+    var newRoot = Blockly.insertionMarkerGhostEyes.group;
+    this.getSvgRoot().appendChild(newRoot);
+    var scale = this.RTL ? 'scale(-.7 .7)' : 'scale(.7 .7)';
+    newRoot.setAttribute('transform',
+      'translate(' + cursorX + ', ' + cursorY + ') ' + scale
+    );
+    newRoot.children[4].setAttribute('opacity', outlineOpacity);
+    newRoot.setAttribute('opacity', totalOpacity);
+  }
   return this.RTL ? -cursorX : cursorX;
 }; /* eslint-enable indent */
 

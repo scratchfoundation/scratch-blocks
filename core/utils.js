@@ -1001,3 +1001,21 @@ Blockly.utils.getViewportBBox = function() {
     left: scrollOffset.x
   };
 };
+
+Blockly.utils.makeGhostEye = function(x, svgRoot) {
+  Blockly.utils.createSvgElement('circle', {
+    'cx': x,
+    'cy': 3,
+    'r': 8,
+    'style': 'fill:white; stroke: black; stroke-width:2;'
+  },
+  svgRoot);
+
+  Blockly.utils.createSvgElement('circle', {
+    'cx': x,
+    'cy': 4,
+    'r': 3,
+    'style': 'fill:black; stroke: black; stroke-width:2;'
+  },
+  svgRoot);
+};
