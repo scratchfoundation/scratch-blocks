@@ -713,7 +713,7 @@ Blockly.BlockSvg.prototype.renderFields_ =
       root.setAttribute('display', 'none');
     }
   }
-  if (this.isInsertionMarker()) {
+  if (this.isInsertionMarker() && !this.getFirstStatementConnection()) {
     // add ghost eyes
     if (!Blockly.insertionMarkerGhostEyes) {
       var group = Blockly.utils.createSvgElement('g', {}, null);
