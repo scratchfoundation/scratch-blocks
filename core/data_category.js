@@ -134,12 +134,12 @@ Blockly.DataCategory.addChangeVariableBy = function(xmlList, variable) {
   //   </value>
   //   <value name="VALUE">
   //     <shadow type="math_number">
-  //       <field name="NUM">0</field>
+  //       <field name="NUM">1</field>
   //     </shadow>
   //   </value>
   // </block>
   Blockly.DataCategory.addBlock(xmlList, variable, 'data_changevariableby',
-    'VARIABLE', ['VALUE', 'math_number', 0]);
+    'VARIABLE', ['VALUE', 'math_number', 1]);
 };
 
 /**
