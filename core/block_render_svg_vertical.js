@@ -714,21 +714,6 @@ Blockly.BlockSvg.prototype.renderFields_ =
     }
   }
   if (this.isInsertionMarker() && !this.getFirstStatementConnection()) {
-    var connection = this.workspace.currentGesture_.blockDragger_.draggedConnectionManager_.closestConnection_;
-    var connectionY = connection.y_;
-    var dragBlock = this.workspace.currentGesture_.targetBlock_;
-    var dragY = dragBlock.getRelativeToSurfaceXY().y;
-    if (connection.sourceBlock_.previousConnection === connection) {
-      dragY += dragBlock.height;
-    }
-    var distance = connectionY - dragY;
-    // 0% = touching, 100% = 3/4 block height away
-    var fraction = Math.min(1, Math.abs(distance / dragBlock.height * 4 / 3));
-    // Eyes are opaque 1/2 of the time and fading 1/2 the time
-    var totalOpacity = fraction < .5 ? 1 : 1 - (fraction - .5) * 2;
-    // Body is fading 1/2 the time and not visible 1/2 the time
-    var outlineOpacity = fraction > .5 ? 0 : .75 - (fraction * 3 / 2);
-
     // add ghost eyes
     if (!Blockly.insertionMarkerGhostEyes) {
       var group = Blockly.utils.createSvgElement('g', {}, null);
@@ -751,8 +736,6 @@ Blockly.BlockSvg.prototype.renderFields_ =
     newRoot.setAttribute('transform',
       'translate(' + cursorX + ', ' + cursorY + ') ' + scale
     );
-    newRoot.children[4].setAttribute('opacity', outlineOpacity);
-    newRoot.setAttribute('opacity', totalOpacity);
   }
   return this.RTL ? -cursorX : cursorX;
 }; /* eslint-enable indent */
