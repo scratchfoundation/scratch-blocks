@@ -129,6 +129,7 @@
       var mutation = primaryWorkspace.getTopBlocks()[0].mutationToDom();
       console.log(mutation);
       secondaryWorkspace.getBlockById('caller_external').domToMutation(mutation);
+      secondaryWorkspace.getBlockById('caller_internal').domToMutation(mutation);
     }
 </script>
 

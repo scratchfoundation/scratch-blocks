@@ -49,7 +49,10 @@ Blockly.ScratchBlocks.ProcedureUtils.getProcCode = function() {
 Blockly.ScratchBlocks.ProcedureUtils.callerMutationToDom = function() {
   var container = document.createElement('mutation');
   container.setAttribute('proccode', this.procCode_);
+  container.setAttribute('argumentnames', JSON.stringify(this.argumentNames_));
+  container.setAttribute('argumentdefaults', JSON.stringify(this.argumentDefaults_));
   container.setAttribute('argumentids', JSON.stringify(this.argumentIds_));
+  container.setAttribute('warp', this.warp_);
   return container;
 };
 
@@ -60,10 +63,18 @@ Blockly.ScratchBlocks.ProcedureUtils.callerMutationToDom = function() {
  */
 Blockly.ScratchBlocks.ProcedureUtils.callerDomToMutation = function(xmlElement) {
   this.procCode_ = xmlElement.getAttribute('proccode');
+  this.argumentNames_ =  JSON.parse(xmlElement.getAttribute('argumentnames'));
+  this.argumentDefaults_ =  JSON.parse(xmlElement.getAttribute('argumentdefaults'));
   this.argumentIds_ = JSON.parse(xmlElement.getAttribute('argumentids'));
+  this.warp_ = xmlElement.getAttribute('warp');
   this.updateDisplay_();
 };
-// TODO: Doc
+
+/**
+ * Remove all inputs on the block, including dummy inputs.
+ * @private
+ * @this Blockly.Block
+ */
 Blockly.ScratchBlocks.ProcedureUtils.removeAllInputs_ = function() {
   // remove all inputs, including dummy inputs.
   for (var i = 0, input; input = this.inputList[i]; i++) {
@@ -74,7 +85,16 @@ Blockly.ScratchBlocks.ProcedureUtils.removeAllInputs_ = function() {
   }
   this.inputList = [];
 };
-// TODO: Doc
+
+/**
+ * Disconnect old blocks from all value inputs on this block, but hold onto them
+ * in case they can be reattached later.
+ * @return {!Object.<string, Blockly.Block>} An object mapping parameter IDs to
+ *     the blocks that were connected to those IDs at the beginning of the
+ *     mutation.
+ * @private
+ * @this Blockly.Block
+ */
 Blockly.ScratchBlocks.ProcedureUtils.disconnectOldBlocks_ = function() {
   // Remove old stuff
   var connectionMap = {};
@@ -94,8 +114,16 @@ Blockly.ScratchBlocks.ProcedureUtils.disconnectOldBlocks_ = function() {
   }
   return connectionMap;
 };
-// TODO: Doc.
-Blockly.ScratchBlocks.ProcedureUtils.deleteOldShadows_ = function(connectionMap) {
+
+/**
+ * Delete all shadow blocks in the given map.
+ * @param {!Object.<string, Blockly.Block>} connectionMap An object mapping
+ *     parameter IDs to the blocks that were connected to those IDs at the
+ *     beginning of the mutation.
+ * @private
+ * @this Blockly.Block
+ */
+Blockly.ScratchBlocks.ProcedureUtils.deleteShadows_ = function(connectionMap) {
   // Get rid of all of the old shadow blocks if they aren't connected.
   if (connectionMap) {
     for (var id in connectionMap) {
@@ -107,7 +135,19 @@ Blockly.ScratchBlocks.ProcedureUtils.deleteOldShadows_ = function(connectionMap)
     }
   }
 };
-// TODO: Doc.
+
+/**
+ * Create all inputs specified by the new procCode, and populate them with
+ * shadow blocks or reconnected old blocks as appropriate.
+ * @param {!Object.<string, Blockly.Block>} connectionMap An object mapping
+ *     parameter IDs to the blocks that were connected to those IDs at the
+ *     beginning of the mutation.
+ * @return {!Object.<string, Blockly.Block>} params An object mapping parameter
+ *     IDs to the blocks that are connected to those IDs at the end of the
+ *     mutation.
+ * @private
+ * @this Blockly.Block
+ */
 Blockly.ScratchBlocks.ProcedureUtils.createAllInputs_ = function(connectionMap) {
   var params = {};
   // Split the proc into components, by %n, %b, and %s (ignoring escaped).
@@ -141,7 +181,14 @@ Blockly.ScratchBlocks.ProcedureUtils.createAllInputs_ = function(connectionMap) 
   }
   return params;
 };
-// TODO: Doc, refactor.
+
+/**
+ * Build a DOM node representing a shadow block of the given type.
+ * @param {string} type One of 'b' (boolean), 's' (string) or 'n' (number).
+ * @return {!Element} The DOM node representing the new shadow block.
+ * @private
+ * @this Blockly.Block
+ */
 Blockly.ScratchBlocks.ProcedureUtils.buildShadowDom_ = function(type) {
   var xmlStart = '<xml xmlns="http://www.w3.org/1999/xhtml">';
   var xmlEnd = '</xml>';
@@ -161,6 +208,20 @@ Blockly.ScratchBlocks.ProcedureUtils.buildShadowDom_ = function(type) {
   return Blockly.Xml.textToDom(xmlStart + shadow + xmlEnd).firstChild;
 };
 
+/**
+ * Reattach a block to the correct input after a mutation, and give the
+ * connection a shadow DOM based on its input type.
+ * @param {!Blockly.Input} input The value input to attach a block to.
+ * @param {string} inputType One of 'b' (boolean), 's' (string) or 'n' (number).
+ * @param {Blockly.Block} oldBlock The block that needs to be attached to the
+ *     input, or null if none existed.
+ * @param {string} id The ID of the current parameter.
+ * @param {!Object.<string, Blockly.Block>} connectionMap An object mapping
+ *     parameter IDs to the blocks that were connected to those IDs at the
+ *     beginning of the mutation.
+ * @private
+ * @this Blockly.Block
+ */
 Blockly.ScratchBlocks.ProcedureUtils.reattachBlock_ = function(input, inputType,
     oldBlock, id, connectionMap) {
   if (inputType == 'b') {
@@ -174,8 +235,15 @@ Blockly.ScratchBlocks.ProcedureUtils.reattachBlock_ = function(input, inputType,
   oldBlock.outputConnection.connect(input.connection);
 };
 
+/**
+ * Create a new shadow block and attach it to the given input.
+ * @param {!Blockly.Input} input The value input to attach a block to.
+ * @param {string} inputType One of 'b' (boolean), 's' (string) or 'n' (number).
+ * @private
+ * @this Blockly.Block
+ */
 Blockly.ScratchBlocks.ProcedureUtils.attachShadow_ = function(input, inputType) {
-// There was no connection map or no old block to reattach.
+  // There was no connection map or no old block to reattach.
   if (inputType == 'b') {
     input.setCheck('Boolean');
   } else if (inputType == 'n' || inputType == 's') {
@@ -192,7 +260,20 @@ Blockly.ScratchBlocks.ProcedureUtils.attachShadow_ = function(input, inputType) 
   }
 };
 
-// TODO: Doc.
+/**
+ * Create an input and attach the correct block to it.
+ * @param {string} inputType One of 'b' (boolean), 's' (string) or 'n' (number).
+ * @param {string} inputName The name to use when adding the input to the block.
+ * @param {Blockly.Block} oldBlock The block that needs to be attached to the
+ *     input, or null if none existed.
+ * @param {string} id The ID of the current parameter.
+ * @param {!Object.<string, Blockly.Block>} connectionMap An object mapping
+ *     parameter IDs to the blocks that were connected to those IDs at the
+ *     beginning of the mutation.
+ * @return {!Blockly.Input} The newly created value input.
+ * @private
+ * @this Blockly.Block
+ */
 Blockly.ScratchBlocks.ProcedureUtils.createInput_ = function(inputType,
     inputName, oldBlock, id, connectionMap) {
   var input = this.appendValueInput(inputName);
@@ -203,7 +284,13 @@ Blockly.ScratchBlocks.ProcedureUtils.createInput_ = function(inputType,
   }
   return input;
 };
-// TODO: Doc, move underscore to end.
+
+/**
+ * Update the block's structure and appearance to match the internally stored
+ * mutation.
+ * @private
+ * @this Blockly.Block
+ */
 Blockly.ScratchBlocks.ProcedureUtils.updateDisplay_ = function() {
   var wasRendered = this.rendered;
   this.rendered = false;
@@ -214,7 +301,7 @@ Blockly.ScratchBlocks.ProcedureUtils.updateDisplay_ = function() {
   }
 
   this.paramMap_ = this.createAllInputs_(connectionMap);
-  this.deleteOldShadows_(connectionMap);
+  this.deleteShadows_(connectionMap);
 
   // TODO: Maybe also bump all old non-shadow blocks explicitly.
 
@@ -260,7 +347,7 @@ Blockly.Blocks['procedures_callnoreturn'] = {
   domToMutation: Blockly.ScratchBlocks.ProcedureUtils.callerDomToMutation,
   removeAllInputs_: Blockly.ScratchBlocks.ProcedureUtils.removeAllInputs_,
   disconnectOldBlocks_: Blockly.ScratchBlocks.ProcedureUtils.disconnectOldBlocks_,
-  deleteOldShadows_: Blockly.ScratchBlocks.ProcedureUtils.deleteOldShadows_,
+  deleteShadows_: Blockly.ScratchBlocks.ProcedureUtils.deleteShadows_,
   createAllInputs_: Blockly.ScratchBlocks.ProcedureUtils.createAllInputs_,
   buildShadowDom_: Blockly.ScratchBlocks.ProcedureUtils.buildShadowDom_,
   createInput_: Blockly.ScratchBlocks.ProcedureUtils.createInput_,
@@ -293,12 +380,6 @@ Blockly.Blocks['procedures_callnoreturn_internal'] = {
   mutationToDom: Blockly.ScratchBlocks.ProcedureUtils.callerMutationToDom,
   domToMutation: Blockly.ScratchBlocks.ProcedureUtils.callerDomToMutation,
   updateDisplay_: function() {
-    // Remove old stuff
-    if (this.params_) {
-      for (var id in this.params_) {
-        console.log(id + ' ' + this.params[id]);
-      }
-    }
     var params = {};
     // Split the proc into components, by %n, %b, and %s (ignoring escaped).
     var procComponents = this.procCode_.split(/(?=[^\\]\%[nbs])/);
@@ -457,7 +538,7 @@ Blockly.Blocks['procedures_mutator_root'] = {
   domToMutation: Blockly.ScratchBlocks.ProcedureUtils.callerDomToMutation,
   removeAllInputs_: Blockly.ScratchBlocks.ProcedureUtils.removeAllInputs_,
   disconnectOldBlocks_: Blockly.ScratchBlocks.ProcedureUtils.disconnectOldBlocks_,
-  deleteOldShadows_: Blockly.ScratchBlocks.ProcedureUtils.deleteOldShadows_,
+  deleteShadows_: Blockly.ScratchBlocks.ProcedureUtils.deleteShadows_,
   createAllInputs_: Blockly.ScratchBlocks.ProcedureUtils.createAllInputs_,
   buildShadowDom_: Blockly.ScratchBlocks.ProcedureUtils.buildShadowDom_,
   createInput_: Blockly.ScratchBlocks.ProcedureUtils.createInput_,
