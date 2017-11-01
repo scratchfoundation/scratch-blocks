@@ -76,6 +76,7 @@ Blockly.Blocks['procedures_callnoreturn'] = {
   mutationToDom: function() {
     var container = document.createElement('mutation');
     container.setAttribute('proccode', this.procCode_);
+    container.setAttribute('argumentids', JSON.stringify(this.argumentIds_));
     return container;
   },
   /**
@@ -85,11 +86,56 @@ Blockly.Blocks['procedures_callnoreturn'] = {
    */
   domToMutation: function(xmlElement) {
     this.procCode_ = xmlElement.getAttribute('proccode');
+    this.argumentIds_ = JSON.parse(xmlElement.getAttribute('argumentids'));
     this._updateDisplay();
   },
-  _updateDisplay: function() {
-    var wasRendered = this.rendered;
-    this.rendered = false;
+  // TODO: Doc
+  removeAllInputs_: function() {
+    // remove all inputs, including dummy inputs.
+    for (var i = 0, input; input = this.inputList[i]; i++) {
+      if (input.connection && input.connection.targetBlock()) {
+        console.warn("connection was still attached?!");
+      }
+      input.dispose();
+    }
+    this.inputList = [];
+  },
+  // TODO: Doc
+  disconnectOldBlocks_: function() {
+    // Remove old stuff
+    var connectionMap = {};
+    for (var id in this.paramMap_) {
+      var input = this.paramMap_[id];
+      console.log(id + ' ' + input);
+      if (input.connection) {
+        // Remove the shadow DOM.  Otherwise a shadow block will respawn
+        // instantly, and we'd have to remove it when we remove the input.
+        input.connection.setShadowDom(null);
+        var target = input.connection.targetBlock();
+        connectionMap[id] = target;
+        if (target) {
+          input.connection.disconnect();
+        }
+      }
+    }
+    return connectionMap;
+  },
+  // TODO: Doc.
+  deleteOldShadows_: function(connectionMap) {
+    // Get rid of all of the old shadow blocks if they aren't connected.
+    if (connectionMap) {
+      for (var id in connectionMap) {
+        var block = connectionMap[id];
+        if (block && block.isShadow()) {
+          block.dispose();
+          connectionMap[id] = null;
+        }
+      }
+    }
+  },
+  // TODO: Doc.
+  createAllInputs_: function(connectionMap) {
+    var params = {};
     // Split the proc into components, by %n, %b, and %s (ignoring escaped).
     var procComponents = this.procCode_.split(/(?=[^\\]\%[nbs])/);
     procComponents = procComponents.map(function(c) {
@@ -103,38 +149,85 @@ Blockly.Blocks['procedures_callnoreturn'] = {
       if (component.substring(0, 1) == '%') {
         var inputType = component.substring(1, 2);
         newLabel = component.substring(2).trim();
-        var inputName = inputPrefix + (inputCount++);
-        switch (inputType) {
-          case 'n':
-            var input = this.appendValueInput(inputName);
-            var num = this.workspace.newBlock('math_number');
-            num.setShadow(true);
-            num.outputConnection.connect(input.connection);
-            if (!this.isInsertionMarker()) {
-              num.initSvg();
-              num.render(false);
-            }
-            break;
-          case 'b':
-            var input = this.appendValueInput(inputName);
-            input.setCheck('Boolean');
-            break;
-          case 's':
-            var input = this.appendValueInput(inputName);
-            var text = this.workspace.newBlock('text');
-            text.setShadow(true);
-            text.outputConnection.connect(input.connection);
-            if (!this.isInsertionMarker()) {
-              text.initSvg();
-              text.render(false);
-            }
-            break;
+
+        var id = this.argumentIds_[inputCount];
+        if (connectionMap && (id in connectionMap)) {
+          var oldBlock = connectionMap[id];
         }
+
+        var inputName = inputPrefix + (inputCount++);
+        var input = this.createInput_(inputType, inputName, oldBlock, id,
+            connectionMap);
+        params[id] = input;
       } else {
         newLabel = component.trim();
       }
       this.appendDummyInput().appendField(newLabel.replace(/\\%/, '%'));
     }
+    return params;
+  },
+  // TODO: Doc.
+  createInput_: function(inputType, inputName, oldBlock, id, connectionMap) {
+    switch (inputType) {
+      case 'n':
+        var input = this.appendValueInput(inputName);
+        if (oldBlock) {
+          var num = oldBlock;
+          connectionMap[id] = null;
+          // TODO: Attach shadow DOM.
+        } else {
+          var num = this.workspace.newBlock('math_number');
+          num.setShadow(true);
+        }
+        num.outputConnection.connect(input.connection);
+        if (!this.isInsertionMarker()) {
+          num.initSvg();
+          num.render(false);
+        }
+        break;
+      case 'b':
+        var input = this.appendValueInput(inputName);
+        input.setCheck('Boolean');
+        if (oldBlock) {
+          oldBlock.outputConnection.connect(input.connection);
+          connectionMap[id] = null;
+          // No shadow DOM.
+        }
+        break;
+      case 's':
+        var input = this.appendValueInput(inputName);
+        if (oldBlock) {
+          var text = oldBlock;
+          connectionMap[id] = null;
+          // TODO: Attach shadow DOM.
+        } else {
+          var text = this.workspace.newBlock('text');
+          text.setShadow(true);
+        }
+        text.outputConnection.connect(input.connection);
+        if (!this.isInsertionMarker()) {
+          text.initSvg();
+          text.render(false);
+        }
+        break;
+    }
+    return input;
+  },
+  // TODO: Doc, move underscore to end.
+  _updateDisplay: function() {
+    var wasRendered = this.rendered;
+    this.rendered = false;
+
+    if (this.paramMap_) {
+      var connectionMap = this.disconnectOldBlocks_();
+      this.removeAllInputs_();
+    }
+
+    this.paramMap_ = this.createAllInputs_(connectionMap);
+    this.deleteOldShadows_(connectionMap);
+
+    // TODO: Maybe also bump all old non-shadow blocks explicitly.
+
     this.rendered = wasRendered;
     if (wasRendered && !this.isInsertionMarker()) {
       this.initSvg();
@@ -183,6 +276,7 @@ Blockly.Blocks['procedures_callnoreturn_internal'] = {
     container.setAttribute('proccode', this.procCode_);
     container.setAttribute('argumentnames', JSON.stringify(this.argumentNames_));
     container.setAttribute('argumentdefaults', JSON.stringify(this.argumentDefaults_));
+    container.setAttribute('argumentids', JSON.stringify(this.argumentIds_));
     container.setAttribute('warp', this.warp_);
     return container;
   },
@@ -195,11 +289,19 @@ Blockly.Blocks['procedures_callnoreturn_internal'] = {
     this.procCode_ = xmlElement.getAttribute('proccode');
     this.argumentNames_ =  JSON.parse(xmlElement.getAttribute('argumentnames'));
     this.argumentDefaults_ =  JSON.parse(xmlElement.getAttribute('argumentdefaults'));
+    this.argumentIds_ = JSON.parse(xmlElement.getAttribute('argumentids'));
     this.warp_ = xmlElement.getAttribute('warp');
     this.updateDisplay_();
 
   },
   updateDisplay_: function() {
+    // Remove old stuff
+    if (this.params_) {
+      for (var id in this.params_) {
+        console.log(id + ' ' + this.params[id]);
+      }
+    }
+    var params = {};
     // Split the proc into components, by %n, %b, and %s (ignoring escaped).
     var procComponents = this.procCode_.split(/(?=[^\\]\%[nbs])/);
     procComponents = procComponents.map(function(c) {
@@ -227,6 +329,8 @@ Blockly.Blocks['procedures_callnoreturn_internal'] = {
             break;
         }
         if (blockType) {
+          var id = this.argumentIds_[inputCount];
+
           var argumentName = this.argumentNames_[inputCount];
           var shadow = goog.dom.createDom('shadow');
           shadow.setAttribute('type', blockType);
@@ -236,6 +340,7 @@ Blockly.Blocks['procedures_callnoreturn_internal'] = {
           var input = this.appendValueInput(inputName);
           var newBlock = Blockly.Xml.domToBlock(shadow, this.workspace);
           newBlock.outputConnection.connect(input.connection);
+          params[id] = input.connection;
         }
         inputCount++;
       } else {
@@ -243,6 +348,7 @@ Blockly.Blocks['procedures_callnoreturn_internal'] = {
       }
       this.appendDummyInput().appendField(newLabel.replace(/\\%/, '%'));
     }
+    this.paramMap_ = params;
   }
 };
 
@@ -368,6 +474,7 @@ Blockly.Blocks['procedures_mutator_root'] = {
     container.setAttribute('proccode', this.procCode_);
     container.setAttribute('argumentnames', JSON.stringify(this.argumentNames_));
     container.setAttribute('argumentdefaults', JSON.stringify(this.argumentDefaults_));
+    container.setAttribute('argumentids', JSON.stringify(this.argumentIds_));
     container.setAttribute('warp', this.warp_);
     return container;
   },
@@ -380,7 +487,9 @@ Blockly.Blocks['procedures_mutator_root'] = {
     this.procCode_ = xmlElement.getAttribute('proccode');
     this.argumentNames_ =  JSON.parse(xmlElement.getAttribute('argumentnames'));
     this.argumentDefaults_ =  JSON.parse(xmlElement.getAttribute('argumentdefaults'));
+    this.argumentIds_ = JSON.parse(xmlElement.getAttribute('argumentids'));
     this.warp_ = xmlElement.getAttribute('warp');
     //this.updateDisplay_();
   }
 };
+
