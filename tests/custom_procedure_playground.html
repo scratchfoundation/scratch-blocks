@@ -79,7 +79,7 @@
       </statement>
       <next>
           <block id="caller_external" type="procedures_callnoreturn">
-              <mutation proccode="say %s %n times if %b"/>
+              <mutation proccode="say %s %n times if %b" argumentnames="[&quot;something&quot;,&quot;this many&quot;,&quot;this is true&quot;]" argumentdefaults="[&quot;&quot;,1,false]" warp="false" argumentids="[&quot;a42&quot;, &quot;b23&quot;, &quot;c99&quot;]"/>
               <value name="input0">
                   <shadow id="V0~M:TxRk0Ua%osjGzh," type="text">
                       <field name="TEXT"/>
@@ -122,7 +122,7 @@
     var secondaryWorkspace = Blockly.inject('secondaryDiv',
         {media: '../media/'});
 
-    Blockly.Xml.domToWorkspace(document.getElementById('main_ws_blocks_simpler'),
+    Blockly.Xml.domToWorkspace(document.getElementById('main_ws_blocks'),
         secondaryWorkspace);
 
     function applyMutation() {

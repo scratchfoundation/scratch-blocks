@@ -61,7 +61,7 @@ Blockly.ScratchBlocks.ProcedureUtils.callerMutationToDom = function() {
 Blockly.ScratchBlocks.ProcedureUtils.callerDomToMutation = function(xmlElement) {
   this.procCode_ = xmlElement.getAttribute('proccode');
   this.argumentIds_ = JSON.parse(xmlElement.getAttribute('argumentids'));
-  this._updateDisplay();
+  this.updateDisplay_();
 };
 // TODO: Doc
 Blockly.ScratchBlocks.ProcedureUtils.removeAllInputs_ = function() {
@@ -204,7 +204,7 @@ Blockly.ScratchBlocks.ProcedureUtils.createInput_ = function(inputType,
   return input;
 };
 // TODO: Doc, move underscore to end.
-Blockly.ScratchBlocks.ProcedureUtils._updateDisplay = function() {
+Blockly.ScratchBlocks.ProcedureUtils.updateDisplay_ = function() {
   var wasRendered = this.rendered;
   this.rendered = false;
 
@@ -264,7 +264,7 @@ Blockly.Blocks['procedures_callnoreturn'] = {
   createAllInputs_: Blockly.ScratchBlocks.ProcedureUtils.createAllInputs_,
   buildShadowDom_: Blockly.ScratchBlocks.ProcedureUtils.buildShadowDom_,
   createInput_: Blockly.ScratchBlocks.ProcedureUtils.createInput_,
-  _updateDisplay: Blockly.ScratchBlocks.ProcedureUtils._updateDisplay,
+  updateDisplay_: Blockly.ScratchBlocks.ProcedureUtils.updateDisplay_,
   reattachBlock_: Blockly.ScratchBlocks.ProcedureUtils.reattachBlock_,
   attachShadow_: Blockly.ScratchBlocks.ProcedureUtils.attachShadow_
 };
@@ -289,44 +289,9 @@ Blockly.Blocks['procedures_callnoreturn_internal'] = {
     this.argumentDefaults_ = [];
     this.warp_ = false;
   },
-  /**
-   * Returns the name of the procedure this block calls, or the empty string if
-   * it has not yet been set.
-   * @return {string} Procedure name.
-   * @this Blockly.Block
-   */
-  getProcCode: function() {
-    return this.procCode_;
-  },
-  /**
-   * Create XML to represent the (non-editable) name and arguments.
-   * @return {!Element} XML storage element.
-   * @this Blockly.Block
-   */
-  mutationToDom: function() {
-
-    var container = document.createElement('mutation');
-    container.setAttribute('proccode', this.procCode_);
-    container.setAttribute('argumentnames', JSON.stringify(this.argumentNames_));
-    container.setAttribute('argumentdefaults', JSON.stringify(this.argumentDefaults_));
-    container.setAttribute('argumentids', JSON.stringify(this.argumentIds_));
-    container.setAttribute('warp', this.warp_);
-    return container;
-  },
-  /**
-   * Parse XML to restore the (non-editable) name and parameters.
-   * @param {!Element} xmlElement XML storage element.
-   * @this Blockly.Block
-   */
-  domToMutation: function(xmlElement) {
-    this.procCode_ = xmlElement.getAttribute('proccode');
-    this.argumentNames_ =  JSON.parse(xmlElement.getAttribute('argumentnames'));
-    this.argumentDefaults_ =  JSON.parse(xmlElement.getAttribute('argumentdefaults'));
-    this.argumentIds_ = JSON.parse(xmlElement.getAttribute('argumentids'));
-    this.warp_ = xmlElement.getAttribute('warp');
-    this.updateDisplay_();
-
-  },
+  getProcCode: Blockly.ScratchBlocks.ProcedureUtils.getProcCode,
+  mutationToDom: Blockly.ScratchBlocks.ProcedureUtils.callerMutationToDom,
+  domToMutation: Blockly.ScratchBlocks.ProcedureUtils.callerDomToMutation,
   updateDisplay_: function() {
     // Remove old stuff
     if (this.params_) {
@@ -424,9 +389,9 @@ Blockly.Blocks['procedures_param'] = {
   domToMutation: function(xmlElement) {
     this._paramName = xmlElement.getAttribute('paramname');
     this._shape = xmlElement.getAttribute('shape');
-    this._updateDisplay();
+    this.updateDisplay_();
   },
-  _updateDisplay: function() {
+  updateDisplay_: function() {
     this.setFieldValue(this._paramName, 'paramName');
     switch (this._shape) {
       case 'b':
@@ -487,42 +452,17 @@ Blockly.Blocks['procedures_mutator_root'] = {
     this.argumentDefaults_ = [];
     this.warp_ = false;
   },
-  /**
-   * Returns the name of the procedure this block calls, or the empty string if
-   * it has not yet been set.
-   * @return {string} Procedure name.
-   * @this Blockly.Block
-   */
-  getProcCode: function() {
-    return this.procCode_;
-  },
-  /**
-   * Create XML to represent the (non-editable) name and arguments.
-   * @return {!Element} XML storage element.
-   * @this Blockly.Block
-   */
-  mutationToDom: function() {
-
-    var container = document.createElement('mutation');
-    container.setAttribute('proccode', this.procCode_);
-    container.setAttribute('argumentnames', JSON.stringify(this.argumentNames_));
-    container.setAttribute('argumentdefaults', JSON.stringify(this.argumentDefaults_));
-    container.setAttribute('argumentids', JSON.stringify(this.argumentIds_));
-    container.setAttribute('warp', this.warp_);
-    return container;
-  },
-  /**
-   * Parse XML to restore the (non-editable) name and parameters.
-   * @param {!Element} xmlElement XML storage element.
-   * @this Blockly.Block
-   */
-  domToMutation: function(xmlElement) {
-    this.procCode_ = xmlElement.getAttribute('proccode');
-    this.argumentNames_ =  JSON.parse(xmlElement.getAttribute('argumentnames'));
-    this.argumentDefaults_ =  JSON.parse(xmlElement.getAttribute('argumentdefaults'));
-    this.argumentIds_ = JSON.parse(xmlElement.getAttribute('argumentids'));
-    this.warp_ = xmlElement.getAttribute('warp');
-    //this.updateDisplay_();
-  }
+  getProcCode: Blockly.ScratchBlocks.ProcedureUtils.getProcCode,
+  mutationToDom: Blockly.ScratchBlocks.ProcedureUtils.callerMutationToDom,
+  domToMutation: Blockly.ScratchBlocks.ProcedureUtils.callerDomToMutation,
+  removeAllInputs_: Blockly.ScratchBlocks.ProcedureUtils.removeAllInputs_,
+  disconnectOldBlocks_: Blockly.ScratchBlocks.ProcedureUtils.disconnectOldBlocks_,
+  deleteOldShadows_: Blockly.ScratchBlocks.ProcedureUtils.deleteOldShadows_,
+  createAllInputs_: Blockly.ScratchBlocks.ProcedureUtils.createAllInputs_,
+  buildShadowDom_: Blockly.ScratchBlocks.ProcedureUtils.buildShadowDom_,
+  createInput_: Blockly.ScratchBlocks.ProcedureUtils.createInput_,
+  updateDisplay_: Blockly.ScratchBlocks.ProcedureUtils.updateDisplay_,
+  reattachBlock_: Blockly.ScratchBlocks.ProcedureUtils.reattachBlock_,
+  attachShadow_: Blockly.ScratchBlocks.ProcedureUtils.attachShadow_
 };
 
