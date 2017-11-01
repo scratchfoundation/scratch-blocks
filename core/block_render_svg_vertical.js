@@ -713,30 +713,6 @@ Blockly.BlockSvg.prototype.renderFields_ =
       root.setAttribute('display', 'none');
     }
   }
-  if (this.isInsertionMarker() && !this.getFirstStatementConnection()) {
-    // add ghost eyes
-    if (!Blockly.insertionMarkerGhostEyes) {
-      var group = Blockly.utils.createSvgElement('g', {}, null);
-      Blockly.utils.makeGhostEye(12, group);
-      Blockly.utils.makeGhostEye(29, group);
-
-      Blockly.utils.createSvgElement('path',
-      {
-        'd': 'M 0 25 V 0 a1,1 0 1,1 40,0  H 40 V 25 ' +
-            'L 35,20 L 30,25 L 25,20 L 20,25 L 15,20 L 10,25 L5,20 L 0,25 z',
-        'style': 'fill:none; stroke:black; stroke-width: 2;'
-      }, group);
-      Blockly.insertionMarkerGhostEyes = {
-        group: group
-      };
-    }
-    var newRoot = Blockly.insertionMarkerGhostEyes.group;
-    this.getSvgRoot().appendChild(newRoot);
-    var scale = this.RTL ? 'scale(-.7 .7)' : 'scale(.7 .7)';
-    newRoot.setAttribute('transform',
-      'translate(' + cursorX + ', ' + cursorY + ') ' + scale
-    );
-  }
   return this.RTL ? -cursorX : cursorX;
 }; /* eslint-enable indent */
 
