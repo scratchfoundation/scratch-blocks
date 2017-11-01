@@ -1111,10 +1111,10 @@ Blockly.Css.CONTENT = [
   '}',
 
   '.scratchCategoryMenu {',
-    'width: 60px;',
+    'width: 52px;',
     'background: $colour_toolbox;',
     'color: $colour_toolboxText;',
-    'font-size: .7em;',
+    'font-size: .7rem;',
     'user-select: none;',
     '-webkit-user-select: none;',
     '-moz-user-select: none;',
@@ -1141,18 +1141,9 @@ Blockly.Css.CONTENT = [
   '.scratchCategoryMenuRow {',
   '}',
 
-  '.scratchCategoryMenu .scratchCategoryMenuRow + .scratchCategoryMenuRow:before {',
-    'display: block;',
-    'border-top: 1px solid #ddd;',
-    'content: "";',
-    'width: 60%;',
-    'margin: 4px auto;',
-  '}',
-
   '.scratchCategoryMenuItem {',
-    'padding: 6px 0px;',
+    'padding: 0.375rem 0px;',
     'cursor: pointer;',
-    'margin: 0px 2px;',
     'text-align: center;',
   '}',
 
@@ -1162,15 +1153,14 @@ Blockly.Css.CONTENT = [
 
   '.scratchCategoryMenuItem.categorySelected {',
     'background: $colour_toolboxSelected;',
-    'border-radius: 6px;',
   '}',
 
   '.scratchCategoryItemBubble {',
-    'width: 16px;',
-    'height: 16px;',
+    'width: 1.25rem;',
+    'height: 1.25rem;',
     'border: 1px solid;',
     'border-radius: 100%;',
-    'margin: 0 auto 3px;',
+    'margin: 0 auto 0.125rem;',
   '}',
 
   '.scratchCategoryMenuItem:hover {',
