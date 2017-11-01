@@ -234,7 +234,6 @@ Blockly.InsertionMarkerManager.prototype.update = function(dxy, deleteArea) {
     this.maybeShowPreview_(candidate);
     Blockly.Events.enable();
   }
-  this.maybeUpdatePreviewGhost_(candidate);
 };
 
 /**** Begin initialization functions ****/
@@ -659,35 +658,6 @@ Blockly.InsertionMarkerManager.prototype.connectMarker_ = function() {
   // Connect() also renders the insertion marker.
   imConn.connect(closest);
   this.markerConnection_ = imConn;
-};
-
-Blockly.InsertionMarkerManager.prototype.maybeUpdatePreviewGhost_ = function(candidate) {
-  // Nope, don't add a marker.
-  if (this.wouldDeleteBlock_) {
-    return;
-  }
-  var closest = candidate.closest;
-  var local = candidate.local;
-
-  // Nothing to connect to.
-  if (!closest) {
-    return;
-  }
-
-  // A drop-in block does not drop a shadow
-  if (this.shouldReplace_()) {
-    return;
-  }
-
-  // Something went wrong and we're trying to connect to an invalid connection.
-  if (closest.sourceBlock_.isInsertionMarker()) {
-    return;
-  }
-
-  var isLastInStack = this.lastOnStack_ && local == this.lastOnStack_;
-  var imBlock = isLastInStack ? this.lastMarker_ : this.firstMarker_;
-
-  imBlock.render();
 };
 
 /**** End insertion marker display functions ****/
