@@ -125,8 +125,9 @@ Blockly.ScratchBlocks.ProcedureUtils.createAllInputs_ = function(connectionMap) 
       newLabel = component.substring(2).trim();
 
       var id = this.argumentIds_[inputCount];
+      var oldBlock = null;
       if (connectionMap && (id in connectionMap)) {
-        var oldBlock = connectionMap[id];
+        oldBlock = connectionMap[id];
       }
 
       var inputName = inputPrefix + (inputCount++);
@@ -141,58 +142,64 @@ Blockly.ScratchBlocks.ProcedureUtils.createAllInputs_ = function(connectionMap) 
   return params;
 };
 // TODO: Doc, refactor.
-Blockly.ScratchBlocks.ProcedureUtils.buildNumberShadowDom_ = function() {
-  return Blockly.Xml.textToDom(
-      '<xml xmlns="http://www.w3.org/1999/xhtml">' +
-      '<shadow type="math_number">' +
-      '<field name="NUM">10</field>' +
-      '</shadow>' +
-      '</xml>').firstChild;
-};
-// TODO: Doc.
-Blockly.ScratchBlocks.ProcedureUtils.createInput_ = function(inputType, inputName, oldBlock, id, connectionMap) {
-  switch (inputType) {
+Blockly.ScratchBlocks.ProcedureUtils.buildShadowDom_ = function(type) {
+  var xmlStart = '<xml xmlns="http://www.w3.org/1999/xhtml">';
+  var xmlEnd = '</xml>';
+  var shadow = '';
+  switch (type) {
     case 'n':
-      var input = this.appendValueInput(inputName);
-      if (oldBlock) {
-        var num = oldBlock;
-        connectionMap[id] = null;
-        input.connection.setShadowDom(this.buildNumberShadowDom_());
-      } else {
-        var num = this.workspace.newBlock('math_number');
-        num.setShadow(true);
-      }
-      num.outputConnection.connect(input.connection);
-      if (!this.isInsertionMarker()) {
-        num.initSvg();
-        num.render(false);
-      }
-      break;
-    case 'b':
-      var input = this.appendValueInput(inputName);
-      input.setCheck('Boolean');
-      if (oldBlock) {
-        oldBlock.outputConnection.connect(input.connection);
-        connectionMap[id] = null;
-        // No shadow DOM.
-      }
+      shadow = '<shadow type="math_number">' +
+          '<field name="NUM">10</field>' +
+          '</shadow>';
       break;
     case 's':
-      var input = this.appendValueInput(inputName);
-      if (oldBlock) {
-        var text = oldBlock;
-        connectionMap[id] = null;
-        // TODO: Attach shadow DOM.
-      } else {
-        var text = this.workspace.newBlock('text');
-        text.setShadow(true);
-      }
-      text.outputConnection.connect(input.connection);
-      if (!this.isInsertionMarker()) {
-        text.initSvg();
-        text.render(false);
-      }
+      shadow = '<shadow type="text"></shadow>';
       break;
+    default:
+      console.warn('Unexpected type in buildShadowDom_: ' + type);
+  }
+  return Blockly.Xml.textToDom(xmlStart + shadow + xmlEnd).firstChild;
+};
+
+Blockly.ScratchBlocks.ProcedureUtils.reattachBlock_ = function(input, inputType,
+    oldBlock, id, connectionMap) {
+  if (inputType == 'b') {
+    input.setCheck('Boolean');
+  } else if (inputType == 'n' || inputType == 's') {
+    input.connection.setShadowDom(this.buildShadowDom_(inputType));
+  } else {
+    console.warn('Found an unexpected input type: ' + inputType);
+  }
+  connectionMap[id] = null;
+  oldBlock.outputConnection.connect(input.connection);
+};
+
+Blockly.ScratchBlocks.ProcedureUtils.attachShadow_ = function(input, inputType) {
+// There was no connection map or no old block to reattach.
+  if (inputType == 'b') {
+    input.setCheck('Boolean');
+  } else if (inputType == 'n' || inputType == 's') {
+    var blockType = inputType == 'n' ? 'math_number' : 'text';
+    var newBlock = this.workspace.newBlock(blockType);
+    newBlock.setShadow(true);
+    if (!this.isInsertionMarker()) {
+      newBlock.initSvg();
+      newBlock.render(false);
+    }
+    newBlock.outputConnection.connect(input.connection);
+  } else {
+    console.warn('Found an unexpected input type: ' + inputType);
+  }
+};
+
+// TODO: Doc.
+Blockly.ScratchBlocks.ProcedureUtils.createInput_ = function(inputType,
+    inputName, oldBlock, id, connectionMap) {
+  var input = this.appendValueInput(inputName);
+  if (connectionMap && oldBlock) {
+    this.reattachBlock_(input, inputType, oldBlock, id, connectionMap);
+  } else {
+    this.attachShadow_(input, inputType);
   }
   return input;
 };
@@ -255,9 +262,11 @@ Blockly.Blocks['procedures_callnoreturn'] = {
   disconnectOldBlocks_: Blockly.ScratchBlocks.ProcedureUtils.disconnectOldBlocks_,
   deleteOldShadows_: Blockly.ScratchBlocks.ProcedureUtils.deleteOldShadows_,
   createAllInputs_: Blockly.ScratchBlocks.ProcedureUtils.createAllInputs_,
-  buildNumberShadowDom_: Blockly.ScratchBlocks.ProcedureUtils.buildNumberShadowDom_,
+  buildShadowDom_: Blockly.ScratchBlocks.ProcedureUtils.buildShadowDom_,
   createInput_: Blockly.ScratchBlocks.ProcedureUtils.createInput_,
-  _updateDisplay: Blockly.ScratchBlocks.ProcedureUtils._updateDisplay
+  _updateDisplay: Blockly.ScratchBlocks.ProcedureUtils._updateDisplay,
+  reattachBlock_: Blockly.ScratchBlocks.ProcedureUtils.reattachBlock_,
+  attachShadow_: Blockly.ScratchBlocks.ProcedureUtils.attachShadow_
 };
 
 Blockly.Blocks['procedures_callnoreturn_internal'] = {
