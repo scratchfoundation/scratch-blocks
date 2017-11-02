@@ -226,16 +226,21 @@ Blockly.ScratchBlocks.ProcedureUtils.createAllInputs_ = function(connectionMap) 
  * @this Blockly.Block
  */
 Blockly.ScratchBlocks.ProcedureUtils.buildShadowDom_ = function(type) {
-  var xmlStart = '<xml xmlns="http://www.w3.org/1999/xhtml">';
-  var xmlEnd = '</xml>';
+  var shadowDom = goog.dom.createDom('shadow');
   if (type == 'n') {
-    var shadow = '<shadow type="math_number">' +
-        '<field name="NUM">10</field>' +
-        '</shadow>';
+    var shadowType = 'math_number';
+    var fieldName = 'NUM';
+    var fieldValue = '10';
   } else {
-    var shadow = '<shadow type="text"></shadow>';
+    var shadowType = 'text';
+    var fieldName = 'TEXT';
+    var fieldValue = 'hello world';
   }
-  return Blockly.Xml.textToDom(xmlStart + shadow + xmlEnd).firstChild;
+  shadowDom.setAttribute('type', shadowType);
+  var fieldDom = goog.dom.createDom('field', null, fieldValue);
+  fieldDom.setAttribute('name', fieldName);
+  shadowDom.appendChild(fieldDom);
+  return shadowDom;
 };
 
 /**
@@ -274,6 +279,11 @@ Blockly.ScratchBlocks.ProcedureUtils.attachShadow_ = function(input, inputType) 
   if (inputType == 'n' || inputType == 's') {
     var blockType = inputType == 'n' ? 'math_number' : 'text';
     var newBlock = this.workspace.newBlock(blockType);
+    if (inputType == 'n') {
+      newBlock.setFieldValue('99', 'NUM');
+    } else {
+      newBlock.setFieldValue('hello world', 'TEXT');
+    }
     newBlock.setShadow(true);
     if (!this.isInsertionMarker()) {
       newBlock.initSvg();
