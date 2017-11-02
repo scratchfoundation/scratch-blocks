@@ -43,31 +43,64 @@ Blockly.ScratchBlocks.ProcedureUtils.getProcCode = function() {
 };
 
 /**
- * Create XML to represent the (non-editable) name and arguments.
+ * Create XML to represent the (non-editable) name and arguments of a procedure
+ * call block (procedures_callnoreturn block).
  * @return {!Element} XML storage element.
  * @this Blockly.Block
  */
 Blockly.ScratchBlocks.ProcedureUtils.callerMutationToDom = function() {
   var container = document.createElement('mutation');
   container.setAttribute('proccode', this.procCode_);
-  container.setAttribute('argumentnames', JSON.stringify(this.argumentNames_));
-  container.setAttribute('argumentdefaults', JSON.stringify(this.argumentDefaults_));
   container.setAttribute('argumentids', JSON.stringify(this.argumentIds_));
   container.setAttribute('warp', this.warp_);
   return container;
 };
 
 /**
- * Parse XML to restore the (non-editable) name and parameters.
+ * Parse XML to restore the (non-editable) name and parameters of a procedure
+ * call block (procedures_callnoreturn block).
  * @param {!Element} xmlElement XML storage element.
  * @this Blockly.Block
  */
 Blockly.ScratchBlocks.ProcedureUtils.callerDomToMutation = function(xmlElement) {
   this.procCode_ = xmlElement.getAttribute('proccode');
-  this.argumentNames_ =  JSON.parse(xmlElement.getAttribute('argumentnames'));
-  this.argumentDefaults_ =  JSON.parse(xmlElement.getAttribute('argumentdefaults'));
   this.argumentIds_ = JSON.parse(xmlElement.getAttribute('argumentids'));
   this.warp_ = xmlElement.getAttribute('warp');
+  this.updateDisplay_();
+};
+
+/**
+ * Create XML to represent the (non-editable) name and arguments of a procedure
+ * definition block (procedures_callnoreturn_internal, which is part of a definition,
+ * or procedures_mutator_root).
+ * @return {!Element} XML storage element.
+ * @this Blockly.Block
+ */
+Blockly.ScratchBlocks.ProcedureUtils.definitionMutationToDom = function() {
+  var container = document.createElement('mutation');
+  container.setAttribute('proccode', this.procCode_);
+  container.setAttribute('argumentids', JSON.stringify(this.argumentIds_));
+  container.setAttribute('argumentnames', JSON.stringify(this.argumentNames_));
+  container.setAttribute('argumentdefaults',
+      JSON.stringify(this.argumentDefaults_));
+  container.setAttribute('warp', this.warp_);
+  return container;
+};
+
+/**
+ * Parse XML to restore the (non-editable) name and parameters of a procedure
+ * definition block (procedures_callnoreturn_internal, which is part of a definition,
+ * or procedures_mutator_root).
+ * @param {!Element} xmlElement XML storage element.
+ * @this Blockly.Block
+ */
+Blockly.ScratchBlocks.ProcedureUtils.definitionDomToMutation = function(xmlElement) {
+  this.procCode_ = xmlElement.getAttribute('proccode');
+  this.argumentIds_ = JSON.parse(xmlElement.getAttribute('argumentids'));
+  this.warp_ = xmlElement.getAttribute('warp');
+  this.argumentNames_ = JSON.parse(xmlElement.getAttribute('argumentnames'));
+  this.argumentDefaults_ = JSON.parse(
+      xmlElement.getAttribute('argumentdefaults'));
   this.updateDisplay_();
 };
 
@@ -369,8 +402,8 @@ Blockly.Blocks['procedures_callnoreturn_internal'] = {
     this.warp_ = false;
   },
   getProcCode: Blockly.ScratchBlocks.ProcedureUtils.getProcCode,
-  mutationToDom: Blockly.ScratchBlocks.ProcedureUtils.callerMutationToDom,
-  domToMutation: Blockly.ScratchBlocks.ProcedureUtils.callerDomToMutation,
+  mutationToDom: Blockly.ScratchBlocks.ProcedureUtils.definitionMutationToDom,
+  domToMutation: Blockly.ScratchBlocks.ProcedureUtils.definitionDomToMutation,
   updateDisplay_: function() {
     var params = {};
     // Split the proc into components, by %n, %b, and %s (ignoring escaped).
@@ -526,8 +559,8 @@ Blockly.Blocks['procedures_mutator_root'] = {
     this.warp_ = false;
   },
   getProcCode: Blockly.ScratchBlocks.ProcedureUtils.getProcCode,
-  mutationToDom: Blockly.ScratchBlocks.ProcedureUtils.callerMutationToDom,
-  domToMutation: Blockly.ScratchBlocks.ProcedureUtils.callerDomToMutation,
+  mutationToDom: Blockly.ScratchBlocks.ProcedureUtils.definitionMutationToDom,
+  domToMutation: Blockly.ScratchBlocks.ProcedureUtils.definitionDomToMutation,
   removeAllInputs_: Blockly.ScratchBlocks.ProcedureUtils.removeAllInputs_,
   disconnectOldBlocks_: Blockly.ScratchBlocks.ProcedureUtils.disconnectOldBlocks_,
   deleteShadows_: Blockly.ScratchBlocks.ProcedureUtils.deleteShadows_,
