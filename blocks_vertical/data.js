@@ -531,7 +531,8 @@ Blockly.Constants.Data.RENAME_OPTION_CALLBACK_FACTORY = function(block) {
   return function() {
     var workspace = block.workspace;
     var currentName = block.getField('VARIABLE').text_;
-    Blockly.FieldVariable.renameVariablePrompt(workspace, currentName);
+    var variable = workspace.getVariable(currentName);
+    Blockly.Variables.renameVariable(workspace, variable);
   };
 };
 
