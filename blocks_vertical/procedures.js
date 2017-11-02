@@ -28,6 +28,7 @@ goog.provide('Blockly.Blocks.procedures');
 goog.require('Blockly.Blocks');
 goog.require('Blockly.constants');
 
+
 // TODO: Create a namespace properly.
 Blockly.ScratchBlocks.ProcedureUtils = {};
 
@@ -76,11 +77,9 @@ Blockly.ScratchBlocks.ProcedureUtils.callerDomToMutation = function(xmlElement) 
  * @this Blockly.Block
  */
 Blockly.ScratchBlocks.ProcedureUtils.removeAllInputs_ = function() {
-  // remove all inputs, including dummy inputs.
+  // Delete inputs directly instead of with block.removeInput to avoid splicing
+  // out of the input list at every index.
   for (var i = 0, input; input = this.inputList[i]; i++) {
-    if (input.connection && input.connection.targetBlock()) {
-      console.warn("connection was still attached?!");
-    }
     input.dispose();
   }
   this.inputList = [];
@@ -100,7 +99,6 @@ Blockly.ScratchBlocks.ProcedureUtils.disconnectOldBlocks_ = function() {
   var connectionMap = {};
   for (var id in this.paramMap_) {
     var input = this.paramMap_[id];
-    console.log(id + ' ' + input);
     if (input.connection) {
       // Remove the shadow DOM.  Otherwise a shadow block will respawn
       // instantly, and we'd have to remove it when we remove the input.
@@ -162,6 +160,11 @@ Blockly.ScratchBlocks.ProcedureUtils.createAllInputs_ = function(connectionMap) 
     var newLabel;
     if (component.substring(0, 1) == '%') {
       var inputType = component.substring(1, 2);
+      if (!(inputType == 'n' || inputType == 'b' || inputType == 's')) {
+        throw new Error(
+            'Found an custom procedure with an invalid type: ' + inputType);
+      }
+
       newLabel = component.substring(2).trim();
 
       var id = this.argumentIds_[inputCount];
@@ -184,7 +187,7 @@ Blockly.ScratchBlocks.ProcedureUtils.createAllInputs_ = function(connectionMap) 
 
 /**
  * Build a DOM node representing a shadow block of the given type.
- * @param {string} type One of 'b' (boolean), 's' (string) or 'n' (number).
+ * @param {string} type One of 's' (string) or 'n' (number).
  * @return {!Element} The DOM node representing the new shadow block.
  * @private
  * @this Blockly.Block
@@ -192,18 +195,12 @@ Blockly.ScratchBlocks.ProcedureUtils.createAllInputs_ = function(connectionMap) 
 Blockly.ScratchBlocks.ProcedureUtils.buildShadowDom_ = function(type) {
   var xmlStart = '<xml xmlns="http://www.w3.org/1999/xhtml">';
   var xmlEnd = '</xml>';
-  var shadow = '';
-  switch (type) {
-    case 'n':
-      shadow = '<shadow type="math_number">' +
-          '<field name="NUM">10</field>' +
-          '</shadow>';
-      break;
-    case 's':
-      shadow = '<shadow type="text"></shadow>';
-      break;
-    default:
-      console.warn('Unexpected type in buildShadowDom_: ' + type);
+  if (type == 'n') {
+    var shadow = '<shadow type="math_number">' +
+        '<field name="NUM">10</field>' +
+        '</shadow>';
+  } else {
+    var shadow = '<shadow type="text"></shadow>';
   }
   return Blockly.Xml.textToDom(xmlStart + shadow + xmlEnd).firstChild;
 };
@@ -224,12 +221,10 @@ Blockly.ScratchBlocks.ProcedureUtils.buildShadowDom_ = function(type) {
  */
 Blockly.ScratchBlocks.ProcedureUtils.reattachBlock_ = function(input, inputType,
     oldBlock, id, connectionMap) {
-  if (inputType == 'b') {
-    input.setCheck('Boolean');
-  } else if (inputType == 'n' || inputType == 's') {
+  if (inputType == 'n' || inputType == 's') {
     input.connection.setShadowDom(this.buildShadowDom_(inputType));
   } else {
-    console.warn('Found an unexpected input type: ' + inputType);
+    input.setCheck('Boolean');
   }
   connectionMap[id] = null;
   oldBlock.outputConnection.connect(input.connection);
@@ -243,10 +238,7 @@ Blockly.ScratchBlocks.ProcedureUtils.reattachBlock_ = function(input, inputType,
  * @this Blockly.Block
  */
 Blockly.ScratchBlocks.ProcedureUtils.attachShadow_ = function(input, inputType) {
-  // There was no connection map or no old block to reattach.
-  if (inputType == 'b') {
-    input.setCheck('Boolean');
-  } else if (inputType == 'n' || inputType == 's') {
+  if (inputType == 'n' || inputType == 's') {
     var blockType = inputType == 'n' ? 'math_number' : 'text';
     var newBlock = this.workspace.newBlock(blockType);
     newBlock.setShadow(true);
@@ -256,7 +248,7 @@ Blockly.ScratchBlocks.ProcedureUtils.attachShadow_ = function(input, inputType) 
     }
     newBlock.outputConnection.connect(input.connection);
   } else {
-    console.warn('Found an unexpected input type: ' + inputType);
+    input.setCheck('Boolean');
   }
 };
 
