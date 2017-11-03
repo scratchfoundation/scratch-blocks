@@ -66,7 +66,7 @@
 
   <xml id="mutator_blocks" style="display:none">
     <block type="procedures_mutator_root" x="25" y="25" deletable="false">
-    <mutation proccode="say %s %n times if %b" argumentnames="[&quot;something&quot;,&quot;this many&quot;,&quot;this is true&quot;]" argumentdefaults="[&quot;&quot;,1,false]" warp="false"/>
+    <mutation proccode="say %s %n times if %b" argumentnames="[&quot;something&quot;,&quot;this many&quot;,&quot;this is true&quot;]" argumentdefaults="[&quot;&quot;,1,false]" warp="false" argumentids="[&quot;a42&quot;, &quot;b23&quot;, &quot;c99&quot;]"/>
     </block>
   </xml>
 
@@ -74,15 +74,15 @@
     <block id="]){{Y!7N9ezN+j@Vr`8p" type="procedures_defnoreturn" x="25" y="25">
       <statement name="custom_block">
           <shadow type="procedures_callnoreturn_internal" id="caller_internal">
-              <mutation proccode="say %s %n times if %b" argumentnames="[&quot;something&quot;,&quot;this many&quot;,&quot;this is true&quot;]" argumentdefaults="[&quot;&quot;,1,false]" warp="false"/>
+              <mutation proccode="say %s %n times if %b" argumentnames="[&quot;something&quot;,&quot;this many&quot;,&quot;this is true&quot;]" argumentdefaults="[&quot;&quot;,1,false]" warp="false" argumentids="[&quot;a42&quot;, &quot;b23&quot;, &quot;c99&quot;]"/>
           </shadow>
       </statement>
       <next>
           <block id="caller_external" type="procedures_callnoreturn">
-              <mutation proccode="say %s %n times if %b"/>
+              <mutation proccode="say %s %n times if %b" argumentnames="[&quot;something&quot;,&quot;this many&quot;,&quot;this is true&quot;]" argumentdefaults="[&quot;&quot;,1,false]" warp="false" argumentids="[&quot;a42&quot;, &quot;b23&quot;, &quot;c99&quot;]"/>
               <value name="input0">
                   <shadow id="V0~M:TxRk0Ua%osjGzh," type="text">
-                      <field name="TEXT"/>
+                      <field name="TEXT"/></field>
                   </shadow>
               </value>
               <value name="input1">
@@ -99,7 +99,7 @@
     <block id="]){{Y!7N9ezN+j@Vr`8p" type="procedures_defnoreturn" x="25" y="25">
       <statement name="custom_block">
           <shadow type="procedures_callnoreturn_internal" id="caller_internal">
-              <mutation proccode="say %s %n times if %b" argumentnames="[&quot;something&quot;,&quot;this many&quot;,&quot;this is true&quot;]" argumentdefaults="[&quot;&quot;,1,false]" warp="false"/>
+              <mutation proccode="say %s %n times if %b" argumentnames="[&quot;something&quot;,&quot;this many&quot;,&quot;this is true&quot;]" argumentdefaults="[&quot;&quot;,1,false]" warp="false" argumentids="[&quot;a42&quot;, &quot;b23&quot;, &quot;c99&quot;]"/>
           </shadow>
       </statement>
       <next>
@@ -122,13 +122,14 @@
     var secondaryWorkspace = Blockly.inject('secondaryDiv',
         {media: '../media/'});
 
-    Blockly.Xml.domToWorkspace(document.getElementById('main_ws_blocks_simpler'),
+    Blockly.Xml.domToWorkspace(document.getElementById('main_ws_blocks'),
         secondaryWorkspace);
 
     function applyMutation() {
       var mutation = primaryWorkspace.getTopBlocks()[0].mutationToDom();
       console.log(mutation);
       secondaryWorkspace.getBlockById('caller_external').domToMutation(mutation);
+      secondaryWorkspace.getBlockById('caller_internal').domToMutation(mutation);
     }
 </script>
 
