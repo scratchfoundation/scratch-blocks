@@ -367,7 +367,7 @@ Blockly.ScratchBlocks.ProcedureUtils.createInputCallerInternal_ = function(type,
     this.reattachBlock_(input, type, oldBlock, id, connectionMap);
   } else {
     var argumentText = this.argumentNames_[index];
-    this.attachShadow_(input, type, argumentText);
+    this.attachArgumentReporter_(input, type, argumentText);
   }
   this.paramMap_[id] = input;
 };
@@ -487,7 +487,7 @@ Blockly.Blocks['procedures_callnoreturn_internal'] = {
   createInput_: Blockly.ScratchBlocks.ProcedureUtils.createInputCallerInternal_,
   updateDisplay_: Blockly.ScratchBlocks.ProcedureUtils.updateDisplay_,
   reattachBlock_: Blockly.ScratchBlocks.ProcedureUtils.reattachBlock_,
-  attachShadow_: Blockly.ScratchBlocks.ProcedureUtils.attachArgumentReporter_
+  attachArgumentReporter_: Blockly.ScratchBlocks.ProcedureUtils.attachArgumentReporter_
 };
 
 Blockly.Blocks['procedures_param'] = {
