@@ -197,19 +197,11 @@ Blockly.ScratchBlocks.ProcedureUtils.createAllInputs_ = function(connectionMap) 
         throw new Error(
             'Found an custom procedure with an invalid type: ' + inputType);
       }
-
       newLabel = component.substring(2).trim();
 
-      var id = this.argumentIds_[inputCount];
-      var oldBlock = null;
-      if (connectionMap && (id in connectionMap)) {
-        oldBlock = connectionMap[id];
-      }
-
-      var inputName = inputPrefix + (inputCount++);
-      var input = this.createInput_(inputType, inputName, oldBlock, id,
-          connectionMap);
-      params[id] = input;
+      var inputName = inputPrefix + inputCount;
+      this.createInput_(inputType, inputName, inputCount, connectionMap, params);
+      inputCount++;
     } else {
       newLabel = component.trim();
     }
@@ -296,6 +288,37 @@ Blockly.ScratchBlocks.ProcedureUtils.attachShadow_ = function(input, inputType) 
 };
 
 /**
+ * Create a new shadow block and attach it to the given input.
+ * @param {!Blockly.Input} input The value input to attach a block to.
+ * @param {string} inputType One of 'b' (boolean), 's' (string) or 'n' (number).
+ * @private
+ * @this Blockly.Block
+ */
+Blockly.ScratchBlocks.ProcedureUtils.attachShadowCallerInternal_ = function(
+    input, inputType, argumentName) {
+  var blockType = '';
+  switch (inputType) {
+    case 'n':
+      blockType = 'argument_reporter_string_number';
+      break;
+    case 'b':
+      blockType = 'argument_reporter_boolean';
+      break;
+    case 's':
+      blockType = 'argument_reporter_string_number';
+      break;
+  }
+  var newBlock = this.workspace.newBlock(blockType);
+  newBlock.setShadow(true);
+  newBlock.setFieldValue(argumentName, 'VALUE');
+  if (!this.isInsertionMarker()) {
+    newBlock.initSvg();
+    newBlock.render(false);
+  }
+  newBlock.outputConnection.connect(input.connection);
+};
+
+/**
  * Create an input and attach the correct block to it.
  * @param {string} inputType One of 'b' (boolean), 's' (string) or 'n' (number).
  * @param {string} inputName The name to use when adding the input to the block.
@@ -309,16 +332,54 @@ Blockly.ScratchBlocks.ProcedureUtils.attachShadow_ = function(input, inputType) 
  * @private
  * @this Blockly.Block
  */
-Blockly.ScratchBlocks.ProcedureUtils.createInput_ = function(inputType,
-    inputName, oldBlock, id, connectionMap) {
-  var input = this.appendValueInput(inputName);
-  if (connectionMap && oldBlock) {
-    this.reattachBlock_(input, inputType, oldBlock, id, connectionMap);
-  } else {
-    this.attachShadow_(input, inputType);
+Blockly.ScratchBlocks.ProcedureUtils.createInput_ = function(type, name,
+    count, connectionMap, params) {
+  var id = this.argumentIds_[count];
+  var oldBlock = null;
+  if (connectionMap && (id in connectionMap)) {
+    oldBlock = connectionMap[id];
   }
-  return input;
+  var input = this.appendValueInput(name);
+  if (connectionMap && oldBlock) {
+    this.reattachBlock_(input, type, oldBlock, id, connectionMap);
+  } else {
+    this.attachShadow_(input, type);
+  }
+  params[id] = input;
 };
+
+
+/**
+ * Create an input and attach the correct block to it.
+ * @param {string} inputType One of 'b' (boolean), 's' (string) or 'n' (number).
+ * @param {string} inputName The name to use when adding the input to the block.
+ * @param {Blockly.Block} oldBlock The block that needs to be attached to the
+ *     input, or null if none existed.
+ * @param {string} id The ID of the current parameter.
+ * @param {!Object.<string, Blockly.Block>} connectionMap An object mapping
+ *     parameter IDs to the blocks that were connected to those IDs at the
+ *     beginning of the mutation.
+ * @return {!Blockly.Input} The newly created value input.
+ * @private
+ * @this Blockly.Block
+ */
+Blockly.ScratchBlocks.ProcedureUtils.createInputCallerInternal_ = function(type,
+    name, count, connectionMap, params) {
+  var id = this.argumentIds_[count];
+  var oldBlock = null;
+  if (connectionMap && (id in connectionMap)) {
+    oldBlock = connectionMap[id];
+  }
+  var input = this.appendValueInput(name);
+  if (connectionMap && oldBlock) {
+    this.reattachBlock_(input, type, oldBlock, id, connectionMap);
+  } else {
+    var argumentText = this.argumentNames_[count];
+    this.attachShadow_(input, type, argumentText);
+  }
+  params[id] = input;
+};
+
 
 /**
  * Update the block's structure and appearance to match the internally stored
@@ -414,56 +475,15 @@ Blockly.Blocks['procedures_callnoreturn_internal'] = {
   getProcCode: Blockly.ScratchBlocks.ProcedureUtils.getProcCode,
   mutationToDom: Blockly.ScratchBlocks.ProcedureUtils.definitionMutationToDom,
   domToMutation: Blockly.ScratchBlocks.ProcedureUtils.definitionDomToMutation,
-  updateDisplay_: function() {
-    var params = {};
-    // Split the proc into components, by %n, %b, and %s (ignoring escaped).
-    var procComponents = this.procCode_.split(/(?=[^\\]\%[nbs])/);
-    procComponents = procComponents.map(function(c) {
-      return c.trim(); // Strip whitespace.
-    });
-    // Create inputs and shadow blocks as appropriate.
-    var inputPrefix = 'input';
-    var inputCount = 0;
-    for (var i = 0, component; component = procComponents[i]; i++) {
-      var newLabel;
-      if (component.substring(0, 1) == '%') {
-        var inputType = component.substring(1, 2);
-        newLabel = component.substring(2).trim();
-        var inputName = inputPrefix + inputCount;
-        var blockType = '';
-        switch (inputType) {
-          case 'n':
-            blockType = 'argument_reporter_string_number';
-            break;
-          case 'b':
-            blockType = 'argument_reporter_boolean';
-            break;
-          case 's':
-            blockType = 'argument_reporter_string_number';
-            break;
-        }
-        if (blockType) {
-          var id = this.argumentIds_[inputCount];
-
-          var argumentName = this.argumentNames_[inputCount];
-          var shadow = goog.dom.createDom('shadow');
-          shadow.setAttribute('type', blockType);
-          var field = goog.dom.createDom('field', null, argumentName);
-          field.setAttribute('name', 'VALUE');
-          shadow.appendChild(field);
-          var input = this.appendValueInput(inputName);
-          var newBlock = Blockly.Xml.domToBlock(shadow, this.workspace);
-          newBlock.outputConnection.connect(input.connection);
-          params[id] = input.connection;
-        }
-        inputCount++;
-      } else {
-        newLabel = component.trim();
-      }
-      this.appendDummyInput().appendField(newLabel.replace(/\\%/, '%'));
-    }
-    this.paramMap_ = params;
-  }
+  removeAllInputs_: Blockly.ScratchBlocks.ProcedureUtils.removeAllInputs_,
+  disconnectOldBlocks_: Blockly.ScratchBlocks.ProcedureUtils.disconnectOldBlocks_,
+  deleteShadows_: Blockly.ScratchBlocks.ProcedureUtils.deleteShadows_,
+  createAllInputs_: Blockly.ScratchBlocks.ProcedureUtils.createAllInputs_,
+  buildShadowDom_: Blockly.ScratchBlocks.ProcedureUtils.buildShadowDom_,
+  createInput_: Blockly.ScratchBlocks.ProcedureUtils.createInputCallerInternal_,
+  updateDisplay_: Blockly.ScratchBlocks.ProcedureUtils.updateDisplay_,
+  reattachBlock_: Blockly.ScratchBlocks.ProcedureUtils.reattachBlock_,
+  attachShadow_: Blockly.ScratchBlocks.ProcedureUtils.attachShadowCallerInternal_
 };
 
 Blockly.Blocks['procedures_param'] = {
