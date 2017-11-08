@@ -358,18 +358,123 @@ Blockly.ScratchBlocks.ProcedureUtils.createInput_ = function(type, name,
 Blockly.ScratchBlocks.ProcedureUtils.createInputCallerInternal_ = function(type,
     name, index, connectionMap) {
   var id = this.argumentIds_[index];
+  var argumentText = this.argumentNames_[index];
+  var oldBlock = null;
+  if (connectionMap && (id in connectionMap)) {
+    oldBlock = connectionMap[id];
+  }
+  var oldTypeMatches =
+    Blockly.ScratchBlocks.ProcedureUtils.checkOldTypeMatches_(oldBlock, type);
+  var input = this.appendValueInput(name);
+  if (connectionMap && oldBlock && oldTypeMatches) {
+    this.reattachBlock_(input, type, oldBlock, id, connectionMap);
+    oldBlock.setFieldValue(argumentText, 'VALUE');
+  } else {
+    this.attachArgumentReporter_(input, type, argumentText);
+  }
+  this.paramMap_[id] = input;
+};
+
+/**
+ * Create an input, attach the correct block to it, and insert it into the
+ * params map.
+ * This function is used by the procedures_callnoreturn_internal block.
+ * TODO (#1213) consider renaming.
+ * @param {string} type One of 'b' (boolean), 's' (string) or 'n' (number).
+ * @param {string} name The name to use when adding the input to the block.
+ * @param {number} index The index of this input into the argument id and name
+ *     arrays.
+ * @param {!Object.<string, Blockly.Block>} connectionMap An object mapping
+ *     parameter IDs to the blocks that were connected to those IDs at the
+ *     beginning of the mutation.
+ * @private
+ * @this Blockly.Block
+ */
+Blockly.ScratchBlocks.ProcedureUtils.createInputMutatorRoot_ = function(type,
+    name, index, connectionMap) {
+  var id = this.argumentIds_[index];
+  var argumentText = this.argumentNames_[index];
+
   var oldBlock = null;
   if (connectionMap && (id in connectionMap)) {
     oldBlock = connectionMap[id];
   }
   var input = this.appendValueInput(name);
-  if (connectionMap && oldBlock) {
+
+  var oldTypeMatches =
+    Blockly.ScratchBlocks.ProcedureUtils.checkOldTypeMatches_(oldBlock, type);
+
+  if (connectionMap && oldBlock && oldTypeMatches) {
     this.reattachBlock_(input, type, oldBlock, id, connectionMap);
+    oldBlock.setFieldValue(argumentText, 'TEXT');
   } else {
-    var argumentText = this.argumentNames_[index];
-    this.attachArgumentReporter_(input, type, argumentText);
+    this.attachShadow_(input, type, argumentText);
   }
   this.paramMap_[id] = input;
+};
+
+Blockly.ScratchBlocks.ProcedureUtils.checkOldTypeMatches_ = function(oldBlock,
+    type) {
+  if (!oldBlock) {
+    return false;
+  }
+  if ((type == 'n' || type == 's') &&
+      oldBlock.type == 'argument_reporter_string_number') {
+    return true;
+  }
+  if (type == 'b' && oldBlock.type == 'argument_reporter_boolean') {
+    return true;
+  }
+  return false;
+};
+
+/**
+ * Create a new shadow block and attach it to the given input.
+ * @param {!Blockly.Input} input The value input to attach a block to.
+ * @param {string} inputType One of 'b' (boolean), 's' (string) or 'n' (number).
+ * @private
+ * @this Blockly.Block
+ */
+Blockly.ScratchBlocks.ProcedureUtils.attachShadowMutatorRoot_ = function(input,
+    inputType, argumentName) {
+  console.log(argumentName);
+  if (inputType == 'n' || inputType == 's') {
+    var newBlock = this.workspace.newBlock('text');
+  } else {
+    var newBlock = this.workspace.newBlock('boolean_textinput');
+    input.setCheck('Boolean');
+  }
+  newBlock.setFieldValue(argumentName, 'TEXT');
+  newBlock.setShadow(true);
+  if (!this.isInsertionMarker()) {
+    newBlock.initSvg();
+    newBlock.render(false);
+  }
+  newBlock.outputConnection.connect(input.connection);
+};
+
+/**
+ * Reattach a block to the correct input after a mutation, and give the
+ * connection a shadow DOM based on its input type.
+ * @param {!Blockly.Input} input The value input to attach a block to.
+ * @param {string} inputType One of 'b' (boolean), 's' (string) or 'n' (number).
+ * @param {Blockly.Block} oldBlock The block that needs to be attached to the
+ *     input, or null if none existed.
+ * @param {string} id The ID of the current parameter.
+ * @param {!Object.<string, Blockly.Block>} connectionMap An object mapping
+ *     parameter IDs to the blocks that were connected to those IDs at the
+ *     beginning of the mutation.
+ * @private
+ * @this Blockly.Block
+ */
+Blockly.ScratchBlocks.ProcedureUtils.reattachBlockMutatorRoot_ = function(input, inputType,
+    oldBlock, id, connectionMap, argumentName) {
+  if (inputType == 'b') {
+    input.setCheck('Boolean');
+  }
+  oldBlock.setFieldValue(argumentName, 'TEXT');
+  connectionMap[id] = null;
+  oldBlock.outputConnection.connect(input.connection);
 };
 
 /**
@@ -397,6 +502,34 @@ Blockly.ScratchBlocks.ProcedureUtils.updateDisplay_ = function() {
     this.initSvg();
     this.render();
   }
+};
+
+Blockly.ScratchBlocks.ProcedureUtils.mutatorMakeProcCode_ = function() {
+  return 'say %s %n times if %b';
+};
+
+Blockly.ScratchBlocks.ProcedureUtils.mutatorRootMutationToDom_ = function() {
+  this.procCode_ = this.getProcCode();
+
+  // Update argument names array.
+  var children = this.getChildren();
+  this.argumentNames_ = [];
+  for (var i = 0; i < children.length; i++) {
+    this.argumentNames_.push(children[i].getFieldValue('TEXT'));
+  }
+
+  this.argumentDefaults_ = ['argument', 'defaults', 'not', 'implemented'];
+  this.warp_ = false;
+
+
+  var container = document.createElement('mutation');
+  container.setAttribute('proccode', this.procCode_);
+  container.setAttribute('argumentids', JSON.stringify(this.argumentIds_));
+  container.setAttribute('argumentnames', JSON.stringify(this.argumentNames_));
+  container.setAttribute('argumentdefaults',
+      JSON.stringify(this.argumentDefaults_));
+  container.setAttribute('warp', this.warp_);
+  return container;
 };
 
 Blockly.Blocks['procedures_defnoreturn'] = {
@@ -456,12 +589,9 @@ Blockly.Blocks['procedures_callnoreturn_internal'] = {
    * @this Blockly.Block
    */
   init: function() {
-    this.setPreviousStatement(true);
-    this.setNextStatement(true);
-    this.setCategory(Blockly.Categories.more);
-    this.setColour(Blockly.Colours.more.primary,
-      Blockly.Colours.more.secondary,
-      Blockly.Colours.more.tertiary);
+    this.jsonInit({
+      "extensions": ["colours_more", "shape_statement"]
+    });
 
     /* Data known about the procedure. */
     this.procCode_ = '';
@@ -577,6 +707,24 @@ Blockly.Blocks['argument_reporter_string_number'] = {
   }
 };
 
+Blockly.Blocks['boolean_textinput'] = {
+  init: function() {
+    this.jsonInit({ "message0": " %1",
+      "args0": [
+        {
+          "type": "field_input",
+          "name": "TEXT",
+          "text": "foo"
+        }
+      ],
+      "colour": Blockly.Colours.textField,
+      "colourSecondary": Blockly.Colours.textField,
+      "colourTertiary": Blockly.Colours.textField,
+      "extensions": ["output_boolean"]
+    });
+  }
+};
+
 Blockly.Blocks['procedures_mutator_root'] = {
   /**
    * The root block in the procedure editing workspace.
@@ -599,17 +747,17 @@ Blockly.Blocks['procedures_mutator_root'] = {
      */
     this.paramMap_ = null;
   },
-  getProcCode: Blockly.ScratchBlocks.ProcedureUtils.getProcCode,
-  mutationToDom: Blockly.ScratchBlocks.ProcedureUtils.definitionMutationToDom,
+  getProcCode: Blockly.ScratchBlocks.ProcedureUtils.mutatorMakeProcCode_,
+  mutationToDom: Blockly.ScratchBlocks.ProcedureUtils.mutatorRootMutationToDom_,
   domToMutation: Blockly.ScratchBlocks.ProcedureUtils.definitionDomToMutation,
   removeAllInputs_: Blockly.ScratchBlocks.ProcedureUtils.removeAllInputs_,
   disconnectOldBlocks_: Blockly.ScratchBlocks.ProcedureUtils.disconnectOldBlocks_,
   deleteShadows_: Blockly.ScratchBlocks.ProcedureUtils.deleteShadows_,
   createAllInputs_: Blockly.ScratchBlocks.ProcedureUtils.createAllInputs_,
   buildShadowDom_: Blockly.ScratchBlocks.ProcedureUtils.buildShadowDom_,
-  createInput_: Blockly.ScratchBlocks.ProcedureUtils.createInput_,
+  createInput_: Blockly.ScratchBlocks.ProcedureUtils.createInputMutatorRoot_,
   updateDisplay_: Blockly.ScratchBlocks.ProcedureUtils.updateDisplay_,
-  reattachBlock_: Blockly.ScratchBlocks.ProcedureUtils.reattachBlock_,
-  attachShadow_: Blockly.ScratchBlocks.ProcedureUtils.attachShadow_
+  reattachBlock_: Blockly.ScratchBlocks.ProcedureUtils.reattachBlockMutatorRoot_,
+  attachShadow_: Blockly.ScratchBlocks.ProcedureUtils.attachShadowMutatorRoot_
 };
 
