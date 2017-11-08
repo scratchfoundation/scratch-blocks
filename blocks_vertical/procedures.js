@@ -202,7 +202,18 @@ Blockly.ScratchBlocks.ProcedureUtils.createAllInputs_ = function(connectionMap) 
     } else {
       newLabel = component.trim();
     }
-    this.appendDummyInput().appendField(newLabel.replace(/\\%/, '%'));
+    newLabel.replace(/\\%/, '%');
+    this.addLabel_(newLabel);
+  }
+};
+
+Blockly.ScratchBlocks.ProcedureUtils.addLabelCaller_ = function(text) {
+  this.appendDummyInput().appendField(text);
+};
+
+Blockly.ScratchBlocks.ProcedureUtils.addLabelMutatorRoot_ = function(text) {
+  if (text) {
+    this.appendDummyInput().appendField(new Blockly.FieldTextInput(text));
   }
 };
 
@@ -405,8 +416,7 @@ Blockly.ScratchBlocks.ProcedureUtils.createInputMutatorRoot_ = function(type,
     Blockly.ScratchBlocks.ProcedureUtils.checkOldTypeMatches_(oldBlock, type);
 
   if (connectionMap && oldBlock && oldTypeMatches) {
-    this.reattachBlock_(input, type, oldBlock, id, connectionMap);
-    oldBlock.setFieldValue(argumentText, 'TEXT');
+    this.reattachBlock_(input, type, oldBlock, id, connectionMap, argumentText);
   } else {
     this.attachShadow_(input, type, argumentText);
   }
@@ -504,8 +514,51 @@ Blockly.ScratchBlocks.ProcedureUtils.updateDisplay_ = function() {
   }
 };
 
-Blockly.ScratchBlocks.ProcedureUtils.mutatorMakeProcCode_ = function() {
-  return 'say %s %n times if %b';
+Blockly.ScratchBlocks.ProcedureUtils.updateProcCodeMutatorRoot_ = function() {
+  var procCode = '';
+  var argumentNames = [];
+  for (var i = 0; i < this.inputList.length; i++) {
+    if (i != 0) {
+      procCode += ' ';
+    }
+    var input = this.inputList[i];
+    if (input.type == Blockly.DUMMY_INPUT) {
+      procCode += input.fieldRow[0].getValue();
+    } else if (input.type == Blockly.INPUT_VALUE) {
+      argumentNames.push(input.connection.targetBlock().getFieldValue('TEXT'));
+      if (input.connection.targetBlock().type == 'boolean_textinput') {
+        procCode += '%b';
+      } else {
+        procCode += '%s';
+      }
+    } else {
+      throw new Error(
+          'Unexpected input type on a procedure mutator root: ' + input.type);
+    }
+  }
+  this.procCode_ = procCode;
+  this.argumentNames_ = argumentNames;
+};
+
+Blockly.ScratchBlocks.ProcedureUtils.addLabelExternal = function() {
+  this.procCode_ = this.procCode_ + ' label text';
+  this.updateDisplay_();
+};
+
+Blockly.ScratchBlocks.ProcedureUtils.addBooleanExternal = function() {
+  this.procCode_ = this.procCode_ + ' %b';
+  this.argumentNames_.push('boolean');
+  this.argumentIds_.push(Blockly.utils.genUid());
+  this.argumentDefaults_.push('todo');
+  this.updateDisplay_();
+};
+
+Blockly.ScratchBlocks.ProcedureUtils.addStringNumberExternal = function() {
+  this.procCode_ = this.procCode_ + ' %s';
+  this.argumentNames_.push('string or number');
+  this.argumentIds_.push(Blockly.utils.genUid());
+  this.argumentDefaults_.push('todo');
+  this.updateDisplay_();
 };
 
 Blockly.ScratchBlocks.ProcedureUtils.mutatorRootMutationToDom_ = function() {
@@ -579,7 +632,8 @@ Blockly.Blocks['procedures_callnoreturn'] = {
   createInput_: Blockly.ScratchBlocks.ProcedureUtils.createInput_,
   updateDisplay_: Blockly.ScratchBlocks.ProcedureUtils.updateDisplay_,
   reattachBlock_: Blockly.ScratchBlocks.ProcedureUtils.reattachBlock_,
-  attachShadow_: Blockly.ScratchBlocks.ProcedureUtils.attachShadow_
+  attachShadow_: Blockly.ScratchBlocks.ProcedureUtils.attachShadow_,
+  addLabel_: Blockly.ScratchBlocks.ProcedureUtils.addLabelCaller_
 };
 
 Blockly.Blocks['procedures_callnoreturn_internal'] = {
@@ -617,7 +671,8 @@ Blockly.Blocks['procedures_callnoreturn_internal'] = {
   createInput_: Blockly.ScratchBlocks.ProcedureUtils.createInputCallerInternal_,
   updateDisplay_: Blockly.ScratchBlocks.ProcedureUtils.updateDisplay_,
   reattachBlock_: Blockly.ScratchBlocks.ProcedureUtils.reattachBlock_,
-  attachArgumentReporter_: Blockly.ScratchBlocks.ProcedureUtils.attachArgumentReporter_
+  attachArgumentReporter_: Blockly.ScratchBlocks.ProcedureUtils.attachArgumentReporter_,
+  addLabel_: Blockly.ScratchBlocks.ProcedureUtils.addLabelCaller_
 };
 
 Blockly.Blocks['procedures_param'] = {
@@ -747,7 +802,7 @@ Blockly.Blocks['procedures_mutator_root'] = {
      */
     this.paramMap_ = null;
   },
-  getProcCode: Blockly.ScratchBlocks.ProcedureUtils.mutatorMakeProcCode_,
+  getProcCode: Blockly.ScratchBlocks.ProcedureUtils.getProcCode,
   mutationToDom: Blockly.ScratchBlocks.ProcedureUtils.mutatorRootMutationToDom_,
   domToMutation: Blockly.ScratchBlocks.ProcedureUtils.definitionDomToMutation,
   removeAllInputs_: Blockly.ScratchBlocks.ProcedureUtils.removeAllInputs_,
@@ -758,6 +813,11 @@ Blockly.Blocks['procedures_mutator_root'] = {
   createInput_: Blockly.ScratchBlocks.ProcedureUtils.createInputMutatorRoot_,
   updateDisplay_: Blockly.ScratchBlocks.ProcedureUtils.updateDisplay_,
   reattachBlock_: Blockly.ScratchBlocks.ProcedureUtils.reattachBlockMutatorRoot_,
-  attachShadow_: Blockly.ScratchBlocks.ProcedureUtils.attachShadowMutatorRoot_
+  attachShadow_: Blockly.ScratchBlocks.ProcedureUtils.attachShadowMutatorRoot_,
+  addLabel_: Blockly.ScratchBlocks.ProcedureUtils.addLabelMutatorRoot_,
+  addLabelExternal: Blockly.ScratchBlocks.ProcedureUtils.addLabelExternal,
+  addBooleanExternal: Blockly.ScratchBlocks.ProcedureUtils.addBooleanExternal,
+  addStringNumberExternal: Blockly.ScratchBlocks.ProcedureUtils.addStringNumberExternal,
+  onChangeFn: Blockly.ScratchBlocks.ProcedureUtils.updateProcCodeMutatorRoot_
 };
 
