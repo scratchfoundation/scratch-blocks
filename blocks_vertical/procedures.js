@@ -96,8 +96,9 @@ Blockly.ScratchBlocks.ProcedureUtils.definitionMutationToDom = function() {
  */
 Blockly.ScratchBlocks.ProcedureUtils.definitionDomToMutation = function(xmlElement) {
   this.procCode_ = xmlElement.getAttribute('proccode');
-  this.argumentIds_ = JSON.parse(xmlElement.getAttribute('argumentids'));
   this.warp_ = xmlElement.getAttribute('warp');
+
+  this.argumentIds_ = JSON.parse(xmlElement.getAttribute('argumentids'));
   this.argumentNames_ = JSON.parse(xmlElement.getAttribute('argumentnames'));
   this.argumentDefaults_ = JSON.parse(
       xmlElement.getAttribute('argumentdefaults'));
@@ -196,9 +197,7 @@ Blockly.ScratchBlocks.ProcedureUtils.createAllInputs_ = function(connectionMap) 
       }
       newLabel = component.substring(2).trim();
 
-      //var inputName = inputPrefix + inputCount;
-      var inputName = '';
-      this.createInput_(inputType, inputName, inputCount, connectionMap);
+      this.createInput_(inputType, inputCount, connectionMap);
       inputCount++;
     } else {
       newLabel = component.trim();
@@ -214,7 +213,8 @@ Blockly.ScratchBlocks.ProcedureUtils.addLabelCaller_ = function(text) {
 
 Blockly.ScratchBlocks.ProcedureUtils.addLabelMutatorRoot_ = function(text) {
   if (text) {
-    this.appendDummyInput().appendField(new Blockly.FieldTextInput(text));
+    this.appendDummyInput(Blockly.utils.genUid()).
+        appendField(new Blockly.FieldTextInput(text));
   }
 };
 
@@ -328,7 +328,6 @@ Blockly.ScratchBlocks.ProcedureUtils.attachArgumentReporter_ = function(
  * params map.
  * This function is used by the procedures_callnoreturn block.
  * @param {string} type One of 'b' (boolean), 's' (string) or 'n' (number).
- * @param {string} name The name to use when adding the input to the block.
  * @param {number} index The index of this input into the argument id array.
  * @param {!Object.<string, Blockly.Block>} connectionMap An object mapping
  *     parameter IDs to the blocks that were connected to those IDs at the
@@ -336,8 +335,8 @@ Blockly.ScratchBlocks.ProcedureUtils.attachArgumentReporter_ = function(
  * @private
  * @this Blockly.Block
  */
-Blockly.ScratchBlocks.ProcedureUtils.createInput_ = function(type, name,
-    index, connectionMap) {
+Blockly.ScratchBlocks.ProcedureUtils.createInput_ = function(type, index,
+    connectionMap) {
   var id = this.argumentIds_[index];
   var oldBlock = null;
   if (connectionMap && (id in connectionMap)) {
@@ -358,7 +357,6 @@ Blockly.ScratchBlocks.ProcedureUtils.createInput_ = function(type, name,
  * This function is used by the procedures_callnoreturn_internal block.
  * TODO (#1213) consider renaming.
  * @param {string} type One of 'b' (boolean), 's' (string) or 'n' (number).
- * @param {string} name The name to use when adding the input to the block.
  * @param {number} index The index of this input into the argument id and name
  *     arrays.
  * @param {!Object.<string, Blockly.Block>} connectionMap An object mapping
@@ -368,7 +366,7 @@ Blockly.ScratchBlocks.ProcedureUtils.createInput_ = function(type, name,
  * @this Blockly.Block
  */
 Blockly.ScratchBlocks.ProcedureUtils.createInputCallerInternal_ = function(type,
-    name, index, connectionMap) {
+    index, connectionMap) {
   var id = this.argumentIds_[index];
   var argumentText = this.argumentNames_[index];
   var oldBlock = null;
@@ -393,7 +391,6 @@ Blockly.ScratchBlocks.ProcedureUtils.createInputCallerInternal_ = function(type,
  * This function is used by the procedures_callnoreturn_internal block.
  * TODO (#1213) consider renaming.
  * @param {string} type One of 'b' (boolean), 's' (string) or 'n' (number).
- * @param {string} name The name to use when adding the input to the block.
  * @param {number} index The index of this input into the argument id and name
  *     arrays.
  * @param {!Object.<string, Blockly.Block>} connectionMap An object mapping
@@ -403,7 +400,7 @@ Blockly.ScratchBlocks.ProcedureUtils.createInputCallerInternal_ = function(type,
  * @this Blockly.Block
  */
 Blockly.ScratchBlocks.ProcedureUtils.createInputMutatorRoot_ = function(type,
-    name, index, connectionMap) {
+    index, connectionMap) {
   var id = this.argumentIds_[index];
   var argumentText = this.argumentNames_[index];
 
@@ -516,33 +513,30 @@ Blockly.ScratchBlocks.ProcedureUtils.updateDisplay_ = function() {
 };
 
 Blockly.ScratchBlocks.ProcedureUtils.updateProcCodeMutatorRoot_ = function() {
-  var procCode = '';
-  var argumentNames = [];
-  var argumentIds = [];
+  this.procCode_ = '';
+  this.argumentNames_ = [];
+  this.argumentIds_ = [];
   for (var i = 0; i < this.inputList.length; i++) {
     if (i != 0) {
-      procCode += ' ';
+      this.procCode_ += ' ';
     }
     var input = this.inputList[i];
     if (input.type == Blockly.DUMMY_INPUT) {
-      procCode += input.fieldRow[0].getValue();
+      this.procCode_ += input.fieldRow[0].getValue();
     } else if (input.type == Blockly.INPUT_VALUE) {
       var target = input.connection.targetBlock();
-      argumentNames.push(target.getFieldValue('TEXT'));
-      argumentIds.push(input.name);
+      this.argumentNames_.push(target.getFieldValue('TEXT'));
+      this.argumentIds_.push(input.name);
       if (target.type == 'boolean_textinput') {
-        procCode += '%b';
+        this.procCode_ += '%b';
       } else {
-        procCode += '%s';
+        this.procCode_ += '%s';
       }
     } else {
       throw new Error(
           'Unexpected input type on a procedure mutator root: ' + input.type);
     }
   }
-  this.procCode_ = procCode;
-  this.argumentNames_ = argumentNames;
-  this.argumentIds_ = argumentIds;
 };
 
 Blockly.ScratchBlocks.ProcedureUtils.addLabelExternal = function() {
@@ -564,30 +558,6 @@ Blockly.ScratchBlocks.ProcedureUtils.addStringNumberExternal = function() {
   this.argumentIds_.push(Blockly.utils.genUid());
   this.argumentDefaults_.push('todo');
   this.updateDisplay_();
-};
-
-Blockly.ScratchBlocks.ProcedureUtils.mutatorRootMutationToDom_ = function() {
-  this.procCode_ = this.getProcCode();
-
-  // Update argument names array.
-  var children = this.getChildren();
-  this.argumentNames_ = [];
-  for (var i = 0; i < children.length; i++) {
-    this.argumentNames_.push(children[i].getFieldValue('TEXT'));
-  }
-
-  this.argumentDefaults_ = ['argument', 'defaults', 'not', 'implemented'];
-  this.warp_ = false;
-
-
-  var container = document.createElement('mutation');
-  container.setAttribute('proccode', this.procCode_);
-  container.setAttribute('argumentids', JSON.stringify(this.argumentIds_));
-  container.setAttribute('argumentnames', JSON.stringify(this.argumentNames_));
-  container.setAttribute('argumentdefaults',
-      JSON.stringify(this.argumentDefaults_));
-  container.setAttribute('warp', this.warp_);
-  return container;
 };
 
 Blockly.Blocks['procedures_defnoreturn'] = {
@@ -808,7 +778,7 @@ Blockly.Blocks['procedures_mutator_root'] = {
     this.paramMap_ = null;
   },
   getProcCode: Blockly.ScratchBlocks.ProcedureUtils.getProcCode,
-  mutationToDom: Blockly.ScratchBlocks.ProcedureUtils.mutatorRootMutationToDom_,
+  mutationToDom: Blockly.ScratchBlocks.ProcedureUtils.definitionMutationToDom,
   domToMutation: Blockly.ScratchBlocks.ProcedureUtils.definitionDomToMutation,
   removeAllInputs_: Blockly.ScratchBlocks.ProcedureUtils.removeAllInputs_,
   disconnectOldBlocks_: Blockly.ScratchBlocks.ProcedureUtils.disconnectOldBlocks_,
