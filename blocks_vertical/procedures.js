@@ -184,7 +184,7 @@ Blockly.ScratchBlocks.ProcedureUtils.createAllInputs_ = function(connectionMap) 
     return c.trim(); // Strip whitespace.
   });
   // Create inputs and shadow blocks as appropriate.
-  var inputPrefix = 'input';
+  //var inputPrefix = 'input';
   var inputCount = 0;
   for (var i = 0, component; component = procComponents[i]; i++) {
     var newLabel;
@@ -196,7 +196,8 @@ Blockly.ScratchBlocks.ProcedureUtils.createAllInputs_ = function(connectionMap) 
       }
       newLabel = component.substring(2).trim();
 
-      var inputName = inputPrefix + inputCount;
+      //var inputName = inputPrefix + inputCount;
+      var inputName = '';
       this.createInput_(inputType, inputName, inputCount, connectionMap);
       inputCount++;
     } else {
@@ -342,7 +343,7 @@ Blockly.ScratchBlocks.ProcedureUtils.createInput_ = function(type, name,
   if (connectionMap && (id in connectionMap)) {
     oldBlock = connectionMap[id];
   }
-  var input = this.appendValueInput(name);
+  var input = this.appendValueInput(id);
   if (connectionMap && oldBlock) {
     this.reattachBlock_(input, type, oldBlock, id, connectionMap);
   } else {
@@ -376,7 +377,7 @@ Blockly.ScratchBlocks.ProcedureUtils.createInputCallerInternal_ = function(type,
   }
   var oldTypeMatches =
     Blockly.ScratchBlocks.ProcedureUtils.checkOldTypeMatches_(oldBlock, type);
-  var input = this.appendValueInput(name);
+  var input = this.appendValueInput(id);
   if (connectionMap && oldBlock && oldTypeMatches) {
     this.reattachBlock_(input, type, oldBlock, id, connectionMap);
     oldBlock.setFieldValue(argumentText, 'VALUE');
@@ -410,7 +411,7 @@ Blockly.ScratchBlocks.ProcedureUtils.createInputMutatorRoot_ = function(type,
   if (connectionMap && (id in connectionMap)) {
     oldBlock = connectionMap[id];
   }
-  var input = this.appendValueInput(name);
+  var input = this.appendValueInput(id);
 
   var oldTypeMatches =
     Blockly.ScratchBlocks.ProcedureUtils.checkOldTypeMatches_(oldBlock, type);
@@ -517,6 +518,7 @@ Blockly.ScratchBlocks.ProcedureUtils.updateDisplay_ = function() {
 Blockly.ScratchBlocks.ProcedureUtils.updateProcCodeMutatorRoot_ = function() {
   var procCode = '';
   var argumentNames = [];
+  var argumentIds = [];
   for (var i = 0; i < this.inputList.length; i++) {
     if (i != 0) {
       procCode += ' ';
@@ -525,8 +527,10 @@ Blockly.ScratchBlocks.ProcedureUtils.updateProcCodeMutatorRoot_ = function() {
     if (input.type == Blockly.DUMMY_INPUT) {
       procCode += input.fieldRow[0].getValue();
     } else if (input.type == Blockly.INPUT_VALUE) {
-      argumentNames.push(input.connection.targetBlock().getFieldValue('TEXT'));
-      if (input.connection.targetBlock().type == 'boolean_textinput') {
+      var target = input.connection.targetBlock();
+      argumentNames.push(target.getFieldValue('TEXT'));
+      argumentIds.push(input.name);
+      if (target.type == 'boolean_textinput') {
         procCode += '%b';
       } else {
         procCode += '%s';
@@ -538,6 +542,7 @@ Blockly.ScratchBlocks.ProcedureUtils.updateProcCodeMutatorRoot_ = function() {
   }
   this.procCode_ = procCode;
   this.argumentNames_ = argumentNames;
+  this.argumentIds_ = argumentIds;
 };
 
 Blockly.ScratchBlocks.ProcedureUtils.addLabelExternal = function() {

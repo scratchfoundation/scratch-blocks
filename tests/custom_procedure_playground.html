@@ -52,6 +52,8 @@
         <button id="label" onclick="addLabel()">Add label</button>
         <button id="cancelButton">cancel</button>
         <button id="okButton" onclick="applyMutation()">ok</button>
+        <button id="rndButton" onclick="removeRandomInput()">remove random input</button>
+        <button id="addRndButton" onclick="addRandomInput()">add random input</button>
       </td>
       <td></td>
     </tr>
@@ -167,6 +169,32 @@
 
     function addTextNumber() {
       mutationRoot.addStringNumberExternal();
+    }
+
+    function removeRandomInput() {
+      var rnd = Math.floor(Math.random() * mutationRoot.inputList.length);
+      mutationRoot.removeInput(mutationRoot.inputList[rnd].name);
+      mutationRoot.onChangeFn();
+      mutationRoot.updateDisplay_();
+
+      applyMutation();
+    }
+
+    function addRandomInput() {
+      var rnd = Math.floor(Math.random() * 3);
+      switch (rnd) {
+        case 0:
+          addTextNumber();
+          break;
+        case 1:
+          addLabel();
+          break;
+        case 2:
+          addBoolean();
+          break;
+      }
+
+      applyMutation();
     }
 </script>
 
