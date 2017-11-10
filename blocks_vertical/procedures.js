@@ -185,7 +185,6 @@ Blockly.ScratchBlocks.ProcedureUtils.createAllInputs_ = function(connectionMap) 
     return c.trim(); // Strip whitespace.
   });
   // Create inputs and shadow blocks as appropriate.
-  //var inputPrefix = 'input';
   var inputCount = 0;
   for (var i = 0, component; component = procComponents[i]; i++) {
     var newLabel;
@@ -202,8 +201,7 @@ Blockly.ScratchBlocks.ProcedureUtils.createAllInputs_ = function(connectionMap) 
     } else {
       newLabel = component.trim();
     }
-    newLabel.replace(/\\%/, '%');
-    this.addLabel_(newLabel);
+    this.addLabel_(newLabel.replace(/\\%/, '%'));
   }
 };
 
@@ -330,6 +328,9 @@ Blockly.ScratchBlocks.ProcedureUtils.createInput_ = function(type, index,
     // Reattach the old block.
     connectionMap[id] = null;
     oldBlock.outputConnection.connect(input.connection);
+    if (type != 'b') {
+      input.connection.setShadowDom(this.buildShadowDom_(type));
+    }
   } else {
     this.attachShadow_(input, type);
   }
@@ -620,7 +621,6 @@ Blockly.Blocks['procedures_callnoreturn_internal'] = {
   disconnectOldBlocks_: Blockly.ScratchBlocks.ProcedureUtils.disconnectOldBlocks_,
   deleteShadows_: Blockly.ScratchBlocks.ProcedureUtils.deleteShadows_,
   createAllInputs_: Blockly.ScratchBlocks.ProcedureUtils.createAllInputs_,
-  buildShadowDom_: Blockly.ScratchBlocks.ProcedureUtils.buildShadowDom_,
   createInput_: Blockly.ScratchBlocks.ProcedureUtils.createInputCallerInternal_,
   updateDisplay_: Blockly.ScratchBlocks.ProcedureUtils.updateDisplay_,
   reattachBlock_: Blockly.ScratchBlocks.ProcedureUtils.reattachBlock_,
@@ -762,7 +762,6 @@ Blockly.Blocks['procedures_mutator_root'] = {
   disconnectOldBlocks_: Blockly.ScratchBlocks.ProcedureUtils.disconnectOldBlocks_,
   deleteShadows_: Blockly.ScratchBlocks.ProcedureUtils.deleteShadows_,
   createAllInputs_: Blockly.ScratchBlocks.ProcedureUtils.createAllInputs_,
-  buildShadowDom_: Blockly.ScratchBlocks.ProcedureUtils.buildShadowDom_,
   createInput_: Blockly.ScratchBlocks.ProcedureUtils.createInputMutatorRoot_,
   updateDisplay_: Blockly.ScratchBlocks.ProcedureUtils.updateDisplay_,
   attachShadow_: Blockly.ScratchBlocks.ProcedureUtils.attachShadowMutatorRoot_,
