@@ -531,8 +531,10 @@ Blockly.BlockSvg.prototype.updateColour = function() {
   this.svgPath_.setAttribute('fill-opacity', this.getOpacity());
 
   // Update colours of input shapes.
-  for (var shape in this.inputShapes_) {
-    this.inputShapes_[shape].setAttribute('fill', this.getColourTertiary());
+  for (var i = 0, input; input = this.inputList[i]; i++) {
+    if (input.outlinePath) {
+      input.outlinePath.setAttribute('fill', this.getColourTertiary());
+    }
   }
 
   // Render icon(s) if applicable
@@ -577,13 +579,16 @@ Blockly.BlockSvg.prototype.highlightShapeForInput = function(conn, add) {
   if (!input) {
     throw 'No input found for the connection';
   }
-  var inputShape = this.inputShapes_[input.name];
+  if (!input.outlinePath) {
+    return;
+  }
   if (add) {
-    inputShape.setAttribute('filter', 'url(#blocklyReplacementGlowFilter)');
+    input.outlinePath.setAttribute('filter',
+        'url(#blocklyReplacementGlowFilter)');
     Blockly.utils.addClass(/** @type {!Element} */ (this.svgGroup_),
         'blocklyReplaceable');
   } else {
-    inputShape.removeAttribute('filter');
+    input.outlinePath.removeAttribute('filter');
     Blockly.utils.removeClass(/** @type {!Element} */ (this.svgGroup_),
         'blocklyReplaceable');
   }
@@ -1314,7 +1319,7 @@ Blockly.BlockSvg.prototype.renderDrawRight_ = function(steps,
  * @param {Number} y Y offset of input.
  */
 Blockly.BlockSvg.prototype.renderInputShape_ = function(input, x, y) {
-  var inputShape = this.inputShapes_[input.name];
+  var inputShape = input.outlinePath;
   if (!inputShape) {
     // No input shape for this input - e.g., the block is an insertion marker.
     return;
