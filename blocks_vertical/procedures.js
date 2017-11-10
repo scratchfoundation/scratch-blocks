@@ -604,63 +604,6 @@ Blockly.Blocks['procedures_callnoreturn_internal'] = {
   attachArgumentReporter_: Blockly.ScratchBlocks.ProcedureUtils.attachArgumentReporter_
 };
 
-Blockly.Blocks['procedures_param'] = {
-  /**
-   * Block for a parameter.
-   * @this Blockly.Block
-   */
-  init: function() {
-    this.appendDummyInput()
-        .appendField(new Blockly.FieldLabel(), 'paramName');
-
-    this.setPreviousStatement(false);
-    this.setNextStatement(false);
-    this.setOutput(true);
-
-    this.setCategory(Blockly.Categories.more);
-    this.setColour(Blockly.Colours.more.primary,
-      Blockly.Colours.more.secondary,
-      Blockly.Colours.more.tertiary);
-    this._paramName = 'undefined';
-    this._shape = 'r';
-  },
-  /**
-   * Create XML to represent the (non-editable) name and arguments.
-   * @return {!Element} XML storage element.
-   * @this Blockly.Block
-   */
-  mutationToDom: function() {
-    var container = document.createElement('mutation');
-    container.setAttribute('paramname', this._paramName);
-    container.setAttribute('shape', this._shape);
-    return container;
-  },
-  /**
-   * Parse XML to restore the (non-editable) name and parameters.
-   * @param {!Element} xmlElement XML storage element.
-   * @this Blockly.Block
-   */
-  domToMutation: function(xmlElement) {
-    this._paramName = xmlElement.getAttribute('paramname');
-    this._shape = xmlElement.getAttribute('shape');
-    this.updateDisplay_();
-  },
-  updateDisplay_: function() {
-    this.setFieldValue(this._paramName, 'paramName');
-    switch (this._shape) {
-      case 'b':
-        this.setOutputShape(Blockly.OUTPUT_SHAPE_HEXAGONAL);
-        this.setOutput(true, 'Boolean');
-        break;
-      case 's':
-      default:
-        this.setOutputShape(Blockly.OUTPUT_SHAPE_ROUND);
-        this.setOutput(true, 'String');
-        break;
-    }
-  }
-};
-
 Blockly.Blocks['argument_reporter_boolean'] = {
   init: function() {
     this.jsonInit({ "message0": " %1",
