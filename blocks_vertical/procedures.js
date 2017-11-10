@@ -211,7 +211,7 @@ Blockly.ScratchBlocks.ProcedureUtils.createAllInputs_ = function(connectionMap) 
       if (inputType == 'b') {
         input.setCheck('Boolean');
       }
-      this.populateInput_(inputType, inputCount, connectionMap, id, oldBlock, input);
+      this.populateInput_(inputType, inputCount, connectionMap, oldBlock, input);
       inputCount++;
     } else {
       newLabel = component.trim();
@@ -242,10 +242,23 @@ Blockly.ScratchBlocks.ProcedureUtils.deleteShadows_ = function(connectionMap) {
 };
 // End of shared code.
 
+/**
+ * Add a label with the given text to a procedures_callnoreturn or
+ * procedures_callnoreturn_internal block.
+ * @param {string} text The label text.
+ * @private
+ */
 Blockly.ScratchBlocks.ProcedureUtils.addLabelCaller_ = function(text) {
   this.appendDummyInput().appendField(text);
 };
 
+/**
+ * Add a label editor with the given text to a procedures_declaration_root
+ * block.  Editing the text in the new input updates the text of the
+ * corresponding labels on function calls.
+ * @param {string} text The label text.
+ * @private
+ */
 Blockly.ScratchBlocks.ProcedureUtils.addLabelMutatorRoot_ = function(text) {
   if (text) {
     this.appendDummyInput(Blockly.utils.genUid()).
@@ -314,8 +327,8 @@ Blockly.ScratchBlocks.ProcedureUtils.attachShadow_ = function(input, inputType) 
  * @private
  * @this Blockly.Block
  */
-Blockly.ScratchBlocks.ProcedureUtils.attachArgumentReporter_ = function(
-    input, inputType, displayName) {
+Blockly.ScratchBlocks.ProcedureUtils.attachArgumentReporter_ = function(input,
+    inputType, displayName) {
   if (inputType == 'n' || inputType == 's') {
     var blockType = 'argument_reporter_string_number';
   } else {
@@ -332,21 +345,24 @@ Blockly.ScratchBlocks.ProcedureUtils.attachArgumentReporter_ = function(
 };
 
 /**
- * Create an input and attach the correct block to it.
+ * Populate the given input with the correct child block or values.
  * This function is used by the procedures_callnoreturn block.
  * @param {string} type One of 'b' (boolean), 's' (string) or 'n' (number).
  * @param {number} index The index of this input into the argument id array.
  * @param {!Object.<string, Blockly.Block>} connectionMap An object mapping
  *     parameter IDs to the blocks that were connected to those IDs at the
  *     beginning of the mutation.
+ * @param {Blockly.BlockSvg} oldBlock The block that was previously connected to
+ *     this input, or null.
+ * @param {!Blockly.Input} input The newly created input to populate.
  * @private
  * @this Blockly.Block
  */
 Blockly.ScratchBlocks.ProcedureUtils.populateInputCaller_ = function(type, index,
-    connectionMap, id, oldBlock, input) {
+    connectionMap, oldBlock, input) {
   if (connectionMap && oldBlock) {
     // Reattach the old block.
-    connectionMap[id] = null;
+    connectionMap[input.name] = null;
     oldBlock.outputConnection.connect(input.connection);
     if (type != 'b') {
       input.connection.setShadowDom(this.buildShadowDom_(type));
@@ -357,7 +373,7 @@ Blockly.ScratchBlocks.ProcedureUtils.populateInputCaller_ = function(type, index
 };
 
 /**
- * Create an input and attach the correct block to it.
+ * Populate the given input with the correct child block or values.
  * This function is used by the procedures_callnoreturn_internal block.
  * TODO (#1213) consider renaming.
  * @param {string} type One of 'b' (boolean), 's' (string) or 'n' (number).
@@ -366,11 +382,14 @@ Blockly.ScratchBlocks.ProcedureUtils.populateInputCaller_ = function(type, index
  * @param {!Object.<string, Blockly.Block>} connectionMap An object mapping
  *     parameter IDs to the blocks that were connected to those IDs at the
  *     beginning of the mutation.
+ * @param {Blockly.BlockSvg} oldBlock The block that was previously connected to
+ *     this input, or null.
+ * @param {!Blockly.Input} input The newly created input to populate.
  * @private
  * @this Blockly.Block
  */
 Blockly.ScratchBlocks.ProcedureUtils.populateInputCallerInternal_ = function(type,
-    index, connectionMap, id, oldBlock, input) {
+    index, connectionMap, oldBlock, input) {
   var oldTypeMatches =
     Blockly.ScratchBlocks.ProcedureUtils.checkOldTypeMatches_(oldBlock, type);
   var displayName = this.displayNames_[index];
@@ -379,7 +398,7 @@ Blockly.ScratchBlocks.ProcedureUtils.populateInputCallerInternal_ = function(typ
     // The old block is the same type, and on the same input, but the input name
     // may have changed.
     oldBlock.setFieldValue(displayName, 'VALUE');
-    connectionMap[id] = null;
+    connectionMap[input.name] = null;
     oldBlock.outputConnection.connect(input.connection);
   } else {
     this.attachArgumentReporter_(input, type, displayName);
@@ -387,7 +406,7 @@ Blockly.ScratchBlocks.ProcedureUtils.populateInputCallerInternal_ = function(typ
 };
 
 /**
- * Create an input and attach the correct block to it.
+ * Populate the given input with the correct child block or values.
  * This function is used by the procedures_callnoreturn_internal block.
  * TODO (#1213) consider renaming.
  * @param {string} type One of 'b' (boolean), 's' (string) or 'n' (number).
@@ -396,18 +415,21 @@ Blockly.ScratchBlocks.ProcedureUtils.populateInputCallerInternal_ = function(typ
  * @param {!Object.<string, Blockly.Block>} connectionMap An object mapping
  *     parameter IDs to the blocks that were connected to those IDs at the
  *     beginning of the mutation.
+ * @param {Blockly.BlockSvg} oldBlock The block that was previously connected to
+ *     this input, or null.
+ * @param {!Blockly.Input} input The newly created input to populate.
  * @private
  * @this Blockly.Block
  */
-Blockly.ScratchBlocks.ProcedureUtils.populateInputMutatorRoot_ = function(type,
-    index, connectionMap, id, oldBlock, input) {
+Blockly.ScratchBlocks.ProcedureUtils.populateInputDeclarationRoot_ = function(type,
+    index, connectionMap, oldBlock, input) {
   var oldTypeMatches =
     Blockly.ScratchBlocks.ProcedureUtils.checkOldTypeMatches_(oldBlock, type);
 
   var displayName = this.displayNames_[index];
   if (connectionMap && oldBlock && oldTypeMatches) {
     oldBlock.setFieldValue(displayName, 'TEXT');
-    connectionMap[id] = null;
+    connectionMap[input.name] = null;
     oldBlock.outputConnection.connect(input.connection);
   } else {
     this.attachShadow_(input, type, displayName);
@@ -437,6 +459,8 @@ Blockly.ScratchBlocks.ProcedureUtils.checkOldTypeMatches_ = function(oldBlock,
 
 /**
  * Create a new shadow block and attach it to the given input.
+ * The shadow block has a single text field which is used to set the display
+ * name of the argument.
  * @param {!Blockly.Input} input The value input to attach a block to.
  * @param {string} inputType One of 'b' (boolean), 's' (string) or 'n' (number).
  * @param {string} displayName The display name  of this argument, which is the
@@ -444,8 +468,8 @@ Blockly.ScratchBlocks.ProcedureUtils.checkOldTypeMatches_ = function(oldBlock,
  * @private
  * @this Blockly.Block
  */
-Blockly.ScratchBlocks.ProcedureUtils.attachShadowMutatorRoot_ = function(input,
-    inputType, displayName) {
+Blockly.ScratchBlocks.ProcedureUtils.attachShadowDeclarationRoot_ = function(
+    input, inputType, displayName) {
   if (inputType == 'n' || inputType == 's') {
     var newBlock = this.workspace.newBlock('text');
   } else {
@@ -464,7 +488,7 @@ Blockly.ScratchBlocks.ProcedureUtils.attachShadowMutatorRoot_ = function(input,
  * Update the serializable information on the block based on the existing inputs
  * and their text.
  */
-Blockly.ScratchBlocks.ProcedureUtils.updateProcCodeMutatorRoot_ = function() {
+Blockly.ScratchBlocks.ProcedureUtils.updateProcCodeDeclarationRoot_ = function() {
   this.procCode_ = '';
   this.displayNames_ = [];
   this.argumentIds_ = [];
@@ -509,7 +533,6 @@ Blockly.ScratchBlocks.ProcedureUtils.addBooleanExternal = function() {
   this.displayNames_.push('boolean');
   this.argumentIds_.push(Blockly.utils.genUid());
   this.argumentDefaults_.push('todo');
-  console.log(this.argumentIds_);
   this.updateDisplay_();
 };
 
@@ -690,15 +713,15 @@ Blockly.Blocks['procedures_declaration_root'] = {
   // Exist on all three blocks, but have different implementations.
   mutationToDom: Blockly.ScratchBlocks.ProcedureUtils.definitionMutationToDom,
   domToMutation: Blockly.ScratchBlocks.ProcedureUtils.definitionDomToMutation,
-  populateInput_: Blockly.ScratchBlocks.ProcedureUtils.populateInputMutatorRoot_,
+  populateInput_: Blockly.ScratchBlocks.ProcedureUtils.populateInputDeclarationRoot_,
   addLabel_: Blockly.ScratchBlocks.ProcedureUtils.addLabelMutatorRoot_,
 
   // Shared with procedures_callnoreturn, but with a different implementation.
-  attachShadow_: Blockly.ScratchBlocks.ProcedureUtils.attachShadowMutatorRoot_,
+  attachShadow_: Blockly.ScratchBlocks.ProcedureUtils.attachShadowDeclarationRoot_,
 
   // Only exist on the mutator root.
   addLabelExternal: Blockly.ScratchBlocks.ProcedureUtils.addLabelExternal,
   addBooleanExternal: Blockly.ScratchBlocks.ProcedureUtils.addBooleanExternal,
   addStringNumberExternal: Blockly.ScratchBlocks.ProcedureUtils.addStringNumberExternal,
-  onChangeFn: Blockly.ScratchBlocks.ProcedureUtils.updateProcCodeMutatorRoot_
+  onChangeFn: Blockly.ScratchBlocks.ProcedureUtils.updateProcCodeDeclarationRoot_
 };
