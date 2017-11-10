@@ -66,9 +66,6 @@ Blockly.BlockSvg = function(workspace, prototypeName, opt_id) {
   /** @type {boolean} */
   this.rendered = false;
 
-  /** @type {Object.<string,Element>} */
-  this.inputShapes_ = {};
-
   /**
    * Whether to move the block to the drag surface when it is dragged.
    * True if it should move, false if it should be translated directly.
@@ -146,9 +143,7 @@ Blockly.BlockSvg.prototype.initSvg = function() {
     // Input shapes are empty holes drawn when a value input is not connected.
     for (var i = 0, input; input = this.inputList[i]; i++) {
       input.init();
-      if (input.type === Blockly.INPUT_VALUE) {
-        this.initInputShape(input);
-      }
+      input.initOutlinePath(this.svgGroup_);
     }
     var icons = this.getIcons();
     for (i = 0; i < icons.length; i++) {
@@ -166,27 +161,6 @@ Blockly.BlockSvg.prototype.initSvg = function() {
   if (!this.getSvgRoot().parentNode) {
     this.workspace.getCanvas().appendChild(this.getSvgRoot());
   }
-};
-
-/**
- * Create and initialize the SVG element for an input shape.
- * May be called more than once for an input.
- * @param {!Blockly.Input} input Value input to add a shape SVG element for.
- */
-Blockly.BlockSvg.prototype.initInputShape = function(input) {
-  if (this.inputShapes_[input.name] || input.connection.getShadowDom()) {
-    // Only create the shape elements once, and don't bother creating them if
-    // there's a shadow block that will always cover the input shape.
-    return;
-  }
-  this.inputShapes_[input.name] = Blockly.utils.createSvgElement(
-    'path',
-    {
-      'class': 'blocklyPath',
-      'style': 'visibility: hidden' // Hide by default - shown when not connected.
-    },
-    this.svgGroup_
-  );
 };
 
 /**
