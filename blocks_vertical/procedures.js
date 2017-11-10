@@ -64,7 +64,7 @@ Blockly.ScratchBlocks.ProcedureUtils.callerDomToMutation = function(xmlElement) 
 /**
  * Create XML to represent the (non-editable) name and arguments of a procedure
  * definition block (procedures_callnoreturn_internal, which is part of a definition,
- * or procedures_mutator_root).
+ * or procedures_declaration_root).
  * @return {!Element} XML storage element.
  * @this Blockly.Block
  */
@@ -82,7 +82,7 @@ Blockly.ScratchBlocks.ProcedureUtils.definitionMutationToDom = function() {
 /**
  * Parse XML to restore the (non-editable) name and parameters of a procedure
  * definition block (procedures_callnoreturn_internal, which is part of a definition,
- * or procedures_mutator_root).
+ * or procedures_declaration_root).
  * @param {!Element} xmlElement XML storage element.
  * @this Blockly.Block
  */
@@ -585,7 +585,7 @@ Blockly.Blocks['procedures_callnoreturn'] = {
   populateInput_: Blockly.ScratchBlocks.ProcedureUtils.populateInputCaller_,
   addLabel_: Blockly.ScratchBlocks.ProcedureUtils.addLabelCaller_,
 
-  // Shared with procedures_mutator_root, but with a different implementation.
+  // Shared with procedures_declaration_root, but with a different implementation.
   attachShadow_: Blockly.ScratchBlocks.ProcedureUtils.attachShadow_,
 
   // Only exists on the external caller.
@@ -682,7 +682,7 @@ Blockly.Blocks['boolean_textinput'] = {
   }
 };
 
-Blockly.Blocks['procedures_mutator_root'] = {
+Blockly.Blocks['procedures_declaration_root'] = {
   /**
    * The root block in the procedure editing workspace.
    * @this Blockly.Block
