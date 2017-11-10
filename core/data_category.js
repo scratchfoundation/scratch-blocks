@@ -66,7 +66,7 @@ Blockly.DataCategory = function(workspace) {
   variableModelList = workspace.getVariablesOfType('list');
   variableModelList.sort(Blockly.VariableModel.compareByName);
   for (var i = 0; i < variableModelList.length; i++) {
-    Blockly.DataCategory.addDataVariable(xmlList, variableModelList[i]);
+    Blockly.DataCategory.addDataList(xmlList, variableModelList[i]);
   }
 
   if (variableModelList.length > 0) {
@@ -169,6 +169,20 @@ Blockly.DataCategory.addHideVariable = function(xmlList, variable) {
   // </block>
   Blockly.DataCategory.addBlock(xmlList, variable, 'data_hidevariable',
     'VARIABLE');
+};
+
+/**
+ * Construct and add a data_listcontents block to xmlList.
+ * @param {!Array.<!Element>} xmlList Array of XML block elements.
+ * @param {?Blockly.VariableModel} variable Variable to select in the field.
+ */
+Blockly.DataCategory.addDataList = function(xmlList, variable) {
+  // <block id="variableId" type="data_listcontents">
+  //    <field name="LIST">variablename</field>
+  // </block>
+  Blockly.DataCategory.addBlock(xmlList, variable, 'data_listcontents', 'LIST');
+  // In the flyout, this ID must match variable ID for monitor syncing reasons
+  xmlList[xmlList.length - 1].setAttribute('id', variable.getId());
 };
 
 /**
