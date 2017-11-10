@@ -120,10 +120,8 @@ Blockly.ScratchBlocks.ProcedureUtils.updateDisplay_ = function() {
   var wasRendered = this.rendered;
   this.rendered = false;
 
-  if (this.paramMap_) {
-    var connectionMap = this.disconnectOldBlocks_();
-    this.removeAllInputs_();
-  }
+  var connectionMap = this.disconnectOldBlocks_();
+  this.removeAllInputs_();
 
   this.createAllInputs_(connectionMap);
   this.deleteShadows_(connectionMap);
@@ -147,14 +145,13 @@ Blockly.ScratchBlocks.ProcedureUtils.updateDisplay_ = function() {
 Blockly.ScratchBlocks.ProcedureUtils.disconnectOldBlocks_ = function() {
   // Remove old stuff
   var connectionMap = {};
-  for (var id in this.paramMap_) {
-    var input = this.paramMap_[id];
+  for (var i = 0, input; input = this.inputList[i]; i++) {
     if (input.connection) {
       // Remove the shadow DOM.  Otherwise a shadow block will respawn
       // instantly, and we'd have to remove it when we remove the input.
       input.connection.setShadowDom(null);
       var target = input.connection.targetBlock();
-      connectionMap[id] = target;
+      connectionMap[input.name] = target;
       if (target) {
         input.connection.disconnect();
       }
@@ -188,7 +185,6 @@ Blockly.ScratchBlocks.ProcedureUtils.removeAllInputs_ = function() {
  * @this Blockly.Block
  */
 Blockly.ScratchBlocks.ProcedureUtils.createAllInputs_ = function(connectionMap) {
-  this.paramMap_ = {};
   // Split the proc into components, by %n, %b, and %s (ignoring escaped).
   var procComponents = this.procCode_.split(/(?=[^\\]\%[nbs])/);
   procComponents = procComponents.map(function(c) {
@@ -336,8 +332,7 @@ Blockly.ScratchBlocks.ProcedureUtils.attachArgumentReporter_ = function(
 };
 
 /**
- * Create an input, attach the correct block to it, and insert it into the
- * params map.
+ * Create an input and attach the correct block to it.
  * This function is used by the procedures_callnoreturn block.
  * @param {string} type One of 'b' (boolean), 's' (string) or 'n' (number).
  * @param {number} index The index of this input into the argument id array.
@@ -359,12 +354,10 @@ Blockly.ScratchBlocks.ProcedureUtils.populateInputCaller_ = function(type, index
   } else {
     this.attachShadow_(input, type);
   }
-  this.paramMap_[id] = input;
 };
 
 /**
- * Create an input, attach the correct block to it, and insert it into the
- * params map.
+ * Create an input and attach the correct block to it.
  * This function is used by the procedures_callnoreturn_internal block.
  * TODO (#1213) consider renaming.
  * @param {string} type One of 'b' (boolean), 's' (string) or 'n' (number).
@@ -391,12 +384,10 @@ Blockly.ScratchBlocks.ProcedureUtils.populateInputCallerInternal_ = function(typ
   } else {
     this.attachArgumentReporter_(input, type, displayName);
   }
-  this.paramMap_[id] = input;
 };
 
 /**
- * Create an input, attach the correct block to it, and insert it into the
- * params map.
+ * Create an input and attach the correct block to it.
  * This function is used by the procedures_callnoreturn_internal block.
  * TODO (#1213) consider renaming.
  * @param {string} type One of 'b' (boolean), 's' (string) or 'n' (number).
@@ -421,7 +412,6 @@ Blockly.ScratchBlocks.ProcedureUtils.populateInputMutatorRoot_ = function(type,
   } else {
     this.attachShadow_(input, type, displayName);
   }
-  this.paramMap_[id] = input;
 };
 
 /**
@@ -519,6 +509,7 @@ Blockly.ScratchBlocks.ProcedureUtils.addBooleanExternal = function() {
   this.displayNames_.push('boolean');
   this.argumentIds_.push(Blockly.utils.genUid());
   this.argumentDefaults_.push('todo');
+  console.log(this.argumentIds_);
   this.updateDisplay_();
 };
 
@@ -564,12 +555,8 @@ Blockly.Blocks['procedures_callnoreturn'] = {
       "extensions": ["colours_more", "shape_statement", "procedure_call_contextmenu"]
     });
     this.procCode_ = '';
-    /**
-     * @type {!Object.<string, Blockly.Block>}
-     * An object mapping parameter IDs to the blocks that are connected to those
-     * IDs.
-     */
-    this.paramMap_ = null;
+    this.argumentIds_ = [];
+    this.warp_ = false;
   },
   // Shared.
   getProcCode: Blockly.ScratchBlocks.ProcedureUtils.getProcCode,
@@ -606,15 +593,9 @@ Blockly.Blocks['procedures_callnoreturn_internal'] = {
     /* Data known about the procedure. */
     this.procCode_ = '';
     this.displayNames_ = [];
+    this.argumentIds_ = [];
     this.argumentDefaults_ = [];
     this.warp_ = false;
-
-    /**
-     * @type {!Object.<string, Blockly.Block>}
-     * An object mapping parameter IDs to the blocks that are connected to those
-     * IDs.
-     */
-    this.paramMap_ = null;
   },
   // Shared.
   getProcCode: Blockly.ScratchBlocks.ProcedureUtils.getProcCode,
@@ -694,15 +675,9 @@ Blockly.Blocks['procedures_declaration_root'] = {
     /* Data known about the procedure. */
     this.procCode_ = '';
     this.displayNames_ = [];
+    this.argumentIds_ = [];
     this.argumentDefaults_ = [];
     this.warp_ = false;
-
-    /**
-     * @type {!Object.<string, Blockly.Block>}
-     * An object mapping parameter IDs to the blocks that are connected to those
-     * IDs.
-     */
-    this.paramMap_ = null;
   },
   // Shared.
   getProcCode: Blockly.ScratchBlocks.ProcedureUtils.getProcCode,
