@@ -596,6 +596,7 @@ Blockly.Events.Change = function(block, element, name, oldValue, newValue) {
   this.name = name;
   this.oldValue = oldValue;
   this.newValue = newValue;
+  this.isSpriteSpecific = block.isSpriteSpecific();
 };
 goog.inherits(Blockly.Events.Change, Blockly.Events.Abstract);
 

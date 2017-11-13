@@ -127,6 +127,12 @@ Blockly.Block = function(workspace, prototypeName, opt_id) {
    */
   this.checkboxInFlyout_ = false;
 
+  /**
+   * @type {boolean}
+   * @private
+   */
+  this.isSpriteSpecific_ = false;
+
   /** @type {string|Blockly.Comment} */
   this.comment = null;
 
@@ -1187,6 +1193,9 @@ Blockly.Block.prototype.jsonInit = function(json) {
   if (json['checkboxInFlyout'] !== undefined) {
     this.setCheckboxInFlyout(json['checkboxInFlyout']);
   }
+  if (json['isSpriteSpecific']) {
+    this.setIsSpriteSpecific(json['isSpriteSpecific']);
+  }
   if (json['category'] !== undefined) {
     this.setCategory(json['category']);
   }
@@ -1703,6 +1712,22 @@ Blockly.Block.prototype.setCheckboxInFlyout = function(hasCheckbox) {
  */
 Blockly.Block.prototype.hasCheckboxInFlyout = function() {
   return this.checkboxInFlyout_;
+};
+
+/**
+ * Set whether this block refers only to the target sprite. If false, it is global
+ * @param {boolean} isSpriteSpecific True if this block is specific to the target sprite.
+ */
+Blockly.Block.prototype.setIsSpriteSpecific = function(isSpriteSpecific) {
+  this.isSpriteSpecific_ = isSpriteSpecific;
+};
+
+/**
+ * Get whether this block refers only to the target sprite. If false, it is global
+ * @return {boolean} True if this block is specific to the target sprite.
+ */
+Blockly.Block.prototype.isSpriteSpecific = function() {
+  return this.isSpriteSpecific_;
 };
 
 /**

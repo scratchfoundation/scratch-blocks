@@ -270,6 +270,7 @@ Blockly.Blocks['looks_size'] = {
       "message0": "size",
       "category": Blockly.Categories.looks,
       "checkboxInFlyout": true,
+      "isSpriteSpecific": true,
       "extensions": ["colours_looks", "output_number"]
     });
   }
@@ -443,6 +444,7 @@ Blockly.Blocks['looks_costumeorder'] = {
       "message0": "costume #",
       "category": Blockly.Categories.looks,
       "checkboxInFlyout": true,
+      "isSpriteSpecific": true,
       "extensions": ["colours_looks", "output_number"]
     });
   }
