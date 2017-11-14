@@ -444,6 +444,7 @@ Blockly.Blocks['motion_xposition'] = {
       "message0": "x position",
       "category": Blockly.Categories.motion,
       "checkboxInFlyout": true,
+      "isSpriteSpecific": true,
       "extensions": ["colours_motion", "output_number"]
     });
   }
@@ -459,6 +460,7 @@ Blockly.Blocks['motion_yposition'] = {
       "message0": "y position",
       "category": Blockly.Categories.motion,
       "checkboxInFlyout": true,
+      "isSpriteSpecific": true,
       "extensions": ["colours_motion", "output_number"]
     });
   }
@@ -474,6 +476,7 @@ Blockly.Blocks['motion_direction'] = {
       "message0": "direction",
       "category": Blockly.Categories.motion,
       "checkboxInFlyout": true,
+      "isSpriteSpecific": true,
       "extensions": ["colours_motion", "output_number"]
     });
   }
