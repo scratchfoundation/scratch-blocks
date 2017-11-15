@@ -74,6 +74,25 @@ Blockly.Procedures.allProcedures = function(root) {
 };
 
 /**
+ * Find all user-created procedure definition mutations in a workspace.
+ * @param {!Blockly.Workspace} root Root workspace.
+ * @return {!Array.<Element>} Array of mutation xml elements.
+ */
+Blockly.Procedures.allProcedureMutations = function(root) {
+  var blocks = root.getAllBlocks();
+  var mutations = [];
+  for (var i = 0; i < blocks.length; i++) {
+    if (blocks[i].type === 'procedures_callnoreturn_internal') {
+      var mutation = blocks[i].mutationToDom();
+      if (mutation) {
+        mutations.push(mutation);
+      }
+    }
+  }
+  return mutations;
+};
+
+/**
  * Comparison function for case-insensitive sorting of the first element of
  * a tuple.
  * @param {!Array} ta First tuple.
@@ -179,71 +198,32 @@ Blockly.Procedures.rename = function(name) {
  */
 Blockly.Procedures.flyoutCategory = function(workspace) {
   var xmlList = [];
-  if (Blockly.Blocks[Blockly.PROCEDURES_DEFINITION_BLOCK_TYPE]) {
-    // <block type="procedures_definition" gap="16">
-    //     <field name="NAME">do something</field>
+
+  // New procedure button
+  var button = goog.dom.createDom('button');
+  var msg = Blockly.Msg.NEW_PROCEDURE;
+  var callbackKey = 'CREATE_PROCEDURE';
+  var callback = function(button) {
+    Blockly.Procedures.createProcedureDefCallback_();
+  };
+  button.setAttribute('text', msg);
+  button.setAttribute('callbackKey', callbackKey);
+  workspace.registerButtonCallback(callbackKey, callback);
+  xmlList.push(button);
+
+  // Create call blocks for each procedure defined in the workspace
+  var mutations = Blockly.Procedures.allProcedureMutations(workspace);
+  for (var i = 0; i < mutations.length; i++) {
+    var mutation = mutations[i];
+    // <block type="procedures_call">
+    //   <mutation ...></mutation>
     // </block>
     var block = goog.dom.createDom('block');
-    block.setAttribute('type', Blockly.PROCEDURES_DEFINITION_BLOCK_TYPE);
+    block.setAttribute('type', 'procedures_call');
     block.setAttribute('gap', 16);
-    var nameField = goog.dom.createDom('field', null,
-        Blockly.Msg.PROCEDURES_DEFNORETURN_PROCEDURE);
-    nameField.setAttribute('name', 'NAME');
-    block.appendChild(nameField);
+    block.appendChild(mutation);
     xmlList.push(block);
   }
-  if (Blockly.Blocks['procedures_defreturn']) {
-    // <block type="procedures_defreturn" gap="16">
-    //     <field name="NAME">do something</field>
-    // </block>
-    var block = goog.dom.createDom('block');
-    block.setAttribute('type', 'procedures_defreturn');
-    block.setAttribute('gap', 16);
-    var nameField = goog.dom.createDom('field', null,
-        Blockly.Msg.PROCEDURES_DEFRETURN_PROCEDURE);
-    nameField.setAttribute('name', 'NAME');
-    block.appendChild(nameField);
-    xmlList.push(block);
-  }
-  if (Blockly.Blocks['procedures_report']) {
-    // <block type="procedures_ifreturn" gap="16"></block>
-    var block = goog.dom.createDom('block');
-    block.setAttribute('type', 'procedures_report');
-    block.setAttribute('gap', 16);
-    xmlList.push(block);
-  }
-  if (xmlList.length) {
-    // Add slightly larger gap between system blocks and user calls.
-    xmlList[xmlList.length - 1].setAttribute('gap', 24);
-  }
-
-  function populateProcedures(procedureList, templateName) {
-    for (var i = 0; i < procedureList.length; i++) {
-      var name = procedureList[i][0];
-      var args = procedureList[i][1];
-      // <block type="procedures_call" gap="16">
-      //   <mutation name="do something">
-      //     <arg name="x"></arg>
-      //   </mutation>
-      // </block>
-      var block = goog.dom.createDom('block');
-      block.setAttribute('type', templateName);
-      block.setAttribute('gap', 16);
-      var mutation = goog.dom.createDom('mutation');
-      mutation.setAttribute('name', name);
-      block.appendChild(mutation);
-      for (var j = 0; j < args.length; j++) {
-        var arg = goog.dom.createDom('arg');
-        arg.setAttribute('name', args[j]);
-        mutation.appendChild(arg);
-      }
-      xmlList.push(block);
-    }
-  }
-
-  var tuple = Blockly.Procedures.allProcedures(workspace);
-  populateProcedures(tuple[0], 'procedures_callnoreturn');
-  populateProcedures(tuple[1], 'procedures_call');
   return xmlList;
 };
 
@@ -333,6 +313,15 @@ Blockly.Procedures.getDefinition = function(name, workspace) {
     }
   }
   return null;
+};
+
+/**
+ * Callback to create a new procedure custom command block.
+ * TODO(#1299): Implement.
+ * @private
+ */
+Blockly.Procedures.createProcedureDefCallback_ = function() {
+  alert('TODO(#1299) Implement procedure creation callback.');
 };
 
 /**
