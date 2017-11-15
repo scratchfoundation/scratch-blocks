@@ -67,20 +67,20 @@
   </xml>
 
   <xml id="mutator_blocks" style="display:none">
-    <block type="procedures_declaration_root" x="25" y="25" deletable="false">
+    <block type="procedures_declaration" x="25" y="25" deletable="false">
     <mutation proccode="say %s %n times if %b" argumentnames="[&quot;something&quot;,&quot;this many&quot;,&quot;this is true&quot;]" argumentdefaults="[&quot;&quot;,1,false]" warp="false" argumentids="[&quot;a42&quot;, &quot;b23&quot;, &quot;c99&quot;]"/>
     </block>
   </xml>
 
   <xml id="main_ws_blocks" style="display:none">
-    <block id="]){{Y!7N9ezN+j@Vr`8p" type="procedures_defnoreturn" x="25" y="25">
+    <block id="]){{Y!7N9ezN+j@Vr`8p" type="procedures_definition" x="25" y="25">
       <statement name="custom_block">
-          <shadow type="procedures_callnoreturn_internal" id="caller_internal">
+          <shadow type="procedures_prototype" id="caller_internal">
               <mutation proccode="say %s %n times if %b" argumentnames="[&quot;something&quot;,&quot;this many&quot;,&quot;this is true&quot;]" argumentdefaults="[&quot;&quot;,1,false]" warp="false" argumentids="[&quot;a42&quot;, &quot;b23&quot;, &quot;c99&quot;]"/>
           </shadow>
       </statement>
       <next>
-          <block id="caller_external" type="procedures_callnoreturn">
+          <block id="caller_external" type="procedures_call">
               <mutation proccode="say %s %n times if %b" argumentnames="[&quot;something&quot;,&quot;this many&quot;,&quot;this is true&quot;]" argumentdefaults="[&quot;&quot;,1,false]" warp="false" argumentids="[&quot;a42&quot;, &quot;b23&quot;, &quot;c99&quot;]"/>
               <value name="input0">
                   <shadow id="V0~M:TxRk0Ua%osjGzh," type="text">
@@ -98,28 +98,28 @@
   </xml>
 
   <xml id="main_ws_blocks_simpler" style="display:none">
-    <block id="]){{Y!7N9ezN+j@Vr`8p" type="procedures_defnoreturn" x="25" y="25">
+    <block id="]){{Y!7N9ezN+j@Vr`8p" type="procedures_definition" x="25" y="25">
       <statement name="custom_block">
-          <shadow type="procedures_callnoreturn_internal" id="caller_internal">
+          <shadow type="procedures_prototype" id="caller_internal">
               <mutation proccode="say %s %n times if %b" argumentnames="[&quot;something&quot;,&quot;this many&quot;,&quot;this is true&quot;]" argumentdefaults="[&quot;&quot;,1,false]" warp="false" argumentids="[&quot;a42&quot;, &quot;b23&quot;, &quot;c99&quot;]"/>
           </shadow>
       </statement>
       <next>
-          <block id="caller_external" type="procedures_callnoreturn">
+          <block id="caller_external" type="procedures_call">
           </block>
       </next>
   </block>
   </xml>
 
   <xml id="main_ws_blocks_simplest" style="display:none">
-    <block id="]){{Y!7N9ezN+j@Vr`8p" type="procedures_defnoreturn" x="25" y="25">
+    <block id="]){{Y!7N9ezN+j@Vr`8p" type="procedures_definition" x="25" y="25">
       <statement name="custom_block">
-          <shadow type="procedures_callnoreturn_internal" id="caller_internal">
+          <shadow type="procedures_prototype" id="caller_internal">
               <mutation proccode="my first function" argumentnames="[]" argumentdefaults="[]" warp="false" argumentids="[]"/>
           </shadow>
       </statement>
       <next>
-          <block id="caller_external" type="procedures_callnoreturn">
+          <block id="caller_external" type="procedures_call">
             <mutation proccode="my first function" argumentnames="[]" argumentdefaults="[]" warp="false" argumentids="[]"/>
           </block>
       </next>
@@ -127,7 +127,7 @@
   </xml>
 
   <xml id="mutator_blocks_simplest" style="display:none">
-    <block type="procedures_declaration_root" x="25" y="25" deletable="false">
+    <block type="procedures_declaration" x="25" y="25" deletable="false">
     <mutation proccode="my first function" argumentnames="[]" argumentdefaults="[]" warp="false" argumentids="[]"/>
     </block>
   </xml>

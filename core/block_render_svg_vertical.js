@@ -491,12 +491,6 @@ Blockly.BlockSvg.TOP_RIGHT_CORNER_DEFINE_HAT =
 Blockly.BlockSvg.DEFINE_BLOCK_PADDING_RIGHT = 2 * Blockly.BlockSvg.GRID_UNIT;
 
 /**
- * The type of all define blocks, which have custom rendering.
- * @cost
- */
-Blockly.BlockSvg.DEFINE_BLOCK_TYPE = 'procedures_defnoreturn';
-
-/**
  * Change the colour of a block.
  */
 Blockly.BlockSvg.prototype.updateColour = function() {
@@ -1159,7 +1153,7 @@ Blockly.BlockSvg.prototype.renderClassify_ = function() {
  */
 Blockly.BlockSvg.prototype.renderDrawTop_ = function(steps, rightEdge) {
   /* eslint-disable indent */
-  if (this.type == Blockly.BlockSvg.DEFINE_BLOCK_TYPE) {
+  if (this.type == Blockly.PROCEDURES_DEFINITION_BLOCK_TYPE) {
     steps.push('m 0, 0');
     steps.push(Blockly.BlockSvg.TOP_LEFT_CORNER_DEFINE_HAT);
   } else {
@@ -1276,7 +1270,7 @@ Blockly.BlockSvg.prototype.renderDrawRight_ = function(steps,
       // Move to the start of the notch.
       cursorX = inputRows.statementEdge + Blockly.BlockSvg.NOTCH_WIDTH;
 
-      if (this.type == Blockly.BlockSvg.DEFINE_BLOCK_TYPE) {
+      if (this.type == Blockly.PROCEDURES_DEFINITION_BLOCK_TYPE) {
         this.renderDefineBlock_(steps, inputRows, input, row);
       } else {
         Blockly.BlockSvg.drawStatementInputFromTopRight_(steps, cursorX,
@@ -1290,7 +1284,7 @@ Blockly.BlockSvg.prototype.renderDrawRight_ = function(steps,
         this.width = Math.max(this.width, inputRows.statementEdge +
           input.connection.targetBlock().getHeightWidth().width);
       }
-      if (this.type != Blockly.BlockSvg.DEFINE_BLOCK_TYPE &&
+      if (this.type != Blockly.PROCEDURES_DEFINITION_BLOCK_TYPE &&
         (y == inputRows.length - 1 ||
           inputRows[y + 1].type == Blockly.NEXT_STATEMENT)) {
         // If the final input is a statement stack, add a small row underneath.
