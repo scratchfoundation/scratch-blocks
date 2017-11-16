@@ -116,6 +116,21 @@ Blockly.Xml.blockToDom = function(block, opt_noId) {
         if (variable) {
           container.setAttribute('id', variable.getId());
           container.setAttribute('variabletype', variable.type);
+        } else {
+          // Above works well for untyped variables, but we need to correctly
+          // set the type for blocks that exist by default in the toolbox
+          // (e.g. broadcast messages)
+          // TODO figure out if we ever need to do something where there's
+          // more than one element in variableTypes field
+
+          // must check that field is an instance of FieldVariable because
+          // FieldVariableGetter doesn't have getVariableTypes_ function
+          if (field instanceof Blockly.FieldVariable) {
+            var variableTypes = field.getVariableTypes_();
+            if (variableTypes.length === 1) {
+              container.setAttribute('variabletype', variableTypes[0]);
+            }
+          }
         }
       }
       element.appendChild(container);

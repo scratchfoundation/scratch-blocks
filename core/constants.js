@@ -326,3 +326,12 @@ Blockly.RENAME_VARIABLE_ID = 'RENAME_VARIABLE_ID';
  * @const {string}
  */
 Blockly.DELETE_VARIABLE_ID = 'DELETE_VARIABLE_ID';
+
+/**
+ * String for use in the dropdown created in field_variable,
+ * specifically for broadcast messages.
+ * This string indicates that this option in the dropdown is 'New message...'
+ * and if selected, should trigger the prompt to create a new message.
+ * @const {string}
+ */
+Blockly.NEW_MESSAGE_ID = 'NEW_MESSAGE_ID';

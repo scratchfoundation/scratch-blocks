@@ -148,6 +148,10 @@ Blockly.Msg.CANNOT_DELETE_VARIABLE_PROCEDURE = 'Can\'t delete the variable "%1" 
 /// dropdown choice - Delete the currently selected variable.
 Blockly.Msg.DELETE_VARIABLE = 'Delete the "%1" variable';
 
+// Broadcast Message creation
+/// dropdown choice - Create a new message.
+Blockly.Msg.NEW_MESSAGE = 'New message...';
+
 // Colour Blocks.
 /// url - Information about colour.
 Blockly.Msg.COLOUR_PICKER_HELPURL = 'https://en.wikipedia.org/wiki/Color';
