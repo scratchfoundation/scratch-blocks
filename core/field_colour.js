@@ -70,6 +70,10 @@ Blockly.FieldColour.prototype.columns_ = 0;
  * @param {!Blockly.Block} block The block containing this field.
  */
 Blockly.FieldColour.prototype.init = function(block) {
+  if (this.fieldGroup_) {
+    // Colour field has already been initialized once.
+    return;
+  }
   Blockly.FieldColour.superClass_.init.call(this, block);
   this.setValue(this.getValue());
 };

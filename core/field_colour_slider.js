@@ -71,6 +71,10 @@ Blockly.FieldColourSlider.EYEDROPPER_PATH = 'eyedropper.svg';
  * @param {!Blockly.Block} block The block containing this field.
  */
 Blockly.FieldColourSlider.prototype.init = function(block) {
+  if (this.fieldGroup_) {
+    // Colour slider has already been initialized once.
+    return;
+  }
   Blockly.FieldColourSlider.superClass_.init.call(this, block);
   this.setValue(this.getValue());
 };
