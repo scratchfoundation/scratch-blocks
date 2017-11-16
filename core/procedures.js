@@ -199,7 +199,7 @@ Blockly.Procedures.rename = function(name) {
 Blockly.Procedures.flyoutCategory = function(workspace) {
   var xmlList = [];
 
-  Blockly.Procedures.addCreateButton_(xmlList);
+  Blockly.Procedures.addCreateButton_(workspace, xmlList);
 
   // Create call blocks for each procedure defined in the workspace
   var mutations = Blockly.Procedures.allProcedureMutations(workspace);
@@ -219,14 +219,15 @@ Blockly.Procedures.flyoutCategory = function(workspace) {
 
 /**
  * Create the "Make a Block..." button.
+ * @param {!Blockly.Workspace} workspace The workspace contianing procedures.
  * @param {!Array.<!Element>} xmlList Array of XML block elements to add to.
  * @private
  */
-Blockly.Procedures.addCreateButton_ = function(xmlList) {
+Blockly.Procedures.addCreateButton_ = function(workspace, xmlList) {
   var button = goog.dom.createDom('button');
   var msg = Blockly.Msg.NEW_PROCEDURE;
   var callbackKey = 'CREATE_PROCEDURE';
-  var callback = function(button) {
+  var callback = function() {
     Blockly.Procedures.createProcedureDefCallback_();
   };
   button.setAttribute('text', msg);
