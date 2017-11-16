@@ -82,7 +82,7 @@ Blockly.Procedures.allProcedureMutations = function(root) {
   var blocks = root.getAllBlocks();
   var mutations = [];
   for (var i = 0; i < blocks.length; i++) {
-    if (blocks[i].type === 'procedures_callnoreturn_internal') {
+    if (blocks[i].type === 'procedures_prototype') {
       var mutation = blocks[i].mutationToDom();
       if (mutation) {
         mutations.push(mutation);
@@ -199,17 +199,7 @@ Blockly.Procedures.rename = function(name) {
 Blockly.Procedures.flyoutCategory = function(workspace) {
   var xmlList = [];
 
-  // New procedure button
-  var button = goog.dom.createDom('button');
-  var msg = Blockly.Msg.NEW_PROCEDURE;
-  var callbackKey = 'CREATE_PROCEDURE';
-  var callback = function(button) {
-    Blockly.Procedures.createProcedureDefCallback_();
-  };
-  button.setAttribute('text', msg);
-  button.setAttribute('callbackKey', callbackKey);
-  workspace.registerButtonCallback(callbackKey, callback);
-  xmlList.push(button);
+  Blockly.Procedures.addCreateButton_(xmlList);
 
   // Create call blocks for each procedure defined in the workspace
   var mutations = Blockly.Procedures.allProcedureMutations(workspace);
@@ -225,6 +215,24 @@ Blockly.Procedures.flyoutCategory = function(workspace) {
     xmlList.push(block);
   }
   return xmlList;
+};
+
+/**
+ * Create the "Make a Block..." button.
+ * @param {!Array.<!Element>} xmlList Array of XML block elements to add to.
+ * @private
+ */
+Blockly.Procedures.addCreateButton_ = function(xmlList) {
+  var button = goog.dom.createDom('button');
+  var msg = Blockly.Msg.NEW_PROCEDURE;
+  var callbackKey = 'CREATE_PROCEDURE';
+  var callback = function(button) {
+    Blockly.Procedures.createProcedureDefCallback_();
+  };
+  button.setAttribute('text', msg);
+  button.setAttribute('callbackKey', callbackKey);
+  workspace.registerButtonCallback(callbackKey, callback);
+  xmlList.push(button);
 };
 
 /**
