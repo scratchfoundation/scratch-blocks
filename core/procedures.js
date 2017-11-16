@@ -179,12 +179,12 @@ Blockly.Procedures.rename = function(name) {
  */
 Blockly.Procedures.flyoutCategory = function(workspace) {
   var xmlList = [];
-  if (Blockly.Blocks['procedures_defnoreturn']) {
-    // <block type="procedures_defnoreturn" gap="16">
+  if (Blockly.Blocks[Blockly.PROCEDURES_DEFINITION_BLOCK_TYPE]) {
+    // <block type="procedures_definition" gap="16">
     //     <field name="NAME">do something</field>
     // </block>
     var block = goog.dom.createDom('block');
-    block.setAttribute('type', 'procedures_defnoreturn');
+    block.setAttribute('type', Blockly.PROCEDURES_DEFINITION_BLOCK_TYPE);
     block.setAttribute('gap', 16);
     var nameField = goog.dom.createDom('field', null,
         Blockly.Msg.PROCEDURES_DEFNORETURN_PROCEDURE);
@@ -221,7 +221,7 @@ Blockly.Procedures.flyoutCategory = function(workspace) {
     for (var i = 0; i < procedureList.length; i++) {
       var name = procedureList[i][0];
       var args = procedureList[i][1];
-      // <block type="procedures_callnoreturn" gap="16">
+      // <block type="procedures_call" gap="16">
       //   <mutation name="do something">
       //     <arg name="x"></arg>
       //   </mutation>
@@ -243,7 +243,7 @@ Blockly.Procedures.flyoutCategory = function(workspace) {
 
   var tuple = Blockly.Procedures.allProcedures(workspace);
   populateProcedures(tuple[0], 'procedures_callnoreturn');
-  populateProcedures(tuple[1], 'procedures_callreturn');
+  populateProcedures(tuple[1], 'procedures_call');
   return xmlList;
 };
 
@@ -276,7 +276,7 @@ Blockly.Procedures.getCallers = function(name, ws, definitionRoot,
   var callers = [];
   for (var i = 0; i < allBlocks.length; i++) {
     var block = allBlocks[i];
-    if (block.type == 'procedures_callnoreturn') {
+    if (block.type == Blockly.PROCEDURES_CALL_BLOCK_TYPE ) {
       var procCode = block.getProcCode();
       if (procCode && procCode == name) {
         callers.push(block);
@@ -342,7 +342,7 @@ Blockly.Procedures.getDefinition = function(name, workspace) {
  * @private
  */
 Blockly.Procedures.editProcedureCallback_ = function(block) {
-  if (block.type == 'procedures_defnoreturn') {
+  if (block.type == Blockly.PROCEDURES_DEFINITION_BLOCK_TYPE) {
     var input = block.getInput('custom_block');
     if (!input) {
       alert('Bad input'); // TODO: Decide what to do about this.
@@ -354,7 +354,8 @@ Blockly.Procedures.editProcedureCallback_ = function(block) {
       return;
     }
     var innerBlock = conn.targetBlock();
-    if (!innerBlock || !innerBlock.type == 'procedures_callnoreturn_internal') {
+    if (!innerBlock ||
+        !innerBlock.type == Blockly.PROCEDURES_PROTOTYPE_BLOCK_TYPE) {
       alert('Bad inner block'); // TODO: Decide what to do about this.
       return;
     }

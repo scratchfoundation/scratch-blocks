@@ -47,11 +47,13 @@
     </tr>
     <tr>
       <td>
-        <button id="text_number">Add text/number input</button>
-        <button id="boolean">Add boolean input</button>
-        <button id="label">Add label</button>
+        <button id="text_number" onclick="addTextNumber()">Add text/number input</button>
+        <button id="boolean" onclick="addBoolean()">Add boolean input</button>
+        <button id="label" onclick="addLabel()">Add label</button>
         <button id="cancelButton">cancel</button>
         <button id="okButton" onclick="applyMutation()">ok</button>
+        <button id="rndButton" onclick="removeRandomInput()">remove random input</button>
+        <button id="addRndButton" onclick="addRandomInput()">add random input</button>
       </td>
       <td></td>
     </tr>
@@ -65,20 +67,20 @@
   </xml>
 
   <xml id="mutator_blocks" style="display:none">
-    <block type="procedures_mutator_root" x="25" y="25" deletable="false">
+    <block type="procedures_declaration" x="25" y="25" deletable="false">
     <mutation proccode="say %s %n times if %b" argumentnames="[&quot;something&quot;,&quot;this many&quot;,&quot;this is true&quot;]" argumentdefaults="[&quot;&quot;,1,false]" warp="false" argumentids="[&quot;a42&quot;, &quot;b23&quot;, &quot;c99&quot;]"/>
     </block>
   </xml>
 
   <xml id="main_ws_blocks" style="display:none">
-    <block id="]){{Y!7N9ezN+j@Vr`8p" type="procedures_defnoreturn" x="25" y="25">
+    <block id="]){{Y!7N9ezN+j@Vr`8p" type="procedures_definition" x="25" y="25">
       <statement name="custom_block">
-          <shadow type="procedures_callnoreturn_internal" id="caller_internal">
+          <shadow type="procedures_prototype" id="caller_internal">
               <mutation proccode="say %s %n times if %b" argumentnames="[&quot;something&quot;,&quot;this many&quot;,&quot;this is true&quot;]" argumentdefaults="[&quot;&quot;,1,false]" warp="false" argumentids="[&quot;a42&quot;, &quot;b23&quot;, &quot;c99&quot;]"/>
           </shadow>
       </statement>
       <next>
-          <block id="caller_external" type="procedures_callnoreturn">
+          <block id="caller_external" type="procedures_call">
               <mutation proccode="say %s %n times if %b" argumentnames="[&quot;something&quot;,&quot;this many&quot;,&quot;this is true&quot;]" argumentdefaults="[&quot;&quot;,1,false]" warp="false" argumentids="[&quot;a42&quot;, &quot;b23&quot;, &quot;c99&quot;]"/>
               <value name="input0">
                   <shadow id="V0~M:TxRk0Ua%osjGzh," type="text">
@@ -96,17 +98,38 @@
   </xml>
 
   <xml id="main_ws_blocks_simpler" style="display:none">
-    <block id="]){{Y!7N9ezN+j@Vr`8p" type="procedures_defnoreturn" x="25" y="25">
+    <block id="]){{Y!7N9ezN+j@Vr`8p" type="procedures_definition" x="25" y="25">
       <statement name="custom_block">
-          <shadow type="procedures_callnoreturn_internal" id="caller_internal">
+          <shadow type="procedures_prototype" id="caller_internal">
               <mutation proccode="say %s %n times if %b" argumentnames="[&quot;something&quot;,&quot;this many&quot;,&quot;this is true&quot;]" argumentdefaults="[&quot;&quot;,1,false]" warp="false" argumentids="[&quot;a42&quot;, &quot;b23&quot;, &quot;c99&quot;]"/>
           </shadow>
       </statement>
       <next>
-          <block id="caller_external" type="procedures_callnoreturn">
+          <block id="caller_external" type="procedures_call">
           </block>
       </next>
   </block>
+  </xml>
+
+  <xml id="main_ws_blocks_simplest" style="display:none">
+    <block id="]){{Y!7N9ezN+j@Vr`8p" type="procedures_definition" x="25" y="25">
+      <statement name="custom_block">
+          <shadow type="procedures_prototype" id="caller_internal">
+              <mutation proccode="my first function" argumentnames="[]" argumentdefaults="[]" warp="false" argumentids="[]"/>
+          </shadow>
+      </statement>
+      <next>
+          <block id="caller_external" type="procedures_call">
+            <mutation proccode="my first function" argumentnames="[]" argumentdefaults="[]" warp="false" argumentids="[]"/>
+          </block>
+      </next>
+  </block>
+  </xml>
+
+  <xml id="mutator_blocks_simplest" style="display:none">
+    <block type="procedures_declaration" x="25" y="25" deletable="false">
+    <mutation proccode="my first function" argumentnames="[]" argumentdefaults="[]" warp="false" argumentids="[]"/>
+    </block>
   </xml>
 
 
@@ -115,21 +138,63 @@
     var primaryWorkspace = Blockly.inject('primaryDiv',
         {media: '../media/'});
 
-    Blockly.Xml.domToWorkspace(document.getElementById('mutator_blocks'),
+    Blockly.Xml.domToWorkspace(document.getElementById('mutator_blocks_simplest'),
         primaryWorkspace);
+
+    var mutationRoot = primaryWorkspace.getTopBlocks()[0];
+
+    primaryWorkspace.addChangeListener(function() {mutationRoot.onChangeFn();});
 
     // Inject secondary workspace.
     var secondaryWorkspace = Blockly.inject('secondaryDiv',
         {media: '../media/'});
 
-    Blockly.Xml.domToWorkspace(document.getElementById('main_ws_blocks'),
+    Blockly.Xml.domToWorkspace(document.getElementById('main_ws_blocks_simplest'),
         secondaryWorkspace);
 
     function applyMutation() {
-      var mutation = primaryWorkspace.getTopBlocks()[0].mutationToDom();
+      var mutation = mutationRoot.mutationToDom();
       console.log(mutation);
       secondaryWorkspace.getBlockById('caller_external').domToMutation(mutation);
       secondaryWorkspace.getBlockById('caller_internal').domToMutation(mutation);
+    }
+
+    function addLabel() {
+      mutationRoot.addLabelExternal();
+    }
+
+    function addBoolean() {
+      mutationRoot.addBooleanExternal();
+    }
+
+    function addTextNumber() {
+      mutationRoot.addStringNumberExternal();
+    }
+
+    function removeRandomInput() {
+      var rnd = Math.floor(Math.random() * mutationRoot.inputList.length);
+      mutationRoot.removeInput(mutationRoot.inputList[rnd].name);
+      mutationRoot.onChangeFn();
+      mutationRoot.updateDisplay_();
+
+      applyMutation();
+    }
+
+    function addRandomInput() {
+      var rnd = Math.floor(Math.random() * 3);
+      switch (rnd) {
+        case 0:
+          addTextNumber();
+          break;
+        case 1:
+          addLabel();
+          break;
+        case 2:
+          addBoolean();
+          break;
+      }
+
+      applyMutation();
     }
 </script>
 
