@@ -348,7 +348,7 @@ function test_canConnectWithReason_Procedures_WrongBlockType() {
   var sharedWorkspace = {};
   var one = helper_createConnection(0, 0, Blockly.NEXT_STATEMENT);
   one.sourceBlock_ = helper_makeSourceBlock(sharedWorkspace);
-  one.sourceBlock_.type = 'procedures_defnoreturn';
+  one.sourceBlock_.type = Blockly.PROCEDURES_DEFINITION_BLOCK_TYPE;
   // Make one be the connection on its source block's input.
   one.sourceBlock_.getInput = function() {
     return {
@@ -368,7 +368,7 @@ function test_canConnectWithReason_Procedures_Pass() {
   var sharedWorkspace = {};
   var one = helper_createConnection(0, 0, Blockly.NEXT_STATEMENT);
   one.sourceBlock_ = helper_makeSourceBlock(sharedWorkspace);
-  one.sourceBlock_.type = 'procedures_defnoreturn';
+  one.sourceBlock_.type = Blockly.PROCEDURES_DEFINITION_BLOCK_TYPE;
   // Make one be the connection on its source block's input.
   one.sourceBlock_.getInput = function() {
     return {
@@ -377,7 +377,7 @@ function test_canConnectWithReason_Procedures_Pass() {
   };
   var two = helper_createConnection(0, 0, Blockly.PREVIOUS_STATEMENT);
   two.sourceBlock_ = helper_makeSourceBlock(sharedWorkspace);
-  two.sourceBlock_.type = 'procedures_callnoreturn_internal';
+  two.sourceBlock_.type = Blockly.PROCEDURES_PROTOTYPE_BLOCK_TYPE;
   assertEquals(Blockly.Connection.CAN_CONNECT,
       one.canConnectWithReason_(two));
 }
@@ -386,7 +386,7 @@ function test_canConnectWithReason_Procedures_NextConnection() {
   var sharedWorkspace = {};
   var one = helper_createConnection(0, 0, Blockly.NEXT_STATEMENT);
   one.sourceBlock_ = helper_makeSourceBlock(sharedWorkspace);
-  one.sourceBlock_.type = 'procedures_defnoreturn';
+  one.sourceBlock_.type = Blockly.PROCEDURES_DEFINITION_BLOCK_TYPE;
   // One is the next connection, not an input connection
   one.sourceBlock_.nextConnection = one;
   one.sourceBlock_.getInput = function() {

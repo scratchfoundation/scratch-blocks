@@ -310,8 +310,8 @@ Blockly.Connection.prototype.canConnectWithReason_ = function(target) {
     return Blockly.Connection.REASON_CHECKS_FAILED;
   } else if (blockA.isShadow() && !blockB.isShadow()) {
     return Blockly.Connection.REASON_SHADOW_PARENT;
-  } else if (blockA.type == 'procedures_defnoreturn' &&
-      blockB.type != 'procedures_callnoreturn_internal' &&
+  } else if (blockA.type == Blockly.PROCEDURES_DEFINITION_BLOCK_TYPE &&
+      blockB.type != 'procedures_prototype' &&
       superiorConn == blockA.getInput('custom_block').connection ) {
     // Hack to fix #1127: Fail attempts to connect to the custom_block input
     // on a defnoreturn block, unless the connecting block is a specific type.
