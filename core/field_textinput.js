@@ -421,6 +421,13 @@ Blockly.FieldTextInput.prototype.resizeEditor_ = function() {
   var scale = this.sourceBlock_.workspace.scale;
   var div = Blockly.WidgetDiv.DIV;
 
+  var initialWidth;
+  if (this.sourceBlock_.isShadow()) {
+    initialWidth = this.sourceBlock_.getHeightWidth().width * scale;
+  } else {
+    initialWidth = this.size_.width * scale;
+  }
+
   var width;
   if (Blockly.BlockSvg.FIELD_TEXTINPUT_EXPAND_PAST_TRUNCATION) {
     // Resize the box based on the measured width of the text, pre-truncation
@@ -436,7 +443,7 @@ Blockly.FieldTextInput.prototype.resizeEditor_ = function() {
     width = textWidth;
   } else {
     // Set width to (truncated) block size.
-    width = this.sourceBlock_.getHeightWidth().width * scale;
+    width = initialWidth;
   }
   // The width must be at least FIELD_WIDTH and at most FIELD_WIDTH_MAX_EDIT
   width = Math.max(width, Blockly.BlockSvg.FIELD_WIDTH_MIN_EDIT * scale);
@@ -449,10 +456,7 @@ Blockly.FieldTextInput.prototype.resizeEditor_ = function() {
   // Use margin-left to animate repositioning of the box (value is unscaled).
   // This is the difference between the default position and the positioning
   // after growing the box.
-  var fieldWidth = this.sourceBlock_.getHeightWidth().width;
-  var initialWidth = fieldWidth * scale;
-  var finalWidth = width;
-  div.style.marginLeft = -0.5 * (finalWidth - initialWidth) + 'px';
+  div.style.marginLeft = -0.5 * (width - initialWidth) + 'px';
 
   // Add 0.5px to account for slight difference between SVG and CSS border
   var borderRadius = this.getBorderRadius() + 0.5;
@@ -524,9 +528,14 @@ Blockly.FieldTextInput.prototype.widgetDispose_ = function() {
     div.style.boxShadow = '';
     // Resize to actual size of final source block.
     if (thisField.sourceBlock_) {
-      var size = thisField.sourceBlock_.getHeightWidth();
-      div.style.width = (size.width + 1) + 'px';
-      div.style.height = (size.height + 1) + 'px';
+      if (thisField.sourceBlock_.isShadow()) {
+        var size = thisField.sourceBlock_.getHeightWidth();
+        div.style.width = (size.width + 1) + 'px';
+        div.style.height = (size.height + 1) + 'px';
+      } else {
+        div.style.width = (thisField.size_.width + 1) + 'px';
+        div.style.height = (Blockly.BlockSvg.FIELD_HEIGHT_MAX_EDIT + 1) + 'px';
+      }
     }
     div.style.marginLeft = 0;
   };
