@@ -84,7 +84,7 @@ Blockly.FieldVariable.prototype.initModel = function() {
     // Check if there was exactly one element specified in the
     // variableTypes list. This is the list that specifies which types of
     // variables to include in the dropdown.
-    // If there is exactly one element specified, make the default variable
+    // If there is exactly one element specified, make the variable
     // being created this specified type. Else, default behavior is to create
     // a scalar variable
     if (this.getVariableTypes_().length === 1) {
