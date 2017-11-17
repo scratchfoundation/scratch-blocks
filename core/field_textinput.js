@@ -91,6 +91,10 @@ Blockly.FieldTextInput.prototype.spellcheck_ = true;
  * Install this text field on a block.
  */
 Blockly.FieldTextInput.prototype.init = function() {
+  if (this.fieldGroup_) {
+    // Field has already been initialized once.
+    return;
+  }
 
   Blockly.FieldTextInput.superClass_.init.call(this);
   // If not in a shadow block, draw a box.
