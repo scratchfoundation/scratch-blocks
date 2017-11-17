@@ -1,7 +1,7 @@
 {
 	"@metadata": {
 		"author": "Ellen Spertus <ellen.spertus@gmail.com>",
-		"lastupdated": "2017-11-16 21:34:37.483953",
+		"lastupdated": "2017-11-17 15:23:04.843531",
 		"locale": "en",
 		"messagedocumentation" : "qqq"
 	},
@@ -35,6 +35,7 @@
 	"VARIABLE_ALREADY_EXISTS": "A variable named '%1' already exists.",
 	"VARIABLE_ALREADY_EXISTS_FOR_ANOTHER_TYPE": "A variable named '%1' already exists for another variable of type '%2'.",
 	"PROCEDURE_ALREADY_EXISTS": "A procedure named '%1' already exists.",
+	"NEW_PROCEDURE": "Make a Block...",
 	"NEW_LIST": "Create list...",
 	"DELETE_VARIABLE_CONFIRMATION": "Delete %1 uses of the '%2' variable?",
 	"CANNOT_DELETE_VARIABLE_PROCEDURE": "Can't delete the variable '%1' because it's part of the definition of the function '%2'",
