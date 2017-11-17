@@ -120,7 +120,7 @@ Blockly.Xml.blockToDom = function(block, opt_noId) {
           // Above works well for untyped variables, but we need to correctly
           // set the type for blocks that exist by default in the toolbox
           // (e.g. broadcast messages)
-          // TODO figure out if we ever need to do something where there's
+          // TODO figure out if we need to do something different when there's
           // more than one element in variableTypes field
 
           // must check that field is an instance of FieldVariable because
