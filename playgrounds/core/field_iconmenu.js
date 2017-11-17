@@ -69,6 +69,10 @@ Blockly.FieldIconMenu.savedPrimary_ = null;
  * @param {Block} block The owning block.
  */
 Blockly.FieldIconMenu.prototype.init = function(block) {
+  if (this.fieldGroup_) {
+    // Icon menu has already been initialized once.
+    return;
+  }
   // Render the arrow icon
   // Fixed sizes in px. Saved for creating the flip transform of the menu renders above the button.
   var arrowSize = 12;
