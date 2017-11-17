@@ -96,14 +96,12 @@ Blockly.FieldTextInput.prototype.init = function() {
   // If not in a shadow block, draw a box.
   if (!this.sourceBlock_.isShadow()) {
     this.box_ = Blockly.utils.createSvgElement('rect', {
-      'rx': Blockly.BlockSvg.CORNER_RADIUS,
-      'ry': Blockly.BlockSvg.CORNER_RADIUS,
       'x': 0,
       'y': 0,
       'width': this.size_.width,
       'height': this.size_.height,
       'fill': Blockly.Colours.textField,
-      'stroke': this.sourceBlock_.getColourTertiary()
+      'fill-opacity': 0.3
     });
     this.fieldGroup_.insertBefore(this.box_, this.textElement_);
   }
@@ -186,7 +184,7 @@ Blockly.FieldTextInput.prototype.setRestrictor = function(restrictor) {
  * @private
  */
 Blockly.FieldTextInput.prototype.showEditor_ = function(
-  opt_quietInput, opt_readOnly, opt_withArrow, opt_arrowCallback) {
+    opt_quietInput, opt_readOnly, opt_withArrow, opt_arrowCallback) {
   this.workspace_ = this.sourceBlock_.workspace;
   var quietInput = opt_quietInput || false;
   var readOnly = opt_readOnly || false;
