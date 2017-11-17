@@ -119,6 +119,11 @@ Blockly.VariableMap.prototype.createVariable = function(name, opt_type, opt_id) 
   var variable = this.getVariable(name);
   if (variable) {
     if (opt_type && variable.type != opt_type) {
+      // TODO (#1245)
+      // We want to be able to create new broadcast messages that have the same
+      // name as variables or lists... and vice-versa
+      // also need to make sure that all the places where variables are looked
+      // up by name also do the right thing with their types...
       throw Error('Variable "' + name + '" is already in use and its type is "'
                   + variable.type + '" which conflicts with the passed in ' +
                   'type, "' + opt_type + '".');

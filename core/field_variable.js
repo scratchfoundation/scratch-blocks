@@ -257,8 +257,11 @@ Blockly.FieldVariable.prototype.onItemSelected = function(menu, menuItem) {
       workspace.deleteVariable(this.getText());
       return;
     } else if (id == Blockly.NEW_MESSAGE_ID) {
-      Blockly.Variables.createVariable(workspace, null, 'broadcast_msg');
-      // TODO update sourceblock's variable name...
+      var thisField = this;
+      var setName = function(newName) {
+        thisField.setValue(newName);
+      };
+      Blockly.Variables.createVariable(workspace, setName, 'broadcast_msg');
       return;
     }
 
