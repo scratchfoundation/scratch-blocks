@@ -87,7 +87,7 @@ Blockly.FieldVariable.prototype.initModel = function() {
     // If there is exactly one element specified, make the variable
     // being created this specified type. Else, default behavior is to create
     // a scalar variable
-    if (this.getVariableTypes_().length === 1) {
+    if (this.getVariableTypes_().length == 1) {
       this.sourceBlock_.workspace.createVariable(this.getValue(),
         this.getVariableTypes_()[0]);
     } else {
@@ -190,7 +190,7 @@ Blockly.FieldVariable.dropdownCreate = function() {
     // doesn't modify the workspace's list.
     for (var i = 0; i < variableTypes.length; i++) {
       var variableType = variableTypes[i];
-      if (variableType === Blockly.BROADCAST_MESSAGE_TYPE){
+      if (variableType == Blockly.BROADCAST_MESSAGE_TYPE){
         isBroadcastType = true;
       }
       var variables = workspace.getVariablesOfType(variableType);

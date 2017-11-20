@@ -127,7 +127,7 @@ Blockly.Xml.blockToDom = function(block, opt_noId) {
           // FieldVariableGetter doesn't have getVariableTypes_ function
           if (field instanceof Blockly.FieldVariable) {
             var variableTypes = field.getVariableTypes_();
-            if (variableTypes.length === 1) {
+            if (variableTypes.length == 1) {
               container.setAttribute('variabletype', variableTypes[0]);
             }
           }
