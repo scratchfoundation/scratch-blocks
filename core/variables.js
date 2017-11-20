@@ -182,6 +182,8 @@ Blockly.Variables.createVariable = function(workspace, opt_callback, opt_type) {
     Blockly.Variables.promptName(Blockly.Msg.NEW_VARIABLE_TITLE, defaultName,
       function(text) {
         if (text) {
+          // TODO (#1245) use separate namespaces for lists, variables, and
+          // broadcast messages
           if (workspace.getVariable(text)) {
             Blockly.alert(Blockly.Msg.VARIABLE_ALREADY_EXISTS.replace('%1',
                 text.toLowerCase()),
@@ -240,6 +242,8 @@ Blockly.Variables.renameVariable = function(workspace, variable,
       function(newName) {
         if (newName) {
           var newVariable = workspace.getVariable(newName);
+          // TODO (#1245) use separate namespaces for lists, variables, and
+          // broadcast messages
           if (newVariable && newVariable.type != variable.type) {
             Blockly.alert(Blockly.Msg.VARIABLE_ALREADY_EXISTS_FOR_ANOTHER_TYPE.replace('%1',
                 newName.toLowerCase()).replace('%2', newVariable.type),

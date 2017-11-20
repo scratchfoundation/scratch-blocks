@@ -112,6 +112,7 @@ Blockly.Xml.blockToDom = function(block, opt_noId) {
       container.setAttribute('name', field.name);
       if (field instanceof Blockly.FieldVariable || field instanceof
         Blockly.FieldVariableGetter) {
+        // TODO (#1253) Lookup variable by id instead of name
         var variable = block.workspace.getVariable(field.getValue());
         if (variable) {
           container.setAttribute('id', variable.getId());
