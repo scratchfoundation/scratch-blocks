@@ -334,4 +334,4 @@ Blockly.DELETE_VARIABLE_ID = 'DELETE_VARIABLE_ID';
  * and if selected, should trigger the prompt to create a new message.
  * @const {string}
  */
-Blockly.NEW_MESSAGE_ID = 'NEW_MESSAGE_ID';
+Blockly.NEW_BROADCAST_MESSAGE_ID = 'NEW_BROADCAST_MESSAGE_ID';

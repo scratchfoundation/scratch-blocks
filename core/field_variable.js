@@ -216,7 +216,7 @@ Blockly.FieldVariable.dropdownCreate = function() {
     options[i] = [variableModelList[i].name, variableModelList[i].getId()];
   }
   if (isBroadcastType) {
-    options.push([Blockly.Msg.NEW_MESSAGE, Blockly.NEW_MESSAGE_ID]);
+    options.push([Blockly.Msg.NEW_BROADCAST_MESSAGE, Blockly.NEW_BROADCAST_MESSAGE_ID]);
   } else {
     options.push([Blockly.Msg.RENAME_VARIABLE, Blockly.RENAME_VARIABLE_ID]);
     if (Blockly.Msg.DELETE_VARIABLE) {
@@ -256,7 +256,7 @@ Blockly.FieldVariable.prototype.onItemSelected = function(menu, menuItem) {
       // Delete variable.
       workspace.deleteVariable(this.getText());
       return;
-    } else if (id == Blockly.NEW_MESSAGE_ID) {
+    } else if (id == Blockly.NEW_BROADCAST_MESSAGE_ID) {
       var thisField = this;
       var setName = function(newName) {
         thisField.setValue(newName);
