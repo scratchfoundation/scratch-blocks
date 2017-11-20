@@ -80,7 +80,7 @@ Blockly.Blocks['event_whenbroadcastreceived'] = {
           "type": "field_variable",
           "name": "BROADCAST_OPTION",
           "variableTypes": ["broadcast_msg"],
-          "variable": "message1"
+          "variable": Blockly.Msg.DEFAULT_BROADCAST_MESSAGE_NAME
         }
       ],
       "category": Blockly.Categories.event,
@@ -153,7 +153,7 @@ Blockly.Blocks['event_broadcast_menu'] = {
             "type": "field_variable",
             "name": "BROADCAST_OPTION",
             "variableTypes":["broadcast_msg"],
-            "variable":"message1"
+            "variable": Blockly.Msg.DEFAULT_BROADCAST_MESSAGE_NAME
           }
         ],
         "colour": Blockly.Colours.event.secondary,
@@ -178,7 +178,7 @@ Blockly.Blocks['event_broadcast'] = {
           "type": "field_variable",
           "name": "BROADCAST_OPTION",
           "variableTypes": ["broadcast_msg"],
-          "variable": "message1"
+          "variable": Blockly.Msg.DEFAULT_BROADCAST_MESSAGE_NAME
         }
       ],
       "category": Blockly.Categories.event,
@@ -200,7 +200,7 @@ Blockly.Blocks['event_broadcastandwait'] = {
           "type": "field_variable",
           "name": "BROADCAST_OPTION",
           "variableTypes": ["broadcast_msg"],
-          "variable":"message1"
+          "variable": Blockly.Msg.DEFAULT_BROADCAST_MESSAGE_NAME
         }
       ],
       "category": Blockly.Categories.event,
