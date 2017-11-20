@@ -357,7 +357,7 @@ Blockly.Workspace.prototype.deleteVariable = function(name) {
   // Check whether this variable is a function parameter before deleting.
   var uses = this.getVariableUses(name);
   for (var i = 0, block; block = uses[i]; i++) {
-    if (block.type == 'procedures_defnoreturn' ||
+    if (block.type == Blockly.PROCEDURES_DEFINITION_BLOCK_TYPE ||
       block.type == 'procedures_defreturn') {
       var procedureName = block.getFieldValue('NAME');
       Blockly.alert(

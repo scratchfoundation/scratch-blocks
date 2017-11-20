@@ -59,6 +59,10 @@ goog.inherits(Blockly.FieldTextDropdown, Blockly.FieldTextInput);
  * Install this text drop-down field on a block.
  */
 Blockly.FieldTextDropdown.prototype.init = function() {
+  if (this.fieldGroup_) {
+    // Text input + dropdown has already been initialized once.
+    return;
+  }
   Blockly.FieldTextDropdown.superClass_.init.call(this);
   // Add dropdown arrow: "option ▾" (LTR) or "▾ אופציה" (RTL)
   // Positioned on render, after text size is calculated.
