@@ -337,6 +337,14 @@ Blockly.DELETE_VARIABLE_ID = 'DELETE_VARIABLE_ID';
 Blockly.NEW_BROADCAST_MESSAGE_ID = 'NEW_BROADCAST_MESSAGE_ID';
 
 /**
+ * String representing the variable type of broadcast message blocks.
+ * This string, for use in differentiating between types of variables,
+ * indicates that the current variable is a broadcast message.
+ * @const {string}
+ */
+Blockly.BROADCAST_MESSAGE_TYPE = 'broadcast_msg';
+
+/**
  * The type of all procedure definition blocks.
  * @const {string}
  */
