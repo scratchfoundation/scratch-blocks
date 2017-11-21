@@ -93,6 +93,32 @@ Blockly.Procedures.allProcedureMutations = function(root) {
 };
 
 /**
+ * Sorts an array of procedure definition mutations alphabetically.
+ * (Does not mutate the given array.)
+ * @param {!Array.<Element>} mutations Array of mutation xml elements.
+ * @return {!Array.<Element>} Sorted array of mutation xml elements.
+ * @private
+ */
+Blockly.Procedures.sortProcedureMutations_ = function(mutations) {
+  var newMutations = mutations.slice();
+
+  newMutations.sort(function(a, b) {
+    var procCodeA = a.getAttribute('proccode');
+    var procCodeB = b.getAttribute('proccode');
+
+    if (procCodeA < procCodeB) {
+      return -1;
+    } else if (procCodeA > procCodeB) {
+      return 1;
+    } else {
+      return 0;
+    }
+  });
+
+  return newMutations;
+};
+
+/**
  * Comparison function for case-insensitive sorting of the first element of
  * a tuple.
  * @param {!Array} ta First tuple.
@@ -203,6 +229,7 @@ Blockly.Procedures.flyoutCategory = function(workspace) {
 
   // Create call blocks for each procedure defined in the workspace
   var mutations = Blockly.Procedures.allProcedureMutations(workspace);
+  mutations = Blockly.Procedures.sortProcedureMutations_(mutations);
   for (var i = 0; i < mutations.length; i++) {
     var mutation = mutations[i];
     // <block type="procedures_call">
