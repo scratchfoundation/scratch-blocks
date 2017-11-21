@@ -97,7 +97,7 @@ Blockly.Procedures.allProcedureMutations = function(root) {
  * (Does not mutate the given array.)
  * @param {!Array.<Element>} mutations Array of mutation xml elements.
  * @return {!Array.<Element>} Sorted array of mutation xml elements.
- * @Private
+ * @private
  */
 Blockly.Procedures.sortProcedureMutations_ = function(mutations) {
   var newMutations = mutations.slice();
