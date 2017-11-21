@@ -77,13 +77,10 @@ Blockly.Blocks['event_whenbroadcastreceived'] = {
       "message0": "when I receive %1",
       "args0": [
         {
-          "type": "field_dropdown",
+          "type": "field_variable",
           "name": "BROADCAST_OPTION",
-          "options": [
-            ['message1', 'message1'],
-            ['message2', 'message2'],
-            ['new message', 'new message']
-          ]
+          "variableTypes": [Blockly.BROADCAST_MESSAGE_TYPE],
+          "variable": Blockly.Msg.DEFAULT_BROADCAST_MESSAGE_NAME
         }
       ],
       "category": Blockly.Categories.event,
@@ -153,13 +150,10 @@ Blockly.Blocks['event_broadcast_menu'] = {
         "message0": "%1",
         "args0": [
           {
-            "type": "field_dropdown",
+            "type": "field_variable",
             "name": "BROADCAST_OPTION",
-            "options": [
-              ['message1', 'message1'],
-              ['message2', 'message2'],
-              ['new message', 'new message']
-            ]
+            "variableTypes":[Blockly.BROADCAST_MESSAGE_TYPE],
+            "variable": Blockly.Msg.DEFAULT_BROADCAST_MESSAGE_NAME
           }
         ],
         "colour": Blockly.Colours.event.secondary,
@@ -181,8 +175,10 @@ Blockly.Blocks['event_broadcast'] = {
       "message0": "broadcast %1",
       "args0": [
         {
-          "type": "input_value",
-          "name": "BROADCAST_OPTION"
+          "type": "field_variable",
+          "name": "BROADCAST_OPTION",
+          "variableTypes": [Blockly.BROADCAST_MESSAGE_TYPE],
+          "variable": Blockly.Msg.DEFAULT_BROADCAST_MESSAGE_NAME
         }
       ],
       "category": Blockly.Categories.event,
@@ -201,8 +197,10 @@ Blockly.Blocks['event_broadcastandwait'] = {
       "message0": "broadcast %1 and wait",
       "args0": [
         {
-          "type": "input_value",
-          "name": "BROADCAST_OPTION"
+          "type": "field_variable",
+          "name": "BROADCAST_OPTION",
+          "variableTypes": [Blockly.BROADCAST_MESSAGE_TYPE],
+          "variable": Blockly.Msg.DEFAULT_BROADCAST_MESSAGE_NAME
         }
       ],
       "category": Blockly.Categories.event,
