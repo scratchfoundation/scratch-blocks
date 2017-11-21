@@ -342,7 +342,15 @@ Blockly.NEW_BROADCAST_MESSAGE_ID = 'NEW_BROADCAST_MESSAGE_ID';
  * indicates that the current variable is a broadcast message.
  * @const {string}
  */
-Blockly.BROADCAST_MESSAGE_TYPE = 'broadcast_msg';
+Blockly.BROADCAST_MESSAGE_VARIABLE_TYPE = 'broadcast_msg';
+
+/**
+ * String representing the variable type of list blocks.
+ * This string, for use in differentiating between types of variables,
+ * indicates that the current variable is a list.
+ * @const {string}
+ */
+Blockly.LIST_VARIABLE_TYPE = 'list';
 
 /**
  * The type of all procedure definition blocks.

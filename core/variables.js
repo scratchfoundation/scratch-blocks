@@ -176,9 +176,9 @@ Blockly.Variables.createVariable = function(workspace, opt_callback, opt_type) {
   // Decide on a modal message based on the opt_type. If opt_type was not
   // provided, default to the original message for scalar variables.
   var newMsg = '';
-  if (opt_type === 'list') {
+  if (opt_type === Blockly.LIST_VARIABLE_TYPE) {
     newMsg = Blockly.Msg.NEW_LIST_TITLE;
-  } else if (opt_type === 'broadcast_msg') {
+  } else if (opt_type === Blockly.BROADCAST_MESSAGE_VARIABLE_TYPE) {
     newMsg = Blockly.Msg.NEW_BROADCAST_MESSAGE_TITLE;
   } else {
     newMsg = Blockly.Msg.NEW_VARIABLE_TITLE;
