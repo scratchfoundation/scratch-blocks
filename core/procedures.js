@@ -97,8 +97,9 @@ Blockly.Procedures.allProcedureMutations = function(root) {
  * (Does not mutate the given array.)
  * @param {!Array.<Element>} mutations Array of mutation xml elements.
  * @return {!Array.<Element>} Sorted array of mutation xml elements.
+ * @Private
  */
-Blockly.Procedures.sortProcedureMutations = function(mutations) {
+Blockly.Procedures.sortProcedureMutations_ = function(mutations) {
   var newMutations = mutations.slice();
 
   newMutations.sort(function(a, b) {
@@ -228,7 +229,7 @@ Blockly.Procedures.flyoutCategory = function(workspace) {
 
   // Create call blocks for each procedure defined in the workspace
   var mutations = Blockly.Procedures.allProcedureMutations(workspace);
-  mutations = Blockly.Procedures.sortProcedureMutations(mutations);
+  mutations = Blockly.Procedures.sortProcedureMutations_(mutations);
   for (var i = 0; i < mutations.length; i++) {
     var mutation = mutations[i];
     // <block type="procedures_call">
