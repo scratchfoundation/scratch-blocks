@@ -96,16 +96,22 @@ Blockly.FieldTextInput.prototype.init = function() {
     return;
   }
 
+  var notInShadow = !this.sourceBlock_.isShadow();
+
+  if (notInShadow) {
+    this.className_ += ' blocklyEditableLabel';
+  }
+
   Blockly.FieldTextInput.superClass_.init.call(this);
+
   // If not in a shadow block, draw a box.
-  if (!this.sourceBlock_.isShadow()) {
+  if (notInShadow) {
     this.box_ = Blockly.utils.createSvgElement('rect', {
       'x': 0,
       'y': 0,
       'width': this.size_.width,
       'height': this.size_.height,
-      'fill': Blockly.Colours.textField,
-      'fill-opacity': 0.3
+      'fill': this.sourceBlock_.getColourTertiary()
     });
     this.fieldGroup_.insertBefore(this.box_, this.textElement_);
   }
