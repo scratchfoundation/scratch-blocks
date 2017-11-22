@@ -32,39 +32,28 @@
   </style>
 </head>
 <body>
-
-  <p>This page has two workspaces.  The workspace on the left (primaryWorkspace) will be the custom procedure editing workspace, which will hold a single non-deletable block.  The workspace on the right will hold the resulting procedure definition and call blocks.</p>
-
-
   <table width="100%">
     <tr>
       <td>
-        <div id="primaryDiv" style="height: 480px; width: 600px;"></div>
+        <div id="secondaryDiv" style="height: 480px; width: 600px;"></div>
       </td>
       <td>
-        <div id="secondaryDiv" style="height: 480px; width: 600px;"></div>
+        <div id="primaryDiv" style="height: 480px; width: 600px;"></div>
       </td>
     </tr>
     <tr>
-      <td>
+      <td></td>
+      <td id="editor-actions">
         <button id="text_number" onclick="addTextNumber()">Add text/number input</button>
         <button id="boolean" onclick="addBoolean()">Add boolean input</button>
         <button id="label" onclick="addLabel()">Add label</button>
-        <button id="cancelButton">cancel</button>
+        <button id="cancelButton" onclick="cancel()">cancel</button>
         <button id="okButton" onclick="applyMutation()">ok</button>
         <button id="rndButton" onclick="removeRandomInput()">remove random input</button>
         <button id="addRndButton" onclick="addRandomInput()">add random input</button>
       </td>
-      <td></td>
     </tr>
   </table>
-
-  <xml id="toolbox" style="display: none">
-    <block type="pen_clear"></block>
-    <block type="pen_stamp"></block>
-    <block type="pen_pendown"></block>
-    <block type="pen_penup"></block>
-  </xml>
 
   <xml id="mutator_blocks" style="display:none">
     <block type="procedures_declaration" x="25" y="25" deletable="false">
@@ -132,31 +121,55 @@
     </block>
   </xml>
 
+  <xml id="toolbox" style="display:none">
+    <category name="More" colour="#FF6680" secondaryColour="#FF4D6A" custom="PROCEDURE">
+    </category>
+  </xml>
 
   <script>
-    // Inject primary workspace.
-    var primaryWorkspace = Blockly.inject('primaryDiv',
+    var editorActions = document.getElementById('editor-actions');
+    editorActions.style.visibility = 'hidden';
+
+    var callback = null;
+    var mutationRoot = null;
+
+    var declarationWorkspace = Blockly.inject('primaryDiv',
         {media: '../media/'});
 
-    Blockly.Xml.domToWorkspace(document.getElementById('mutator_blocks_simplest'),
-        primaryWorkspace);
+    declarationWorkspace.addChangeListener(function() {
+      if (mutationRoot) {
+        mutationRoot.onChangeFn();
+      }
+    });
 
-    var mutationRoot = primaryWorkspace.getTopBlocks()[0];
+    var definitionWorkspace = Blockly.inject('secondaryDiv', {
+      media: '../media/',
+      toolbox: document.getElementById('toolbox'),
+      zoom: {
+        startScale: 0.75
+      }
+    });
 
-    primaryWorkspace.addChangeListener(function() {mutationRoot.onChangeFn();});
+    Blockly.Xml.clearWorkspaceAndLoadFromXml(document.getElementById('main_ws_blocks_simplest'),
+        definitionWorkspace);
 
-    // Inject secondary workspace.
-    var secondaryWorkspace = Blockly.inject('secondaryDiv',
-        {media: '../media/'});
-
-    Blockly.Xml.domToWorkspace(document.getElementById('main_ws_blocks_simplest'),
-        secondaryWorkspace);
+    Blockly.Procedures.externalProcedureDefCallback_ = function (mutation, cb) {
+      editorActions.style.visibility = 'visible';
+      callback = cb;
+      declarationWorkspace.clear();
+      mutationRoot = declarationWorkspace.newBlock('procedures_declaration');
+      mutationRoot.domToMutation(mutation);
+      mutationRoot.initSvg();
+      mutationRoot.render(false);
+    }
 
     function applyMutation() {
-      var mutation = mutationRoot.mutationToDom();
-      console.log(mutation);
-      secondaryWorkspace.getBlockById('caller_external').domToMutation(mutation);
-      secondaryWorkspace.getBlockById('caller_internal').domToMutation(mutation);
+      callback(mutationRoot.mutationToDom());
+      callback = null;
+      mutationRoot = null;
+      declarationWorkspace.clear();
+      definitionWorkspace.refreshToolboxSelection_()
+      editorActions.style.visibility = 'hidden';
     }
 
     function addLabel() {
@@ -176,8 +189,6 @@
       mutationRoot.removeInput(mutationRoot.inputList[rnd].name);
       mutationRoot.onChangeFn();
       mutationRoot.updateDisplay_();
-
-      applyMutation();
     }
 
     function addRandomInput() {
@@ -193,8 +204,14 @@
           addBoolean();
           break;
       }
+    }
 
-      applyMutation();
+    function cancel() {
+      callback = null;
+      mutationRoot = null;
+      declarationWorkspace.clear();
+      definitionWorkspace.refreshToolboxSelection_()
+      editorActions.style.visibility = 'hidden';
     }
 </script>
 
