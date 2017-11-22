@@ -1,7 +1,7 @@
 {
 	"@metadata": {
 		"author": "Ellen Spertus <ellen.spertus@gmail.com>",
-		"lastupdated": "2017-11-21 22:35:37.264080",
+		"lastupdated": "2017-11-22 14:58:27.784665",
 		"locale": "en",
 		"messagedocumentation" : "qqq"
 	},
@@ -37,7 +37,9 @@
 	"PROCEDURE_ALREADY_EXISTS": "A procedure named '%1' already exists.",
 	"NEW_PROCEDURE": "Make a Block...",
 	"NEW_LIST": "Create list...",
+	"NEW_LIST_TITLE": "New list name:",
 	"NEW_BROADCAST_MESSAGE": "New message...",
+	"NEW_BROADCAST_MESSAGE_TITLE": "New message name:",
 	"DEFAULT_BROADCAST_MESSAGE_NAME": "message1",
 	"DELETE_VARIABLE_CONFIRMATION": "Delete %1 uses of the '%2' variable?",
 	"CANNOT_DELETE_VARIABLE_PROCEDURE": "Can't delete the variable '%1' because it's part of the definition of the function '%2'",
