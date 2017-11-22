@@ -190,7 +190,7 @@ Blockly.FieldVariable.dropdownCreate = function() {
     // doesn't modify the workspace's list.
     for (var i = 0; i < variableTypes.length; i++) {
       var variableType = variableTypes[i];
-      if (variableType == Blockly.BROADCAST_MESSAGE_TYPE){
+      if (variableType == Blockly.BROADCAST_MESSAGE_VARIABLE_TYPE){
         isBroadcastType = true;
       }
       var variables = workspace.getVariablesOfType(variableType);
@@ -261,7 +261,7 @@ Blockly.FieldVariable.prototype.onItemSelected = function(menu, menuItem) {
       var setName = function(newName) {
         thisField.setValue(newName);
       };
-      Blockly.Variables.createVariable(workspace, setName, Blockly.BROADCAST_MESSAGE_TYPE);
+      Blockly.Variables.createVariable(workspace, setName, Blockly.BROADCAST_MESSAGE_VARIABLE_TYPE);
       return;
     }
 

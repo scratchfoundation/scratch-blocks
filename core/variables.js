@@ -173,13 +173,19 @@ Blockly.Variables.generateUniqueName = function(workspace) {
  * @param {string} opt_type Optional type of variable, like 'string' or 'list'.
  */
 Blockly.Variables.createVariable = function(workspace, opt_callback, opt_type) {
-  // (karishma) TODO (#1244) Modal message should change depending on what type
-  // (opt_type above) of variable we are creating. If opt_type is not provided,
-  // we should default to the original 'NEW_VARIABLE_TITLE' message for
-  // scalar variables.
+  // Decide on a modal message based on the opt_type. If opt_type was not
+  // provided, default to the original message for scalar variables.
+  var newMsg = '';
+  if (opt_type === Blockly.LIST_VARIABLE_TYPE) {
+    newMsg = Blockly.Msg.NEW_LIST_TITLE;
+  } else if (opt_type === Blockly.BROADCAST_MESSAGE_VARIABLE_TYPE) {
+    newMsg = Blockly.Msg.NEW_BROADCAST_MESSAGE_TITLE;
+  } else {
+    newMsg = Blockly.Msg.NEW_VARIABLE_TITLE;
+  }
   // This function needs to be named so it can be called recursively.
   var promptAndCheckWithAlert = function(defaultName) {
-    Blockly.Variables.promptName(Blockly.Msg.NEW_VARIABLE_TITLE, defaultName,
+    Blockly.Variables.promptName(newMsg, defaultName,
       function(text) {
         if (text) {
           // TODO (#1245) use separate namespaces for lists, variables, and
