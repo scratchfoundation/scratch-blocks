@@ -532,6 +532,7 @@ Blockly.ScratchBlocks.ProcedureUtils.updateDeclarationProcCode_ = function() {
 
 /**
  * Focus on the final input of the block
+ * @private
  */
 Blockly.ScratchBlocks.ProcedureUtils.focusLastInput_ = function() {
   if (this.inputList.length > 0) {
