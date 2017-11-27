@@ -534,7 +534,7 @@ Blockly.ScratchBlocks.ProcedureUtils.updateDeclarationProcCode_ = function() {
  * Focus on the last argument editor or label editor on the block.
  * @private
  */
-Blockly.ScratchBlocks.ProcedureUtils.focusLastInput_ = function() {
+Blockly.ScratchBlocks.ProcedureUtils.focusLastEditor_ = function() {
   if (this.inputList.length > 0) {
     var newInput = this.inputList[this.inputList.length - 1];
     if (newInput.type == Blockly.DUMMY_INPUT) {
@@ -555,7 +555,7 @@ Blockly.ScratchBlocks.ProcedureUtils.addLabelExternal = function() {
   Blockly.WidgetDiv.hide(true);
   this.procCode_ = this.procCode_ + ' label text';
   this.updateDisplay_();
-  this.focusLastInput_();
+  this.focusLastEditor_();
 };
 
 /**
@@ -570,7 +570,7 @@ Blockly.ScratchBlocks.ProcedureUtils.addBooleanExternal = function() {
   this.argumentIds_.push(Blockly.utils.genUid());
   this.argumentDefaults_.push('todo');
   this.updateDisplay_();
-  this.focusLastInput_();
+  this.focusLastEditor_();
 };
 
 /**
@@ -585,7 +585,7 @@ Blockly.ScratchBlocks.ProcedureUtils.addStringNumberExternal = function() {
   this.argumentIds_.push(Blockly.utils.genUid());
   this.argumentDefaults_.push('todo');
   this.updateDisplay_();
-  this.focusLastInput_();
+  this.focusLastEditor_();
 };
 
 Blockly.Blocks['procedures_definition'] = {
@@ -707,7 +707,7 @@ Blockly.Blocks['procedures_declaration'] = {
 
   // Only exist on procedures_declaration.
   createArgumentEditor_: Blockly.ScratchBlocks.ProcedureUtils.createArgumentEditor_,
-  focusLastInput_: Blockly.ScratchBlocks.ProcedureUtils.focusLastInput_,
+  focusLastEditor_: Blockly.ScratchBlocks.ProcedureUtils.focusLastEditor_,
   addLabelExternal: Blockly.ScratchBlocks.ProcedureUtils.addLabelExternal,
   addBooleanExternal: Blockly.ScratchBlocks.ProcedureUtils.addBooleanExternal,
   addStringNumberExternal: Blockly.ScratchBlocks.ProcedureUtils.addStringNumberExternal,
