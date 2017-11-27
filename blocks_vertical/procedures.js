@@ -263,7 +263,7 @@ Blockly.ScratchBlocks.ProcedureUtils.addLabelField_ = function(text) {
 Blockly.ScratchBlocks.ProcedureUtils.addLabelEditor_ = function(text) {
   if (text) {
     this.appendDummyInput(Blockly.utils.genUid()).
-        appendField(new Blockly.FieldTextInput(text));
+        appendField(new Blockly.FieldTextInputRemovable(text));
   }
 };
 
@@ -588,6 +588,53 @@ Blockly.ScratchBlocks.ProcedureUtils.addStringNumberExternal = function() {
   this.focusLastEditor_();
 };
 
+/**
+ * Callback to remove a field, only for the declaration block.
+ * @param {Blockly.Field} field The field being removed.
+ * @public
+ */
+Blockly.ScratchBlocks.ProcedureUtils.removeFieldCallback = function(field) {
+  // Do not delete if there is only one input
+  if (this.inputList.length === 1) {
+    return;
+  }
+
+  for(var n = 0; n < this.inputList.length; n++) {
+    var input = this.inputList[n];
+    var name = input.name;
+    if (input.connection) {
+      var target = input.connection.targetBlock();
+      if (target.getField(field.name) == field) {
+        Blockly.WidgetDiv.hide(true);
+        this.removeInput(name);
+        this.onChangeFn();
+        this.updateDisplay_();
+      }
+    } else {
+      for (var j = 0; j < input.fieldRow.length; j++) {
+        if (input.fieldRow[j] == field) {
+          Blockly.WidgetDiv.hide(true);
+          this.removeInput(name);
+          this.onChangeFn();
+          this.updateDisplay_();
+        }
+      }
+    }
+  }
+};
+
+/**
+ * Callback to pass removeField up to the declaration block from arguments.
+ * @param {Blockly.Field} field The field being removed.
+ * @public
+ */
+Blockly.ScratchBlocks.ProcedureUtils.removeArgumentCallback_ = function(
+    field) {
+  if (this.parentBlock_ && this.parentBlock_.removeFieldCallback) {
+    this.parentBlock_.removeFieldCallback(field);
+  }
+};
+
 Blockly.Blocks['procedures_definition'] = {
   /**
    * Block for defining a procedure with no return value.
@@ -705,6 +752,9 @@ Blockly.Blocks['procedures_declaration'] = {
   populateArgument_: Blockly.ScratchBlocks.ProcedureUtils.populateArgumentOnDeclaration_,
   addProcedureLabel_: Blockly.ScratchBlocks.ProcedureUtils.addLabelEditor_,
 
+  // Exist on declaration and arguments editors, with different implementations.
+  removeFieldCallback: Blockly.ScratchBlocks.ProcedureUtils.removeFieldCallback,
+
   // Only exist on procedures_declaration.
   createArgumentEditor_: Blockly.ScratchBlocks.ProcedureUtils.createArgumentEditor_,
   focusLastEditor_: Blockly.ScratchBlocks.ProcedureUtils.focusLastEditor_,
@@ -749,7 +799,7 @@ Blockly.Blocks['argument_editor_boolean'] = {
     this.jsonInit({ "message0": " %1",
       "args0": [
         {
-          "type": "field_input",
+          "type": "field_input_removable",
           "name": "TEXT",
           "text": "foo"
         }
@@ -759,7 +809,9 @@ Blockly.Blocks['argument_editor_boolean'] = {
       "colourTertiary": Blockly.Colours.textField,
       "extensions": ["output_boolean"]
     });
-  }
+  },
+  // Exist on declaration and arguments editors, with different implementations.
+  removeFieldCallback: Blockly.ScratchBlocks.ProcedureUtils.removeArgumentCallback_
 };
 
 Blockly.Blocks['argument_editor_string_number'] = {
@@ -767,7 +819,7 @@ Blockly.Blocks['argument_editor_string_number'] = {
     this.jsonInit({ "message0": " %1",
       "args0": [
         {
-          "type": "field_input",
+          "type": "field_input_removable",
           "name": "TEXT",
           "text": "foo"
         }
@@ -777,5 +829,7 @@ Blockly.Blocks['argument_editor_string_number'] = {
       "colourTertiary": Blockly.Colours.textField,
       "extensions": ["output_number", "output_string"]
     });
-  }
+  },
+  // Exist on declaration and arguments editors, with different implementations.
+  removeFieldCallback: Blockly.ScratchBlocks.ProcedureUtils.removeArgumentCallback_
 };

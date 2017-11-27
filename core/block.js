@@ -1342,6 +1342,9 @@ Blockly.Block.prototype.interpolate_ = function(message, args, lastDummyAlign) {
             case 'field_input':
               field = Blockly.Block.newFieldTextInputFromJson_(element);
               break;
+            case 'field_input_removable':
+              field = Blockly.Block.newFieldTextInputRemovableFromJson_(element);
+              break;
             case 'field_textdropdown':
               field = new Blockly.FieldTextDropdown(element['text'], element['options']);
               if (typeof element['spellcheck'] == 'boolean') {
@@ -1471,6 +1474,23 @@ Blockly.Block.newFieldLabelSerializableFromJson_ = function(options) {
 Blockly.Block.newFieldTextInputFromJson_ = function(options) {
   var text = Blockly.utils.replaceMessageReferences(options['text']);
   var field = new Blockly.FieldTextInput(text, options['class']);
+  if (typeof options['spellcheck'] == 'boolean') {
+    field.setSpellcheck(options['spellcheck']);
+  }
+  return field;
+};
+
+/**
+ * Helper function to construct a FieldTextInputRemovable from a JSON arg object,
+ * dereferencing any string table references.
+ * @param {!Object} options A JSON object with options (text, class, and
+ *                          spellcheck).
+ * @returns {!Blockly.FieldTextInput} The new text input.
+ * @private
+ */
+Blockly.Block.newFieldTextInputRemovableFromJson_ = function(options) {
+  var text = Blockly.utils.replaceMessageReferences(options['text']);
+  var field = new Blockly.FieldTextInputRemovable(text, options['class']);
   if (typeof options['spellcheck'] == 'boolean') {
     field.setSpellcheck(options['spellcheck']);
   }

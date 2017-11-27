@@ -163,7 +163,7 @@ Blockly.Css.CONTENT = [
   '}',
 
   '.blocklyWidgetDiv.fieldTextInput {',
-    'overflow: hidden;',
+    // 'overflow: hidden;',
     'border: 1px solid;',
     'box-sizing: border-box;',
     'transform-origin: 0 0;',
