@@ -279,11 +279,11 @@ Blockly.ScratchBlocks.ProcedureUtils.buildShadowDom_ = function(type) {
   if (type == 'n') {
     var shadowType = 'math_number';
     var fieldName = 'NUM';
-    var fieldValue = '10';
+    var fieldValue = '1';
   } else {
     var shadowType = 'text';
     var fieldName = 'TEXT';
-    var fieldValue = 'hello world';
+    var fieldValue = '';
   }
   shadowDom.setAttribute('type', shadowType);
   var fieldDom = goog.dom.createDom('field', null, fieldValue);
@@ -306,9 +306,9 @@ Blockly.ScratchBlocks.ProcedureUtils.attachShadow_ = function(input,
     var blockType = argumentType == 'n' ? 'math_number' : 'text';
     var newBlock = this.workspace.newBlock(blockType);
     if (argumentType == 'n') {
-      newBlock.setFieldValue('99', 'NUM');
+      newBlock.setFieldValue('1', 'NUM');
     } else {
-      newBlock.setFieldValue('hello world', 'TEXT');
+      newBlock.setFieldValue('', 'TEXT');
     }
     newBlock.setShadow(true);
     if (!this.isInsertionMarker()) {
@@ -531,12 +531,30 @@ Blockly.ScratchBlocks.ProcedureUtils.updateDeclarationProcCode_ = function() {
 };
 
 /**
+ * Focus on the final input of the block
+ */
+Blockly.ScratchBlocks.ProcedureUtils.focusLastInput_ = function() {
+  if (this.inputList.length > 0) {
+    var newInput = this.inputList[this.inputList.length - 1];
+    if (newInput.type == Blockly.DUMMY_INPUT) {
+      newInput.fieldRow[0].showEditor_();
+    } else if (newInput.type == Blockly.INPUT_VALUE) {
+      // Inspect the argument editor.
+      var target = newInput.connection.targetBlock();
+      target.getField('TEXT').showEditor_();
+    }
+  }
+};
+
+/**
  * Externally-visible function to add a label to the procedure declaration.
  * @public
  */
 Blockly.ScratchBlocks.ProcedureUtils.addLabelExternal = function() {
+  Blockly.WidgetDiv.hide(true);
   this.procCode_ = this.procCode_ + ' label text';
   this.updateDisplay_();
+  this.focusLastInput_();
 };
 
 /**
@@ -545,11 +563,13 @@ Blockly.ScratchBlocks.ProcedureUtils.addLabelExternal = function() {
  * @public
  */
 Blockly.ScratchBlocks.ProcedureUtils.addBooleanExternal = function() {
+  Blockly.WidgetDiv.hide(true);
   this.procCode_ = this.procCode_ + ' %b';
   this.displayNames_.push('boolean');
   this.argumentIds_.push(Blockly.utils.genUid());
   this.argumentDefaults_.push('todo');
   this.updateDisplay_();
+  this.focusLastInput_();
 };
 
 /**
@@ -558,11 +578,13 @@ Blockly.ScratchBlocks.ProcedureUtils.addBooleanExternal = function() {
  * @public
  */
 Blockly.ScratchBlocks.ProcedureUtils.addStringNumberExternal = function() {
+  Blockly.WidgetDiv.hide(true);
   this.procCode_ = this.procCode_ + ' %s';
   this.displayNames_.push('string or number');
   this.argumentIds_.push(Blockly.utils.genUid());
   this.argumentDefaults_.push('todo');
   this.updateDisplay_();
+  this.focusLastInput_();
 };
 
 Blockly.Blocks['procedures_definition'] = {
@@ -684,6 +706,7 @@ Blockly.Blocks['procedures_declaration'] = {
 
   // Only exist on procedures_declaration.
   createArgumentEditor_: Blockly.ScratchBlocks.ProcedureUtils.createArgumentEditor_,
+  focusLastInput_: Blockly.ScratchBlocks.ProcedureUtils.focusLastInput_,
   addLabelExternal: Blockly.ScratchBlocks.ProcedureUtils.addLabelExternal,
   addBooleanExternal: Blockly.ScratchBlocks.ProcedureUtils.addBooleanExternal,
   addStringNumberExternal: Blockly.ScratchBlocks.ProcedureUtils.addStringNumberExternal,
@@ -755,4 +778,3 @@ Blockly.Blocks['argument_editor_string_number'] = {
     });
   }
 };
-
