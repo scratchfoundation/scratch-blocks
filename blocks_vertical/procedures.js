@@ -531,7 +531,7 @@ Blockly.ScratchBlocks.ProcedureUtils.updateDeclarationProcCode_ = function() {
 };
 
 /**
- * Focus on the final input of the block
+ * Focus on the last argument editor or label editor on the block.
  * @private
  */
 Blockly.ScratchBlocks.ProcedureUtils.focusLastInput_ = function() {
