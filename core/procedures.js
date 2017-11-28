@@ -82,7 +82,7 @@ Blockly.Procedures.allProcedureMutations = function(root) {
   var blocks = root.getAllBlocks();
   var mutations = [];
   for (var i = 0; i < blocks.length; i++) {
-    if (blocks[i].type === 'procedures_prototype') {
+    if (blocks[i].type == 'procedures_prototype') {
       var mutation = blocks[i].mutationToDom();
       if (mutation) {
         mutations.push(mutation);
@@ -317,7 +317,7 @@ Blockly.Procedures.getDefineBlock = function(procCode, workspace) {
     var input = blocks[i].getInput('custom_block');
     if (input && input.connection) {
       var prototypeBlock = input.connection.targetBlock();
-      if (prototypeBlock.getProcCode && prototypeBlock.getProcCode() === procCode) {
+      if (prototypeBlock.getProcCode && prototypeBlock.getProcCode() == procCode) {
         return blocks[i];
       }
     }
@@ -334,7 +334,7 @@ Blockly.Procedures.getDefineBlock = function(procCode, workspace) {
 Blockly.Procedures.getPrototypeBlock = function(procCode, workspace) {
   var blocks = workspace.getAllBlocks();
   for (var i = 0; i < blocks.length; i++) {
-    if (blocks[i].type === Blockly.PROCEDURES_PROTOTYPE_BLOCK_TYPE) {
+    if (blocks[i].type == Blockly.PROCEDURES_PROTOTYPE_BLOCK_TYPE) {
       if (blocks[i].getProcCode && blocks[i].getProcCode() == procCode) {
         return blocks[i];
       }
@@ -366,32 +366,40 @@ Blockly.Procedures.newProcedureMutation = function() {
 Blockly.Procedures.createProcedureDefCallback_ = function(workspace) {
   Blockly.Procedures.externalProcedureDefCallback_(
     Blockly.Procedures.newProcedureMutation(),
-    function(newMutation) {
-      if (newMutation) {
-
-        // TODO Is this the best way to assemble the new procedure definition?
-        var definitionBlock = workspace.newBlock('procedures_definition');
-        var prototypeBlock = workspace.newBlock('procedures_prototype');
-        prototypeBlock.setShadow(true);
-        definitionBlock.getInput('custom_block')
-          .connection.connect(prototypeBlock.previousConnection);
-        definitionBlock.initSvg();
-        definitionBlock.render();
-        prototypeBlock.domToMutation(newMutation);
-        prototypeBlock.initSvg();
-        prototypeBlock.render();
-
-        // TODO how to position the new block in the right place?
-        definitionBlock.moveBy(30, 30);
-        definitionBlock.scheduleSnapAndBump();
-      }
-    }
+    Blockly.Procedures.createProcedureCallbackFactory_(workspace)
   );
 };
 
 /**
+ * Callback factory for adding a new custom procedure from a mutation.
+ * @param {!Blockly.Workspace} workspace The workspace to create the new procedure on.
+ * @return {function(?Element)} callback for creating the new custom procedure.
+ * @private
+ */
+Blockly.Procedures.createProcedureCallbackFactory_ = function(workspace) {
+  return function(mutation) {
+    if (mutation) {
+      // Create new procedure definition and prototype blocks with the mutation.
+      var definitionBlock = workspace.newBlock('procedures_definition');
+      var prototypeBlock = workspace.newBlock('procedures_prototype');
+      prototypeBlock.setShadow(true);
+      definitionBlock.getInput('custom_block')
+        .connection.connect(prototypeBlock.previousConnection);
+      definitionBlock.initSvg();
+      definitionBlock.render();
+      prototypeBlock.domToMutation(mutation);
+      prototypeBlock.initSvg();
+      prototypeBlock.render();
+
+      // Position the new block on the workspace.
+      definitionBlock.moveBy(30, 30);
+      definitionBlock.scheduleSnapAndBump();
+    }
+  };
+};
+
+/**
  * Callback to open the modal for editing custom procedures.
- * TODO(#603): Implement.
  * @param {!Blockly.Block} block The block that was right-clicked.
  * @private
  */
@@ -425,31 +433,41 @@ Blockly.Procedures.editProcedureCallback_ = function(block) {
   // Block now refers to the procedure prototype block, it is safe to proceed.
   Blockly.Procedures.externalProcedureDefCallback_(
     block.mutationToDom(),
-    function(newMutation) {
-      if (newMutation) {
-        // Update all the callers
-        var defineBlock = Blockly.Procedures.getDefineBlock(block.getProcCode(),
-          block.workspace);
-        if (defineBlock) {
-          var callers = Blockly.Procedures.getCallers(block.getProcCode(),
-              defineBlock.workspace, defineBlock, true /* allowRecursive */);
-          for (var i = 0, caller; caller = callers[i]; i++) {
-            var oldMutationDom = caller.mutationToDom();
-            var oldMutation = oldMutationDom && Blockly.Xml.domToText(oldMutationDom);
-            caller.domToMutation(newMutation);
-            if (oldMutation != newMutation) {
-              Blockly.Events.fire(new Blockly.Events.BlockChange(
-                  caller, 'mutation', null, oldMutation, newMutation));
-            }
-          }
-        } else {
-          alert('No define block on workspace'); // TODO decide what to do about this.
-        }
-        // And update the prototype block
-        block.domToMutation(newMutation);
-      }
-    }
+    Blockly.Procedures.editProcedureCallbackFactory_(block)
   );
+};
+
+/**
+ * Callback factory for editing an existing custom procedure.
+ * @param {!Blockly.Block} block The procedure prototype block being edited.
+ * @return {function(?Element)} Callback for editing the custom procedure.
+ * @private
+ */
+Blockly.Procedures.editProcedureCallbackFactory_ = function(block) {
+  return function(mutation) {
+    if (mutation) {
+      // Update all the callers
+      var defineBlock = Blockly.Procedures.getDefineBlock(block.getProcCode(),
+        block.workspace);
+      if (defineBlock) {
+        var callers = Blockly.Procedures.getCallers(block.getProcCode(),
+            defineBlock.workspace, defineBlock, true /* allowRecursive */);
+        for (var i = 0, caller; caller = callers[i]; i++) {
+          var oldMutationDom = caller.mutationToDom();
+          var oldMutation = oldMutationDom && Blockly.Xml.domToText(oldMutationDom);
+          caller.domToMutation(mutation);
+          if (oldMutation != mutation) {
+            Blockly.Events.fire(new Blockly.Events.BlockChange(
+                caller, 'mutation', null, oldMutation, mutation));
+          }
+        }
+      } else {
+        alert('No define block on workspace'); // TODO decide what to do about this.
+      }
+      // And update the prototype block
+      block.domToMutation(mutation);
+    }
+  };
 };
 
 /**
