@@ -314,9 +314,8 @@ Blockly.Procedures.getDefineBlock = function(procCode, workspace) {
   // Assume that a procedure definition is a top block.
   var blocks = workspace.getTopBlocks(false);
   for (var i = 0; i < blocks.length; i++) {
-    var input = blocks[i].getInput('custom_block');
-    if (input && input.connection) {
-      var prototypeBlock = input.connection.targetBlock();
+    if (blocks[i].type == Blockly.PROCEDURES_DEFINITION_BLOCK_TYPE) {
+      var prototypeBlock = blocks[i].getInput('custom_block').connection.targetBlock();
       if (prototypeBlock.getProcCode && prototypeBlock.getProcCode() == procCode) {
         return blocks[i];
       }
@@ -332,13 +331,9 @@ Blockly.Procedures.getDefineBlock = function(procCode, workspace) {
  * @return {Blockly.Block} The procedure prototype block, or null not found.
  */
 Blockly.Procedures.getPrototypeBlock = function(procCode, workspace) {
-  var blocks = workspace.getAllBlocks();
-  for (var i = 0; i < blocks.length; i++) {
-    if (blocks[i].type == Blockly.PROCEDURES_PROTOTYPE_BLOCK_TYPE) {
-      if (blocks[i].getProcCode && blocks[i].getProcCode() == procCode) {
-        return blocks[i];
-      }
-    }
+  var defineBlock = Blockly.Procedures.getDefineBlock(procCode, workspace);
+  if (defineBlock) {
+    return defineBlock.getInput('custom_block').connection.targetBlock();
   }
   return null;
 };
@@ -348,7 +343,6 @@ Blockly.Procedures.getPrototypeBlock = function(procCode, workspace) {
  * @return {Element} The mutation for a new custom procedure
  */
 Blockly.Procedures.newProcedureMutation = function() {
-  // TODO Is this the "default new block" we want? Scratch 2 has a blank label.
   var mutation = goog.dom.createDom('mutation');
   mutation.setAttribute('proccode', 'block name');
   mutation.setAttribute('argumentids', JSON.stringify([]));
@@ -379,21 +373,20 @@ Blockly.Procedures.createProcedureDefCallback_ = function(workspace) {
 Blockly.Procedures.createProcedureCallbackFactory_ = function(workspace) {
   return function(mutation) {
     if (mutation) {
-      // Create new procedure definition and prototype blocks with the mutation.
-      var definitionBlock = workspace.newBlock('procedures_definition');
-      var prototypeBlock = workspace.newBlock('procedures_prototype');
-      prototypeBlock.setShadow(true);
-      definitionBlock.getInput('custom_block')
-        .connection.connect(prototypeBlock.previousConnection);
-      definitionBlock.initSvg();
-      definitionBlock.render();
-      prototypeBlock.domToMutation(mutation);
-      prototypeBlock.initSvg();
-      prototypeBlock.render();
-
-      // Position the new block on the workspace.
-      definitionBlock.moveBy(30, 30);
-      definitionBlock.scheduleSnapAndBump();
+      var blockText = '<xml>' +
+          '<block type="procedures_definition">' +
+          '<statement name="custom_block">' +
+          '<shadow type="procedures_prototype">' +
+          '</shadow>' +
+          '</statement>' +
+          '</block>' +
+          '</xml>';
+      var blockDom = Blockly.Xml.textToDom(blockText).firstChild;
+      var block = Blockly.Xml.domToBlock(blockDom, workspace);
+      block.getInput('custom_block').connection.targetBlock()
+        .domToMutation(mutation);
+      block.moveBy(30, 30);
+      block.scheduleSnapAndBump();
     }
   };
 };
