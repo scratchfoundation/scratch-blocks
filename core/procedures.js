@@ -77,6 +77,7 @@ Blockly.Procedures.allProcedures = function(root) {
  * Find all user-created procedure definition mutations in a workspace.
  * @param {!Blockly.Workspace} root Root workspace.
  * @return {!Array.<Element>} Array of mutation xml elements.
+ * @package
  */
 Blockly.Procedures.allProcedureMutations = function(root) {
   var blocks = root.getAllBlocks();
@@ -280,6 +281,7 @@ Blockly.Procedures.getCallers = function(name, ws, definitionRoot,
  * @param {string} name Name of procedure (procCode in scratch-blocks).
  * @param {!Blockly.Workspace} ws The workspace to find callers in.
  * @param {!Element} mutation New mutation for the callers.
+ * @package
  */
 Blockly.Procedures.mutateCallersAndPrototype = function(name, ws, mutation) {
   var defineBlock = Blockly.Procedures.getDefineBlock(name, ws);
@@ -311,6 +313,7 @@ Blockly.Procedures.mutateCallersAndPrototype = function(name, ws, mutation) {
  * @param {string} procCode The identifier of the procedure.
  * @param {!Blockly.Workspace} workspace The workspace to search.
  * @return {Blockly.Block} The procedure definition block, or null not found.
+ * @package
  */
 Blockly.Procedures.getDefineBlock = function(procCode, workspace) {
   // Assume that a procedure definition is a top block.
@@ -331,6 +334,7 @@ Blockly.Procedures.getDefineBlock = function(procCode, workspace) {
  * @param {string} procCode The identifier of the procedure.
  * @param {!Blockly.Workspace} workspace The workspace to search.
  * @return {Blockly.Block} The procedure prototype block, or null not found.
+ * @package
  */
 Blockly.Procedures.getPrototypeBlock = function(procCode, workspace) {
   var defineBlock = Blockly.Procedures.getDefineBlock(procCode, workspace);
@@ -343,6 +347,7 @@ Blockly.Procedures.getPrototypeBlock = function(procCode, workspace) {
 /**
  * Create a mutation for a brand new custom procedure.
  * @return {Element} The mutation for a new custom procedure
+ * @package
  */
 Blockly.Procedures.newProcedureMutation = function() {
   var mutationText = '<xml>' +
