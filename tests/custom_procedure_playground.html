@@ -153,7 +153,7 @@
     Blockly.Xml.clearWorkspaceAndLoadFromXml(document.getElementById('main_ws_blocks_simplest'),
         definitionWorkspace);
 
-    Blockly.Procedures.externalProcedureDefCallback_ = function (mutation, cb) {
+    Blockly.Procedures.externalProcedureDefCallback = function (mutation, cb) {
       editorActions.style.visibility = 'visible';
       callback = cb;
       declarationWorkspace.clear();
