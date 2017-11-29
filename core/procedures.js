@@ -308,7 +308,7 @@ Blockly.Procedures.mutateCallersAndPrototype = function(name, ws, mutation) {
 
 /**
  * Find the definition block for the named procedure.
- * @param {string} procCode The identifier of the procedure to delete.
+ * @param {string} procCode The identifier of the procedure.
  * @param {!Blockly.Workspace} workspace The workspace to search.
  * @return {Blockly.Block} The procedure definition block, or null not found.
  */
@@ -328,7 +328,7 @@ Blockly.Procedures.getDefineBlock = function(procCode, workspace) {
 
 /**
  * Find the prototype block for the named procedure.
- * @param {string} procCode The identifier of the procedure to delete.
+ * @param {string} procCode The identifier of the procedure.
  * @param {!Blockly.Workspace} workspace The workspace to search.
  * @return {Blockly.Block} The procedure prototype block, or null not found.
  */
