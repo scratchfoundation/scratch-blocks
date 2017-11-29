@@ -82,7 +82,7 @@ Blockly.Procedures.allProcedureMutations = function(root) {
   var blocks = root.getAllBlocks();
   var mutations = [];
   for (var i = 0; i < blocks.length; i++) {
-    if (blocks[i].type == 'procedures_prototype') {
+    if (blocks[i].type == Blockly.PROCEDURES_PROTOTYPE_BLOCK_TYPE) {
       var mutation = blocks[i].mutationToDom();
       if (mutation) {
         mutations.push(mutation);
