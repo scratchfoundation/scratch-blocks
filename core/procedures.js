@@ -345,13 +345,16 @@ Blockly.Procedures.getPrototypeBlock = function(procCode, workspace) {
  * @return {Element} The mutation for a new custom procedure
  */
 Blockly.Procedures.newProcedureMutation = function() {
-  var mutation = goog.dom.createDom('mutation');
-  mutation.setAttribute('proccode', 'block name');
-  mutation.setAttribute('argumentids', JSON.stringify([]));
-  mutation.setAttribute('argumentnames', JSON.stringify([]));
-  mutation.setAttribute('argumentdefaults', JSON.stringify([]));
-  mutation.setAttribute('warp', false);
-  return mutation;
+  var mutationText = '<xml>' +
+      '<mutation' +
+      ' proccode="block name"' +
+      ' argumentids="[]"' +
+      ' argumentnames="[]"' +
+      ' argumentdefaults="[]"' +
+      ' warp="false">' +
+      '</mutation>' +
+      '</xml>';
+  return Blockly.Xml.textToDom(mutationText).firstChild;
 };
 
 /**
