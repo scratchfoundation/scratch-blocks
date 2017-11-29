@@ -834,6 +834,7 @@ Blockly.Gesture.prototype.forceStartBlockDrag = function(fakeEvent, block) {
  */
 Blockly.Gesture.prototype.duplicateOnDrag_ = function() {
   var newBlock = null;
+  Blockly.Events.disable();
   try {
     // Note: targetBlock_ should have no children.  If it has children we would
     // need to update shadow block IDs to avoid problems in the VM.
