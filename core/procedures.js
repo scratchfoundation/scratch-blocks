@@ -369,8 +369,8 @@ Blockly.Procedures.newProcedureMutation = function() {
  */
 Blockly.Procedures.createProcedureDefCallback_ = function(workspace) {
   Blockly.Procedures.externalProcedureDefCallback(
-    Blockly.Procedures.newProcedureMutation(),
-    Blockly.Procedures.createProcedureCallbackFactory_(workspace)
+      Blockly.Procedures.newProcedureMutation(),
+      Blockly.Procedures.createProcedureCallbackFactory_(workspace)
   );
 };
 
@@ -431,12 +431,12 @@ Blockly.Procedures.editProcedureCallback_ = function(block) {
   } else if (block.type == Blockly.PROCEDURES_CALL_BLOCK_TYPE) {
     // This is a call block, find the prototype corresponding to the procCode
     block = Blockly.Procedures.getPrototypeBlock(
-      block.getProcCode(), block.workspace);
+        block.getProcCode(), block.workspace);
   }
   // Block now refers to the procedure prototype block, it is safe to proceed.
   Blockly.Procedures.externalProcedureDefCallback(
-    block.mutationToDom(),
-    Blockly.Procedures.editProcedureCallbackFactory_(block)
+      block.mutationToDom(),
+      Blockly.Procedures.editProcedureCallbackFactory_(block)
   );
 };
 
@@ -450,7 +450,7 @@ Blockly.Procedures.editProcedureCallbackFactory_ = function(block) {
   return function(mutation) {
     if (mutation) {
       Blockly.Procedures.mutateCallersAndPrototype(block.getProcCode(),
-        block.workspace, mutation);
+          block.workspace, mutation);
     }
   };
 };
