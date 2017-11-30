@@ -77,12 +77,13 @@ Blockly.Procedures.allProcedures = function(root) {
  * Find all user-created procedure definition mutations in a workspace.
  * @param {!Blockly.Workspace} root Root workspace.
  * @return {!Array.<Element>} Array of mutation xml elements.
+ * @package
  */
 Blockly.Procedures.allProcedureMutations = function(root) {
   var blocks = root.getAllBlocks();
   var mutations = [];
   for (var i = 0; i < blocks.length; i++) {
-    if (blocks[i].type === 'procedures_prototype') {
+    if (blocks[i].type == Blockly.PROCEDURES_PROTOTYPE_BLOCK_TYPE) {
       var mutation = blocks[i].mutationToDom();
       if (mutation) {
         mutations.push(mutation);
@@ -255,7 +256,7 @@ Blockly.Procedures.addCreateButton_ = function(workspace, xmlList) {
   var msg = Blockly.Msg.NEW_PROCEDURE;
   var callbackKey = 'CREATE_PROCEDURE';
   var callback = function() {
-    Blockly.Procedures.createProcedureDefCallback_();
+    Blockly.Procedures.createProcedureDefCallback_(workspace);
   };
   button.setAttribute('text', msg);
   button.setAttribute('callbackKey', callbackKey);
@@ -303,47 +304,51 @@ Blockly.Procedures.getCallers = function(name, ws, definitionRoot,
 };
 
 /**
- * When a procedure definition changes its parameters, find and edit all its
- * callers.
- * @param {!Blockly.Block} defBlock Procedure definition block.
+ * Find and edit all callers with a procCode using a new mutation.
+ * @param {string} name Name of procedure (procCode in scratch-blocks).
+ * @param {!Blockly.Workspace} ws The workspace to find callers in.
+ * @param {!Element} mutation New mutation for the callers.
+ * @package
  */
-Blockly.Procedures.mutateCallers = function(defBlock) {
-  // TODO(#1143) Update this for scratch procedures.
-  var oldRecordUndo = Blockly.Events.recordUndo;
-  var name = defBlock.getProcedureDef()[0];
-  var xmlElement = defBlock.mutationToDom(true);
-  var callers = Blockly.Procedures.getCallers(name, defBlock.workspace);
-  for (var i = 0, caller; caller = callers[i]; i++) {
-    var oldMutationDom = caller.mutationToDom();
-    var oldMutation = oldMutationDom && Blockly.Xml.domToText(oldMutationDom);
-    caller.domToMutation(xmlElement);
-    var newMutationDom = caller.mutationToDom();
-    var newMutation = newMutationDom && Blockly.Xml.domToText(newMutationDom);
-    if (oldMutation != newMutation) {
-      // Fire a mutation on every caller block.  But don't record this as an
-      // undo action since it is deterministically tied to the procedure's
-      // definition mutation.
-      Blockly.Events.recordUndo = false;
-      Blockly.Events.fire(new Blockly.Events.BlockChange(
-          caller, 'mutation', null, oldMutation, newMutation));
-      Blockly.Events.recordUndo = oldRecordUndo;
+Blockly.Procedures.mutateCallersAndPrototype = function(name, ws, mutation) {
+  var defineBlock = Blockly.Procedures.getDefineBlock(name, ws);
+  var prototypeBlock = Blockly.Procedures.getPrototypeBlock(name, ws);
+  if (defineBlock && prototypeBlock) {
+    var callers = Blockly.Procedures.getCallers(name,
+        defineBlock.workspace, defineBlock, true /* allowRecursive */);
+    callers.push(prototypeBlock);
+    Blockly.Events.setGroup(true);
+    for (var i = 0, caller; caller = callers[i]; i++) {
+      var oldMutationDom = caller.mutationToDom();
+      var oldMutation = oldMutationDom && Blockly.Xml.domToText(oldMutationDom);
+      caller.domToMutation(mutation);
+      var newMutationDom = caller.mutationToDom();
+      var newMutation = newMutationDom && Blockly.Xml.domToText(newMutationDom);
+      if (oldMutation != newMutation) {
+        Blockly.Events.fire(new Blockly.Events.BlockChange(
+            caller, 'mutation', null, oldMutation, newMutation));
+      }
     }
+    Blockly.Events.setGroup(false);
+  } else {
+    alert('No define block on workspace'); // TODO decide what to do about this.
   }
 };
 
 /**
  * Find the definition block for the named procedure.
- * @param {string} name Name of procedure.
+ * @param {string} procCode The identifier of the procedure.
  * @param {!Blockly.Workspace} workspace The workspace to search.
  * @return {Blockly.Block} The procedure definition block, or null not found.
+ * @package
  */
-Blockly.Procedures.getDefinition = function(name, workspace) {
+Blockly.Procedures.getDefineBlock = function(procCode, workspace) {
   // Assume that a procedure definition is a top block.
   var blocks = workspace.getTopBlocks(false);
   for (var i = 0; i < blocks.length; i++) {
-    if (blocks[i].getProcedureDef) {
-      var tuple = blocks[i].getProcedureDef();
-      if (tuple && Blockly.Names.equals(tuple[0], name)) {
+    if (blocks[i].type == Blockly.PROCEDURES_DEFINITION_BLOCK_TYPE) {
+      var prototypeBlock = blocks[i].getInput('custom_block').connection.targetBlock();
+      if (prototypeBlock.getProcCode && prototypeBlock.getProcCode() == procCode) {
         return blocks[i];
       }
     }
@@ -352,21 +357,86 @@ Blockly.Procedures.getDefinition = function(name, workspace) {
 };
 
 /**
+ * Find the prototype block for the named procedure.
+ * @param {string} procCode The identifier of the procedure.
+ * @param {!Blockly.Workspace} workspace The workspace to search.
+ * @return {Blockly.Block} The procedure prototype block, or null not found.
+ * @package
+ */
+Blockly.Procedures.getPrototypeBlock = function(procCode, workspace) {
+  var defineBlock = Blockly.Procedures.getDefineBlock(procCode, workspace);
+  if (defineBlock) {
+    return defineBlock.getInput('custom_block').connection.targetBlock();
+  }
+  return null;
+};
+
+/**
+ * Create a mutation for a brand new custom procedure.
+ * @return {Element} The mutation for a new custom procedure
+ * @package
+ */
+Blockly.Procedures.newProcedureMutation = function() {
+  var mutationText = '<xml>' +
+      '<mutation' +
+      ' proccode="block name"' +
+      ' argumentids="[]"' +
+      ' argumentnames="[]"' +
+      ' argumentdefaults="[]"' +
+      ' warp="false">' +
+      '</mutation>' +
+      '</xml>';
+  return Blockly.Xml.textToDom(mutationText).firstChild;
+};
+
+/**
  * Callback to create a new procedure custom command block.
- * TODO(#1299): Implement.
+ * @param {!Blockly.Workspace} workspace The workspace to create the new procedure on.
  * @private
  */
-Blockly.Procedures.createProcedureDefCallback_ = function() {
-  alert('TODO(#1299) Implement procedure creation callback.');
+Blockly.Procedures.createProcedureDefCallback_ = function(workspace) {
+  Blockly.Procedures.externalProcedureDefCallback(
+      Blockly.Procedures.newProcedureMutation(),
+      Blockly.Procedures.createProcedureCallbackFactory_(workspace)
+  );
+};
+
+/**
+ * Callback factory for adding a new custom procedure from a mutation.
+ * @param {!Blockly.Workspace} workspace The workspace to create the new procedure on.
+ * @return {function(?Element)} callback for creating the new custom procedure.
+ * @private
+ */
+Blockly.Procedures.createProcedureCallbackFactory_ = function(workspace) {
+  return function(mutation) {
+    if (mutation) {
+      var blockText = '<xml>' +
+          '<block type="procedures_definition">' +
+          '<statement name="custom_block">' +
+          '<shadow type="procedures_prototype">' +
+          Blockly.Xml.domToText(mutation) +
+          '</shadow>' +
+          '</statement>' +
+          '</block>' +
+          '</xml>';
+      var blockDom = Blockly.Xml.textToDom(blockText).firstChild;
+      Blockly.Events.setGroup(true);
+      var block = Blockly.Xml.domToBlock(blockDom, workspace);
+      block.moveBy(30, 30);
+      block.scheduleSnapAndBump();
+      Blockly.Events.setGroup(false);
+    }
+  };
 };
 
 /**
  * Callback to open the modal for editing custom procedures.
- * TODO(#603): Implement.
  * @param {!Blockly.Block} block The block that was right-clicked.
  * @private
  */
 Blockly.Procedures.editProcedureCallback_ = function(block) {
+  // Edit can come from one of three block types (call, define, prototype)
+  // Normalize by setting the block to the prototype block for the procedure.
   if (block.type == Blockly.PROCEDURES_DEFINITION_BLOCK_TYPE) {
     var input = block.getInput('custom_block');
     if (!input) {
@@ -385,9 +455,39 @@ Blockly.Procedures.editProcedureCallback_ = function(block) {
       return;
     }
     block = innerBlock;
+  } else if (block.type == Blockly.PROCEDURES_CALL_BLOCK_TYPE) {
+    // This is a call block, find the prototype corresponding to the procCode
+    block = Blockly.Procedures.getPrototypeBlock(
+        block.getProcCode(), block.workspace);
   }
-  alert('TODO(#603): implement function editing (procCode was "' +
-      block.procCode_ + '")');
+  // Block now refers to the procedure prototype block, it is safe to proceed.
+  Blockly.Procedures.externalProcedureDefCallback(
+      block.mutationToDom(),
+      Blockly.Procedures.editProcedureCallbackFactory_(block)
+  );
+};
+
+/**
+ * Callback factory for editing an existing custom procedure.
+ * @param {!Blockly.Block} block The procedure prototype block being edited.
+ * @return {function(?Element)} Callback for editing the custom procedure.
+ * @private
+ */
+Blockly.Procedures.editProcedureCallbackFactory_ = function(block) {
+  return function(mutation) {
+    if (mutation) {
+      Blockly.Procedures.mutateCallersAndPrototype(block.getProcCode(),
+          block.workspace, mutation);
+    }
+  };
+};
+
+/**
+ * Callback to create a new procedure custom command block.
+ * @public
+ */
+Blockly.Procedures.externalProcedureDefCallback = function(/** mutator, callback */) {
+  alert('External procedure editor must be override Blockly.Procedures.externalProcedureDefCallback');
 };
 
 /**
