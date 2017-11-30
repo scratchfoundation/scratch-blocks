@@ -670,25 +670,36 @@ Blockly.BlockSvg.prototype.duplicateAndDragCallback_ = function() {
       // will lead to weird jumps.
       // Resizing will be enabled when the drag ends.
       ws.setResizesEnabled(false);
-      // Using domToBlock instead of domToWorkspace means that the new block
-      // will be placed at position (0, 0) in main workspace units.
-      var newBlock = Blockly.Xml.domToBlock(xml, ws);
 
-      // Scratch-specific: Give shadow dom new IDs to prevent duplicating on paste
-      Blockly.utils.changeObscuredShadowIds(newBlock);
+      // Disable events and manually emit events after the block has been
+      // positioned and has had its shadow IDs fixed (Scratch-specific).
+      Blockly.Events.disable();
+      try {
+        // Using domToBlock instead of domToWorkspace means that the new block
+        // will be placed at position (0, 0) in main workspace units.
+        var newBlock = Blockly.Xml.domToBlock(xml, ws);
 
-      var svgRootNew = newBlock.getSvgRoot();
-      if (!svgRootNew) {
-        throw new Error('newBlock is not rendered.');
+        // Scratch-specific: Give shadow dom new IDs to prevent duplicating on paste
+        Blockly.utils.changeObscuredShadowIds(newBlock);
+
+        var svgRootNew = newBlock.getSvgRoot();
+        if (!svgRootNew) {
+          throw new Error('newBlock is not rendered.');
+        }
+
+        // The position of the old block in workspace coordinates.
+        var oldBlockPosWs = oldBlock.getRelativeToSurfaceXY();
+
+        // Place the new block as the same position as the old block.
+        // TODO: Offset by the difference between the mouse position and the upper
+        // left corner of the block.
+        newBlock.moveBy(oldBlockPosWs.x, oldBlockPosWs.y);
+      } finally {
+        Blockly.Events.enable();
       }
-
-      // The position of the old block in workspace coordinates.
-      var oldBlockPosWs = oldBlock.getRelativeToSurfaceXY();
-
-      // Place the new block as the same position as the old block.
-      // TODO: Offset by the difference between the mouse position and the upper
-      // left corner of the block.
-      newBlock.moveBy(oldBlockPosWs.x, oldBlockPosWs.y);
+      if (Blockly.Events.isEnabled()) {
+        Blockly.Events.fire(new Blockly.Events.BlockCreate(newBlock));
+      }
 
       // The position of the old block in pixels relative to the main
       // workspace's origin.
