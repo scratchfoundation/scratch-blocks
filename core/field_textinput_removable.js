@@ -2,8 +2,8 @@
  * @license
  * Visual Blocks Editor
  *
- * Copyright 2012 Google Inc.
- * https://developers.google.com/blockly/
+ * Copyright 2016 Massachusetts Institute of Technology
+ * All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,27 +19,23 @@
  */
 
 /**
- * @fileoverview Text input field.
- * @author fraser@google.com (Neil Fraser)
+ * @fileoverview Text input field with floating "remove" button.
+ * @author pkaplan@media.mit.edu (Paul Kaplan)
  */
 'use strict';
 
 goog.provide('Blockly.FieldTextInputRemovable');
 
-goog.require('Blockly.FieldTextInput');
 goog.require('Blockly.BlockSvg.render');
 goog.require('Blockly.Colours');
-goog.require('Blockly.Field');
+goog.require('Blockly.FieldTextInput');
 goog.require('Blockly.Msg');
 goog.require('Blockly.utils');
-goog.require('goog.asserts');
 goog.require('goog.dom');
 goog.require('goog.dom.TagName');
-goog.require('goog.userAgent');
-
 
 /**
- * Class for an editable text field.
+ * Class for an editable text field displaying a deletion icon when selected.
  * @param {string} text The initial content of the field.
  * @param {Function=} opt_validator An optional function that is called
  *     to validate any constraints on what the user entered.  Takes the new
@@ -48,7 +44,7 @@ goog.require('goog.userAgent');
  * @param {RegExp=} opt_restrictor An optional regular expression to restrict
  *     typed text to. Text that doesn't match the restrictor will never show
  *     in the text field.
- * @extends {Blockly.Field}
+ * @extends {Blockly.FieldTextInput}
  * @constructor
  */
 Blockly.FieldTextInputRemovable = function(text, opt_validator, opt_restrictor) {
@@ -66,22 +62,15 @@ Blockly.FieldTextInputRemovable.prototype.showEditor_ = function() {
 
   var div = Blockly.WidgetDiv.DIV;
   var removeButton =
-      goog.dom.createDom(goog.dom.TagName.IMG, 'blocklyTextDropDownArrow');
+      goog.dom.createDom(goog.dom.TagName.IMG, 'blocklyTextRemoveIcon');
   removeButton.setAttribute('src',
-    Blockly.mainWorkspace.options.pathToMedia + 'icons/remove.svg');
-  removeButton.style.width = 25 + 'px';
-  removeButton.style.height = 25 + 'px';
-  removeButton.style.top = -40 + 'px';
-  removeButton.style.cursor = 'pointer';
-  removeButton.style.left = '50%';
-  removeButton.style['margin-left'] = -15 + 'px';
-
+      Blockly.mainWorkspace.options.pathToMedia + 'icons/remove.svg');
   this.removeButtonMouseWrapper_ = Blockly.bindEvent_(removeButton,
-    'mousedown', this, this.removeCallback_);
+      'mousedown', this, this.removeCallback_);
   div.appendChild(removeButton);
 };
 
-Blockly.FieldTextInput.prototype.removeCallback_ = function() {
+Blockly.FieldTextInputRemovable.prototype.removeCallback_ = function() {
   if (this.sourceBlock_ && this.sourceBlock_.removeFieldCallback) {
     this.sourceBlock_.removeFieldCallback(this);
   }

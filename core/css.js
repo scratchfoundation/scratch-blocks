@@ -176,6 +176,16 @@ Blockly.Css.CONTENT = [
     'position: absolute;',
   '}',
 
+  '.blocklyTextRemoveIcon {',
+    'position: absolute;',
+    'width: 24px;',
+    'height: 24px;',
+    'top: -40px;',
+    'left: 50%;',
+    'margin-left: -12px;',
+    'cursor: pointer;',
+  '}',
+
   '.blocklyNonSelectable {',
     'user-select: none;',
     '-moz-user-select: none;',

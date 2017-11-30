@@ -598,28 +598,27 @@ Blockly.ScratchBlocks.ProcedureUtils.removeFieldCallback = function(field) {
   if (this.inputList.length === 1) {
     return;
   }
-
+  var inputNameToRemove = null;
   for(var n = 0; n < this.inputList.length; n++) {
     var input = this.inputList[n];
-    var name = input.name;
     if (input.connection) {
       var target = input.connection.targetBlock();
       if (target.getField(field.name) == field) {
-        Blockly.WidgetDiv.hide(true);
-        this.removeInput(name);
-        this.onChangeFn();
-        this.updateDisplay_();
+        inputNameToRemove = input.name;
       }
     } else {
       for (var j = 0; j < input.fieldRow.length; j++) {
         if (input.fieldRow[j] == field) {
-          Blockly.WidgetDiv.hide(true);
-          this.removeInput(name);
-          this.onChangeFn();
-          this.updateDisplay_();
+          inputNameToRemove = input.name;
         }
       }
     }
+  }
+  if (inputNameToRemove) {
+    Blockly.WidgetDiv.hide(true);
+    this.removeInput(inputNameToRemove);
+    this.onChangeFn();
+    this.updateDisplay_();
   }
 };
 
