@@ -163,13 +163,17 @@ Blockly.Css.CONTENT = [
   '}',
 
   '.blocklyWidgetDiv.fieldTextInput {',
-    // 'overflow: hidden;',
+    'overflow: hidden;',
     'border: 1px solid;',
     'box-sizing: border-box;',
     'transform-origin: 0 0;',
     '-ms-transform-origin: 0 0;',
     '-moz-transform-origin: 0 0;',
     '-webkit-transform-origin: 0 0;',
+  '}',
+
+  '.blocklyWidgetDiv.fieldTextInput.removableTextInput {',
+    'overflow: visible;',
   '}',
 
   '.blocklyTextDropDownArrow {',

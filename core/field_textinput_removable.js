@@ -61,6 +61,7 @@ Blockly.FieldTextInputRemovable.prototype.showEditor_ = function() {
   Blockly.FieldTextInputRemovable.superClass_.showEditor_.call(this);
 
   var div = Blockly.WidgetDiv.DIV;
+  div.className += ' removableTextInput';
   var removeButton =
       goog.dom.createDom(goog.dom.TagName.IMG, 'blocklyTextRemoveIcon');
   removeButton.setAttribute('src',
