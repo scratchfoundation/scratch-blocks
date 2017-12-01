@@ -1342,6 +1342,9 @@ Blockly.Block.prototype.interpolate_ = function(message, args, lastDummyAlign) {
             case 'field_input':
               field = Blockly.Block.newFieldTextInputFromJson_(element);
               break;
+            case 'field_input_removable':
+              field = Blockly.FieldTextInputRemovable.fromJson(element);
+              break;
             case 'field_textdropdown':
               field = new Blockly.FieldTextDropdown(element['text'], element['options']);
               if (typeof element['spellcheck'] == 'boolean') {
