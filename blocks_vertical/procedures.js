@@ -599,7 +599,7 @@ Blockly.ScratchBlocks.ProcedureUtils.removeFieldCallback = function(field) {
     return;
   }
   var inputNameToRemove = null;
-  for(var n = 0; n < this.inputList.length; n++) {
+  for (var n = 0; n < this.inputList.length; n++) {
     var input = this.inputList[n];
     if (input.connection) {
       var target = input.connection.targetBlock();

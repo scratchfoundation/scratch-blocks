@@ -71,8 +71,32 @@ Blockly.FieldTextInputRemovable.prototype.showEditor_ = function() {
   div.appendChild(removeButton);
 };
 
+/**
+ * Function to call when remove button is called. Checks for removeFieldCallback
+ * on sourceBlock and calls it if possible.
+ * @private
+ */
 Blockly.FieldTextInputRemovable.prototype.removeCallback_ = function() {
   if (this.sourceBlock_ && this.sourceBlock_.removeFieldCallback) {
     this.sourceBlock_.removeFieldCallback(this);
+  } else {
+    console.warn('Expected a source block with removeFieldCallback');
   }
+};
+
+/**
+ * Helper function to construct a FieldTextInputRemovable from a JSON arg object,
+ * dereferencing any string table references.
+ * @param {!Object} options A JSON object with options (text, class, and
+ *                          spellcheck).
+ * @returns {!Blockly.FieldTextInputRemovable} The new text input.
+ * @public
+ */
+Blockly.FieldTextInputRemovable.fromJson = function(options) {
+  var text = Blockly.utils.replaceMessageReferences(options['text']);
+  var field = new Blockly.FieldTextInputRemovable(text, options['class']);
+  if (typeof options['spellcheck'] == 'boolean') {
+    field.setSpellcheck(options['spellcheck']);
+  }
+  return field;
 };
