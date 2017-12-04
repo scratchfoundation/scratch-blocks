@@ -205,7 +205,8 @@ Blockly.FieldVariable.dropdownCreate = function() {
     }
   }
   // Ensure that the currently selected variable is an option.
-  if (createSelectedVariable && workspace) {
+  // TODO (#1270): Remove isBroadcastType check here when flyout variables fixed.
+  if (createSelectedVariable && workspace && !isBroadcastType) {
     var newVar = workspace.createVariable(name);
     variableModelList.push(newVar);
   }
@@ -216,7 +217,10 @@ Blockly.FieldVariable.dropdownCreate = function() {
     options[i] = [variableModelList[i].name, variableModelList[i].getId()];
   }
   if (isBroadcastType) {
-    options.push([Blockly.Msg.NEW_BROADCAST_MESSAGE, Blockly.NEW_BROADCAST_MESSAGE_ID]);
+    // TODO (#1270): Re-enable create broadcast message dropdown in flyout when fixed.
+    if (!workspace.isFlyout) {
+      options.push([Blockly.Msg.NEW_BROADCAST_MESSAGE, Blockly.NEW_BROADCAST_MESSAGE_ID]);
+    }
   } else {
     options.push([Blockly.Msg.RENAME_VARIABLE, Blockly.RENAME_VARIABLE_ID]);
     if (Blockly.Msg.DELETE_VARIABLE) {
