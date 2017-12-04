@@ -689,9 +689,10 @@ Blockly.BlockSvg.prototype.renderFields_ =
     var yOffset = -field.getSize().height / 2;
 
     // If the first field is an image, as in extension blocks, and this is an
-    // image field, bump it down by one grid unit to align it vertically
+    // image field, and we're not in a hat, bump the image down by one grid unit
+    // to align it vertically
     if ((this.inputList[0].fieldRow[0] instanceof Blockly.FieldImage) &&
-        (field instanceof Blockly.FieldImage)) {
+        (field instanceof Blockly.FieldImage) && this.previousConnection) {
       yOffset += Blockly.BlockSvg.GRID_UNIT;
     }
 
@@ -918,8 +919,9 @@ Blockly.BlockSvg.prototype.computeInputHeight_ = function(input, row,
     // Extra row for below statement input.
     return Blockly.BlockSvg.EXTRA_STATEMENT_ROW_Y;
   } else {
-    // if the first field is an image, as in extension blocks, make it taller
-    if (input.fieldRow[0] instanceof Blockly.FieldImage) {
+    // if this is not a hat, and the first field is an image as in extension blocks,
+    // make it taller
+    if (this.previousConnection && (input.fieldRow[0] instanceof Blockly.FieldImage)) {
       return Blockly.BlockSvg.MIN_BLOCK_Y + 2 * Blockly.BlockSvg.GRID_UNIT;
     }
     // All other blocks.
