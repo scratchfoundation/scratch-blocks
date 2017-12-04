@@ -687,6 +687,14 @@ Blockly.BlockSvg.prototype.renderFields_ =
     // Offset the field upward by half its height.
     // This vertically centers the fields around cursorY.
     var yOffset = -field.getSize().height / 2;
+
+    // If the first field is an image, as in extension blocks, and this is an
+    // image field, bump it down by one grid unit to align it vertically
+    if ((this.inputList[0].fieldRow[0] instanceof Blockly.FieldImage) &&
+        (field instanceof Blockly.FieldImage)) {
+      yOffset += Blockly.BlockSvg.GRID_UNIT;
+    }
+
     var translateX, translateY;
     var scale = '';
     if (this.RTL) {
