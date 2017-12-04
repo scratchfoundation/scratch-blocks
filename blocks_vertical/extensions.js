@@ -90,3 +90,67 @@ Blockly.Blocks['extension_wedo_motor'] = {
     });
   }
 };
+
+Blockly.Blocks['extension_wedo_hat'] = {
+  /**
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.jsonInit({
+      "message0": "%1 when I am wearing a hat",
+      "args0": [
+        {
+          "type": "field_image",
+          "src": Blockly.mainWorkspace.options.pathToMedia + "extensions/wedo2-block-icon.svg",
+          "width": 40,
+          "height": 40
+        }
+      ],
+      "category": Blockly.Categories.more,
+      "extensions": ["colours_more", "shape_hat"]
+    });
+  }
+};
+
+Blockly.Blocks['extension_wedo_boolean'] = {
+  /**
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.jsonInit({
+      "message0": "%1 O RLY?",
+      "args0": [
+        {
+          "type": "field_image",
+          "src": Blockly.mainWorkspace.options.pathToMedia + "extensions/wedo2-block-icon.svg",
+          "width": 40,
+          "height": 40
+        }
+      ],
+      "category": Blockly.Categories.more,
+      "extensions": ["colours_more", "output_boolean"]
+    });
+  }
+};
+
+
+Blockly.Blocks['extension_music_reporter'] = {
+  /**
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.jsonInit({
+      "message0": "%1 hey now, you're an all-star",
+      "args0": [
+        {
+          "type": "field_image",
+          "src": Blockly.mainWorkspace.options.pathToMedia + "extensions/music-block-icon.svg",
+          "width": 40,
+          "height": 40
+        }
+      ],
+      "category": Blockly.Categories.more,
+      "extensions": ["colours_more", "output_number"]
+    });
+  }
+};
