@@ -904,6 +904,10 @@ Blockly.BlockSvg.prototype.computeInputHeight_ = function(input, row,
     // Extra row for below statement input.
     return Blockly.BlockSvg.EXTRA_STATEMENT_ROW_Y;
   } else {
+    // if the first field is an image, as in extension blocks, make it taller
+    if (input.fieldRow[0] instanceof Blockly.FieldImage) {
+      return Blockly.BlockSvg.MIN_BLOCK_Y + 2 * Blockly.BlockSvg.GRID_UNIT;
+    }
     // All other blocks.
     return Blockly.BlockSvg.MIN_BLOCK_Y;
   }
