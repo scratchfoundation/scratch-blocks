@@ -133,24 +133,53 @@ Blockly.Blocks['extension_wedo_boolean'] = {
   }
 };
 
-Blockly.Blocks['extension_wedo_reporter'] = {
+Blockly.Blocks['extension_wedo_tilt_reporter'] = {
   /**
    * @this Blockly.Block
    */
   init: function() {
     this.jsonInit({
-      "message0": "%1 width of this block",
+      "message0": "%1 tilt angle %2",
       "args0": [
         {
           "type": "field_image",
           "src": Blockly.mainWorkspace.options.pathToMedia + "extensions/wedo2-block-icon.svg",
           "width": 40,
           "height": 40
+        },
+        {
+          "type": "input_value",
+          "name": "TILT"
         }
       ],
       "category": Blockly.Categories.more,
       "extensions": ["colours_more", "output_number"]
     });
+  }
+};
+
+Blockly.Blocks['extension_wedo_tilt_menu'] = {
+  /**
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.jsonInit(
+      {
+        "message0": "%1",
+        "args0": [
+          {
+            "type": "field_dropdown",
+            "name": "TILT",
+            "options": [
+              ['Any', 'Any'],
+              ['Whirl', 'Whirl'],
+              ['South', 'South'],
+              ['Back in time', 'Back in time']
+            ]
+          }
+        ],
+        "extensions": ["colours_more", "output_string"]
+      });
   }
 };
 
