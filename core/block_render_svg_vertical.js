@@ -631,14 +631,11 @@ Blockly.BlockSvg.prototype.render = function(opt_bubble) {
   // If there are no icons, cursorX will be 0, otherwise it will be the
   // width that the first label needs to move over by.
 
-  // If the first field is an image, as in extension blocks, add a horizontal offset
-  // to align the image with the notch.
-  if (this.inputList[0].fieldRow[0] instanceof Blockly.FieldImage) {
+  // If the first field is an image, as in extension blocks, and this is a
+  // reporter block, a add a horizontal offset
+  if ((this.inputList[0].fieldRow[0] instanceof Blockly.FieldImage) &&
+    this.outputConnection) {
     cursorX += Blockly.BlockSvg.GRID_UNIT;
-    // If this is a round reporter block, increase the horizontal offset.
-    if (this.getOutputShape() === Blockly.OUTPUT_SHAPE_ROUND) {
-      cursorX += Blockly.BlockSvg.GRID_UNIT;
-    }
   }
 
   var inputRows = this.renderCompute_(cursorX);
