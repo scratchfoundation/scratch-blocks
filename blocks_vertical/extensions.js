@@ -133,6 +133,26 @@ Blockly.Blocks['extension_wedo_boolean'] = {
   }
 };
 
+Blockly.Blocks['extension_wedo_reporter'] = {
+  /**
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.jsonInit({
+      "message0": "%1 width of this block",
+      "args0": [
+        {
+          "type": "field_image",
+          "src": Blockly.mainWorkspace.options.pathToMedia + "extensions/wedo2-block-icon.svg",
+          "width": 40,
+          "height": 40
+        }
+      ],
+      "category": Blockly.Categories.more,
+      "extensions": ["colours_more", "output_number"]
+    });
+  }
+};
 
 Blockly.Blocks['extension_music_reporter'] = {
   /**

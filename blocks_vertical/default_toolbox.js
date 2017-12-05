@@ -646,6 +646,7 @@ Blockly.Blocks.defaultToolbox = '<xml id="toolbox-categories" style="display: no
     '<block type="extension_wedo_motor" id="extension_wedo_motor"></block>'+
     '<block type="extension_wedo_hat" id="extension_wedo_hat"></block>'+
     '<block type="extension_wedo_boolean" id="extension_wedo_boolean"></block>'+
+    '<block type="extension_wedo_reporter" id="extension_wedo_reporter"></block>'+
     '<block type="extension_music_reporter" id="extension_music_reporter"></block>'+
   '</category>'+
   '</xml>';
