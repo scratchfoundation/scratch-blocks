@@ -76,13 +76,19 @@ Blockly.Blocks['extension_wedo_motor'] = {
    */
   init: function() {
     this.jsonInit({
-      "message0": "%1 turn on a motor",
+      "message0": "%1 turn a motor %2",
       "args0": [
         {
           "type": "field_image",
           "src": Blockly.mainWorkspace.options.pathToMedia + "extensions/wedo2-block-icon.svg",
           "width": 40,
           "height": 40
+        },
+        {
+          "type": "field_image",
+          "src": Blockly.mainWorkspace.options.pathToMedia + "rotate-right.svg",
+          "width": 24,
+          "height": 24
         }
       ],
       "category": Blockly.Categories.more,
