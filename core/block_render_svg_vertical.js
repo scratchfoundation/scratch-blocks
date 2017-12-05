@@ -632,7 +632,7 @@ Blockly.BlockSvg.prototype.render = function(opt_bubble) {
   // width that the first label needs to move over by.
 
   // If the first field is an image, as in extension blocks, and this is a
-  // reporter block, a add a horizontal offset
+  // reporter block, add a horizontal offset.
   if ((this.inputList[0].fieldRow[0] instanceof Blockly.FieldImage) &&
     this.outputConnection) {
     cursorX += Blockly.BlockSvg.GRID_UNIT;
