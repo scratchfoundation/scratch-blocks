@@ -635,6 +635,10 @@ Blockly.BlockSvg.prototype.render = function(opt_bubble) {
   // to align the image with the notch.
   if (this.inputList[0].fieldRow[0] instanceof Blockly.FieldImage) {
     cursorX += Blockly.BlockSvg.GRID_UNIT;
+    // If this is a round reporter block, increase the horizontal offset.
+    if (this.getOutputShape() === Blockly.OUTPUT_SHAPE_ROUND) {
+      cursorX += Blockly.BlockSvg.GRID_UNIT;
+    }
   }
 
   var inputRows = this.renderCompute_(cursorX);
