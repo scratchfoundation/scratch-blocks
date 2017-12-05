@@ -911,7 +911,8 @@ Blockly.BlockSvg.prototype.computeInputHeight_ = function(input, row,
     // "Lone" field blocks are smaller.
     return Blockly.BlockSvg.MIN_BLOCK_Y_SINGLE_FIELD_OUTPUT;
   } else if (this.outputConnection) {
-    // If the first field is an image as in extension blocks, make it taller
+    // If this is a reporter and the first field is an image as in extension blocks,
+    // make it taller.
     if (input.fieldRow[0] instanceof Blockly.FieldImage) {
       return Blockly.BlockSvg.MIN_BLOCK_Y_REPORTER + 2 * Blockly.BlockSvg.GRID_UNIT;
     }
