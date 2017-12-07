@@ -73,8 +73,8 @@ Blockly.Variables.allUsedVariables = function(root) {
       for (var y = 0; y < blockVariables.length; y++) {
         var varName = blockVariables[y];
         // Variable name may be null if the block is only half-built.
-        if (varName && varName.toLowerCase() != ignorableName) {
-          variableHash[varName.toLowerCase()] = varName;
+        if (varName && varName != ignorableName) {
+          variableHash[varName] = varName;
         }
       }
     }
@@ -133,7 +133,7 @@ Blockly.Variables.generateUniqueName = function(workspace) {
     while (!newName) {
       var inUse = false;
       for (var i = 0; i < variableList.length; i++) {
-        if (variableList[i].name.toLowerCase() == potName) {
+        if (variableList[i].name == potName) {
           // This potential name is already used.
           inUse = true;
           break;
@@ -192,14 +192,14 @@ Blockly.Variables.createVariable = function(workspace, opt_callback, opt_type) {
           // broadcast messages
           if (workspace.getVariable(text)) {
             Blockly.alert(Blockly.Msg.VARIABLE_ALREADY_EXISTS.replace('%1',
-                text.toLowerCase()),
+                text),
                 function() {
                   promptAndCheckWithAlert(text);  // Recurse
                 });
           }
           else if (!Blockly.Procedures.isNameUsed(text, workspace)) {
             Blockly.alert(Blockly.Msg.PROCEDURE_ALREADY_EXISTS.replace('%1',
-                text.toLowerCase()),
+                text),
                 function() {
                   promptAndCheckWithAlert(text);  // Recurse
                 });
@@ -252,14 +252,14 @@ Blockly.Variables.renameVariable = function(workspace, variable,
           // broadcast messages
           if (newVariable && newVariable.type != variable.type) {
             Blockly.alert(Blockly.Msg.VARIABLE_ALREADY_EXISTS_FOR_ANOTHER_TYPE.replace('%1',
-                newName.toLowerCase()).replace('%2', newVariable.type),
+                newName).replace('%2', newVariable.type),
                 function() {
                   promptAndCheckWithAlert(newName);  // Recurse
                 });
           }
           else if (!Blockly.Procedures.isNameUsed(newName, workspace)) {
             Blockly.alert(Blockly.Msg.PROCEDURE_ALREADY_EXISTS.replace('%1',
-                newName.toLowerCase()),
+                newName),
                 function() {
                   promptAndCheckWithAlert(newName);  // Recurse
                 });

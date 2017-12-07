@@ -180,7 +180,7 @@ Blockly.VariableMap.prototype.getVariable = function(name) {
   for (var i = 0; i < keys.length; i++ ) {
     var key = keys[i];
     for (var j = 0, variable; variable = this.variableMap_[key][j]; j++) {
-      if (Blockly.Names.equals(variable.name, name)) {
+      if (variable.name == name) {
         return variable;
       }
     }

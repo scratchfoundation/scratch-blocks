@@ -318,7 +318,7 @@ Blockly.Workspace.prototype.renameVariableById = function(id, newName) {
  * @return {?Blockly.VariableModel} The newly created variable.
  */
 Blockly.Workspace.prototype.createVariable = function(name, opt_type, opt_id) {
-  if (name.toLowerCase() == Blockly.Variables.noVariableText()) {
+  if (name == Blockly.Variables.noVariableText()) {
     return;
   }
   return this.variableMap_.createVariable(name, opt_type, opt_id);
@@ -339,7 +339,7 @@ Blockly.Workspace.prototype.getVariableUses = function(name) {
       for (var j = 0; j < blockVariables.length; j++) {
         var varName = blockVariables[j];
         // Variable name may be null if the block is only half-built.
-        if (varName && name && Blockly.Names.equals(varName, name)) {
+        if (varName && name && varName == name) {
           uses.push(blocks[i]);
         }
       }
@@ -417,8 +417,7 @@ Blockly.Workspace.prototype.deleteVariableInternal_ = function(variable) {
 };
 
 /**
- * Check whether a variable exists with the given name.  The check is
- * case-insensitive.
+ * Check whether a variable exists with the given name.
  * @param {string} name The name to check for.
  * @return {number} The index of the name in the variable list, or -1 if it is
  *     not present.

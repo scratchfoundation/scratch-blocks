@@ -840,7 +840,7 @@ Blockly.Block.prototype.renameVar = function(oldName, newName) {
     for (var j = 0, field; field = input.fieldRow[j]; j++) {
       if ((field instanceof Blockly.FieldVariable ||
           field instanceof Blockly.FieldVariableGetter) &&
-          Blockly.Names.equals(oldName, field.getValue())) {
+          oldName == field.getValue()) {
         field.setValue(newName);
       }
     }
