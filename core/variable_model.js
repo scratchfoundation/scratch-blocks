@@ -95,5 +95,6 @@ Blockly.VariableModel.prototype.getId = function() {
  * @package
  */
 Blockly.VariableModel.compareByName = function(var1, var2) {
-  return goog.string.caseInsensitiveCompare(var1.name, var2.name);
+  // numerateCompare gives better sort order because names often have numbers.
+  return goog.string.numerateCompare(var1.name, var2.name);
 };
