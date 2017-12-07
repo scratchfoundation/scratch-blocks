@@ -197,8 +197,7 @@ Blockly.FieldVariable.dropdownCreate = function() {
       variableModelList = variableModelList.concat(variables);
     }
     for (var i = 0; i < variableModelList.length; i++){
-      if (createSelectedVariable &&
-          goog.string.caseInsensitiveEquals(variableModelList[i].name, name)) {
+      if (createSelectedVariable && variableModelList[i].name == name) {
         createSelectedVariable = false;
         break;
       }

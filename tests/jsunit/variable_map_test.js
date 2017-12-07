@@ -115,6 +115,16 @@ function test_createVariableAlreadyExists() {
   variableMapTest_tearDown();
 }
 
+function test_createVariableCaseSensitive() {
+  // Expect that variables can be created with names that differ only in case.
+  variableMapTest_setUp();
+  variable_map.createVariable('name', 'type1', 'id1');
+  variable_map.createVariable('Name', 'type1', 'id2');
+  checkVariableValues(variable_map, 'name', 'type1', 'id1');
+  checkVariableValues(variable_map, 'Name', 'type1', 'id2');
+  variableMapTest_tearDown();
+}
+
 function test_createVariableNullAndUndefinedType() {
   variableMapTest_setUp();
   variable_map.createVariable('name1', null, 'id1');
