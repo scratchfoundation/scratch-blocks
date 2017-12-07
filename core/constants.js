@@ -48,7 +48,7 @@ Blockly.SNAP_RADIUS = 48;
  * Maximum misalignment between connections for them to snap together,
  * when a connection is already highlighted.
  */
-Blockly.CONNECTING_SNAP_RADIUS = 96;
+Blockly.CONNECTING_SNAP_RADIUS = 68;
 
 /**
  * How much to prefer staying connected to the current connection over moving to
