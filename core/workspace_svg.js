@@ -1083,7 +1083,7 @@ Blockly.WorkspaceSvg.prototype.createVariable = function(name, opt_type, opt_id)
     opt_type, opt_id);
   // For performance reasons, only refresh the the toolbox for new variables.
   // Variables that already exist should already be there.
-  if (!variableInMap) {
+  if (!variableInMap && !(opt_type == Blockly.BROADCAST_MESSAGE_VARIABLE_TYPE)) {
     this.refreshToolboxSelection_();
   }
   return newVar;
