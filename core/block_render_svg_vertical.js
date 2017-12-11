@@ -141,6 +141,13 @@ Blockly.BlockSvg.STATEMENT_INPUT_INNER_SPACE = 2 * Blockly.BlockSvg.GRID_UNIT;
 Blockly.BlockSvg.START_HAT_HEIGHT = 16;
 
 /**
+ * Height of the vertical separator line for icons that appear at the left edge
+ * of a block, such as extension icons.
+ * @const
+ */
+Blockly.BlockSvg.ICON_SEPARATOR_HEIGHT = 10 * Blockly.BlockSvg.GRID_UNIT;
+
+/**
  * Path of the top hat's curve.
  * @const
  */
@@ -727,7 +734,7 @@ Blockly.BlockSvg.prototype.renderFields_ =
     // add a vertical separator line next to the icon.
     if ((this.inputList[0].fieldRow[0] instanceof Blockly.FieldImage) &&
       (field === this.inputList[0].fieldRow[0])) {
-      var lineTopHeight = 5 * Blockly.BlockSvg.GRID_UNIT;
+      var lineTopHeight = Blockly.BlockSvg.ICON_SEPARATOR_HEIGHT / 2;
       var lineBottomHeight = lineTopHeight;
       // If this is a hat block, shorten the bottom of the line by one grid unit.
       if (!this.previousConnection) {
