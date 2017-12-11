@@ -748,7 +748,8 @@ Blockly.BlockSvg.prototype.renderFields_ =
         'x2': cursorX,
         'y2': cursorY + lineBottomHeight
       }, field.sourceBlock_.svgGroup_);
-      cursorX += 2 * Blockly.BlockSvg.GRID_UNIT;
+      cursorX += this.RTL ?
+        -2 * Blockly.BlockSvg.GRID_UNIT : 2 * Blockly.BlockSvg.GRID_UNIT;
     }
 
     // Fields are invisible on insertion marker.
