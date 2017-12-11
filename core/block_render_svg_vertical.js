@@ -722,6 +722,28 @@ Blockly.BlockSvg.prototype.renderFields_ =
     root.setAttribute('transform',
       'translate(' + translateX + ', ' + translateY + ') ' + scale
     );
+
+    // If the first field is an image, as in extension blocks, and this field is the first field,
+    // add a vertical separator line next to the icon.
+    if ((this.inputList[0].fieldRow[0] instanceof Blockly.FieldImage) &&
+      (field === this.inputList[0].fieldRow[0])) {
+      var lineTopHeight = 5 * Blockly.BlockSvg.GRID_UNIT;
+      var lineBottomHeight = lineTopHeight;
+      // If this is a hat block, shorten the bottom of the line by one grid unit.
+      if (!this.previousConnection) {
+        lineBottomHeight -= Blockly.BlockSvg.GRID_UNIT;
+      }
+      Blockly.utils.createSvgElement('line', {
+        'stroke': this.getColourSecondary(),
+        'stroke-linecap': 'round',
+        'x1': cursorX,
+        'y1': cursorY - lineTopHeight,
+        'x2': cursorX,
+        'y2': cursorY + lineBottomHeight
+      }, field.sourceBlock_.svgGroup_);
+      cursorX += 2 * Blockly.BlockSvg.GRID_UNIT;
+    }
+
     // Fields are invisible on insertion marker.
     if (this.isInsertionMarker()) {
       root.setAttribute('display', 'none');
