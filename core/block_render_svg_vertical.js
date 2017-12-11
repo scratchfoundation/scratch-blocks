@@ -635,7 +635,8 @@ Blockly.BlockSvg.prototype.render = function(opt_bubble) {
   // reporter block, add a horizontal offset.
   if ((this.inputList[0].fieldRow[0] instanceof Blockly.FieldImage) &&
     this.outputConnection) {
-    cursorX += Blockly.BlockSvg.GRID_UNIT;
+    cursorX += this.RTL ?
+      -Blockly.BlockSvg.GRID_UNIT : Blockly.BlockSvg.GRID_UNIT;
   }
 
   var inputRows = this.renderCompute_(cursorX);
