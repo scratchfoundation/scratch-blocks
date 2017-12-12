@@ -690,8 +690,9 @@ Blockly.BlockSvg.prototype.renderFields_ =
     // This vertically centers the fields around cursorY.
     var yOffset = -field.getSize().height / 2;
 
-    // If the first field is an image, as in extension blocks, and this field is the first field,
-    // and we're not in a hat, bump the image down by one grid unit to align it vertically
+    // If the first field is an image, as in extension blocks, and this field
+    // is the first field, and we're not in a hat, bump the image down by one
+    // grid unit to align it vertically.
     if ((this.inputList[0].fieldRow[0] instanceof Blockly.FieldImage) &&
         (field === this.inputList[0].fieldRow[0]) && this.previousConnection) {
       yOffset += Blockly.BlockSvg.GRID_UNIT;
