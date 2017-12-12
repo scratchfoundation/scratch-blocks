@@ -304,16 +304,24 @@ Blockly.ScratchBlocks.ProcedureUtils.attachShadow_ = function(input,
     argumentType) {
   if (argumentType == 'n' || argumentType == 's') {
     var blockType = argumentType == 'n' ? 'math_number' : 'text';
-    var newBlock = this.workspace.newBlock(blockType);
-    if (argumentType == 'n') {
-      newBlock.setFieldValue('1', 'NUM');
-    } else {
-      newBlock.setFieldValue('', 'TEXT');
+    Blockly.Events.disable();
+    try {
+      var newBlock = this.workspace.newBlock(blockType);
+      if (argumentType == 'n') {
+        newBlock.setFieldValue('1', 'NUM');
+      } else {
+        newBlock.setFieldValue('', 'TEXT');
+      }
+      newBlock.setShadow(true);
+      if (!this.isInsertionMarker()) {
+        newBlock.initSvg();
+        newBlock.render(false);
+      }
+    } finally {
+      Blockly.Events.enable();
     }
-    newBlock.setShadow(true);
-    if (!this.isInsertionMarker()) {
-      newBlock.initSvg();
-      newBlock.render(false);
+    if (Blockly.Events.isEnabled()) {
+      Blockly.Events.fire(new Blockly.Events.BlockCreate(newBlock));
     }
     newBlock.outputConnection.connect(input.connection);
   }
@@ -336,12 +344,20 @@ Blockly.ScratchBlocks.ProcedureUtils.createArgumentReporter_ = function(
   } else {
     var blockType = 'argument_reporter_boolean';
   }
-  var newBlock = this.workspace.newBlock(blockType);
-  newBlock.setShadow(true);
-  newBlock.setFieldValue(displayName, 'VALUE');
-  if (!this.isInsertionMarker()) {
-    newBlock.initSvg();
-    newBlock.render(false);
+  Blockly.Events.disable();
+  try {
+    var newBlock = this.workspace.newBlock(blockType);
+    newBlock.setShadow(true);
+    newBlock.setFieldValue(displayName, 'VALUE');
+    if (!this.isInsertionMarker()) {
+      newBlock.initSvg();
+      newBlock.render(false);
+    }
+  } finally {
+    Blockly.Events.enable();
+  }
+  if (Blockly.Events.isEnabled()) {
+    Blockly.Events.fire(new Blockly.Events.BlockCreate(newBlock));
   }
   return newBlock;
 };
@@ -484,16 +500,24 @@ Blockly.ScratchBlocks.ProcedureUtils.checkOldTypeMatches_ = function(oldBlock,
  */
 Blockly.ScratchBlocks.ProcedureUtils.createArgumentEditor_ = function(
     argumentType, displayName) {
-  if (argumentType == 'n' || argumentType == 's') {
-    var newBlock = this.workspace.newBlock('argument_editor_string_number');
-  } else {
-    var newBlock = this.workspace.newBlock('argument_editor_boolean');
+  Blockly.Events.disable();
+  try {
+    if (argumentType == 'n' || argumentType == 's') {
+      var newBlock = this.workspace.newBlock('argument_editor_string_number');
+    } else {
+      var newBlock = this.workspace.newBlock('argument_editor_boolean');
+    }
+    newBlock.setFieldValue(displayName, 'TEXT');
+    newBlock.setShadow(true);
+    if (!this.isInsertionMarker()) {
+      newBlock.initSvg();
+      newBlock.render(false);
+    }
+  } finally {
+    Blockly.Events.enable();
   }
-  newBlock.setFieldValue(displayName, 'TEXT');
-  newBlock.setShadow(true);
-  if (!this.isInsertionMarker()) {
-    newBlock.initSvg();
-    newBlock.render(false);
+  if (Blockly.Events.isEnabled()) {
+    Blockly.Events.fire(new Blockly.Events.BlockCreate(newBlock));
   }
   return newBlock;
 };
