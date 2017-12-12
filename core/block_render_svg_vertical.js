@@ -759,7 +759,7 @@ Blockly.BlockSvg.prototype.addIconSeparatorLine_ = function(field, cursorX,
   var lineTopHeight = Blockly.BlockSvg.ICON_SEPARATOR_HEIGHT / 2;
   var lineBottomHeight = lineTopHeight;
   // If this is a hat block, shorten the bottom of the line by one grid unit.
-  if (!this.previousConnection) {
+  if (!this.previousConnection && this.nextConnection) {
     lineBottomHeight -= Blockly.BlockSvg.GRID_UNIT;
   }
   Blockly.utils.createSvgElement('line', {
