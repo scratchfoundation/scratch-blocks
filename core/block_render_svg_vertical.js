@@ -634,7 +634,7 @@ Blockly.BlockSvg.prototype.render = function(opt_bubble) {
   // If the first field is an image, as in extension blocks, and this is a
   // reporter block, add a horizontal offset.
   if ((this.inputList[0].fieldRow[0] instanceof Blockly.FieldImage) &&
-    this.outputConnection) {
+      this.outputConnection) {
     cursorX += this.RTL ?
       -Blockly.BlockSvg.GRID_UNIT : Blockly.BlockSvg.GRID_UNIT;
   }
@@ -693,7 +693,7 @@ Blockly.BlockSvg.prototype.renderFields_ =
     // If the first field is an image, as in extension blocks, and this field is the first field,
     // and we're not in a hat, bump the image down by one grid unit to align it vertically
     if ((this.inputList[0].fieldRow[0] instanceof Blockly.FieldImage) &&
-      (field === this.inputList[0].fieldRow[0]) && this.previousConnection) {
+        (field === this.inputList[0].fieldRow[0]) && this.previousConnection) {
       yOffset += Blockly.BlockSvg.GRID_UNIT;
     }
 
