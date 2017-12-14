@@ -730,10 +730,10 @@ Blockly.BlockSvg.prototype.renderFields_ =
       'translate(' + translateX + ', ' + translateY + ') ' + scale
     );
 
-    // If the first field is an image, as in extension blocks, and this field
-    // is the first field, add a vertical separator line next to the icon.
-    if ((this.inputList[0].fieldRow[0] instanceof Blockly.FieldImage) &&
-        (field === this.inputList[0].fieldRow[0])) {
+    // If this an extension block, and this is the first field, and it is an
+    // image, add a vertical separator line next to the image.
+    if (this.isScratchExtension && (field === this.inputList[0].fieldRow[0]) &&
+        (field instanceof Blockly.FieldImage)) {
       this.addIconSeparatorLine_(field, cursorX, cursorY);
       cursorX += this.RTL ?
         -Blockly.BlockSvg.SEP_SPACE_X : Blockly.BlockSvg.SEP_SPACE_X;
