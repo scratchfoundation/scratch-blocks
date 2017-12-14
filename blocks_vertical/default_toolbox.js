@@ -642,7 +642,13 @@ Blockly.Blocks.defaultToolbox = '<xml id="toolbox-categories" style="display: no
   '</category>' +
   '<category name="Extensions" colour="#FF6680" secondaryColour="#FF4D6A">'+
     '<block type="extension_pen_down" id="extension_pen_down"></block>'+
-    '<block type="extension_music_drum" id="extension_music_drum"></block>'+
+    '<block type="extension_music_drum" id="extension_music_drum">'+
+      '<value name="NUMBER">'+
+        '<shadow type="math_number">'+
+          '<field name="NUM">1</field>'+
+        '</shadow>'+
+      '</value>'+
+      '</block>'+
     '<block type="extension_wedo_motor" id="extension_wedo_motor"></block>'+
     '<block type="extension_wedo_hat" id="extension_wedo_hat"></block>'+
     '<block type="extension_wedo_boolean" id="extension_wedo_boolean"></block>'+

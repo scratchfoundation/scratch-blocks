@@ -55,13 +55,17 @@ Blockly.Blocks['extension_music_drum'] = {
    */
   init: function() {
     this.jsonInit({
-      "message0": "%1 play a drum",
+      "message0": "%1 play drum %2",
       "args0": [
         {
           "type": "field_image",
           "src": Blockly.mainWorkspace.options.pathToMedia + "extensions/music-block-icon.svg",
           "width": 40,
           "height": 40
+        },
+        {
+          "type": "input_value",
+          "name": "NUMBER"
         }
       ],
       "category": Blockly.Categories.more,
