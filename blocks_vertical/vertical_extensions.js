@@ -211,14 +211,19 @@ Blockly.ScratchBlocks.VerticalExtensions.PROCEDURE_CALL_CONTEXTMENU = {
     menuOptions.push(Blockly.Procedures.makeShowDefinitionOption(this));
   }
 };
+
+
+Blockly.ScratchBlocks.VerticalExtensions.SCRATCH_EXTENSION = function() {
+  this.isScratchExtension = true;
+};
 /**
  * Register all extensions for scratch-blocks.
  * @package
  */
 Blockly.ScratchBlocks.VerticalExtensions.registerAll = function() {
   var categoryNames =
-      ['control', 'data', 'sounds', 'motion', 'looks', 'event', 'sensing',
-      'pen', 'operators', 'more'];
+      ['control', 'data', 'data_lists', 'sounds', 'motion', 'looks', 'event',
+      'sensing', 'pen', 'operators', 'more'];
   // Register functions for all category colours.
   for (var i = 0; i < categoryNames.length; i++) {
     name = categoryNames[i];
@@ -251,6 +256,10 @@ Blockly.ScratchBlocks.VerticalExtensions.registerAll = function() {
       Blockly.ScratchBlocks.VerticalExtensions.PROCEDURE_DEF_CONTEXTMENU);
   Blockly.Extensions.registerMixin('procedure_call_contextmenu',
       Blockly.ScratchBlocks.VerticalExtensions.PROCEDURE_CALL_CONTEXTMENU);
+
+  // Extension blocks have slightly different block rendering.
+  Blockly.Extensions.register('scratch_extension',
+    Blockly.ScratchBlocks.VerticalExtensions.SCRATCH_EXTENSION);
 };
 
 Blockly.ScratchBlocks.VerticalExtensions.registerAll();
