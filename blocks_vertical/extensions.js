@@ -44,7 +44,7 @@ Blockly.Blocks['extension_pen_down'] = {
         }
       ],
       "category": Blockly.Categories.more,
-      "extensions": ["colours_more", "shape_statement"]
+      "extensions": ["colours_more", "shape_statement", "scratch_extension"]
     });
   }
 };
@@ -65,7 +65,7 @@ Blockly.Blocks['extension_music_drum'] = {
         }
       ],
       "category": Blockly.Categories.more,
-      "extensions": ["colours_more", "shape_statement"]
+      "extensions": ["colours_more", "shape_statement", "scratch_extension"]
     });
   }
 };
@@ -92,7 +92,7 @@ Blockly.Blocks['extension_wedo_motor'] = {
         }
       ],
       "category": Blockly.Categories.more,
-      "extensions": ["colours_more", "shape_statement"]
+      "extensions": ["colours_more", "shape_statement", "scratch_extension"]
     });
   }
 };
@@ -113,7 +113,7 @@ Blockly.Blocks['extension_wedo_hat'] = {
         }
       ],
       "category": Blockly.Categories.more,
-      "extensions": ["colours_more", "shape_hat"]
+      "extensions": ["colours_more", "shape_hat", "scratch_extension"]
     });
   }
 };
@@ -134,7 +134,7 @@ Blockly.Blocks['extension_wedo_boolean'] = {
         }
       ],
       "category": Blockly.Categories.more,
-      "extensions": ["colours_more", "output_boolean"]
+      "extensions": ["colours_more", "output_boolean", "scratch_extension"]
     });
   }
 };
@@ -159,7 +159,7 @@ Blockly.Blocks['extension_wedo_tilt_reporter'] = {
         }
       ],
       "category": Blockly.Categories.more,
-      "extensions": ["colours_more", "output_number"]
+      "extensions": ["colours_more", "output_number", "scratch_extension"]
     });
   }
 };
@@ -205,7 +205,7 @@ Blockly.Blocks['extension_music_reporter'] = {
         }
       ],
       "category": Blockly.Categories.more,
-      "extensions": ["colours_more", "output_number"]
+      "extensions": ["colours_more", "output_number", "scratch_extension"]
     });
   }
 };
