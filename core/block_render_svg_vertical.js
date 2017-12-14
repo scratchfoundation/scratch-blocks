@@ -631,6 +631,12 @@ Blockly.BlockSvg.prototype.render = function(opt_bubble) {
   // If there are no icons, cursorX will be 0, otherwise it will be the
   // width that the first label needs to move over by.
 
+  // If this is an extension reporter block, add a horizontal offset.
+  if (this.isScratchExtension && this.outputConnection) {
+    cursorX += this.RTL ?
+      -Blockly.BlockSvg.GRID_UNIT : Blockly.BlockSvg.GRID_UNIT;
+  }
+
   var inputRows = this.renderCompute_(cursorX);
   this.renderDraw_(cursorX, inputRows);
   this.renderMoveConnections_();
@@ -681,6 +687,15 @@ Blockly.BlockSvg.prototype.renderFields_ =
     // Offset the field upward by half its height.
     // This vertically centers the fields around cursorY.
     var yOffset = -field.getSize().height / 2;
+
+    // If this is an extension block, and this field is the first field, and
+    // it is an image field, and this block has a previous connection, bump
+    // the image down by one grid unit to align it vertically.
+    if (this.isScratchExtension && (field === this.inputList[0].fieldRow[0])
+        && (field instanceof Blockly.FieldImage) && this.previousConnection) {
+      yOffset += Blockly.BlockSvg.GRID_UNIT;
+    }
+
     var translateX, translateY;
     var scale = '';
     if (this.RTL) {
@@ -895,6 +910,10 @@ Blockly.BlockSvg.prototype.computeInputHeight_ = function(input, row,
     // "Lone" field blocks are smaller.
     return Blockly.BlockSvg.MIN_BLOCK_Y_SINGLE_FIELD_OUTPUT;
   } else if (this.outputConnection) {
+    // If this is an extension reporter block, make it taller.
+    if (this.isScratchExtension) {
+      return Blockly.BlockSvg.MIN_BLOCK_Y_REPORTER + 2 * Blockly.BlockSvg.GRID_UNIT;
+    }
     // All other reporters.
     return Blockly.BlockSvg.MIN_BLOCK_Y_REPORTER;
   } else if (row.type == Blockly.NEXT_STATEMENT) {
@@ -904,6 +923,11 @@ Blockly.BlockSvg.prototype.computeInputHeight_ = function(input, row,
     // Extra row for below statement input.
     return Blockly.BlockSvg.EXTRA_STATEMENT_ROW_Y;
   } else {
+    // If this is an extension block, and it has a previous connection,
+    // make it taller.
+    if (this.isScratchExtension && this.previousConnection) {
+      return Blockly.BlockSvg.MIN_BLOCK_Y + 2 * Blockly.BlockSvg.GRID_UNIT;
+    }
     // All other blocks.
     return Blockly.BlockSvg.MIN_BLOCK_Y;
   }
