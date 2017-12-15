@@ -27,20 +27,22 @@ goog.require('Blockly.Colours');
 goog.require('Blockly.constants');
 goog.require('Blockly.ScratchBlocks.VerticalExtensions');
 
-
 Blockly.Blocks['extension_pen_down'] = {
   /**
    * @this Blockly.Block
    */
   init: function() {
     this.jsonInit({
-      "message0": "%1 pen down",
+      "message0": "%1 %2 pen down",
       "args0": [
         {
           "type": "field_image",
           "src": Blockly.mainWorkspace.options.pathToMedia + "extensions/pen-block-icon.svg",
           "width": 40,
           "height": 40
+        },
+        {
+          "type": "field_vertical_separator"
         }
       ],
       "category": Blockly.Categories.more,
@@ -55,13 +57,16 @@ Blockly.Blocks['extension_music_drum'] = {
    */
   init: function() {
     this.jsonInit({
-      "message0": "%1 play drum %2",
+      "message0": "%1 %2 play drum %3",
       "args0": [
         {
           "type": "field_image",
           "src": Blockly.mainWorkspace.options.pathToMedia + "extensions/music-block-icon.svg",
           "width": 40,
           "height": 40
+        },
+        {
+          "type": "field_vertical_separator"
         },
         {
           "type": "input_value",
@@ -80,13 +85,16 @@ Blockly.Blocks['extension_wedo_motor'] = {
    */
   init: function() {
     this.jsonInit({
-      "message0": "%1 turn a motor %2",
+      "message0": "%1 %2 turn a motor %3",
       "args0": [
         {
           "type": "field_image",
           "src": Blockly.mainWorkspace.options.pathToMedia + "extensions/wedo2-block-icon.svg",
           "width": 40,
           "height": 40
+        },
+        {
+          "type": "field_vertical_separator"
         },
         {
           "type": "field_image",
@@ -107,13 +115,16 @@ Blockly.Blocks['extension_wedo_hat'] = {
    */
   init: function() {
     this.jsonInit({
-      "message0": "%1 when I am wearing a hat",
+      "message0": "%1 %2 when I am wearing a hat",
       "args0": [
         {
           "type": "field_image",
           "src": Blockly.mainWorkspace.options.pathToMedia + "extensions/wedo2-block-icon.svg",
           "width": 40,
           "height": 40
+        },
+        {
+          "type": "field_vertical_separator"
         }
       ],
       "category": Blockly.Categories.more,
@@ -128,13 +139,16 @@ Blockly.Blocks['extension_wedo_boolean'] = {
    */
   init: function() {
     this.jsonInit({
-      "message0": "%1 O RLY?",
+      "message0": "%1 %2 O RLY?",
       "args0": [
         {
           "type": "field_image",
           "src": Blockly.mainWorkspace.options.pathToMedia + "extensions/wedo2-block-icon.svg",
           "width": 40,
           "height": 40
+        },
+        {
+          "type": "field_vertical_separator"
         }
       ],
       "category": Blockly.Categories.more,
@@ -149,13 +163,16 @@ Blockly.Blocks['extension_wedo_tilt_reporter'] = {
    */
   init: function() {
     this.jsonInit({
-      "message0": "%1 tilt angle %2",
+      "message0": "%1 %2 tilt angle %3",
       "args0": [
         {
           "type": "field_image",
           "src": Blockly.mainWorkspace.options.pathToMedia + "extensions/wedo2-block-icon.svg",
           "width": 40,
           "height": 40
+        },
+        {
+          "type": "field_vertical_separator"
         },
         {
           "type": "input_value",
@@ -199,13 +216,16 @@ Blockly.Blocks['extension_music_reporter'] = {
    */
   init: function() {
     this.jsonInit({
-      "message0": "%1 hey now, you're an all-star",
+      "message0": "%1 %2 hey now, you're an all-star",
       "args0": [
         {
           "type": "field_image",
           "src": Blockly.mainWorkspace.options.pathToMedia + "extensions/music-block-icon.svg",
           "width": 40,
           "height": 40
+        },
+        {
+          "type": "field_vertical_separator"
         }
       ],
       "category": Blockly.Categories.more,
