@@ -703,6 +703,16 @@ Blockly.BlockSvg.prototype.renderFields_ =
       yOffset += Blockly.BlockSvg.GRID_UNIT;
     }
 
+    // If this is an extension hat block, adjust the height of the vertical
+    // separator without adjusting the field height. The effect is to move
+    // the bottom end of the line up one grid unit.
+    if (this.isScratchExtension &&
+        !this.previousConnection && this.nextConnection &&
+        field instanceof Blockly.FieldVerticalSeparator) {
+      field.setLineHeight(Blockly.BlockSvg.ICON_SEPARATOR_HEIGHT -
+          Blockly.BlockSvg.GRID_UNIT);
+    }
+
     var translateX, translateY;
     var scale = '';
     if (this.RTL) {
