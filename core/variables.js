@@ -185,7 +185,7 @@ Blockly.Variables.createVariable = function(workspace, opt_callback, opt_type) {
   }
   // This function needs to be named so it can be called recursively.
   var promptAndCheckWithAlert = function(defaultName) {
-    Blockly.Variables.promptName(newMsg, defaultName,
+    Blockly.Variables.promptName(newMsg, defaultName, opt_type,
       function(text) {
         if (text) {
           // TODO (#1245) use separate namespaces for lists, variables, and
@@ -244,7 +244,7 @@ Blockly.Variables.renameVariable = function(workspace, variable,
   // This function needs to be named so it can be called recursively.
   var promptAndCheckWithAlert = function(defaultName) {
     Blockly.Variables.promptName(
-      Blockly.Msg.RENAME_VARIABLE_TITLE.replace('%1', variable.name), defaultName,
+      Blockly.Msg.RENAME_VARIABLE_TITLE.replace('%1', variable.name), defaultName, null,
       function(newName) {
         if (newName) {
           var newVariable = workspace.getVariable(newName);
@@ -285,23 +285,31 @@ Blockly.Variables.renameVariable = function(workspace, variable,
  * Prompt the user for a new variable name.
  * @param {string} promptText The string of the prompt.
  * @param {string} defaultText The default value to show in the prompt's field.
+ * @param {string} opt_type Optional type of variable, like 'string' or 'list'.
  * @param {function(?string)} callback A callback. It will be passed the new
  *     variable name, or null if the user picked something illegal.
  */
-Blockly.Variables.promptName = function(promptText, defaultText, callback) {
+Blockly.Variables.promptName = function(promptText, defaultText, opt_type, callback) {
   Blockly.prompt(promptText, defaultText, function(newVar) {
     // Merge runs of whitespace.  Strip leading and trailing whitespace.
     // Beyond this, all names are legal.
     if (newVar) {
-      newVar = newVar.replace(/[\s\xa0]+/g, ' ').replace(/^ | $/g, '');
-      if (newVar == Blockly.Msg.RENAME_VARIABLE ||
-          newVar == Blockly.Msg.NEW_VARIABLE) {
-        // Ok, not ALL names are legal...
-        newVar = null;
-      }
+      newVar = Blockly.Variables.validateName_(newVar, opt_type);
     }
     callback(newVar);
   });
+};
+
+Blockly.Variables.validateName_ = function(name, opt_type) {
+  if (!opt_type || !opt_type == Blockly.BROADCAST_MESSAGE_VARIABLE_TYPE) {
+    name = name.replace(/[\s\xa0]+/g, ' ').replace(/^ | $/g, '');
+    if (name == Blockly.Msg.RENAME_VARIABLE ||
+        name == Blockly.Msg.NEW_VARIABLE) {
+      // Ok, not ALL names are legal...
+      name = null;
+    }
+  }
+  return name;
 };
 
 /**
