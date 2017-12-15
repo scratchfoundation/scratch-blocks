@@ -730,15 +730,6 @@ Blockly.BlockSvg.prototype.renderFields_ =
       'translate(' + translateX + ', ' + translateY + ') ' + scale
     );
 
-    // If this an extension block, and this is the first field, and it is an
-    // image, add a vertical separator line next to the image.
-    if (this.isScratchExtension && (field === this.inputList[0].fieldRow[0]) &&
-        (field instanceof Blockly.FieldImage)) {
-      this.addIconSeparatorLine_(field, cursorX, cursorY);
-      cursorX += this.RTL ?
-        -Blockly.BlockSvg.SEP_SPACE_X : Blockly.BlockSvg.SEP_SPACE_X;
-    }
-
     // Fields are invisible on insertion marker.
     if (this.isInsertionMarker()) {
       root.setAttribute('display', 'none');
@@ -746,31 +737,6 @@ Blockly.BlockSvg.prototype.renderFields_ =
   }
   return this.RTL ? -cursorX : cursorX;
 }; /* eslint-enable indent */
-
-/**
- * Add a vertical separator line SVG after the current field.
- * @param {Blockly.Field} field - the field after which to place the line.
- * @param {number} cursorX - the current x position for rendering.
- * @param {number} cursorY - the current y position for rendering.
- * @private
- */
-Blockly.BlockSvg.prototype.addIconSeparatorLine_ = function(field, cursorX,
-    cursorY) {
-  var lineTopHeight = Blockly.BlockSvg.ICON_SEPARATOR_HEIGHT / 2;
-  var lineBottomHeight = lineTopHeight;
-  // If this is a hat block, shorten the bottom of the line by one grid unit.
-  if (!this.previousConnection && this.nextConnection) {
-    lineBottomHeight -= Blockly.BlockSvg.GRID_UNIT;
-  }
-  Blockly.utils.createSvgElement('line', {
-    'stroke': this.getColourSecondary(),
-    'stroke-linecap': 'round',
-    'x1': cursorX,
-    'y1': cursorY - lineTopHeight,
-    'x2': cursorX,
-    'y2': cursorY + lineBottomHeight
-  }, field.sourceBlock_.svgGroup_);
-};
 
 /**
  * Computes the height and widths for each row and field.
