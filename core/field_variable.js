@@ -263,7 +263,9 @@ Blockly.FieldVariable.prototype.onItemSelected = function(menu, menuItem) {
     } else if (id == Blockly.NEW_BROADCAST_MESSAGE_ID) {
       var thisField = this;
       var setName = function(newName) {
-        thisField.setValue(newName);
+        if (newName) {
+          thisField.setValue(newName);
+        }
       };
       Blockly.Variables.createVariable(workspace, setName, Blockly.BROADCAST_MESSAGE_VARIABLE_TYPE);
       return;
