@@ -2,7 +2,7 @@
  * @license
  * Visual Blocks Editor
  *
- * Copyright 2012 Google Inc.
+ * Copyright 2017 Massachusetts Institute of Technology
  * https://developers.google.com/blockly/
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -25,9 +25,11 @@
 'use strict';
 
 goog.provide('Blockly.FieldVerticalSeparator');
+
 goog.require('Blockly.Field');
 goog.require('goog.dom');
 goog.require('goog.math.Size');
+
 
 /**
  * Class for a vertical separator line.
@@ -79,9 +81,10 @@ Blockly.FieldVerticalSeparator.prototype.init = function() {
  * This allows the line's height to be changed without causing it to be
  * centered with the new height (needed for correct rendering of hat blocks).
  * @param {number} newHeight the new height for the line.
+ * @package
  */
 Blockly.FieldVerticalSeparator.prototype.setLineHeight = function(newHeight) {
-    this.lineElement_.setAttribute('y2', newHeight);
+  this.lineElement_.setAttribute('y2', newHeight);
 };
 
 /**
@@ -94,7 +97,7 @@ Blockly.FieldVerticalSeparator.prototype.dispose = function() {
 };
 
 /**
- * Get the source URL of this field.
+ * Get the value of this field. A no-op in this case.
  * @return {string} null.
  * @override
  */
@@ -103,20 +106,24 @@ Blockly.FieldVerticalSeparator.prototype.getValue = function() {
 };
 
 /**
- * Set the value of this field.
+ * Set the value of this field. A no-op in this case.
  * @param {?string} src New value.
  * @override
  */
-Blockly.FieldVerticalSeparator.prototype.setValue = function(src) {
+Blockly.FieldVerticalSeparator.prototype.setValue = function(
+    /* eslint-disable no-unused-vars */ src
+    /* eslint-enable no-unused-vars */) {
   return;
 };
 
 /**
- * Set the text of this field.
+ * Set the text of this field. A no-op in this case.
  * @param {?string} alt New text.
  * @override
  */
-Blockly.FieldVerticalSeparator.prototype.setText = function(alt) {
+Blockly.FieldVerticalSeparator.prototype.setText = function(
+    /* eslint-disable no-unused-vars */ alt
+    /* eslint-enable no-unused-vars */) {
   return;
 };
 
