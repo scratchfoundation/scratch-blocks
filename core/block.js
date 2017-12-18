@@ -1389,6 +1389,9 @@ Blockly.Block.prototype.interpolate_ = function(message, args, lastDummyAlign) {
             case 'field_variable_getter':
               field = Blockly.Block.newFieldVariableGetterFromJson_(element);
               break;
+            case 'field_vertical_separator':
+              field = new Blockly.FieldVerticalSeparator();
+              break;
             case 'field_date':
               if (Blockly.FieldDate) {
                 field = new Blockly.FieldDate(element['date']);

@@ -141,6 +141,13 @@ Blockly.BlockSvg.STATEMENT_INPUT_INNER_SPACE = 2 * Blockly.BlockSvg.GRID_UNIT;
 Blockly.BlockSvg.START_HAT_HEIGHT = 16;
 
 /**
+ * Height of the vertical separator line for icons that appear at the left edge
+ * of a block, such as extension icons.
+ * @const
+ */
+Blockly.BlockSvg.ICON_SEPARATOR_HEIGHT = 10 * Blockly.BlockSvg.GRID_UNIT;
+
+/**
  * Path of the top hat's curve.
  * @const
  */
@@ -696,6 +703,16 @@ Blockly.BlockSvg.prototype.renderFields_ =
       yOffset += Blockly.BlockSvg.GRID_UNIT;
     }
 
+    // If this is an extension hat block, adjust the height of the vertical
+    // separator without adjusting the field height. The effect is to move
+    // the bottom end of the line up one grid unit.
+    if (this.isScratchExtension &&
+        !this.previousConnection && this.nextConnection &&
+        field instanceof Blockly.FieldVerticalSeparator) {
+      field.setLineHeight(Blockly.BlockSvg.ICON_SEPARATOR_HEIGHT -
+          Blockly.BlockSvg.GRID_UNIT);
+    }
+
     var translateX, translateY;
     var scale = '';
     if (this.RTL) {
@@ -722,6 +739,7 @@ Blockly.BlockSvg.prototype.renderFields_ =
     root.setAttribute('transform',
       'translate(' + translateX + ', ' + translateY + ') ' + scale
     );
+
     // Fields are invisible on insertion marker.
     if (this.isInsertionMarker()) {
       root.setAttribute('display', 'none');
