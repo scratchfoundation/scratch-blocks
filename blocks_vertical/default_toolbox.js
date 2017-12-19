@@ -640,7 +640,8 @@ Blockly.Blocks.defaultToolbox = '<xml id="toolbox-categories" style="display: no
   '</category>' +
   '<category name="More" colour="#FF6680" secondaryColour="#FF4D6A" custom="PROCEDURE">' +
   '</category>' +
-  '<category name="Extensions" colour="#FF6680" secondaryColour="#FF4D6A">'+
+  '<category name="Extensions" colour="#FF6680" secondaryColour="#FF4D6A" '+
+    'iconURI="../media/extensions/wedo2-block-icon.svg">'+
     '<block type="extension_pen_down" id="extension_pen_down"></block>'+
     '<block type="extension_music_drum" id="extension_music_drum">'+
       '<value name="NUMBER">'+
