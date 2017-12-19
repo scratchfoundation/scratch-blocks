@@ -120,8 +120,9 @@ Blockly.Xml.fieldToDomVariable_ = function(field, workspace) {
  * @private
  */
 Blockly.Xml.fieldToDom_ = function(field, workspace) {
-  if (field.name && field.EDITABLE) {
-    if (field instanceof Blockly.FieldVariable) {
+  if (field.name && field.SERIALIZABLE) {
+    if (field instanceof Blockly.FieldVariable ||
+        field instanceof Blockly.FieldVariableGetter) {
       return Blockly.Xml.fieldToDomVariable_(field, workspace);
     } else {
       var container = goog.dom.createDom('field', null, field.getValue());
@@ -171,42 +172,8 @@ Blockly.Xml.blockToDom = function(block, opt_noId) {
       element.appendChild(mutation);
     }
   }
-  function fieldToDom(field) {
-    if (field.name && field.SERIALIZABLE) {
-      var container = goog.dom.createDom('field', null, field.getValue());
-      container.setAttribute('name', field.name);
-      if (field instanceof Blockly.FieldVariable || field instanceof
-        Blockly.FieldVariableGetter) {
-        // TODO (#1253) Lookup variable by id instead of name
-        var variable = block.workspace.getVariable(field.getValue());
-        if (variable) {
-          container.setAttribute('id', variable.getId());
-          container.setAttribute('variabletype', variable.type);
-        } else {
-          // Above works well for untyped variables, but we need to correctly
-          // set the type for blocks that exist by default in the toolbox
-          // (e.g. broadcast messages)
-          // TODO figure out if we need to do something different when there's
-          // more than one element in variableTypes field
 
-          // must check that field is an instance of FieldVariable because
-          // FieldVariableGetter doesn't have getVariableTypes_ function
-          if (field instanceof Blockly.FieldVariable) {
-            var variableTypes = field.getVariableTypes_();
-            if (variableTypes.length == 1) {
-              container.setAttribute('variabletype', variableTypes[0]);
-            }
-          }
-        }
-      }
-      element.appendChild(container);
-    }
-  }
-  for (var i = 0, input; input = block.inputList[i]; i++) {
-    for (var j = 0, field; field = input.fieldRow[j]; j++) {
-      fieldToDom(field);
-    }
-  }
+  Blockly.Xml.allFieldsToDom_(block, element);
 
   var commentText = block.getCommentText();
   if (commentText) {
@@ -695,34 +662,7 @@ Blockly.Xml.domToBlockHeadless_ = function(xmlBlock, workspace) {
         // Titles were renamed to field in December 2013.
         // Fall through.
       case 'field':
-        var field = block.getField(name);
-        var text = xmlChild.textContent;
-        if (field instanceof Blockly.FieldVariable ||
-          field instanceof Blockly.FieldVariableGetter) {
-          // TODO (marisaleung): When we change setValue and getValue to
-          // interact with id's instead of names, update this so that we get
-          // the variable based on id instead of textContent.
-          var type = xmlChild.getAttribute('variabletype') || '';
-          var variable = workspace.getVariable(text);
-          if (!variable) {
-            variable = workspace.createVariable(text, type,
-              xmlChild.getAttribute(id));
-          }
-          if (typeof(type) !== undefined && type !== null) {
-            if (type !== variable.type) {
-              throw Error('Serialized variable type with id \'' +
-                variable.getId() + '\' had type ' + variable.type + ', and ' +
-                'does not match variable field that references it: ' +
-                Blockly.Xml.domToText(xmlChild) + '.');
-            }
-          }
-        }
-        if (!field) {
-          console.warn('Ignoring non-existent field ' + name + ' in block ' +
-                       prototypeName);
-          break;
-        }
-        field.setValue(text);
+        Blockly.Xml.domToField_(block, name, xmlChild);
         break;
       case 'value':
       case 'statement':
@@ -855,7 +795,8 @@ Blockly.Xml.domToField_ = function(block, fieldName, xml) {
 
   var workspace = block.workspace;
   var text = xml.textContent;
-  if (field instanceof Blockly.FieldVariable) {
+  if (field instanceof Blockly.FieldVariable ||
+      field instanceof Blockly.FieldVariableGetter) {
     Blockly.Xml.domToFieldVariable_(workspace, xml, text, field);
   } else {
     field.setValue(text);
