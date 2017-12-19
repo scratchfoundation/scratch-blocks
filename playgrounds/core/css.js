@@ -1181,6 +1181,13 @@ Blockly.Css.CONTENT = [
     'margin: 0 auto 0.125rem;',
   '}',
 
+  '.scratchCategoryItemIcon {',
+    'width: 1.25rem;',
+    'height: 1.25rem;',
+    'margin: 0 auto 0.125rem;',
+    'background-size: 100%;',
+  '}',
+
   '.scratchCategoryMenuItem:hover {',
     'color: $colour_toolboxHover !important;',
   '}',

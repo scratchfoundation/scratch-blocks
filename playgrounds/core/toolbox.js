@@ -506,6 +506,7 @@ Blockly.Toolbox.Category = function(parent, parentHtml, domTree) {
   this.name_ = domTree.getAttribute('name');
   this.setColour(domTree);
   this.custom_ = domTree.getAttribute('custom');
+  this.iconURI_ = domTree.getAttribute('iconURI');
   this.contents_ = [];
   if (!this.custom_) {
     this.parseContents_(domTree);
@@ -536,10 +537,16 @@ Blockly.Toolbox.Category.prototype.createDom = function() {
   this.label_ = goog.dom.createDom('div',
     {'class': 'scratchCategoryMenuItemLabel'},
     this.name_);
-  this.bubble_ = goog.dom.createDom('div',
-    {'class': 'scratchCategoryItemBubble'});
-  this.bubble_.style.backgroundColor = this.colour_;
-  this.bubble_.style.borderColor = this.secondaryColour_;
+  if (this.iconURI_) {
+    this.bubble_ = goog.dom.createDom('div',
+        {'class': 'scratchCategoryItemIcon'});
+    this.bubble_.style.backgroundImage = 'url(' + this.iconURI_ + ')';
+  } else {
+    this.bubble_ = goog.dom.createDom('div',
+        {'class': 'scratchCategoryItemBubble'});
+    this.bubble_.style.backgroundColor = this.colour_;
+    this.bubble_.style.borderColor = this.secondaryColour_;
+  }
   this.item_.appendChild(this.bubble_);
   this.item_.appendChild(this.label_);
   this.parentHtml_.appendChild(this.item_);
