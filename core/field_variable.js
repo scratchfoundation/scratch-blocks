@@ -103,7 +103,14 @@ Blockly.FieldVariable.prototype.initModel = function() {
   } else {
     var variable = Blockly.Variables.getOrCreateVariable(
         this.workspace_, null, this.defaultVariableName, this.defaultType_);
-    this.setValue(variable.getId());
+    // Don't fire a change event for this setValue.  It would have null as the
+    // old value, which is not valid.
+    Blockly.Events.disable();
+    try {
+      this.setValue(variable.getId());
+    } finally {
+      Blockly.Events.enable();
+    }
   }
 };
 
@@ -132,15 +139,28 @@ Blockly.FieldVariable.prototype.setSourceBlock = function(block) {
  * @return {string} Current variable's ID.
  */
 Blockly.FieldVariable.prototype.getValue = function() {
-  return this.variable_ ? this.variable_.getId() : '';
+  return this.variable_ ? this.variable_.getId() : null;
 };
 
 /**
- * Get the text from this field.
- * @return {string} Current text.
+ * Get the text from this field, which is the selected variable's name.
+ * @return {string} The selected variable's name, or the empty string if no
+ *     variable is selected.
  */
 Blockly.FieldVariable.prototype.getText = function() {
   return this.variable_ ? this.variable_.name : '';
+};
+
+/**
+ * Get the variable model for the selected variable.
+ * Not guaranteed to be in the variable map on the workspace (e.g. if accessed
+ * after the variable has been deleted).
+ * @return {?Blockly.VariableModel} the selected variable, or null if none was
+ *     selected.
+ * @package
+ */
+Blockly.FieldVariable.prototype.getVariable = function() {
+  return this.variable_;
 };
 
 /**
@@ -149,8 +169,6 @@ Blockly.FieldVariable.prototype.getText = function() {
  *     variable.
  */
 Blockly.FieldVariable.prototype.setValue = function(id) {
-  // What do I do when id is null?  That happens when undoing a change event
-  // for the first time the value was set.
   var workspace = this.sourceBlock_.workspace;
   var variable = Blockly.Variables.getVariable(workspace, id);
 
@@ -167,7 +185,7 @@ Blockly.FieldVariable.prototype.setValue = function(id) {
   if (this.sourceBlock_ && Blockly.Events.isEnabled()) {
     var oldValue = this.variable_ ? this.variable_.getId() : null;
     Blockly.Events.fire(new Blockly.Events.BlockChange(
-        this.sourceBlock_, 'field', this.name, oldValue, variable.getId()));
+        this.sourceBlock_, 'field', this.name, oldValue, id));
   }
   this.variable_ = variable;
   this.value_ = id;
@@ -200,8 +218,7 @@ Blockly.FieldVariable.prototype.typeIsAllowed_ = function(type) {
  * @private
  */
 Blockly.FieldVariable.prototype.getVariableTypes_ = function() {
-  // TODO: Why does this happen every time, instead of once when the workspace
-  // is set?  Do we expect the variable types to change that much?
+  // TODO (#1513): Try to avoid calling this every time the field is edited.
   var variableTypes = this.variableTypes;
   if (variableTypes === null) {
     // If variableTypes is null, return all variable types.
@@ -306,12 +323,7 @@ Blockly.FieldVariable.prototype.onItemSelected = function(menu, menuItem) {
       return;
     }
 
-    // TODO: Call any validation function, and allow it to override.
-    // For now it's unclear whether the validator should act on the id.
-    //var validatedId = this.callValidator(variable.getId());
+    // TODO (#1529): Call any validation function, and allow it to override.
   }
-  // if (variable.getId() !== null) {
-  //   this.setValue(validatedId);
-  // }
   this.setValue(id);
 };

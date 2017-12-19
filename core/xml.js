@@ -87,28 +87,38 @@ Blockly.Xml.blockToDomWithXY = function(block, opt_noId) {
   return element;
 };
 
-Blockly.Xml.fieldToDomVariable_ = function(field, workspace) {
+/**
+ * Encode a variable field as XML.
+ * @param {!Blockly.FieldVariable} field The field to encode.
+ * @return {?Element} XML element, or null if the field did not need to be
+ *     serialized.
+ * @private
+ */
+Blockly.Xml.fieldToDomVariable_ = function(field) {
   var id = field.getValue();
-  var variable = workspace.getVariableById(id);
+  // The field had not been initialized fully before being serialized.
+  // This can happen if a block is created directly through a call to
+  // workspace.newBlock instead of from XML.
+  // The new block will be serialized for the first time when firing a block
+  // creation event.
+  if (id == null) {
+    field.initModel();
+    id = field.getValue();
+  }
+  // Get the variable directly from the field, instead of doing a lookup.  This
+  // will work even if the variable has already been deleted.  This can happen
+  // because the flyout defers deleting blocks until the next time the flyout is
+  // opened.
+  var variable = field.getVariable();
+
   if (!variable) {
-    if (workspace.isFlyout && workspace.targetWorkspace) {
-      var potentialVariableMap = workspace.getPotentialVariableMap();
-      if (potentialVariableMap) {
-        variable = potentialVariableMap.getVariableById(id);
-      }
-    }
+    throw Error('Tried to serialize a variable field with no variable.');
   }
-  if (variable) {
-    var container = goog.dom.createDom('field', null, variable.name);
-    container.setAttribute('name', field.name);
-    container.setAttribute('id', variable.getId());
-    container.setAttribute('variabletype', variable.type);
-    return container;
-  } else {
-    // something went wrong?
-    console.warn('no variable in fieldtodom');
-    return null;
-  }
+  var container = goog.dom.createDom('field', null, variable.name);
+  container.setAttribute('name', field.name);
+  container.setAttribute('id', variable.getId());
+  container.setAttribute('variabletype', variable.type);
+  return container;
 };
 
 /**
@@ -119,11 +129,11 @@ Blockly.Xml.fieldToDomVariable_ = function(field, workspace) {
  *     serialized.
  * @private
  */
-Blockly.Xml.fieldToDom_ = function(field, workspace) {
+Blockly.Xml.fieldToDom_ = function(field) {
   if (field.name && field.SERIALIZABLE) {
     if (field instanceof Blockly.FieldVariable ||
         field instanceof Blockly.FieldVariableGetter) {
-      return Blockly.Xml.fieldToDomVariable_(field, workspace);
+      return Blockly.Xml.fieldToDomVariable_(field);
     } else {
       var container = goog.dom.createDom('field', null, field.getValue());
       container.setAttribute('name', field.name);
@@ -142,10 +152,9 @@ Blockly.Xml.fieldToDom_ = function(field, workspace) {
  * @private
  */
 Blockly.Xml.allFieldsToDom_ = function(block, element) {
-  var workspace = block.workspace;
   for (var i = 0, input; input = block.inputList[i]; i++) {
     for (var j = 0, field; field = input.fieldRow[j]; j++) {
-      var fieldDom = Blockly.Xml.fieldToDom_(field, workspace);
+      var fieldDom = Blockly.Xml.fieldToDom_(field);
       if (fieldDom) {
         element.appendChild(fieldDom);
       }
@@ -520,12 +529,11 @@ Blockly.Xml.domToBlock = function(xmlBlock, workspace) {
   var variablesBeforeCreation = workspace.getAllVariables();
   try {
     var topBlock = Blockly.Xml.domToBlockHeadless_(xmlBlock, workspace);
+    // Generate list of all blocks.
+    var blocks = topBlock.getDescendants();
     if (workspace.rendered) {
-      // TODO (fenichel): Otherwise call initModel?
       // Hide connections to speed up assembly.
       topBlock.setConnectionsHidden(true);
-      // Generate list of all blocks.
-      var blocks = topBlock.getDescendants();
       // Render each block.
       for (var i = blocks.length - 1; i >= 0; i--) {
         blocks[i].initSvg();
@@ -546,12 +554,15 @@ Blockly.Xml.domToBlock = function(xmlBlock, workspace) {
       // Allow the scrollbars to resize and move based on the new contents.
       // TODO(@picklesrus): #387. Remove when domToBlock avoids resizing.
       workspace.resizeContents();
+    } else {
+      for (var i = blocks.length - 1; i >= 0; i--) {
+        blocks[i].initModel();
+      }
     }
   } finally {
     Blockly.Events.enable();
   }
   if (Blockly.Events.isEnabled()) {
-    Blockly.Events.fire(new Blockly.Events.BlockCreate(topBlock));
     var newVariables = Blockly.Variables.getAddedVariables(workspace,
         variablesBeforeCreation);
     // Fire a VarCreate event for each (if any) new variable created.
@@ -559,6 +570,9 @@ Blockly.Xml.domToBlock = function(xmlBlock, workspace) {
       var thisVariable = newVariables[i];
       Blockly.Events.fire(new Blockly.Events.VarCreate(thisVariable));
     }
+    // Block events come after var events, in case they refer to newly created
+    // variables.
+    Blockly.Events.fire(new Blockly.Events.BlockCreate(topBlock));
   }
   return topBlock;
 };

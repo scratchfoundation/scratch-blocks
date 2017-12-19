@@ -92,7 +92,7 @@ Blockly.Workspace = function(opt_options) {
   this.variableMap_ = new Blockly.VariableMap(this);
 
   /**
-   * Blocks in the flyout can refer to variables that don't exist in the
+   * Blocks in the flyout can refer to variables that don't exist in the main
    * workspace.  For instance, the "get item in list" block refers to an "item"
    * variable regardless of whether the variable has been created yet.
    * A FieldVariable must always refer to a Blockly.VariableModel.  We reconcile
@@ -141,18 +141,6 @@ Blockly.Workspace.SCAN_ANGLE = 3;
  */
 Blockly.Workspace.prototype.addTopBlock = function(block) {
   this.topBlocks_.push(block);
-  if (!this.isFlyout) {
-    return;
-  }
-  // This is for the (unlikely) case where you have a variable in a block in
-  // an always-open flyout.  It needs to be possible to edit the block in the
-  // flyout, so the contents of the dropdown need to be correct.
-  var variableNames = Blockly.Variables.allUsedVariables(block);
-  for (var i = 0, name; name = variableNames[i]; i++) {
-    if (!this.getVariable(name)) {
-      this.createVariable(name);
-    }
-  }
 };
 
 /**
@@ -255,7 +243,7 @@ Blockly.Workspace.prototype.createVariable = function(name, opt_type, opt_id) {
 };
 
 /**
- * Find all the uses of a named variable.
+ * Find all the uses of the given variable, which is identified by ID.
  * @param {string} id ID of the variable to find.
  * @return {!Array.<!Blockly.Block>} Array of block usages.
  */
