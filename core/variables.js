@@ -168,7 +168,7 @@ Blockly.Variables.generateUniqueName = function(workspace) {
  * @param {!Blockly.Workspace} workspace The workspace on which to create the
  *     variable.
  * @param {function(?string=)=} opt_callback A callback. It will
- *     be passed an acceptable new variable name, or null if change is to be
+ *     be passed the id of the variable to be created, or null if change is to be
  *     aborted (cancel button), or undefined if an existing variable was chosen.
  * @param {string} opt_type Optional type of variable, like 'string' or 'list'.
  */
@@ -211,14 +211,14 @@ Blockly.Variables.createVariable = function(workspace, opt_callback, opt_type) {
           else {
             var variable = workspace.createVariable(text, opt_type);
 
-            var flyout = workspace.getFlyout();
+            var flyout = workspace.isFlyout ? workspace : workspace.getFlyout();
             var variableBlockId = variable.getId();
             if (flyout.setCheckboxState) {
               flyout.setCheckboxState(variableBlockId, true);
             }
 
             if (opt_callback) {
-              opt_callback(text);
+              opt_callback(variableBlockId);
             }
           }
         } else {
