@@ -53,7 +53,8 @@ Blockly.FieldVariable = function(varname, opt_validator, opt_variableTypes) {
   this.setValidator(opt_validator);
   // TODO (#1499): Add opt_default_type to match default value.  If not set, ''.
   this.defaultVariableName = (varname || '');
-  this.defaultType_ = '';
+  var hasSingleVarType = opt_variableTypes && (opt_variableTypes.length == 1);
+  this.defaultType_ = hasSingleVarType ? opt_variableTypes[0] : '';
   this.variableTypes = opt_variableTypes;
   this.variableType = (opt_variableTypes && opt_variableTypes.length == 1) ?
     opt_variableTypes[0] : '';
