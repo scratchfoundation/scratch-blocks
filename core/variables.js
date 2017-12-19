@@ -73,7 +73,7 @@ Blockly.Variables.allUsedVariables = function(root) {
       for (var y = 0; y < blockVariables.length; y++) {
         var variable = blockVariables[y];
         // Variable ID may be null if the block is only half-built.
-        if (variable.getId()) {
+        if (variable.getId() && variable.name.toLowerCase() != ignorableName) {
           variableHash[variable.name.toLowerCase()] = variable.name;
         }
       }
