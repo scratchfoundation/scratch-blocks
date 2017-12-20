@@ -49,7 +49,9 @@ Blockly.FieldVariable = function(varname, opt_validator, opt_variableTypes) {
   // The FieldDropdown constructor would call setValue, which might create a
   // spurious variable.  Just do the relevant parts of the constructor.
   this.menuGenerator_ = Blockly.FieldVariable.dropdownCreate;
-  this.size_ = new goog.math.Size(0, Blockly.BlockSvg.MIN_BLOCK_Y);
+  this.size_ = new goog.math.Size(
+    Blockly.BlockSvg.FIELD_WIDTH,
+    Blockly.BlockSvg.FIELD_HEIGHT);
   this.setValidator(opt_validator);
   // TODO (#1499): Add opt_default_type to match default value.  If not set, ''.
   this.defaultVariableName = (varname || '');
