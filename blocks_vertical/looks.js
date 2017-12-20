@@ -35,7 +35,7 @@ Blockly.Blocks['looks_sayforsecs'] = {
    */
   init: function() {
     this.jsonInit({
-      "message0": "say %1 for %2 secs",
+      "message0": "say %1 for %2 seconds",
       "args0": [
         {
           "type": "input_value",
@@ -79,7 +79,7 @@ Blockly.Blocks['looks_thinkforsecs'] = {
    */
   init: function() {
     this.jsonInit({
-      "message0": "think %1 for %2 secs",
+      "message0": "think %1 for %2 seconds",
       "args0": [
         {
           "type": "input_value",
