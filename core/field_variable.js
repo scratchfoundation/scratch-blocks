@@ -184,7 +184,6 @@ Blockly.FieldVariable.dropdownCreate = function() {
   if (this.sourceBlock_) {
     workspace = this.sourceBlock_.workspace;
   }
-  var isBroadcastType = false;
   if (workspace) {
     var variableTypes = this.getVariableTypes_();
     var variableModelList = [];
@@ -192,9 +191,6 @@ Blockly.FieldVariable.dropdownCreate = function() {
     // doesn't modify the workspace's list.
     for (var i = 0; i < variableTypes.length; i++) {
       var variableType = variableTypes[i];
-      if (variableType == Blockly.BROADCAST_MESSAGE_VARIABLE_TYPE){
-        isBroadcastType = true;
-      }
       var variables = workspace.getVariablesOfType(variableType);
       variableModelList = variableModelList.concat(variables);
     }
@@ -206,6 +202,7 @@ Blockly.FieldVariable.dropdownCreate = function() {
       }
     }
   }
+  var isBroadcastType = this.variableType == Blockly.BROADCAST_MESSAGE_VARIABLE_TYPE;
   // Ensure that the currently selected variable is an option.
   if (createSelectedVariable && workspace) {
     var newVar = null;
