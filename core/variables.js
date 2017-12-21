@@ -307,7 +307,7 @@ Blockly.Variables.promptName = function(promptText, defaultText, callback, opt_t
  * @return {string} The validated and possibly transformed name of the variable.
  */
 Blockly.Variables.validateName_ = function(name, opt_type) {
-  if (!opt_type || !opt_type == Blockly.BROADCAST_MESSAGE_VARIABLE_TYPE) {
+  if (!opt_type || opt_type != Blockly.BROADCAST_MESSAGE_VARIABLE_TYPE) {
     name = name.replace(/[\s\xa0]+/g, ' ').replace(/^ | $/g, '');
     if (name == Blockly.Msg.RENAME_VARIABLE ||
         name == Blockly.Msg.NEW_VARIABLE) {
