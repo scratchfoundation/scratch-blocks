@@ -316,7 +316,8 @@ Blockly.FieldVariable.dropdownCreate = function() {
 
 /**
  * Handle the selection of an item in the variable dropdown menu.
- * Special case the 'Rename variable...' and 'Delete variable...' options.
+ * Special case the 'Rename variable...', 'Delete variable...',
+ * and 'New message...' options.
  * In the rename case, prompt the user for a new name.
  * @param {!goog.ui.Menu} menu The Menu component clicked.
  * @param {!goog.ui.MenuItem} menuItem The MenuItem selected within menu.
