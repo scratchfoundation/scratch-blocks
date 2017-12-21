@@ -51,6 +51,8 @@ Blockly.FieldVariable = function(varname, opt_validator, opt_variableTypes) {
   this.setValue(varname || '');
   this.addArgType('variable');
   this.variableTypes = opt_variableTypes;
+  this.variableType = (opt_variableTypes && opt_variableTypes.length == 1) ?
+    opt_variableTypes[0] : '';
 };
 goog.inherits(Blockly.FieldVariable, Blockly.FieldDropdown);
 
@@ -84,14 +86,14 @@ Blockly.FieldVariable.prototype.initModel = function() {
     // Check if there was exactly one element specified in the
     // variableTypes list. This is the list that specifies which types of
     // variables to include in the dropdown.
-    // If there is exactly one element specified, make the variable
-    // being created this specified type. Else, default behavior is to create
-    // a scalar variable
-    if (this.getVariableTypes_().length == 1) {
-      this.sourceBlock_.workspace.createVariable(this.getValue(),
-        this.getVariableTypes_()[0]);
-    } else {
-      this.sourceBlock_.workspace.createVariable(this.getValue());
+    this.sourceBlock_.workspace.createVariable(this.getValue(), this.variableType);
+  } else {
+    // Using shorter name for this constant
+    var broadcastMsgType = Blockly.BROADCAST_MESSAGE_VARIABLE_TYPE;
+    var broadcastVars = this.sourceBlock_.workspace.getVariablesOfType(broadcastMsgType);
+    if (this.variableType == broadcastMsgType && broadcastVars.length != 0) {
+      broadcastVars.sort(Blockly.VariableModel.compareByName);
+      this.setValue(broadcastVars[0].name);
     }
   }
 };
