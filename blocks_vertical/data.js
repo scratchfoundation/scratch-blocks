@@ -164,7 +164,7 @@ Blockly.Blocks['data_listcontents'] = {
           "variableTypes": ["list"]
         }
       ],
-      "category": Blockly.Categories.data,
+      "category": Blockly.Categories.dataLists,
       "extensions": ["colours_data_lists", "output_string"],
       "checkboxInFlyout": true
     });
@@ -246,7 +246,7 @@ Blockly.Blocks['data_addtolist'] = {
           "variableTypes": ["list"]
         }
       ],
-      "category": Blockly.Categories.data,
+      "category": Blockly.Categories.dataLists,
       "extensions": ["colours_data_lists", "shape_statement"]
     });
   }
@@ -271,7 +271,7 @@ Blockly.Blocks['data_deleteoflist'] = {
           "variableTypes": ["list"]
         }
       ],
-      "category": Blockly.Categories.data,
+      "category": Blockly.Categories.dataLists,
       "extensions": ["colours_data_lists", "shape_statement"]
     });
   }
@@ -300,7 +300,7 @@ Blockly.Blocks['data_insertatlist'] = {
           "variableTypes": ["list"]
         }
       ],
-      "category": Blockly.Categories.data,
+      "category": Blockly.Categories.dataLists,
       "extensions": ["colours_data_lists", "shape_statement"]
     });
   }
@@ -329,7 +329,7 @@ Blockly.Blocks['data_replaceitemoflist'] = {
           "name": "ITEM"
         }
       ],
-      "category": Blockly.Categories.data,
+      "category": Blockly.Categories.dataLists,
       "extensions": ["colours_data_lists", "shape_statement"]
     });
   }
@@ -355,7 +355,7 @@ Blockly.Blocks['data_itemoflist'] = {
         }
       ],
       "output": null,
-      "category": Blockly.Categories.data,
+      "category": Blockly.Categories.dataLists,
       "extensions": ["colours_data_lists"],
       "outputShape": Blockly.OUTPUT_SHAPE_ROUND
     });
@@ -377,7 +377,7 @@ Blockly.Blocks['data_lengthoflist'] = {
           "variableTypes": ["list"]
         }
       ],
-      "category": Blockly.Categories.data,
+      "category": Blockly.Categories.dataLists,
       "extensions": ["colours_data_lists", "output_number"]
     });
   }
@@ -402,7 +402,7 @@ Blockly.Blocks['data_listcontainsitem'] = {
           "name": "ITEM"
         }
       ],
-      "category": Blockly.Categories.data,
+      "category": Blockly.Categories.dataLists,
       "extensions": ["colours_data_lists", "output_boolean"]
     });
   }
@@ -423,7 +423,7 @@ Blockly.Blocks['data_showlist'] = {
           "variableTypes": ["list"]
         }
       ],
-      "category": Blockly.Categories.data,
+      "category": Blockly.Categories.dataLists,
       "extensions": ["colours_data_lists", "shape_statement"]
     });
   }
@@ -444,7 +444,7 @@ Blockly.Blocks['data_hidelist'] = {
           "variableTypes": ["list"]
         }
       ],
-      "category": Blockly.Categories.data,
+      "category": Blockly.Categories.dataLists,
       "extensions": ["colours_data_lists", "shape_statement"]
     });
   }
