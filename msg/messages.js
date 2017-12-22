@@ -129,6 +129,8 @@ Blockly.Msg.RENAME_VARIABLE_TITLE = 'Rename all "%1" variables to:';
 Blockly.Msg.NEW_VARIABLE = 'Make a Variable';
 /// prompt - Prompts the user to enter the name for a new variable.  See [https://github.com/google/blockly/wiki/Variables#dropdown-menu https://github.com/google/blockly/wiki/Variables#dropdown-menu].
 Blockly.Msg.NEW_VARIABLE_TITLE = 'New variable name:';
+/// prompt title - Title of the prompt asking the user to enter the name for the new variable.
+Blockly.Msg.VARIABLE_MODAL_TITLE = 'New Variable';
 /// alert - Tells the user that the name they entered is already in use.
 Blockly.Msg.VARIABLE_ALREADY_EXISTS = 'A variable named "%1" already exists.';
 /// alert - Tells the user that the name they entered is already in use for another type.
@@ -145,12 +147,16 @@ Blockly.Msg.NEW_PROCEDURE = 'Make a Block';
 Blockly.Msg.NEW_LIST = 'Make a List';
 /// prompt - Prompts the user to enter the name for a new list
 Blockly.Msg.NEW_LIST_TITLE = 'New list name:';
+/// prompt title - Title of the prompt asking the user to enter the name for the new list.
+Blockly.Msg.LIST_MODAL_TITLE = 'New List';
 
 // Broadcast Message creation
 /// dropdown choice - Create a new message.
 Blockly.Msg.NEW_BROADCAST_MESSAGE = 'New message';
 /// prompt - Prompts the user to enter the name for a new broadcast message
 Blockly.Msg.NEW_BROADCAST_MESSAGE_TITLE = 'New message name:';
+/// prompt title - Title of the prompt asking the user to enter the name for the new message.
+Blockly.Msg.BROADCAST_MODAL_TITLE = 'New Message';
 /// default broadcast message name
 /// (default option in broadcast message dropdown menus)
 Blockly.Msg.DEFAULT_BROADCAST_MESSAGE_NAME = 'message1';
