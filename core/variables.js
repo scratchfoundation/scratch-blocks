@@ -223,7 +223,7 @@ Blockly.Variables.createVariable = function(workspace, opt_callback, opt_type) {
             opt_callback(null);
           }
         }
-      });
+      }, opt_type);
   };
   promptAndCheckWithAlert('');
 };
@@ -276,7 +276,7 @@ Blockly.Variables.renameVariable = function(workspace, variable,
             opt_callback(null);
           }
         }
-      });
+      }, null);
   };
   promptAndCheckWithAlert('');
 };
@@ -287,21 +287,35 @@ Blockly.Variables.renameVariable = function(workspace, variable,
  * @param {string} defaultText The default value to show in the prompt's field.
  * @param {function(?string)} callback A callback. It will be passed the new
  *     variable name, or null if the user picked something illegal.
+ * @param {string} opt_type Optional type of variable, like 'string' or 'list'.
  */
-Blockly.Variables.promptName = function(promptText, defaultText, callback) {
+Blockly.Variables.promptName = function(promptText, defaultText, callback, opt_type) {
   Blockly.prompt(promptText, defaultText, function(newVar) {
     // Merge runs of whitespace.  Strip leading and trailing whitespace.
     // Beyond this, all names are legal.
     if (newVar) {
-      newVar = newVar.replace(/[\s\xa0]+/g, ' ').replace(/^ | $/g, '');
-      if (newVar == Blockly.Msg.RENAME_VARIABLE ||
-          newVar == Blockly.Msg.NEW_VARIABLE) {
-        // Ok, not ALL names are legal...
-        newVar = null;
-      }
+      newVar = Blockly.Variables.validateName_(newVar, opt_type);
     }
     callback(newVar);
   });
+};
+
+/**
+ * Validate the variable name provided by the user.
+ * @param {string} name The user-provided name of the variable.
+ * @param {string} opt_type Optional type of variable, like 'string' or 'list'.
+ * @return {string} The validated and possibly transformed name of the variable.
+ */
+Blockly.Variables.validateName_ = function(name, opt_type) {
+  if (!opt_type || opt_type != Blockly.BROADCAST_MESSAGE_VARIABLE_TYPE) {
+    name = name.replace(/[\s\xa0]+/g, ' ').replace(/^ | $/g, '');
+    if (name == Blockly.Msg.RENAME_VARIABLE ||
+        name == Blockly.Msg.NEW_VARIABLE) {
+      // Ok, not ALL names are legal...
+      name = null;
+    }
+  }
+  return name;
 };
 
 /**
