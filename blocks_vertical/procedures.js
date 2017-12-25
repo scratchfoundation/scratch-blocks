@@ -605,7 +605,7 @@ Blockly.ScratchBlocks.ProcedureUtils.addBooleanExternal = function() {
 Blockly.ScratchBlocks.ProcedureUtils.addStringNumberExternal = function() {
   Blockly.WidgetDiv.hide(true);
   this.procCode_ = this.procCode_ + ' %s';
-  this.displayNames_.push('string or number');
+  this.displayNames_.push('number or text');
   this.argumentIds_.push(Blockly.utils.genUid());
   this.argumentDefaults_.push('todo');
   this.updateDisplay_();
