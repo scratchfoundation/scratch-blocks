@@ -51,6 +51,8 @@ Blockly.FieldVariable = function(varname, opt_validator, opt_variableTypes) {
   this.setValue(varname || '');
   this.addArgType('variable');
   this.variableTypes = opt_variableTypes;
+  this.variableType = (opt_variableTypes && opt_variableTypes.length == 1) ?
+    opt_variableTypes[0] : '';
 };
 goog.inherits(Blockly.FieldVariable, Blockly.FieldDropdown);
 
@@ -84,14 +86,14 @@ Blockly.FieldVariable.prototype.initModel = function() {
     // Check if there was exactly one element specified in the
     // variableTypes list. This is the list that specifies which types of
     // variables to include in the dropdown.
-    // If there is exactly one element specified, make the variable
-    // being created this specified type. Else, default behavior is to create
-    // a scalar variable
-    if (this.getVariableTypes_().length == 1) {
-      this.sourceBlock_.workspace.createVariable(this.getValue(),
-        this.getVariableTypes_()[0]);
-    } else {
-      this.sourceBlock_.workspace.createVariable(this.getValue());
+    this.sourceBlock_.workspace.createVariable(this.getValue(), this.variableType);
+  } else {
+    // Using shorter name for this constant
+    var broadcastMsgType = Blockly.BROADCAST_MESSAGE_VARIABLE_TYPE;
+    var broadcastVars = this.sourceBlock_.workspace.getVariablesOfType(broadcastMsgType);
+    if (this.variableType == broadcastMsgType && broadcastVars.length != 0) {
+      broadcastVars.sort(Blockly.VariableModel.compareByName);
+      this.setValue(broadcastVars[0].name);
     }
   }
 };
@@ -182,7 +184,6 @@ Blockly.FieldVariable.dropdownCreate = function() {
   if (this.sourceBlock_) {
     workspace = this.sourceBlock_.workspace;
   }
-  var isBroadcastType = false;
   if (workspace) {
     var variableTypes = this.getVariableTypes_();
     var variableModelList = [];
@@ -190,9 +191,6 @@ Blockly.FieldVariable.dropdownCreate = function() {
     // doesn't modify the workspace's list.
     for (var i = 0; i < variableTypes.length; i++) {
       var variableType = variableTypes[i];
-      if (variableType == Blockly.BROADCAST_MESSAGE_VARIABLE_TYPE){
-        isBroadcastType = true;
-      }
       var variables = workspace.getVariablesOfType(variableType);
       variableModelList = variableModelList.concat(variables);
     }
@@ -204,10 +202,15 @@ Blockly.FieldVariable.dropdownCreate = function() {
       }
     }
   }
+  var isBroadcastType = this.variableType == Blockly.BROADCAST_MESSAGE_VARIABLE_TYPE;
   // Ensure that the currently selected variable is an option.
-  // TODO (#1270): Remove isBroadcastType check here when flyout variables fixed.
-  if (createSelectedVariable && workspace && !isBroadcastType) {
-    var newVar = workspace.createVariable(name);
+  if (createSelectedVariable && workspace) {
+    var newVar = null;
+    if (isBroadcastType && workspace.isFlyout) {
+      newVar = workspace.targetWorkspace.createVariable(name, Blockly.BROADCAST_MESSAGE_VARIABLE_TYPE);
+    } else {
+      newVar = workspace.createVariable(name);
+    }
     variableModelList.push(newVar);
   }
   variableModelList.sort(Blockly.VariableModel.compareByName);
@@ -217,10 +220,7 @@ Blockly.FieldVariable.dropdownCreate = function() {
     options[i] = [variableModelList[i].name, variableModelList[i].getId()];
   }
   if (isBroadcastType) {
-    // TODO (#1270): Re-enable create broadcast message dropdown in flyout when fixed.
-    if (!workspace.isFlyout) {
-      options.push([Blockly.Msg.NEW_BROADCAST_MESSAGE, Blockly.NEW_BROADCAST_MESSAGE_ID]);
-    }
+    options.push([Blockly.Msg.NEW_BROADCAST_MESSAGE, Blockly.NEW_BROADCAST_MESSAGE_ID]);
   } else {
     options.push([Blockly.Msg.RENAME_VARIABLE, Blockly.RENAME_VARIABLE_ID]);
     if (Blockly.Msg.DELETE_VARIABLE) {
@@ -267,7 +267,8 @@ Blockly.FieldVariable.prototype.onItemSelected = function(menu, menuItem) {
           thisField.setValue(newName);
         }
       };
-      Blockly.Variables.createVariable(workspace, setName, Blockly.BROADCAST_MESSAGE_VARIABLE_TYPE);
+      var broadcastMsgWkspc = workspace.isFlyout ? workspace.targetWorkspace : workspace;
+      Blockly.Variables.createVariable(broadcastMsgWkspc, setName, Blockly.BROADCAST_MESSAGE_VARIABLE_TYPE);
       return;
     }
 
