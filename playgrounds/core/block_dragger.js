@@ -211,6 +211,10 @@ Blockly.BlockDragger.prototype.endBlockDrag = function(e, currentDragDeltaXY) {
   var newLoc = goog.math.Coordinate.sum(this.startXY_, delta);
   this.draggingBlock_.moveOffDragSurface_(newLoc);
 
+  // Scratch-specific: note possible illegal definition deletion for rollback below.
+  var isDeletingProcDef = this.wouldDeleteBlock_ &&
+      (this.draggingBlock_.type == Blockly.PROCEDURES_DEFINITION_BLOCK_TYPE);
+
   var deleted = this.maybeDeleteBlock_();
   if (!deleted) {
     // These are expensive and don't need to be done if we're deleting.
@@ -227,6 +231,31 @@ Blockly.BlockDragger.prototype.endBlockDrag = function(e, currentDragDeltaXY) {
     this.workspace_.toolbox_.removeDeleteStyle();
   }
   Blockly.Events.setGroup(false);
+
+  // Scratch-specific: roll back deletes that create call blocks with defines.
+  // Have to wait for connections to be re-established, so put in setTimeout.
+  // Only do this if we deleted a proc def.
+  if (isDeletingProcDef) {
+    var ws = this.workspace_;
+    setTimeout(function() {
+      var allBlocks = ws.getAllBlocks();
+      for (var i = 0; i < allBlocks.length; i++) {
+        var block = allBlocks[i];
+        if (block.type == Blockly.PROCEDURES_CALL_BLOCK_TYPE) {
+          var procCode = block.getProcCode();
+          // Check for call blocks with no associated define block.
+          if (!Blockly.Procedures.getDefineBlock(procCode, ws)) {
+            // TODO:(#1151)
+            alert('To delete a block definition, first remove all uses of the block');
+            ws.undo();
+            return; // There can only be one define deletion at a time.
+          }
+        }
+      }
+      // The proc deletion was valid, update the toolbox.
+      ws.refreshToolboxSelection_();
+    });
+  }
 };
 
 /**
