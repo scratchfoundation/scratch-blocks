@@ -456,9 +456,12 @@ Blockly.Procedures.editProcedureCallback_ = function(block) {
     }
     block = innerBlock;
   } else if (block.type == Blockly.PROCEDURES_CALL_BLOCK_TYPE) {
-    // This is a call block, find the prototype corresponding to the procCode
+    // This is a call block, find the prototype corresponding to the procCode.
+    // Make sure to search the correct workspace, call block can be in flyout.
+    var workspaceToSearch = block.workspace.isFlyout ?
+        block.workspace.targetWorkspace : block.workspace;
     block = Blockly.Procedures.getPrototypeBlock(
-        block.getProcCode(), block.workspace);
+        block.getProcCode(), workspaceToSearch);
   }
   // Block now refers to the procedure prototype block, it is safe to proceed.
   Blockly.Procedures.externalProcedureDefCallback(

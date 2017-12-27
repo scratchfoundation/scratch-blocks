@@ -7,6 +7,7 @@ goog.provide('Blockly.Msg.en');
 goog.require('Blockly.Msg');
 
 Blockly.Msg["ADD_COMMENT"] = "Add Comment";
+Blockly.Msg["BROADCAST_MODAL_TITLE"] = "New Message";
 Blockly.Msg["CANNOT_DELETE_VARIABLE_PROCEDURE"] = "Can't delete the variable '%1' because it's part of the definition of the function '%2'";
 Blockly.Msg["CHANGE_VALUE_TITLE"] = "Change value:";
 Blockly.Msg["CLEAN_UP"] = "Clean up Blocks";
@@ -176,6 +177,7 @@ Blockly.Msg["LISTS_SPLIT_TEXT_FROM_LIST"] = "make text from list";
 Blockly.Msg["LISTS_SPLIT_TOOLTIP_JOIN"] = "Join a list of texts into one text, separated by a delimiter.";
 Blockly.Msg["LISTS_SPLIT_TOOLTIP_SPLIT"] = "Split text into a list of texts, breaking at each delimiter.";
 Blockly.Msg["LISTS_SPLIT_WITH_DELIMITER"] = "with delimiter";
+Blockly.Msg["LIST_MODAL_TITLE"] = "New List";
 Blockly.Msg["LOGIC_BOOLEAN_FALSE"] = "false";
 Blockly.Msg["LOGIC_BOOLEAN_HELPURL"] = "https://github.com/google/blockly/wiki/Logic#values";
 Blockly.Msg["LOGIC_BOOLEAN_TOOLTIP"] = "Returns either true or false.";
@@ -408,6 +410,7 @@ Blockly.Msg["VARIABLES_SET_HELPURL"] = "https://github.com/google/blockly/wiki/V
 Blockly.Msg["VARIABLES_SET_TOOLTIP"] = "Sets this variable to be equal to the input.";
 Blockly.Msg["VARIABLE_ALREADY_EXISTS"] = "A variable named '%1' already exists.";
 Blockly.Msg["VARIABLE_ALREADY_EXISTS_FOR_ANOTHER_TYPE"] = "A variable named '%1' already exists for another variable of type '%2'.";
+Blockly.Msg["VARIABLE_MODAL_TITLE"] = "New Variable";
 Blockly.Msg.PROCEDURES_DEFRETURN_TITLE = Blockly.Msg.PROCEDURES_DEFNORETURN_TITLE;
 Blockly.Msg.CONTROLS_IF_IF_TITLE_IF = Blockly.Msg.CONTROLS_IF_MSG_IF;
 Blockly.Msg.CONTROLS_WHILEUNTIL_INPUT_DO = Blockly.Msg.CONTROLS_REPEAT_INPUT_DO;
