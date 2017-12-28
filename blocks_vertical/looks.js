@@ -383,30 +383,48 @@ Blockly.Blocks['looks_backdrops'] = {
   }
 };
 
-Blockly.Blocks['looks_gotofront'] = {
+Blockly.Blocks['looks_gotofrontback'] = {
   /**
-   * "Go to front" Block.
+   * "Go to front/back" Block.
    * @this Blockly.Block
    */
   init: function() {
     this.jsonInit(
       {
-        "message0": "go to front",
+        "message0": "go to %1",
+        "args0": [
+          {
+            "type": "field_dropdown",
+            "name": "FRONT_BACK",
+            "options": [
+              ['front', 'front'],
+              ['back', 'back']
+            ]
+          }
+        ],
         "category": Blockly.Categories.looks,
         "extensions": ["colours_looks", "shape_statement"]
       });
   }
 };
 
-Blockly.Blocks['looks_gobacklayers'] = {
+Blockly.Blocks['looks_goforwardbackwardlayers'] = {
   /**
-   * "Go back [Number] Layers" Block.
+   * "Go forward/backward [Number] Layers" Block.
    * @this Blockly.Block
    */
   init: function() {
     this.jsonInit({
-      "message0": "go back %1 layers",
+      "message0": "go %1 %2 layers",
       "args0": [
+        {
+          "type": "field_dropdown",
+          "name": "FORWARD_BACKWARD",
+          "options": [
+            ['forward', 'forward'],
+            ['backward', 'backward']
+          ]
+        },
         {
           "type": "input_value",
           "name": "NUM"
