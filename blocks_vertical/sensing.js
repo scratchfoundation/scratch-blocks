@@ -334,7 +334,7 @@ Blockly.Blocks['sensing_setdragmode'] = {
           "name": "STYLE",
           "options": [
             ['draggable', 'draggable'],
-            ['not draggable', 'not draggable'],
+            ['not draggable', 'not draggable']
           ]
         }
       ],
