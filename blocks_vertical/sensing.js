@@ -322,7 +322,7 @@ Blockly.Blocks['sensing_mousey'] = {
 
 Blockly.Blocks['sensing_setdragmode'] = {
   /**
-   * Block to set rotation style.
+   * Block to set drag mode.
    * @this Blockly.Block
    */
   init: function() {
