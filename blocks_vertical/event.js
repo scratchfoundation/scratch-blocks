@@ -99,11 +99,8 @@ Blockly.Blocks['event_whenbackdropswitchesto'] = {
       "message0": "when backdrop switches to %1",
       "args0": [
         {
-          "type": "field_dropdown",
-          "name": "BACKDROP",
-          "options": [
-              ['backdrop1', 'BACKDROP1']
-          ]
+          "type": "input_value",
+          "name": "BACKDROP"
         }
       ],
       "category": Blockly.Categories.event,
