@@ -193,8 +193,8 @@ Blockly.Blocks.defaultToolbox = '<xml id="toolbox-categories" style="display: no
         '</shadow>'+
       '</value>'+
     '</block>'+
-    '<block type="looks_gotofront" id="looks_gotofront"></block>'+
-    '<block type="looks_gobacklayers" id="looks_gobacklayers">'+
+    '<block type="looks_gotofrontback" id="looks_gotofrontback"></block>'+
+    '<block type="looks_goforwardbackwardlayers" id="looks_goforwardbackwardlayers">'+
       '<value name="NUM">'+
         '<shadow type="math_integer">'+
           '<field name="NUM">1</field>'+
