@@ -386,6 +386,7 @@ Blockly.Blocks.defaultToolbox = '<xml id="toolbox-categories" style="display: no
     '<block type="sensing_mousedown" id="sensing_mousedown"></block>'+
     '<block type="sensing_mousex" id="sensing_mousex"></block>'+
     '<block type="sensing_mousey" id="sensing_mousey"></block>'+
+    '<block type="sensing_setdragmode" id="sensing_setdragmode"></block>' +
     '<block type="sensing_loudness" id="sensing_loudness"></block>'+
     '<block type="sensing_timer" id="sensing_timer"></block>'+
     '<block type="sensing_resettimer" id="sensing_resettimer"></block>'+

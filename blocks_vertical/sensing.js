@@ -320,6 +320,30 @@ Blockly.Blocks['sensing_mousey'] = {
   }
 };
 
+Blockly.Blocks['sensing_setdragmode'] = {
+  /**
+   * Block to set drag mode.
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.jsonInit({
+      "message0": "set drag mode %1",
+      "args0": [
+        {
+          "type": "field_dropdown",
+          "name": "DRAG_MODE",
+          "options": [
+            ['draggable', 'draggable'],
+            ['not draggable', 'not draggable']
+          ]
+        }
+      ],
+      "category": Blockly.Categories.sensing,
+      "extensions": ["colours_sensing", "shape_statement"]
+    });
+  }
+};
+
 Blockly.Blocks['sensing_loudness'] = {
   /**
    * Block to report loudness
