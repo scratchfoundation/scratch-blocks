@@ -436,14 +436,24 @@ Blockly.Blocks['looks_goforwardbackwardlayers'] = {
   }
 };
 
-Blockly.Blocks['looks_backdropname'] = {
+Blockly.Blocks['looks_backdropnumbername'] = {
   /**
-   * Block to report backdrop's name
+   * Block to report backdrop's number or name
    * @this Blockly.Block
    */
   init: function() {
     this.jsonInit({
-      "message0": "backdrop name",
+      "message0": "backdrop %1",
+      "args0": [
+        {
+          "type": "field_dropdown",
+          "name": "NUMBER_NAME",
+          "options": [
+            ['number', 'number'],
+            ['name', 'name']
+          ]
+        }
+      ],
       "category": Blockly.Categories.looks,
       "checkboxInFlyout": true,
       "extensions": ["colours_looks", "output_number"]
@@ -451,29 +461,24 @@ Blockly.Blocks['looks_backdropname'] = {
   }
 };
 
-Blockly.Blocks['looks_costumeorder'] = {
+Blockly.Blocks['looks_costumenumbername'] = {
   /**
-   * Block to report costume's order
+   * Block to report costume's number or name
    * @this Blockly.Block
    */
   init: function() {
     this.jsonInit({
-      "message0": "costume #",
-      "category": Blockly.Categories.looks,
-      "checkboxInFlyout": true,
-      "extensions": ["colours_looks", "output_number"]
-    });
-  }
-};
-
-Blockly.Blocks['looks_backdroporder'] = {
-  /**
-   * Block to report backdrop's order
-   * @this Blockly.Block
-   */
-  init: function() {
-    this.jsonInit({
-      "message0": "backdrop #",
+      "message0": "costume %1",
+      "args0": [
+        {
+          "type": "field_dropdown",
+          "name": "NUMBER_NAME",
+          "options": [
+            ['number', 'number'],
+            ['name', 'name']
+          ]
+        }
+      ],
       "category": Blockly.Categories.looks,
       "checkboxInFlyout": true,
       "extensions": ["colours_looks", "output_number"]
