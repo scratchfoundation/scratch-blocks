@@ -204,76 +204,57 @@ Blockly.Blocks['sensing_keypressed'] = {
       "message0": "key %1 pressed?",
       "args0": [
         {
-          "type": "input_value",
-          "name": "KEY_OPTION"
+          "type": "field_dropdown",
+          "name": "KEY_OPTION",
+          "options": [
+            // [localization, language-independent saved value]
+            ['space', 'space'],
+            ['left arrow', 'left arrow'],
+            ['right arrow', 'right arrow'],
+            ['down arrow', 'down arrow'],
+            ['up arrow', 'up arrow'],
+            ['any', 'any'],
+            ['a', 'a'],
+            ['b', 'b'],
+            ['c', 'c'],
+            ['d', 'd'],
+            ['e', 'e'],
+            ['f', 'f'],
+            ['g', 'g'],
+            ['h', 'h'],
+            ['i', 'i'],
+            ['j', 'j'],
+            ['k', 'k'],
+            ['l', 'l'],
+            ['m', 'm'],
+            ['n', 'n'],
+            ['o', 'o'],
+            ['p', 'p'],
+            ['q', 'q'],
+            ['r', 'r'],
+            ['s', 's'],
+            ['t', 't'],
+            ['u', 'u'],
+            ['v', 'v'],
+            ['w', 'w'],
+            ['x', 'x'],
+            ['y', 'y'],
+            ['z', 'z'],
+            ['0', '0'],
+            ['1', '1'],
+            ['2', '2'],
+            ['3', '3'],
+            ['4', '4'],
+            ['5', '5'],
+            ['6', '6'],
+            ['7', '7'],
+            ['8', '8'],
+            ['9', '9']
+          ]
         }
       ],
       "category": Blockly.Categories.sensing,
       "extensions": ["colours_sensing", "output_boolean"]
-    });
-  }
-};
-
-Blockly.Blocks['sensing_keyoptions'] = {
-  /**
-   * Options for Keys
-   * @this Blockly.Block
-   */
-  init: function() {
-    this.jsonInit({
-      "message0": "%1",
-      "args0": [
-        {
-          "type": "field_dropdown",
-          "name": "KEY_OPTION",
-          "options": [
-              // [localization, language-independent saved value]
-              ['space', 'space'],
-              ['left arrow', 'left arrow'],
-              ['right arrow', 'right arrow'],
-              ['down arrow', 'down arrow'],
-              ['up arrow', 'up arrow'],
-              ['any', 'any'],
-              ['a', 'a'],
-              ['b', 'b'],
-              ['c', 'c'],
-              ['d', 'd'],
-              ['e', 'e'],
-              ['f', 'f'],
-              ['g', 'g'],
-              ['h', 'h'],
-              ['i', 'i'],
-              ['j', 'j'],
-              ['k', 'k'],
-              ['l', 'l'],
-              ['m', 'm'],
-              ['n', 'n'],
-              ['o', 'o'],
-              ['p', 'p'],
-              ['q', 'q'],
-              ['r', 'r'],
-              ['s', 's'],
-              ['t', 't'],
-              ['u', 'u'],
-              ['v', 'v'],
-              ['w', 'w'],
-              ['x', 'x'],
-              ['y', 'y'],
-              ['z', 'z'],
-              ['0', '0'],
-              ['1', '1'],
-              ['2', '2'],
-              ['3', '3'],
-              ['4', '4'],
-              ['5', '5'],
-              ['6', '6'],
-              ['7', '7'],
-              ['8', '8'],
-              ['9', '9']
-          ]
-        }
-      ],
-      "extensions": ["colours_sensing", "output_string"]
     });
   }
 };
@@ -524,37 +505,6 @@ Blockly.Blocks['sensing_resettimer'] = {
   }
 };
 
-Blockly.Blocks['sensing_of_property_menu'] = {
-  /**
-   * "_ of *" properties menu.
-   * @this Blockly.Block
-   */
-  init: function() {
-    this.jsonInit(
-      {
-        "message0": "%1",
-        "args0": [
-          {
-            "type": "field_dropdown",
-            "name": "PROPERTY",
-            "options": [
-              ['x position', 'x position'],
-              ['y position', 'y position'],
-              ['direction', 'direction'],
-              ['costume #', 'costume #'],
-              ['costume name', 'costume name'],
-              ['size', 'size'],
-              ['volume', 'volume'],
-              ['backdrop #', 'backdrop #'],
-              ['backdrop name', 'backdrop name']
-            ]
-          }
-        ],
-        "extensions": ["colours_sensing", "output_string"]
-      });
-  }
-};
-
 Blockly.Blocks['sensing_of_object_menu'] = {
   /**
    * "* of _" object menu.
@@ -590,8 +540,19 @@ Blockly.Blocks['sensing_of'] = {
       "message0": "%1 of %2",
       "args0": [
         {
-          "type": "input_value",
-          "name": "PROPERTY"
+          "type": "field_dropdown",
+          "name": "PROPERTY",
+          "options": [
+            ['x position', 'x position'],
+            ['y position', 'y position'],
+            ['direction', 'direction'],
+            ['costume #', 'costume #'],
+            ['costume name', 'costume name'],
+            ['size', 'size'],
+            ['volume', 'volume'],
+            ['backdrop #', 'backdrop #'],
+            ['backdrop name', 'backdrop name']
+          ]
         },
         {
           "type": "input_value",
@@ -616,43 +577,23 @@ Blockly.Blocks['sensing_current'] = {
       "message0": "current %1",
       "args0": [
         {
-          "type": "input_value",
-          "name": "CURRENTMENU"
+          "type": "field_dropdown",
+          "name": "CURRENTMENU",
+          "options": [
+            ['year', 'YEAR'],
+            ['month', 'MONTH'],
+            ['date', 'DATE'],
+            ['day of week', 'DAYOFWEEK'],
+            ['hour', 'HOUR'],
+            ['minute', 'MINUTE'],
+            ['second', 'SECOND']
+          ]
         }
       ],
       "category": Blockly.Categories.sensing,
       "checkboxInFlyout": true,
       "extensions": ["colours_sensing", "output_number"]
     });
-  }
-};
-
-Blockly.Blocks['sensing_currentmenu'] = {
-  /**
-   * "Current [Options]" Block Menu.
-   * @this Blockly.Block
-   */
-  init: function() {
-    this.jsonInit(
-      {
-        "message0": "%1",
-        "args0": [
-          {
-            "type": "field_dropdown",
-            "name": "CURRENTMENU",
-            "options": [
-              ['year', 'YEAR'],
-              ['month', 'MONTH'],
-              ['date', 'DATE'],
-              ['day of week', 'DAYOFWEEK'],
-              ['hour', 'HOUR'],
-              ['minute', 'MINUTE'],
-              ['second', 'SECOND']
-            ]
-          }
-        ],
-        "extensions": ["colours_sensing", "output_string"]
-      });
   }
 };
 
