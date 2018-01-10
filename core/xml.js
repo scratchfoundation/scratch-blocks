@@ -764,8 +764,14 @@ Blockly.Xml.domToFieldVariable_ = function(workspace, xml, text, field) {
     type = '';
   }
 
-  var variable =
-      Blockly.Variables.getOrCreateVariable(workspace, xml.id, text, type);
+  var variable;
+  if (!workspace.getPotentialVariableMap() && !workspace.isFlyout) {
+    var flyoutWkspc = workspace.getFlyout().getWorkspace();
+    variable = Blockly.Variables.realizePotentialVar(text, type, flyoutWkspc);
+  }
+  if (!variable) {
+    variable = Blockly.Variables.getOrCreateVariable(workspace, xml.id, text, type);
+  }
 
   // This should never happen :)
   if (type != null && type !== variable.type) {

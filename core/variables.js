@@ -163,6 +163,32 @@ Blockly.Variables.generateUniqueName = function(workspace) {
   return newName;
 };
 
+Blockly.Variables.realizePotentialVar = function(varName, varType, potentialVarWkspc) {
+  var potentialVarMap = potentialVarWkspc.getPotentialVariableMap();
+  if (potentialVarMap == null) {
+    console.warn('Called Blockly.Variables.realizePotentialVar with incorrect ' +
+      'workspace. The provided workspace does not have a potential variable map.');
+    return;
+  }
+  var sharesNameWithPotentialVar = false;
+  var potentialVars = potentialVarMap.getVariablesOfType(varType);
+  for (var i=0, potentialVar = potentialVars[i]; i < potentialVars.length; i++) {
+    // TODO (#1292) case sensitivity check based on var type
+    if (varName == potentialVar.name) {
+      sharesNameWithPotentialVar = true;
+      break;
+    }
+  }
+  if (sharesNameWithPotentialVar) {
+    var variable = Blockly.Variables.getOrCreateVariable(
+      potentialVarWkspc.targetWorkspace, potentialVar.getId(), varName, varType);
+    // The variable should be removed from the potential variable map now that
+    // it has been created as a real variable.
+    potentialVarWkspc.potentialVariableMap_.deleteVariable(potentialVar);
+  }
+  return variable;
+};
+
 /**
  * Create a new variable on the given workspace.
  * @param {!Blockly.Workspace} workspace The workspace on which to create the
@@ -209,7 +235,14 @@ Blockly.Variables.createVariable = function(workspace, opt_callback, opt_type) {
                 });
           }
           else {
-            var variable = workspace.createVariable(text, opt_type);
+            var potentialVarMap = workspace.getPotentialVariableMap();
+            var variable;
+            if (potentialVarMap && opt_type) {
+              variable = Blockly.Variables.realizePotentialVar(text, opt_type, workspace);
+            }
+            if (!variable) {
+              variable = workspace.createVariable(text, opt_type);
+            }
 
             var flyout = workspace.isFlyout ? workspace : workspace.getFlyout();
             var variableBlockId = variable.getId();
