@@ -187,6 +187,7 @@ Blockly.Field.prototype.init = function() {
        'x': fieldX,
        'y': size.height / 2 + Blockly.BlockSvg.FIELD_TOP_PADDING,
        'dominant-baseline': 'middle',
+       'dy': goog.userAgent.EDGE_OR_IE ? '0.35em' : '0',
        'text-anchor': 'middle'},
       this.fieldGroup_);
 
