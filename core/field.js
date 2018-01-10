@@ -132,6 +132,12 @@ Blockly.Field.prototype.validator_ = null;
 Blockly.Field.NBSP = '\u00A0';
 
 /**
+ * Text offset used for IE/Edge.
+ * @const
+ */
+Blockly.Field.IE_TEXT_OFFSET = '0.3em';
+
+/**
  * Editable fields usually show some sort of UI for the user to change them.
  * @type {boolean}
  * @public
@@ -187,7 +193,7 @@ Blockly.Field.prototype.init = function() {
        'x': fieldX,
        'y': size.height / 2 + Blockly.BlockSvg.FIELD_TOP_PADDING,
        'dominant-baseline': 'middle',
-       'dy': goog.userAgent.EDGE_OR_IE ? '0.35em' : '0',
+       'dy': goog.userAgent.EDGE_OR_IE ? Blockly.Field.IE_TEXT_OFFSET : '0',
        'text-anchor': 'middle'},
       this.fieldGroup_);
 

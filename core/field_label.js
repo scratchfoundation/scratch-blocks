@@ -76,7 +76,7 @@ Blockly.FieldLabel.prototype.init = function() {
       'y': Blockly.BlockSvg.FIELD_TOP_PADDING,
       'text-anchor': 'middle',
       'dominant-baseline': 'middle',
-      'dy': goog.userAgent.EDGE_OR_IE ? '0.35em' : '0'
+      'dy': goog.userAgent.EDGE_OR_IE ? Blockly.Field.IE_TEXT_OFFSET : '0'
     }, null);
   if (this.class_) {
     Blockly.utils.addClass(this.textElement_, this.class_);
