@@ -601,7 +601,6 @@ Blockly.Blocks['sensing_of'] = {
       "output": true,
       "category": Blockly.Categories.sensing,
       "outputShape": Blockly.OUTPUT_SHAPE_ROUND,
-      "checkboxInFlyout": true,
       "extensions": ["colours_sensing"]
     });
   }
