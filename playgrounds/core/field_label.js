@@ -30,6 +30,7 @@ goog.require('Blockly.Field');
 goog.require('Blockly.Tooltip');
 goog.require('goog.dom');
 goog.require('goog.math.Size');
+goog.require('goog.userAgent');
 
 
 /**
@@ -74,7 +75,8 @@ Blockly.FieldLabel.prototype.init = function() {
       {'class': 'blocklyText',
       'y': Blockly.BlockSvg.FIELD_TOP_PADDING,
       'text-anchor': 'middle',
-      'dominant-baseline': 'middle'
+      'dominant-baseline': 'middle',
+      'dy': goog.userAgent.EDGE_OR_IE ? Blockly.Field.IE_TEXT_OFFSET : '0'
     }, null);
   if (this.class_) {
     Blockly.utils.addClass(this.textElement_, this.class_);
