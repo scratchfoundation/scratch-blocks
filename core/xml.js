@@ -779,7 +779,8 @@ Blockly.Xml.domToFieldVariable_ = function(workspace, xml, text, field) {
   }
 
   var variable;
-  if (!workspace.getPotentialVariableMap() && !workspace.isFlyout) {
+  if (!workspace.getPotentialVariableMap() && !workspace.isFlyout &&
+      workspace.getFlyout()) {
     var flyoutWkspc = workspace.getFlyout().getWorkspace();
     variable = Blockly.Variables.realizePotentialVar(text, type, flyoutWkspc);
   }

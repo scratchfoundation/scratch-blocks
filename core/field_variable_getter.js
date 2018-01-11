@@ -34,11 +34,12 @@ goog.require('Blockly.Field');
  * Class for a variable getter field.
  * @param {string} text The initial content of the field.
  * @param {string} name Optional CSS class for the field's text.
+ * @param {string} opt_varType The type of variable this field is associated with.
  * @extends {Blockly.FieldLabel}
  * @constructor
  *
  */
-Blockly.FieldVariableGetter = function(text, name, varType) {
+Blockly.FieldVariableGetter = function(text, name, opt_varType) {
   this.size_ = new goog.math.Size(
     Blockly.BlockSvg.FIELD_WIDTH,
     Blockly.BlockSvg.FIELD_HEIGHT);
@@ -52,7 +53,7 @@ Blockly.FieldVariableGetter = function(text, name, varType) {
   this.maxDisplayLength = Blockly.BlockSvg.MAX_DISPLAY_LENGTH;
 
   this.name_ = name;
-  this.variableType_ = varType;
+  this.variableType_ = opt_varType ? opt_varType : '';
 };
 goog.inherits(Blockly.FieldVariableGetter, Blockly.Field);
 
