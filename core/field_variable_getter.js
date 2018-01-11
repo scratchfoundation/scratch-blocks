@@ -38,7 +38,7 @@ goog.require('Blockly.Field');
  * @constructor
  *
  */
-Blockly.FieldVariableGetter = function(text, name) {
+Blockly.FieldVariableGetter = function(text, name, varType) {
   this.size_ = new goog.math.Size(
     Blockly.BlockSvg.FIELD_WIDTH,
     Blockly.BlockSvg.FIELD_HEIGHT);
@@ -52,6 +52,7 @@ Blockly.FieldVariableGetter = function(text, name) {
   this.maxDisplayLength = Blockly.BlockSvg.MAX_DISPLAY_LENGTH;
 
   this.name_ = name;
+  this.variableType_ = varType;
 };
 goog.inherits(Blockly.FieldVariableGetter, Blockly.Field);
 
@@ -85,7 +86,7 @@ Blockly.FieldVariableGetter.prototype.init = function() {
   }
   this.workspace_ = this.sourceBlock_.workspace;
   var variable = Blockly.Variables.getOrCreateVariable(
-    this.workspace_, null, this.text_, null);
+    this.workspace_, null, this.text_, this.variableType_);
   this.setValue(variable.getId());
 };
 
@@ -93,7 +94,7 @@ Blockly.FieldVariableGetter.prototype.init = function() {
  * Get the variable's ID.
  * @return {string} Current variable's ID.
  */
-Blockly.FieldVariable.prototype.getValue = function() {
+Blockly.FieldVariableGetter.prototype.getValue = function() {
   return this.variable_ ? this.variable_.getId() : '';
 };
 
@@ -101,7 +102,7 @@ Blockly.FieldVariable.prototype.getValue = function() {
  * Get the text from this field.
  * @return {string} Current text.
  */
-Blockly.FieldVariable.prototype.getText = function() {
+Blockly.FieldVariableGetter.prototype.getText = function() {
   return this.variable_ ? this.variable_.name : '';
 };
 
