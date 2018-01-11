@@ -1579,7 +1579,7 @@ Blockly.Block.newFieldVariableFromJson_ = function(options) {
 Blockly.Block.newFieldVariableGetterFromJson_ = function(options) {
   var varname = Blockly.utils.replaceMessageReferences(options['text']);
   return new Blockly.FieldVariableGetter(varname, options['name'],
-      options['class']);
+      options['class'], options['variableType']);
 };
 
 /**

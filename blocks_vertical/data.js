@@ -42,7 +42,8 @@ Blockly.Blocks['data_variable'] = {
         {
           "type": "field_variable_getter",
           "text": "",
-          "name": "VARIABLE"
+          "name": "VARIABLE",
+          "variableType": ""
         }
       ],
       "category": Blockly.Categories.data,
@@ -161,7 +162,7 @@ Blockly.Blocks['data_listcontents'] = {
           "type": "field_variable_getter",
           "text": "",
           "name": "LIST",
-          "variableTypes": ["list"]
+          "variableType": Blockly.LIST_VARIABLE_TYPE
         }
       ],
       "category": Blockly.Categories.dataLists,
@@ -243,7 +244,7 @@ Blockly.Blocks['data_addtolist'] = {
         {
           "type": "field_variable",
           "name": "LIST",
-          "variableTypes": ["list"]
+          "variableTypes": [Blockly.LIST_VARIABLE_TYPE]
         }
       ],
       "category": Blockly.Categories.dataLists,
@@ -268,7 +269,7 @@ Blockly.Blocks['data_deleteoflist'] = {
         {
           "type": "field_variable",
           "name": "LIST",
-          "variableTypes": ["list"]
+          "variableTypes": [Blockly.LIST_VARIABLE_TYPE]
         }
       ],
       "category": Blockly.Categories.dataLists,
@@ -297,7 +298,7 @@ Blockly.Blocks['data_insertatlist'] = {
         {
           "type": "field_variable",
           "name": "LIST",
-          "variableTypes": ["list"]
+          "variableTypes": [Blockly.LIST_VARIABLE_TYPE]
         }
       ],
       "category": Blockly.Categories.dataLists,
@@ -322,7 +323,7 @@ Blockly.Blocks['data_replaceitemoflist'] = {
         {
           "type": "field_variable",
           "name": "LIST",
-          "variableTypes": ["list"]
+          "variableTypes": [Blockly.LIST_VARIABLE_TYPE]
         },
         {
           "type": "input_value",
@@ -351,7 +352,7 @@ Blockly.Blocks['data_itemoflist'] = {
         {
           "type": "field_variable",
           "name": "LIST",
-          "variableTypes": ["list"]
+          "variableTypes": [Blockly.LIST_VARIABLE_TYPE]
         }
       ],
       "output": null,
@@ -374,7 +375,7 @@ Blockly.Blocks['data_lengthoflist'] = {
         {
           "type": "field_variable",
           "name": "LIST",
-          "variableTypes": ["list"]
+          "variableTypes": [Blockly.LIST_VARIABLE_TYPE]
         }
       ],
       "category": Blockly.Categories.dataLists,
@@ -395,7 +396,7 @@ Blockly.Blocks['data_listcontainsitem'] = {
         {
           "type": "field_variable",
           "name": "LIST",
-          "variableTypes": ["list"]
+          "variableTypes": [Blockly.LIST_VARIABLE_TYPE]
         },
         {
           "type": "input_value",
@@ -420,7 +421,7 @@ Blockly.Blocks['data_showlist'] = {
         {
           "type": "field_variable",
           "name": "LIST",
-          "variableTypes": ["list"]
+          "variableTypes": [Blockly.LIST_VARIABLE_TYPE]
         }
       ],
       "category": Blockly.Categories.dataLists,
@@ -441,7 +442,7 @@ Blockly.Blocks['data_hidelist'] = {
         {
           "type": "field_variable",
           "name": "LIST",
-          "variableTypes": ["list"]
+          "variableTypes": [Blockly.LIST_VARIABLE_TYPE]
         }
       ],
       "category": Blockly.Categories.dataLists,

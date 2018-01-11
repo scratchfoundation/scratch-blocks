@@ -106,6 +106,18 @@ Blockly.FieldVariableGetter.prototype.getText = function() {
   return this.variable_ ? this.variable_.name : '';
 };
 
+/**
+ * Get the variable model for the variable associated with this field.
+ * Not guaranteed to be in the variable map on the workspace (e.g. if accessed
+ * after the variable has been deleted).
+ * @return {?Blockly.VariableModel} the selected variable, or null if none was
+ *     selected.
+ * @package
+ */
+Blockly.FieldVariableGetter.prototype.getVariable = function() {
+  return this.variable_;
+};
+
 Blockly.FieldVariableGetter.prototype.setValue = function(id) {
   // What do I do when id is null?  That happens when undoing a change event
   // for the first time the value was set.
