@@ -51,7 +51,6 @@ Blockly.FieldVariableGetter = function(text, name) {
    */
   this.maxDisplayLength = Blockly.BlockSvg.MAX_DISPLAY_LENGTH;
 
-
   this.name_ = name;
 };
 goog.inherits(Blockly.FieldVariableGetter, Blockly.Field);
@@ -91,13 +90,19 @@ Blockly.FieldVariableGetter.prototype.init = function() {
 };
 
 /**
- * Get the id of the underlying variable if it exists.
- * @return {?string} The ID of the underlying variable.
+ * Get the variable's ID.
+ * @return {string} Current variable's ID.
  */
-Blockly.FieldVariableGetter.prototype.getValue = function() {
-  if (this.variable_) {
-    return this.variable_.getId();
-  }
+Blockly.FieldVariable.prototype.getValue = function() {
+  return this.variable_ ? this.variable_.getId() : '';
+};
+
+/**
+ * Get the text from this field.
+ * @return {string} Current text.
+ */
+Blockly.FieldVariable.prototype.getText = function() {
+  return this.variable_ ? this.variable_.name : '';
 };
 
 Blockly.FieldVariableGetter.prototype.setValue = function(id) {
@@ -110,12 +115,7 @@ Blockly.FieldVariableGetter.prototype.setValue = function(id) {
     throw new Error('Variable id doesn\'t point to a real variable!  ID was ' +
         id);
   }
-  // Type checks!
-  var type = variable.type;
-  if (!this.typeIsAllowed_(type)) {
-    throw new Error('Variable type doesn\'t match this field!  Type was ' +
-        type);
-  }
+
   if (this.sourceBlock_ && Blockly.Events.isEnabled()) {
     var oldValue = this.variable_ ? this.variable_.getId() : null;
     Blockly.Events.fire(new Blockly.Events.BlockChange(
@@ -124,52 +124,6 @@ Blockly.FieldVariableGetter.prototype.setValue = function(id) {
   this.variable_ = variable;
   this.value_ = id;
   this.setText(variable.name);
-};
-
-/**
- * Check whether the given variable type is allowed on this field.
- * @param {string} type The type to check.
- * @return {boolean} True if the type is in the list of allowed types.
- * @private
- */
-Blockly.FieldVariableGetter.prototype.typeIsAllowed_ = function(type) {
-  var typeList = this.getVariableTypes_();
-  if (!typeList) {
-    return true; // If it's null, all types are valid.
-  }
-  for (var i = 0; i < typeList.length; i++) {
-    if (type == typeList[i]) {
-      return true;
-    }
-  }
-  return false;
-};
-
-/**
- * Return a list of variable types to include in the dropdown.
- * @return {!Array.<string>} Array of variable types.
- * @throws {Error} if variableTypes is an empty array.
- * @private
- */
-Blockly.FieldVariableGetter.prototype.getVariableTypes_ = function() {
-  // TODO: Why does this happen every time, instead of once when the workspace
-  // is set?  Do we expect the variable types to change that much?
-  var variableTypes = this.variableTypes;
-  if (variableTypes === null) {
-    // If variableTypes is null, return all variable types.
-    if (this.sourceBlock_) {
-      var workspace = this.sourceBlock_.workspace;
-      return workspace.getVariableTypes();
-    }
-  }
-  variableTypes = variableTypes || [''];
-  if (variableTypes.length == 0) {
-    // Throw an error if variableTypes is an empty list.
-    var name = this.getText();
-    throw new Error('\'variableTypes\' of field variable ' +
-      name + ' was an empty list');
-  }
-  return variableTypes;
 };
 
 /**
