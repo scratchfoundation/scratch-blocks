@@ -1029,17 +1029,6 @@ Blockly.WorkspaceSvg.prototype.refreshToolboxSelection_ = function() {
 };
 
 /**
- * Rename a variable by updating its name in the variable list.
- * @param {string} oldName Variable to rename.
- * @param {string} newName New variable name.
- * @package
- */
-Blockly.WorkspaceSvg.prototype.renameVariable = function(oldName, newName) {
-  Blockly.WorkspaceSvg.superClass_.renameVariable.call(this, oldName, newName);
-  this.refreshToolboxSelection_();
-};
-
-/**
  * Rename a variable by updating its name in the variable map.  Update the
  *     flyout to show the renamed variable immediately.
  * @param {string} id Id of the variable to rename.
@@ -1052,18 +1041,7 @@ Blockly.WorkspaceSvg.prototype.renameVariableById = function(id, newName) {
 };
 
 /**
- * Delete a variable by the passed in name.   Update the flyout to show
- *     immediately that the variable is deleted.
- * @param {string} name Name of variable to delete.
- * @package
- */
-Blockly.WorkspaceSvg.prototype.deleteVariable = function(name) {
-  Blockly.WorkspaceSvg.superClass_.deleteVariable.call(this, name);
-  this.refreshToolboxSelection_();
-};
-
-/**
- * Delete a variable by the passed in id.   Update the flyout to show
+ * Delete a variable by the passed in ID.   Update the flyout to show
  *     immediately that the variable is deleted.
  * @param {string} id Id of variable to delete.
  * @package

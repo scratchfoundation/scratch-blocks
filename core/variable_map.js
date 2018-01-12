@@ -272,14 +272,19 @@ Blockly.VariableMap.prototype.deleteVariableById = function(id) {
  */
 Blockly.VariableMap.prototype.deleteVariableInternal_ = function(variable,
     uses) {
-  Blockly.Events.setGroup(true);
+  var existingGroup = Blockly.Events.getGroup();
+  if (!existingGroup) {
+    Blockly.Events.setGroup(true);
+  }
   try {
     for (var i = 0; i < uses.length; i++) {
       uses[i].dispose(true, false);
     }
     this.deleteVariable(variable);
   } finally {
-    Blockly.Events.setGroup(false);
+    if (!existingGroup) {
+      Blockly.Events.setGroup(false);
+    }
   }
 };
 
@@ -345,6 +350,7 @@ Blockly.VariableMap.prototype.getVariablesOfType = function(type) {
 /**
  * Return all variable types.  This list always contains the empty string.
  * @return {!Array.<string>} List of variable types.
+ * @package
  */
 Blockly.VariableMap.prototype.getVariableTypes = function() {
   var types = Object.keys(this.variableMap_);

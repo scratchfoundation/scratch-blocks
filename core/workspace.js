@@ -101,7 +101,7 @@ Blockly.Workspace = function(opt_options) {
    * @type {!Blockly.VariableMap}
    * @private
    */
-  this.potentialVariableMap_ = new Blockly.VariableMap(this);
+  this.potentialVariableMap_ = null;
 };
 
 /**
@@ -211,6 +211,9 @@ Blockly.Workspace.prototype.clear = function() {
     Blockly.WidgetDiv.hide(true);
   }
   this.potentialVariableMap_.clear();
+  if (this.potentialVariableMap_) {
+    this.potentialVariableMap_.clear();
+  }
 };
 
 /* Begin functions that are just pass-throughs to the variable map. */
@@ -322,6 +325,7 @@ Blockly.Workspace.prototype.getVariablesOfType = function(type) {
 /**
  * Return all variable types.
  * @return {!Array.<string>} List of variable types.
+ * @package
  */
 Blockly.Workspace.prototype.getVariableTypes = function() {
   return this.variableMap_.getVariableTypes();
@@ -501,7 +505,15 @@ Blockly.Workspace.prototype.allInputsFilled = function(opt_shadowBlocksAreFilled
  * @package
  */
 Blockly.Workspace.prototype.getPotentialVariableMap = function() {
-  return this.isFlyout ? this.potentialVariableMap_ : null;
+  return this.potentialVariableMap_;
+};
+
+/**
+ * Create and store the potential variable map for this workspace.
+ * @package
+ */
+Blockly.Workspace.prototype.createPotentialVariableMap = function() {
+  this.potentialVariableMap_ = new Blockly.VariableMap(this);
 };
 
 /**

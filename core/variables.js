@@ -435,7 +435,7 @@ Blockly.Variables.generateVariableFieldXml_ = function(variableModel, opt_name) 
   }
   var fieldName = opt_name || 'VARIABLE';
   var text = '<field name="' + fieldName + '" id="' + variableModel.getId() +
-    '" variabletype="' + typeString +
+    '" variabletype="' + goog.string.htmlEscape(typeString) +
     '">' + goog.string.htmlEscape(variableModel.name) + '</field>';
   return text;
 };
@@ -453,7 +453,7 @@ Blockly.Variables.generateVariableFieldXml_ = function(variableModel, opt_name) 
  *     or name + type combination.
  * @package
  */
-Blockly.Variables.getOrCreateVariable = function(workspace, id, opt_name,
+Blockly.Variables.getOrCreateVariablePackage = function(workspace, id, opt_name,
     opt_type) {
   var variable = Blockly.Variables.getVariable(workspace, id, opt_name,
       opt_type);
@@ -488,14 +488,15 @@ Blockly.Variables.getVariable = function(workspace, id, opt_name, opt_type) {
     if (!variable && potentialVariableMap) {
       variable = potentialVariableMap.getVariableById(id);
     }
-  } else if (opt_name && (opt_type != undefined)){
+  } else if (opt_name) {
+    if (opt_type == undefined) {
+      throw new Error('Tried to look up a variable by name without a type');
+    }
     // Otherwise look up by name and type.
     var variable = workspace.getVariable(opt_name, opt_type);
     if (!variable && potentialVariableMap) {
       variable = potentialVariableMap.getVariable(opt_name, opt_type);
     }
-  } else {
-    throw new Error('Tried to look up a variable by name without a type');
   }
   return variable;
 };
