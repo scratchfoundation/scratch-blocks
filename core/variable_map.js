@@ -74,10 +74,16 @@ Blockly.VariableMap.prototype.renameVariable = function(variable, newName) {
   Blockly.Events.setGroup(true);
   try {
     // The IDs may match if the rename is a simple case change (name1 -> Name1).
-    if (!conflictVar || conflictVar.getId() == variable.getId()) {
+    if (!conflictVar) {
       this.renameVariableAndUses_(variable, newName, blocks);
     } else {
-      this.renameVariableWithConflict_(variable, newName, conflictVar, blocks);
+      // We don't want to rename if the variable if one with the exact new name
+      // already exists.
+      console.warn('Unexpected conflict when attempting to rename ' +
+        'variable with name: ' + variable.name + ' and id: ' + variable.getId() +
+        ' to new name: ' + newName + '. Variable with the new name already exist' +
+        ' and has id: ' + conflictVar.getId());
+
     }
   } finally {
     Blockly.Events.setGroup(false);
@@ -299,7 +305,7 @@ Blockly.VariableMap.prototype.getVariable = function(name, opt_type) {
   var list = this.variableMap_[type];
   if (list) {
     for (var j = 0, variable; variable = list[j]; j++) {
-      if (Blockly.Names.equals(variable.name, name)) {
+      if (variable.name == name) {
         return variable;
       }
     }
