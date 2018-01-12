@@ -377,11 +377,7 @@ Blockly.Blocks.defaultToolbox = '<xml id="toolbox-categories" style="display: no
         '<shadow type="sensing_distancetomenu"></shadow>'+
       '</value>'+
     '</block>'+
-    '<block type="sensing_keypressed" id="sensing_keypressed">'+
-        '<value name="KEY_OPTION">'+
-          '<shadow type="sensing_keyoptions"></shadow>'+
-        '</value>'+
-    '</block>'+
+    '<block type="sensing_keypressed" id="sensing_keypressed"></block>'+
     '<block type="sensing_mousedown" id="sensing_mousedown"></block>'+
     '<block type="sensing_mousex" id="sensing_mousex"></block>'+
     '<block type="sensing_mousey" id="sensing_mousey"></block>'+
@@ -390,18 +386,11 @@ Blockly.Blocks.defaultToolbox = '<xml id="toolbox-categories" style="display: no
     '<block type="sensing_timer" id="sensing_timer"></block>'+
     '<block type="sensing_resettimer" id="sensing_resettimer"></block>'+
     '<block type="sensing_of" id="sensing_of">'+
-      '<value name="PROPERTY">'+
-        '<shadow type="sensing_of_property_menu"></shadow>'+
-      '</value>'+
       '<value name="OBJECT">'+
         '<shadow type="sensing_of_object_menu"></shadow>'+
       '</value>'+
     '</block>'+
-    '<block type="sensing_current" id="sensing_current">'+
-      '<value name="CURRENTMENU">'+
-        '<shadow type="sensing_currentmenu"></shadow>'+
-      '</value>'+
-    '</block>'+
+    '<block type="sensing_current" id="sensing_current"></block>'+
     '<block type="sensing_dayssince2000" id="sensing_dayssince2000"></block>'+
   '</category>'+
   '<category name="Pen" colour="#00B295" secondaryColour="#0B8E69">'+
