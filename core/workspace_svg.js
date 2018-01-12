@@ -1014,9 +1014,17 @@ Blockly.WorkspaceSvg.prototype.paste = function(xmlBlock) {
 Blockly.WorkspaceSvg.prototype.refreshToolboxSelection_ = function() {
   // Updating the toolbox can be expensive. Don't do it when when it is
   // disabled.
-  if (this.toolbox_ && this.toolbox_.flyout_ && !this.currentGesture_ &&
+  if (this.toolbox_) {
+    if (this.toolbox_.flyout_ && !this.currentGesture_ &&
       this.toolboxRefreshEnabled_) {
-    this.toolbox_.refreshSelection();
+      this.toolbox_.refreshSelection();
+    }
+  } else {
+    var thisTarget = this.targetWorkspace;
+    if (thisTarget && thisTarget.toolbox_ && thisTarget.toolbox_.flyout_ &&
+      !thisTarget.currentGesture_ && thisTarget.toolboxRefreshEnabled_) {
+      thisTarget.toolbox_.refreshSelection();
+    }
   }
 };
 
