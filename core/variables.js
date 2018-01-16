@@ -195,12 +195,19 @@ Blockly.Variables.generateUniqueName = function(workspace) {
   return newName;
 };
 
-Blockly.Variables.realizePotentialVar = function(varName, varType, potentialVarWkspc) {
+Blockly.Variables.realizePotentialVar = function(varName, varType, potentialVarWkspc,
+  opt_real_wkspc) {
   var potentialVarMap = potentialVarWkspc.getPotentialVariableMap();
   if (potentialVarMap == null) {
     console.warn('Called Blockly.Variables.realizePotentialVar with incorrect ' +
       'workspace. The provided workspace does not have a potential variable map.');
     return;
+  }
+  // First check if a variable with the same name and type already exists as a
+  // real variable.
+  var realVar;
+  if (opt_real_wkspc) {
+    realVar = Blockly.Variables.getVariable(opt_real_wkspc, null, varName, varType);
   }
   var sharesNameWithPotentialVar = false;
   var potentialVars = potentialVarMap.getVariablesOfType(varType);
@@ -211,9 +218,14 @@ Blockly.Variables.realizePotentialVar = function(varName, varType, potentialVarW
       break;
     }
   }
+  var variable;
   if (sharesNameWithPotentialVar) {
-    var variable = Blockly.Variables.getOrCreateVariable(
-      potentialVarWkspc.targetWorkspace, potentialVar.getId(), varName, varType);
+    if (!realVar) { // If a real var didn't already exist, realize the potential var.
+      variable = Blockly.Variables.getOrCreateVariable(
+        potentialVarWkspc.targetWorkspace, potentialVar.getId(), varName, varType);
+    } else {
+      variable = realVar;
+    }
     // The variable should be removed from the potential variable map now that
     // it has been created as a real variable.
     potentialVarWkspc.potentialVariableMap_.deleteVariable(potentialVar);
@@ -269,6 +281,11 @@ Blockly.Variables.createVariable = function(workspace, opt_callback, opt_type) {
           else {
             var potentialVarMap = workspace.getPotentialVariableMap();
             var variable;
+            // This check ensures that if a new variable is being created from a
+            // workspace that already has a variable of the same name and type as
+            // a potential variable, that potential variable gets turned into a
+            // real variable and thus there aren't duplicate options in the field_variable
+            // dropdown.
             if (potentialVarMap && opt_type) {
               variable = Blockly.Variables.realizePotentialVar(text, opt_type, workspace);
             }

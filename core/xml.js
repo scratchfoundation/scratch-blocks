@@ -779,10 +779,12 @@ Blockly.Xml.domToFieldVariable_ = function(workspace, xml, text, field) {
   }
 
   var variable;
+  // This check ensures that there is not both a potential variable and a real
+  // variable with the same name and type.
   if (!workspace.getPotentialVariableMap() && !workspace.isFlyout &&
       workspace.getFlyout()) {
     var flyoutWkspc = workspace.getFlyout().getWorkspace();
-    variable = Blockly.Variables.realizePotentialVar(text, type, flyoutWkspc);
+    variable = Blockly.Variables.realizePotentialVar(text, type, flyoutWkspc, workspace);
   }
   if (!variable) {
     variable = Blockly.Variables.getOrCreateVariable(workspace, xml.id, text, type);
