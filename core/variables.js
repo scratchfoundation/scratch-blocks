@@ -196,6 +196,7 @@ Blockly.Variables.generateUniqueName = function(workspace) {
 };
 
 /**
+ * Remove any possiblity of conflict/duplication between a real and potential variable.
  * When creating a new variable, checks the desired name and type already exists
  * as a real or potential variable.
  * If 'opt_realWkspc' is provided, checks whether a real variable with the given
