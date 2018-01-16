@@ -195,8 +195,32 @@ Blockly.Variables.generateUniqueName = function(workspace) {
   return newName;
 };
 
+/**
+ * When creating a new variable, checks the desired name and type already exists
+ * as a real or potential variable.
+ * If 'opt_realWkspc' is provided, checks whether a real variable with the given
+ * name and type already exists on that workspace first.
+ * Checks whether a potential variable (using the given 'potentialVarWkspc') exists.
+ * If a potential var exists and a real var also exists, discards the potential var
+ * and returns the real var.
+ * If a potential var exists and a real var does not exist (or 'opt_realWkspc'
+ * was not provided), creates the potential var as a real var,
+ * discards the potential var, and returns the newly created real var.
+ * If a potential var does not exist, returns null.
+ *
+ * @param {string} varName The name of the variable to check for.
+ * @param {string} varType The type of the variable to check for.
+ * @param {!Blockly.Workspace} potentialVarWkspc The workspace containing the
+ * potential vraible map we want to check against.
+ * @param {?Blockly.Workspace} opt_realWkspc An optional real workspace to check
+ * against.
+ * @return {?Blockly.VariableModel} The matching variable, if one already existed
+ * in the real workspace or the newly transformed variable, if one already
+ * existed as a potential variable. Null if no matching varaiable, real or
+ * potential, was found.
+ */
 Blockly.Variables.realizePotentialVar = function(varName, varType, potentialVarWkspc,
-  opt_real_wkspc) {
+  opt_realWkspc) {
   var potentialVarMap = potentialVarWkspc.getPotentialVariableMap();
   if (potentialVarMap == null) {
     console.warn('Called Blockly.Variables.realizePotentialVar with incorrect ' +
@@ -206,8 +230,8 @@ Blockly.Variables.realizePotentialVar = function(varName, varType, potentialVarW
   // First check if a variable with the same name and type already exists as a
   // real variable.
   var realVar;
-  if (opt_real_wkspc) {
-    realVar = Blockly.Variables.getVariable(opt_real_wkspc, null, varName, varType);
+  if (opt_realWkspc) {
+    realVar = Blockly.Variables.getVariable(opt_realWkspc, null, varName, varType);
   }
   var sharesNameWithPotentialVar = false;
   var potentialVars = potentialVarMap.getVariablesOfType(varType);
