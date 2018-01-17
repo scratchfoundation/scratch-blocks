@@ -210,7 +210,6 @@ Blockly.Workspace.prototype.clear = function() {
   if (Blockly.WidgetDiv) {
     Blockly.WidgetDiv.hide(true);
   }
-  this.potentialVariableMap_.clear();
   if (this.potentialVariableMap_) {
     this.potentialVariableMap_.clear();
   }

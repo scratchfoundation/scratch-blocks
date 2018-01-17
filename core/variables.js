@@ -246,7 +246,7 @@ Blockly.Variables.realizePotentialVar = function(varName, varType, potentialVarW
   var variable;
   if (sharesNameWithPotentialVar) {
     if (!realVar) { // If a real var didn't already exist, realize the potential var.
-      variable = Blockly.Variables.getOrCreateVariable(
+      variable = Blockly.Variables.getOrCreateVariablePackage(
         potentialVarWkspc.targetWorkspace, potentialVar.getId(), varName, varType);
     } else {
       variable = realVar;

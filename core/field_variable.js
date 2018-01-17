@@ -101,7 +101,7 @@ Blockly.FieldVariable.prototype.initModel = function() {
     broadcastVars.sort(Blockly.VariableModel.compareByName);
     this.setValue(broadcastVars[0].getId());
   } else {
-    var variable = Blockly.Variables.getOrCreateVariable(
+    var variable = Blockly.Variables.getOrCreateVariablePackage(
         this.workspace_, null, this.defaultVariableName, this.defaultType_);
     // Don't fire a change event for this setValue.  It would have null as the
     // old value, which is not valid.
