@@ -287,8 +287,6 @@ Blockly.Variables.createVariable = function(workspace, opt_callback, opt_type) {
     Blockly.Variables.promptName(newMsg, defaultName,
       function(text) {
         if (text) {
-          // TODO (#1245) use separate namespaces for lists, variables, and
-          // broadcast messages
           if (workspace.getVariable(text, opt_type)) {
             Blockly.alert(Blockly.Msg.VARIABLE_ALREADY_EXISTS.replace('%1',
                 text.toLowerCase()),
@@ -352,9 +350,6 @@ Blockly.Variables.renameVariable = function(workspace, variable,
   opt_callback) {
   // (karishma) TODO (#1244) Modal message should change depending on what type
   // of variable is getting renamed.
-  // This function needs to be named so it can be called recursively.
-  // TODO (#1245) use separate namespaces for lists, variables, and
-  // broadcast messages
   // This function needs to be named so it can be called recursively.
   var promptAndCheckWithAlert = function(defaultName) {
     var promptText =

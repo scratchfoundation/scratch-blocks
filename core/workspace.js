@@ -229,7 +229,7 @@ Blockly.Workspace.prototype.renameVariableById = function(id, newName) {
 /**
  * Create a variable with a given name, optional type, and optional id.
  * @param {!string} name The name of the variable. This must be unique across
- *     variables and procedures.
+ *     each variable type.
  * @param {?string} opt_type The type of the variable like 'int' or 'string'.
  *     Does not need to be unique. Field_variable can filter variables based on
  *     their type. This will default to '' which is a specific type.
@@ -238,9 +238,6 @@ Blockly.Workspace.prototype.renameVariableById = function(id, newName) {
  * @return {?Blockly.VariableModel} The newly created variable.
  */
 Blockly.Workspace.prototype.createVariable = function(name, opt_type, opt_id) {
-  if (name.toLowerCase() == Blockly.Variables.noVariableText()) {
-    return;
-  }
   return this.variableMap_.createVariable(name, opt_type, opt_id);
 };
 

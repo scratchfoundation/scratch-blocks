@@ -160,7 +160,7 @@ Blockly.VariableMap.prototype.renameVariableWithConflict_ = function(variable,
 /**
  * Create a variable with a given name, optional type, and optional id.
  * @param {!string} name The name of the variable. This must be unique across
- *     variables and procedures.
+ *     each variable type.
  * @param {?string} opt_type The type of the variable like 'int' or 'string'.
  *     Does not need to be unique. Field_variable can filter variables based on
  *     their type. This will default to '' which is a specific type.
@@ -172,11 +172,6 @@ Blockly.VariableMap.prototype.createVariable = function(name,
     opt_type, opt_id) {
   var variable = this.getVariable(name, opt_type);
   if (variable) {
-    // TODO (#1245)
-    // We want to be able to create new broadcast messages that have the same
-    // name as variables or lists... and vice-versa
-    // also need to make sure that all the places where variables are looked
-    // up by name also do the right thing with their types...
     if (opt_id && variable.getId() != opt_id) {
       throw Error('Variable "' + name + '" is already in use and its id is "'
                   + variable.getId() + '" which conflicts with the passed in ' +
