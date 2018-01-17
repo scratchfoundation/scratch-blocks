@@ -235,8 +235,8 @@ function test_renameVariable_ReferenceExists() {
 }
 
 function test_renameVariable_TwoVariablesSameType() {
-  // Expect 'renameVariable' to change oldName variable name to newName.
-  // Expect oldName block name to change to newName
+  // Cannot rename variable to a name that already exists
+  // for a variable of the same type.
   workspaceTest_setUp();
   var id1 = 'id1';
   var id2 = 'id2';
@@ -252,18 +252,18 @@ function test_renameVariable_TwoVariablesSameType() {
   createMockBlock(id2);
 
   workspace.renameVariableById(id1, newName);
-  checkVariableValues(workspace, newName, type, id2);
-  // The old variable should have been deleted.
-  var variable = workspace.getVariableById(id1);
-  assertNull(variable);
 
-  // There should only be one variable left.
-  assertEquals(1, workspace.getAllVariables().length);
+  // Both variables should retain the same names/ids as before.
+  checkVariableValues(workspace, oldName, type, id1);
+  checkVariableValues(workspace, newName, type, id2);
+
+  // Both variables should remain on the workspace.
+  assertEquals(2, workspace.getAllVariables().length);
 
   // References should have the correct names.
   var block_var_name_1 = workspace.topBlocks_[0].getVarModels()[0].name;
   var block_var_name_2 = workspace.topBlocks_[1].getVarModels()[0].name;
-  assertEquals(newName, block_var_name_1);
+  assertEquals(oldName, block_var_name_1);
   assertEquals(newName, block_var_name_2);
 
   workspaceTest_tearDown();
@@ -306,10 +306,9 @@ function test_renameVariable_OldCase() {
 
 function test_renameVariable_TwoVariablesAndOldCase() {
   // Test renaming a variable to an in-use name, but with different
-  // capitalization.  The new capitalization should apply everywhere.
+  // capitalization. Two variables with different capitalizations should
+  // co-exist.
 
-  // TODO (fenichel): What about different capitalization but also different
-  // types?
   workspaceTest_setUp();
   var oldName = 'name1';
   var oldCase = 'Name2';
@@ -325,22 +324,29 @@ function test_renameVariable_TwoVariablesAndOldCase() {
   createMockBlock(id1);
   createMockBlock(id2);
 
+  // Blocks should have the correct variable names
+  var old_block_var_name_1 = workspace.topBlocks_[0].getVarModels()[0].name;
+  var old_block_var_name_2 = workspace.topBlocks_[1].getVarModels()[0].name;
+  assertEquals(oldName, old_block_var_name_1);
+  assertEquals(oldCase, old_block_var_name_2);
+
   workspace.renameVariableById(id1, newName);
 
-  checkVariableValues(workspace, newName, type, id2);
+  // The old variable gets properly renamed to the new name,
+  // since variables are case sensitive.
+  checkVariableValues(workspace, newName, type, id1);
 
-  // The old variable should have been deleted.
-  var variable = workspace.getVariableById(id1);
-  assertNull(variable);
+  // Both variables should still exist
+  assertEquals(2, workspace.getAllVariables().length);
 
-  // There should only be one variable left.
-  assertEquals(1, workspace.getAllVariables().length);
-
-  // Blocks should now use the new capitalization.
+  // Block which had oldName should have been updated to use newName, while
+  // block with oldCase should still have the same name.
   var block_var_name_1 = workspace.topBlocks_[0].getVarModels()[0].name;
   var block_var_name_2 = workspace.topBlocks_[1].getVarModels()[0].name;
   assertEquals(newName, block_var_name_1);
-  assertEquals(newName, block_var_name_2);
+  assertNotEquals(old_block_var_name_1, block_var_name_1);
+  assertEquals(oldCase, block_var_name_2);
+  assertEquals(old_block_var_name_2, block_var_name_2);
   workspaceTest_tearDown();
 }
 
