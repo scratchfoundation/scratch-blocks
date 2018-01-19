@@ -530,8 +530,7 @@ Blockly.Constants.Data.VARIABLE_OPTION_CALLBACK_FACTORY = function(block, name) 
 Blockly.Constants.Data.RENAME_OPTION_CALLBACK_FACTORY = function(block) {
   return function() {
     var workspace = block.workspace;
-    var currentName = block.getField('VARIABLE').text_;
-    var variable = workspace.getVariable(currentName);
+    var variable = block.getField('VARIABLE').getVariable();
     Blockly.Variables.renameVariable(workspace, variable);
   };
 };
