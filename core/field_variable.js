@@ -53,13 +53,12 @@ Blockly.FieldVariable = function(varname, opt_validator, opt_variableTypes) {
     Blockly.BlockSvg.FIELD_WIDTH,
     Blockly.BlockSvg.FIELD_HEIGHT);
   this.setValidator(opt_validator);
-  // TODO (#1499): Add opt_default_type to match default value.  If not set, ''.
+  // TODO (blockly #1499): Add opt_default_type to match default value.
+  // If not set, ''.
   this.defaultVariableName = (varname || '');
   var hasSingleVarType = opt_variableTypes && (opt_variableTypes.length == 1);
   this.defaultType_ = hasSingleVarType ? opt_variableTypes[0] : '';
   this.variableTypes = opt_variableTypes;
-  //this.variableType = (opt_variableTypes && opt_variableTypes.length == 1) ?
-  //  opt_variableTypes[0] : '';
 
   this.value_ = null;
 };
@@ -78,7 +77,7 @@ Blockly.FieldVariable.prototype.init = function() {
   }
   Blockly.FieldVariable.superClass_.init.call(this);
 
-  // TODO (1010): Change from init/initModel to initView/initModel
+  // TODO (blockly #1010): Change from init/initModel to initView/initModel
   this.initModel();
 };
 
@@ -337,11 +336,11 @@ Blockly.FieldVariable.prototype.onItemSelected = function(menu, menuItem) {
         }
       };
       Blockly.Variables.createVariable(workspace, updateField,
-        Blockly.BROADCAST_MESSAGE_VARIABLE_TYPE);
+          Blockly.BROADCAST_MESSAGE_VARIABLE_TYPE);
       return;
     }
 
-    // TODO (#1529): Call any validation function, and allow it to override.
+    // TODO (blockly #1529): Call any validation function, and allow it to override.
   }
   this.setValue(id);
 };

@@ -40,9 +40,8 @@ goog.require('Blockly.Field');
  *
  */
 Blockly.FieldVariableGetter = function(text, name, opt_varType) {
-  this.size_ = new goog.math.Size(
-    Blockly.BlockSvg.FIELD_WIDTH,
-    Blockly.BlockSvg.FIELD_HEIGHT);
+  this.size_ = new goog.math.Size(Blockly.BlockSvg.FIELD_WIDTH,
+      Blockly.BlockSvg.FIELD_HEIGHT);
   this.text_ = text;
 
   /**
@@ -87,7 +86,7 @@ Blockly.FieldVariableGetter.prototype.init = function() {
   }
   this.workspace_ = this.sourceBlock_.workspace;
   var variable = Blockly.Variables.getOrCreateVariablePackage(
-    this.workspace_, null, this.text_, this.variableType_);
+      this.workspace_, null, this.text_, this.variableType_);
   this.setValue(variable.getId());
 };
 
