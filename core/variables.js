@@ -291,15 +291,7 @@ Blockly.Variables.createVariable = function(workspace, opt_callback, opt_type) {
                 function() {
                   promptAndCheckWithAlert(text);  // Recurse
                 });
-          }
-          else if (!Blockly.Procedures.isNameUsed(text, workspace)) {
-            Blockly.alert(Blockly.Msg.PROCEDURE_ALREADY_EXISTS.replace('%1',
-                text.toLowerCase()),
-                function() {
-                  promptAndCheckWithAlert(text);  // Recurse
-                });
-          }
-          else {
+          } else {
             var potentialVarMap = workspace.getPotentialVariableMap();
             var variable;
             // This check ensures that if a new variable is being created from a

@@ -77,11 +77,11 @@ Blockly.VariableMap.prototype.renameVariable = function(variable, newName) {
     if (!conflictVar) {
       this.renameVariableAndUses_(variable, newName, blocks);
     } else {
-      // We don't want to rename if the variable if one with the exact new name
+      // We don't want to rename the variable if one with the exact new name
       // already exists.
       console.warn('Unexpected conflict when attempting to rename ' +
         'variable with name: ' + variable.name + ' and id: ' + variable.getId() +
-        ' to new name: ' + newName + '. Variable with the new name already exist' +
+        ' to new name: ' + newName + '. A variable with the new name already exists' +
         ' and has id: ' + conflictVar.getId());
 
     }
