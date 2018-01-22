@@ -197,65 +197,62 @@ Blockly.Variables.generateUniqueName = function(workspace) {
 
 /**
  * Remove any possiblity of conflict/duplication between a real and potential variable.
- * When creating a new variable, checks the desired name and type already exists
+ * When creating a new variable, checks whether the desired name and type already exists
  * as a real or potential variable.
- * If 'opt_realWkspc' is provided, checks whether a real variable with the given
- * name and type already exists on that workspace first.
- * Checks whether a potential variable (using the given 'potentialVarWkspc') exists.
+ * If 'checkReal' is true, checks whether a real variable with the given
+ * name and type already exists.
+ * Checks whether a potential variable (using the given 'potentialVarWs') exists.
  * If a potential var exists and a real var also exists, discards the potential var
  * and returns the real var.
- * If a potential var exists and a real var does not exist (or 'opt_realWkspc'
- * was not provided), creates the potential var as a real var,
+ * If a potential var exists and a real var does not exist (or 'checkReal'
+ * was false), creates the potential var as a real var,
  * discards the potential var, and returns the newly created real var.
  * If a potential var does not exist, returns null.
  *
  * @param {string} varName The name of the variable to check for.
  * @param {string} varType The type of the variable to check for.
- * @param {!Blockly.Workspace} potentialVarWkspc The workspace containing the
- * potential vraible map we want to check against.
- * @param {?Blockly.Workspace} opt_realWkspc An optional real workspace to check
- * against.
+ * @param {!Blockly.Workspace} potentialVarWs The workspace containing the
+ *     potential variable map we want to check against.
+ * @param {boolean} checkReal Whether or not to check if a variable of the given
+ *     name and type exists as a real variable.
  * @return {?Blockly.VariableModel} The matching variable, if one already existed
- * in the real workspace or the newly transformed variable, if one already
- * existed as a potential variable. Null if no matching varaiable, real or
- * potential, was found.
+ *     in the real workspace; the newly transformed variable, if one already
+ *     existed as a potential variable. Null, if no matching variable, real or
+ *     potential, was found.
  */
-Blockly.Variables.realizePotentialVar = function(varName, varType, potentialVarWkspc,
-  opt_realWkspc) {
-  var potentialVarMap = potentialVarWkspc.getPotentialVariableMap();
-  if (potentialVarMap == null) {
+Blockly.Variables.realizePotentialVar = function(varName, varType, potentialVarWs,
+    checkReal) {
+  var potentialVarMap = potentialVarWs.getPotentialVariableMap();
+  var realWs = potentialVarWs.targetWorkspace;
+  if (!potentialVarMap) {
     console.warn('Called Blockly.Variables.realizePotentialVar with incorrect ' +
-      'workspace. The provided workspace does not have a potential variable map.');
+        'workspace. The provided workspace does not have a potential variable map.');
     return;
   }
   // First check if a variable with the same name and type already exists as a
   // real variable.
   var realVar;
-  if (opt_realWkspc) {
-    realVar = Blockly.Variables.getVariable(opt_realWkspc, null, varName, varType);
+  if (checkReal) {
+    realVar = Blockly.Variables.getVariable(realWs, null, varName, varType);
   }
-  var sharesNameWithPotentialVar = false;
-  var potentialVars = potentialVarMap.getVariablesOfType(varType);
-  for (var i=0, potentialVar = potentialVars[i]; i < potentialVars.length; i++) {
-    // TODO (#1292) case sensitivity check based on var type
-    if (varName == potentialVar.name) {
-      sharesNameWithPotentialVar = true;
-      break;
-    }
+
+  // Check if variable with same name and type exists as a potential var
+  var potentialVar = potentialVarMap.getVariable(varName, varType);
+  if (!potentialVar) {
+    return null;
   }
-  var variable;
-  if (sharesNameWithPotentialVar) {
-    if (!realVar) { // If a real var didn't already exist, realize the potential var.
-      variable = Blockly.Variables.getOrCreateVariablePackage(
-        potentialVarWkspc.targetWorkspace, potentialVar.getId(), varName, varType);
-    } else {
-      variable = realVar;
-    }
-    // The variable should be removed from the potential variable map now that
-    // it has been created as a real variable.
-    potentialVarWkspc.potentialVariableMap_.deleteVariable(potentialVar);
+
+  // The potential var exists, so save its id and delete it from the potential
+  // variable map.
+  var id = potentialVar.getId();
+  potentialVarMap.deleteVariable(potentialVar);
+
+  // Depending on whether a real var already exists or not, either return the
+  // existing real var or turn the potential var into a new one using its id.
+  if (realVar) {
+    return realVar;
   }
-  return variable;
+  return realWs.createVariable(varName, varType, id);
 };
 
 /**
@@ -310,7 +307,7 @@ Blockly.Variables.createVariable = function(workspace, opt_callback, opt_type) {
             // real variable and thus there aren't duplicate options in the field_variable
             // dropdown.
             if (potentialVarMap && opt_type) {
-              variable = Blockly.Variables.realizePotentialVar(text, opt_type, workspace);
+              variable = Blockly.Variables.realizePotentialVar(text, opt_type, workspace, false);
             }
             if (!variable) {
               variable = workspace.createVariable(text, opt_type);
