@@ -34,7 +34,7 @@ goog.require('goog.string');
  * Holds information for the variable including name, id, and type.
  * @param {!Blockly.Workspace} workspace The variable's workspace.
  * @param {!string} name The name of the variable. This must be unique across
- *     variables and procedures.
+ *     each variable type.
  * @param {?string} opt_type The type of the variable like 'int' or 'string'.
  *     Does not need to be unique. Field_variable can filter variables based on
  *     their type. This will default to '' which is a specific type.
