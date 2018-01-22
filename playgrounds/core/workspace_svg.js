@@ -1014,21 +1014,18 @@ Blockly.WorkspaceSvg.prototype.paste = function(xmlBlock) {
 Blockly.WorkspaceSvg.prototype.refreshToolboxSelection_ = function() {
   // Updating the toolbox can be expensive. Don't do it when when it is
   // disabled.
-  if (this.toolbox_ && this.toolbox_.flyout_ && !this.currentGesture_ &&
+  if (this.toolbox_) {
+    if (this.toolbox_.flyout_ && !this.currentGesture_ &&
       this.toolboxRefreshEnabled_) {
-    this.toolbox_.refreshSelection();
+      this.toolbox_.refreshSelection();
+    }
+  } else {
+    var thisTarget = this.targetWorkspace;
+    if (thisTarget && thisTarget.toolbox_ && thisTarget.toolbox_.flyout_ &&
+      !thisTarget.currentGesture_ && thisTarget.toolboxRefreshEnabled_) {
+      thisTarget.toolbox_.refreshSelection();
+    }
   }
-};
-
-/**
- * Rename a variable by updating its name in the variable list.
- * @param {string} oldName Variable to rename.
- * @param {string} newName New variable name.
- * @package
- */
-Blockly.WorkspaceSvg.prototype.renameVariable = function(oldName, newName) {
-  Blockly.WorkspaceSvg.superClass_.renameVariable.call(this, oldName, newName);
-  this.refreshToolboxSelection_();
 };
 
 /**
@@ -1044,18 +1041,7 @@ Blockly.WorkspaceSvg.prototype.renameVariableById = function(id, newName) {
 };
 
 /**
- * Delete a variable by the passed in name.   Update the flyout to show
- *     immediately that the variable is deleted.
- * @param {string} name Name of variable to delete.
- * @package
- */
-Blockly.WorkspaceSvg.prototype.deleteVariable = function(name) {
-  Blockly.WorkspaceSvg.superClass_.deleteVariable.call(this, name);
-  this.refreshToolboxSelection_();
-};
-
-/**
- * Delete a variable by the passed in id.   Update the flyout to show
+ * Delete a variable by the passed in ID.   Update the flyout to show
  *     immediately that the variable is deleted.
  * @param {string} id Id of variable to delete.
  * @package
@@ -1078,7 +1064,7 @@ Blockly.WorkspaceSvg.prototype.deleteVariableById = function(id) {
  * @package
  */
 Blockly.WorkspaceSvg.prototype.createVariable = function(name, opt_type, opt_id) {
-  var variableInMap = (this.getVariable(name) != null);
+  var variableInMap = (this.getVariable(name, opt_type) != null);
   var newVar = Blockly.WorkspaceSvg.superClass_.createVariable.call(this, name,
     opt_type, opt_id);
   // For performance reasons, only refresh the the toolbox for new variables.

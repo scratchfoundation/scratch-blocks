@@ -26,7 +26,9 @@
 
 function test_fieldvariablegetter_constructor() {
   var field = new Blockly.FieldVariableGetter('text', 'name');
-  assertEquals(field.getValue(), 'text');
+  // The field does not have a variable until after init() is called.
+  assertEquals(field.getText(), '');
+  assertEquals(field.getValue(), '');
 }
 
 function test_fieldvariablegetter_isEditable() {

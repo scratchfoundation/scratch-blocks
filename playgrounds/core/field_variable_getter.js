@@ -34,13 +34,25 @@ goog.require('Blockly.Field');
  * Class for a variable getter field.
  * @param {string} text The initial content of the field.
  * @param {string} name Optional CSS class for the field's text.
+ * @param {string} opt_varType The type of variable this field is associated with.
  * @extends {Blockly.FieldLabel}
  * @constructor
  *
  */
-Blockly.FieldVariableGetter = function(text, name) {
-  Blockly.FieldVariableGetter.superClass_.constructor.call(this, text);
+Blockly.FieldVariableGetter = function(text, name, opt_varType) {
+  this.size_ = new goog.math.Size(Blockly.BlockSvg.FIELD_WIDTH,
+      Blockly.BlockSvg.FIELD_HEIGHT);
+  this.text_ = text;
+
+  /**
+   * Maximum characters of text to display before adding an ellipsis.
+   * Same for strings and numbers.
+   * @type {number}
+   */
+  this.maxDisplayLength = Blockly.BlockSvg.MAX_DISPLAY_LENGTH;
+
   this.name_ = name;
+  this.variableType_ = opt_varType ? opt_varType : '';
 };
 goog.inherits(Blockly.FieldVariableGetter, Blockly.Field);
 
@@ -69,20 +81,62 @@ Blockly.FieldVariableGetter.prototype.init = function() {
     return;
   }
   Blockly.FieldVariableGetter.superClass_.init.call(this);
-  if (!this.getValue()) {
-    // Variables without names get uniquely named for this workspace.
-    var workspace =
-        this.sourceBlock_.isInFlyout ?
-            this.sourceBlock_.workspace.targetWorkspace :
-            this.sourceBlock_.workspace;
-    this.setValue(Blockly.Variables.generateUniqueName(workspace));
+  if (this.variable_) {
+    return; // Initialization already happened.
   }
-  // If the selected variable doesn't exist yet, create it.
-  // For instance, some blocks in the toolbox have variable dropdowns filled
-  // in by default.
-  if (!this.sourceBlock_.isInFlyout) {
-    this.sourceBlock_.workspace.createVariable(this.getValue());
+  this.workspace_ = this.sourceBlock_.workspace;
+  var variable = Blockly.Variables.getOrCreateVariablePackage(
+      this.workspace_, null, this.text_, this.variableType_);
+  this.setValue(variable.getId());
+};
+
+/**
+ * Get the variable's ID.
+ * @return {string} Current variable's ID.
+ */
+Blockly.FieldVariableGetter.prototype.getValue = function() {
+  return this.variable_ ? this.variable_.getId() : '';
+};
+
+/**
+ * Get the text from this field.
+ * @return {string} Current text.
+ */
+Blockly.FieldVariableGetter.prototype.getText = function() {
+  return this.variable_ ? this.variable_.name : '';
+};
+
+/**
+ * Get the variable model for the variable associated with this field.
+ * Not guaranteed to be in the variable map on the workspace (e.g. if accessed
+ * after the variable has been deleted).
+ * @return {?Blockly.VariableModel} the selected variable, or null if none was
+ *     selected.
+ * @package
+ */
+Blockly.FieldVariableGetter.prototype.getVariable = function() {
+  return this.variable_;
+};
+
+Blockly.FieldVariableGetter.prototype.setValue = function(id) {
+  // What do I do when id is null?  That happens when undoing a change event
+  // for the first time the value was set.
+  var workspace = this.sourceBlock_.workspace;
+  var variable = Blockly.Variables.getVariable(workspace, id);
+
+  if (!variable) {
+    throw new Error('Variable id doesn\'t point to a real variable!  ID was ' +
+        id);
   }
+
+  if (this.sourceBlock_ && Blockly.Events.isEnabled()) {
+    var oldValue = this.variable_ ? this.variable_.getId() : null;
+    Blockly.Events.fire(new Blockly.Events.BlockChange(
+        this.sourceBlock_, 'field', this.name, oldValue, variable.getId()));
+  }
+  this.variable_ = variable;
+  this.value_ = id;
+  this.setText(variable.name);
 };
 
 /**

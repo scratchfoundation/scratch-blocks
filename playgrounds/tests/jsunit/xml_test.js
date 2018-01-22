@@ -301,22 +301,28 @@ function test_appendDomToWorkspace() {
 
 function test_blockToDom_fieldToDom_trivial() {
   xmlTest_setUpWithMockBlocks();
-  workspace.createVariable('name1', 'type1', 'id1');
+  // TODO (#1199): make a similar test where the variable is given a non-empty
+  // type.f
+  workspace.createVariable('name1', '', 'id1');
   var block = new Blockly.Block(workspace, 'field_variable_test_block');
-  block.inputList[0].fieldRow[0].setValue('name1');
+  block.inputList[0].fieldRow[0].setValue('id1');
   var resultFieldDom = Blockly.Xml.blockToDom(block).childNodes[0];
-  xmlTest_checkVariableFieldDomValues(resultFieldDom, 'VAR', 'type1', 'id1',
+  xmlTest_checkVariableFieldDomValues(resultFieldDom, 'VAR', '', 'id1',
     'name1');
   xmlTest_tearDownWithMockBlocks();
 }
 
 function test_blockToDom_fieldToDom_defaultCase() {
   xmlTest_setUpWithMockBlocks();
+  setUpMockMethod(mockControl_, Blockly.utils, 'genUid', null, ['1', '1']);
   try {
-    setUpMockMethod(mockControl_, Blockly.utils, 'genUid', null, ['1', '1']);
     workspace.createVariable('name1');
+
+    Blockly.Events.disable();
     var block = new Blockly.Block(workspace, 'field_variable_test_block');
-    block.inputList[0].fieldRow[0].setValue('name1');
+    block.inputList[0].fieldRow[0].setValue('1');
+    Blockly.Events.enable();
+
     var resultFieldDom = Blockly.Xml.blockToDom(block).childNodes[0];
     // Expect type is '' and id is '1' since we don't specify type and id.
     xmlTest_checkVariableFieldDomValues(resultFieldDom, 'VAR', '', '1', 'name1');
@@ -362,14 +368,18 @@ function test_variablesToDom_oneVariable() {
 function test_variablesToDom_twoVariables_oneBlock() {
   xmlTest_setUpWithMockBlocks();
 
-  workspace.createVariable('name1', 'type1', 'id1');
+  workspace.createVariable('name1', '', 'id1');
   workspace.createVariable('name2', 'type2', 'id2');
+  // If events are enabled during block construction, it will create a default
+  // variable.
+  Blockly.Events.disable();
   var block = new Blockly.Block(workspace, 'field_variable_test_block');
-  block.inputList[0].fieldRow[0].setValue('name1');
+  block.inputList[0].fieldRow[0].setValue('id1');
+  Blockly.Events.enable();
 
   var resultDom = Blockly.Xml.variablesToDom(workspace.getAllVariables());
   assertEquals(2, resultDom.children.length);
-  xmlTest_checkVariableDomValues(resultDom.children[0], 'type1', 'id1',
+  xmlTest_checkVariableDomValues(resultDom.children[0], '', 'id1',
       'name1');
   xmlTest_checkVariableDomValues(resultDom.children[1], 'type2', 'id2',
       'name2');
@@ -422,14 +432,12 @@ function test_variableFieldXml_caseSensitive() {
     }
   };
 
-  var generatedXml = Blockly.Variables.generateVariableFieldXml_(mockVariableModel);
-  // The field contains this XML tag as a result of how we're generating this
-  // XML.  This is not desirable, but the goal of this test is to make sure
-  // we're preserving case-sensitivity.
-  var xmlns = 'xmlns="http://www.w3.org/1999/xhtml"';
+  var generatedXml =
+    Blockly.Variables.generateVariableFieldXml_(mockVariableModel);
   var goldenXml =
-      '<field ' + xmlns + ' name="VARIABLE"' +
+      '<field name="VARIABLE"' +
+      ' id="' + id + '"' +
       ' variabletype="' + type + '"' +
-      ' id="' + id + '">' + name + '</field>';
+      '>' + name + '</field>';
   assertEquals(goldenXml, generatedXml);
 }
