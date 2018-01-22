@@ -557,9 +557,17 @@ Blockly.Procedures.deleteProcedureDefCallback = function(procCode,
   if (callers.length > 0) {
     return false;
   }
+
+  var workspace = definitionRoot.workspace;
+
   // Delete the whole stack.
   Blockly.Events.setGroup(true);
   definitionRoot.dispose();
   Blockly.Events.setGroup(false);
+
+  // TODO (#1354) Update this function when '_' is removed
+  // Refresh toolbox, so caller doesn't appear there anymore
+  workspace.refreshToolboxSelection_();
+
   return true;
 };

@@ -104,6 +104,16 @@ Blockly.Workspace.prototype.rendered = false;
  */
 Blockly.Workspace.prototype.MAX_UNDO = 1024;
 
+// TODO (#1354) Update this function when it is fixed upstream
+/**
+ * Refresh the toolbox. This is a no-op in a non-rendered workspace,
+ * but may be overriden by subclasses.
+ * @private
+ */
+Blockly.Workspace.prototype.refreshToolboxSelection_ = function() {
+  // No-op. Overriden by subclass.
+};
+
 /**
  * Dispose of this workspace.
  * Unlink from all DOM elements to prevent memory leaks.
