@@ -237,6 +237,9 @@ function test_renameVariable_ReferenceExists() {
 function test_renameVariable_TwoVariablesSameType() {
   // Cannot rename variable to a name that already exists
   // for a variable of the same type.
+  // Note: this behavior is different from that of blockly which allows
+  // renaming variables to a name that already exists if the variables have the
+  // same type.
   workspaceTest_setUp();
   var id1 = 'id1';
   var id2 = 'id2';
@@ -308,6 +311,10 @@ function test_renameVariable_TwoVariablesAndOldCase() {
   // Test renaming a variable to an in-use name, but with different
   // capitalization. Two variables with different capitalizations should
   // co-exist.
+  // Note: this behavior is different from that of blockly which does not allow
+  // two variables of the same name to exist with different capitalization. In
+  // blockly, variable names are case insensitive, so different capitalizations
+  // of a variable name are treated as the same name.
 
   workspaceTest_setUp();
   var oldName = 'name1';

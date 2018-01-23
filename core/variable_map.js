@@ -73,7 +73,6 @@ Blockly.VariableMap.prototype.renameVariable = function(variable, newName) {
   var blocks = this.workspace.getAllBlocks();
   Blockly.Events.setGroup(true);
   try {
-    // The IDs may match if the rename is a simple case change (name1 -> Name1).
     if (!conflictVar) {
       this.renameVariableAndUses_(variable, newName, blocks);
     } else {
