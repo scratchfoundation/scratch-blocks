@@ -272,6 +272,7 @@ Blockly.Variables.createVariable = function(workspace, opt_callback, opt_type) {
   if (opt_type === Blockly.LIST_VARIABLE_TYPE) {
     newMsg = Blockly.Msg.NEW_LIST_TITLE;
     modalTitle = Blockly.Msg.LIST_MODAL_TITLE;
+
   } else if (opt_type === Blockly.BROADCAST_MESSAGE_VARIABLE_TYPE) {
     newMsg = Blockly.Msg.NEW_BROADCAST_MESSAGE_TITLE;
     modalTitle = Blockly.Msg.BROADCAST_MODAL_TITLE;
@@ -286,19 +287,11 @@ Blockly.Variables.createVariable = function(workspace, opt_callback, opt_type) {
         if (text) {
           if (workspace.getVariable(text, opt_type)) {
             Blockly.alert(Blockly.Msg.VARIABLE_ALREADY_EXISTS.replace('%1',
-                text.toLowerCase()),
+                text),
                 function() {
                   promptAndCheckWithAlert(text);  // Recurse
                 });
-          }
-          else if (!Blockly.Procedures.isNameUsed(text, workspace)) {
-            Blockly.alert(Blockly.Msg.PROCEDURE_ALREADY_EXISTS.replace('%1',
-                text.toLowerCase()),
-                function() {
-                  promptAndCheckWithAlert(text);  // Recurse
-                });
-          }
-          else {
+          } else {
             var potentialVarMap = workspace.getPotentialVariableMap();
             var variable;
             // This check ensures that if a new variable is being created from a
@@ -354,7 +347,15 @@ Blockly.Variables.renameVariable = function(workspace, variable,
     Blockly.Variables.promptName(promptText, defaultName,
         function(newName) {
           if (newName) {
-            workspace.renameVariableById(variable.getId(), newName);
+            if (workspace.getVariable(newName, variable.type)) {
+              Blockly.alert(Blockly.Msg.VARIABLE_ALREADY_EXISTS.replace('%1',
+                  newName),
+                  function() {
+                    promptAndCheckWithAlert(newName);  // Recurse
+                  });
+            } else {
+              workspace.renameVariableById(variable.getId(), newName);
+            }
             if (opt_callback) {
               opt_callback(newName);
             }
