@@ -284,8 +284,7 @@ Blockly.Variables.createVariable = function(workspace, opt_callback, opt_type) {
     return;
   }
   var validate = Blockly.Variables.nameValidator_.bind(null, opt_type);
-  // This function needs to be named so it can be called recursively.
-  //var promptAndCheckWithAlert = function(defaultName) {
+
   // Prompt the user to enter a name for the variable
   Blockly.prompt(newMsg, '',
       function(text) {
@@ -328,7 +327,7 @@ Blockly.Variables.createVariable = function(workspace, opt_callback, opt_type) {
 /**
  * This function provides a common interface for variable name validation agnostic
  * of type. This is so that functions like Blockly.Variables.createVariable and
- * Blockly.Variables.renameVariable can call a single function (with a single type
+ * Blockly.Variables.renameVariable can call a single function (with a single
  * type signature) to validate the user-provided name for a variable.
  * @param {string} type The type of the variable for which the provided name
  *     should be validated.
@@ -351,8 +350,9 @@ Blockly.Variables.nameValidator_ = function(type, text, workspace, opt_callback)
   // For broadcast messages, if a broadcast message of the provided name already exists,
   // the validator needs to call a function that updates the selected
   // field option of the dropdown menu of the block that was used to create the new message.
-  // For scalar variables and lists, the validator needs a retry function that is responsible
-  // for popping up an alert and prompting the user for a new name.
+  // For scalar variables and lists, the validator has the same validation behavior, but needs
+  // to know which type of variable to check for and needs a type-specific error message
+  // that is displayed when a variable of the given name and type already exists.
 
   if (type == Blockly.BROADCAST_MESSAGE_VARIABLE_TYPE) {
     return Blockly.Variables.validateBroadcastMessageName_(text, workspace, opt_callback);
@@ -449,7 +449,7 @@ Blockly.Variables.validateScalarVarOrListName_ = function(name, workspace,
 Blockly.Variables.renameVariable = function(workspace, variable,
     opt_callback) {
   // Validation and modal message/title depends on the variable type
-  var promptMsg, modalTitle, validate;
+  var promptMsg, modalTitle;
   var varType = variable.type;
   if (varType == Blockly.LIST_VARIABLE_TYPE) {
     promptMsg = Blockly.Msg.RENAME_LIST_TITLE;
@@ -463,7 +463,7 @@ Blockly.Variables.renameVariable = function(workspace, variable,
         'when attempting to rename a variable.');
     return;
   }
-  var validate = Blockly.Variables.nameValidator_(varType);
+  var validate = Blockly.Variables.nameValidator_.bind(null, varType);
 
   var promptText = promptMsg.replace('%1', variable.name);
   Blockly.prompt(promptText, '',
