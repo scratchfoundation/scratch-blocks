@@ -353,6 +353,16 @@ Blockly.BROADCAST_MESSAGE_VARIABLE_TYPE = 'broadcast_msg';
  */
 Blockly.LIST_VARIABLE_TYPE = 'list';
 
+// TODO (#1251) Replace '' below with 'scalar', and start using this constant
+// everywhere.
+/**
+ * String representing the variable type of scalar variables.
+ * This string, for use in differentiating between types of variables,
+ * indicates that the current variable is a scalar variable.
+ * @const {string}
+ */
+Blockly.SCALAR_VARIABLE_TYPE = '';
+
 /**
  * The type of all procedure definition blocks.
  * @const {string}
