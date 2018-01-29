@@ -269,19 +269,21 @@ Blockly.Variables.createVariable = function(workspace, opt_callback, opt_type) {
   // Decide on a modal message based on the opt_type. If opt_type was not
   // provided, default to the original message for scalar variables.
   var newMsg, modalTitle;
-  if (opt_type === Blockly.BROADCAST_MESSAGE_VARIABLE_TYPE) {
+  if (opt_type == Blockly.BROADCAST_MESSAGE_VARIABLE_TYPE) {
     newMsg = Blockly.Msg.NEW_BROADCAST_MESSAGE_TITLE;
     modalTitle = Blockly.Msg.BROADCAST_MODAL_TITLE;
-  } else if (opt_type === Blockly.LIST_VARIABLE_TYPE) {
+  } else if (opt_type == Blockly.LIST_VARIABLE_TYPE) {
     newMsg = Blockly.Msg.NEW_LIST_TITLE;
     modalTitle = Blockly.Msg.LIST_MODAL_TITLE;
-  } else if (opt_type === Blockly.SCALAR_VARIABLE_TYPE){
+  } else {
+    // Note: this case covers 1) scalar variables, 2) any new type of
+    // variable not explicitly checked for above, and 3) a null or undefined
+    // opt_type -- turns a falsey opt_type into ''
+    // TODO (#1251) Warn developers that they didn't provide an opt_type/provided
+    // a falsey opt_type
+    opt_type = opt_type ? opt_type : '';
     newMsg = Blockly.Msg.NEW_VARIABLE_TITLE;
     modalTitle = Blockly.Msg.VARIABLE_MODAL_TITLE;
-  } else {
-    console.warn('Encountered unexpected type "' + opt_type + '" in call to ' +
-        'Blockly.Variables.createVariable');
-    return;
   }
   var validate = Blockly.Variables.nameValidator_.bind(null, opt_type);
 
@@ -359,12 +361,9 @@ Blockly.Variables.nameValidator_ = function(type, text, workspace, opt_callback)
   } else if (type == Blockly.LIST_VARIABLE_TYPE) {
     return Blockly.Variables.validateScalarVarOrListName_(text, workspace, type,
         Blockly.Msg.LIST_ALREADY_EXISTS);
-  } else if (type == Blockly.SCALAR_VARIABLE_TYPE) {
+  } else {
     return Blockly.Variables.validateScalarVarOrListName_(text, workspace, type,
         Blockly.Msg.VARIABLE_ALREADY_EXISTS);
-  } else {
-    console.warn('Encountered unexpected type "' + type + '" in call to ' +
-      'Blockly.Variables.nameValidator_');
   }
 };
 
@@ -417,12 +416,6 @@ Blockly.Variables.validateBroadcastMessageName_ = function(name, workspace, opt_
  */
 Blockly.Variables.validateScalarVarOrListName_ = function(name, workspace,
     type, errorMsg) {
-  if (type != Blockly.SCALAR_VARIABLE_TYPE &&
-      type != Blockly.LIST_VARIABLE_TYPE) {
-    console.warn ('Encountered unexpected type "' + type + '" when trying to validate' +
-        'name as a scalar variable or a list.');
-    return null;
-  }
   // For scalar variables, we don't want leading or trailing white space
   name = Blockly.Variables.trimName_(name);
   if (!name) {
@@ -451,17 +444,18 @@ Blockly.Variables.renameVariable = function(workspace, variable,
   // Validation and modal message/title depends on the variable type
   var promptMsg, modalTitle;
   var varType = variable.type;
+  if (varType == Blockly.BROADCAST_MESSAGE_VARIABLE_TYPE) {
+    console.warn('Unexpected attempt to rename a broadcast message with ' +
+        'id: ' + variable.getId() + ' and name: ' + variable.name);
+    return;
+  }
   if (varType == Blockly.LIST_VARIABLE_TYPE) {
     promptMsg = Blockly.Msg.RENAME_LIST_TITLE;
     modalTitle = Blockly.Msg.RENAME_LIST_MODAL_TITLE;
-  } else if (varType == Blockly.SCALAR_VARIABLE_TYPE) {
+  } else {
+    // Default for all other types of variables
     promptMsg = Blockly.Msg.RENAME_VARIABLE_TITLE;
     modalTitle = Blockly.Msg.RENAME_VARIABLE_MODAL_TITLE;
-  } else {
-    // Only lists and variables can be renamed... this is an error
-    console.warn('Encountered unexpected variable type ' + varType +
-        'when attempting to rename a variable.');
-    return;
   }
   var validate = Blockly.Variables.nameValidator_.bind(null, varType);
 
