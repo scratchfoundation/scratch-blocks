@@ -259,62 +259,63 @@ Blockly.Variables.realizePotentialVar = function(varName, varType, potentialVarW
  * Create a new variable on the given workspace.
  * @param {!Blockly.Workspace} workspace The workspace on which to create the
  *     variable.
- * @param {function(?string=)=} opt_callback A callback. It will
- *     be passed the id of the variable to be created, or null if change is to be
- *     aborted (cancel button), or undefined if an existing variable was chosen.
- * @param {string} opt_type Optional type of variable, like 'string' or 'list'.
+ * @param {function(?string=)=} opt_callback An optional callback function to act
+ *     on the id of the variable that is created from the user's input, or null
+ *     if the change is to be aborted (cancel button or an invalid name was provided).
+ * @param {string} opt_type Optional type of the variable to be created,
+ *     like 'string' or 'list'.
  */
 Blockly.Variables.createVariable = function(workspace, opt_callback, opt_type) {
   // Decide on a modal message based on the opt_type. If opt_type was not
   // provided, default to the original message for scalar variables.
-  var newMsg = '';
-  var modalTitle = '';
-  if (opt_type === Blockly.LIST_VARIABLE_TYPE) {
-    newMsg = Blockly.Msg.NEW_LIST_TITLE;
-    modalTitle = Blockly.Msg.LIST_MODAL_TITLE;
-
-  } else if (opt_type === Blockly.BROADCAST_MESSAGE_VARIABLE_TYPE) {
+  var newMsg, modalTitle;
+  if (opt_type == Blockly.BROADCAST_MESSAGE_VARIABLE_TYPE) {
     newMsg = Blockly.Msg.NEW_BROADCAST_MESSAGE_TITLE;
     modalTitle = Blockly.Msg.BROADCAST_MODAL_TITLE;
+  } else if (opt_type == Blockly.LIST_VARIABLE_TYPE) {
+    newMsg = Blockly.Msg.NEW_LIST_TITLE;
+    modalTitle = Blockly.Msg.LIST_MODAL_TITLE;
   } else {
+    // Note: this case covers 1) scalar variables, 2) any new type of
+    // variable not explicitly checked for above, and 3) a null or undefined
+    // opt_type -- turns a falsey opt_type into ''
+    // TODO (#1251) Warn developers that they didn't provide an opt_type/provided
+    // a falsey opt_type
+    opt_type = opt_type ? opt_type : '';
     newMsg = Blockly.Msg.NEW_VARIABLE_TITLE;
     modalTitle = Blockly.Msg.VARIABLE_MODAL_TITLE;
   }
-  // This function needs to be named so it can be called recursively.
-  var promptAndCheckWithAlert = function(defaultName) {
-    Blockly.Variables.promptName(newMsg, defaultName,
+  var validate = Blockly.Variables.nameValidator_.bind(null, opt_type);
+
+  // Prompt the user to enter a name for the variable
+  Blockly.prompt(newMsg, '',
       function(text) {
-        if (text) {
-          if (workspace.getVariable(text, opt_type)) {
-            Blockly.alert(Blockly.Msg.VARIABLE_ALREADY_EXISTS.replace('%1',
-                text),
-                function() {
-                  promptAndCheckWithAlert(text);  // Recurse
-                });
-          } else {
-            var potentialVarMap = workspace.getPotentialVariableMap();
-            var variable;
-            // This check ensures that if a new variable is being created from a
-            // workspace that already has a variable of the same name and type as
-            // a potential variable, that potential variable gets turned into a
-            // real variable and thus there aren't duplicate options in the field_variable
-            // dropdown.
-            if (potentialVarMap && opt_type) {
-              variable = Blockly.Variables.realizePotentialVar(text, opt_type, workspace, false);
-            }
-            if (!variable) {
-              variable = workspace.createVariable(text, opt_type);
-            }
+        var validatedText = validate(text, workspace, opt_callback);
+        if (validatedText) {
+          // The name is valid according to the type, create the variable
+          var potentialVarMap = workspace.getPotentialVariableMap();
+          var variable;
+          // This check ensures that if a new variable is being created from a
+          // workspace that already has a variable of the same name and type as
+          // a potential variable, that potential variable gets turned into a
+          // real variable and thus there aren't duplicate options in the field_variable
+          // dropdown.
+          if (potentialVarMap && opt_type) {
+            variable = Blockly.Variables.realizePotentialVar(validatedText,
+                opt_type, workspace, false);
+          }
+          if (!variable) {
+            variable = workspace.createVariable(validatedText, opt_type);
+          }
 
-            var flyout = workspace.isFlyout ? workspace : workspace.getFlyout();
-            var variableBlockId = variable.getId();
-            if (flyout.setCheckboxState) {
-              flyout.setCheckboxState(variableBlockId, true);
-            }
+          var flyout = workspace.isFlyout ? workspace : workspace.getFlyout();
+          var variableBlockId = variable.getId();
+          if (flyout.setCheckboxState) {
+            flyout.setCheckboxState(variableBlockId, true);
+          }
 
-            if (opt_callback) {
-              opt_callback(variableBlockId);
-            }
+          if (opt_callback) {
+            opt_callback(variableBlockId);
           }
         } else {
           // User canceled prompt without a value.
@@ -322,9 +323,111 @@ Blockly.Variables.createVariable = function(workspace, opt_callback, opt_type) {
             opt_callback(null);
           }
         }
-      }, opt_type, modalTitle);
-  };
-  promptAndCheckWithAlert('');
+      }, modalTitle);
+};
+
+/**
+ * This function provides a common interface for variable name validation agnostic
+ * of type. This is so that functions like Blockly.Variables.createVariable and
+ * Blockly.Variables.renameVariable can call a single function (with a single
+ * type signature) to validate the user-provided name for a variable.
+ * @param {string} type The type of the variable for which the provided name
+ *     should be validated.
+ * @param {string} text The user-provided text that should be validated as a
+ *     variable name.
+ * @param {!Blockly.Workspace} workspace The workspace on which to validate the
+ *     variable name. This is the workspace used to check whether the variable
+ *     already exists.
+ * @param {function(?string=)=} opt_callback An optional function to be called on
+ *     a pre-existing variable of the user-provided name. This function is currently
+ *     only used for broadcast messages.
+ * @return {string} The validated name according to the parameters given, if
+ *     the name is determined to be valid, or null if the name
+ *     is determined to be invalid/in-use, and the calling function should not
+ *     proceed with creating or renaming the variable.
+ * @private
+ */
+Blockly.Variables.nameValidator_ = function(type, text, workspace, opt_callback) {
+  // The validators for the different variable types require slightly different arguments.
+  // For broadcast messages, if a broadcast message of the provided name already exists,
+  // the validator needs to call a function that updates the selected
+  // field option of the dropdown menu of the block that was used to create the new message.
+  // For scalar variables and lists, the validator has the same validation behavior, but needs
+  // to know which type of variable to check for and needs a type-specific error message
+  // that is displayed when a variable of the given name and type already exists.
+
+  if (type == Blockly.BROADCAST_MESSAGE_VARIABLE_TYPE) {
+    return Blockly.Variables.validateBroadcastMessageName_(text, workspace, opt_callback);
+  } else if (type == Blockly.LIST_VARIABLE_TYPE) {
+    return Blockly.Variables.validateScalarVarOrListName_(text, workspace, type,
+        Blockly.Msg.LIST_ALREADY_EXISTS);
+  } else {
+    return Blockly.Variables.validateScalarVarOrListName_(text, workspace, type,
+        Blockly.Msg.VARIABLE_ALREADY_EXISTS);
+  }
+};
+
+/**
+ * Validate the given name as a broadcast message type.
+ * @param {string} name The name to validate
+ * @param {!Blockly.Workspace} workspace The workspace the name should be validated
+ *     against.
+ * @param {function(?string=)=} opt_callback An optional function to call if a broadcast
+ *     message already exists with the given name. This function will be called on the id
+ *     of the existing variable.
+ * @return {string} The validated name, or null if invalid.
+ * @private
+ */
+Blockly.Variables.validateBroadcastMessageName_ = function(name, workspace, opt_callback) {
+  if (!name) { // no name was provided or the user cancelled the prompt
+    return null;
+  }
+  var variable = workspace.getVariable(name, Blockly.BROADCAST_MESSAGE_VARIABLE_TYPE);
+  if (variable) {
+    // If the user provided a name for a broadcast message that already exists,
+    // use the provided callback function to update the selected option in
+    // the field of the block that was used to create
+    // this message.
+    if (opt_callback) {
+      opt_callback(variable.getId());
+    }
+    // Return null to signal to the calling function that we do not want to create
+    // a new variable since one already exists.
+    return null;
+  } else {
+    // The name provided is actually a new name, so the calling
+    // function should go ahead and create it as a new variable.
+    return name;
+  }
+};
+
+/**
+ * Validate the given name as a scalar variable or list type.
+ * This function is also responsible for any user facing error-handling.
+ * @param {string} name The name to validate
+ * @param {!Blockly.Workspace} workspace The workspace the name should be validated
+ *     against.
+ * @param {string} type The type to validate the variable as. This should be one of
+ *     Blockly.SCALAR_VARIABLE_TYPE or Blockly.LIST_VARIABLE_TYPE.
+ * @param {string} errorMsg The type-specific error message the user should see
+ *     if a variable of the validated, given name and type already exists.
+ * @return {string} The validated name, or null if invalid.
+ * @private
+ */
+Blockly.Variables.validateScalarVarOrListName_ = function(name, workspace,
+    type, errorMsg) {
+  // For scalar variables, we don't want leading or trailing white space
+  name = Blockly.Variables.trimName_(name);
+  if (!name) {
+    return null;
+  }
+  if (workspace.getVariable(name, type)) {
+    // error
+    Blockly.alert(errorMsg.replace('%1', name));
+    return null;
+  } else { // trimmed name is valid
+    return name;
+  }
 };
 
 /**
@@ -337,77 +440,56 @@ Blockly.Variables.createVariable = function(workspace, opt_callback, opt_type) {
  *     aborted (cancel button), or undefined if an existing variable was chosen.
  */
 Blockly.Variables.renameVariable = function(workspace, variable,
-  opt_callback) {
-  // (karishma) TODO (#1244) Modal message should change depending on what type
-  // of variable is getting renamed.
-  // This function needs to be named so it can be called recursively.
-  var promptAndCheckWithAlert = function(defaultName) {
-    var promptText =
-        Blockly.Msg.RENAME_VARIABLE_TITLE.replace('%1', variable.name);
-    Blockly.Variables.promptName(promptText, defaultName,
-        function(newName) {
-          if (newName) {
-            if (workspace.getVariable(newName, variable.type)) {
-              Blockly.alert(Blockly.Msg.VARIABLE_ALREADY_EXISTS.replace('%1',
-                  newName),
-                  function() {
-                    promptAndCheckWithAlert(newName);  // Recurse
-                  });
-            } else {
-              workspace.renameVariableById(variable.getId(), newName);
-            }
-            if (opt_callback) {
-              opt_callback(newName);
-            }
-          } else {
-            // User canceled prompt without a value.
-            if (opt_callback) {
-              opt_callback(null);
-            }
-          }
-        }, null);
-  };
-  promptAndCheckWithAlert('');
-};
-
-/**
- * Prompt the user for a new variable name.
- * @param {string} promptText The string of the prompt.
- * @param {string} defaultText The default value to show in the prompt's field.
- * @param {function(?string)} callback A callback. It will be passed the new
- *     variable name, or null if the user picked something illegal.
- * @param {string} opt_type Optional type of variable, like 'string' or 'list'.
- * @param {string} opt_modal_title Optional title for the prompt.
- */
-Blockly.Variables.promptName = function(promptText, defaultText, callback, opt_type,
-  opt_modal_title) {
-  var modalTitle = opt_modal_title ? opt_modal_title : Blockly.Msg.VARIABLE_MODAL_TITLE;
-  Blockly.prompt(promptText, defaultText, function(newVar) {
-    // Merge runs of whitespace.  Strip leading and trailing whitespace.
-    // Beyond this, all names are legal.
-    if (newVar) {
-      newVar = Blockly.Variables.validateName_(newVar, opt_type);
-    }
-    callback(newVar);
-  }, modalTitle);
-};
-
-/**
- * Validate the variable name provided by the user.
- * @param {string} name The user-provided name of the variable.
- * @param {string} opt_type Optional type of variable, like 'string' or 'list'.
- * @return {string} The validated and possibly transformed name of the variable.
- */
-Blockly.Variables.validateName_ = function(name, opt_type) {
-  if (!opt_type || opt_type != Blockly.BROADCAST_MESSAGE_VARIABLE_TYPE) {
-    name = name.replace(/[\s\xa0]+/g, ' ').replace(/^ | $/g, '');
-    if (name == Blockly.Msg.RENAME_VARIABLE ||
-        name == Blockly.Msg.NEW_VARIABLE) {
-      // Ok, not ALL names are legal...
-      name = null;
-    }
+    opt_callback) {
+  // Validation and modal message/title depends on the variable type
+  var promptMsg, modalTitle;
+  var varType = variable.type;
+  if (varType == Blockly.BROADCAST_MESSAGE_VARIABLE_TYPE) {
+    console.warn('Unexpected attempt to rename a broadcast message with ' +
+        'id: ' + variable.getId() + ' and name: ' + variable.name);
+    return;
   }
-  return name;
+  if (varType == Blockly.LIST_VARIABLE_TYPE) {
+    promptMsg = Blockly.Msg.RENAME_LIST_TITLE;
+    modalTitle = Blockly.Msg.RENAME_LIST_MODAL_TITLE;
+  } else {
+    // Default for all other types of variables
+    promptMsg = Blockly.Msg.RENAME_VARIABLE_TITLE;
+    modalTitle = Blockly.Msg.RENAME_VARIABLE_MODAL_TITLE;
+  }
+  var validate = Blockly.Variables.nameValidator_.bind(null, varType);
+
+  var promptText = promptMsg.replace('%1', variable.name);
+  Blockly.prompt(promptText, '',
+      function(newName) {
+        var validatedText = validate(newName, workspace);
+        if (validatedText) {
+          workspace.renameVariableById(variable.getId(), validatedText);
+          if (opt_callback) {
+            opt_callback(newName);
+          }
+        } else {
+          // User canceled prompt without a value.
+          if (opt_callback) {
+            opt_callback(null);
+          }
+        }
+      }, modalTitle);
+};
+
+/**
+ * Strip leading and trailing whitespace from the given name, for use with
+ * user provided name for scalar variables and lists.
+ * @param {string} name The user-provided name of the variable.
+ * @return {string} The trimmed name, or whatever falsey value was originally provided.
+ */
+Blockly.Variables.trimName_ = function(name) {
+  if (name) {
+    return goog.string.trim(name);
+  } else {
+    // Return whatever was provided
+    return name;
+  }
 };
 
 /**
