@@ -323,7 +323,7 @@ Blockly.Variables.createVariable = function(workspace, opt_callback, opt_type) {
             opt_callback(null);
           }
         }
-      }, modalTitle);
+      }, modalTitle, opt_type);
 };
 
 /**
@@ -474,7 +474,7 @@ Blockly.Variables.renameVariable = function(workspace, variable,
             opt_callback(null);
           }
         }
-      }, modalTitle);
+      }, modalTitle, varType);
 };
 
 /**
