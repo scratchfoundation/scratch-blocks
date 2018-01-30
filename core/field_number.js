@@ -82,7 +82,7 @@ Blockly.FieldNumber.DROPDOWN_Y_PADDING = 8;
  * @type {Array.<string>}
  * @const
  */
- // Calculator order
+// Calculator order
 Blockly.FieldNumber.NUMPAD_BUTTONS =
     ['7', '8', '9', '4', '5', '6', '1', '2', '3', '.', '0', '-', ' '];
 

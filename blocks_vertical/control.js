@@ -198,8 +198,8 @@ Blockly.Blocks['control_stop'] = {
         .appendField(stopDropdown, 'STOP_OPTION');
     this.setCategory(Blockly.Categories.control);
     this.setColour(Blockly.Colours.control.primary,
-      Blockly.Colours.control.secondary,
-      Blockly.Colours.control.tertiary
+        Blockly.Colours.control.secondary,
+        Blockly.Colours.control.tertiary
     );
     this.setPreviousStatement(true);
   },
@@ -320,19 +320,19 @@ Blockly.Blocks['control_create_clone_of_menu'] = {
    */
   init: function() {
     this.jsonInit(
-      {
-        "message0": "%1",
-        "args0": [
-          {
-            "type": "field_dropdown",
-            "name": "CLONE_OPTION",
-            "options": [
-              ['myself', '_myself_']
-            ]
-          }
-        ],
-        "extensions": ["colours_control", "output_string"]
-      });
+        {
+          "message0": "%1",
+          "args0": [
+            {
+              "type": "field_dropdown",
+              "name": "CLONE_OPTION",
+              "options": [
+                ['myself', '_myself_']
+              ]
+            }
+          ],
+          "extensions": ["colours_control", "output_string"]
+        });
   }
 };
 

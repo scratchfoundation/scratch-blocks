@@ -111,7 +111,7 @@ Blockly.ConnectionDB.prototype.findConnection = function(conn) {
  */
 Blockly.ConnectionDB.prototype.findPositionForConnection_ =
     function(connection) {
-  /* eslint-disable indent */
+      /* eslint-disable indent */
   if (!this.length) {
     return 0;
   }

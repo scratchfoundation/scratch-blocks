@@ -123,11 +123,11 @@ Blockly.Blocks['looks_show'] = {
    */
   init: function() {
     this.jsonInit(
-      {
-        "message0": "show",
-        "category": Blockly.Categories.looks,
-        "extensions": ["colours_looks", "shape_statement"]
-      });
+        {
+          "message0": "show",
+          "category": Blockly.Categories.looks,
+          "extensions": ["colours_looks", "shape_statement"]
+        });
   }
 };
 
@@ -138,11 +138,11 @@ Blockly.Blocks['looks_hide'] = {
    */
   init: function() {
     this.jsonInit(
-      {
-        "message0": "hide",
-        "category": Blockly.Categories.looks,
-        "extensions": ["colours_looks", "shape_statement"]
-      });
+        {
+          "message0": "hide",
+          "category": Blockly.Categories.looks,
+          "extensions": ["colours_looks", "shape_statement"]
+        });
   }
 };
 
@@ -282,23 +282,23 @@ Blockly.Blocks['looks_costume'] = {
    */
   init: function() {
     this.jsonInit(
-      {
-        "message0": "%1",
-        "args0": [
-          {
-            "type": "field_dropdown",
-            "name": "COSTUME",
-            "options": [
-              ['costume1', 'COSTUME1'],
-              ['costume2', 'COSTUME2']
-            ]
-          }
-        ],
-        "colour": Blockly.Colours.looks.secondary,
-        "colourSecondary": Blockly.Colours.looks.secondary,
-        "colourTertiary": Blockly.Colours.looks.tertiary,
-        "extensions": ["output_string"]
-      });
+        {
+          "message0": "%1",
+          "args0": [
+            {
+              "type": "field_dropdown",
+              "name": "COSTUME",
+              "options": [
+                ['costume1', 'COSTUME1'],
+                ['costume2', 'COSTUME2']
+              ]
+            }
+          ],
+          "colour": Blockly.Colours.looks.secondary,
+          "colourSecondary": Blockly.Colours.looks.secondary,
+          "colourTertiary": Blockly.Colours.looks.tertiary,
+          "extensions": ["output_string"]
+        });
   }
 };
 
@@ -329,11 +329,11 @@ Blockly.Blocks['looks_nextcostume'] = {
    */
   init: function() {
     this.jsonInit(
-      {
-        "message0": "next costume",
-        "category": Blockly.Categories.looks,
-        "extensions": ["colours_looks", "shape_statement"]
-      });
+        {
+          "message0": "next costume",
+          "category": Blockly.Categories.looks,
+          "extensions": ["colours_looks", "shape_statement"]
+        });
   }
 };
 
@@ -371,7 +371,7 @@ Blockly.Blocks['looks_backdrops'] = {
           "type": "field_dropdown",
           "name": "BACKDROP",
           "options": [
-              ['backdrop1', 'BACKDROP1']
+            ['backdrop1', 'BACKDROP1']
           ]
         }
       ],
@@ -390,21 +390,21 @@ Blockly.Blocks['looks_gotofrontback'] = {
    */
   init: function() {
     this.jsonInit(
-      {
-        "message0": "go to %1",
-        "args0": [
-          {
-            "type": "field_dropdown",
-            "name": "FRONT_BACK",
-            "options": [
-              ['front', 'front'],
-              ['back', 'back']
-            ]
-          }
-        ],
-        "category": Blockly.Categories.looks,
-        "extensions": ["colours_looks", "shape_statement"]
-      });
+        {
+          "message0": "go to %1",
+          "args0": [
+            {
+              "type": "field_dropdown",
+              "name": "FRONT_BACK",
+              "options": [
+                ['front', 'front'],
+                ['back', 'back']
+              ]
+            }
+          ],
+          "category": Blockly.Categories.looks,
+          "extensions": ["colours_looks", "shape_statement"]
+        });
   }
 };
 
@@ -513,10 +513,10 @@ Blockly.Blocks['looks_nextbackdrop'] = {
    */
   init: function() {
     this.jsonInit(
-      {
-        "message0": "next backdrop",
-        "category": Blockly.Categories.looks,
-        "extensions": ["colours_looks", "shape_statement"]
-      });
+        {
+          "message0": "next backdrop",
+          "category": Blockly.Categories.looks,
+          "extensions": ["colours_looks", "shape_statement"]
+        });
   }
 };

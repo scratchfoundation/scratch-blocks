@@ -673,7 +673,7 @@ Blockly.BlockSvg.prototype.render = function(opt_bubble) {
  */
 Blockly.BlockSvg.prototype.renderFields_ =
     function(fieldList, cursorX, cursorY) {
-  /* eslint-disable indent */
+      /* eslint-disable indent */
   if (this.RTL) {
     cursorX = -cursorX;
   }
@@ -1375,7 +1375,7 @@ Blockly.BlockSvg.prototype.renderInputShape_ = function(input, x, y) {
     inputShapeY = y - (Blockly.BlockSvg.INPUT_SHAPE_HEIGHT / 2);
     inputShape.setAttribute('d', inputShapeInfo.path);
     inputShape.setAttribute('transform',
-      'translate(' + inputShapeX + ',' + inputShapeY + ')'
+        'translate(' + inputShapeX + ',' + inputShapeY + ')'
     );
     inputShape.setAttribute('data-argument-type', inputShapeInfo.argType);
     inputShape.setAttribute('style', 'visibility: visible');
@@ -1479,7 +1479,7 @@ Blockly.BlockSvg.prototype.drawEdgeShapeRight_ = function(steps) {
  */
 Blockly.BlockSvg.prototype.positionNewBlock =
     function(newBlock, newConnection, existingConnection) {
-  /* eslint-disable indent */
+      /* eslint-disable indent */
   // We only need to position the new block if it's before the existing one,
   // otherwise its position is set by the previous block.
   if (newConnection.type == Blockly.NEXT_STATEMENT) {

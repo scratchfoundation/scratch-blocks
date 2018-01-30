@@ -223,10 +223,9 @@ Blockly.ScratchBlocks.VerticalExtensions.SCRATCH_EXTENSION = function() {
 Blockly.ScratchBlocks.VerticalExtensions.registerAll = function() {
   var categoryNames =
       ['control', 'data', 'data_lists', 'sounds', 'motion', 'looks', 'event',
-      'sensing', 'pen', 'operators', 'more'];
+        'sensing', 'pen', 'operators', 'more'];
   // Register functions for all category colours.
-  for (var i = 0; i < categoryNames.length; i++) {
-    name = categoryNames[i];
+  for (var i = 0, name; name = categoryNames[i]; i++) {
     Blockly.Extensions.register('colours_' + name,
         Blockly.ScratchBlocks.VerticalExtensions.colourHelper(name));
   }
@@ -259,7 +258,7 @@ Blockly.ScratchBlocks.VerticalExtensions.registerAll = function() {
 
   // Extension blocks have slightly different block rendering.
   Blockly.Extensions.register('scratch_extension',
-    Blockly.ScratchBlocks.VerticalExtensions.SCRATCH_EXTENSION);
+      Blockly.ScratchBlocks.VerticalExtensions.SCRATCH_EXTENSION);
 };
 
 Blockly.ScratchBlocks.VerticalExtensions.registerAll();

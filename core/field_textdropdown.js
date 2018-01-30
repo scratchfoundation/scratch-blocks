@@ -107,12 +107,12 @@ Blockly.FieldTextDropdown.prototype.dispose = function() {
 Blockly.FieldTextDropdown.prototype.showEditor_ = function() {
   if (!this.dropDownOpen_) {
     Blockly.FieldTextDropdown.superClass_.showEditor_.call(this, null, null,
-      true, function() {
+        true, function() {
         // When the drop-down arrow is clicked, hide text editor and show drop-down.
-        Blockly.WidgetDiv.hide();
-        this.showDropdown_();
-        Blockly.Touch.clearTouchIdentifier();
-      });
+          Blockly.WidgetDiv.hide();
+          this.showDropdown_();
+          Blockly.Touch.clearTouchIdentifier();
+        });
   }
 };
 

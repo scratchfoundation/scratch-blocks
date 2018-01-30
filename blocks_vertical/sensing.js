@@ -55,20 +55,20 @@ Blockly.Blocks['sensing_touchingobjectmenu'] = {
    */
   init: function() {
     this.jsonInit(
-      {
-        "message0": "%1",
-        "args0": [
-          {
-            "type": "field_dropdown",
-            "name": "TOUCHINGOBJECTMENU",
-            "options": [
-              ['mouse-pointer', '_mouse_'],
-              ['edge', '_edge_']
-            ]
-          }
-        ],
-        "extensions": ["colours_sensing", "output_string"]
-      });
+        {
+          "message0": "%1",
+          "args0": [
+            {
+              "type": "field_dropdown",
+              "name": "TOUCHINGOBJECTMENU",
+              "options": [
+                ['mouse-pointer', '_mouse_'],
+                ['edge', '_edge_']
+              ]
+            }
+          ],
+          "extensions": ["colours_sensing", "output_string"]
+        });
   }
 };
 
@@ -143,19 +143,19 @@ Blockly.Blocks['sensing_distancetomenu'] = {
    */
   init: function() {
     this.jsonInit(
-      {
-        "message0": "%1",
-        "args0": [
-          {
-            "type": "field_dropdown",
-            "name": "DISTANCETOMENU",
-            "options": [
-              ['mouse-pointer', '_mouse_']
-            ]
-          }
-        ],
-        "extensions": ["colours_sensing", "output_string"]
-      });
+        {
+          "message0": "%1",
+          "args0": [
+            {
+              "type": "field_dropdown",
+              "name": "DISTANCETOMENU",
+              "options": [
+                ['mouse-pointer', '_mouse_']
+              ]
+            }
+          ],
+          "extensions": ["colours_sensing", "output_string"]
+        });
   }
 };
 
@@ -372,20 +372,20 @@ Blockly.Blocks['sensing_videoonmenuone'] = {
    */
   init: function() {
     this.jsonInit(
-      {
-        "message0": "%1",
-        "args0": [
-          {
-            "type": "field_dropdown",
-            "name": "VIDEOONMENU1",
-            "options": [
-              ['motion', 'MOTION'],
-              ['direction', 'DIRECTION']
-            ]
-          }
-        ],
-        "extensions": ["colours_sensing", "output_string"]
-      });
+        {
+          "message0": "%1",
+          "args0": [
+            {
+              "type": "field_dropdown",
+              "name": "VIDEOONMENU1",
+              "options": [
+                ['motion', 'MOTION'],
+                ['direction', 'DIRECTION']
+              ]
+            }
+          ],
+          "extensions": ["colours_sensing", "output_string"]
+        });
   }
 };
 Blockly.Blocks['sensing_videoonmenutwo'] = {
@@ -395,19 +395,19 @@ Blockly.Blocks['sensing_videoonmenutwo'] = {
    */
   init: function() {
     this.jsonInit(
-      {
-        "message0": "%1",
-        "args0": [
-          {
-            "type": "field_dropdown",
-            "name": "VIDEOONMENU2",
-            "options": [
-              ['stage', 'STAGE']
-            ]
-          }
-        ],
-        "extensions": ["colours_sensing", "output_string"]
-      });
+        {
+          "message0": "%1",
+          "args0": [
+            {
+              "type": "field_dropdown",
+              "name": "VIDEOONMENU2",
+              "options": [
+                ['stage', 'STAGE']
+              ]
+            }
+          ],
+          "extensions": ["colours_sensing", "output_string"]
+        });
   }
 };
 
@@ -438,21 +438,21 @@ Blockly.Blocks['sensing_videotogglemenu'] = {
    */
   init: function() {
     this.jsonInit(
-      {
-        "message0": "%1",
-        "args0": [
-          {
-            "type": "field_dropdown",
-            "name": "VIDEOTOGGLEMENU",
-            "options": [
-              ['on', 'ON'],
-              ['off', 'OFF'],
-              ['on-flipped', 'ONFLIPPED']
-            ]
-          }
-        ],
-        "extensions": ["colours_sensing", "output_string"]
-      });
+        {
+          "message0": "%1",
+          "args0": [
+            {
+              "type": "field_dropdown",
+              "name": "VIDEOTOGGLEMENU",
+              "options": [
+                ['on', 'ON'],
+                ['off', 'OFF'],
+                ['on-flipped', 'ONFLIPPED']
+              ]
+            }
+          ],
+          "extensions": ["colours_sensing", "output_string"]
+        });
   }
 };
 
@@ -512,20 +512,20 @@ Blockly.Blocks['sensing_of_object_menu'] = {
    */
   init: function() {
     this.jsonInit(
-      {
-        "message0": "%1",
-        "args0": [
-          {
-            "type": "field_dropdown",
-            "name": "OBJECT",
-            "options": [
-              ['Sprite1', 'Sprite1'],
-              ['Stage', '_stage_']
-            ]
-          }
-        ],
-        "extensions": ["colours_sensing", "output_string"]
-      });
+        {
+          "message0": "%1",
+          "args0": [
+            {
+              "type": "field_dropdown",
+              "name": "OBJECT",
+              "options": [
+                ['Sprite1', 'Sprite1'],
+                ['Stage', '_stage_']
+              ]
+            }
+          ],
+          "extensions": ["colours_sensing", "output_string"]
+        });
   }
 };
 
