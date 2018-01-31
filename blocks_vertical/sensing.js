@@ -204,6 +204,26 @@ Blockly.Blocks['sensing_keypressed'] = {
       "message0": "key %1 pressed?",
       "args0": [
         {
+          "type": "input_value",
+          "name": "KEY_OPTION"
+        }
+      ],
+      "category": Blockly.Categories.sensing,
+      "extensions": ["colours_sensing", "output_boolean"]
+    });
+  }
+};
+
+Blockly.Blocks['sensing_keyoptions'] = {
+  /**
+   * Options for Keys
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.jsonInit({
+      "message0": "%1",
+      "args0": [
+        {
           "type": "field_dropdown",
           "name": "KEY_OPTION",
           "options": [
@@ -253,8 +273,7 @@ Blockly.Blocks['sensing_keypressed'] = {
           ]
         }
       ],
-      "category": Blockly.Categories.sensing,
-      "extensions": ["colours_sensing", "output_boolean"]
+      "extensions": ["colours_sensing", "output_string"]
     });
   }
 };
