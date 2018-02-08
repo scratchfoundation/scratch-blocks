@@ -191,7 +191,17 @@ Blockly.Blocks['control_stop'] = {
         ['other scripts in sprite', OTHER_SCRIPTS]
       ];
     }, function(option) {
+      // Create an event group to keep field value and mutator in sync
+      // Return null at the end because setValue is called here already.
+      Blockly.Events.setGroup(true);
+      var oldMutation = Blockly.Xml.domToText(this.sourceBlock_.mutationToDom());
       this.sourceBlock_.setNextStatement(option == OTHER_SCRIPTS);
+      var newMutation = Blockly.Xml.domToText(this.sourceBlock_.mutationToDom());
+      Blockly.Events.fire(new Blockly.Events.BlockChange(this.sourceBlock_,
+          'mutation', null, oldMutation, newMutation));
+      this.setValue(option);
+      Blockly.Events.setGroup(false);
+      return null;
     });
     this.appendDummyInput()
         .appendField('stop')
@@ -205,8 +215,7 @@ Blockly.Blocks['control_stop'] = {
   },
   mutationToDom: function() {
     var container = document.createElement('mutation');
-    var hasNext = (this.getFieldValue('STOP_OPTION') == 'other scripts in sprite');
-    container.setAttribute('hasnext', hasNext);
+    container.setAttribute('hasnext', this.nextConnection != null);
     return container;
   },
   domToMutation: function(xmlElement) {
