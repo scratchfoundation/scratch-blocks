@@ -95,6 +95,8 @@ Blockly.Events.BLOCK_CHANGE = Blockly.Events.CHANGE;
  * @const
  */
 Blockly.Events.MOVE = 'move';
+Blockly.Events.DRAG = 'drag';
+Blockly.Events.END_DRAG = 'endDrag';
 
 /**
  * Name of event that moves a block.
@@ -865,6 +867,241 @@ Blockly.Events.Move.prototype.run = function(forward) {
     }
   }
 };
+
+/////////////////////////////////////////
+/**
+ * Class for a block drag event.
+ * @param {Blockly.Block} block The moved block.  Null for a blank event.
+ * @extends {Blockly.Events.Abstract}
+ * @constructor
+ */
+Blockly.Events.Drag = function(block) {
+  if (!block) {
+    return;  // Blank event to be populated by fromJson.
+  }
+  Blockly.Events.Drag.superClass_.constructor.call(this, block);
+  var location = this.currentLocation_();
+  this.oldParentId = location.parentId;
+  this.oldInputName = location.inputName;
+  this.oldCoordinate = location.coordinate;
+};
+goog.inherits(Blockly.Events.Drag, Blockly.Events.Abstract);
+
+/**
+ * Class for a block drag event.
+ * @param {Blockly.Block} block The moved block.  Null for a blank event.
+ * @extends {Blockly.Events.Abstract}
+ * @constructor
+ */
+Blockly.Events.BlockDrag = Blockly.Events.Drag;
+
+/**
+ * Type of this event.
+ * @type {string}
+ */
+Blockly.Events.Drag.prototype.type = Blockly.Events.DRAG;
+
+/**
+ * Encode the event as JSON.
+ * @return {!Object} JSON representation.
+ */
+Blockly.Events.Drag.prototype.toJson = function() {
+  var json = Blockly.Events.Drag.superClass_.toJson.call(this);
+  if (this.newParentId) {
+    json['newParentId'] = this.newParentId;
+  }
+  if (this.newInputName) {
+    json['newInputName'] = this.newInputName;
+  }
+  if (this.isOutside) {
+    json['isOutside'] = this.isOutside;
+  }
+  if (this.newCoordinate) {
+    json['newCoordinate'] = Math.round(this.newCoordinate.x) + ',' +
+        Math.round(this.newCoordinate.y);
+  }
+  return json;
+};
+
+/**
+ * Decode the JSON event.
+ * @param {!Object} json JSON representation.
+ */
+Blockly.Events.Drag.prototype.fromJson = function(json) {
+  Blockly.Events.Drag.superClass_.fromJson.call(this, json);
+  this.newParentId = json['newParentId'];
+  this.newInputName = json['newInputName'];
+  this.isOutside = json['isOutside'];
+  if (json['newCoordinate']) {
+    var xy = json['newCoordinate'].split(',');
+    this.newCoordinate =
+        new goog.math.Coordinate(parseFloat(xy[0]), parseFloat(xy[1]));
+  }
+};
+
+/**
+ * Record the block's new location.  Called after the move.
+ */
+Blockly.Events.Drag.prototype.recordNew = function() {
+  var location = this.currentLocation_();
+  this.newParentId = location.parentId;
+  this.newInputName = location.inputName;
+  this.newCoordinate = location.coordinate;
+};
+
+/**
+ * Returns the parentId and input if the block is connected,
+ *   or the XY location if disconnected.
+ * @return {!Object} Collection of location info.
+ * @private
+ */
+Blockly.Events.Drag.prototype.currentLocation_ = function() {
+  var workspace = Blockly.Workspace.getById(this.workspaceId);
+  var block = workspace.getBlockById(this.blockId);
+  var location = {};
+  var parent = block.getParent();
+  if (parent) {
+    location.parentId = parent.id;
+    var input = parent.getInputWithBlock(block);
+    if (input) {
+      location.inputName = input.name;
+    }
+  } else {
+    location.coordinate = block.getRelativeToSurfaceXY();
+  }
+  return location;
+};
+
+/**
+ * Does this event record any change of state?
+ * @return {boolean} True if something changed.
+ */
+Blockly.Events.Drag.prototype.isNull = function() {
+  return false;
+};
+
+/**
+ * Run a drag event.
+ */
+Blockly.Events.Drag.prototype.run = function() {
+  console.error('Not implemented');
+};
+
+/////////////////////////////////////////
+/**
+ * Class for a block end drag event.
+ * @param {Blockly.Block} block The moved block.  Null for a blank event.
+ * @extends {Blockly.Events.Abstract}
+ * @constructor
+ */
+Blockly.Events.EndDrag = function(block) {
+  if (!block) {
+    return;  // Blank event to be populated by fromJson.
+  }
+  Blockly.Events.EndDrag.superClass_.constructor.call(this, block);
+  var location = this.currentLocation_();
+  this.oldParentId = location.parentId;
+  this.oldInputName = location.inputName;
+  this.oldCoordinate = location.coordinate;
+};
+goog.inherits(Blockly.Events.EndDrag, Blockly.Events.Abstract);
+
+/**
+ * Class for a block end drag event.
+ * @param {Blockly.Block} block The moved block.  Null for a blank event.
+ * @extends {Blockly.Events.Abstract}
+ * @constructor
+ */
+Blockly.Events.BlockEndDrag = Blockly.Events.EndDrag;
+
+/**
+ * Type of this event.
+ * @type {string}
+ */
+Blockly.Events.EndDrag.prototype.type = Blockly.Events.END_DRAG;
+
+/**
+ * Encode the event as JSON.
+ * @return {!Object} JSON representation.
+ */
+Blockly.Events.EndDrag.prototype.toJson = function() {
+  var json = Blockly.Events.EndDrag.superClass_.toJson.call(this);
+  if (this.newParentId) {
+    json['newParentId'] = this.newParentId;
+  }
+  if (this.newInputName) {
+    json['newInputName'] = this.newInputName;
+  }
+  if (this.newCoordinate) {
+    json['newCoordinate'] = Math.round(this.newCoordinate.x) + ',' +
+        Math.round(this.newCoordinate.y);
+  }
+  return json;
+};
+
+/**
+ * Decode the JSON event.
+ * @param {!Object} json JSON representation.
+ */
+Blockly.Events.EndDrag.prototype.fromJson = function(json) {
+  Blockly.Events.EndDrag.superClass_.fromJson.call(this, json);
+  this.newParentId = json['newParentId'];
+  this.newInputName = json['newInputName'];
+  if (json['newCoordinate']) {
+    var xy = json['newCoordinate'].split(',');
+    this.newCoordinate =
+        new goog.math.Coordinate(parseFloat(xy[0]), parseFloat(xy[1]));
+  }
+};
+
+/**
+ * Record the block's new location.  Called after the move.
+ */
+Blockly.Events.EndDrag.prototype.recordNew = function() {
+  var location = this.currentLocation_();
+  this.newParentId = location.parentId;
+  this.newInputName = location.inputName;
+  this.newCoordinate = location.coordinate;
+};
+
+/**
+ * Returns the parentId and input if the block is connected,
+ *   or the XY location if disconnected.
+ * @return {!Object} Collection of location info.
+ * @private
+ */
+Blockly.Events.EndDrag.prototype.currentLocation_ = function() {
+  var workspace = Blockly.Workspace.getById(this.workspaceId);
+  var block = workspace.getBlockById(this.blockId);
+  var location = {};
+  var parent = block.getParent();
+  if (parent) {
+    location.parentId = parent.id;
+    var input = parent.getInputWithBlock(block);
+    if (input) {
+      location.inputName = input.name;
+    }
+  } else {
+    location.coordinate = block.getRelativeToSurfaceXY();
+  }
+  return location;
+};
+
+/**
+ * Does this event record any change of state?
+ * @return {boolean} True if something changed.
+ */
+Blockly.Events.EndDrag.prototype.isNull = function() {
+  return false;
+};
+
+/**
+ * Run a drag event.
+ */
+Blockly.Events.EndDrag.prototype.run = function() {
+  console.error('Not implemented');
+};
+/////////////////////////////////////////
 
 /**
  * Class for a UI event.

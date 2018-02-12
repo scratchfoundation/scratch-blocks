@@ -474,8 +474,8 @@ Blockly.Gesture.prototype.handleMove = function(e) {
     this.blockDragger_.dragBlock(this.mostRecentEvent_,
         this.currentDragDeltaXY_);
   }
-  e.preventDefault();
-  e.stopPropagation();
+  //e.preventDefault();
+  //e.stopPropagation();
 };
 
 /**
