@@ -189,18 +189,12 @@ Blockly.BlockDragger.prototype.dragBlock = function(e, currentDragDeltaXY) {
 
   this.deleteArea_ = this.workspace_.isDeleteArea(e);
   var isOutside = this.workspace_.isOutside(e);
-  if (isOutside) {
-    // Let mouse events through to GUI
-    this.draggingBlock_.svgGroup_.setAttribute("pointer-events", "none");
-  } else {
-    this.draggingBlock_.svgGroup_.setAttribute("pointer-events", "auto");
-  }
   this.draggedConnectionManager_.update(delta, this.deleteArea_, isOutside);
   if (!this.draggedConnectionManager_.wouldDeleteBlock() && !this.draggedConnectionManager_.closestConnection_) {
     this.fireDragEvent_(isOutside);
   }
 
-  this.updateCursorDuringBlockDrag_();
+  this.updateCursorDuringBlockDrag_(isOutside);
 };
 
 /**
@@ -215,7 +209,7 @@ Blockly.BlockDragger.prototype.endBlockDrag = function(e, currentDragDeltaXY) {
   this.dragBlock(e, currentDragDeltaXY);
   this.dragIconData_ = [];
   this.fireEndDragEvent_();
-  this.draggingBlock_.svgGroup_.setAttribute("pointer-events", "auto");
+  this.draggingBlock_.setMouseThroughStyle(false);
 
   Blockly.BlockSvg.disconnectUiStop_();
 
@@ -332,9 +326,11 @@ Blockly.BlockDragger.prototype.maybeDeleteBlock_ = function() {
 /**
  * Update the cursor (and possibly the trash can lid) to reflect whether the
  * dragging block would be deleted if released immediately.
+ * @param {boolean} isOutside True if the cursor is to the right of the workspace
  * @private
  */
-Blockly.BlockDragger.prototype.updateCursorDuringBlockDrag_ = function() {
+Blockly.BlockDragger.prototype.updateCursorDuringBlockDrag_ = function(isOutside) {
+  debugger;
   this.wouldDeleteBlock_ = this.draggedConnectionManager_.wouldDeleteBlock();
   var trashcan = this.workspace_.trashcan;
   if (this.wouldDeleteBlock_) {
@@ -347,6 +343,13 @@ Blockly.BlockDragger.prototype.updateCursorDuringBlockDrag_ = function() {
     if (trashcan) {
       trashcan.setOpen_(false);
     }
+  }
+
+  if (isOutside) {
+    // Let mouse events through to GUI
+    this.draggingBlock_.setMouseThroughStyle(true);
+  } else {
+    this.draggingBlock_.setMouseThroughStyle(false);
   }
 };
 

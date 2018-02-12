@@ -425,6 +425,10 @@ Blockly.Css.CONTENT = [
     'cursor: url("<<<PATH>>>/handdelete.cur"), auto;',
   '}',
 
+  '.blocklyDragging.blocklyDraggingMouseThrough {',
+    'pointer-events: none;',
+  '}',
+
   '.blocklyToolboxDelete {',
     'cursor: url("<<<PATH>>>/handdelete.cur"), auto;',
   '}',
