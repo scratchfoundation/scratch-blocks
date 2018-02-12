@@ -208,7 +208,7 @@ Blockly.BlockDragger.prototype.endBlockDrag = function(e, currentDragDeltaXY) {
   // Make sure internal state is fresh.
   this.dragBlock(e, currentDragDeltaXY);
   this.dragIconData_ = [];
-  this.fireEndDragEvent_();
+  this.fireEndDragEvent_(this.workspace_.isOutside(e));
   this.draggingBlock_.setMouseThroughStyle(false);
 
   Blockly.BlockSvg.disconnectUiStop_();
@@ -282,8 +282,8 @@ Blockly.BlockDragger.prototype.fireDragEvent_ = function(isOutside) {
  * @param {?boolean} isOutside True if the drag is going outside the visible area.
  * @private
  */
-Blockly.BlockDragger.prototype.fireEndDragEvent_ = function() {
-  var event = new Blockly.Events.BlockEndDrag(this.draggingBlock_);
+Blockly.BlockDragger.prototype.fireEndDragEvent_ = function(isOutside) {
+  var event = new Blockly.Events.BlockEndDrag(this.draggingBlock_, isOutside);
   event.oldCoordinate = this.startXY_;
   event.recordNew();
   Blockly.Events.fire(event);
@@ -330,7 +330,6 @@ Blockly.BlockDragger.prototype.maybeDeleteBlock_ = function() {
  * @private
  */
 Blockly.BlockDragger.prototype.updateCursorDuringBlockDrag_ = function(isOutside) {
-  debugger;
   this.wouldDeleteBlock_ = this.draggedConnectionManager_.wouldDeleteBlock();
   var trashcan = this.workspace_.trashcan;
   if (this.wouldDeleteBlock_) {

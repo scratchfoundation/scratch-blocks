@@ -991,10 +991,12 @@ Blockly.Events.Drag.prototype.run = function() {
 /**
  * Class for a block end drag event.
  * @param {Blockly.Block} block The moved block.  Null for a blank event.
+ * @param {boolean} isOutside True if the moved block is to the right of the
+ *     blocks workspace.
  * @extends {Blockly.Events.Abstract}
  * @constructor
  */
-Blockly.Events.EndDrag = function(block) {
+Blockly.Events.EndDrag = function(block, isOutside) {
   if (!block) {
     return;  // Blank event to be populated by fromJson.
   }
@@ -1003,6 +1005,11 @@ Blockly.Events.EndDrag = function(block) {
   this.oldParentId = location.parentId;
   this.oldInputName = location.inputName;
   this.oldCoordinate = location.coordinate;
+  this.isOutside = isOutside;
+  // If drag ends outside the blocks workspace, send the block XML
+  if (isOutside) {
+    this.xml = Blockly.Xml.blockToDom(block);
+  }
 };
 goog.inherits(Blockly.Events.EndDrag, Blockly.Events.Abstract);
 
@@ -1036,6 +1043,12 @@ Blockly.Events.EndDrag.prototype.toJson = function() {
     json['newCoordinate'] = Math.round(this.newCoordinate.x) + ',' +
         Math.round(this.newCoordinate.y);
   }
+  if (this.isOutside) {
+    json['isOutside'] = this.isOutside;
+  }
+  if (this.xml) {
+    json['xml'] = this.xml;
+  }
   return json;
 };
 
@@ -1047,6 +1060,8 @@ Blockly.Events.EndDrag.prototype.fromJson = function(json) {
   Blockly.Events.EndDrag.superClass_.fromJson.call(this, json);
   this.newParentId = json['newParentId'];
   this.newInputName = json['newInputName'];
+  this.isOutside = json['isOutside'];
+  this.xml = json['xml'];
   if (json['newCoordinate']) {
     var xy = json['newCoordinate'].split(',');
     this.newCoordinate =
