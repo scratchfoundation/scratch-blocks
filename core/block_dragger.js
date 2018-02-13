@@ -78,6 +78,8 @@ Blockly.BlockDragger = function(block, workspace) {
    */
   this.wouldDeleteBlock_ = false;
 
+  this.wasOutside_ = false;
+
   /**
    * The location of the top left corner of the dragging block at the beginning
    * of the drag in workspace coordinates.
@@ -146,6 +148,7 @@ Blockly.BlockDragger.initIconData_ = function(block) {
  * @package
  */
 Blockly.BlockDragger.prototype.startBlockDrag = function(currentDragDeltaXY) {
+  this.wasOutside_ = false;
   if (!Blockly.Events.getGroup()) {
     Blockly.Events.setGroup(true);
   }
@@ -190,8 +193,9 @@ Blockly.BlockDragger.prototype.dragBlock = function(e, currentDragDeltaXY) {
   this.deleteArea_ = this.workspace_.isDeleteArea(e);
   var isOutside = this.workspace_.isOutside(e);
   this.draggedConnectionManager_.update(delta, this.deleteArea_, isOutside);
-  if (!this.draggedConnectionManager_.wouldDeleteBlock() && !this.draggedConnectionManager_.closestConnection_) {
-    this.fireDragEvent_(isOutside);
+  if (isOutside !== this.wasOutside_) {
+    this.fireDragOutsideEvent_(isOutside);
+    this.wasOutside_ = isOutside;
   }
 
   this.updateCursorDuringBlockDrag_(isOutside);
@@ -269,11 +273,9 @@ Blockly.BlockDragger.prototype.endBlockDrag = function(e, currentDragDeltaXY) {
  * @param {?boolean} isOutside True if the drag is going outside the visible area.
  * @private
  */
-Blockly.BlockDragger.prototype.fireDragEvent_ = function(isOutside) {
-  var event = new Blockly.Events.BlockDrag(this.draggingBlock_);
-  event.oldCoordinate = this.startXY_;
+Blockly.BlockDragger.prototype.fireDragOutsideEvent_ = function(isOutside) {
+  var event = new Blockly.Events.BlockDragOutside(this.draggingBlock_);
   event.isOutside = isOutside;
-  event.recordNew();
   Blockly.Events.fire(event);
 };
 
@@ -284,8 +286,6 @@ Blockly.BlockDragger.prototype.fireDragEvent_ = function(isOutside) {
  */
 Blockly.BlockDragger.prototype.fireEndDragEvent_ = function(isOutside) {
   var event = new Blockly.Events.BlockEndDrag(this.draggingBlock_, isOutside);
-  event.oldCoordinate = this.startXY_;
-  event.recordNew();
   Blockly.Events.fire(event);
 };
 

@@ -486,7 +486,7 @@ Blockly.Gesture.prototype.handleMove = function(e) {
 Blockly.Gesture.prototype.handleUp = function(e) {
   this.updateFromEvent_(e);
   Blockly.longStop_();
-
+  
   if (this.isEnding_) {
     console.log('Trying to end a gesture recursively.');
     return;

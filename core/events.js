@@ -95,7 +95,7 @@ Blockly.Events.BLOCK_CHANGE = Blockly.Events.CHANGE;
  * @const
  */
 Blockly.Events.MOVE = 'move';
-Blockly.Events.DRAG = 'drag';
+Blockly.Events.DRAG_OUTSIDE = 'dragOutside';
 Blockly.Events.END_DRAG = 'endDrag';
 
 /**
@@ -870,22 +870,19 @@ Blockly.Events.Move.prototype.run = function(forward) {
 
 /////////////////////////////////////////
 /**
- * Class for a block drag event.
+ * Class for a block drag event. Fired when block dragged into or out of
+ * the blocks UI.
  * @param {Blockly.Block} block The moved block.  Null for a blank event.
  * @extends {Blockly.Events.Abstract}
  * @constructor
  */
-Blockly.Events.Drag = function(block) {
+Blockly.Events.DragOutside = function(block) {
   if (!block) {
     return;  // Blank event to be populated by fromJson.
   }
-  Blockly.Events.Drag.superClass_.constructor.call(this, block);
-  var location = this.currentLocation_();
-  this.oldParentId = location.parentId;
-  this.oldInputName = location.inputName;
-  this.oldCoordinate = location.coordinate;
+  Blockly.Events.DragOutside.superClass_.constructor.call(this, block);
 };
-goog.inherits(Blockly.Events.Drag, Blockly.Events.Abstract);
+goog.inherits(Blockly.Events.DragOutside, Blockly.Events.Abstract);
 
 /**
  * Class for a block drag event.
@@ -893,32 +890,22 @@ goog.inherits(Blockly.Events.Drag, Blockly.Events.Abstract);
  * @extends {Blockly.Events.Abstract}
  * @constructor
  */
-Blockly.Events.BlockDrag = Blockly.Events.Drag;
+Blockly.Events.BlockDragOutside = Blockly.Events.DragOutside;
 
 /**
  * Type of this event.
  * @type {string}
  */
-Blockly.Events.Drag.prototype.type = Blockly.Events.DRAG;
+Blockly.Events.DragOutside.prototype.type = Blockly.Events.DRAG_OUTSIDE;
 
 /**
  * Encode the event as JSON.
  * @return {!Object} JSON representation.
  */
-Blockly.Events.Drag.prototype.toJson = function() {
-  var json = Blockly.Events.Drag.superClass_.toJson.call(this);
-  if (this.newParentId) {
-    json['newParentId'] = this.newParentId;
-  }
-  if (this.newInputName) {
-    json['newInputName'] = this.newInputName;
-  }
+Blockly.Events.DragOutside.prototype.toJson = function() {
+  var json = Blockly.Events.DragOutside.superClass_.toJson.call(this);
   if (this.isOutside) {
     json['isOutside'] = this.isOutside;
-  }
-  if (this.newCoordinate) {
-    json['newCoordinate'] = Math.round(this.newCoordinate.x) + ',' +
-        Math.round(this.newCoordinate.y);
   }
   return json;
 };
@@ -927,63 +914,23 @@ Blockly.Events.Drag.prototype.toJson = function() {
  * Decode the JSON event.
  * @param {!Object} json JSON representation.
  */
-Blockly.Events.Drag.prototype.fromJson = function(json) {
-  Blockly.Events.Drag.superClass_.fromJson.call(this, json);
-  this.newParentId = json['newParentId'];
-  this.newInputName = json['newInputName'];
+Blockly.Events.DragOutside.prototype.fromJson = function(json) {
+  Blockly.Events.DragOutside.superClass_.fromJson.call(this, json);
   this.isOutside = json['isOutside'];
-  if (json['newCoordinate']) {
-    var xy = json['newCoordinate'].split(',');
-    this.newCoordinate =
-        new goog.math.Coordinate(parseFloat(xy[0]), parseFloat(xy[1]));
-  }
-};
-
-/**
- * Record the block's new location.  Called after the move.
- */
-Blockly.Events.Drag.prototype.recordNew = function() {
-  var location = this.currentLocation_();
-  this.newParentId = location.parentId;
-  this.newInputName = location.inputName;
-  this.newCoordinate = location.coordinate;
-};
-
-/**
- * Returns the parentId and input if the block is connected,
- *   or the XY location if disconnected.
- * @return {!Object} Collection of location info.
- * @private
- */
-Blockly.Events.Drag.prototype.currentLocation_ = function() {
-  var workspace = Blockly.Workspace.getById(this.workspaceId);
-  var block = workspace.getBlockById(this.blockId);
-  var location = {};
-  var parent = block.getParent();
-  if (parent) {
-    location.parentId = parent.id;
-    var input = parent.getInputWithBlock(block);
-    if (input) {
-      location.inputName = input.name;
-    }
-  } else {
-    location.coordinate = block.getRelativeToSurfaceXY();
-  }
-  return location;
 };
 
 /**
  * Does this event record any change of state?
  * @return {boolean} True if something changed.
  */
-Blockly.Events.Drag.prototype.isNull = function() {
+Blockly.Events.DragOutside.prototype.isNull = function() {
   return false;
 };
 
 /**
- * Run a drag event.
+ * Run a drag outside event.
  */
-Blockly.Events.Drag.prototype.run = function() {
+Blockly.Events.DragOutside.prototype.run = function() {
   console.error('Not implemented');
 };
 
@@ -1001,14 +948,10 @@ Blockly.Events.EndDrag = function(block, isOutside) {
     return;  // Blank event to be populated by fromJson.
   }
   Blockly.Events.EndDrag.superClass_.constructor.call(this, block);
-  var location = this.currentLocation_();
-  this.oldParentId = location.parentId;
-  this.oldInputName = location.inputName;
-  this.oldCoordinate = location.coordinate;
   this.isOutside = isOutside;
   // If drag ends outside the blocks workspace, send the block XML
   if (isOutside) {
-    this.xml = Blockly.Xml.blockToDom(block);
+    this.xml = Blockly.Xml.blockToDom(block, true /* opt_noId */); // TODO noId not working
   }
 };
 goog.inherits(Blockly.Events.EndDrag, Blockly.Events.Abstract);
@@ -1033,16 +976,6 @@ Blockly.Events.EndDrag.prototype.type = Blockly.Events.END_DRAG;
  */
 Blockly.Events.EndDrag.prototype.toJson = function() {
   var json = Blockly.Events.EndDrag.superClass_.toJson.call(this);
-  if (this.newParentId) {
-    json['newParentId'] = this.newParentId;
-  }
-  if (this.newInputName) {
-    json['newInputName'] = this.newInputName;
-  }
-  if (this.newCoordinate) {
-    json['newCoordinate'] = Math.round(this.newCoordinate.x) + ',' +
-        Math.round(this.newCoordinate.y);
-  }
   if (this.isOutside) {
     json['isOutside'] = this.isOutside;
   }
@@ -1058,48 +991,8 @@ Blockly.Events.EndDrag.prototype.toJson = function() {
  */
 Blockly.Events.EndDrag.prototype.fromJson = function(json) {
   Blockly.Events.EndDrag.superClass_.fromJson.call(this, json);
-  this.newParentId = json['newParentId'];
-  this.newInputName = json['newInputName'];
   this.isOutside = json['isOutside'];
   this.xml = json['xml'];
-  if (json['newCoordinate']) {
-    var xy = json['newCoordinate'].split(',');
-    this.newCoordinate =
-        new goog.math.Coordinate(parseFloat(xy[0]), parseFloat(xy[1]));
-  }
-};
-
-/**
- * Record the block's new location.  Called after the move.
- */
-Blockly.Events.EndDrag.prototype.recordNew = function() {
-  var location = this.currentLocation_();
-  this.newParentId = location.parentId;
-  this.newInputName = location.inputName;
-  this.newCoordinate = location.coordinate;
-};
-
-/**
- * Returns the parentId and input if the block is connected,
- *   or the XY location if disconnected.
- * @return {!Object} Collection of location info.
- * @private
- */
-Blockly.Events.EndDrag.prototype.currentLocation_ = function() {
-  var workspace = Blockly.Workspace.getById(this.workspaceId);
-  var block = workspace.getBlockById(this.blockId);
-  var location = {};
-  var parent = block.getParent();
-  if (parent) {
-    location.parentId = parent.id;
-    var input = parent.getInputWithBlock(block);
-    if (input) {
-      location.inputName = input.name;
-    }
-  } else {
-    location.coordinate = block.getRelativeToSurfaceXY();
-  }
-  return location;
 };
 
 /**
