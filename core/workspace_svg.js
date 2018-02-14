@@ -1111,10 +1111,9 @@ Blockly.WorkspaceSvg.prototype.isDeleteArea = function(e) {
 };
 
 /**
- * Is the mouse event over a delete area (toolbox or non-closing flyout)?
+ * Is the mouse event outside the blocks UI, to the right of the workspace?
  * @param {!Event} e Mouse move event.
- * @return {?number} Null if not over a delete area, or an enum representing
- *     which delete area the event is over.
+ * @return {boolean} True if event is outside the blocks UI.
  */
 Blockly.WorkspaceSvg.prototype.isOutside = function(e) {
   var mousePoint = Blockly.utils.mouseToSvg(e, this.getParentSvg(),

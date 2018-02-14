@@ -868,7 +868,6 @@ Blockly.Events.Move.prototype.run = function(forward) {
   }
 };
 
-/////////////////////////////////////////
 /**
  * Class for a block drag event. Fired when block dragged into or out of
  * the blocks UI.
@@ -934,7 +933,6 @@ Blockly.Events.DragOutside.prototype.run = function() {
   console.error('Not implemented');
 };
 
-/////////////////////////////////////////
 /**
  * Class for a block end drag event.
  * @param {Blockly.Block} block The moved block.  Null for a blank event.
@@ -951,7 +949,7 @@ Blockly.Events.EndDrag = function(block, isOutside) {
   this.isOutside = isOutside;
   // If drag ends outside the blocks workspace, send the block XML
   if (isOutside) {
-    this.xml = Blockly.Xml.blockToDom(block, true /* opt_noId */); // TODO noId not working
+    this.xml = Blockly.Xml.blockToDom(block, true /* opt_noId */);
   }
 };
 goog.inherits(Blockly.Events.EndDrag, Blockly.Events.Abstract);
@@ -1009,7 +1007,6 @@ Blockly.Events.EndDrag.prototype.isNull = function() {
 Blockly.Events.EndDrag.prototype.run = function() {
   console.error('Not implemented');
 };
-/////////////////////////////////////////
 
 /**
  * Class for a UI event.

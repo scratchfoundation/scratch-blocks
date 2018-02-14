@@ -78,6 +78,12 @@ Blockly.BlockDragger = function(block, workspace) {
    */
   this.wouldDeleteBlock_ = false;
 
+  /**
+   * Whether the currently dragged block is to the right of the workspace. Keep
+   * track so that we can fire events only when this changes.
+   * @type {boolean}
+   * @private
+   */
   this.wasOutside_ = false;
 
   /**
@@ -278,7 +284,8 @@ Blockly.BlockDragger.prototype.endBlockDrag = function(e, currentDragDeltaXY) {
 };
 
 /**
- * Fire a move event at the end of a block drag.
+ * Fire an event when the dragged blocks move to the right of the workspace, or back into
+ * the workspace.
  * @param {?boolean} isOutside True if the drag is going outside the visible area.
  * @private
  */
@@ -289,7 +296,7 @@ Blockly.BlockDragger.prototype.fireDragOutsideEvent_ = function(isOutside) {
 };
 
 /**
- * Fire a move event at the end of a block drag.
+ * Fire an end drag event at the end of a block drag.
  * @param {?boolean} isOutside True if the drag is going outside the visible area.
  * @private
  */
