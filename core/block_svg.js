@@ -1161,7 +1161,7 @@ Blockly.BlockSvg.prototype.removeSelect = function() {
 
 /**
  * Update the cursor over this block by adding or removing a class.
- * @param {boolean} letMouseEventsThrough True if the blocks should ignore pointer
+ * @param {boolean} letMouseThrough True if the blocks should ignore pointer
  *     events, false otherwise.
  * @package
  */

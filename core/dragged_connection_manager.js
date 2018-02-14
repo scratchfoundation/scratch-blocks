@@ -157,7 +157,6 @@ Blockly.DraggedConnectionManager.prototype.applyConnections = function() {
  * @package
  */
 Blockly.DraggedConnectionManager.prototype.update = function(dxy, deleteArea, isOutside) {
-  // TODO verify isOutside
   var oldClosestConnection;
   var closestConnectionChanged;
   // If dragged outside, don't connect, since the connections aren't visible.

@@ -212,7 +212,8 @@ Blockly.BlockDragger.prototype.endBlockDrag = function(e, currentDragDeltaXY) {
   // Make sure internal state is fresh.
   this.dragBlock(e, currentDragDeltaXY);
   this.dragIconData_ = [];
-  this.fireEndDragEvent_(this.workspace_.isOutside(e));
+  var isOutside = this.workspace_.isOutside(e);
+  this.fireEndDragEvent_(isOutside);
   this.draggingBlock_.setMouseThroughStyle(false);
 
   Blockly.BlockSvg.disconnectUiStop_();
@@ -241,6 +242,14 @@ Blockly.BlockDragger.prototype.endBlockDrag = function(e, currentDragDeltaXY) {
     this.workspace_.toolbox_.removeDeleteStyle();
   }
   Blockly.Events.setGroup(false);
+
+  if (isOutside) {
+    var ws = this.workspace_;
+    // Reset a drag to outside of scratch-blocks
+    setTimeout(function() {
+      ws.undo();
+    });
+  }
 
   // Scratch-specific: roll back deletes that create call blocks with defines.
   // Have to wait for connections to be re-established, so put in setTimeout.

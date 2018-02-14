@@ -474,8 +474,8 @@ Blockly.Gesture.prototype.handleMove = function(e) {
     this.blockDragger_.dragBlock(this.mostRecentEvent_,
         this.currentDragDeltaXY_);
   }
-  //e.preventDefault();
-  //e.stopPropagation();
+  e.preventDefault();
+  e.stopPropagation();
 };
 
 /**
@@ -486,7 +486,7 @@ Blockly.Gesture.prototype.handleMove = function(e) {
 Blockly.Gesture.prototype.handleUp = function(e) {
   this.updateFromEvent_(e);
   Blockly.longStop_();
-  
+
   if (this.isEnding_) {
     console.log('Trying to end a gesture recursively.');
     return;
