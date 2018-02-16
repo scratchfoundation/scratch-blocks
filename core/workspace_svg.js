@@ -51,6 +51,7 @@ goog.require('goog.array');
 goog.require('goog.dom');
 goog.require('goog.math.Coordinate');
 goog.require('goog.userAgent');
+goog.require('goog.math.Rect');
 
 
 /**
@@ -448,7 +449,7 @@ Blockly.WorkspaceSvg.prototype.createDom = function(opt_backgroundClass) {
   if (this.grid_) {
     this.grid_.update(this.scale);
   }
-  this.recordDeleteAreas();
+  this.recordCachedAreas();
   return this.svgGroup_;
 };
 
@@ -609,7 +610,7 @@ Blockly.WorkspaceSvg.prototype.getFlyout = function() {
  */
 Blockly.WorkspaceSvg.prototype.updateScreenCalculations_ = function() {
   this.updateInverseScreenCTM();
-  this.recordDeleteAreas();
+  this.recordCachedAreas();
 };
 
 /**
@@ -1076,9 +1077,17 @@ Blockly.WorkspaceSvg.prototype.createVariable = function(name, opt_type, opt_id)
 };
 
 /**
+ * Update cached areas for this workspace.
+ */
+Blockly.WorkspaceSvg.prototype.recordCachedAreas = function() {
+  this.recordBlocksArea_();
+  this.recordDeleteAreas_();
+};
+
+/**
  * Make a list of all the delete areas for this workspace.
  */
-Blockly.WorkspaceSvg.prototype.recordDeleteAreas = function() {
+Blockly.WorkspaceSvg.prototype.recordDeleteAreas_ = function() {
   if (this.trashcan) {
     this.deleteAreaTrash_ = this.trashcan.getClientRect();
   } else {
@@ -1091,6 +1100,14 @@ Blockly.WorkspaceSvg.prototype.recordDeleteAreas = function() {
   } else {
     this.deleteAreaToolbox_ = null;
   }
+};
+
+/**
+ * Record where all of blocks GUI is on the screen
+ */
+Blockly.WorkspaceSvg.prototype.recordBlocksArea_ = function() {
+  var bounds = this.svgGroup_.getBoundingClientRect();
+  this.blocksArea_ = new goog.math.Rect(bounds.left, bounds.top, bounds.width, bounds.height);
 };
 
 /**
@@ -1111,14 +1128,16 @@ Blockly.WorkspaceSvg.prototype.isDeleteArea = function(e) {
 };
 
 /**
- * Is the mouse event outside the blocks UI, to the right of the workspace?
+ * Is the mouse event inside the blocks UI?
  * @param {!Event} e Mouse move event.
- * @return {boolean} True if event is outside the blocks UI.
+ * @return {boolean} True if event is within the bounds of the blocks UI or delete area
  */
-Blockly.WorkspaceSvg.prototype.isOutside = function(e) {
-  var mousePoint = Blockly.utils.mouseToSvg(e, this.getParentSvg(),
-      this.getInverseScreenCTM());
-  return this.getParentSvg().width.baseVal.value < mousePoint.x;
+Blockly.WorkspaceSvg.prototype.isInsideBlocksArea = function(e) {
+  var xy = new goog.math.Coordinate(e.clientX, e.clientY);
+  if (this.isDeleteArea(e) || (this.blocksArea_ && this.blocksArea_.contains(xy))) {
+    return true;
+  }
+  return false;
 };
 
 /**

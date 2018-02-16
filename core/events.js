@@ -95,7 +95,17 @@ Blockly.Events.BLOCK_CHANGE = Blockly.Events.CHANGE;
  * @const
  */
 Blockly.Events.MOVE = 'move';
+
+/**
+ * Name of event that drags a block outside of or into the blocks workspace
+ * @const
+ */
 Blockly.Events.DRAG_OUTSIDE = 'dragOutside';
+
+/**
+ * Name of event that ends a block drag
+ * @const
+ */
 Blockly.Events.END_DRAG = 'endDrag';
 
 /**
@@ -927,16 +937,9 @@ Blockly.Events.DragOutside.prototype.isNull = function() {
 };
 
 /**
- * Run a drag outside event.
- */
-Blockly.Events.DragOutside.prototype.run = function() {
-  console.error('Not implemented');
-};
-
-/**
  * Class for a block end drag event.
  * @param {Blockly.Block} block The moved block.  Null for a blank event.
- * @param {boolean} isOutside True if the moved block is to the right of the
+ * @param {boolean} isOutside True if the moved block is outside of the
  *     blocks workspace.
  * @extends {Blockly.Events.Abstract}
  * @constructor
@@ -999,13 +1002,6 @@ Blockly.Events.EndDrag.prototype.fromJson = function(json) {
  */
 Blockly.Events.EndDrag.prototype.isNull = function() {
   return false;
-};
-
-/**
- * Run a drag event.
- */
-Blockly.Events.EndDrag.prototype.run = function() {
-  console.error('Not implemented');
 };
 
 /**

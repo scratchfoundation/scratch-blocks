@@ -79,7 +79,7 @@ Blockly.BlockDragger = function(block, workspace) {
   this.wouldDeleteBlock_ = false;
 
   /**
-   * Whether the currently dragged block is to the right of the workspace. Keep
+   * Whether the currently dragged block is outside of the workspace. Keep
    * track so that we can fire events only when this changes.
    * @type {boolean}
    * @private
@@ -197,7 +197,7 @@ Blockly.BlockDragger.prototype.dragBlock = function(e, currentDragDeltaXY) {
   this.dragIcons_(delta);
 
   this.deleteArea_ = this.workspace_.isDeleteArea(e);
-  var isOutside = this.workspace_.isOutside(e);
+  var isOutside = !this.workspace_.isInsideBlocksArea(e);
   this.draggedConnectionManager_.update(delta, this.deleteArea_, isOutside);
   if (isOutside !== this.wasOutside_) {
     this.fireDragOutsideEvent_(isOutside);
@@ -218,7 +218,7 @@ Blockly.BlockDragger.prototype.endBlockDrag = function(e, currentDragDeltaXY) {
   // Make sure internal state is fresh.
   this.dragBlock(e, currentDragDeltaXY);
   this.dragIconData_ = [];
-  var isOutside = this.workspace_.isOutside(e);
+  var isOutside = this.wasOutside_;
   this.fireEndDragEvent_(isOutside);
   this.draggingBlock_.setMouseThroughStyle(false);
 
@@ -284,8 +284,7 @@ Blockly.BlockDragger.prototype.endBlockDrag = function(e, currentDragDeltaXY) {
 };
 
 /**
- * Fire an event when the dragged blocks move to the right of the workspace, or back into
- * the workspace.
+ * Fire an event when the dragged blocks move outside or back into the blocks workspace
  * @param {?boolean} isOutside True if the drag is going outside the visible area.
  * @private
  */
@@ -342,7 +341,7 @@ Blockly.BlockDragger.prototype.maybeDeleteBlock_ = function() {
 /**
  * Update the cursor (and possibly the trash can lid) to reflect whether the
  * dragging block would be deleted if released immediately.
- * @param {boolean} isOutside True if the cursor is to the right of the workspace
+ * @param {boolean} isOutside True if the cursor is outside of the blocks workspace
  * @private
  */
 Blockly.BlockDragger.prototype.updateCursorDuringBlockDrag_ = function(isOutside) {

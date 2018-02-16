@@ -153,7 +153,7 @@ Blockly.DraggedConnectionManager.prototype.applyConnections = function() {
  *     in workspace units.
  * @param {?number} deleteArea One of {@link Blockly.DELETE_AREA_TRASH},
  *     {@link Blockly.DELETE_AREA_TOOLBOX}, or {@link Blockly.DELETE_AREA_NONE}.
- * @param {?boolean} isOutside True if the drag is going outside the workspace to the right.
+ * @param {?boolean} isOutside True if the drag is going outside the blocks workspace
  * @package
  */
 Blockly.DraggedConnectionManager.prototype.update = function(dxy, deleteArea, isOutside) {
