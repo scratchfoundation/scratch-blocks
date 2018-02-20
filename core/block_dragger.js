@@ -188,6 +188,7 @@ Blockly.BlockDragger.prototype.startBlockDrag = function(currentDragDeltaXY) {
  * @param {!goog.math.Coordinate} currentDragDeltaXY How far the pointer has
  *     moved from the position at the start of the drag, in pixel units.
  * @package
+ * @return {boolean} True if the event should be propagated, false if not.
  */
 Blockly.BlockDragger.prototype.dragBlock = function(e, currentDragDeltaXY) {
   var delta = this.pixelsToWorkspaceUnits_(currentDragDeltaXY);
@@ -205,6 +206,7 @@ Blockly.BlockDragger.prototype.dragBlock = function(e, currentDragDeltaXY) {
   }
 
   this.updateCursorDuringBlockDrag_(isOutside);
+  return isOutside;
 };
 
 /**
