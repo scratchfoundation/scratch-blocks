@@ -1086,6 +1086,7 @@ Blockly.WorkspaceSvg.prototype.recordCachedAreas = function() {
 
 /**
  * Make a list of all the delete areas for this workspace.
+ * @private
  */
 Blockly.WorkspaceSvg.prototype.recordDeleteAreas_ = function() {
   if (this.trashcan) {
@@ -1104,6 +1105,7 @@ Blockly.WorkspaceSvg.prototype.recordDeleteAreas_ = function() {
 
 /**
  * Record where all of blocks GUI is on the screen
+ * @private
  */
 Blockly.WorkspaceSvg.prototype.recordBlocksArea_ = function() {
   var bounds = this.svgGroup_.getBoundingClientRect();
