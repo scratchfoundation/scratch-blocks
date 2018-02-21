@@ -1161,6 +1161,22 @@ Blockly.BlockSvg.prototype.removeSelect = function() {
 
 /**
  * Update the cursor over this block by adding or removing a class.
+ * @param {boolean} letMouseThrough True if the blocks should ignore pointer
+ *     events, false otherwise.
+ * @package
+ */
+Blockly.BlockSvg.prototype.setMouseThroughStyle = function(letMouseThrough) {
+  if (letMouseThrough) {
+    Blockly.utils.addClass(/** @type {!Element} */ (this.svgGroup_),
+        'blocklyDraggingMouseThrough');
+  } else {
+    Blockly.utils.removeClass(/** @type {!Element} */ (this.svgGroup_),
+        'blocklyDraggingMouseThrough');
+  }
+};
+
+/**
+ * Update the cursor over this block by adding or removing a class.
  * @param {boolean} enable True if the delete cursor should be shown, false
  *     otherwise.
  * @package

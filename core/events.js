@@ -97,6 +97,18 @@ Blockly.Events.BLOCK_CHANGE = Blockly.Events.CHANGE;
 Blockly.Events.MOVE = 'move';
 
 /**
+ * Name of event that drags a block outside of or into the blocks workspace
+ * @const
+ */
+Blockly.Events.DRAG_OUTSIDE = 'dragOutside';
+
+/**
+ * Name of event that ends a block drag
+ * @const
+ */
+Blockly.Events.END_DRAG = 'endDrag';
+
+/**
  * Name of event that moves a block.
  * @const
  */
@@ -864,6 +876,132 @@ Blockly.Events.Move.prototype.run = function(forward) {
       console.warn("Can't connect to non-existant input: " + inputName);
     }
   }
+};
+
+/**
+ * Class for a block drag event. Fired when block dragged into or out of
+ * the blocks UI.
+ * @param {Blockly.Block} block The moved block.  Null for a blank event.
+ * @extends {Blockly.Events.Abstract}
+ * @constructor
+ */
+Blockly.Events.DragOutside = function(block) {
+  if (!block) {
+    return;  // Blank event to be populated by fromJson.
+  }
+  Blockly.Events.DragOutside.superClass_.constructor.call(this, block);
+};
+goog.inherits(Blockly.Events.DragOutside, Blockly.Events.Abstract);
+
+/**
+ * Class for a block drag event.
+ * @param {Blockly.Block} block The moved block.  Null for a blank event.
+ * @extends {Blockly.Events.Abstract}
+ * @constructor
+ */
+Blockly.Events.BlockDragOutside = Blockly.Events.DragOutside;
+
+/**
+ * Type of this event.
+ * @type {string}
+ */
+Blockly.Events.DragOutside.prototype.type = Blockly.Events.DRAG_OUTSIDE;
+
+/**
+ * Encode the event as JSON.
+ * @return {!Object} JSON representation.
+ */
+Blockly.Events.DragOutside.prototype.toJson = function() {
+  var json = Blockly.Events.DragOutside.superClass_.toJson.call(this);
+  if (this.isOutside) {
+    json['isOutside'] = this.isOutside;
+  }
+  return json;
+};
+
+/**
+ * Decode the JSON event.
+ * @param {!Object} json JSON representation.
+ */
+Blockly.Events.DragOutside.prototype.fromJson = function(json) {
+  Blockly.Events.DragOutside.superClass_.fromJson.call(this, json);
+  this.isOutside = json['isOutside'];
+};
+
+/**
+ * Does this event record any change of state?
+ * @return {boolean} True if something changed.
+ */
+Blockly.Events.DragOutside.prototype.isNull = function() {
+  return false;
+};
+
+/**
+ * Class for a block end drag event.
+ * @param {Blockly.Block} block The moved block.  Null for a blank event.
+ * @param {boolean} isOutside True if the moved block is outside of the
+ *     blocks workspace.
+ * @extends {Blockly.Events.Abstract}
+ * @constructor
+ */
+Blockly.Events.EndDrag = function(block, isOutside) {
+  if (!block) {
+    return;  // Blank event to be populated by fromJson.
+  }
+  Blockly.Events.EndDrag.superClass_.constructor.call(this, block);
+  this.isOutside = isOutside;
+  // If drag ends outside the blocks workspace, send the block XML
+  if (isOutside) {
+    this.xml = Blockly.Xml.blockToDom(block, true /* opt_noId */);
+  }
+};
+goog.inherits(Blockly.Events.EndDrag, Blockly.Events.Abstract);
+
+/**
+ * Class for a block end drag event.
+ * @param {Blockly.Block} block The moved block.  Null for a blank event.
+ * @extends {Blockly.Events.Abstract}
+ * @constructor
+ */
+Blockly.Events.BlockEndDrag = Blockly.Events.EndDrag;
+
+/**
+ * Type of this event.
+ * @type {string}
+ */
+Blockly.Events.EndDrag.prototype.type = Blockly.Events.END_DRAG;
+
+/**
+ * Encode the event as JSON.
+ * @return {!Object} JSON representation.
+ */
+Blockly.Events.EndDrag.prototype.toJson = function() {
+  var json = Blockly.Events.EndDrag.superClass_.toJson.call(this);
+  if (this.isOutside) {
+    json['isOutside'] = this.isOutside;
+  }
+  if (this.xml) {
+    json['xml'] = this.xml;
+  }
+  return json;
+};
+
+/**
+ * Decode the JSON event.
+ * @param {!Object} json JSON representation.
+ */
+Blockly.Events.EndDrag.prototype.fromJson = function(json) {
+  Blockly.Events.EndDrag.superClass_.fromJson.call(this, json);
+  this.isOutside = json['isOutside'];
+  this.xml = json['xml'];
+};
+
+/**
+ * Does this event record any change of state?
+ * @return {boolean} True if something changed.
+ */
+Blockly.Events.EndDrag.prototype.isNull = function() {
+  return false;
 };
 
 /**
