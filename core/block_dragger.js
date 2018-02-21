@@ -154,7 +154,6 @@ Blockly.BlockDragger.initIconData_ = function(block) {
  * @package
  */
 Blockly.BlockDragger.prototype.startBlockDrag = function(currentDragDeltaXY) {
-  this.wasOutside_ = false;
   if (!Blockly.Events.getGroup()) {
     Blockly.Events.setGroup(true);
   }
