@@ -145,7 +145,7 @@ Blockly.Css.CONTENT = [
   '.blocklyWidgetDiv {',
     'display: none;',
     'position: absolute;',
-    'z-index: 99999;', /* big value for bootstrap3 compatibility */
+    'z-index: 1000;',
   '}',
 
   '.injectionDiv {',
