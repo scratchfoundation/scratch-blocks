@@ -1108,12 +1108,13 @@ Blockly.WorkspaceSvg.prototype.recordDeleteAreas_ = function() {
  * @private
  */
 Blockly.WorkspaceSvg.prototype.recordBlocksArea_ = function() {
-  if (!this.getParentSvg()) {
+  var parentSvg = this.getParentSvg();
+  if (parentSvg) {
+    var bounds = parentSvg.getBoundingClientRect();
+    this.blocksArea_ = new goog.math.Rect(bounds.left, bounds.top, bounds.width, bounds.height);
+  } else {
     this.blocksArea_ = null;
-    return;
   }
-  var bounds = this.getParentSvg().getBoundingClientRect();
-  this.blocksArea_ = new goog.math.Rect(bounds.left, bounds.top, bounds.width, bounds.height);
 };
 
 /**
