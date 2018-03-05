@@ -1108,7 +1108,11 @@ Blockly.WorkspaceSvg.prototype.recordDeleteAreas_ = function() {
  * @private
  */
 Blockly.WorkspaceSvg.prototype.recordBlocksArea_ = function() {
-  var bounds = this.svgGroup_.getBoundingClientRect();
+  if (!this.getParentSvg()) {
+    this.blocksArea_ = null;
+    return;
+  }
+  var bounds = this.getParentSvg().getBoundingClientRect();
   this.blocksArea_ = new goog.math.Rect(bounds.left, bounds.top, bounds.width, bounds.height);
 };
 
