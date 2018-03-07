@@ -764,8 +764,6 @@ Blockly.BlockSvg.prototype.showContextMenu_ = function(e) {
     return;
   }
 
-  menuOptions.push(Blockly.ContextMenu.blockHelpOption(block));
-
   // Allow the block to add or modify menuOptions.
   if (this.customContextMenu) {
     this.customContextMenu(menuOptions);
