@@ -288,6 +288,7 @@ Blockly.FieldColourSlider.prototype.showEditor_ = function() {
   this.hueSlider_.setUnitIncrement(5);
   this.hueSlider_.setMinimum(0);
   this.hueSlider_.setMaximum(360);
+  this.hueSlider_.setMoveToPointEnabled(true);
   this.hueSlider_.render(div);
 
   var saturationElements = this.createLabelDom_(
@@ -296,6 +297,7 @@ Blockly.FieldColourSlider.prototype.showEditor_ = function() {
   div.appendChild(saturationElements[0]);
   this.saturationReadout_ = saturationElements[1];
   this.saturationSlider_ = new goog.ui.Slider();
+  this.saturationSlider_.setMoveToPointEnabled(true);
   this.saturationSlider_.setUnitIncrement(0.01);
   this.saturationSlider_.setStep(0.001);
   this.saturationSlider_.setMinimum(0);
@@ -311,6 +313,7 @@ Blockly.FieldColourSlider.prototype.showEditor_ = function() {
   this.brightnessSlider_.setUnitIncrement(2);
   this.brightnessSlider_.setMinimum(0);
   this.brightnessSlider_.setMaximum(255);
+  this.brightnessSlider_.setMoveToPointEnabled(true);
   this.brightnessSlider_.render(div);
 
   Blockly.FieldColourSlider.hueChangeEventKey_ = goog.events.listen(this.hueSlider_,
