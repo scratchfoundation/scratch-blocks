@@ -345,21 +345,10 @@ Blockly.Xml.domToPrettyText = function(dom) {
  * @param {string} text Text representation.
  * @return {!Element} A tree of XML elements.
  */
- function hackReplaceFlipRtl(text){
-	 
-	 function replacer(match, p1, p2, p3, offset, string){
-		 
-		return("flipRtl"); 
-		 
-	 };
-	 
-	 return(text.replace(/flip\_rtl/,replacer));
-	 
- };
- 
+
 Blockly.Xml.textToDom = function(text) {
   var oParser = new DOMParser();
-  var dom = oParser.parseFromString(hackReplaceFlipRtl(text), 'text/xml');
+  var dom = oParser.parseFromString(text, 'text/xml');
   // The DOM should have one and only one top-level node, an XML tag.
   if (!dom || !dom.firstChild ||
       dom.firstChild.nodeName.toLowerCase() != 'xml' ||
