@@ -556,11 +556,11 @@ Blockly.Flyout.prototype.selectCategoryByScrollPosition = function(pos) {
   if (this.scrollTarget) {
     return;
   }
-  var workspacePos = pos / this.workspace_.scale;
+  var workspacePos = Math.round(pos / this.workspace_.scale);
   // Traverse the array of scroll positions in reverse, so we can select the furthest
   // category that the scroll position is beyond.
   for (var i = this.categoryScrollPositions.length - 1; i >= 0; i--) {
-    if (workspacePos > this.categoryScrollPositions[i].position) {
+    if (workspacePos >= this.categoryScrollPositions[i].position) {
       this.parentToolbox_.selectCategoryByName(this.categoryScrollPositions[i].categoryName);
       return;
     }
