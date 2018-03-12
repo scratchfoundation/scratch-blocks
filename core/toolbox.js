@@ -183,7 +183,7 @@ Blockly.Toolbox.prototype.createFlyout_ = function() {
 Blockly.Toolbox.prototype.populate_ = function(newTree) {
   this.categoryMenu_.populate(newTree);
   this.showAll_();
-  this.setSelectedItem(this.categoryMenu_.categories_[0]);
+  this.setSelectedItem(this.categoryMenu_.categories_[0], false);
 };
 
 /**
@@ -340,8 +340,12 @@ Blockly.Toolbox.prototype.getSelectedItem = function() {
 /**
  * Set the currently selected category.
  * @param {Blockly.Toolbox.Category} item The category to select.
+ * @param {boolean} [shouldScroll=true] Whether or not to scroll to the selected category.
  */
-Blockly.Toolbox.prototype.setSelectedItem = function(item) {
+Blockly.Toolbox.prototype.setSelectedItem = function(item, shouldScroll) {
+  if (typeof shouldScroll === 'undefined') {
+    shouldScroll = true;
+  }
   if (this.selectedItem_) {
     // They selected a different category but one was already open.  Close it.
     this.selectedItem_.setSelected(false);
@@ -351,7 +355,9 @@ Blockly.Toolbox.prototype.setSelectedItem = function(item) {
     this.selectedItem_.setSelected(true);
     // Scroll flyout to the top of the selected category
     var categoryName = item.name_;
-    this.scrollToCategoryByName(categoryName);
+    if (shouldScroll) {
+      this.scrollToCategoryByName(categoryName);
+    }
   }
 };
 
