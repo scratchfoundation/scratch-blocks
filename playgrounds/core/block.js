@@ -1513,7 +1513,7 @@ Blockly.Block.newFieldImageFromJson_ = function(options) {
   var height =
     Number(Blockly.utils.replaceMessageReferences(options['height']));
   var alt = Blockly.utils.replaceMessageReferences(options['alt']);
-  var flip_rtl = !!options['flip_rtl'];
+  var flip_rtl = !!options['flip_rtl'] || !!options['flipRtl'];
   return new Blockly.FieldImage(src, width, height, alt, flip_rtl);
 };
 
