@@ -340,7 +340,7 @@ Blockly.Toolbox.prototype.getSelectedItem = function() {
 /**
  * Set the currently selected category.
  * @param {Blockly.Toolbox.Category} item The category to select.
- * @param {boolean} [shouldScroll=true] Whether or not to scroll to the selected category.
+ * @param {boolean=} opt_shouldScroll Whether to scroll to the selected category. Defaults to true.
  */
 Blockly.Toolbox.prototype.setSelectedItem = function(item, shouldScroll) {
   if (typeof shouldScroll === 'undefined') {
