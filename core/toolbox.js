@@ -342,9 +342,9 @@ Blockly.Toolbox.prototype.getSelectedItem = function() {
  * @param {Blockly.Toolbox.Category} item The category to select.
  * @param {boolean=} opt_shouldScroll Whether to scroll to the selected category. Defaults to true.
  */
-Blockly.Toolbox.prototype.setSelectedItem = function(item, shouldScroll) {
-  if (typeof shouldScroll === 'undefined') {
-    shouldScroll = true;
+Blockly.Toolbox.prototype.setSelectedItem = function(item, opt_shouldScroll) {
+  if (typeof opt_shouldScroll === 'undefined') {
+    opt_shouldScroll = true;
   }
   if (this.selectedItem_) {
     // They selected a different category but one was already open.  Close it.
@@ -355,7 +355,7 @@ Blockly.Toolbox.prototype.setSelectedItem = function(item, shouldScroll) {
     this.selectedItem_.setSelected(true);
     // Scroll flyout to the top of the selected category
     var categoryName = item.name_;
-    if (shouldScroll) {
+    if (opt_shouldScroll) {
       this.scrollToCategoryByName(categoryName);
     }
   }
