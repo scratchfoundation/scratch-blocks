@@ -595,9 +595,9 @@ Blockly.Flyout.prototype.stepScrollAnimation = function() {
  * @return {number} The current scroll position.
  */
 Blockly.Flyout.prototype.getScrollPos = function() {
-    var pos = this.horizontalLayout_ ?
-      -this.workspace_.scrollX : -this.workspace_.scrollY;
-    return pos / this.workspace_.scale;
+  var pos = this.horizontalLayout_ ?
+    -this.workspace_.scrollX : -this.workspace_.scrollY;
+  return pos / this.workspace_.scale;
 };
 
 /**
