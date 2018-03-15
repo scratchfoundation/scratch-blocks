@@ -338,6 +338,45 @@ Blockly.Toolbox.prototype.getSelectedItem = function() {
 };
 
 /**
+ * @return {string} The name of the currently selected category.
+ */
+Blockly.Toolbox.prototype.getSelectedCategoryName = function() {
+  return this.selectedItem_.name_;
+};
+
+/**
+ * @return {number} The distance flyout is scrolled below the top of the currently
+ * selected category.
+ */
+Blockly.Toolbox.prototype.getCategoryScrollOffset = function() {
+  var categoryPos = this.getCategoryPositionByName(this.getSelectedCategoryName());
+  return this.flyout_.getScrollPos() - categoryPos;
+};
+
+/**
+ * Get the position of a category by name.
+ * @param  {string} name The name of the category.
+ * @return {number} The position of the category.
+ */
+Blockly.Toolbox.prototype.getCategoryPositionByName = function(name) {
+  var scrollPositions = this.flyout_.categoryScrollPositions;
+  for (var i = 0; i < scrollPositions.length; i++) {
+    if (name === scrollPositions[i].categoryName) {
+      return scrollPositions[i].position;
+    }
+  }
+};
+
+/**
+ * Set the scroll position of the flyout.
+ * @param {number} pos The position to set.
+ */
+Blockly.Toolbox.prototype.setFlyoutScrollPos = function(pos) {
+  this.flyout_.setScrollPos(pos);
+};
+
+
+/**
  * Set the currently selected category.
  * @param {Blockly.Toolbox.Category} item The category to select.
  * @param {boolean=} opt_shouldScroll Whether to scroll to the selected category. Defaults to true.

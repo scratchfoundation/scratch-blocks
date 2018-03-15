@@ -591,6 +591,24 @@ Blockly.Flyout.prototype.stepScrollAnimation = function() {
 };
 
 /**
+ * Get the scaled scroll position.
+ * @return {number} The current scroll position.
+ */
+Blockly.Flyout.prototype.getScrollPos = function() {
+  var pos = this.horizontalLayout_ ?
+    -this.workspace_.scrollX : -this.workspace_.scrollY;
+  return pos / this.workspace_.scale;
+};
+
+/**
+ * Set the scroll position, scaling it.
+ * @param {number} pos The scroll position to set.
+ */
+Blockly.Flyout.prototype.setScrollPos = function(pos) {
+  this.scrollbar_.set(pos * this.workspace_.scale);
+};
+
+/**
  * Delete blocks and background buttons from a previous showing of the flyout.
  * @private
  */
