@@ -303,6 +303,9 @@ Blockly.Blocks.defaultToolbox = '<xml id="toolbox-categories" style="display: no
     '</block>'+
     '<block type="event_whenthisspriteclicked" id="event_whenthisspriteclicked"></block>'+
     '<block type="event_whenbackdropswitchesto" id="event_whenbackdropswitchesto">'+
+       '<value name="BACKDROP">'+
+         '<shadow type="looks_backdrops"></shadow>'+
+       '</value>'+
     '</block>'+
     '<block type="event_whengreaterthan" id="event_whengreaterthan">'+
       '<value name="VALUE">'+
