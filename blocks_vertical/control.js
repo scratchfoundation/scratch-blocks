@@ -232,7 +232,7 @@ Blockly.Blocks['control_wait'] = {
   init: function() {
     this.jsonInit({
       "id": "control_wait",
-      "message0": "wait %1 seconds",
+      "message0": "wait %1 secs",
       "args0": [
         {
           "type": "input_value",
