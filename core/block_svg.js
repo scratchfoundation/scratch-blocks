@@ -154,7 +154,7 @@ Blockly.BlockSvg.prototype.initSvg = function() {
   this.updateMovable();
   if (!this.workspace.options.readOnly && !this.eventsInit_) {
     Blockly.bindEventWithChecks_(this.getSvgRoot(), 'mousedown', this,
-                       this.onMouseDown_);
+        this.onMouseDown_);
   }
   this.eventsInit_ = true;
 
@@ -300,7 +300,7 @@ Blockly.BlockSvg.prototype.setParent = function(newParent) {
     // If we are a shadow block, inherit tertiary colour.
     if (this.isShadow()) {
       this.setColour(this.getColour(), this.getColourSecondary(),
-        newParent.getColourTertiary());
+          newParent.getColourTertiary());
     }
   }
 };
@@ -815,11 +815,11 @@ Blockly.BlockSvg.prototype.setDragging = function(adding) {
     Blockly.draggingConnections_ =
         Blockly.draggingConnections_.concat(this.getConnections_(true));
     Blockly.utils.addClass(/** @type {!Element} */ (this.svgGroup_),
-                      'blocklyDragging');
+        'blocklyDragging');
   } else {
     Blockly.draggingConnections_ = [];
     Blockly.utils.removeClass(/** @type {!Element} */ (this.svgGroup_),
-                         'blocklyDragging');
+        'blocklyDragging');
   }
   // Recurse through all blocks attached under this one.
   for (var i = 0; i < this.childBlocks_.length; i++) {
@@ -833,10 +833,10 @@ Blockly.BlockSvg.prototype.setDragging = function(adding) {
 Blockly.BlockSvg.prototype.updateMovable = function() {
   if (this.isMovable()) {
     Blockly.utils.addClass(/** @type {!Element} */ (this.svgGroup_),
-                      'blocklyDraggable');
+        'blocklyDraggable');
   } else {
     Blockly.utils.removeClass(/** @type {!Element} */ (this.svgGroup_),
-                         'blocklyDraggable');
+        'blocklyDraggable');
   }
 };
 
@@ -992,7 +992,7 @@ Blockly.BlockSvg.disposeUiStep_ = function(clone, rtl, start, workspaceScale) {
     clone.setAttribute('transform', 'translate(' + x + ',' + y + ')' +
         ' scale(' + scale + ')');
     setTimeout(Blockly.BlockSvg.disposeUiStep_, 10, clone, rtl, start,
-               workspaceScale);
+        workspaceScale);
   }
 };
 
@@ -1146,7 +1146,7 @@ Blockly.BlockSvg.prototype.setMutator = function(mutator) {
  */
 Blockly.BlockSvg.prototype.addSelect = function() {
   Blockly.utils.addClass(/** @type {!Element} */ (this.svgGroup_),
-                    'blocklySelected');
+      'blocklySelected');
 };
 
 /**
@@ -1154,7 +1154,7 @@ Blockly.BlockSvg.prototype.addSelect = function() {
  */
 Blockly.BlockSvg.prototype.removeSelect = function() {
   Blockly.utils.removeClass(/** @type {!Element} */ (this.svgGroup_),
-                       'blocklySelected');
+      'blocklySelected');
 };
 
 /**
@@ -1234,7 +1234,7 @@ Blockly.BlockSvg.prototype.bringToFront = function() {
  */
 Blockly.BlockSvg.prototype.setPreviousStatement =
     function(newBoolean, opt_check) {
-  /* eslint-disable indent */
+      /* eslint-disable indent */
   Blockly.BlockSvg.superClass_.setPreviousStatement.call(this, newBoolean,
       opt_check);
 

@@ -608,7 +608,7 @@ Blockly.Xml.domToBlockHeadless_ = function(xmlBlock, workspace) {
   var block = null;
   var prototypeName = xmlBlock.getAttribute('type');
   goog.asserts.assert(prototypeName, 'Block type unspecified: %s',
-                      xmlBlock.outerHTML);
+      xmlBlock.outerHTML);
   var id = xmlBlock.getAttribute('id');
   block = workspace.newBlock(prototypeName, id);
 
@@ -623,13 +623,12 @@ Blockly.Xml.domToBlockHeadless_ = function(xmlBlock, workspace) {
     // Find any enclosed blocks or shadows in this tag.
     var childBlockNode = null;
     var childShadowNode = null;
-    for (var j = 0, grandchildNode; grandchildNode = xmlChild.childNodes[j];
-         j++) {
-      if (grandchildNode.nodeType == 1) {
-        if (grandchildNode.nodeName.toLowerCase() == 'block') {
-          childBlockNode = grandchildNode;
-        } else if (grandchildNode.nodeName.toLowerCase() == 'shadow') {
-          childShadowNode = grandchildNode;
+    for (var j = 0, grandchild; grandchild = xmlChild.childNodes[j]; j++) {
+      if (grandchild.nodeType == 1) {
+        if (grandchild.nodeName.toLowerCase() == 'block') {
+          childBlockNode = grandchild;
+        } else if (grandchild.nodeName.toLowerCase() == 'shadow') {
+          childShadowNode = grandchild;
         }
       }
     }
@@ -754,7 +753,7 @@ Blockly.Xml.domToBlockHeadless_ = function(xmlBlock, workspace) {
     var children = block.getChildren();
     for (var i = 0, child; child = children[i]; i++) {
       goog.asserts.assert(child.isShadow(),
-                          'Shadow block not allowed non-shadow child.');
+          'Shadow block not allowed non-shadow child.');
     }
     block.setShadow(true);
   }
@@ -788,7 +787,7 @@ Blockly.Xml.domToFieldVariable_ = function(workspace, xml, text, field) {
   }
   if (!variable) {
     variable = Blockly.Variables.getOrCreateVariablePackage(workspace, xml.id,
-      text, type);
+        text, type);
   }
 
   // This should never happen :)

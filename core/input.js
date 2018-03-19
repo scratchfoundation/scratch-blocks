@@ -268,13 +268,13 @@ Blockly.Input.prototype.dispose = function() {
 Blockly.Input.prototype.initOutlinePath = function(svgRoot) {
   if (this.type == Blockly.INPUT_VALUE) {
     this.outlinePath = Blockly.utils.createSvgElement(
-      'path',
-      {
-        'class': 'blocklyPath',
-        'style': 'visibility: hidden', // Hide by default - shown when not connected.
-        'd': ''  // IE doesn't like paths without the data definition, set an empty default
-      },
-      svgRoot
-      );
+        'path',
+        {
+          'class': 'blocklyPath',
+          'style': 'visibility: hidden', // Hide by default - shown when not connected.
+          'd': ''  // IE doesn't like paths without the data definition, set an empty default
+        },
+        svgRoot
+    );
   }
 };

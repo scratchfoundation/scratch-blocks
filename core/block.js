@@ -791,14 +791,14 @@ Blockly.Block.prototype.setColour = function(colour, colourSecondary, colourTert
   } else {
     this.colourSecondary_ = goog.color.rgbArrayToHex(
         goog.color.darken(goog.color.hexToRgb(this.colour_),
-        0.1));
+            0.1));
   }
   if (colourTertiary !== undefined) {
     this.colourTertiary_ = this.makeColour_(colourTertiary);
   } else {
     this.colourTertiary_ = goog.color.rgbArrayToHex(
         goog.color.darken(goog.color.hexToRgb(this.colour_),
-        0.2));
+            0.2));
   }
   if (this.rendered) {
     this.updateColour();
@@ -1196,7 +1196,7 @@ Blockly.Block.prototype.jsonInit = function(json) {
   // Validate inputs.
   goog.asserts.assert(json['output'] == undefined ||
       json['previousStatement'] == undefined,
-      'Must not have both an output and a previousStatement.');
+  'Must not have both an output and a previousStatement.');
 
   // Set basic properties of block.
   if (json['colour'] !== undefined) {
@@ -1347,11 +1347,11 @@ Blockly.Block.prototype.interpolate_ = function(message, args, lastDummyAlign) {
     var token = tokens[i];
     if (typeof token == 'number') {
       if (token <= 0 || token > args.length) {
-        throw new Error('Block \"' + this.type + '\": ' +
+        throw new Error('Block "' + this.type + '": ' +
             'Message index %' + token + ' out of range.');
       }
       if (indexDup[token]) {
-        throw new Error('Block \"' + this.type + '\": ' +
+        throw new Error('Block "' + this.type + '": ' +
             'Message index %' + token + ' duplicated.');
       }
       indexDup[token] = true;
@@ -1365,13 +1365,13 @@ Blockly.Block.prototype.interpolate_ = function(message, args, lastDummyAlign) {
     }
   }
   if(indexCount != args.length) {
-    throw new Error('Block \"' + this.type + '\": ' +
+    throw new Error('Block "' + this.type + '": ' +
         'Message does not reference all ' + args.length + ' arg(s).');
   }
   // Add last dummy input if needed.
   if (elements.length && (typeof elements[elements.length - 1] == 'string' ||
       goog.string.startsWith(elements[elements.length - 1]['type'],
-                             'field_'))) {
+          'field_'))) {
     var dummyInput = {type: 'input_dummy'};
     if (lastDummyAlign) {
       dummyInput['align'] = lastDummyAlign;
@@ -1428,8 +1428,8 @@ Blockly.Block.prototype.interpolate_ = function(message, args, lastDummyAlign) {
               break;
             case 'field_numberdropdown':
               field = new Blockly.FieldNumberDropdown(
-                element['value'], element['options'],
-                element['min'], element['max'], element['precision']
+                  element['value'], element['options'],
+                  element['min'], element['max'], element['precision']
               );
               break;
             case 'field_angle':
@@ -1632,7 +1632,7 @@ Blockly.Block.prototype.moveInputBefore = function(name, refName) {
   }
   goog.asserts.assert(inputIndex != -1, 'Named input "%s" not found.', name);
   goog.asserts.assert(refIndex != -1, 'Reference input "%s" not found.',
-                      refName);
+      refName);
   this.moveNumberedInputBefore(inputIndex, refIndex);
 };
 
@@ -1646,9 +1646,9 @@ Blockly.Block.prototype.moveNumberedInputBefore = function(
   // Validate arguments.
   goog.asserts.assert(inputIndex != refIndex, 'Can\'t move input to itself.');
   goog.asserts.assert(inputIndex < this.inputList.length,
-                      'Input index ' + inputIndex + ' out of bounds.');
+      'Input index ' + inputIndex + ' out of bounds.');
   goog.asserts.assert(refIndex <= this.inputList.length,
-                      'Reference input ' + refIndex + ' out of bounds.');
+      'Reference input ' + refIndex + ' out of bounds.');
   // Remove input.
   var input = this.inputList[inputIndex];
   this.inputList.splice(inputIndex, 1);

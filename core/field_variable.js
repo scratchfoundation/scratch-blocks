@@ -300,7 +300,7 @@ Blockly.FieldVariable.dropdownCreate = function() {
     options.push([Blockly.Msg.RENAME_VARIABLE, Blockly.RENAME_VARIABLE_ID]);
     if (Blockly.Msg.DELETE_VARIABLE) {
       options.push([Blockly.Msg.DELETE_VARIABLE.replace('%1', name),
-          Blockly.DELETE_VARIABLE_ID]);
+        Blockly.DELETE_VARIABLE_ID]);
     }
   }
 

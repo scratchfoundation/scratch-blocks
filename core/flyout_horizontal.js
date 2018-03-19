@@ -230,7 +230,7 @@ Blockly.HorizontalFlyout.prototype.setBackgroundPath_ = function(width, height) 
     path.push('a', this.CORNER_RADIUS, this.CORNER_RADIUS, 0, 0, 1,
         this.CORNER_RADIUS, -this.CORNER_RADIUS);
     path.push('h', width);
-     // Right.
+    // Right.
     path.push('a', this.CORNER_RADIUS, this.CORNER_RADIUS, 0, 0, 1,
         this.CORNER_RADIUS, this.CORNER_RADIUS);
     path.push('v', height);
@@ -365,7 +365,7 @@ Blockly.HorizontalFlyout.prototype.layout_ = function(contents, gaps) {
       // Clicking on a flyout button or label is a lot like clicking on the
       // flyout background.
       this.listeners_.push(Blockly.bindEventWithChecks_(buttonSvg, 'mousedown',
-           this, this.onMouseDown_));
+          this, this.onMouseDown_));
 
 
       this.buttons_.push(button);

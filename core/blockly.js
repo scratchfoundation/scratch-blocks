@@ -127,7 +127,7 @@ Blockly.hueToRgb = function(hue) {
  */
 Blockly.svgSize = function(svg) {
   return {width: svg.cachedWidth_,
-          height: svg.cachedHeight_};
+    height: svg.cachedHeight_};
 };
 
 /**
@@ -437,7 +437,7 @@ Blockly.bindEventWithChecks_ = function(node, name, thisObject, func,
       }
     };
     for (var i = 0, eventName;
-         eventName = Blockly.Touch.TOUCH_MAP[name][i]; i++) {
+      eventName = Blockly.Touch.TOUCH_MAP[name][i]; i++) {
       node.addEventListener(eventName, touchWrapFunc, false);
       bindData.push([node, eventName, touchWrapFunc]);
     }
@@ -487,7 +487,7 @@ Blockly.bindEvent_ = function(node, name, thisObject, func) {
       e.preventDefault();
     };
     for (var i = 0, eventName;
-         eventName = Blockly.Touch.TOUCH_MAP[name][i]; i++) {
+      eventName = Blockly.Touch.TOUCH_MAP[name][i]; i++) {
       node.addEventListener(eventName, touchWrapFunc, false);
       bindData.push([node, eventName, touchWrapFunc]);
     }

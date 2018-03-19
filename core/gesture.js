@@ -568,7 +568,7 @@ Blockly.Gesture.prototype.handleRightClick = function(e) {
  */
 Blockly.Gesture.prototype.handleWsStart = function(e, ws) {
   goog.asserts.assert(!this.hasStarted_,
-     'Tried to call gesture.handleWsStart, but the gesture had already been ' +
+      'Tried to call gesture.handleWsStart, but the gesture had already been ' +
      'started.');
   this.setStartWorkspace_(ws);
   this.mostRecentEvent_ = e;
@@ -583,7 +583,7 @@ Blockly.Gesture.prototype.handleWsStart = function(e, ws) {
  */
 Blockly.Gesture.prototype.handleFlyoutStart = function(e, flyout) {
   goog.asserts.assert(!this.hasStarted_,
-     'Tried to call gesture.handleFlyoutStart, but the gesture had already been ' +
+      'Tried to call gesture.handleFlyoutStart, but the gesture had already been ' +
      'started.');
   this.setStartFlyout_(flyout);
   this.handleWsStart(e, flyout.getWorkspace());
@@ -597,7 +597,7 @@ Blockly.Gesture.prototype.handleFlyoutStart = function(e, flyout) {
  */
 Blockly.Gesture.prototype.handleBlockStart = function(e, block) {
   goog.asserts.assert(!this.hasStarted_,
-     'Tried to call gesture.handleBlockStart, but the gesture had already been ' +
+      'Tried to call gesture.handleBlockStart, but the gesture had already been ' +
      'started.');
   this.setStartBlock(block);
   this.mostRecentEvent_ = e;
@@ -641,7 +641,7 @@ Blockly.Gesture.prototype.doBlockClick_ = function() {
       // This is used to toggle the stack when any block in the stack is clicked.
       var rootBlock = this.startBlock_.getRootBlock();
       Blockly.Events.fire(
-        new Blockly.Events.Ui(rootBlock, 'stackclick', undefined, undefined));
+          new Blockly.Events.Ui(rootBlock, 'stackclick', undefined, undefined));
     }
   }
   this.bringBlockToFront_();
@@ -682,7 +682,7 @@ Blockly.Gesture.prototype.bringBlockToFront_ = function() {
  */
 Blockly.Gesture.prototype.setStartField = function(field) {
   goog.asserts.assert(!this.hasStarted_,
-     'Tried to call gesture.setStartField, but the gesture had already been ' +
+      'Tried to call gesture.setStartField, but the gesture had already been ' +
      'started.');
   if (!this.startField_) {
     this.startField_ = field;

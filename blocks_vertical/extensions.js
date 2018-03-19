@@ -191,22 +191,22 @@ Blockly.Blocks['extension_wedo_tilt_menu'] = {
    */
   init: function() {
     this.jsonInit(
-      {
-        "message0": "%1",
-        "args0": [
-          {
-            "type": "field_dropdown",
-            "name": "TILT",
-            "options": [
-              ['Any', 'Any'],
-              ['Whirl', 'Whirl'],
-              ['South', 'South'],
-              ['Back in time', 'Back in time']
-            ]
-          }
-        ],
-        "extensions": ["colours_more", "output_string"]
-      });
+        {
+          "message0": "%1",
+          "args0": [
+            {
+              "type": "field_dropdown",
+              "name": "TILT",
+              "options": [
+                ['Any', 'Any'],
+                ['Whirl', 'Whirl'],
+                ['South', 'South'],
+                ['Back in time', 'Back in time']
+              ]
+            }
+          ],
+          "extensions": ["colours_more", "output_string"]
+        });
   }
 };
 

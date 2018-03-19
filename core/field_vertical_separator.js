@@ -140,5 +140,5 @@ Blockly.FieldVerticalSeparator.prototype.render_ = function() {
  * @private
  */
 Blockly.FieldVerticalSeparator.prototype.updateWidth = function() {
- // NOP
+  // NOP
 };

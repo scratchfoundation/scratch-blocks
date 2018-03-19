@@ -73,11 +73,11 @@ Blockly.FieldLabel.prototype.init = function() {
   // Build the DOM.
   this.textElement_ = Blockly.utils.createSvgElement('text',
       {'class': 'blocklyText',
-      'y': Blockly.BlockSvg.FIELD_TOP_PADDING,
-      'text-anchor': 'middle',
-      'dominant-baseline': 'middle',
-      'dy': goog.userAgent.EDGE_OR_IE ? Blockly.Field.IE_TEXT_OFFSET : '0'
-    }, null);
+        'y': Blockly.BlockSvg.FIELD_TOP_PADDING,
+        'text-anchor': 'middle',
+        'dominant-baseline': 'middle',
+        'dy': goog.userAgent.EDGE_OR_IE ? Blockly.Field.IE_TEXT_OFFSET : '0'
+      }, null);
   if (this.class_) {
     Blockly.utils.addClass(this.textElement_, this.class_);
   }

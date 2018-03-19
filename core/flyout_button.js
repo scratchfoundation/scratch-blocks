@@ -146,19 +146,19 @@ Blockly.FlyoutButton.prototype.createDom = function() {
     // Shadow rectangle (light source does not mirror in RTL).
     var shadow = Blockly.utils.createSvgElement('rect',
         {'class': 'blocklyFlyoutButtonShadow',
-         'rx': 4, 'ry': 4, 'x': 1, 'y': 1},
-         this.svgGroup_);
+          'rx': 4, 'ry': 4, 'x': 1, 'y': 1},
+        this.svgGroup_);
   }
   // Background rectangle.
   var rect = Blockly.utils.createSvgElement('rect',
       {'class': this.isLabel_ ?
         'blocklyFlyoutLabelBackground' : 'blocklyFlyoutButtonBackground',
-        'rx': 4, 'ry': 4},
+      'rx': 4, 'ry': 4},
       this.svgGroup_);
 
   var svgText = Blockly.utils.createSvgElement('text',
       {'class': this.isLabel_ ? 'blocklyFlyoutLabelText' : 'blocklyText',
-          'x': 0, 'y': 0, 'text-anchor': 'middle'},
+        'x': 0, 'y': 0, 'text-anchor': 'middle'},
       this.svgGroup_);
   svgText.textContent = this.text_;
 

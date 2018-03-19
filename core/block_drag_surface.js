@@ -132,17 +132,17 @@ Blockly.BlockDragSurfaceSvg.prototype.createDropShadowDom_ = function(defs) {
   var rnd = String(Math.random()).substring(2);
   // Adjust these width/height, x/y properties to prevent the shadow from clipping
   var dragShadowFilter = Blockly.utils.createSvgElement('filter',
-    {'id': 'blocklyDragShadowFilter' + rnd, 'height': '140%', 'width': '140%', y: '-20%', x: '-20%'}, defs);
+      {'id': 'blocklyDragShadowFilter' + rnd, 'height': '140%', 'width': '140%', y: '-20%', x: '-20%'}, defs);
   Blockly.utils.createSvgElement('feGaussianBlur',
-    {'in': 'SourceAlpha', 'stdDeviation': Blockly.BlockDragSurfaceSvg.SHADOW_STD_DEVIATION}, dragShadowFilter);
+      {'in': 'SourceAlpha', 'stdDeviation': Blockly.BlockDragSurfaceSvg.SHADOW_STD_DEVIATION}, dragShadowFilter);
   var componentTransfer = Blockly.utils.createSvgElement('feComponentTransfer',
-    {'result': 'offsetBlur'}, dragShadowFilter);
+      {'result': 'offsetBlur'}, dragShadowFilter);
   // Shadow opacity is specified in the adjustable colour library,
   // since the darkness of the shadow largely depends on the workspace colour.
   Blockly.utils.createSvgElement('feFuncA',
-    {'type': 'linear', 'slope': Blockly.Colours.dragShadowOpacity}, componentTransfer);
+      {'type': 'linear', 'slope': Blockly.Colours.dragShadowOpacity}, componentTransfer);
   Blockly.utils.createSvgElement('feComposite',
-    {'in': 'SourceGraphic', 'in2': 'offsetBlur', 'operator': 'over'}, dragShadowFilter);
+      {'in': 'SourceGraphic', 'in2': 'offsetBlur', 'operator': 'over'}, dragShadowFilter);
   return dragShadowFilter.id;
 };
 
@@ -154,7 +154,7 @@ Blockly.BlockDragSurfaceSvg.prototype.createDropShadowDom_ = function(defs) {
  */
 Blockly.BlockDragSurfaceSvg.prototype.setBlocksAndShow = function(blocks) {
   goog.asserts.assert(this.dragGroup_.childNodes.length == 0,
-    'Already dragging a block.');
+      'Already dragging a block.');
   // appendChild removes the blocks from the previous parent
   this.dragGroup_.appendChild(blocks);
   this.SVG_.style.display = 'block';
@@ -261,7 +261,7 @@ Blockly.BlockDragSurfaceSvg.prototype.clearAndHide = function(opt_newSurface) {
   }
   this.SVG_.style.display = 'none';
   goog.asserts.assert(this.dragGroup_.childNodes.length == 0,
-    'Drag group was not cleared.');
+      'Drag group was not cleared.');
   this.surfaceXY_ = null;
 
   // Reset the overflow property back to hidden so that nothing appears outside

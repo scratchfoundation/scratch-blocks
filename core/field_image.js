@@ -76,12 +76,12 @@ Blockly.FieldImage.prototype.init = function() {
   }
   /** @type {SVGElement} */
   this.imageElement_ = Blockly.utils.createSvgElement(
-    'image',
-    {
-      'height': this.height_ + 'px',
-      'width': this.width_ + 'px'
-    },
-    this.fieldGroup_);
+      'image',
+      {
+        'height': this.height_ + 'px',
+        'width': this.width_ + 'px'
+      },
+      this.fieldGroup_);
   this.setValue(this.src_);
   this.sourceBlock_.getSvgRoot().appendChild(this.fieldGroup_);
 
@@ -168,5 +168,5 @@ Blockly.FieldImage.prototype.render_ = function() {
  * @private
  */
 Blockly.FieldImage.prototype.updateWidth = function() {
- // NOP
+  // NOP
 };

@@ -133,9 +133,9 @@ Blockly.ZoomControls.prototype.createDom = function() {
   </g>
   */
   this.svgGroup_ = Blockly.utils.createSvgElement(
-    'g',
-    {'class': 'blocklyZoom'},
-    null
+      'g',
+      {'class': 'blocklyZoom'},
+      null
   );
 
   /**
@@ -143,18 +143,18 @@ Blockly.ZoomControls.prototype.createDom = function() {
    * @type {SVGElement}
    */
   var zoominSvg = Blockly.utils.createSvgElement(
-    'image',
-    {
-      'width': this.WIDTH_,
-      'height': this.WIDTH_,
-      'y': 0
-    },
-    this.svgGroup_
+      'image',
+      {
+        'width': this.WIDTH_,
+        'height': this.WIDTH_,
+        'y': 0
+      },
+      this.svgGroup_
   );
   zoominSvg.setAttributeNS(
-    'http://www.w3.org/1999/xlink',
-    'xlink:href',
-    workspace.options.pathToMedia + this.ZOOM_IN_PATH_
+      'http://www.w3.org/1999/xlink',
+      'xlink:href',
+      workspace.options.pathToMedia + this.ZOOM_IN_PATH_
   );
 
   /**
@@ -162,18 +162,18 @@ Blockly.ZoomControls.prototype.createDom = function() {
    * @type {SVGElement}
    */
   var zoomoutSvg = Blockly.utils.createSvgElement(
-    'image',
-    {
-      'width': this.WIDTH_,
-      'height': this.WIDTH_,
-      'y': (this.WIDTH_ * 1) + (this.MARGIN_BETWEEN_ * 1)
-    },
-    this.svgGroup_
+      'image',
+      {
+        'width': this.WIDTH_,
+        'height': this.WIDTH_,
+        'y': (this.WIDTH_ * 1) + (this.MARGIN_BETWEEN_ * 1)
+      },
+      this.svgGroup_
   );
   zoomoutSvg.setAttributeNS(
-    'http://www.w3.org/1999/xlink',
-    'xlink:href',
-    workspace.options.pathToMedia + this.ZOOM_OUT_PATH_
+      'http://www.w3.org/1999/xlink',
+      'xlink:href',
+      workspace.options.pathToMedia + this.ZOOM_OUT_PATH_
   );
 
   /**
@@ -181,18 +181,18 @@ Blockly.ZoomControls.prototype.createDom = function() {
    * @type {SVGElement}
    */
   var zoomresetSvg = Blockly.utils.createSvgElement(
-    'image',
-    {
-      'width': this.WIDTH_,
-      'height': this.WIDTH_,
-      'y': (this.WIDTH_ * 2) + (this.MARGIN_BETWEEN_ * 2)
-    },
-    this.svgGroup_
+      'image',
+      {
+        'width': this.WIDTH_,
+        'height': this.WIDTH_,
+        'y': (this.WIDTH_ * 2) + (this.MARGIN_BETWEEN_ * 2)
+      },
+      this.svgGroup_
   );
   zoomresetSvg.setAttributeNS(
-    'http://www.w3.org/1999/xlink',
-    'xlink:href',
-    workspace.options.pathToMedia + this.ZOOM_RESET_PATH_
+      'http://www.w3.org/1999/xlink',
+      'xlink:href',
+      workspace.options.pathToMedia + this.ZOOM_RESET_PATH_
   );
 
   // Attach event listeners.

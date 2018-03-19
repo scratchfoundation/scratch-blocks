@@ -185,7 +185,7 @@ Blockly.ScratchBlocks.ProcedureUtils.removeAllInputs_ = function() {
  */
 Blockly.ScratchBlocks.ProcedureUtils.createAllInputs_ = function(connectionMap) {
   // Split the proc into components, by %n, %b, and %s (ignoring escaped).
-  var procComponents = this.procCode_.split(/(?=[^\\]\%[nbs])/);
+  var procComponents = this.procCode_.split(/(?=[^\\]%[nbs])/);
   procComponents = procComponents.map(function(c) {
     return c.trim(); // Strip whitespace.
   });

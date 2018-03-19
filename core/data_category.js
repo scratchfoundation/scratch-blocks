@@ -120,7 +120,7 @@ Blockly.DataCategory.addSetVariableTo = function(xmlList, variable) {
   //   </value>
   // </block>
   Blockly.DataCategory.addBlock(xmlList, variable, 'data_setvariableto',
-    'VARIABLE', ['VALUE', 'text', 0]);
+      'VARIABLE', ['VALUE', 'text', 0]);
 };
 
 /**
@@ -140,7 +140,7 @@ Blockly.DataCategory.addChangeVariableBy = function(xmlList, variable) {
   //   </value>
   // </block>
   Blockly.DataCategory.addBlock(xmlList, variable, 'data_changevariableby',
-    'VARIABLE', ['VALUE', 'math_number', 1]);
+      'VARIABLE', ['VALUE', 'math_number', 1]);
 };
 
 /**
@@ -155,7 +155,7 @@ Blockly.DataCategory.addShowVariable = function(xmlList, variable) {
   //   </value>
   // </block>
   Blockly.DataCategory.addBlock(xmlList, variable, 'data_showvariable',
-    'VARIABLE');
+      'VARIABLE');
 };
 
 /**
@@ -170,7 +170,7 @@ Blockly.DataCategory.addHideVariable = function(xmlList, variable) {
   //   </value>
   // </block>
   Blockly.DataCategory.addBlock(xmlList, variable, 'data_hidevariable',
-    'VARIABLE');
+      'VARIABLE');
 };
 
 /**
@@ -202,7 +202,7 @@ Blockly.DataCategory.addAddToList = function(xmlList, variable) {
   //   </value>
   // </block>
   Blockly.DataCategory.addBlock(xmlList, variable, 'data_addtolist', 'LIST',
-    ['ITEM', 'text', 'thing']);
+      ['ITEM', 'text', 'thing']);
 };
 
 /**
@@ -220,7 +220,7 @@ Blockly.DataCategory.addDeleteOfList = function(xmlList, variable) {
   //   </value>
   // </block>
   Blockly.DataCategory.addBlock(xmlList, variable, 'data_deleteoflist', 'LIST',
-    ['INDEX', 'math_integer', 1]);
+      ['INDEX', 'math_integer', 1]);
 };
 
 /**
@@ -243,7 +243,7 @@ Blockly.DataCategory.addInsertAtList = function(xmlList, variable) {
   //   </value>
   // </block>
   Blockly.DataCategory.addBlock(xmlList, variable, 'data_insertatlist', 'LIST',
-    ['INDEX', 'math_integer', 1], ['ITEM', 'text', 'thing']);
+      ['INDEX', 'math_integer', 1], ['ITEM', 'text', 'thing']);
 };
 
 /**
@@ -266,7 +266,7 @@ Blockly.DataCategory.addReplaceItemOfList = function(xmlList, variable) {
   //   </value>
   // </block>
   Blockly.DataCategory.addBlock(xmlList, variable, 'data_replaceitemoflist',
-    'LIST', ['INDEX', 'math_integer', 1], ['ITEM', 'text', 'thing']);
+      'LIST', ['INDEX', 'math_integer', 1], ['ITEM', 'text', 'thing']);
 };
 
 /**
@@ -284,7 +284,7 @@ Blockly.DataCategory.addItemOfList = function(xmlList, variable) {
   //   </value>
   // </block>
   Blockly.DataCategory.addBlock(xmlList, variable, 'data_itemoflist', 'LIST',
-    ['INDEX', 'math_integer', 1]);
+      ['INDEX', 'math_integer', 1]);
 };
 
 /**
@@ -314,7 +314,7 @@ Blockly.DataCategory.addListContainsItem = function(xmlList, variable) {
   //   </value>
   // </block>
   Blockly.DataCategory.addBlock(xmlList, variable, 'data_listcontainsitem',
-    'LIST', ['ITEM', 'text', 'thing']);
+      'LIST', ['ITEM', 'text', 'thing']);
 };
 
 /**
@@ -361,7 +361,7 @@ Blockly.DataCategory.addCreateButton = function(xmlList, workspace, type) {
     callbackKey = 'CREATE_LIST';
     callback = function(button) {
       Blockly.Variables.createVariable(button.getTargetWorkspace(), null,
-        Blockly.LIST_VARIABLE_TYPE);};
+          Blockly.LIST_VARIABLE_TYPE);};
   }
   button.setAttribute('text', msg);
   button.setAttribute('callbackKey', callbackKey);
@@ -384,17 +384,17 @@ Blockly.DataCategory.addCreateButton = function(xmlList, workspace, type) {
  *     name and shadow type of a second pair of value tags.
  */
 Blockly.DataCategory.addBlock = function(xmlList,
-  variable, blockType, fieldName, opt_value, opt_secondValue) {
+    variable, blockType, fieldName, opt_value, opt_secondValue) {
   if (Blockly.Blocks[blockType]) {
     var firstValueField;
     var secondValueField;
     if (opt_value) {
       firstValueField = Blockly.DataCategory.createValue(opt_value[0],
-        opt_value[1], opt_value[2]);
+          opt_value[1], opt_value[2]);
     }
     if (opt_secondValue) {
       secondValueField = Blockly.DataCategory.createValue(opt_secondValue[0],
-        opt_secondValue[1], opt_value[2]);
+          opt_secondValue[1], opt_value[2]);
     }
 
     var gap = 8;

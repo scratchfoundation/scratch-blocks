@@ -214,19 +214,19 @@ Blockly.FieldAngle.prototype.showEditor_ = function() {
     'class': 'blocklyAngleDragHandle'
   }, this.handle_);
   this.arrowSvg_ = Blockly.utils.createSvgElement(
-    'image',
-    {
-      'width': Blockly.FieldAngle.ARROW_WIDTH,
-      'height': Blockly.FieldAngle.ARROW_WIDTH,
-      'x': -Blockly.FieldAngle.ARROW_WIDTH / 2,
-      'y': -Blockly.FieldAngle.ARROW_WIDTH / 2
-    },
-    this.handle_
+      'image',
+      {
+        'width': Blockly.FieldAngle.ARROW_WIDTH,
+        'height': Blockly.FieldAngle.ARROW_WIDTH,
+        'x': -Blockly.FieldAngle.ARROW_WIDTH / 2,
+        'y': -Blockly.FieldAngle.ARROW_WIDTH / 2
+      },
+      this.handle_
   );
   this.arrowSvg_.setAttributeNS(
-    'http://www.w3.org/1999/xlink',
-    'xlink:href',
-    Blockly.mainWorkspace.options.pathToMedia + Blockly.FieldAngle.ARROW_SVG_PATH
+      'http://www.w3.org/1999/xlink',
+      'xlink:href',
+      Blockly.mainWorkspace.options.pathToMedia + Blockly.FieldAngle.ARROW_SVG_PATH
   );
 
   Blockly.DropDownDiv.setColour(this.sourceBlock_.parentBlock_.getColour(),

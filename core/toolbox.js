@@ -171,7 +171,7 @@ Blockly.Toolbox.prototype.createFlyout_ = function() {
   this.flyout_.setParentToolbox(this);
 
   goog.dom.insertSiblingAfter(this.flyout_.createDom('svg'),
-                              this.workspace_.getParentSvg());
+      this.workspace_.getParentSvg());
   this.flyout_.init(workspace);
 };
 
@@ -269,7 +269,7 @@ Blockly.Toolbox.prototype.clearSelection = function() {
  */
 Blockly.Toolbox.prototype.addDeleteStyle = function() {
   Blockly.utils.addClass(/** @type {!Element} */ (this.HtmlDiv),
-                         'blocklyToolboxDelete');
+      'blocklyToolboxDelete');
 };
 
 /**
@@ -278,7 +278,7 @@ Blockly.Toolbox.prototype.addDeleteStyle = function() {
  */
 Blockly.Toolbox.prototype.removeDeleteStyle = function() {
   Blockly.utils.removeClass(/** @type {!Element} */ (this.HtmlDiv),
-                            'blocklyToolboxDelete');
+      'blocklyToolboxDelete');
 };
 
 /**
@@ -578,10 +578,10 @@ Blockly.Toolbox.Category.prototype.dispose = function() {
 Blockly.Toolbox.Category.prototype.createDom = function() {
   var toolbox = this.parent_.parent_;
   this.item_ = goog.dom.createDom('div',
-    {'class': 'scratchCategoryMenuItem'});
+      {'class': 'scratchCategoryMenuItem'});
   this.label_ = goog.dom.createDom('div',
-    {'class': 'scratchCategoryMenuItemLabel'},
-    this.name_);
+      {'class': 'scratchCategoryMenuItemLabel'},
+      this.name_);
   if (this.iconURI_) {
     this.bubble_ = goog.dom.createDom('div',
         {'class': 'scratchCategoryItemIcon'});
@@ -596,7 +596,7 @@ Blockly.Toolbox.Category.prototype.createDom = function() {
   this.item_.appendChild(this.label_);
   this.parentHtml_.appendChild(this.item_);
   Blockly.bindEvent_(this.item_, 'mouseup', toolbox,
-    toolbox.setSelectedItemFactory(this));
+      toolbox.setSelectedItemFactory(this));
 };
 
 /**

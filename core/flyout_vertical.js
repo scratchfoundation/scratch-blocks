@@ -478,7 +478,7 @@ Blockly.VerticalFlyout.prototype.layout_ = function(contents, gaps) {
       // Clicking on a flyout button or label is a lot like clicking on the
       // flyout background.
       this.listeners_.push(Blockly.bindEventWithChecks_(buttonSvg, 'mousedown',
-           this, this.onMouseDown_));
+          this, this.onMouseDown_));
 
       this.buttons_.push(button);
       cursorY += button.height + gaps[i];
@@ -504,13 +504,13 @@ Blockly.VerticalFlyout.prototype.createRect_ = function(block, x, y,
   // Create an invisible rectangle under the block to act as a button.  Just
   // using the block as a button is poor, since blocks have holes in them.
   var rect = Blockly.utils.createSvgElement('rect',
-    {
-      'fill-opacity': 0,
-      'x': x,
-      'y': y,
-      'height': blockHW.height,
-      'width': blockHW.width
-    }, null);
+      {
+        'fill-opacity': 0,
+        'x': x,
+        'y': y,
+        'height': blockHW.height,
+        'width': blockHW.width
+      }, null);
   rect.tooltip = block;
   Blockly.Tooltip.bindMouseEvents(rect);
   // Add the rectangles under the blocks, so that the blocks' tooltips work.
@@ -531,29 +531,29 @@ Blockly.VerticalFlyout.prototype.createRect_ = function(block, x, y,
  * @private
  */
 Blockly.VerticalFlyout.prototype.createCheckbox_ = function(block, cursorX,
-     cursorY, blockHW) {
+    cursorY, blockHW) {
   var checkboxState = Blockly.VerticalFlyout.getCheckboxState(block.id);
   var svgRoot = block.getSvgRoot();
   var extraSpace = this.CHECKBOX_SIZE + this.CHECKBOX_MARGIN;
   var width = this.RTL ? this.getWidth() / this.workspace_.scale - extraSpace : cursorX;
   var height = cursorY + blockHW.height / 2 - this.CHECKBOX_SIZE / 2;
   var checkboxGroup = Blockly.utils.createSvgElement('g',
-    {
-      'class': 'blocklyFlyoutCheckbox',
-      'transform': 'translate(' + width + ', ' + height + ')'
-    }, null);
+      {
+        'class': 'blocklyFlyoutCheckbox',
+        'transform': 'translate(' + width + ', ' + height + ')'
+      }, null);
   Blockly.utils.createSvgElement('rect',
-    {
-      'height': this.CHECKBOX_SIZE,
-      'width': this.CHECKBOX_SIZE,
-      'rx': this.CHECKBOX_CORNER_RADIUS,
-      'ry': this.CHECKBOX_CORNER_RADIUS
-    }, checkboxGroup);
+      {
+        'height': this.CHECKBOX_SIZE,
+        'width': this.CHECKBOX_SIZE,
+        'rx': this.CHECKBOX_CORNER_RADIUS,
+        'ry': this.CHECKBOX_CORNER_RADIUS
+      }, checkboxGroup);
   Blockly.utils.createSvgElement('path',
-    {
-      'class': 'blocklyFlyoutCheckboxPath',
-      'd': this.CHECKMARK_PATH
-    }, checkboxGroup);
+      {
+        'class': 'blocklyFlyoutCheckboxPath',
+        'd': this.CHECKMARK_PATH
+      }, checkboxGroup);
   var checkboxObj = {svgRoot: checkboxGroup, clicked: checkboxState, block: block};
 
   if (checkboxState) {

@@ -100,12 +100,12 @@ Blockly.Extensions.registerMutator = function(name, mixinObj, opt_helperFn,
 
   // Sanity check the mixin object before registering it.
   Blockly.Extensions.checkHasFunction_(errorPrefix, mixinObj.domToMutation,
-                                       'domToMutation');
+      'domToMutation');
   Blockly.Extensions.checkHasFunction_(errorPrefix, mixinObj.mutationToDom,
-                                       'mutationToDom');
+      'mutationToDom');
 
   var hasMutatorDialog = Blockly.Extensions.checkMutatorDialog_(mixinObj,
-    errorPrefix);
+      errorPrefix);
 
   if (opt_helperFn && !goog.isFunction(opt_helperFn)) {
     throw new Error('Extension "' + name + '" is not a function');

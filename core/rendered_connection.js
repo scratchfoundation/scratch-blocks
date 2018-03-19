@@ -201,8 +201,8 @@ Blockly.RenderedConnection.prototype.highlight = function() {
   var y = this.y_ - xy.y;
   Blockly.Connection.highlightedPath_ = Blockly.utils.createSvgElement('path',
       {'class': 'blocklyHighlightedConnectionPath',
-       'd': steps,
-       transform: 'translate(' + x + ',' + y + ')' +
+        'd': steps,
+        transform: 'translate(' + x + ',' + y + ')' +
            (this.sourceBlock_.RTL ? ' scale(-1 1)' : '')},
       this.sourceBlock_.getSvgRoot());
 };

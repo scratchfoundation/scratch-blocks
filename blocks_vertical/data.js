@@ -478,7 +478,7 @@ Blockly.Constants.Data.CUSTOM_CONTEXT_MENU_GET_VARIABLE_MIXIN = {
 
         option.callback =
             Blockly.Constants.Data.VARIABLE_OPTION_CALLBACK_FACTORY(this,
-            option.text);
+                option.text);
         options.push(option);
       }
     } else {
@@ -500,7 +500,7 @@ Blockly.Constants.Data.CUSTOM_CONTEXT_MENU_GET_VARIABLE_MIXIN = {
 };
 
 Blockly.Extensions.registerMixin('contextMenu_getVariableBlock',
-  Blockly.Constants.Data.CUSTOM_CONTEXT_MENU_GET_VARIABLE_MIXIN);
+    Blockly.Constants.Data.CUSTOM_CONTEXT_MENU_GET_VARIABLE_MIXIN);
 
 /**
  * Callback factory for dropdown menu options associated with a variable getter
