@@ -1658,7 +1658,7 @@ Blockly.WorkspaceSvg.prototype.updateStackGlowScale_ = function() {
   // No such def in the flyout workspace.
   if (this.options.stackGlowBlur) {
     this.options.stackGlowBlur.setAttribute('stdDeviation',
-      Blockly.STACK_GLOW_RADIUS / this.scale
+      Blockly.Colours.stackGlowSize / this.scale
     );
   }
 };
