@@ -96,7 +96,7 @@ Blockly.Colours = {
   "insertionMarkerOpacity": 0.2,
   "dragShadowOpacity": 0.3,
   "stackGlow": "#FFF200",
-  "stackGlowSize": 1.3,
+  "stackGlowSize": 4,
   "stackGlowOpacity": 1,
   "replacementGlow": "#FFFFFF",
   "replacementGlowSize": 2,
