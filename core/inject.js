@@ -135,7 +135,7 @@ Blockly.createDom_ = function(container, options) {
         'height': '160%', 'width': '180%', y: '-30%', x: '-40%'}, defs);
   options.stackGlowBlur = Blockly.utils.createSvgElement('feGaussianBlur',
       {'in': 'SourceGraphic',
-      'stdDeviation': Blockly.STACK_GLOW_RADIUS}, stackGlowFilter);
+      'stdDeviation': Blockly.Colours.stackGlowSize}, stackGlowFilter);
   // Set all gaussian blur pixels to 1 opacity before applying flood
   var componentTransfer = Blockly.utils.createSvgElement('feComponentTransfer', {'result': 'outBlur'}, stackGlowFilter);
   Blockly.utils.createSvgElement('feFuncA',
@@ -156,7 +156,7 @@ Blockly.createDom_ = function(container, options) {
         'height': '160%', 'width': '180%', y: '-30%', x: '-40%'}, defs);
   Blockly.utils.createSvgElement('feGaussianBlur',
       {'in': 'SourceGraphic',
-      'stdDeviation': Blockly.REPLACEMENT_GLOW_RADIUS}, replacementGlowFilter);
+      'stdDeviation': Blockly.Colours.replacementGlowSize}, replacementGlowFilter);
   // Set all gaussian blur pixels to 1 opacity before applying flood
   var componentTransfer = Blockly.utils.createSvgElement('feComponentTransfer',
       {'result': 'outBlur'}, replacementGlowFilter);
