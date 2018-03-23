@@ -64,6 +64,21 @@ Blockly.Blocks['event_whenthisspriteclicked'] = {
       "extensions": ["colours_event", "shape_hat"]
     });
   }
+
+};
+
+Blockly.Blocks['event_whenstageclicked'] = {
+  /**
+   * Block for when the stage is clicked.
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.jsonInit({
+      "message0": "when stage clicked",
+      "category": Blockly.Categories.event,
+      "extensions": ["colours_event", "shape_hat"]
+    });
+  }
 };
 
 Blockly.Blocks['event_whenbroadcastreceived'] = {
