@@ -305,6 +305,39 @@ Blockly.Blocks['control_repeat_until'] = {
   }
 };
 
+Blockly.Blocks['control_for_each'] = {
+  /**
+   * Block for for-each. This is an obsolete block that is implemented for
+   * compatibility with Scratch 2.0 projects.
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.jsonInit({
+      "type": "control_for_each",
+      "message0": "for each %1 in %2",
+      "message1": "%1",
+      "args0": [
+        {
+          "type": "field_variable",
+          "name": "VARIABLE"
+        },
+        {
+          "type": "input_value",
+          "name": "VALUE"
+        }
+      ],
+      "args1": [
+        {
+          "type": "input_statement",
+          "name": "SUBSTACK"
+        }
+      ],
+      "category": Blockly.Categories.control,
+      "extensions": ["colours_control", "shape_statement"]
+    });
+  }
+};
+
 Blockly.Blocks['control_start_as_clone'] = {
   /**
    * Block for "when I start as a clone" hat.
