@@ -363,6 +363,33 @@ Blockly.Blocks['data_itemoflist'] = {
   }
 };
 
+Blockly.Blocks['data_itemnumoflist'] = {
+  /**
+   * Block for reporting the item # of a string in a list.
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.jsonInit({
+      "message0": "item # of %1 in %2",
+      "args0": [
+        {
+          "type": "input_value",
+          "name": "ITEM"
+        },
+        {
+          "type": "field_variable",
+          "name": "LIST",
+          "variableTypes": [Blockly.LIST_VARIABLE_TYPE]
+        }
+      ],
+      "output": null,
+      "category": Blockly.Categories.dataLists,
+      "extensions": ["colours_data_lists"],
+      "outputShape": Blockly.OUTPUT_SHAPE_ROUND
+    });
+  }
+};
+
 Blockly.Blocks['data_lengthoflist'] = {
   /**
    * Block for reporting length of list.

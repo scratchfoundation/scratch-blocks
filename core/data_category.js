@@ -79,6 +79,7 @@ Blockly.DataCategory = function(workspace) {
     Blockly.DataCategory.addInsertAtList(xmlList, firstVariable);
     Blockly.DataCategory.addReplaceItemOfList(xmlList, firstVariable);
     Blockly.DataCategory.addItemOfList(xmlList, firstVariable);
+    Blockly.DataCategory.addItemNumberOfList(xmlList, firstVariable);
     Blockly.DataCategory.addLengthOfList(xmlList, firstVariable);
     Blockly.DataCategory.addListContainsItem(xmlList, firstVariable);
     // TODO (#1276): uncomment these when their implementations are finished.
@@ -285,6 +286,23 @@ Blockly.DataCategory.addItemOfList = function(xmlList, variable) {
   // </block>
   Blockly.DataCategory.addBlock(xmlList, variable, 'data_itemoflist', 'LIST',
     ['INDEX', 'math_integer', 1]);
+};
+
+/** Construct and add a data_itemnumoflist block to xmlList.
+ * @param {!Array.<!Element>} xmlList Array of XML block elements.
+ * @param {?Blockly.VariableModel} variable Variable to select in the field.
+ */
+Blockly.DataCategory.addItemNumberOfList = function(xmlList, variable) {
+  // <block type="data_itemnumoflist">
+  //   <value name="ITEM">
+  //     <shadow type="text">
+  //       <field name="TEXT">thing</field>
+  //     </shadow>
+  //   </value>
+  //   <field name="LIST" variabletype="list" id="">variablename</field>
+  // </block>
+  Blockly.DataCategory.addBlock(xmlList, variable, 'data_itemnumoflist',
+    'LIST', ['ITEM', 'text', 'thing']);
 };
 
 /**
