@@ -1225,10 +1225,15 @@ Blockly.WorkspaceSvg.prototype.onMouseWheel_ = function(e) {
   if (this.currentGesture_) {
     this.currentGesture_.cancel();
   }
+
+  // Multiplier variable, so that non-pixel-deltaModes are supported.
+  // See LLK/scratch-blocks#1190.
+  var multiplier = e.deltaMode === 0x1 ? this.lineScrollMultiplier : 1;
+
   if (e.ctrlKey) {
     // The vertical scroll distance that corresponds to a click of a zoom button.
     var PIXELS_PER_ZOOM_STEP = 50;
-    var delta = -e.deltaY / PIXELS_PER_ZOOM_STEP;
+    var delta = -e.deltaY / PIXELS_PER_ZOOM_STEP * multiplier;
     var position = Blockly.utils.mouseToSvg(e, this.getParentSvg(),
         this.getInverseScreenCTM());
     this.zoom(position.x, position.y, delta);
@@ -1239,9 +1244,6 @@ Blockly.WorkspaceSvg.prototype.onMouseWheel_ = function(e) {
     Blockly.WidgetDiv.hide(true);
     Blockly.DropDownDiv.hideWithoutAnimation();
 
-    // Multiplier variable, so that non-pixel-deltaModes are supported.
-    // See LLK/scratch-blocks#1190.
-    var multiplier = e.deltaMode === 0x1 ? this.lineScrollMultiplier : 1;
     var x = this.scrollX - e.deltaX * multiplier;
     var y = this.scrollY - e.deltaY * multiplier;
 
