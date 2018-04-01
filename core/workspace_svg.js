@@ -198,7 +198,7 @@ Blockly.WorkspaceSvg.prototype.dragDeltaXY_ = null;
  * that delta is multiplied by this value.
  * @type {number}
  */
-Blockly.WorkspaceSvg.prototype.lineScrollMultiplier = 10;
+Blockly.WorkspaceSvg.prototype.lineScrollMultiplier = 15;
 
 /**
  * Current scale.
