@@ -190,6 +190,16 @@ Blockly.WorkspaceSvg.prototype.startScrollY = 0;
  */
 Blockly.WorkspaceSvg.prototype.dragDeltaXY_ = null;
 
+/***
+ * Distance to scroll when a mouse wheel event is received and
+ * its delta mode is line (0x1) instead of pixel (0x0). In these
+ * cases, a single "scroll" has a delta of 1, which makes the
+ * workspace scroll very slowly (just one pixel). To compensate,
+ * that delta is multiplied by this value.
+ * @type {number}
+ */
+Blockly.WorkspaceSvg.prototype.lineScrollMultiplier = 10;
+
 /**
  * Current scale.
  * @type {number}
@@ -1228,8 +1238,13 @@ Blockly.WorkspaceSvg.prototype.onMouseWheel_ = function(e) {
     // (mouse scroll makes field out of place with div)
     Blockly.WidgetDiv.hide(true);
     Blockly.DropDownDiv.hideWithoutAnimation();
-    var x = this.scrollX - e.deltaX;
-    var y = this.scrollY - e.deltaY;
+
+    // Multiplier variable, so that non-pixel-deltaModes are supported.
+    // See LLK/scratch-blocks#1190.
+    var multiplier = e.deltaMode === 0x1 ? this.lineScrollMultiplier : 1;
+    var x = this.scrollX - e.deltaX * multiplier;
+    var y = this.scrollY - e.deltaY * multiplier;
+
     this.startDragMetrics = this.getMetrics();
     this.scroll(x, y);
   }
