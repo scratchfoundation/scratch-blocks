@@ -414,3 +414,48 @@ Blockly.Blocks['control_delete_this_clone'] = {
     });
   }
 };
+
+Blockly.Blocks['control_get_counter'] = {
+  /**
+   * Block to get the counter value. This is an obsolete block that is
+   * implemented for compatibility with Scratch 2.0 projects.
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.jsonInit({
+      "message0": "counter",
+      "category": Blockly.Categories.control,
+      "extensions": ["colours_control", "output_number"]
+    });
+  }
+};
+
+Blockly.Blocks['control_incr_counter'] = {
+  /**
+   * Block to add one to the counter value. This is an obsolete block that is
+   * implemented for compatibility with Scratch 2.0 projects.
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.jsonInit({
+      "message0": "incr counter",
+      "category": Blockly.Categories.control,
+      "extensions": ["colours_control", "shape_statement"]
+    });
+  }
+};
+
+Blockly.Blocks['control_clear_counter'] = {
+  /**
+   * Block to clear the counter value. This is an obsolete block that is
+   * implemented for compatibility with Scratch 2.0 projects.
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.jsonInit({
+      "message0": "clear counter",
+      "category": Blockly.Categories.control,
+      "extensions": ["colours_control", "shape_statement"]
+    });
+  }
+};
