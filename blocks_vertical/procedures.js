@@ -56,6 +56,8 @@ Blockly.ScratchBlocks.ProcedureUtils.callerMutationToDom = function() {
  */
 Blockly.ScratchBlocks.ProcedureUtils.callerDomToMutation = function(xmlElement) {
   this.procCode_ = xmlElement.getAttribute('proccode');
+  this.generateShadows_ =
+      JSON.parse(xmlElement.getAttribute('generateShadows'));
   this.argumentIds_ = JSON.parse(xmlElement.getAttribute('argumentids'));
   this.warp_ = JSON.parse(xmlElement.getAttribute('warp'));
   this.updateDisplay_();
@@ -382,11 +384,11 @@ Blockly.ScratchBlocks.ProcedureUtils.populateArgumentOnCaller_ = function(type,
     // Reattach the old block.
     connectionMap[input.name] = null;
     oldBlock.outputConnection.connect(input.connection);
-    if (type != 'b') {
+    if (type != 'b' && this.generateShadows_) {
       // TODO: Preserve old shadow DOM.
       input.connection.setShadowDom(this.buildShadowDom_(type));
     }
-  } else {
+  } else if (this.generateShadows_) {
     this.attachShadow_(input, type);
   }
 };
