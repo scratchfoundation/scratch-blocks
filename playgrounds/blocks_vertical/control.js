@@ -268,11 +268,52 @@ Blockly.Blocks['control_wait_until'] = {
 
 Blockly.Blocks['control_repeat_until'] = {
   /**
-   * Block for repeat until a condition becomes true.
+   * Block to repeat until a condition becomes true.
+   * @this Blockly.Block
    */
   init: function() {
     this.jsonInit({
       "message0": "repeat until %1",
+      "message1": "%1",
+      "message2": "%1",
+      "lastDummyAlign2": "RIGHT",
+      "args0": [
+        {
+          "type": "input_value",
+          "name": "CONDITION",
+          "check": "Boolean"
+        }
+      ],
+      "args1": [
+        {
+          "type": "input_statement",
+          "name": "SUBSTACK"
+        }
+      ],
+      "args2": [
+        {
+          "type": "field_image",
+          "src": Blockly.mainWorkspace.options.pathToMedia + "repeat.svg",
+          "width": 24,
+          "height": 24,
+          "alt": "*",
+          "flip_rtl": true
+        }
+      ],
+      "category": Blockly.Categories.control,
+      "extensions": ["colours_control", "shape_statement"]
+    });
+  }
+};
+
+Blockly.Blocks['control_while'] = {
+  /**
+   * Block to repeat until a condition becomes false.
+   * (This is an obsolete "hacked" block, for compatibility with 2.0.)
+   */
+  init: function() {
+    this.jsonInit({
+      "message0": "while %1",
       "message1": "%1",
       "message2": "%1",
       "lastDummyAlign2": "RIGHT",
