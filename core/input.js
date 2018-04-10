@@ -248,9 +248,7 @@ Blockly.Input.prototype.init = function() {
  * Sever all links to this input.
  */
 Blockly.Input.prototype.dispose = function() {
-  if (this.outlinePath) {
-    if (this.outlinePath && this.outlinePath.parentNode) this.outlinePath.parentNode.removeChild(this.outlinePath);
-  }
+  if (this.outlinePath && this.outlinePath.parentNode) this.outlinePath.parentNode.removeChild(this.outlinePath);
   for (var i = 0, field; field = this.fieldRow[i]; i++) {
     field.dispose();
   }

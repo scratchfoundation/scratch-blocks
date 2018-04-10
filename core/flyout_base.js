@@ -317,10 +317,8 @@ Blockly.Flyout.prototype.dispose = function() {
     this.workspace_.dispose();
     this.workspace_ = null;
   }
-  if (this.svgGroup_) {
-    if (this.svgGroup_ && this.svgGroup_.parentNode) this.svgGroup_.parentNode.removeChild(this.svgGroup_);
-    this.svgGroup_ = null;
-  }
+  if (this.svgGroup_ && this.svgGroup_.parentNode) this.svgGroup_.parentNode.removeChild(this.svgGroup_);
+  this.svgGroup_ = null;
   this.parentToolbox_ = null;
   this.svgBackground_ = null;
   this.targetWorkspace_ = null;
