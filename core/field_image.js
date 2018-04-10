@@ -94,7 +94,7 @@ Blockly.FieldImage.prototype.init = function() {
  * Dispose of all DOM objects belonging to this text.
  */
 Blockly.FieldImage.prototype.dispose = function() {
-  goog.dom.removeNode(this.fieldGroup_);
+  if (this.fieldGroup_ && this.fieldGroup_.parentNode) this.fieldGroup_.parentNode.removeChild(this.fieldGroup_);
   this.fieldGroup_ = null;
   this.imageElement_ = null;
 };

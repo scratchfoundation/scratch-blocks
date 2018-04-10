@@ -223,7 +223,7 @@ Blockly.Field.prototype.dispose = function() {
     this.mouseDownWrapper_ = null;
   }
   this.sourceBlock_ = null;
-  goog.dom.removeNode(this.fieldGroup_);
+  if (this.fieldGroup_ && this.fieldGroup_.parentNode) this.fieldGroup_.parentNode.removeChild(this.fieldGroup_);
   this.fieldGroup_ = null;
   this.textElement_ = null;
   this.validator_ = null;

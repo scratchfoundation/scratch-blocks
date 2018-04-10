@@ -397,7 +397,7 @@ Blockly.VerticalFlyout.prototype.clearOldBlocks_ = function() {
   // Do the same for checkboxes.
   for (var i = 0, elem; elem = this.checkboxes_[i]; i++) {
     elem.block.flyoutCheckbox = null;
-    goog.dom.removeNode(elem.svgRoot);
+    if (elem.svgRoot && elem.svgRoot.parentNode) elem.svgRoot.parentNode.removeChild(elem.svgRoot);
   }
   this.checkboxes_ = [];
 };
