@@ -375,9 +375,7 @@ Blockly.Field.prototype.getSvgRoot = function() {
 Blockly.Field.prototype.render_ = function() {
   if (this.visible_ && this.textElement_) {
     // Replace the text.
-    goog.dom.removeChildren(/** @type {!Element} */ (this.textElement_));
-    var textNode = document.createTextNode(this.getDisplayText_());
-    this.textElement_.appendChild(textNode);
+    this.textElement_.textContent = this.getDisplayText_();
     this.updateWidth();
 
     // Update text centering, based on newly calculated width.
