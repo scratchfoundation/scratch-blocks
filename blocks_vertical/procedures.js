@@ -244,10 +244,15 @@ Blockly.ScratchBlocks.ProcedureUtils.deleteShadows_ = function(connectionMap) {
   // Get rid of all of the old shadow blocks if they aren't connected.
   if (connectionMap) {
     for (var id in connectionMap) {
-      var block = connectionMap[id];
-      if (block && block.isShadow()) {
-        block.dispose();
-        connectionMap[id] = null;
+      var saveInfo = connectionMap[id];
+      if (saveInfo) {
+        var block = saveInfo['block'];
+        if (block && block.isShadow()) {
+          block.dispose();
+          connectionMap[id] = null;
+          // At this point we know which shadow DOMs are about to be orphaned in
+          // the VM.  What do we do with that information?
+        }
       }
     }
   }
@@ -396,7 +401,7 @@ Blockly.ScratchBlocks.ProcedureUtils.populateArgumentOnCaller_ = function(type,
   }
 
   if (connectionMap && oldBlock) {
-    // Reattach the old block.
+    // Reattach the old block and shadow DOM.
     connectionMap[input.name] = null;
     oldBlock.outputConnection.connect(input.connection);
     if (type != 'b' && this.generateShadows_) {
@@ -479,7 +484,7 @@ Blockly.ScratchBlocks.ProcedureUtils.populateArgumentOnDeclaration_ = function(
   var displayName = this.displayNames_[index];
 
   // Decide which block to attach.
-  if (connectionMap && oldBlock && oldTypeMatches) {
+  if (oldBlock && oldTypeMatches) {
     var argumentEditor = oldBlock;
     oldBlock.setFieldValue(displayName, 'TEXT');
     connectionMap[input.name] = null;
