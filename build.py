@@ -41,6 +41,7 @@ if sys.version_info[0] != 2:
 
 import errno, glob, httplib, json, os, re, subprocess, threading, urllib
 
+CLOSURE_ROOT = os.path.join("node_modules")
 
 def import_path(fullpath):
   """Import a file with full path specification.
@@ -87,7 +88,7 @@ var isNodeJS = !!(typeof module !== 'undefined' && module.exports &&
 
 if (isNodeJS) {
   var window = {};
-  require('closure-library');
+  require('google-closure-library');
 }
 
 window.BLOCKLY_DIR = (function() {
@@ -109,7 +110,7 @@ window.BLOCKLY_DIR = (function() {
 window.BLOCKLY_BOOT = function() {
   var dir = '';
   if (isNodeJS) {
-    require('closure-library');
+    require('google-closure-library');
     dir = 'blockly';
   } else {
     // Execute after Closure has loaded.
@@ -136,7 +137,7 @@ window.BLOCKLY_BOOT = function() {
 
     provides = []
     for dep in calcdeps.BuildDependenciesFromFiles(self.search_paths):
-      if not dep.filename.startswith(os.pardir + os.sep):  # '../'
+      if not dep.filename.startswith(CLOSURE_ROOT + os.sep):  # '../'
         provides.extend(dep.provides)
     provides.sort()  # Deterministic build.
     f.write('\n')
@@ -157,7 +158,7 @@ if (isNodeJS) {
   document.write('<script>var goog = undefined;</script>');
   // Load fresh Closure Library.
   document.write('<script src="' + window.BLOCKLY_DIR +
-      '/../closure-library/closure/goog/base.js"></script>');
+      '/../google-closure-library/closure/goog/base.js"></script>');
   document.write('<script>window.BLOCKLY_BOOT();</script>');
 }
 """)
@@ -197,26 +198,38 @@ class Gen_compressed(threading.Thread):
       search_paths = self.search_paths_horizontal
     # Define the parameters for the POST request.
     params = [
-        ("compilation_level", "SIMPLE_OPTIMIZATIONS"),
-        ("use_closure_library", "true"),
-        ("output_format", "json"),
-        ("output_info", "compiled_code"),
-        ("output_info", "warnings"),
-        ("output_info", "errors"),
-        ("output_info", "statistics"),
+        ("compilation_level", "SIMPLE"),
+        # ("dependency_mode", "LOOSE"),
+        ("language_in", "ECMASCRIPT_2017"),
+        ("language_out", "ECMASCRIPT5"),
+        ("inject_libraries", "false"),
+        ("define", "goog.DEBUG=false"),
+        # ("assume_function_wrapper", ""),
+        # ("charset", "UTF-8"),
+        # ("output_wrapper", "%output%"),
+        # ("isolation_mode", "IIFE"),
+        # ("use_closure_library", "true"),
+        # ("output_format", "json"),
+        # ("output_info", "compiled_code"),
+        # ("output_info", "warnings"),
+        # ("output_info", "errors"),
+        # ("output_info", "statistics"),
       ]
 
     # Read in all the source files.
     filenames = calcdeps.CalculateDependencies(search_paths,
         [os.path.join("core", "blockly.js")])
     filenames.sort()  # Deterministic build.
+    # print str(filenames)
+    # exit()
     for filename in filenames:
       # Filter out the Closure files (the compiler will add them).
-      if filename.startswith(os.pardir + os.sep):  # '../'
-        continue
-      f = open(filename)
-      params.append(("js_code", "".join(f.readlines())))
-      f.close()
+      # if filename.startswith(CLOSURE_ROOT + os.sep):  # '../'
+      #   continue
+      # f = open(filename)
+      # params.append(("js_code", "".join(f.readlines())))
+      params.append(("js_file", filename))
+      # f.close()
 
     self.do_compile(params, target_filename, filenames, "")
 
@@ -232,24 +245,33 @@ class Gen_compressed(threading.Thread):
       filenames = glob.glob(os.path.join("blocks_common", "*.js"))
     # Define the parameters for the POST request.
     params = [
-        ("compilation_level", "SIMPLE_OPTIMIZATIONS"),
-        ("output_format", "json"),
-        ("output_info", "compiled_code"),
-        ("output_info", "warnings"),
-        ("output_info", "errors"),
-        ("output_info", "statistics"),
+        ("compilation_level", "SIMPLE"),
+        # ("dependency_mode", "LOOSE"),
+        # ("process_closure_primitives", "0"),
+        # ("jscomp_off", "JSC_LATE_PROVIDE_ERROR"),
+        # ("defines", "goog.DEBUG=false"),
+        # ("output_format", "json"),
+        # ("output_info", "compiled_code"),
+        # ("output_info", "warnings"),
+        # ("output_info", "errors"),
+        # ("output_info", "statistics"),
+        # ("entry_point", "goog:Blockly.Blocks"),
+        # ("output_manifest", target_filename + ".MF"),
+        # ("output_module_dependencies", ""),
       ]
 
     # Read in all the source files.
     # Add Blockly.Blocks to be compatible with the compiler.
-    params.append(("js_code", "goog.provide('Blockly.Blocks');"))
+    # params.append(("js_code", "goog.provide('Blockly.Blocks');"))
+    params.append(("js_file", os.path.join("build", "gen_blocks.js")))
     # Add Blockly.Colours for use of centralized colour bank
     filenames.append(os.path.join("core", "colours.js"))
     filenames.append(os.path.join("core", "constants.js"))
     for filename in filenames:
-      f = open(filename)
-      params.append(("js_code", "".join(f.readlines())))
-      f.close()
+      # f = open(filename)
+      # params.append(("js_code", "".join(f.readlines())))
+      params.append(("js_file", filename))
+      # f.close()
 
     # Remove Blockly.Blocks to be compatible with Blockly.
     remove = "var Blockly={Blocks:{}};"
@@ -259,25 +281,29 @@ class Gen_compressed(threading.Thread):
     target_filename = language + "_compressed.js"
     # Define the parameters for the POST request.
     params = [
-        ("compilation_level", "SIMPLE_OPTIMIZATIONS"),
-        ("output_format", "json"),
-        ("output_info", "compiled_code"),
-        ("output_info", "warnings"),
-        ("output_info", "errors"),
-        ("output_info", "statistics"),
+        ("compilation_level", "SIMPLE"),
+        # ("dependency_mode", "LOOSE"),
+        # ("defines", "goog.DEBUG=false"),
+        # ("output_format", "json"),
+        # ("output_info", "compiled_code"),
+        # ("output_info", "warnings"),
+        # ("output_info", "errors"),
+        # ("output_info", "statistics"),
       ]
 
     # Read in all the source files.
     # Add Blockly.Generator to be compatible with the compiler.
-    params.append(("js_code", "goog.provide('Blockly.Generator');"))
+    # params.append(("js_code", "goog.provide('Blockly.Generator');"))
+    params.append(("js_file", os.path.join("build", "gen_generator.js")))
     filenames = glob.glob(
         os.path.join("generators", language, "*.js"))
     filenames.sort()  # Deterministic build.
     filenames.insert(0, os.path.join("generators", language + ".js"))
     for filename in filenames:
-      f = open(filename)
-      params.append(("js_code", "".join(f.readlines())))
-      f.close()
+      # f = open(filename)
+      # params.append(("js_code", "".join(f.readlines())))
+      params.append(("js_file", filename))
+      # f.close()
     filenames.insert(0, "[goog.provide]")
 
     # Remove Blockly.Generator to be compatible with Blockly.
@@ -286,15 +312,33 @@ class Gen_compressed(threading.Thread):
 
   def do_compile(self, params, target_filename, filenames, remove):
     # Send the request to Google.
-    headers = {"Content-type": "application/x-www-form-urlencoded"}
-    conn = httplib.HTTPSConnection("closure-compiler.appspot.com")
-    conn.request("POST", "/compile", urllib.urlencode(params), headers)
-    response = conn.getresponse()
-    json_str = response.read()
-    conn.close()
+
+    underWord = re.compile(r'_([a-z])')
+    # camel = lambda s: underWord.sub(lambda t: t.groups()[0].upper(), s)
+    camel = lambda s: s
+    camelParams = [("--" + camel(arg), value) if arg != "js_file" else (value,) for (arg, value) in params]
+    camelArgs = [item for pair in camelParams for item in pair]
+    args = [item for group in [["google-closure-compiler"], camelArgs] for item in group if item]
+    json.dump(args, open(target_filename + ".json", "w"))
+    json.dump(params, open(target_filename + ".raw.json", "w"))
+    proc = subprocess.Popen(args, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
+    (stdout, stderr) = proc.communicate()
+    # proc.wait()
+    # print "boop"
+    # exit()
+
+    # headers = {"Content-type": "application/x-www-form-urlencoded"}
+    # conn = httplib.HTTPSConnection("closure-compiler.appspot.com")
+    # conn.request("POST", "/compile", urllib.urlencode(params), headers)
+    # response = conn.getresponse()
+    # json_str = response.read()
+    # conn.close()
+    # json_str = stdout
 
     # Parse the JSON response.
-    json_data = json.loads(json_str)
+    # json_data = json.loads(json_str)
+    json_data = dict(compiledCode=stdout)
+    print target_filename, len(stdout)
 
     def file_lookup(name):
       if not name.startswith("Input_"):
@@ -361,22 +405,22 @@ class Gen_compressed(threading.Thread):
 \\*/""")
       code = re.sub(LICENSE, "", code)
 
-      stats = json_data["statistics"]
-      original_b = stats["originalSize"]
-      compressed_b = stats["compressedSize"]
-      if original_b > 0 and compressed_b > 0:
-        f = open(target_filename, "w")
-        f.write(code)
-        f.close()
+      # stats = json_data["statistics"]
+      # original_b = stats["originalSize"]
+      # compressed_b = stats["compressedSize"]
+      # if original_b > 0 and compressed_b > 0:
+      f = open(target_filename, "w")
+      f.write(code)
+      f.close()
 
-        original_kb = int(original_b / 1024 + 0.5)
-        compressed_kb = int(compressed_b / 1024 + 0.5)
-        ratio = int(float(compressed_b) / float(original_b) * 100 + 0.5)
-        print("SUCCESS: " + target_filename)
-        print("Size changed from %d KB to %d KB (%d%%)." % (
-            original_kb, compressed_kb, ratio))
-      else:
-        print("UNKNOWN ERROR")
+        # original_kb = int(original_b / 1024 + 0.5)
+        # compressed_kb = int(compressed_b / 1024 + 0.5)
+        # ratio = int(float(compressed_b) / float(original_b) * 100 + 0.5)
+      print("SUCCESS: " + target_filename)
+        # print("Size changed from %d KB to %d KB (%d%%)." % (
+        #     original_kb, compressed_kb, ratio))
+      # else:
+      #   print("UNKNOWN ERROR")
 
 
 class Gen_langfiles(threading.Thread):
@@ -465,17 +509,17 @@ def exclude_horizontal(item):
 if __name__ == "__main__":
   try:
     calcdeps = import_path(os.path.join(
-        os.path.pardir, "closure-library", "closure", "bin", "calcdeps.py"))
+        CLOSURE_ROOT, "google-closure-library", "closure", "bin", "calcdeps.py"))
   except ImportError:
-    if os.path.isdir(os.path.join(os.path.pardir, "closure-library-read-only")):
+    if os.path.isdir(os.path.join(CLOSURE_ROOT, "closure-library-read-only")):
       # Dir got renamed when Closure moved from Google Code to GitHub in 2014.
       print("Error: Closure directory needs to be renamed from"
             "'closure-library-read-only' to 'closure-library'.\n"
             "Please rename this directory.")
-    elif os.path.isdir(os.path.join(os.path.pardir, "google-closure-library")):
+    elif os.path.isdir(os.path.join(CLOSURE_ROOT, "google-closure-library")):
       # When Closure is installed by npm, it is named "google-closure-library".
       #calcdeps = import_path(os.path.join(
-      # os.path.pardir, "google-closure-library", "closure", "bin", "calcdeps.py"))
+      # CLOSURE_ROOT, "google-closure-library", "closure", "bin", "calcdeps.py"))
       print("Error: Closure directory needs to be renamed from"
            "'google-closure-library' to 'closure-library'.\n"
            "Please rename this directory.")
@@ -485,7 +529,7 @@ developers.google.com/blockly/guides/modify/web/closure""")
     sys.exit(1)
 
   search_paths = calcdeps.ExpandDirectories(
-      ["core", os.path.join(os.path.pardir, "closure-library")])
+      ["core", os.path.join(CLOSURE_ROOT, "google-closure-library")])
 
   search_paths_horizontal = filter(exclude_vertical, search_paths)
   search_paths_vertical = filter(exclude_horizontal, search_paths)

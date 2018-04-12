@@ -29,7 +29,7 @@
     "gh-pages": "0.12.0",
     "glob": "7.1.2",
     "google-closure-compiler": "20180402.0.0",
-    "google-closure-library": "20170910.0.0",
+    "google-closure-library": "20180204.0.0",
     "graceful-fs": "4.1.11",
     "imports-loader": "0.6.5",
     "json": "9.0.4",
