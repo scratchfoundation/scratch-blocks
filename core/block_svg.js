@@ -934,7 +934,7 @@ Blockly.BlockSvg.prototype.dispose = function(healStack, animate) {
   }
   Blockly.BlockSvg.superClass_.dispose.call(this, healStack);
 
-  goog.dom.removeNode(this.svgGroup_);
+  if (this.svgGroup_ && this.svgGroup_.parentNode) this.svgGroup_.parentNode.removeChild(this.svgGroup_);
   blockWorkspace.resizeContents();
   // Sever JavaScript to DOM connections.
   this.svgGroup_ = null;
@@ -983,7 +983,7 @@ Blockly.BlockSvg.disposeUiStep_ = function(clone, rtl, start, workspaceScale) {
   var ms = new Date - start;
   var percent = ms / 150;
   if (percent > 1) {
-    goog.dom.removeNode(clone);
+    if (clone && clone.parentNode) clone.parentNode.removeChild(clone);
   } else {
     var x = clone.translateX_ +
         (rtl ? -1 : 1) * clone.bBox_.width * workspaceScale / 2 * percent;

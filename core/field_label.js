@@ -97,7 +97,7 @@ Blockly.FieldLabel.prototype.init = function() {
  * Dispose of all DOM objects belonging to this text.
  */
 Blockly.FieldLabel.prototype.dispose = function() {
-  goog.dom.removeNode(this.textElement_);
+  if (this.textElement_ && this.textElement_.parentNode) this.textElement_.parentNode.removeChild(this.textElement_);
   this.textElement_ = null;
 };
 
