@@ -56,6 +56,8 @@ Blockly.ScratchBlocks.ProcedureUtils.callerMutationToDom = function() {
  */
 Blockly.ScratchBlocks.ProcedureUtils.callerDomToMutation = function(xmlElement) {
   this.procCode_ = xmlElement.getAttribute('proccode');
+  this.generateShadows_ =
+      JSON.parse(xmlElement.getAttribute('generateshadows'));
   this.argumentIds_ = JSON.parse(xmlElement.getAttribute('argumentids'));
   this.warp_ = JSON.parse(xmlElement.getAttribute('warp'));
   this.updateDisplay_();
@@ -64,11 +66,18 @@ Blockly.ScratchBlocks.ProcedureUtils.callerDomToMutation = function(xmlElement) 
 /**
  * Create XML to represent the (non-editable) name and arguments of a
  * procedures_prototype block or a procedures_declaration block.
+ * @param {boolean=} opt_generateShadows Whether to include the generateshadows
+ *     flag in the generated XML.  False if not provided.
  * @return {!Element} XML storage element.
  * @this Blockly.Block
  */
-Blockly.ScratchBlocks.ProcedureUtils.definitionMutationToDom = function() {
+Blockly.ScratchBlocks.ProcedureUtils.definitionMutationToDom = function(
+    opt_generateShadows) {
   var container = document.createElement('mutation');
+
+  if (opt_generateShadows) {
+    container.setAttribute('generateshadows', true);
+  }
   container.setAttribute('proccode', this.procCode_);
   container.setAttribute('argumentids', JSON.stringify(this.argumentIds_));
   container.setAttribute('argumentnames', JSON.stringify(this.displayNames_));
@@ -382,11 +391,11 @@ Blockly.ScratchBlocks.ProcedureUtils.populateArgumentOnCaller_ = function(type,
     // Reattach the old block.
     connectionMap[input.name] = null;
     oldBlock.outputConnection.connect(input.connection);
-    if (type != 'b') {
+    if (type != 'b' && this.generateShadows_) {
       // TODO: Preserve old shadow DOM.
       input.connection.setShadowDom(this.buildShadowDom_(type));
     }
-  } else {
+  } else if (this.generateShadows_) {
     this.attachShadow_(input, type);
   }
 };

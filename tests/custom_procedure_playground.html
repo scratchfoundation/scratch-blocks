@@ -164,7 +164,9 @@
     }
 
     function applyMutation() {
-      callback(mutationRoot.mutationToDom());
+      var mutation = mutationRoot.mutationToDom(/* opt_generateShadows */ true)
+      console.log(mutation);
+      callback(mutation);
       callback = null;
       mutationRoot = null;
       declarationWorkspace.clear();
