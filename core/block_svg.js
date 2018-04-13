@@ -272,33 +272,23 @@ Blockly.BlockSvg.prototype.getIcons = function() {
  * @param {Blockly.BlockSvg} newParent New parent block.
  */
 Blockly.BlockSvg.prototype.setParent = function(newParent) {
-  if (newParent === this.parentBlock_) {
+  var oldParent = this.parentBlock_;
+  if (newParent == oldParent) {
     return;
   }
-  var svgRoot = this.getSvgRoot();
-  var oldXY = this.getRelativeToSurfaceXY();
-
-  if (this.parentBlock_ && svgRoot) {
-    // Move this block up the DOM.  Keep track of x/y translations.
-
-    // Avoid moving a block up the DOM if it's currently selected/dragging,
-    // so as to avoid taking things off the drag surface.
-
-    // Also if we have a new parent, we should avoid calling `appendChild` twice with
-    // the same child, so we will just move ourselves later in the newParent block.
-
-    // Also do not move it if the workspace is clearing, we will only `removeChild`
-    // a few cycles later.
-    if (Blockly.selected !== this && !newParent && !this.workspace.isClearing) {
-      this.workspace.getCanvas().appendChild(svgRoot);
-      this.translate(oldXY.x, oldXY.y);
-    }
-  }
-
   Blockly.Field.startCache();
   Blockly.BlockSvg.superClass_.setParent.call(this, newParent);
   Blockly.Field.stopCache();
 
+  var svgRoot = this.getSvgRoot();
+
+  // Bail early if workspace is clearing, or we aren't rendered.
+  // We won't need to reattach ourselves anywhere.
+  if (this.workspace.isClearing || !svgRoot) {
+    return;
+  }
+
+  var oldXY = this.getRelativeToSurfaceXY();
   if (newParent) {
     newParent.getSvgRoot().appendChild(svgRoot);
     var newXY = this.getRelativeToSurfaceXY();
@@ -310,6 +300,17 @@ Blockly.BlockSvg.prototype.setParent = function(newParent) {
         newParent.getColourTertiary());
     }
   }
+  // If we are losing a parent, we want to move our DOM element to the
+  // root of the workspace.
+  else if (oldParent) {
+    // Avoid moving a block up the DOM if it's currently selected/dragging,
+    // so as to avoid taking things off the drag surface.
+    if (Blockly.selected != this) {
+      this.workspace.getCanvas().appendChild(svgRoot);
+      this.translate(oldXY.x, oldXY.y);
+    }
+  }
+
 };
 
 /**
