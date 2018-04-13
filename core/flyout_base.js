@@ -55,12 +55,12 @@ Blockly.Flyout = function(workspaceOptions) {
   this.workspace_ = new Blockly.WorkspaceSvg(workspaceOptions);
   this.workspace_.isFlyout = true;
 
-  // when we create blocks for this workspace, make the default id
-  // the same as the prototype for easier re-use
+  // When we create blocks for this workspace, instead of using the "optional" id
+  // make the default `id` the same as the `type` for easier re-use.
   var newBlock = this.workspace_.newBlock;
-  this.workspace_.newBlock = function(proto, id) {
-    // this here is workspace
-    return newBlock.call(this, proto, id || proto);
+  this.workspace_.newBlock = function(type, id) {
+    // Use `type` if `id` isn't passed. `this` will be workspace.
+    return newBlock.call(this, proto, id || type);
   };
 
   /**
@@ -482,8 +482,9 @@ Blockly.Flyout.prototype.show = function(xmlList) {
       var tagName = xml.tagName.toUpperCase();
       var default_gap = this.horizontalLayout_ ? this.GAP_X : this.GAP_Y;
       if (tagName == 'BLOCK') {
-        // this is probably a naive assumption, but we are going to assume
-        // that in a flyout, the same ID block is the same
+
+        // We assume that in a flyout, the same block id/type means
+        // the same output SVG nodes.  Check for a recycled element.
         var id = xml.getAttribute('id') || xml.getAttribute('type');
         var recycled = this.recycleBlocks_.findIndex(function(block) {
           return block.id === id;
@@ -491,8 +492,8 @@ Blockly.Flyout.prototype.show = function(xmlList) {
         var curBlock;
 
         if (recycled > -1) {
-          // delete the recycled element out of the recycle bin and
-          // assign it to curBlock
+          // Delete the recycled element out of the recycle bin and
+          // assign it to curBlock.
           curBlock = this.recycleBlocks_.splice(recycled, 1)[0];
         } else {
           var curBlock = Blockly.Xml.domToBlock(xml, this.workspace_);
@@ -544,7 +545,7 @@ Blockly.Flyout.prototype.show = function(xmlList) {
   this.listeners_.push(Blockly.bindEvent_(this.svgBackground_, 'mouseover',
       this, deselectAll));
 
-  // Clean out the old recycle bin
+  // Clean out the old recycle bin.
   var oldBlocks = this.recycleBlocks_;
   this.recycleBlocks_ = [];
   for (var i = 0; i < oldBlocks.length; i++) {
