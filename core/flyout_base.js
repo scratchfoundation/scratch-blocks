@@ -60,7 +60,7 @@ Blockly.Flyout = function(workspaceOptions) {
   var newBlock = this.workspace_.newBlock;
   this.workspace_.newBlock = function(type, id) {
     // Use `type` if `id` isn't passed. `this` will be workspace.
-    return newBlock.call(this, proto, id || type);
+    return newBlock.call(this, type, id || type);
   };
 
   /**
