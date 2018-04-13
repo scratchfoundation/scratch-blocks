@@ -851,7 +851,7 @@ Blockly.Flyout.prototype.placeNewBlock_ = function(oldBlock) {
  *
  * @param {!Blockly.BlockSvg} block The block to recycle.
  */
-Blockly.WorkspaceSvg.prototype.recycleBlock = function(block) {
+Blockly.Flyout.prototype.recycleBlock = function(block) {
   block.rendered = false;
   var g = block.getSvgRoot();
   g.setAttribute('transform', '');
