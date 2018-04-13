@@ -55,6 +55,14 @@ Blockly.Flyout = function(workspaceOptions) {
   this.workspace_ = new Blockly.WorkspaceSvg(workspaceOptions);
   this.workspace_.isFlyout = true;
 
+  // when we create blocks for this workspace, make the default id
+  // the same as the prototype for easier re-use
+  var newBlock = this.workspace_.newBlock;
+  this.workspace_.newBlock = function(proto, id) {
+    // this here is workspace
+    return newBlock.call(this, proto, id || proto);
+  };
+
   /**
    * Is RTL vs LTR.
    * @type {boolean}
@@ -126,6 +134,14 @@ Blockly.Flyout = function(workspaceOptions) {
    * @package
    */
   this.scrollTarget = null;
+
+  /**
+   * A recycle bin for blocks.
+   * @type {!Array.<!Blockly.Block>}
+   * @private
+   */
+  this.recycleBlocks_ = [];
+
 };
 
 /**
@@ -466,7 +482,21 @@ Blockly.Flyout.prototype.show = function(xmlList) {
       var tagName = xml.tagName.toUpperCase();
       var default_gap = this.horizontalLayout_ ? this.GAP_X : this.GAP_Y;
       if (tagName == 'BLOCK') {
-        var curBlock = Blockly.Xml.domToBlock(xml, this.workspace_);
+        // this is probably a naive assumption, but we are going to assume
+        // that in a flyout, the same ID block is the same
+        var id = xml.getAttribute('id') || xml.getAttribute('type');
+        var recycled = this.recycleBlocks_.findIndex(function(block) {
+          return block.id === id;
+        });
+        var curBlock;
+
+        if (recycled > -1) {
+          // delete the recycled element out of the recycle bin and
+          // assign it to curBlock
+          curBlock = this.recycleBlocks_.splice(recycled, 1)[0];
+        } else {
+          var curBlock = Blockly.Xml.domToBlock(xml, this.workspace_);
+        }
         if (curBlock.disabled) {
           // Record blocks that were initially disabled.
           // Do not enable these blocks as a result of capacity filtering.
@@ -513,6 +543,13 @@ Blockly.Flyout.prototype.show = function(xmlList) {
 
   this.listeners_.push(Blockly.bindEvent_(this.svgBackground_, 'mouseover',
       this, deselectAll));
+
+  // Clean out the old recycle bin
+  var oldBlocks = this.recycleBlocks_;
+  this.recycleBlocks_ = [];
+  for (var i = 0; i < oldBlocks.length; i++) {
+    oldBlocks[i].dispose(false, false);
+  }
 
   this.workspace_.setResizesEnabled(true);
   this.reflow();
@@ -617,7 +654,7 @@ Blockly.Flyout.prototype.clearOldBlocks_ = function() {
   var oldBlocks = this.workspace_.getTopBlocks(false);
   for (var i = 0, block; block = oldBlocks[i]; i++) {
     if (block.workspace == this.workspace_) {
-      block.dispose(false, false);
+      this.recycleBlock(block);
     }
   }
   // Delete any background buttons from a previous showing.
@@ -806,4 +843,17 @@ Blockly.Flyout.prototype.placeNewBlock_ = function(oldBlock) {
 
   block.moveBy(finalOffsetMainWs.x, finalOffsetMainWs.y);
   return block;
+};
+
+/**
+ * Put a previously created block into the recycle bin, used during large
+ * workspace swaps to limit the number of new dom elements we need to create
+ *
+ * @param {!Blockly.BlockSvg} block The block to recycle.
+ */
+Blockly.WorkspaceSvg.prototype.recycleBlock = function(block) {
+  block.rendered = false;
+  var g = block.getSvgRoot();
+  g.setAttribute('transform', '');
+  this.recycleBlocks_.push(block);
 };
