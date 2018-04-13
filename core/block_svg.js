@@ -272,18 +272,23 @@ Blockly.BlockSvg.prototype.getIcons = function() {
  * @param {Blockly.BlockSvg} newParent New parent block.
  */
 Blockly.BlockSvg.prototype.setParent = function(newParent) {
-  if (newParent == this.parentBlock_) {
+  if (newParent === this.parentBlock_) {
     return;
   }
   var svgRoot = this.getSvgRoot();
+  var oldXY = this.getRelativeToSurfaceXY();
   if (this.parentBlock_ && svgRoot) {
     // Move this block up the DOM.  Keep track of x/y translations.
-    var xy = this.getRelativeToSurfaceXY();
+
     // Avoid moving a block up the DOM if it's currently selected/dragging,
     // so as to avoid taking things off the drag surface.
-    if (Blockly.selected != this) {
+
+    // Also do not move it if the workspace is clearing, no need, we will be deleted
+    // Also, if we have a new parent, we should avoid calling `appendChild` twice with
+    // the same child, so we will just move ourselves later in the newParent block
+    if (Blockly.selected !== this && !newParent && !this.workspace.isClearing) {
       this.workspace.getCanvas().appendChild(svgRoot);
-      this.translate(xy.x, xy.y);
+      this.translate(oldXY.x, oldXY.y);
     }
   }
 
@@ -292,7 +297,6 @@ Blockly.BlockSvg.prototype.setParent = function(newParent) {
   Blockly.Field.stopCache();
 
   if (newParent) {
-    var oldXY = this.getRelativeToSurfaceXY();
     newParent.getSvgRoot().appendChild(svgRoot);
     var newXY = this.getRelativeToSurfaceXY();
     // Move the connections to match the child's new position.
