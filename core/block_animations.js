@@ -93,7 +93,9 @@ Blockly.BlockAnimations.connectionUiEffect = function(block) {
  * @param {!Blockly.BlockSvg} _block The block being disconnected.
  * @package
  */
-Blockly.BlockAnimations.disconnectUiEffect = function(_block) {
+Blockly.BlockAnimations.disconnectUiEffect = function(
+    /* eslint-disable no-unused-vars */ _block
+    /* eslint-enable no-unused-vars */) {
 };
 
 /**
