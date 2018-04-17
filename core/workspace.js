@@ -111,6 +111,13 @@ Blockly.Workspace = function(opt_options) {
 Blockly.Workspace.prototype.rendered = false;
 
 /**
+ * Returns `true` if the workspace is currently in the process of a bulk clear.
+ * @type {boolean}
+ * @package
+ */
+Blockly.Workspace.prototype.isClearing = false;
+
+/**
  * Maximum number of undo events in stack. `0` turns off undo, `Infinity` sets it to unlimited.
  * @type {number}
  */
@@ -202,6 +209,7 @@ Blockly.Workspace.prototype.getAllBlocks = function() {
  * Dispose of all blocks in workspace.
  */
 Blockly.Workspace.prototype.clear = function() {
+  this.isClearing = true;
   var existingGroup = Blockly.Events.getGroup();
   if (!existingGroup) {
     Blockly.Events.setGroup(true);
@@ -223,6 +231,7 @@ Blockly.Workspace.prototype.clear = function() {
   if (this.potentialVariableMap_) {
     this.potentialVariableMap_.clear();
   }
+  this.isClearing = false;
 };
 
 /* Begin functions that are just pass-throughs to the variable map. */
