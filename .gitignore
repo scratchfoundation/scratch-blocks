@@ -28,3 +28,5 @@ common.pyc
 /gh-pages/Gemfile.lock
 /gh-pages/closure-library
 /gh-pages/_site
+/local_build/*compiler*.jar
+/local_build/local_blockly_compressed_vertical.js
