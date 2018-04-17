@@ -111,6 +111,12 @@ Blockly.Workspace = function(opt_options) {
 Blockly.Workspace.prototype.rendered = false;
 
 /**
+ * Returns `true` if the workspace is currently in the process of a bulk clear.
+ * @type {boolean}
+ */
+Blockly.Workspace.prototype.isClearing = false;
+
+/**
  * Maximum number of undo events in stack. `0` turns off undo, `Infinity` sets it to unlimited.
  * @type {number}
  */
