@@ -63,6 +63,17 @@ Blockly.FieldDropdown = function(menuGenerator, opt_validator) {
 goog.inherits(Blockly.FieldDropdown, Blockly.Field);
 
 /**
+ * Construct a FieldDropdown from a JSON arg object.
+ * @param {!Object} element A JSON object with options.
+ * @returns {!Blockly.FieldDropdown} The new field instance.
+ * @package
+ * @nocollapse
+ */
+Blockly.FieldDropdown.fromJson = function(element) {
+  return new Blockly.FieldDropdown(element['options']);
+};
+
+/**
  * Horizontal distance that a checkmark overhangs the dropdown.
  */
 Blockly.FieldDropdown.CHECKMARK_OVERHANG = 25;
@@ -481,3 +492,5 @@ Blockly.FieldDropdown.prototype.dispose = function() {
   Blockly.WidgetDiv.hideIfOwner(this);
   Blockly.FieldDropdown.superClass_.dispose.call(this);
 };
+
+Blockly.Field.register('field_dropdown', Blockly.FieldDropdown);

@@ -1408,76 +1408,20 @@ Blockly.Block.prototype.interpolate_ = function(message, args, lastDummyAlign) {
             case 'input_dummy':
               input = this.appendDummyInput(element['name']);
               break;
-            case 'field_label':
-              field = Blockly.Block.newFieldLabelFromJson_(element);
-              break;
-            case 'field_label_serializable':
-              field = Blockly.Block.newFieldLabelSerializableFromJson_(element);
-              break;
-            case 'field_input':
-              field = Blockly.Block.newFieldTextInputFromJson_(element);
-              break;
-            case 'field_input_removable':
-              field = Blockly.FieldTextInputRemovable.fromJson(element);
-              break;
-            case 'field_textdropdown':
-              field = new Blockly.FieldTextDropdown(element['text'], element['options']);
-              if (typeof element['spellcheck'] == 'boolean') {
-                field.setSpellcheck(element['spellcheck']);
-              }
-              break;
-            case 'field_numberdropdown':
-              field = new Blockly.FieldNumberDropdown(
-                element['value'], element['options'],
-                element['min'], element['max'], element['precision']
-              );
-              break;
-            case 'field_angle':
-              field = new Blockly.FieldAngle(element['angle']);
-              break;
-            case 'field_checkbox':
-              field = new Blockly.FieldCheckbox(
-                  element['checked'] ? 'TRUE' : 'FALSE');
-              break;
-            case 'field_colour':
-              field = new Blockly.FieldColour(element['colour']);
-              break;
-            case 'field_colour_slider':
-              field = new Blockly.FieldColourSlider(element['colour']);
-              break;
-            case 'field_variable':
-              field = Blockly.Block.newFieldVariableFromJson_(element);
-              break;
-            case 'field_dropdown':
-              field = new Blockly.FieldDropdown(element['options']);
-              break;
-            case 'field_iconmenu':
-              field = new Blockly.FieldIconMenu(element['options']);
-              break;
-            case 'field_image':
-              field = Blockly.Block.newFieldImageFromJson_(element);
-              break;
-            case 'field_number':
-              field = new Blockly.FieldNumber(element['value'],
-                  element['min'], element['max'], element['precision']);
-              break;
-            case 'field_variable_getter':
-              field = Blockly.Block.newFieldVariableGetterFromJson_(element);
-              break;
-            case 'field_vertical_separator':
-              field = new Blockly.FieldVerticalSeparator();
-              break;
-            case 'field_date':
-              if (Blockly.FieldDate) {
-                field = new Blockly.FieldDate(element['date']);
-                break;
-              }
-              // Fall through if FieldDate is not compiled in.
             default:
+              field = Blockly.Field.fromJson(element);
+
               // Unknown field.
-              if (element['alt']) {
-                element = element['alt'];
-                altRepeat = true;
+              if (!field) {
+                if (element['alt']) {
+                  element = element['alt'];
+                  altRepeat = true;
+                } else {
+                  console.warn('Blockly could not create a field of type ' +
+                      element['type'] +
+                      '. You may need to register your custom field.  See ' +
+                      'github.com/google/blockly/issues/1584');
+                }
               }
           }
         }
@@ -1498,90 +1442,6 @@ Blockly.Block.prototype.interpolate_ = function(message, args, lastDummyAlign) {
       }
     }
   }
-};
-
-/**
- * Helper function to construct a FieldImage from a JSON arg object,
- * dereferencing any string table references.
- * @param {!Object} options A JSON object with options (src, width, height, and alt).
- * @returns {!Blockly.FieldImage} The new image.
- * @private
- */
-Blockly.Block.newFieldImageFromJson_ = function(options) {
-  var src = Blockly.utils.replaceMessageReferences(options['src']);
-  var width = Number(Blockly.utils.replaceMessageReferences(options['width']));
-  var height =
-    Number(Blockly.utils.replaceMessageReferences(options['height']));
-  var alt = Blockly.utils.replaceMessageReferences(options['alt']);
-  var flip_rtl = !!options['flip_rtl'] || !!options['flipRtl'];
-  return new Blockly.FieldImage(src, width, height, alt, flip_rtl);
-};
-
-/**
- * Helper function to construct a FieldLabel from a JSON arg object,
- * dereferencing any string table references.
- * @param {!Object} options A JSON object with options (text, and class).
- * @returns {!Blockly.FieldLabel} The new label.
- * @private
- */
-Blockly.Block.newFieldLabelFromJson_ = function(options) {
-  var text = Blockly.utils.replaceMessageReferences(options['text']);
-  return new Blockly.FieldLabel(text, options['class']);
-};
-
-/**
- * Helper function to construct a FieldLabelSerializable from a JSON arg object,
- * dereferencing any string table references.
- * @param {!Object} options A JSON object with options (text, and class).
- * @returns {!Blockly.FieldLabelSerializable} The new label.
- * @private
- */
-Blockly.Block.newFieldLabelSerializableFromJson_ = function(options) {
-  var text = Blockly.utils.replaceMessageReferences(options['text']);
-  return new Blockly.FieldLabelSerializable(text, options['class']);
-};
-
-/**
- * Helper function to construct a FieldTextInput from a JSON arg object,
- * dereferencing any string table references.
- * @param {!Object} options A JSON object with options (text, class, and
- *                          spellcheck).
- * @returns {!Blockly.FieldTextInput} The new text input.
- * @private
- */
-Blockly.Block.newFieldTextInputFromJson_ = function(options) {
-  var text = Blockly.utils.replaceMessageReferences(options['text']);
-  var field = new Blockly.FieldTextInput(text, options['class']);
-  if (typeof options['spellcheck'] == 'boolean') {
-    field.setSpellcheck(options['spellcheck']);
-  }
-  return field;
-};
-
-/**
- * Helper function to construct a FieldVariable from a JSON arg object,
- * dereferencing any string table references.
- * @param {!Object} options A JSON object with options (variable).
- * @returns {!Blockly.FieldVariable} The variable field.
- * @private
- */
-Blockly.Block.newFieldVariableFromJson_ = function(options) {
-  var varname = Blockly.utils.replaceMessageReferences(options['variable']);
-  var variableTypes = options['variableTypes'];
-  return new Blockly.FieldVariable(varname, null, variableTypes);
-};
-
-/**
- * Helper function to construct a FieldVariableGetter from a JSON arg object,
- * dereferencing any string table references.
- * @param {!Object} options A JSON object with options (variable).
- * @returns {!Blockly.FieldImage} The new image.
- * @private
- */
-Blockly.Block.newFieldVariableGetterFromJson_ = function(options) {
-  var varname = Blockly.utils.replaceMessageReferences(options['text']);
-  return new Blockly.FieldVariableGetter(varname, options['name'],
-      options['class'], options['variableType']);
 };
 
 /**

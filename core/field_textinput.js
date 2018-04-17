@@ -59,6 +59,24 @@ Blockly.FieldTextInput = function(text, opt_validator, opt_restrictor) {
 goog.inherits(Blockly.FieldTextInput, Blockly.Field);
 
 /**
+ * Construct a FieldTextInput from a JSON arg object,
+ * dereferencing any string table references.
+ * @param {!Object} options A JSON object with options (text, class, and
+ *                          spellcheck).
+ * @returns {!Blockly.FieldTextInput} The new field instance.
+ * @package
+ * @nocollapse
+ */
+Blockly.FieldTextInput.fromJson = function(options) {
+  var text = Blockly.utils.replaceMessageReferences(options['text']);
+  var field = new Blockly.FieldTextInput(text, options['class']);
+  if (typeof options['spellcheck'] === 'boolean') {
+    field.setSpellcheck(options['spellcheck']);
+  }
+  return field;
+};
+
+/**
  * Length of animations in seconds.
  */
 Blockly.FieldTextInput.ANIMATION_TIME = 0.25;
@@ -622,3 +640,5 @@ Blockly.FieldTextInput.nonnegativeIntegerValidator = function(text) {
   }
   return n;
 };
+
+Blockly.Field.register('field_input', Blockly.FieldTextInput);

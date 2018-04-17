@@ -63,6 +63,20 @@ Blockly.FieldVariable = function(varname, opt_validator, opt_variableTypes) {
 };
 goog.inherits(Blockly.FieldVariable, Blockly.FieldDropdown);
 
+/**
+ * Construct a FieldVariable from a JSON arg object,
+ * dereferencing any string table references.
+ * @param {!Object} options A JSON object with options (variable,
+ *                          variableTypes, and defaultType).
+ * @returns {!Blockly.FieldVariable} The new field instance.
+ * @package
+ * @nocollapse
+ */
+Blockly.FieldVariable.fromJson = function(options) {
+  var varname = Blockly.utils.replaceMessageReferences(options['variable']);
+  var variableTypes = options['variableTypes'];
+  return new Blockly.FieldVariable(varname, null, variableTypes);
+};
 
 /**
  * Initialize everything needed to render this field.  This includes making sure
@@ -343,3 +357,5 @@ Blockly.FieldVariable.prototype.onItemSelected = function(menu, menuItem) {
   }
   this.setValue(id);
 };
+
+Blockly.Field.register('field_variable', Blockly.FieldVariable);
