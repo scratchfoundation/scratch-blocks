@@ -113,6 +113,7 @@ Blockly.Workspace.prototype.rendered = false;
 /**
  * Returns `true` if the workspace is currently in the process of a bulk clear.
  * @type {boolean}
+ * @package
  */
 Blockly.Workspace.prototype.isClearing = false;
 
