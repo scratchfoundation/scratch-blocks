@@ -70,7 +70,8 @@ function test_fieldnumber_fromJson() {
   assertEquals(Blockly.FieldNumber.fromJson({}).getValue(), '0');
   assertEquals(Blockly.FieldNumber.fromJson({ value: 1 }).getValue(), '1');
 
-  // All options
+  // All options, but scratch-blocks parses min/max/precision differently from
+  // Blockly.  See notes in field_number.js.
   var field = Blockly.FieldNumber.fromJson({
       value: 0,
       min: -128,
@@ -78,7 +79,4 @@ function test_fieldnumber_fromJson() {
       precision: 1
   });
   assertEquals(field.getValue(), '0');
-  assertEquals(field.min_, -128);
-  assertEquals(field.max_, 127);
-  assertEquals(field.precision_, 1);
 }
