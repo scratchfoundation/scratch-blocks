@@ -27,6 +27,7 @@
 goog.provide('Blockly.BlockSvg');
 
 goog.require('Blockly.Block');
+goog.require('Blockly.BlockAnimations');
 goog.require('Blockly.ContextMenu');
 goog.require('Blockly.Grid');
 goog.require('Blockly.RenderedConnection');
@@ -918,7 +919,7 @@ Blockly.BlockSvg.prototype.dispose = function(healStack, animate) {
 
   if (animate && this.rendered) {
     this.unplug(healStack);
-    this.disposeUiEffect();
+    Blockly.BlockAnimations.disposeUiEffect(this);
   }
   // Stop rerendering.
   this.rendered = false;
@@ -940,76 +941,6 @@ Blockly.BlockSvg.prototype.dispose = function(healStack, animate) {
   this.svgGroup_ = null;
   this.svgPath_ = null;
   Blockly.Field.stopCache();
-};
-
-/**
- * Play some UI effects (sound, animation) when disposing of a block.
- */
-Blockly.BlockSvg.prototype.disposeUiEffect = function() {
-  this.workspace.getAudioManager().play('delete');
-
-  var xy = this.workspace.getSvgXY(/** @type {!Element} */ (this.svgGroup_));
-  // Deeply clone the current block.
-  var clone = this.svgGroup_.cloneNode(true);
-  clone.translateX_ = xy.x;
-  clone.translateY_ = xy.y;
-  clone.setAttribute('transform',
-      'translate(' + clone.translateX_ + ',' + clone.translateY_ + ')');
-  this.workspace.getParentSvg().appendChild(clone);
-  clone.bBox_ = clone.getBBox();
-  // Start the animation.
-  Blockly.BlockSvg.disposeUiStep_(clone, this.RTL, new Date,
-      this.workspace.scale);
-};
-
-/**
- * Play some UI effects (sound) after a connection has been established.
- */
-Blockly.BlockSvg.prototype.connectionUiEffect = function() {
-  this.workspace.getAudioManager().play('click');
-};
-
-/**
- * Animate a cloned block and eventually dispose of it.
- * This is a class method, not an instance method since the original block has
- * been destroyed and is no longer accessible.
- * @param {!Element} clone SVG element to animate and dispose of.
- * @param {boolean} rtl True if RTL, false if LTR.
- * @param {!Date} start Date of animation's start.
- * @param {number} workspaceScale Scale of workspace.
- * @private
- */
-Blockly.BlockSvg.disposeUiStep_ = function(clone, rtl, start, workspaceScale) {
-  var ms = new Date - start;
-  var percent = ms / 150;
-  if (percent > 1) {
-    goog.dom.removeNode(clone);
-  } else {
-    var x = clone.translateX_ +
-        (rtl ? -1 : 1) * clone.bBox_.width * workspaceScale / 2 * percent;
-    var y = clone.translateY_ + clone.bBox_.height * workspaceScale * percent;
-    var scale = (1 - percent) * workspaceScale;
-    clone.setAttribute('transform', 'translate(' + x + ',' + y + ')' +
-        ' scale(' + scale + ')');
-    setTimeout(Blockly.BlockSvg.disposeUiStep_, 10, clone, rtl, start,
-               workspaceScale);
-  }
-};
-
-/**
- * Play some UI effects (sound, animation) when disconnecting a block.
- * No-op in scratch-blocks, which has no disconnect animation.
- * @private
- */
-Blockly.BlockSvg.prototype.disconnectUiEffect = function() {
-};
-
-/**
- * Stop the disconnect UI animation immediately.
- * No-op in scratch-blocks, which has no disconnect animation.
- * @private
- */
-Blockly.BlockSvg.disconnectUiStop_ = function() {
 };
 
 /**
