@@ -399,7 +399,7 @@ Blockly.DataCategory.addBlock = function(xmlList,
 
     var gap = 8;
     var blockText = '<xml>' +
-        '<block type="' + blockType + '" gap="' + gap + '" dynamic>' +
+        '<block type="' + blockType + '" gap="' + gap + '" dynamic="true">' +
         Blockly.Variables.generateVariableFieldXml_(variable, fieldName) +
         firstValueField + secondValueField +
         '</block>' +
