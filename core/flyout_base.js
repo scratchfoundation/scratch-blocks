@@ -483,21 +483,26 @@ Blockly.Flyout.prototype.show = function(xmlList) {
       var default_gap = this.horizontalLayout_ ? this.GAP_X : this.GAP_Y;
       if (tagName == 'BLOCK') {
 
-        // We assume that in a flyout, the same block id/type means
-        // the same output BlockSvg.  Check for a recycled element.
+        // We assume that in a flyout, the same block id (or type if missing id) means
+        // the same output BlockSVG.
+
+        // Look for a block that matches the id or type, our createBlock will assign
+        // id = type if none existed.
         var id = xml.getAttribute('id') || xml.getAttribute('type');
         var recycled = this.recycleBlocks_.findIndex(function(block) {
           return block.id === id;
         });
-        var curBlock;
 
+
+        // If we found a recycled item, reuse the BlockSVG from last time.
+        // Otherwise, convert the XML block to a BlockSVG.
+        var curBlock;
         if (recycled > -1) {
-          // Delete the recycled element out of the recycle bin and
-          // assign it to curBlock.
           curBlock = this.recycleBlocks_.splice(recycled, 1)[0];
         } else {
-          var curBlock = Blockly.Xml.domToBlock(xml, this.workspace_);
+          curBlock = Blockly.Xml.domToBlock(xml, this.workspace_);
         }
+
         if (curBlock.disabled) {
           // Record blocks that were initially disabled.
           // Do not enable these blocks as a result of capacity filtering.
@@ -663,7 +668,7 @@ Blockly.Flyout.prototype.clearOldBlocks_ = function() {
   var oldBlocks = this.workspace_.getTopBlocks(false);
   for (var i = 0, block; block = oldBlocks[i]; i++) {
     if (block.workspace == this.workspace_) {
-      this.recycleBlock(block);
+      this.recycleBlock_(block);
     }
   }
   // Delete any background buttons from a previous showing.
@@ -859,8 +864,9 @@ Blockly.Flyout.prototype.placeNewBlock_ = function(oldBlock) {
  * workspace swaps to limit the number of new dom elements we need to create
  *
  * @param {!Blockly.BlockSvg} block The block to recycle.
+ * @private
  */
-Blockly.Flyout.prototype.recycleBlock = function(block) {
+Blockly.Flyout.prototype.recycleBlock_ = function(block) {
   var xy = block.getRelativeToSurfaceXY();
   block.moveBy(-xy.x, -xy.y);
   this.recycleBlocks_.push(block);
