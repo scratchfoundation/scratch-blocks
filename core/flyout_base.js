@@ -484,7 +484,7 @@ Blockly.Flyout.prototype.show = function(xmlList) {
       if (tagName == 'BLOCK') {
 
         // We assume that in a flyout, the same block id/type means
-        // the same output SVG nodes.  Check for a recycled element.
+        // the same output BlockSvg.  Check for a recycled element.
         var id = xml.getAttribute('id') || xml.getAttribute('type');
         var recycled = this.recycleBlocks_.findIndex(function(block) {
           return block.id === id;
@@ -531,6 +531,8 @@ Blockly.Flyout.prototype.show = function(xmlList) {
     }
   }
 
+  this.emptyRecycleBlocks_();
+
   this.layout_(contents, gaps);
 
   // IE 11 is an incompetent browser that fails to fire mouseout events.
@@ -545,13 +547,6 @@ Blockly.Flyout.prototype.show = function(xmlList) {
   this.listeners_.push(Blockly.bindEvent_(this.svgBackground_, 'mouseover',
       this, deselectAll));
 
-  // Clean out the old recycle bin.
-  var oldBlocks = this.recycleBlocks_;
-  this.recycleBlocks_ = [];
-  for (var i = 0; i < oldBlocks.length; i++) {
-    oldBlocks[i].dispose(false, false);
-  }
-
   this.workspace_.setResizesEnabled(true);
   this.reflow();
 
@@ -562,6 +557,19 @@ Blockly.Flyout.prototype.show = function(xmlList) {
   this.workspace_.addChangeListener(this.reflowWrapper_);
 
   this.recordCategoryScrollPositions_();
+};
+
+/**
+ * Empty out the recycled blocks, properly destroying everything.
+ * @private
+ */
+Blockly.Flyout.prototype.emptyRecycleBlocks_ = function() {
+  // Clean out the old recycle bin.
+  var oldBlocks = this.recycleBlocks_;
+  this.recycleBlocks_ = [];
+  for (var i = 0; i < oldBlocks.length; i++) {
+    oldBlocks[i].dispose(false, false);
+  }
 };
 
 /**
@@ -853,7 +861,7 @@ Blockly.Flyout.prototype.placeNewBlock_ = function(oldBlock) {
  * @param {!Blockly.BlockSvg} block The block to recycle.
  */
 Blockly.Flyout.prototype.recycleBlock = function(block) {
-  var g = block.getSvgRoot();
-  g.setAttribute('transform', '');
+  var xy = block.getRelativeToSurfaceXY();
+  block.moveBy(-xy.x, -xy.y);
   this.recycleBlocks_.push(block);
 };
