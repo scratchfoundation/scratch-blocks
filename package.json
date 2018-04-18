@@ -31,6 +31,7 @@
     "rimraf": "2.6.2",
     "travis-after-all": "1.4.4",
     "webdriverio": "4.8.0",
-    "webpack": "1.13.2"
+    "webpack": "1.13.2",
+    "google-closure-compiler": "20180402.0.0"
   }
 }

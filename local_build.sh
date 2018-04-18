@@ -51,10 +51,10 @@ echo Using $COMPILER as the compiler.
 rm local_blockly_compressed_vertical.js 2> /dev/null
 echo Compiling Scratch-Blocks..
 java -jar $COMPILER \
-  --js='../core/**.js' \
-  --js='!../core/block_render_svg_horizontal.js' \
-  --js='../../closure-library/closure/goog/**.js' \
-  --js='../../closure-library/third_party/closure/goog/**.js' \
+  --js='core/**.js' \
+  --js='!core/block_render_svg_horizontal.js' \
+  --js='../closure-library/closure/goog/**.js' \
+  --js='../closure-library/third_party/closure/goog/**.js' \
   --generate_exports \
   --warning_level='DEFAULT' \
   --compilation_level SIMPLE_OPTIMIZATIONS \
