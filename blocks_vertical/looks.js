@@ -391,7 +391,7 @@ Blockly.Blocks['looks_gotofrontback'] = {
   init: function() {
     this.jsonInit(
       {
-        "message0": "go to %1",
+        "message0": "go to %1 layer",
         "args0": [
           {
             "type": "field_dropdown",
