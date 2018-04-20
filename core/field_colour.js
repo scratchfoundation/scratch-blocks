@@ -52,6 +52,17 @@ Blockly.FieldColour = function(colour, opt_validator) {
 goog.inherits(Blockly.FieldColour, Blockly.Field);
 
 /**
+ * Construct a FieldColour from a JSON arg object.
+ * @param {!Object} options A JSON object with options (colour).
+ * @returns {!Blockly.FieldColour} The new field instance.
+ * @package
+ * @nocollapse
+ */
+Blockly.FieldColour.fromJson = function(options) {
+  return new Blockly.FieldColour(options['colour']);
+};
+
+/**
  * By default use the global constants for colours.
  * @type {Array.<string>}
  * @private
@@ -237,3 +248,5 @@ Blockly.FieldColour.widgetDispose_ = function() {
   }
   Blockly.Events.setGroup(false);
 };
+
+Blockly.Field.register('field_colour', Blockly.FieldColour);

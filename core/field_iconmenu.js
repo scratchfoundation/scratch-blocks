@@ -49,6 +49,16 @@ Blockly.FieldIconMenu = function(icons) {
 };
 goog.inherits(Blockly.FieldIconMenu, Blockly.Field);
 
+/**
+ * Construct a FieldIconMenu from a JSON arg object.
+ * @param {!Object} element A JSON object with options.
+ * @returns {!Blockly.FieldIconMenu} The new field instance.
+ * @package
+ * @nocollapse
+ */
+Blockly.FieldIconMenu.fromJson = function(element) {
+  return new Blockly.FieldIconMenu(element['options']);
+};
 
 /**
  * Fixed width of the drop-down, in px. Icon buttons will flow inside this width.
@@ -292,3 +302,5 @@ Blockly.FieldIconMenu.prototype.onHide_ = function() {
   // Unflip the arrow if appropriate
   this.arrowIcon_.setAttribute('transform', 'translate(' + this.arrowX_ + ',' + this.arrowY_ + ')');
 };
+
+Blockly.Field.register('field_iconmenu', Blockly.FieldIconMenu);

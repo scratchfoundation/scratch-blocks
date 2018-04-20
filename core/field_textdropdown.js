@@ -56,6 +56,23 @@ Blockly.FieldTextDropdown = function(text, menuGenerator, opt_validator, opt_res
 goog.inherits(Blockly.FieldTextDropdown, Blockly.FieldTextInput);
 
 /**
+ * Construct a FieldTextDropdown from a JSON arg object,
+ * dereferencing any string table references.
+ * @param {!Object} element A JSON object with options.
+ * @returns {!Blockly.FieldTextDropdown} The new field instance.
+ * @package
+ * @nocollapse
+ */
+Blockly.FieldTextDropdown.fromJson = function(element) {
+  var field =
+      new Blockly.FieldTextDropdown(element['text'], element['options']);
+  if (typeof element['spellcheck'] == 'boolean') {
+    field.setSpellcheck(element['spellcheck']);
+  }
+  return field;
+};
+
+/**
  * Install this text drop-down field on a block.
  */
 Blockly.FieldTextDropdown.prototype.init = function() {
@@ -143,3 +160,5 @@ Blockly.FieldTextDropdown.prototype.showDropdown_ = Blockly.FieldDropdown.protot
  * Callback when the drop-down menu is hidden.
  */
 Blockly.FieldTextDropdown.prototype.onHide = Blockly.FieldDropdown.prototype.onHide;
+
+Blockly.Field.register('field_textdropdown', Blockly.FieldTextDropdown);
