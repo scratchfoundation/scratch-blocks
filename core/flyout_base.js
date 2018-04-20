@@ -55,6 +55,14 @@ Blockly.Flyout = function(workspaceOptions) {
   this.workspace_ = new Blockly.WorkspaceSvg(workspaceOptions);
   this.workspace_.isFlyout = true;
 
+  // When we create blocks for this workspace, instead of using the "optional" id
+  // make the default `id` the same as the `type` for easier re-use.
+  var newBlock = this.workspace_.newBlock;
+  this.workspace_.newBlock = function(type, id) {
+    // Use `type` if `id` isn't passed. `this` will be workspace.
+    return newBlock.call(this, type, id || type);
+  };
+
   /**
    * Is RTL vs LTR.
    * @type {boolean}
@@ -126,6 +134,14 @@ Blockly.Flyout = function(workspaceOptions) {
    * @package
    */
   this.scrollTarget = null;
+
+  /**
+   * A recycle bin for blocks.
+   * @type {!Array.<!Blockly.Block>}
+   * @private
+   */
+  this.recycleBlocks_ = [];
+
 };
 
 /**
@@ -466,7 +482,28 @@ Blockly.Flyout.prototype.show = function(xmlList) {
       var tagName = xml.tagName.toUpperCase();
       var default_gap = this.horizontalLayout_ ? this.GAP_X : this.GAP_Y;
       if (tagName == 'BLOCK') {
-        var curBlock = Blockly.Xml.domToBlock(xml, this.workspace_);
+
+        // We assume that in a flyout, the same block id (or type if missing id) means
+        // the same output BlockSVG.
+
+        // Look for a block that matches the id or type, our createBlock will assign
+        // id = type if none existed.
+        var dynamic = xml.hasAttribute('dynamic');
+        var id = xml.getAttribute('id') || xml.getAttribute('type');
+        var recycled = this.recycleBlocks_.findIndex(function(block) {
+          return block.id === id;
+        });
+
+
+        // If we found a recycled item, reuse the BlockSVG from last time.
+        // Otherwise, convert the XML block to a BlockSVG.
+        var curBlock;
+        if (!dynamic && recycled > -1) {
+          curBlock = this.recycleBlocks_.splice(recycled, 1)[0];
+        } else {
+          curBlock = Blockly.Xml.domToBlock(xml, this.workspace_);
+        }
+
         if (curBlock.disabled) {
           // Record blocks that were initially disabled.
           // Do not enable these blocks as a result of capacity filtering.
@@ -500,6 +537,8 @@ Blockly.Flyout.prototype.show = function(xmlList) {
     }
   }
 
+  this.emptyRecycleBlocks_();
+
   this.layout_(contents, gaps);
 
   // IE 11 is an incompetent browser that fails to fire mouseout events.
@@ -524,6 +563,19 @@ Blockly.Flyout.prototype.show = function(xmlList) {
   this.workspace_.addChangeListener(this.reflowWrapper_);
 
   this.recordCategoryScrollPositions_();
+};
+
+/**
+ * Empty out the recycled blocks, properly destroying everything.
+ * @private
+ */
+Blockly.Flyout.prototype.emptyRecycleBlocks_ = function() {
+  // Clean out the old recycle bin.
+  var oldBlocks = this.recycleBlocks_;
+  this.recycleBlocks_ = [];
+  for (var i = 0; i < oldBlocks.length; i++) {
+    oldBlocks[i].dispose(false, false);
+  }
 };
 
 /**
@@ -617,7 +669,7 @@ Blockly.Flyout.prototype.clearOldBlocks_ = function() {
   var oldBlocks = this.workspace_.getTopBlocks(false);
   for (var i = 0, block; block = oldBlocks[i]; i++) {
     if (block.workspace == this.workspace_) {
-      block.dispose(false, false);
+      this.recycleBlock_(block);
     }
   }
   // Delete any background buttons from a previous showing.
@@ -806,4 +858,17 @@ Blockly.Flyout.prototype.placeNewBlock_ = function(oldBlock) {
 
   block.moveBy(finalOffsetMainWs.x, finalOffsetMainWs.y);
   return block;
+};
+
+/**
+ * Put a previously created block into the recycle bin, used during large
+ * workspace swaps to limit the number of new dom elements we need to create
+ *
+ * @param {!Blockly.BlockSvg} block The block to recycle.
+ * @private
+ */
+Blockly.Flyout.prototype.recycleBlock_ = function(block) {
+  var xy = block.getRelativeToSurfaceXY();
+  block.moveBy(-xy.x, -xy.y);
+  this.recycleBlocks_.push(block);
 };
