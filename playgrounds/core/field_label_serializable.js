@@ -47,6 +47,19 @@ Blockly.FieldLabelSerializable = function(text, opt_class) {
 goog.inherits(Blockly.FieldLabelSerializable, Blockly.FieldLabel);
 
 /**
+ * Construct a FieldLabelSerializable from a JSON arg object,
+ * dereferencing any string table references.
+ * @param {!Object} options A JSON object with options (text, and class).
+ * @returns {!Blockly.FieldLabelSerializable} The new field instance.
+ * @package
+ * @nocollapse
+ */
+Blockly.FieldLabelSerializable.fromJson = function(options) {
+  var text = Blockly.utils.replaceMessageReferences(options['text']);
+  return new Blockly.FieldLabelSerializable(text, options['class']);
+};
+
+/**
  * Editable fields usually show some sort of UI for the user to change them.
  * This field should be serialized, but only edited programmatically.
  * @type {boolean}
@@ -107,3 +120,6 @@ Blockly.FieldLabelSerializable.prototype.render_ = function() {
     this.textElement_.setAttribute('x', centerTextX);
   }
 };
+
+Blockly.Field.register(
+    'field_label_serializable', Blockly.FieldLabelSerializable);

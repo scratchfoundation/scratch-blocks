@@ -57,5 +57,21 @@ Blockly.FieldNumberDropdown = function(value, menuGenerator, opt_min, opt_max,
   );
   this.addArgType('numberdropdown');
 };
-
 goog.inherits(Blockly.FieldNumberDropdown, Blockly.FieldTextDropdown);
+
+/**
+ * Construct a FieldTextDropdown from a JSON arg object,
+ * dereferencing any string table references.
+ * @param {!Object} element A JSON object with options.
+ * @returns {!Blockly.FieldNumberDropdown} The new field instance.
+ * @package
+ * @nocollapse
+ */
+Blockly.FieldNumberDropdown.fromJson = function(element) {
+  return new Blockly.FieldNumberDropdown(
+      element['value'], element['options'],
+      element['min'], element['max'], element['precision']
+  );
+};
+
+Blockly.Field.register('field_numberdropdown', Blockly.FieldNumberDropdown);

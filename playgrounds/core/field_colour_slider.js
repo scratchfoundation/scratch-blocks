@@ -51,6 +51,16 @@ Blockly.FieldColourSlider = function(colour, opt_validator) {
 };
 goog.inherits(Blockly.FieldColourSlider, Blockly.Field);
 
+/**
+ * Construct a FieldColourSlider from a JSON arg object.
+ * @param {!Object} options A JSON object with options (colour).
+ * @returns {!Blockly.FieldColourSlider} The new field instance.
+ * @package
+ * @nocollapse
+ */
+Blockly.FieldColourSlider.fromJson = function(options) {
+  return new Blockly.FieldColourSlider(options['colour']);
+};
 
 /**
  * Function to be called if eyedropper can be activated.
@@ -363,3 +373,5 @@ Blockly.FieldColourSlider.prototype.dispose = function() {
   Blockly.Events.setGroup(false);
   Blockly.FieldColourSlider.superClass_.dispose.call(this);
 };
+
+Blockly.Field.register('field_colour_slider', Blockly.FieldColourSlider);

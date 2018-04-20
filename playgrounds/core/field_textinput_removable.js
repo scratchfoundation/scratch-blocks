@@ -100,3 +100,6 @@ Blockly.FieldTextInputRemovable.fromJson = function(options) {
   }
   return field;
 };
+
+Blockly.Field.register(
+    'field_input_removable', Blockly.FieldTextInputRemovable);
