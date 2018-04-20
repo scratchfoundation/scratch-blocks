@@ -1460,3 +1460,36 @@ Blockly.BlockSvg.prototype.scheduleSnapAndBump = function() {
     Blockly.Events.setGroup(false);
   }, Blockly.BUMP_DELAY);
 };
+
+/**
+ * Determine if this block can be recycled, basic non-dynamic shadows and no variables
+ * @return {boolean} true if the block can be recycled
+ */
+Blockly.BlockSvg.prototype.isRecyclable = function() {
+  for (var i = 0; i < this.inputList.length; i++) {
+    var input = this.inputList[i];
+    for (var j = 0; j < input.fieldRow.length; j++) {
+      var field = input.fieldRow[j];
+      // No variables.
+      if (field instanceof Blockly.FieldVariable ||
+          field instanceof Blockly.FieldVariableGetter) {
+        return false;
+      }
+      if (field instanceof Blockly.FieldDropdown ||
+          field instanceof Blockly.FieldNumberDropdown ||
+          field instanceof Blockly.FieldTextDropdown) {
+        if (field.isOptionListDynamic()) {
+          return false;
+        }
+      }
+    }
+    // Check children.
+    if (input.connection) {
+      var child = input.connection.targetBlock();
+      if (child && !child.isRecyclable()) {
+        return false;
+      }
+    }
+  }
+  return true;
+};
