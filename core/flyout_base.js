@@ -668,7 +668,7 @@ Blockly.Flyout.prototype.clearOldBlocks_ = function() {
   var oldBlocks = this.workspace_.getTopBlocks(false);
   for (var i = 0, block; block = oldBlocks[i]; i++) {
     if (block.workspace == this.workspace_) {
-      if (block.recyclable_) {
+      if (block.isRecyclable()) {
         this.recycleBlock_(block);
       } else {
         block.dispose(false, false);

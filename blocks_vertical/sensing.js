@@ -87,8 +87,7 @@ Blockly.Blocks['sensing_touchingcolor'] = {
         }
       ],
       "category": Blockly.Categories.sensing,
-      "extensions": ["colours_sensing", "output_boolean"],
-      "recyclable": true
+      "extensions": ["colours_sensing", "output_boolean"]
     });
   }
 };
@@ -112,8 +111,7 @@ Blockly.Blocks['sensing_coloristouchingcolor'] = {
         }
       ],
       "category": Blockly.Categories.sensing,
-      "extensions": ["colours_sensing", "output_boolean"],
-      "recyclable": true
+      "extensions": ["colours_sensing", "output_boolean"]
     });
   }
 };
@@ -176,8 +174,7 @@ Blockly.Blocks['sensing_askandwait'] = {
         }
       ],
       "category": Blockly.Categories.sensing,
-      "extensions": ["colours_sensing", "shape_statement"],
-      "recyclable": true
+      "extensions": ["colours_sensing", "shape_statement"]
     });
   }
 };
@@ -192,8 +189,7 @@ Blockly.Blocks['sensing_answer'] = {
       "message0": "answer",
       "category": Blockly.Categories.sensing,
       "checkboxInFlyout": true,
-      "extensions": ["colours_sensing", "output_number"],
-      "recyclable": true
+      "extensions": ["colours_sensing", "output_number"]
     });
   }
 };
@@ -213,8 +209,7 @@ Blockly.Blocks['sensing_keypressed'] = {
         }
       ],
       "category": Blockly.Categories.sensing,
-      "extensions": ["colours_sensing", "output_boolean"],
-      "recyclable": true
+      "extensions": ["colours_sensing", "output_boolean"]
     });
   }
 };
@@ -292,8 +287,7 @@ Blockly.Blocks['sensing_mousedown'] = {
     this.jsonInit({
       "message0": "mouse down?",
       "category": Blockly.Categories.sensing,
-      "extensions": ["colours_sensing", "output_boolean"],
-      "recyclable": true
+      "extensions": ["colours_sensing", "output_boolean"]
     });
   }
 };
@@ -307,8 +301,7 @@ Blockly.Blocks['sensing_mousex'] = {
     this.jsonInit({
       "message0": "mouse x",
       "category": Blockly.Categories.sensing,
-      "extensions": ["colours_sensing", "output_number"],
-      "recyclable": true
+      "extensions": ["colours_sensing", "output_number"]
     });
   }
 };
@@ -322,8 +315,7 @@ Blockly.Blocks['sensing_mousey'] = {
     this.jsonInit({
       "message0": "mouse y",
       "category": Blockly.Categories.sensing,
-      "extensions": ["colours_sensing", "output_number"],
-      "recyclable": true
+      "extensions": ["colours_sensing", "output_number"]
     });
   }
 };
@@ -347,8 +339,7 @@ Blockly.Blocks['sensing_setdragmode'] = {
         }
       ],
       "category": Blockly.Categories.sensing,
-      "extensions": ["colours_sensing", "shape_statement"],
-      "recyclable": true
+      "extensions": ["colours_sensing", "shape_statement"]
     });
   }
 };
@@ -363,8 +354,7 @@ Blockly.Blocks['sensing_loudness'] = {
       "message0": "loudness",
       "category": Blockly.Categories.sensing,
       "checkboxInFlyout": true,
-      "extensions": ["colours_sensing", "output_number"],
-      "recyclable": true
+      "extensions": ["colours_sensing", "output_number"]
     });
   }
 };
@@ -389,8 +379,7 @@ Blockly.Blocks['sensing_videoon'] = {
       ],
       "category": Blockly.Categories.sensing,
       "checkboxInFlyout": true,
-      "extensions": ["colours_sensing", "output_number"],
-      "recyclable": true
+      "extensions": ["colours_sensing", "output_number"]
     });
   }
 };
@@ -456,8 +445,7 @@ Blockly.Blocks['sensing_videotoggle'] = {
         }
       ],
       "category": Blockly.Categories.sensing,
-      "extensions": ["colours_sensing", "shape_statement"],
-      "recyclable": true
+      "extensions": ["colours_sensing", "shape_statement"]
     });
   }
 };
@@ -502,8 +490,7 @@ Blockly.Blocks['sensing_setvideotransparency'] = {
         }
       ],
       "category": Blockly.Categories.sensing,
-      "extensions": ["colours_sensing", "shape_statement"],
-      "recyclable": true
+      "extensions": ["colours_sensing", "shape_statement"]
     });
   }
 };
@@ -518,8 +505,7 @@ Blockly.Blocks['sensing_timer'] = {
       "message0": "timer",
       "category": Blockly.Categories.sensing,
       "checkboxInFlyout": true,
-      "extensions": ["colours_sensing", "output_number"],
-      "recyclable": true
+      "extensions": ["colours_sensing", "output_number"]
     });
   }
 };
@@ -533,8 +519,7 @@ Blockly.Blocks['sensing_resettimer'] = {
     this.jsonInit({
       "message0": "reset timer",
       "category": Blockly.Categories.sensing,
-      "extensions": ["colours_sensing", "shape_statement"],
-      "recyclable": true
+      "extensions": ["colours_sensing", "shape_statement"]
     });
   }
 };
@@ -626,8 +611,7 @@ Blockly.Blocks['sensing_current'] = {
       ],
       "category": Blockly.Categories.sensing,
       "checkboxInFlyout": true,
-      "extensions": ["colours_sensing", "output_number"],
-      "recyclable": true
+      "extensions": ["colours_sensing", "output_number"]
     });
   }
 };
@@ -641,8 +625,7 @@ Blockly.Blocks['sensing_dayssince2000'] = {
     this.jsonInit({
       "message0": "days since 2000",
       "category": Blockly.Categories.sensing,
-      "extensions": ["colours_sensing", "output_number"],
-      "recyclable": true
+      "extensions": ["colours_sensing", "output_number"]
     });
   }
 };
@@ -657,8 +640,7 @@ Blockly.Blocks['sensing_username'] = {
       "message0": "username",
       "category": Blockly.Categories.sensing,
       "checkboxInFlyout": true,
-      "extensions": ["colours_sensing", "output_number"],
-      "recyclable": true
+      "extensions": ["colours_sensing", "output_number"]
     });
   }
 };

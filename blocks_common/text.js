@@ -50,8 +50,7 @@ Blockly.Blocks['text'] = {
       "outputShape": Blockly.OUTPUT_SHAPE_ROUND,
       "colour": Blockly.Colours.textField,
       "colourSecondary": Blockly.Colours.textField,
-      "colourTertiary": Blockly.Colours.textField,
-      "recyclable": true
+      "colourTertiary": Blockly.Colours.textField
     });
   }
 };

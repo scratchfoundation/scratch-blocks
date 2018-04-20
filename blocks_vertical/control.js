@@ -57,8 +57,7 @@ Blockly.Blocks['control_forever'] = {
         }
       ],
       "category": Blockly.Categories.control,
-      "extensions": ["colours_control", "shape_end"],
-      "recyclable": true
+      "extensions": ["colours_control", "shape_end"]
     });
   }
 };
@@ -99,8 +98,7 @@ Blockly.Blocks['control_repeat'] = {
         }
       ],
       "category": Blockly.Categories.control,
-      "extensions": ["colours_control", "shape_statement"],
-      "recyclable": true
+      "extensions": ["colours_control", "shape_statement"]
     });
   }
 };
@@ -129,8 +127,7 @@ Blockly.Blocks['control_if'] = {
         }
       ],
       "category": Blockly.Categories.control,
-      "extensions": ["colours_control", "shape_statement"],
-      "recyclable": true
+      "extensions": ["colours_control", "shape_statement"]
     });
   }
 };
@@ -167,8 +164,7 @@ Blockly.Blocks['control_if_else'] = {
         }
       ],
       "category": Blockly.Categories.control,
-      "extensions": ["colours_control", "shape_statement"],
-      "recyclable": true
+      "extensions": ["colours_control", "shape_statement"]
     });
   }
 };
@@ -244,8 +240,7 @@ Blockly.Blocks['control_wait'] = {
         }
       ],
       "category": Blockly.Categories.control,
-      "extensions": ["colours_control", "shape_statement"],
-      "recyclable": true
+      "extensions": ["colours_control", "shape_statement"]
     });
   }
 };
@@ -266,8 +261,7 @@ Blockly.Blocks['control_wait_until'] = {
         }
       ],
       "category": Blockly.Categories.control,
-      "extensions": ["colours_control", "shape_statement"],
-      "recyclable": true
+      "extensions": ["colours_control", "shape_statement"]
     });
   }
 };
@@ -307,8 +301,7 @@ Blockly.Blocks['control_repeat_until'] = {
         }
       ],
       "category": Blockly.Categories.control,
-      "extensions": ["colours_control", "shape_statement"],
-      "recyclable": true
+      "extensions": ["colours_control", "shape_statement"]
     });
   }
 };
@@ -348,8 +341,7 @@ Blockly.Blocks['control_while'] = {
         }
       ],
       "category": Blockly.Categories.control,
-      "extensions": ["colours_control", "shape_statement"],
-      "recyclable": true
+      "extensions": ["colours_control", "shape_statement"]
     });
   }
 };
@@ -382,8 +374,7 @@ Blockly.Blocks['control_for_each'] = {
         }
       ],
       "category": Blockly.Categories.control,
-      "extensions": ["colours_control", "shape_statement"],
-      "recyclable": true
+      "extensions": ["colours_control", "shape_statement"]
     });
   }
 };
@@ -400,8 +391,7 @@ Blockly.Blocks['control_start_as_clone'] = {
       "args0": [
       ],
       "category": Blockly.Categories.control,
-      "extensions": ["colours_control", "shape_hat"],
-      "recyclable": true
+      "extensions": ["colours_control", "shape_hat"]
     });
   }
 };
@@ -445,8 +435,7 @@ Blockly.Blocks['control_create_clone_of'] = {
         }
       ],
       "category": Blockly.Categories.control,
-      "extensions": ["colours_control", "shape_statement"],
-      "recyclable": true
+      "extensions": ["colours_control", "shape_statement"]
     });
   }
 };
@@ -462,8 +451,7 @@ Blockly.Blocks['control_delete_this_clone'] = {
       "args0": [
       ],
       "category": Blockly.Categories.control,
-      "extensions": ["colours_control", "shape_end"],
-      "recyclable": true
+      "extensions": ["colours_control", "shape_end"]
     });
   }
 };
@@ -478,8 +466,7 @@ Blockly.Blocks['control_get_counter'] = {
     this.jsonInit({
       "message0": "counter",
       "category": Blockly.Categories.control,
-      "extensions": ["colours_control", "output_number"],
-      "recyclable": true
+      "extensions": ["colours_control", "output_number"]
     });
   }
 };
@@ -494,8 +481,7 @@ Blockly.Blocks['control_incr_counter'] = {
     this.jsonInit({
       "message0": "incr counter",
       "category": Blockly.Categories.control,
-      "extensions": ["colours_control", "shape_statement"],
-      "recyclable": true
+      "extensions": ["colours_control", "shape_statement"]
     });
   }
 };
@@ -510,8 +496,7 @@ Blockly.Blocks['control_clear_counter'] = {
     this.jsonInit({
       "message0": "clear counter",
       "category": Blockly.Categories.control,
-      "extensions": ["colours_control", "shape_statement"],
-      "recyclable": true
+      "extensions": ["colours_control", "shape_statement"]
     });
   }
 };

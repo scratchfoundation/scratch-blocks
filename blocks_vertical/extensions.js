@@ -46,8 +46,7 @@ Blockly.Blocks['extension_pen_down'] = {
         }
       ],
       "category": Blockly.Categories.more,
-      "extensions": ["colours_more", "shape_statement", "scratch_extension"],
-      "recyclable": true
+      "extensions": ["colours_more", "shape_statement", "scratch_extension"]
     });
   }
 };
@@ -75,8 +74,7 @@ Blockly.Blocks['extension_music_drum'] = {
         }
       ],
       "category": Blockly.Categories.more,
-      "extensions": ["colours_more", "shape_statement", "scratch_extension"],
-      "recyclable": true
+      "extensions": ["colours_more", "shape_statement", "scratch_extension"]
     });
   }
 };

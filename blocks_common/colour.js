@@ -55,8 +55,7 @@ Blockly.Blocks['colour_picker'] = {
         }
       ],
       "outputShape": Blockly.OUTPUT_SHAPE_ROUND,
-      "output": "Colour",
-      "recyclable": true
+      "output": "Colour"
     });
   }
 };
