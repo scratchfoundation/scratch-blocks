@@ -488,7 +488,6 @@ Blockly.Flyout.prototype.show = function(xmlList) {
 
         // Look for a block that matches the id or type, our createBlock will assign
         // id = type if none existed.
-        var dynamic = xml.hasAttribute('dynamic');
         var id = xml.getAttribute('id') || xml.getAttribute('type');
         var recycled = this.recycleBlocks_.findIndex(function(block) {
           return block.id === id;
@@ -498,7 +497,7 @@ Blockly.Flyout.prototype.show = function(xmlList) {
         // If we found a recycled item, reuse the BlockSVG from last time.
         // Otherwise, convert the XML block to a BlockSVG.
         var curBlock;
-        if (!dynamic && recycled > -1) {
+        if (recycled > -1) {
           curBlock = this.recycleBlocks_.splice(recycled, 1)[0];
         } else {
           curBlock = Blockly.Xml.domToBlock(xml, this.workspace_);
@@ -669,7 +668,11 @@ Blockly.Flyout.prototype.clearOldBlocks_ = function() {
   var oldBlocks = this.workspace_.getTopBlocks(false);
   for (var i = 0, block; block = oldBlocks[i]; i++) {
     if (block.workspace == this.workspace_) {
-      this.recycleBlock_(block);
+      if (block.recyclable_) {
+        this.recycleBlock_(block);
+      } else {
+        block.dispose(false, false);
+      }
     }
   }
   // Delete any background buttons from a previous showing.

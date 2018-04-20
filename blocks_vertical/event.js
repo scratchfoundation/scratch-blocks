@@ -47,7 +47,8 @@ Blockly.Blocks['event_whenflagclicked'] = {
         }
       ],
       "category": Blockly.Categories.event,
-      "extensions": ["colours_event", "shape_hat"]
+      "extensions": ["colours_event", "shape_hat"],
+      "recyclable": true
     });
   }
 };
@@ -61,7 +62,8 @@ Blockly.Blocks['event_whenthisspriteclicked'] = {
     this.jsonInit({
       "message0": "when this sprite clicked",
       "category": Blockly.Categories.event,
-      "extensions": ["colours_event", "shape_hat"]
+      "extensions": ["colours_event", "shape_hat"],
+      "recyclable": true
     });
   }
 
@@ -76,7 +78,8 @@ Blockly.Blocks['event_whenstageclicked'] = {
     this.jsonInit({
       "message0": "when stage clicked",
       "category": Blockly.Categories.event,
-      "extensions": ["colours_event", "shape_hat"]
+      "extensions": ["colours_event", "shape_hat"],
+      "recyclable": true
     });
   }
 };
@@ -280,7 +283,8 @@ Blockly.Blocks['event_whenkeypressed'] = {
         }
       ],
       "category": Blockly.Categories.event,
-      "extensions": ["colours_event", "shape_hat"]
+      "extensions": ["colours_event", "shape_hat"],
+      "recyclable": true
     });
   }
 };

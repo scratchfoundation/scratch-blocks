@@ -143,6 +143,13 @@ Blockly.Block = function(workspace, prototypeName, opt_id) {
   this.category_ = null;
 
   /**
+   * Recyclable property
+   * @type {boolean}
+   * @package
+   */
+  this.recyclable_ = false;
+
+  /**
    * The block's position in workspace units.  (0, 0) is at the workspace's
    * origin; scale does not change this value.
    * @type {!goog.math.Coordinate}
@@ -1264,6 +1271,9 @@ Blockly.Block.prototype.jsonInit = function(json) {
   }
   if (json['category'] !== undefined) {
     this.setCategory(json['category']);
+  }
+  if (json['recyclable']) {
+    this.recyclable_ = true;
   }
 };
 
