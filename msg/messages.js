@@ -22,7 +22,7 @@
  * @fileoverview English strings.
  * @author ascii@media.mit.edu (Andrew Sliwinski)
  *
- * After modifying this file, run `./i18n/js_to_json.js` from the root directory
+ * After modifying this file, run `npm run translate` from the root directory
  * to regenerate `./msg/json/en.json`.
  */
 'use strict';
@@ -252,8 +252,13 @@ Blockly.Msg.REDO = 'Redo';
 Blockly.Msg.EDIT_PROCEDURE = 'Edit';
 Blockly.Msg.SHOW_PROCEDURE_DEFINITION = 'Go to definition';
 
+// Color
+Blockly.Msg.COLOUR_HUE_LABEL = 'Color';
+Blockly.Msg.COLOUR_SATURATION_LABEL = 'Saturation';
+Blockly.Msg.COLOUR_BRIGHTNESS_LABEL = 'Brightness';
+
 // Variables
-// @todo Remove these when fully unused by Scratch
+// @todo Remove these once fully managed by Scratch VM / Scratch GUI
 Blockly.Msg.CHANGE_VALUE_TITLE = 'Change value:';
 Blockly.Msg.RENAME_VARIABLE = 'Rename variable';
 Blockly.Msg.RENAME_VARIABLE_TITLE = 'Rename all "%1" variables to:';
@@ -268,10 +273,12 @@ Blockly.Msg.CANNOT_DELETE_VARIABLE_PROCEDURE = 'Can\'t delete the variable "%1" 
 Blockly.Msg.DELETE_VARIABLE = 'Delete the "%1" variable';
 
 // Custom Procedures
+// @todo Remove these once fully managed by Scratch VM / Scratch GUI
 Blockly.Msg.NEW_PROCEDURE = 'Make a Block';
 Blockly.Msg.PROCEDURE_ALREADY_EXISTS = 'A procedure named "%1" already exists.';
 
 // Lists
+// @todo Remove these once fully managed by Scratch VM / Scratch GUI
 Blockly.Msg.NEW_LIST = 'Make a List';
 Blockly.Msg.NEW_LIST_TITLE = 'New list name:';
 Blockly.Msg.LIST_MODAL_TITLE = 'New List';
@@ -280,12 +287,8 @@ Blockly.Msg.RENAME_LIST_TITLE = 'Rename all "%1" lists to:';
 Blockly.Msg.RENAME_LIST_MODAL_TITLE = 'Rename List';
 
 // Broadcast Messages
+// @todo Remove these once fully managed by Scratch VM / Scratch GUI
 Blockly.Msg.NEW_BROADCAST_MESSAGE = 'New message';
 Blockly.Msg.NEW_BROADCAST_MESSAGE_TITLE = 'New message name:';
 Blockly.Msg.BROADCAST_MODAL_TITLE = 'New Message';
 Blockly.Msg.DEFAULT_BROADCAST_MESSAGE_NAME = 'message1';
-
-// Color
-Blockly.Msg.COLOUR_HUE_LABEL = 'Color';
-Blockly.Msg.COLOUR_SATURATION_LABEL = 'Saturation';
-Blockly.Msg.COLOUR_BRIGHTNESS_LABEL = 'Brightness';
