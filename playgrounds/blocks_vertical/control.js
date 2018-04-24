@@ -36,7 +36,7 @@ Blockly.Blocks['control_forever'] = {
   init: function() {
     this.jsonInit({
       "id": "control_forever",
-      "message0": "forever",
+      "message0": Blockly.Msg.CONTROL_FOREVER,
       "message1": "%1", // Statement
       "message2": "%1", // Icon
       "lastDummyAlign2": "RIGHT",
@@ -71,7 +71,7 @@ Blockly.Blocks['control_repeat'] = {
   init: function() {
     this.jsonInit({
       "id": "control_repeat",
-      "message0": "repeat %1",
+      "message0": Blockly.Msg.CONTROL_REPEAT,
       "message1": "%1", // Statement
       "message2": "%1", // Icon
       "lastDummyAlign2": "RIGHT",
@@ -111,7 +111,7 @@ Blockly.Blocks['control_if'] = {
   init: function() {
     this.jsonInit({
       "type": "control_if",
-      "message0": "if %1 then",
+      "message0": Blockly.Msg.CONTROL_IF,
       "message1": "%1", // Statement
       "args0": [
         {
@@ -140,9 +140,9 @@ Blockly.Blocks['control_if_else'] = {
   init: function() {
     this.jsonInit({
       "type": "control_if_else",
-      "message0": "if %1 then",
+      "message0": Blockly.Msg.CONTROL_IF,
       "message1": "%1",
-      "message2": "else",
+      "message2": Blockly.Msg.CONTROL_ELSE,
       "message3": "%1",
       "args0": [
         {
@@ -232,7 +232,7 @@ Blockly.Blocks['control_wait'] = {
   init: function() {
     this.jsonInit({
       "id": "control_wait",
-      "message0": "wait %1 seconds",
+      "message0": Blockly.Msg.CONTROL_WAIT,
       "args0": [
         {
           "type": "input_value",
@@ -252,7 +252,7 @@ Blockly.Blocks['control_wait_until'] = {
    */
   init: function() {
     this.jsonInit({
-      "message0": "wait until %1",
+      "message0": Blockly.Msg.CONTROL_WAITUNTIL,
       "args0": [
         {
           "type": "input_value",
@@ -273,7 +273,7 @@ Blockly.Blocks['control_repeat_until'] = {
    */
   init: function() {
     this.jsonInit({
-      "message0": "repeat until %1",
+      "message0": Blockly.Msg.CONTROL_REPEATUNTIL,
       "message1": "%1",
       "message2": "%1",
       "lastDummyAlign2": "RIGHT",
@@ -313,7 +313,7 @@ Blockly.Blocks['control_while'] = {
    */
   init: function() {
     this.jsonInit({
-      "message0": "while %1",
+      "message0": Blockly.Msg.CONTROL_WHILE,
       "message1": "%1",
       "message2": "%1",
       "lastDummyAlign2": "RIGHT",
@@ -355,7 +355,7 @@ Blockly.Blocks['control_for_each'] = {
   init: function() {
     this.jsonInit({
       "type": "control_for_each",
-      "message0": "for each %1 in %2",
+      "message0": Blockly.Msg.CONTROL_FOREACH,
       "message1": "%1",
       "args0": [
         {
@@ -387,7 +387,7 @@ Blockly.Blocks['control_start_as_clone'] = {
   init: function() {
     this.jsonInit({
       "id": "control_start_as_clone",
-      "message0": "when I start as a clone",
+      "message0": Blockly.Msg.CONTROL_STARTASCLONE,
       "args0": [
       ],
       "category": Blockly.Categories.control,
@@ -427,7 +427,7 @@ Blockly.Blocks['control_create_clone_of'] = {
   init: function() {
     this.jsonInit({
       "id": "control_start_as_clone",
-      "message0": "create clone of %1",
+      "message0": Blockly.Msg.CONTROL_CREATECLONEOF,
       "args0": [
         {
           "type": "input_value",
@@ -447,7 +447,7 @@ Blockly.Blocks['control_delete_this_clone'] = {
    */
   init: function() {
     this.jsonInit({
-      "message0": "delete this clone",
+      "message0": Blockly.Msg.CONTROL_DELETETHISCLONE,
       "args0": [
       ],
       "category": Blockly.Categories.control,
@@ -464,7 +464,7 @@ Blockly.Blocks['control_get_counter'] = {
    */
   init: function() {
     this.jsonInit({
-      "message0": "counter",
+      "message0": Blockly.Msg.CONTROL_COUNTER,
       "category": Blockly.Categories.control,
       "extensions": ["colours_control", "output_number"]
     });
@@ -479,7 +479,7 @@ Blockly.Blocks['control_incr_counter'] = {
    */
   init: function() {
     this.jsonInit({
-      "message0": "incr counter",
+      "message0": Blockly.Msg.CONTROL_INCRCOUNTER,
       "category": Blockly.Categories.control,
       "extensions": ["colours_control", "shape_statement"]
     });
@@ -494,7 +494,7 @@ Blockly.Blocks['control_clear_counter'] = {
    */
   init: function() {
     this.jsonInit({
-      "message0": "clear counter",
+      "message0": Blockly.Msg.CONTROL_CLEARCOUNTER,
       "category": Blockly.Categories.control,
       "extensions": ["colours_control", "shape_statement"]
     });

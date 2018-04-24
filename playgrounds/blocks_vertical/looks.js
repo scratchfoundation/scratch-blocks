@@ -35,7 +35,7 @@ Blockly.Blocks['looks_sayforsecs'] = {
    */
   init: function() {
     this.jsonInit({
-      "message0": "say %1 for %2 seconds",
+      "message0": Blockly.Msg.LOOKS_SAYFORSECS,
       "args0": [
         {
           "type": "input_value",
@@ -59,7 +59,7 @@ Blockly.Blocks['looks_say'] = {
    */
   init: function() {
     this.jsonInit({
-      "message0": "say %1",
+      "message0": Blockly.Msg.LOOKS_SAY,
       "args0": [
         {
           "type": "input_value",
@@ -79,7 +79,7 @@ Blockly.Blocks['looks_thinkforsecs'] = {
    */
   init: function() {
     this.jsonInit({
-      "message0": "think %1 for %2 seconds",
+      "message0": Blockly.Msg.LOOKS_THINKFORSECS,
       "args0": [
         {
           "type": "input_value",
@@ -103,7 +103,7 @@ Blockly.Blocks['looks_think'] = {
    */
   init: function() {
     this.jsonInit({
-      "message0": "think %1",
+      "message0": Blockly.Msg.LOOKS_THINK,
       "args0": [
         {
           "type": "input_value",
@@ -124,7 +124,7 @@ Blockly.Blocks['looks_show'] = {
   init: function() {
     this.jsonInit(
       {
-        "message0": "show",
+        "message0": Blockly.Msg.LOOKS_SHOW,
         "category": Blockly.Categories.looks,
         "extensions": ["colours_looks", "shape_statement"]
       });
@@ -139,7 +139,7 @@ Blockly.Blocks['looks_hide'] = {
   init: function() {
     this.jsonInit(
       {
-        "message0": "hide",
+        "message0": Blockly.Msg.LOOKS_HIDE,
         "category": Blockly.Categories.looks,
         "extensions": ["colours_looks", "shape_statement"]
       });
@@ -147,13 +147,13 @@ Blockly.Blocks['looks_hide'] = {
 };
 
 Blockly.Blocks['looks_effect_menu_options'] = [
-  ['color', 'COLOR'],
-  ['fisheye', 'FISHEYE'],
-  ['whirl', 'WHIRL'],
-  ['pixelate', 'PIXELATE'],
-  ['mosaic', 'MOSAIC'],
-  ['brightness', 'BRIGHTNESS'],
-  ['ghost', 'GHOST']
+  [Blockly.Msg.LOOKS_EFFECT_COLOR, 'COLOR'],
+  [Blockly.Msg.LOOKS_EFFECT_FISHEYE, 'FISHEYE'],
+  [Blockly.Msg.LOOKS_EFFECT_WHIRL, 'WHIRL'],
+  [Blockly.Msg.LOOKS_EFFECT_PIXELATE, 'PIXELATE'],
+  [Blockly.Msg.LOOKS_EFFECT_MOSAIC, 'MOSAIC'],
+  [Blockly.Msg.LOOKS_EFFECT_BRIGHTNESS, 'BRIGHTNESS'],
+  [Blockly.Msg.LOOKS_EFFECT_GHOST, 'GHOST']
 ];
 
 Blockly.Blocks['looks_changeeffectby'] = {
@@ -163,7 +163,7 @@ Blockly.Blocks['looks_changeeffectby'] = {
    */
   init: function() {
     this.jsonInit({
-      "message0": "change %1 effect by %2",
+      "message0": Blockly.Msg.LOOKS_CHANGEEFFECTBY,
       "args0": [
         {
           "type": "field_dropdown",
@@ -188,7 +188,7 @@ Blockly.Blocks['looks_seteffectto'] = {
    */
   init: function() {
     this.jsonInit({
-      "message0": "set %1 effect to %2",
+      "message0": Blockly.Msg.LOOKS_SETEFFECTTO,
       "args0": [
         {
           "type": "field_dropdown",
@@ -213,7 +213,7 @@ Blockly.Blocks['looks_cleargraphiceffects'] = {
    */
   init: function() {
     this.jsonInit({
-      "message0": "clear graphic effects",
+      "message0": Blockly.Msg.LOOKS_CLEARGRAPHICEFFECTS,
       "category": Blockly.Categories.looks,
       "extensions": ["colours_looks", "shape_statement"]
     });
@@ -227,7 +227,7 @@ Blockly.Blocks['looks_changesizeby'] = {
    */
   init: function() {
     this.jsonInit({
-      "message0": "change size by %1",
+      "message0": Blockly.Msg.LOOKS_CHANGESIZEBY,
       "args0": [
         {
           "type": "input_value",
@@ -247,7 +247,7 @@ Blockly.Blocks['looks_setsizeto'] = {
    */
   init: function() {
     this.jsonInit({
-      "message0": "set size to %1 %",
+      "message0": Blockly.Msg.LOOKS_SETSIZETO,
       "args0": [
         {
           "type": "input_value",
@@ -267,7 +267,7 @@ Blockly.Blocks['looks_size'] = {
    */
   init: function() {
     this.jsonInit({
-      "message0": "size",
+      "message0": Blockly.Msg.LOOKS_SIZE,
       "category": Blockly.Categories.looks,
       "checkboxInFlyout": true,
       "extensions": ["colours_looks", "output_number"]
@@ -309,7 +309,7 @@ Blockly.Blocks['looks_switchcostumeto'] = {
    */
   init: function() {
     this.jsonInit({
-      "message0": "switch costume to %1",
+      "message0": Blockly.Msg.LOOKS_SWITCHCOSTUMETO,
       "args0": [
         {
           "type": "input_value",
@@ -330,7 +330,7 @@ Blockly.Blocks['looks_nextcostume'] = {
   init: function() {
     this.jsonInit(
       {
-        "message0": "next costume",
+        "message0": Blockly.Msg.LOOKS_NEXTCOSTUME,
         "category": Blockly.Categories.looks,
         "extensions": ["colours_looks", "shape_statement"]
       });
@@ -344,7 +344,7 @@ Blockly.Blocks['looks_switchbackdropto'] = {
    */
   init: function() {
     this.jsonInit({
-      "message0": "switch backdrop to %1",
+      "message0": Blockly.Msg.LOOKS_SWITCHBACKDROPTO,
       "args0": [
         {
           "type": "input_value",
@@ -391,14 +391,14 @@ Blockly.Blocks['looks_gotofrontback'] = {
   init: function() {
     this.jsonInit(
       {
-        "message0": "go to %1 layer",
+        "message0": Blockly.Msg.LOOKS_GOTOFRONTBACK,
         "args0": [
           {
             "type": "field_dropdown",
             "name": "FRONT_BACK",
             "options": [
-              ['front', 'front'],
-              ['back', 'back']
+              [Blockly.Msg.LOOKS_GOTOFRONTBACK_FRONT, 'front'],
+              [Blockly.Msg.LOOKS_GOTOFRONTBACK_BACK, 'back']
             ]
           }
         ],
@@ -415,14 +415,14 @@ Blockly.Blocks['looks_goforwardbackwardlayers'] = {
    */
   init: function() {
     this.jsonInit({
-      "message0": "go %1 %2 layers",
+      "message0": Blockly.Msg.LOOKS_GOFORWARDBACKWARDLAYERS,
       "args0": [
         {
           "type": "field_dropdown",
           "name": "FORWARD_BACKWARD",
           "options": [
-            ['forward', 'forward'],
-            ['backward', 'backward']
+            [Blockly.Msg.LOOKS_GOFORWARDBACKWARDLAYERS_FORWARD, 'forward'],
+            [Blockly.Msg.LOOKS_GOFORWARDBACKWARDLAYERS_BACKWARD, 'backward']
           ]
         },
         {
@@ -443,14 +443,14 @@ Blockly.Blocks['looks_backdropnumbername'] = {
    */
   init: function() {
     this.jsonInit({
-      "message0": "backdrop %1",
+      "message0": Blockly.Msg.LOOKS_BACKDROPNUMBERNAME,
       "args0": [
         {
           "type": "field_dropdown",
           "name": "NUMBER_NAME",
           "options": [
-            ['number', 'number'],
-            ['name', 'name']
+            [Blockly.Msg.LOOKS_NUMBERNAME_NUMBER, 'number'],
+            [Blockly.Msg.LOOKS_NUMBERNAME_NAME, 'name']
           ]
         }
       ],
@@ -468,14 +468,14 @@ Blockly.Blocks['looks_costumenumbername'] = {
    */
   init: function() {
     this.jsonInit({
-      "message0": "costume %1",
+      "message0": Blockly.Msg.LOOKS_COSTUMENUMBERNAME,
       "args0": [
         {
           "type": "field_dropdown",
           "name": "NUMBER_NAME",
           "options": [
-            ['number', 'number'],
-            ['name', 'name']
+            [Blockly.Msg.LOOKS_NUMBERNAME_NUMBER, 'number'],
+            [Blockly.Msg.LOOKS_NUMBERNAME_NAME, 'name']
           ]
         }
       ],
@@ -493,7 +493,7 @@ Blockly.Blocks['looks_switchbackdroptoandwait'] = {
    */
   init: function() {
     this.jsonInit({
-      "message0": "switch backdrop to %1 and wait",
+      "message0": Blockly.Msg.LOOKS_SWITCHBACKDROPTOANDWAIT,
       "args0": [
         {
           "type": "input_value",
@@ -514,7 +514,7 @@ Blockly.Blocks['looks_nextbackdrop'] = {
   init: function() {
     this.jsonInit(
       {
-        "message0": "next backdrop",
+        "message0": Blockly.Msg.LOOKS_NEXTBACKDROP,
         "category": Blockly.Categories.looks,
         "extensions": ["colours_looks", "shape_statement"]
       });
