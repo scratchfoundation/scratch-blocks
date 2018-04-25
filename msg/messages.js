@@ -68,8 +68,8 @@ Blockly.Msg.DATA_HIDELIST = "hide list %1";
 
 // Event blocks
 Blockly.Msg.EVENT_WHENFLAGCLICKED = "when %1 clicked";
-Blockly.Msg.EVENT_WHENTHISSPRITECLICKED = "when this sprite clicked";
-Blockly.Msg.EVENT_WHENSTAGECLICKED = "when stage clicked";
+Blockly.Msg.EVENT_WHENTHISSPRITECLICKED = "when this sprite tapped";
+Blockly.Msg.EVENT_WHENSTAGECLICKED = "when stage tapped";
 Blockly.Msg.EVENT_WHENBROADCASTRECEIVED = "when I receive %1";
 Blockly.Msg.EVENT_WHENBACKDROPSWITCHESTO = "when backdrop switches to %1";
 Blockly.Msg.EVENT_WHENGREATERTHAN = "when %1 > %2";
@@ -195,9 +195,9 @@ Blockly.Msg.SENSING_DISTANCETO_POINTER = "pointer";
 Blockly.Msg.SENSING_ASKANDWAIT = "ask %1 and wait";
 Blockly.Msg.SENSING_ANSWER = "answer";
 Blockly.Msg.SENSING_KEYPRESSED = "key %1 pressed?";
-Blockly.Msg.SENSING_MOUSEDOWN = "mouse down?";
-Blockly.Msg.SENSING_MOUSEX = "mouse x";
-Blockly.Msg.SENSING_MOUSEY = "mouse y";
+Blockly.Msg.SENSING_MOUSEDOWN = "pointer down?";
+Blockly.Msg.SENSING_MOUSEX = "pointer x";
+Blockly.Msg.SENSING_MOUSEY = "pointer y";
 Blockly.Msg.SENSING_SETDRAGMODE = "set drag mode %1";
 Blockly.Msg.SENSING_SETDRAGMODE_DRAGGABLE = "draggable";
 Blockly.Msg.SENSING_SETDRAGMODE_NOTDRAGGABLE = "not draggable";
