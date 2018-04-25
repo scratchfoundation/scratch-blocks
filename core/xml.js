@@ -131,8 +131,7 @@ Blockly.Xml.fieldToDomVariable_ = function(field) {
  */
 Blockly.Xml.fieldToDom_ = function(field) {
   if (field.name && field.SERIALIZABLE) {
-    if (field instanceof Blockly.FieldVariable ||
-        field instanceof Blockly.FieldVariableGetter) {
+    if (field.referencesVariables()) {
       return Blockly.Xml.fieldToDomVariable_(field);
     } else {
       var container = goog.dom.createDom('field', null, field.getValue());
@@ -819,8 +818,7 @@ Blockly.Xml.domToField_ = function(block, fieldName, xml) {
 
   var workspace = block.workspace;
   var text = xml.textContent;
-  if (field instanceof Blockly.FieldVariable ||
-      field instanceof Blockly.FieldVariableGetter) {
+  if (field.referencesVariables()) {
     Blockly.Xml.domToFieldVariable_(workspace, xml, text, field);
   } else {
     field.setValue(text);
