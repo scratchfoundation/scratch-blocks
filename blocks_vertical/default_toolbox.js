@@ -323,11 +323,6 @@ Blockly.Blocks.defaultToolbox = '<xml id="toolbox-categories" style="display: no
         '<shadow type="colour_picker"></shadow>'+
       '</value>'+
     '</block>'+
-    '<block type="sensing_distanceto" id="sensing_distanceto">'+
-      '<value name="DISTANCETOMENU">'+
-        '<shadow type="sensing_distancetomenu"></shadow>'+
-      '</value>'+
-    '</block>'+
     '<block type="sensing_keypressed" id="sensing_keypressed">'+
         '<value name="KEY_OPTION">'+
           '<shadow type="sensing_keyoptions"></shadow>'+
@@ -336,6 +331,11 @@ Blockly.Blocks.defaultToolbox = '<xml id="toolbox-categories" style="display: no
     '<block type="sensing_mousedown" id="sensing_mousedown"></block>'+
     '<block type="sensing_mousex" id="sensing_mousex"></block>'+
     '<block type="sensing_mousey" id="sensing_mousey"></block>'+
+    '<block type="sensing_distanceto" id="sensing_distanceto">'+
+      '<value name="DISTANCETOMENU">'+
+        '<shadow type="sensing_distancetomenu"></shadow>'+
+      '</value>'+
+    '</block>'+
     '<block type="sensing_setdragmode" id="sensing_setdragmode"></block>' +
     '<block type="sensing_loudness" id="sensing_loudness"></block>'+
     '<block type="sensing_timer" id="sensing_timer"></block>'+
