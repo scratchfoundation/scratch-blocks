@@ -174,7 +174,9 @@ Blockly.FlyoutButton.prototype.createDom = function() {
   rect.setAttribute('height', this.height);
 
   svgText.setAttribute('text-anchor', 'middle');
-  svgText.setAttribute('alignment-baseline', 'central');
+  svgText.setAttribute('dominant-baseline', 'central');
+  svgText.setAttribute('dy', goog.userAgent.EDGE_OR_IE ?
+    Blockly.Field.IE_TEXT_OFFSET : '0');
   svgText.setAttribute('x', this.width / 2);
   svgText.setAttribute('y', this.height / 2);
 
