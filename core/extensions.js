@@ -99,13 +99,13 @@ Blockly.Extensions.registerMutator = function(name, mixinObj, opt_helperFn,
   var errorPrefix = 'Error when registering mutator "' + name + '": ';
 
   // Sanity check the mixin object before registering it.
-  Blockly.Extensions.checkHasFunction_(errorPrefix, mixinObj.domToMutation,
-                                       'domToMutation');
-  Blockly.Extensions.checkHasFunction_(errorPrefix, mixinObj.mutationToDom,
-                                       'mutationToDom');
+  Blockly.Extensions.checkHasFunction_(
+      errorPrefix, mixinObj.domToMutation, 'domToMutation');
+  Blockly.Extensions.checkHasFunction_(
+      errorPrefix, mixinObj.mutationToDom, 'mutationToDom');
 
-  var hasMutatorDialog = Blockly.Extensions.checkMutatorDialog_(mixinObj,
-    errorPrefix);
+  var hasMutatorDialog =
+      Blockly.Extensions.checkMutatorDialog_(mixinObj, errorPrefix);
 
   if (opt_helperFn && !goog.isFunction(opt_helperFn)) {
     throw new Error('Extension "' + name + '" is not a function');
@@ -313,11 +313,12 @@ Blockly.Extensions.mutatorPropertiesMatch_ = function(oldProperties, block) {
  * reported as warnings in the console, and are never fatal.
  * @param {string} dropdownName The name of the field whose value is the key
  *     to the lookup table.
- * @param {!Object<string, string>} lookupTable The table of field values to
+ * @param {!Object.<string, string>} lookupTable The table of field values to
  *     tooltip text.
  * @return {Function} The extension function.
  */
-Blockly.Extensions.buildTooltipForDropdown = function(dropdownName, lookupTable) {
+Blockly.Extensions.buildTooltipForDropdown = function(dropdownName,
+    lookupTable) {
   // List of block types already validated, to minimize duplicate warnings.
   var blockTypesChecked = [];
 
