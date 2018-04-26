@@ -115,11 +115,6 @@ Blockly.Blocks['sound_stopallsounds'] = {
   }
 };
 
-Blockly.Blocks['sound_effects_menu_options'] = [
-  [Blockly.Msg.SOUND_EFFECTS_PITCH, 'PITCH'],
-  [Blockly.Msg.SOUND_EFFECTS_PAN, 'PAN']
-];
-
 Blockly.Blocks['sound_seteffectto'] = {
   /**
    * Block to set the audio effect
@@ -132,7 +127,10 @@ Blockly.Blocks['sound_seteffectto'] = {
         {
           "type": "field_dropdown",
           "name": "EFFECT",
-          "options": Blockly.Blocks['sound_effects_menu_options']
+          "options": [
+            [Blockly.Msg.SOUND_EFFECTS_PITCH, 'PITCH'],
+            [Blockly.Msg.SOUND_EFFECTS_PAN, 'PAN']
+          ]
         },
         {
           "type": "input_value",
@@ -157,7 +155,10 @@ Blockly.Blocks['sound_changeeffectby'] = {
         {
           "type": "field_dropdown",
           "name": "EFFECT",
-          "options": Blockly.Blocks['sound_effects_menu_options']
+          "options": [
+            [Blockly.Msg.SOUND_EFFECTS_PITCH, 'PITCH'],
+            [Blockly.Msg.SOUND_EFFECTS_PAN, 'PAN']
+          ]
         },
         {
           "type": "input_value",
