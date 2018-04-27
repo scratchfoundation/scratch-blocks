@@ -45,7 +45,7 @@ goog.require('goog.userAgent');
  * accessed through the exact name that was exported. Note, that all the exports
  * are happening as the last thing in the generated js files, so they won't be
  * accessible before JavaScript loads!
- * @return {!Object<string, string>} The message array
+ * @return {!Object.<string, string>} The message array.
  * @private
  */
 Blockly.utils.getMessageArray_ = function() {
@@ -122,7 +122,7 @@ Blockly.utils.removeClass = function(element, className) {
  * @param {!Element} element DOM element to check.
  * @param {string} className Name of class to check.
  * @return {boolean} True if class exists, false otherwise.
- * @private
+ * @package
  */
 Blockly.utils.hasClass = function(element, className) {
   var classes = element.getAttribute('class');
@@ -325,7 +325,7 @@ Blockly.utils.isRightButton = function(e) {
  * @param {!Event} e Mouse event.
  * @param {!Element} svg SVG element.
  * @param {SVGMatrix} matrix Inverted screen CTM to use.
- * @return {!Object} Object with .x and .y properties.
+ * @return {!SVGPoint} Object with .x and .y properties.
  */
 Blockly.utils.mouseToSvg = function(e, svg, matrix) {
   var svgPoint = svg.createSVGPoint();
@@ -451,7 +451,7 @@ Blockly.utils.replaceMessageReferences = function(message) {
   var interpolatedResult = Blockly.utils.tokenizeInterpolation_(message, false);
   // When parseInterpolationTokens == false, interpolatedResult should be at
   // most length 1.
-  return interpolatedResult.length ? interpolatedResult[0] : "";
+  return interpolatedResult.length ? interpolatedResult[0] : '';
 };
 
 /**

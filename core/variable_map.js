@@ -36,11 +36,11 @@ goog.require('Blockly.VariableModel');
  * @constructor
  */
 Blockly.VariableMap = function(workspace) {
- /**
+  /**
    * A map from variable type to list of variable names.  The lists contain all
    * of the named variables in the workspace, including variables
    * that are not currently in use.
-   * @type {!Object<string, !Array.<Blockly.VariableModel>>}
+   * @type {!Object.<string, !Array.<Blockly.VariableModel>>}
    * @private
    */
   this.variableMap_ = {};
@@ -169,7 +169,7 @@ Blockly.VariableMap.prototype.renameVariableWithConflict_ = function(variable,
  * @param {?string} opt_type The type of the variable like 'int' or 'string'.
  *     Does not need to be unique. Field_variable can filter variables based on
  *     their type. This will default to '' which is a specific type.
- * @param {?string} opt_id The unique id of the variable. This will default to
+ * @param {string=} opt_id The unique ID of the variable. This will default to
  *     a UUID.
  * @return {?Blockly.VariableModel} The newly created variable.
  */
@@ -313,7 +313,7 @@ Blockly.VariableMap.prototype.getVariable = function(name, opt_type) {
 };
 
 /**
- * Find the variable by the given id and return it. Return null if it is not
+ * Find the variable by the given ID and return it. Return null if it is not
  *     found.
  * @param {!string} id The id to check for.
  * @return {?Blockly.VariableModel} The variable with the given id.
@@ -335,7 +335,7 @@ Blockly.VariableMap.prototype.getVariableById = function(id) {
  * Get a list containing all of the variables of a specified type. If type is
  *     null, return list of variables with empty string type.
  * @param {?string} type Type of the variables to find.
- * @return {Array.<Blockly.VariableModel>} The sought after variables of the
+ * @return {!Array.<!Blockly.VariableModel>} The sought after variables of the
  *     passed in type. An empty array if none are found.
  */
 Blockly.VariableMap.prototype.getVariablesOfType = function(type) {
@@ -368,7 +368,7 @@ Blockly.VariableMap.prototype.getVariableTypes = function() {
 
 /**
  * Return all variables of all types.
- * @return {!Array.<Blockly.VariableModel>} List of variable models.
+ * @return {!Array.<!Blockly.VariableModel>} List of variable models.
  */
 Blockly.VariableMap.prototype.getAllVariables = function() {
   var all_variables = [];
