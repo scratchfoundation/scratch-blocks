@@ -527,7 +527,7 @@ Blockly.Flyout.prototype.show = function(xmlList) {
 };
 
 /**
- * Store an array of category names and scrollbar positions.
+ * Store an array of category names, scrollbar positions, and category lengths.
  * This is used when scrolling the flyout to cause a category to be selected.
  * @private
  */
@@ -543,6 +543,14 @@ Blockly.Flyout.prototype.recordCategoryScrollPositions_ = function() {
       });
     }
   }
+  var numCategories = this.categoryScrollPositions.length;
+  for (var i=0; i<numCategories - 1; i++) {
+    var currentPos = this.categoryScrollPositions[i].position;
+    var nextPos = this.categoryScrollPositions[i+1].position;
+    var length = nextPos - currentPos;
+    this.categoryScrollPositions[i].length = length;
+  }
+  this.categoryScrollPositions[numCategories - 1].length = 0;
 };
 
 /**
