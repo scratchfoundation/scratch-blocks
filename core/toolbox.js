@@ -368,6 +368,20 @@ Blockly.Toolbox.prototype.getCategoryPositionByName = function(name) {
 };
 
 /**
+ * Get the length of a category by name.
+ * @param  {string} name The name of the category.
+ * @return {number} The length of the category.
+ */
+Blockly.Toolbox.prototype.getCategoryLengthByName = function(name) {
+  var scrollPositions = this.flyout_.categoryScrollPositions;
+  for (var i = 0; i < scrollPositions.length; i++) {
+    if (name === scrollPositions[i].categoryName) {
+      return scrollPositions[i].length;
+    }
+  }
+};
+
+/**
  * Set the scroll position of the flyout.
  * @param {number} pos The position to set.
  */
