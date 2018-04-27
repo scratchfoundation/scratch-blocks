@@ -544,7 +544,7 @@ Blockly.Flyout.prototype.recordCategoryScrollPositions_ = function() {
     }
   }
   var numCategories = this.categoryScrollPositions.length;
-  for (var i=0; i<numCategories - 1; i++) {
+  for (var i = 0; i < numCategories - 1; i++) {
     var currentPos = this.categoryScrollPositions[i].position;
     var nextPos = this.categoryScrollPositions[i+1].position;
     var length = nextPos - currentPos;
