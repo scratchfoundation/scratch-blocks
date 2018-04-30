@@ -146,6 +146,16 @@ Blockly.Msg.MOTION_SETROTATIONSTYLE_ALLAROUND = "all around";
 Blockly.Msg.MOTION_XPOSITION = "x position";
 Blockly.Msg.MOTION_YPOSITION = "y position";
 Blockly.Msg.MOTION_DIRECTION = "direction";
+Blockly.Msg.MOTION_SCROLLRIGHT = "scroll right %1";
+Blockly.Msg.MOTION_SCROLLUP = "scroll up %1";
+Blockly.Msg.MOTION_ALIGNSCENE = "align scene %1";
+Blockly.Msg.MOTION_ALIGNSCENE_BOTTOMLEFT = "bottom-left";
+Blockly.Msg.MOTION_ALIGNSCENE_BOTTOMRIGHT = "bottom-right";
+Blockly.Msg.MOTION_ALIGNSCENE_MIDDLE = "middle";
+Blockly.Msg.MOTION_ALIGNSCENE_TOPLEFT = "top-left";
+Blockly.Msg.MOTION_ALIGNSCENE_TOPRIGHT = "top-right";
+Blockly.Msg.MOTION_XSCROLL = "x scroll";
+Blockly.Msg.MOTION_YSCROLL = "y scroll";
 
 // Operators blocks
 Blockly.Msg.OPERATORS_ADD = "%1 + %2";

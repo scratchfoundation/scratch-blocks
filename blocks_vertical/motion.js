@@ -478,3 +478,110 @@ Blockly.Blocks['motion_direction'] = {
     });
   }
 };
+
+Blockly.Blocks['motion_scroll_right'] = {
+  /**
+   * Block to scroll the stage right. Does not actually do anything. This is
+   * an obsolete block that is implemented for compatibility with Scratch 2.0
+   * projects.
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.jsonInit({
+      "message0": Blockly.Msg.MOTION_SCROLLRIGHT,
+      "args0": [
+        {
+          "type": "input_value",
+          "name": "DISTANCE"
+        }
+      ],
+      "category": Blockly.Categories.motion,
+      "extensions": ["colours_motion", "shape_statement"]
+    });
+  }
+};
+
+Blockly.Blocks['motion_scroll_up'] = {
+  /**
+   * Block to scroll the stage up. Does not actually do anything. This is an
+   * obsolete block that is implemented for compatibility with Scratch 2.0
+   * projects.
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.jsonInit({
+      "message0": Blockly.Msg.MOTION_SCROLLUP,
+      "args0": [
+        {
+          "type": "input_value",
+          "name": "DISTANCE"
+        }
+      ],
+      "category": Blockly.Categories.motion,
+      "extensions": ["colours_motion", "shape_statement"]
+    });
+  }
+};
+
+Blockly.Blocks['motion_align_scene'] = {
+  /**
+   * Block to change the stage's scrolling alignment. Does not actually do
+   * anything. This is an obsolete block that is implemented for compatibility
+   * with Scratch 2.0 projects.
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.jsonInit({
+      "message0": Blockly.Msg.MOTION_ALIGNSCENE,
+      "args0": [
+        {
+          "type": "field_dropdown",
+          "name": "ALIGNMENT",
+          "options": [
+            [Blockly.Msg.MOTION_ALIGNSCENE_BOTTOMLEFT, 'bottom-left'],
+            [Blockly.Msg.MOTION_ALIGNSCENE_BOTTOMRIGHT, 'bottom-right'],
+            [Blockly.Msg.MOTION_ALIGNSCENE_MIDDLE, 'middle'],
+            [Blockly.Msg.MOTION_ALIGNSCENE_TOPLEFT, 'top-left'],
+            [Blockly.Msg.MOTION_ALIGNSCENE_TOPRIGHT, 'top-right']
+          ]
+        }
+      ],
+      "category": Blockly.Categories.motion,
+      "extensions": ["colours_motion", "shape_statement"]
+    });
+  }
+};
+
+Blockly.Blocks['motion_xscroll'] = {
+  /**
+   * Block to report the stage's scroll position's X value. Does not actually
+   * do anything. This is an obsolete block that is implemented for
+   * compatibility with Scratch 2.0 projects.
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.jsonInit({
+      "message0": Blockly.Msg.MOTION_XSCROLL,
+      "category": Blockly.Categories.motion,
+      "checkboxInFlyout": true,
+      "extensions": ["colours_motion", "output_number"]
+    });
+  }
+};
+
+Blockly.Blocks['motion_yscroll'] = {
+  /**
+   * Block to report the stage's scroll position's Y value. Does not actually
+   * do anything. This is an obsolete block that is implemented for
+   * compatibility with Scratch 2.0 projects.
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.jsonInit({
+      "message0": Blockly.Msg.MOTION_YSCROLL,
+      "category": Blockly.Categories.motion,
+      "checkboxInFlyout": true,
+      "extensions": ["colours_motion", "output_number"]
+    });
+  }
+};
