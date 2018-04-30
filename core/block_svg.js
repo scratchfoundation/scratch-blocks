@@ -48,7 +48,7 @@ goog.require('goog.userAgent');
  * @param {?string} prototypeName Name of the language object containing
  *     type-specific functions for this block.
  * @param {string=} opt_id Optional ID.  Use this ID if provided, otherwise
- *     create a new id.
+ *     create a new ID.
  * @extends {Blockly.Block}
  * @constructor
  */
@@ -60,7 +60,8 @@ Blockly.BlockSvg = function(workspace, prototypeName, opt_id) {
    */
   this.svgGroup_ = Blockly.utils.createSvgElement('g', {}, null);
   /** @type {SVGElement} */
-  this.svgPath_ = Blockly.utils.createSvgElement('path', {'class': 'blocklyPath blocklyBlockBackground'},
+  this.svgPath_ = Blockly.utils.createSvgElement('path',
+      {'class': 'blocklyPath blocklyBlockBackground'},
       this.svgGroup_);
   this.svgPath_.tooltip = this;
 
@@ -154,8 +155,8 @@ Blockly.BlockSvg.prototype.initSvg = function() {
   this.updateColour();
   this.updateMovable();
   if (!this.workspace.options.readOnly && !this.eventsInit_) {
-    Blockly.bindEventWithChecks_(this.getSvgRoot(), 'mousedown', this,
-                       this.onMouseDown_);
+    Blockly.bindEventWithChecks_(
+        this.getSvgRoot(), 'mousedown', this, this.onMouseDown_);
   }
   this.eventsInit_ = true;
 
@@ -598,7 +599,7 @@ Blockly.BlockSvg.prototype.tab = function(start, forward) {
 
 /**
  * Create an ordered list of all text fields and connected inputs.
- * @return {!Array<!Blockly.FieldTextInput|!Blockly.Input>} The ordered list.
+ * @return {!Array.<!Blockly.FieldTextInput|!Blockly.Input>} The ordered list.
  * @private
  */
 Blockly.BlockSvg.prototype.createTabList_ = function() {
@@ -815,12 +816,12 @@ Blockly.BlockSvg.prototype.setDragging = function(adding) {
     group.skew_ = '';
     Blockly.draggingConnections_ =
         Blockly.draggingConnections_.concat(this.getConnections_(true));
-    Blockly.utils.addClass(/** @type {!Element} */ (this.svgGroup_),
-                      'blocklyDragging');
+    Blockly.utils.addClass(
+        /** @type {!Element} */ (this.svgGroup_), 'blocklyDragging');
   } else {
     Blockly.draggingConnections_ = [];
-    Blockly.utils.removeClass(/** @type {!Element} */ (this.svgGroup_),
-                         'blocklyDragging');
+    Blockly.utils.removeClass(
+        /** @type {!Element} */ (this.svgGroup_), 'blocklyDragging');
   }
   // Recurse through all blocks attached under this one.
   for (var i = 0; i < this.childBlocks_.length; i++) {
@@ -833,11 +834,11 @@ Blockly.BlockSvg.prototype.setDragging = function(adding) {
  */
 Blockly.BlockSvg.prototype.updateMovable = function() {
   if (this.isMovable()) {
-    Blockly.utils.addClass(/** @type {!Element} */ (this.svgGroup_),
-                      'blocklyDraggable');
+    Blockly.utils.addClass(
+        /** @type {!Element} */ (this.svgGroup_), 'blocklyDraggable');
   } else {
-    Blockly.utils.removeClass(/** @type {!Element} */ (this.svgGroup_),
-                         'blocklyDraggable');
+    Blockly.utils.removeClass(
+        /** @type {!Element} */ (this.svgGroup_), 'blocklyDraggable');
   }
 };
 
@@ -1076,16 +1077,16 @@ Blockly.BlockSvg.prototype.setMutator = function(mutator) {
  * Select this block.  Highlight it visually.
  */
 Blockly.BlockSvg.prototype.addSelect = function() {
-  Blockly.utils.addClass(/** @type {!Element} */ (this.svgGroup_),
-                    'blocklySelected');
+  Blockly.utils.addClass(
+      /** @type {!Element} */ (this.svgGroup_), 'blocklySelected');
 };
 
 /**
  * Unselect this block.  Remove its highlighting.
  */
 Blockly.BlockSvg.prototype.removeSelect = function() {
-  Blockly.utils.removeClass(/** @type {!Element} */ (this.svgGroup_),
-                       'blocklySelected');
+  Blockly.utils.removeClass(
+      /** @type {!Element} */ (this.svgGroup_),  'blocklySelected');
 };
 
 /**
@@ -1112,11 +1113,11 @@ Blockly.BlockSvg.prototype.setMouseThroughStyle = function(letMouseThrough) {
  */
 Blockly.BlockSvg.prototype.setDeleteStyle = function(enable) {
   if (enable) {
-    Blockly.utils.addClass(/** @type {!Element} */ (this.svgGroup_),
-        'blocklyDraggingDelete');
+    Blockly.utils.addClass(
+        /** @type {!Element} */ (this.svgGroup_), 'blocklyDraggingDelete');
   } else {
-    Blockly.utils.removeClass(/** @type {!Element} */ (this.svgGroup_),
-        'blocklyDraggingDelete');
+    Blockly.utils.removeClass(
+        /** @type {!Element} */ (this.svgGroup_), 'blocklyDraggingDelete');
   }
 };
 
@@ -1143,8 +1144,8 @@ Blockly.BlockSvg.prototype.setColour = function(colour, colourSecondary,
 
 /**
  * Move this block to the front of the visible workspace.
- * <g> tags do not respect z-index so svg renders them in the
- * order that they are in the dom.  By placing this block first within the
+ * <g> tags do not respect z-index so SVG renders them in the
+ * order that they are in the DOM.  By placing this block first within the
  * block group's <g>, it will render on top of any other blocks.
  * @package
  */
@@ -1160,7 +1161,7 @@ Blockly.BlockSvg.prototype.bringToFront = function() {
 /**
  * Set whether this block can chain onto the bottom of another block.
  * @param {boolean} newBoolean True if there can be a previous statement.
- * @param {string|Array.<string>|null|undefined} opt_check Statement type or
+ * @param {(string|Array.<string>|null)=} opt_check Statement type or
  *     list of statement types.  Null/undefined if any type could be connected.
  */
 Blockly.BlockSvg.prototype.setPreviousStatement =
@@ -1178,7 +1179,7 @@ Blockly.BlockSvg.prototype.setPreviousStatement =
 /**
  * Set whether another block can chain onto the bottom of this block.
  * @param {boolean} newBoolean True if there can be a next statement.
- * @param {string|Array.<string>|null|undefined} opt_check Statement type or
+ * @param {(string|Array.<string>|null)=} opt_check Statement type or
  *     list of statement types.  Null/undefined if any type could be connected.
  */
 Blockly.BlockSvg.prototype.setNextStatement = function(newBoolean, opt_check) {
@@ -1194,7 +1195,7 @@ Blockly.BlockSvg.prototype.setNextStatement = function(newBoolean, opt_check) {
 /**
  * Set whether this block returns a value.
  * @param {boolean} newBoolean True if there is an output.
- * @param {string|Array.<string>|null|undefined} opt_check Returned type or list
+ * @param {(string|Array.<string>|null)=} opt_check Returned type or list
  *     of returned types.  Null or undefined if any type could be returned
  *     (e.g. variable get).
  */
