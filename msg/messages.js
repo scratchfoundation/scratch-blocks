@@ -202,6 +202,7 @@ Blockly.Msg.SENSING_SETDRAGMODE = "set drag mode %1";
 Blockly.Msg.SENSING_SETDRAGMODE_DRAGGABLE = "draggable";
 Blockly.Msg.SENSING_SETDRAGMODE_NOTDRAGGABLE = "not draggable";
 Blockly.Msg.SENSING_LOUDNESS = "loudness";
+Blockly.Msg.SENSING_LOUD = "loud?";
 Blockly.Msg.SENSING_TIMER = "timer";
 Blockly.Msg.SENSING_RESETTIMER = "reset timer";
 Blockly.Msg.SENSING_OF = "%1 of %2";

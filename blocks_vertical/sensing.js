@@ -358,6 +358,22 @@ Blockly.Blocks['sensing_loudness'] = {
   }
 };
 
+Blockly.Blocks['sensing_loud'] = {
+  /**
+   * Block to report if the loudness is "loud" (greater than 10). This is an
+   * obsolete block that is implemented for compatibility with Scratch 2.0 and
+   * 1.4 projects.
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.jsonInit({
+      "message0": Blockly.Msg.SENSING_LOUD,
+      "category": Blockly.Categories.sensing,
+      "extensions": ["colours_sensing", "output_boolean"]
+    });
+  }
+};
+
 Blockly.Blocks['sensing_timer'] = {
   /**
    * Block to report timer
