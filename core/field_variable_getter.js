@@ -171,4 +171,15 @@ Blockly.FieldVariableGetter.prototype.updateEditable = function() {
   // nop.
 };
 
+/**
+ * Whether this field references any Blockly variables.  If true it may need to
+ * be handled differently during serialization and deserialization.  Subclasses
+ * may override this.
+ * @return {boolean} True if this field has any variable references.
+ * @package
+ */
+Blockly.FieldVariableGetter.prototype.referencesVariables = function() {
+  return true;
+};
+
 Blockly.Field.register('field_variable_getter', Blockly.FieldVariableGetter);

@@ -853,8 +853,7 @@ Blockly.Block.prototype.getVars = function() {
   var vars = [];
   for (var i = 0, input; input = this.inputList[i]; i++) {
     for (var j = 0, field; field = input.fieldRow[j]; j++) {
-      if (field instanceof Blockly.FieldVariable ||
-          field instanceof Blockly.FieldVariableGetter) {
+      if (field.referencesVariables()) {
         vars.push(field.getValue());
       }
     }
@@ -871,8 +870,7 @@ Blockly.Block.prototype.getVarModels = function() {
   var vars = [];
   for (var i = 0, input; input = this.inputList[i]; i++) {
     for (var j = 0, field; field = input.fieldRow[j]; j++) {
-      if (field instanceof Blockly.FieldVariable ||
-          field instanceof Blockly.FieldVariableGetter) {
+      if (field.referencesVariables()) {
         var model = this.workspace.getVariableById(field.getValue());
         // Check if the variable actually exists (and isn't just a potential
         // variable).
@@ -894,8 +892,7 @@ Blockly.Block.prototype.getVarModels = function() {
 Blockly.Block.prototype.updateVarName = function(variable) {
   for (var i = 0, input; input = this.inputList[i]; i++) {
     for (var j = 0, field; field = input.fieldRow[j]; j++) {
-      if ((field instanceof Blockly.FieldVariable ||
-          field instanceof Blockly.FieldVariableGetter) &&
+      if (field.referencesVariables() &&
           variable.getId() == field.getValue()) {
         field.setText(variable.name);
       }
@@ -913,8 +910,7 @@ Blockly.Block.prototype.updateVarName = function(variable) {
 Blockly.Block.prototype.renameVarById = function(oldId, newId) {
   for (var i = 0, input; input = this.inputList[i]; i++) {
     for (var j = 0, field; field = input.fieldRow[j]; j++) {
-      if ((field instanceof Blockly.FieldVariable ||
-          field instanceof Blockly.FieldVariableGetter) &&
+      if (field.referencesVariables() &&
           oldId == field.getValue()) {
         field.setValue(newId);
       }
