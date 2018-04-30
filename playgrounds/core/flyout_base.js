@@ -71,7 +71,7 @@ Blockly.Flyout = function(workspaceOptions) {
   /**
    * Position of the toolbox and flyout relative to the workspace.
    * @type {number}
-   * @private
+   * @protected
    */
   this.toolboxPosition_ = workspaceOptions.toolboxPosition;
 
@@ -93,7 +93,7 @@ Blockly.Flyout = function(workspaceOptions) {
   /**
    * List of visible buttons.
    * @type {!Array.<!Blockly.FlyoutButton>}
-   * @private
+   * @protected
    */
   this.buttons_ = [];
 
@@ -188,14 +188,14 @@ Blockly.Flyout.prototype.SCROLLBAR_PADDING = 2;
 /**
  * Width of flyout.
  * @type {number}
- * @private
+ * @protected
  */
 Blockly.Flyout.prototype.width_ = 0;
 
 /**
  * Height of flyout.
  * @type {number}
- * @private
+ * @protected
  */
 Blockly.Flyout.prototype.height_ = 0;
 
@@ -234,7 +234,7 @@ Blockly.Flyout.prototype.verticalOffset_ = 0;
  * This is used to know when to create a new block and when to scroll the
  * flyout. Setting it to 360 means that all drags create a new block.
  * @type {number}
- * @private
+ * @protected
 */
 Blockly.Flyout.prototype.dragAngleRange_ = 70;
 
@@ -264,7 +264,7 @@ Blockly.Flyout.prototype.createDom = function(tagName) {
   // Setting style to display:none to start. The toolbox and flyout
   // hide/show code will set up proper visibility and size later.
   this.svgGroup_ = Blockly.utils.createSvgElement(tagName,
-      {'class': 'blocklyFlyout', 'style' : 'display: none'}, null);
+      {'class': 'blocklyFlyout', 'style': 'display: none'}, null);
   this.svgBackground_ = Blockly.utils.createSvgElement('path',
       {'class': 'blocklyFlyoutBackground'}, this.svgGroup_);
   this.svgGroup_.appendChild(this.workspace_.createDom());
@@ -289,7 +289,8 @@ Blockly.Flyout.prototype.init = function(targetWorkspace) {
       Blockly.bindEventWithChecks_(this.svgGroup_, 'wheel', this, this.wheel_));
   // Dragging the flyout up and down (or left and right).
   Array.prototype.push.apply(this.eventWrappers_,
-      Blockly.bindEventWithChecks_(this.svgGroup_, 'mousedown', this, this.onMouseDown_));
+      Blockly.bindEventWithChecks_(
+          this.svgGroup_, 'mousedown', this, this.onMouseDown_));
 
   // A flyout connected to a workspace doesn't have its own current gesture.
   this.workspace_.getGesture =
