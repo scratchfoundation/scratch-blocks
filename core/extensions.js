@@ -76,6 +76,9 @@ Blockly.Extensions.register = function(name, initFn) {
  *     registered.
  */
 Blockly.Extensions.registerMixin = function(name, mixinObj) {
+  if (!goog.isObject(mixinObj)){
+    throw new Error('Error: Mixin "' + name + '" must be a object');
+  }
   Blockly.Extensions.register(name, function() {
     this.mixin(mixinObj);
   });
@@ -373,24 +376,24 @@ Blockly.Extensions.buildTooltipForDropdown = function(dropdownName,
  * Emits console warnings when they are not.
  * @param {!Blockly.Block} block The block containing the dropdown
  * @param {string} dropdownName The name of the dropdown
- * @param {!Object<string, string>} lookupTable The string lookup table
+ * @param {!Object.<string, string>} lookupTable The string lookup table
  * @private
  */
-Blockly.Extensions.checkDropdownOptionsInTable_ =
-  function(block, dropdownName, lookupTable) {
-    // Validate all dropdown options have values.
-    var dropdown = block.getField(dropdownName);
-    if (!dropdown.isOptionListDynamic()) {
-      var options = dropdown.getOptions();
-      for (var i = 0; i < options.length; ++i) {
-        var optionKey = options[i][1]; // label, then value
-        if (lookupTable[optionKey] == null) {
-          console.warn('No tooltip mapping for value ' + optionKey +
-            ' of field ' + dropdownName + ' of block type ' + block.type);
-        }
+Blockly.Extensions.checkDropdownOptionsInTable_ = function(block, dropdownName,
+    lookupTable) {
+  // Validate all dropdown options have values.
+  var dropdown = block.getField(dropdownName);
+  if (!dropdown.isOptionListDynamic()) {
+    var options = dropdown.getOptions();
+    for (var i = 0; i < options.length; ++i) {
+      var optionKey = options[i][1];  // label, then value
+      if (lookupTable[optionKey] == null) {
+        console.warn('No tooltip mapping for value ' + optionKey +
+          ' of field ' + dropdownName + ' of block type ' + block.type);
       }
     }
-  };
+  }
+};
 
 /**
  * Builds an extension function that will install a dynamic tooltip. The

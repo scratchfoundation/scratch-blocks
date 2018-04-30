@@ -733,14 +733,13 @@ Blockly.Field.prototype.onMouseDown_ = function(e) {
   }
 };
 
-
 /**
  * Change the tooltip text for this field.
- * @param {string|!Element} newTip Text for tooltip or a parent element to
+ * @param {string|!Element} _newTip Text for tooltip or a parent element to
  *     link to for its tooltip.
  * @abstract
  */
-Blockly.Field.prototype.setTooltip = function(/*newTip*/) {
+Blockly.Field.prototype.setTooltip = function(_newTip) {
   // Non-abstract sub-classes may wish to implement this.  See FieldLabel.
 };
 

@@ -50,7 +50,7 @@ Blockly.Flyout = function(workspaceOptions) {
 
   /**
    * @type {!Blockly.Workspace}
-   * @private
+   * @protected
    */
   this.workspace_ = new Blockly.WorkspaceSvg(workspaceOptions);
   this.workspace_.isFlyout = true;
@@ -352,7 +352,7 @@ Blockly.Flyout.prototype.getHeight = function() {
 };
 
 /**
- * Get the flyout's workspace.
+ * Get the workspace inside the flyout.
  * @return {!Blockly.WorkspaceSvg} The workspace inside the flyout.
  * @package
  */
@@ -724,7 +724,7 @@ Blockly.Flyout.prototype.createBlock = function(originalBlock) {
     Blockly.Events.setGroup(true);
     Blockly.Events.fire(new Blockly.Events.Create(newBlock));
     // Fire a VarCreate event for each (if any) new variable created.
-    for(var i = 0; i < newVariables.length; i++) {
+    for (var i = 0; i < newVariables.length; i++) {
       var thisVariable = newVariables[i];
       Blockly.Events.fire(new Blockly.Events.VarCreate(thisVariable));
     }

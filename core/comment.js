@@ -126,10 +126,10 @@ Blockly.Comment.prototype.createEditor_ = function() {
   Blockly.bindEventWithChecks_(textarea, 'wheel', this, function(e) {
     e.stopPropagation();
   });
-  Blockly.bindEventWithChecks_(textarea, 'change', this, function(/* e */) {
+  Blockly.bindEventWithChecks_(textarea, 'change', this, function(_e) {
     if (this.text_ != textarea.value) {
       Blockly.Events.fire(new Blockly.Events.BlockChange(
-        this.block_, 'comment', null, this.text_, textarea.value));
+          this.block_, 'comment', null, this.text_, textarea.value));
       this.text_ = textarea.value;
     }
   });
@@ -213,17 +213,18 @@ Blockly.Comment.prototype.setVisible = function(visible) {
 
 /**
  * Bring the comment to the top of the stack when clicked on.
- * @param {!Event} e Mouse up event.
+ * @param {!Event} _e Mouse up event.
  * @private
  */
-Blockly.Comment.prototype.textareaFocus_ = function(/*e*/) {
+Blockly.Comment.prototype.textareaFocus_ = function(_e) {
   // Ideally this would be hooked to the focus event for the comment.
   // However doing so in Firefox swallows the cursor for unknown reasons.
   // So this is hooked to mouseup instead.  No big deal.
-  this.bubble_.promote_();
-  // Since the act of moving this node within the DOM causes a loss of focus,
-  // we need to reapply the focus.
-  this.textarea_.focus();
+  if (this.bubble_.promote_()) {
+    // Since the act of moving this node within the DOM causes a loss of focus,
+    // we need to reapply the focus.
+    this.textarea_.focus();
+  }
 };
 
 /**

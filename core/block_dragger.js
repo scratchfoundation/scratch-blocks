@@ -36,7 +36,7 @@ goog.require('goog.asserts');
 /**
  * Class for a block dragger.  It moves blocks around the workspace when they
  * are being dragged by a mouse or touch.
- * @param {!Blockly.Block} block The block to drag.
+ * @param {!Blockly.BlockSvg} block The block to drag.
  * @param {!Blockly.WorkspaceSvg} workspace The workspace to drag on.
  * @constructor
  */

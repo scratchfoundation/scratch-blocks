@@ -51,7 +51,7 @@ goog.require('goog.string');
  * @param {?string} prototypeName Name of the language object containing
  *     type-specific functions for this block.
  * @param {string=} opt_id Optional ID.  Use this ID if provided, otherwise
- *     create a new id.
+ *     create a new ID.
  * @constructor
  */
 Blockly.Block = function(workspace, prototypeName, opt_id) {
@@ -1188,11 +1188,12 @@ Blockly.Block.prototype.appendDummyInput = function(opt_name) {
  * @param {!Object} json Structured data describing the block.
  */
 Blockly.Block.prototype.jsonInit = function(json) {
+  var warningPrefix = json['type'] ? 'Block "' + json['type'] + '": ' : '';
 
   // Validate inputs.
-  goog.asserts.assert(json['output'] == undefined ||
-      json['previousStatement'] == undefined,
-      'Must not have both an output and a previousStatement.');
+  goog.asserts.assert(
+      json['output'] == undefined || json['previousStatement'] == undefined,
+      warningPrefix + 'Must not have both an output and a previousStatement.');
 
   // Set basic properties of block.
   if (json['colour'] !== undefined) {
@@ -1343,11 +1344,11 @@ Blockly.Block.prototype.interpolate_ = function(message, args, lastDummyAlign) {
     var token = tokens[i];
     if (typeof token == 'number') {
       if (token <= 0 || token > args.length) {
-        throw new Error('Block \"' + this.type + '\": ' +
+        throw new Error('Block "' + this.type + '": ' +
             'Message index %' + token + ' out of range.');
       }
       if (indexDup[token]) {
-        throw new Error('Block \"' + this.type + '\": ' +
+        throw new Error('Block "' + this.type + '": ' +
             'Message index %' + token + ' duplicated.');
       }
       indexDup[token] = true;
@@ -1360,14 +1361,14 @@ Blockly.Block.prototype.interpolate_ = function(message, args, lastDummyAlign) {
       }
     }
   }
-  if(indexCount != args.length) {
-    throw new Error('Block \"' + this.type + '\": ' +
+  if (indexCount != args.length) {
+    throw new Error('Block "' + this.type + '": ' +
         'Message does not reference all ' + args.length + ' arg(s).');
   }
   // Add last dummy input if needed.
   if (elements.length && (typeof elements[elements.length - 1] == 'string' ||
-      goog.string.startsWith(elements[elements.length - 1]['type'],
-                             'field_'))) {
+      goog.string.startsWith(
+          elements[elements.length - 1]['type'], 'field_'))) {
     var dummyInput = {type: 'input_dummy'};
     if (lastDummyAlign) {
       dummyInput['align'] = lastDummyAlign;
@@ -1487,8 +1488,8 @@ Blockly.Block.prototype.moveInputBefore = function(name, refName) {
     }
   }
   goog.asserts.assert(inputIndex != -1, 'Named input "%s" not found.', name);
-  goog.asserts.assert(refIndex != -1, 'Reference input "%s" not found.',
-                      refName);
+  goog.asserts.assert(
+      refIndex != -1, 'Reference input "%s" not found.', refName);
   this.moveNumberedInputBefore(inputIndex, refIndex);
 };
 
@@ -1502,9 +1503,9 @@ Blockly.Block.prototype.moveNumberedInputBefore = function(
   // Validate arguments.
   goog.asserts.assert(inputIndex != refIndex, 'Can\'t move input to itself.');
   goog.asserts.assert(inputIndex < this.inputList.length,
-                      'Input index ' + inputIndex + ' out of bounds.');
+      'Input index ' + inputIndex + ' out of bounds.');
   goog.asserts.assert(refIndex <= this.inputList.length,
-                      'Reference input ' + refIndex + ' out of bounds.');
+      'Reference input ' + refIndex + ' out of bounds.');
   // Remove input.
   var input = this.inputList[inputIndex];
   this.inputList.splice(inputIndex, 1);

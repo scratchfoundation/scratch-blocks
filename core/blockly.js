@@ -126,8 +126,10 @@ Blockly.hueToRgb = function(hue) {
  * @return {!Object} Contains width and height properties.
  */
 Blockly.svgSize = function(svg) {
-  return {width: svg.cachedWidth_,
-          height: svg.cachedHeight_};
+  return {
+    width: svg.cachedWidth_,
+    height: svg.cachedHeight_
+  };
 };
 
 /**
@@ -324,7 +326,6 @@ Blockly.confirm = function(message, callback) {
   callback(window.confirm(message));
 };
 
-/* eslint-disable no-unused-vars */
 /**
  * Wrapper to window.prompt() that app developers may override to provide
  * alternatives to the modal browser window. Built-in browser prompts are
@@ -333,17 +334,16 @@ Blockly.confirm = function(message, callback) {
  * @param {string} message The message to display to the user.
  * @param {string} defaultValue The value to initialize the prompt with.
  * @param {!function(string)} callback The callback for handling user response.
- * @param {?string} opt_title An optional title for the prompt.
- * @param {?string} opt_varType An optional variable type for variable specific
+ * @param {?string} _opt_title An optional title for the prompt.
+ * @param {?string} _opt_varType An optional variable type for variable specific
  *     prompt behavior.
  */
-Blockly.prompt = function(message, defaultValue, callback, opt_title,
-    opt_varType) {
+Blockly.prompt = function(message, defaultValue, callback, _opt_title,
+    _opt_varType) {
   // opt_title and opt_varType are unused because we only need them to pass
   // information to the scratch-gui, which overwrites this function
   callback(window.prompt(message, defaultValue));
 };
-/* eslint-enable no-unused-vars */
 
 /**
  * Helper function for defining a block from JSON.  The resulting function has
@@ -365,19 +365,28 @@ Blockly.jsonInitFactory_ = function(jsonDef) {
  * @param {!Array.<!Object>} jsonArray An array of JSON block definitions.
  */
 Blockly.defineBlocksWithJsonArray = function(jsonArray) {
-  for (var i = 0, elem; elem = jsonArray[i]; i++) {
-    var typename = elem.type;
-    if (typename == null || typename === '') {
-      console.warn('Block definition #' + i +
-        ' in JSON array is missing a type attribute. Skipping.');
+  for (var i = 0; i < jsonArray.length; i++) {
+    var elem = jsonArray[i];
+    if (!elem) {
+      console.warn(
+          'Block definition #' + i + ' in JSON array is ' + elem + '. ' +
+          'Skipping.');
     } else {
-      if (Blockly.Blocks[typename]) {
-        console.warn('Block definition #' + i +
-          ' in JSON array overwrites prior definition of "' + typename + '".');
+      var typename = elem.type;
+      if (typename == null || typename === '') {
+        console.warn(
+            'Block definition #' + i +
+            ' in JSON array is missing a type attribute. Skipping.');
+      } else {
+        if (Blockly.Blocks[typename]) {
+          console.warn(
+              'Block definition #' + i + ' in JSON array' +
+              ' overwrites prior definition of "' + typename + '".');
+        }
+        Blockly.Blocks[typename] = {
+          init: Blockly.jsonInitFactory_(elem)
+        };
       }
-      Blockly.Blocks[typename] = {
-        init: Blockly.jsonInitFactory_(elem)
-      };
     }
   }
 };

@@ -162,7 +162,7 @@ Blockly.Bubble.bubbleMouseUp_ = function(/*e*/) {
 Blockly.Bubble.prototype.rendered_ = false;
 
 /**
- * Absolute coordinate of anchor point, in workspace coordinates
+ * Absolute coordinate of anchor point, in workspace coordinates.
  * @type {goog.math.Coordinate}
  * @private
  */
@@ -256,10 +256,8 @@ Blockly.Bubble.prototype.createDom_ = function(content, hasResize) {
     Blockly.utils.createSvgElement('line',
         {
           'class': 'blocklyResizeLine',
-          'x1': resizeSize / 3,
-          'y1': resizeSize - 1,
-          'x2': resizeSize - 1,
-          'y2': resizeSize / 3
+          'x1': resizeSize / 3, 'y1': resizeSize - 1,
+          'x2': resizeSize - 1, 'y2': resizeSize / 3
         }, this.resizeGroup_);
     Blockly.utils.createSvgElement('line',
         {
@@ -371,11 +369,16 @@ Blockly.Bubble.prototype.registerResizeEvent = function(callback) {
 
 /**
  * Move this bubble to the top of the stack.
+ * @return {!boolean} Whether or not the bubble has been moved.
  * @private
  */
 Blockly.Bubble.prototype.promote_ = function() {
   var svgGroup = this.bubbleGroup_.parentNode;
-  svgGroup.appendChild(this.bubbleGroup_);
+  if (svgGroup.lastChild !== this.bubbleGroup_) {
+    svgGroup.appendChild(this.bubbleGroup_);
+    return true;
+  }
+  return false;
 };
 
 /**
@@ -448,8 +451,17 @@ Blockly.Bubble.prototype.positionBubble_ = function() {
     left += this.relativeLeft_;
   }
   var top = this.relativeTop_ + this.anchorXY_.y;
-  this.bubbleGroup_.setAttribute('transform',
-      'translate(' + left + ',' + top + ')');
+  this.moveTo(left, top);
+};
+
+/**
+ * Move the bubble group to the specified location in workspace coordinates.
+ * @param {number} x The x position to move to.
+ * @param {number} y The y position to move to.
+ * @package
+ */
+Blockly.Bubble.prototype.moveTo = function(x, y) {
+  this.bubbleGroup_.setAttribute('transform', 'translate(' + x + ',' + y + ')');
 };
 
 /**
