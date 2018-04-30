@@ -30,7 +30,9 @@ goog.require('Blockly.BlockSvg.render');
 goog.require('Blockly.Colours');
 goog.require('Blockly.Field');
 goog.require('Blockly.Msg');
+goog.require('Blockly.scratchBlocksUtils');
 goog.require('Blockly.utils');
+
 goog.require('goog.asserts');
 goog.require('goog.dom');
 goog.require('goog.dom.TagName');
@@ -124,13 +126,15 @@ Blockly.FieldTextInput.prototype.init = function() {
 
   // If not in a shadow block, draw a box.
   if (notInShadow) {
-    this.box_ = Blockly.utils.createSvgElement('rect', {
-      'x': 0,
-      'y': 0,
-      'width': this.size_.width,
-      'height': this.size_.height,
-      'fill': this.sourceBlock_.getColourTertiary()
-    });
+    this.box_ = Blockly.utils.createSvgElement('rect',
+        {
+          'x': 0,
+          'y': 0,
+          'width': this.size_.width,
+          'height': this.size_.height,
+          'fill': this.sourceBlock_.getColourTertiary()
+        }
+    );
     this.fieldGroup_.insertBefore(this.box_, this.textElement_);
   }
 };
@@ -455,7 +459,7 @@ Blockly.FieldTextInput.prototype.resizeEditor_ = function() {
   var width;
   if (Blockly.BlockSvg.FIELD_TEXTINPUT_EXPAND_PAST_TRUNCATION) {
     // Resize the box based on the measured width of the text, pre-truncation
-    var textWidth = Blockly.utils.measureText(
+    var textWidth = Blockly.scratchBlocksUtils.measureText(
       Blockly.FieldTextInput.htmlInput_.style.fontSize,
       Blockly.FieldTextInput.htmlInput_.style.fontFamily,
       Blockly.FieldTextInput.htmlInput_.style.fontWeight,
