@@ -75,7 +75,10 @@ Blockly.Warning.prototype.drawIcon_ = function(group) {
   Blockly.utils.createSvgElement('rect',
       {
         'class': 'blocklyIconSymbol',
-        'x': '7', 'y': '11', 'height': '2', 'width': '2'
+        'x': '7',
+        'y': '11',
+        'height': '2',
+        'width': '2'
       },
       group);
 };

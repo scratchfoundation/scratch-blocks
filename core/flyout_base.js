@@ -290,7 +290,7 @@ Blockly.Flyout.prototype.init = function(targetWorkspace) {
   // Dragging the flyout up and down (or left and right).
   Array.prototype.push.apply(this.eventWrappers_,
       Blockly.bindEventWithChecks_(
-          this.svgBackground_, 'mousedown', this, this.onMouseDown_));
+          this.svgGroup_, 'mousedown', this, this.onMouseDown_));
 
   // A flyout connected to a workspace doesn't have its own current gesture.
   this.workspace_.getGesture =
