@@ -812,36 +812,6 @@ Blockly.utils.wrapToText_ = function(words, wordBreaks) {
 };
 
 /**
- * Measure some text using a canvas in-memory.
- * Does not exist in Blockly, but needed in scratch-blocks
- * @param {string} fontSize E.g., '10pt'
- * @param {string} fontFamily E.g., 'Arial'
- * @param {string} fontWeight E.g., '600'
- * @param {string} text The actual text to measure
- * @return {number} Width of the text in px.
- */
-Blockly.utils.measureText = function(fontSize, fontFamily, fontWeight, text) {
-  var canvas = document.createElement('canvas');
-  var context = canvas.getContext('2d');
-  context.font = fontWeight + ' ' + fontSize + ' ' + fontFamily;
-  return context.measureText(text).width;
-};
-
-/**
- * Encode a string's HTML entities.
- * E.g., <a> -> &lt;a&gt;
- * Does not exist in Blockly, but needed in scratch-blocks
- * @param {string} rawStr Unencoded raw string to encode.
- * @return {string} String with HTML entities encoded.
- */
-Blockly.utils.encodeEntities = function(rawStr) {
-  // CC-BY-SA https://stackoverflow.com/questions/18749591/encode-html-entities-in-javascript
-  return rawStr.replace(/[\u00A0-\u9999<>\&]/gim, function(i) {
-    return '&#' + i.charCodeAt(0) + ';';
-  });
-};
-
-/**
  * Check if 3D transforms are supported by adding an element
  * and attempting to set the property.
  * @return {boolean} true if 3D transforms are supported.
@@ -943,43 +913,6 @@ Blockly.utils.runAfterPageLoad = function(fn) {
 Blockly.utils.setCssTransform = function(node, transform) {
   node.style['transform'] = transform;
   node.style['-webkit-transform'] = transform;
-};
-
-/**
- * Re-assign obscured shadow blocks new IDs to prevent collisions
- * Scratch specific to help the VM handle deleting obscured shadows.
- * @param {Blockly.Block} block the root block to be processed.
- */
-Blockly.utils.changeObscuredShadowIds = function(block) {
-  var blocks = block.getDescendants();
-  for (var i = blocks.length - 1; i >= 0; i--) {
-    var descendant = blocks[i];
-    for (var j = 0; j < descendant.inputList.length; j++) {
-      var connection = descendant.inputList[j].connection;
-      if (connection) {
-        var shadowDom = connection.getShadowDom();
-        if (shadowDom) {
-          shadowDom.setAttribute('id', Blockly.utils.genUid());
-          connection.setShadowDom(shadowDom);
-        }
-      }
-    }
-  }
-};
-
-/**
- * Whether a block is both a shadow block and an argument reporter.  These
- * blocks have special behaviour in scratch-blocks: they're duplicated when
- * dragged, and they are rendered slightly differently from normal shadow
- * blocks.
- * @param {!Blockly.BlockSvg} block The block that should be used to make this
- *     decision.
- * @return {boolean} True if the block should be duplicated on drag.
- * @package
- */
-Blockly.utils.isShadowArgumentReporter = function(block) {
-  return (block.isShadow() && (block.type == 'argument_reporter_boolean' ||
-      block.type == 'argument_reporter_string_number'));
 };
 
 /**
