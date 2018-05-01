@@ -301,8 +301,15 @@ Blockly.Blocks['looks_size'] = {
 Blockly.Blocks['looks_changestretchby'] = {
   /**
    * Block to change stretch. Does not actually do anything. This is an
-   * obsolete block that is implemented for compatibility with Scratch 2.0
-   * projects.
+   * obsolete block that is implemented for compatibility with Scratch 1.4
+   * projects as well as 2.0 projects that still have the block.
+   * The "stretch" blocks were introduced in very early versions of Scratch,
+   * but their functionality was removed shortly later. They still appeared
+   * correctly up until (and including) Scratch 1.4 - as "change stretch by"
+   * and "set stretch to" - but were removed altogether in Scratch 2.0, and
+   * displayed as red "undefined" blocks. Some Scratch projects still contain
+   * these blocks, however, and they don't open in 3.0 unless the blocks
+   * actually exist (though they still don't funcitonally do anything).
    * @this Blockly.Block
    */
   init: function() {
@@ -323,7 +330,8 @@ Blockly.Blocks['looks_changestretchby'] = {
 Blockly.Blocks['looks_setstretchto'] = {
   /**
    * Block to set stretch. Does not actually do anything. This is an obsolete
-   * block that is implemented for compatibility with Scratch 2.0 projects.
+   * block that is implemented for compatibility with Scratch 1.4 projects
+   * (see looks_changestretchby).
    * @this Blockly.Block
    */
   init: function() {
