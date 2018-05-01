@@ -500,3 +500,33 @@ Blockly.Blocks['control_clear_counter'] = {
     });
   }
 };
+
+Blockly.Blocks['control_all_at_once'] = {
+  /**
+   * Block to run the contained script. This is an obsolete block that is
+   * implemented for compatibility with Scratch 2.0 projects. Note that
+   * this was originally designed to run all of the contained blocks
+   * (sequentially, like normal) within a single frame, but this feature
+   * was removed in place of custom blocks marked "run without screen
+   * refresh". The "all at once" block was changed to run the contained
+   * blocks ordinarily, functioning the same way as an "if" block with a
+   * reporter that is always true (e.g. "if 1 = 1"). Also note that the
+   * Scratch 2.0 spec for this block is "warpSpeed", but the label shows
+   * "all at once".
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.jsonInit({
+      "message0": Blockly.Msg.CONTROL_ALLATONCE,
+      "message1": "%1", // Statement
+      "args1": [
+        {
+          "type": "input_statement",
+          "name": "SUBSTACK"
+        }
+      ],
+      "category": Blockly.Categories.control,
+      "extensions": ["colours_control", "shape_statement"]
+    });
+  }
+};

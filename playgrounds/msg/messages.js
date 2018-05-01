@@ -50,6 +50,7 @@ Blockly.Msg.CONTROL_DELETETHISCLONE = "delete this clone";
 Blockly.Msg.CONTROL_COUNTER = "counter";
 Blockly.Msg.CONTROL_INCRCOUNTER = "increment counter";
 Blockly.Msg.CONTROL_CLEARCOUNTER = "clear counter";
+Blockly.Msg.CONTROL_ALLATONCE = "all at once";
 
 // Data blocks
 Blockly.Msg.DATA_SETVARIABLETO = "set %1 to %2";
