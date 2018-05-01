@@ -146,6 +146,23 @@ Blockly.Blocks['looks_hide'] = {
   }
 };
 
+Blockly.Blocks['looks_hideallsprites'] = {
+  /**
+   * Hide-all-sprites block. Does not actually do anything. This is an
+   * obsolete block that is implemented for compatibility with Scratch 2.0
+   * projects.
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.jsonInit(
+      {
+        "message0": Blockly.Msg.LOOKS_HIDEALLSPRITES,
+        "category": Blockly.Categories.looks,
+        "extensions": ["colours_looks", "shape_statement"]
+      });
+  }
+};
+
 Blockly.Blocks['looks_changeeffectby'] = {
   /**
    * Block to change graphic effect.

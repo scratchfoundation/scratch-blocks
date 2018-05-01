@@ -90,6 +90,7 @@ Blockly.Msg.LOOKS_THINKFORSECS = "think %1 for %2 seconds";
 Blockly.Msg.LOOKS_THINK = "think %1";
 Blockly.Msg.LOOKS_SHOW = "show";
 Blockly.Msg.LOOKS_HIDE = "hide";
+Blockly.Msg.LOOKS_HIDEALLSPRITES = "hide all sprites";
 Blockly.Msg.LOOKS_EFFECT_COLOR = "color";
 Blockly.Msg.LOOKS_EFFECT_FISHEYE = "fisheye";
 Blockly.Msg.LOOKS_EFFECT_WHIRL = "whirl";
@@ -224,6 +225,7 @@ Blockly.Msg.SENSING_CURRENT_MINUTE = "minute";
 Blockly.Msg.SENSING_CURRENT_SECOND = "second";
 Blockly.Msg.SENSING_DAYSSINCE2000 = "days since 2000";
 Blockly.Msg.SENSING_USERNAME = "username";
+Blockly.Msg.SENSING_USERID = "user id";
 
 // Sound blocks
 Blockly.Msg.SOUND_PLAY = "start sound %1";

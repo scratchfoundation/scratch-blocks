@@ -507,3 +507,19 @@ Blockly.Blocks['sensing_username'] = {
     });
   }
 };
+
+Blockly.Blocks['sensing_userid'] = {
+  /**
+   * Block to report user's ID. Does not actually do anything. This is an
+   * obsolete block that is implemented for compatibility with Scratch 2.0
+   * projects.
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.jsonInit({
+      "message0": Blockly.Msg.SENSING_USERID,
+      "category": Blockly.Categories.sensing,
+      "extensions": ["colours_sensing", "output_number"]
+    });
+  }
+};
