@@ -1,0 +1,1 @@
+goog.provide('Blockly.Generator');
