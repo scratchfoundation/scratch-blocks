@@ -258,8 +258,8 @@ Blockly.Scrollbar.prototype.origin_ = new goog.math.Coordinate(0, 0);
 Blockly.Scrollbar.prototype.originHasChanged_ = true;
 
 /**
- * The size of the area within which the scrollbar handle can move.
- * Coordinate system: pixel coordinates.
+ * The size of the area within which the scrollbar handle can move, in CSS
+ * pixels.
  * @type {number}
  * @private
  */

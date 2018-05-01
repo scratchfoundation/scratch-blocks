@@ -269,7 +269,7 @@ Blockly.utils.getScale_REGEXP_ = /scale\(\s*([-+\d.e]+)\s*\)/;
  * @private
  */
 Blockly.utils.getRelativeXY.XY_3D_REGEX_ =
-  /transform:\s*translate3d\(\s*([-+\d.e]+)px([ ,]\s*([-+\d.e]+)\s*)px([ ,]\s*([-+\d.e]+)\s*)px\)?/;
+    /transform:\s*translate3d\(\s*([-+\d.e]+)px([ ,]\s*([-+\d.e]+)\s*)px([ ,]\s*([-+\d.e]+)\s*)px\)?/;
 
 /**
  * Static regex to pull the x,y,z values out of a translate3d() style property.
@@ -278,7 +278,7 @@ Blockly.utils.getRelativeXY.XY_3D_REGEX_ =
  * @private
  */
 Blockly.utils.getRelativeXY.XY_2D_REGEX_ =
-  /transform:\s*translate\(\s*([-+\d.e]+)px([ ,]\s*([-+\d.e]+)\s*)px\)?/;
+    /transform:\s*translate\(\s*([-+\d.e]+)px([ ,]\s*([-+\d.e]+)\s*)px\)?/;
 
 /**
  * Helper method for creating SVG elements.
@@ -491,7 +491,8 @@ Blockly.utils.checkMessageReferences = function(message) {
  * @return {!Array.<string|number>} Array of strings and numbers.
  * @private
  */
-Blockly.utils.tokenizeInterpolation_ = function(message, parseInterpolationTokens) {
+Blockly.utils.tokenizeInterpolation_ = function(message,
+    parseInterpolationTokens) {
   var tokens = [];
   var chars = message.split('');
   chars.push('');  // End marker.
@@ -499,7 +500,7 @@ Blockly.utils.tokenizeInterpolation_ = function(message, parseInterpolationToken
   // 0 - Base case.
   // 1 - % found.
   // 2 - Digit found.
-  // 3 - Message ref found
+  // 3 - Message ref found.
   var state = 0;
   var buffer = [];
   var number = null;
