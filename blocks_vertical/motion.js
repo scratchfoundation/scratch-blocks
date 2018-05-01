@@ -563,7 +563,6 @@ Blockly.Blocks['motion_xscroll'] = {
     this.jsonInit({
       "message0": Blockly.Msg.MOTION_XSCROLL,
       "category": Blockly.Categories.motion,
-      "checkboxInFlyout": true,
       "extensions": ["colours_motion", "output_number"]
     });
   }
@@ -580,7 +579,6 @@ Blockly.Blocks['motion_yscroll'] = {
     this.jsonInit({
       "message0": Blockly.Msg.MOTION_YSCROLL,
       "category": Blockly.Categories.motion,
-      "checkboxInFlyout": true,
       "extensions": ["colours_motion", "output_number"]
     });
   }
