@@ -298,6 +298,49 @@ Blockly.Blocks['looks_size'] = {
   }
 };
 
+Blockly.Blocks['looks_changestretchby'] = {
+  /**
+   * Block to change stretch. Does not actually do anything. This is an
+   * obsolete block that is implemented for compatibility with Scratch 2.0
+   * projects.
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.jsonInit({
+      "message0": Blockly.Msg.LOOKS_CHANGESTRETCHBY,
+      "args0": [
+        {
+          "type": "input_value",
+          "name": "CHANGE"
+        }
+      ],
+      "category": Blockly.Categories.looks,
+      "extensions": ["colours_looks", "shape_statement"]
+    });
+  }
+};
+
+Blockly.Blocks['looks_setstretchto'] = {
+  /**
+   * Block to set stretch. Does not actually do anything. This is an obsolete
+   * block that is implemented for compatibility with Scratch 2.0 projects.
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.jsonInit({
+      "message0": Blockly.Msg.LOOKS_SETSTRETCHTO,
+      "args0": [
+        {
+          "type": "input_value",
+          "name": "STRETCH"
+        }
+      ],
+      "category": Blockly.Categories.looks,
+      "extensions": ["colours_looks", "shape_statement"]
+    });
+  }
+};
+
 Blockly.Blocks['looks_costume'] = {
   /**
    * Costumes drop-down menu.
