@@ -34,6 +34,7 @@ goog.require('goog.events');
 goog.require('goog.style');
 goog.require('goog.ui.ColorPicker');
 
+
 /**
  * Class for a colour input field.
  * @param {string} colour The initial colour in '#rrggbb' format.

@@ -95,12 +95,12 @@ Blockly.FieldImage.prototype.init = function() {
   }
   /** @type {SVGElement} */
   this.imageElement_ = Blockly.utils.createSvgElement(
-    'image',
-    {
-      'height': this.height_ + 'px',
-      'width': this.width_ + 'px'
-    },
-    this.fieldGroup_);
+      'image',
+      {
+        'height': this.height_ + 'px',
+        'width': this.width_ + 'px'
+      },
+      this.fieldGroup_);
   this.setValue(this.src_);
   this.sourceBlock_.getSvgRoot().appendChild(this.fieldGroup_);
 
