@@ -90,6 +90,7 @@ Blockly.Msg.LOOKS_THINKFORSECS = "think %1 for %2 seconds";
 Blockly.Msg.LOOKS_THINK = "think %1";
 Blockly.Msg.LOOKS_SHOW = "show";
 Blockly.Msg.LOOKS_HIDE = "hide";
+Blockly.Msg.LOOKS_HIDEALLSPRITES = "hide all sprites";
 Blockly.Msg.LOOKS_EFFECT_COLOR = "color";
 Blockly.Msg.LOOKS_EFFECT_FISHEYE = "fisheye";
 Blockly.Msg.LOOKS_EFFECT_WHIRL = "whirl";
@@ -103,6 +104,8 @@ Blockly.Msg.LOOKS_CLEARGRAPHICEFFECTS = "clear graphic effects";
 Blockly.Msg.LOOKS_CHANGESIZEBY = "change size by %1";
 Blockly.Msg.LOOKS_SETSIZETO = "set size to %1 %";
 Blockly.Msg.LOOKS_SIZE = "size";
+Blockly.Msg.LOOKS_CHANGESTRETCHBY = "change stretch by %1";
+Blockly.Msg.LOOKS_SETSTRETCHTO = "set stretch to %1 %";
 Blockly.Msg.LOOKS_SWITCHCOSTUMETO = "switch costume to %1";
 Blockly.Msg.LOOKS_NEXTCOSTUME = "next costume";
 Blockly.Msg.LOOKS_SWITCHBACKDROPTO = "switch backdrop to %1";
@@ -225,6 +228,7 @@ Blockly.Msg.SENSING_CURRENT_MINUTE = "minute";
 Blockly.Msg.SENSING_CURRENT_SECOND = "second";
 Blockly.Msg.SENSING_DAYSSINCE2000 = "days since 2000";
 Blockly.Msg.SENSING_USERNAME = "username";
+Blockly.Msg.SENSING_USERID = "user id";
 
 // Sound blocks
 Blockly.Msg.SOUND_PLAY = "start sound %1";
