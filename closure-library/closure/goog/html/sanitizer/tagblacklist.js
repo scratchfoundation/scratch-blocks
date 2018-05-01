@@ -34,6 +34,8 @@ goog.html.sanitizer.TagBlacklist = {
   'BASE': true,
   'BGSOUND': true,
   'EMBED': true,
+  // Blacklisted by default, can be allowed using allowFormTag.
+  'FORM': true,
   // NOTE: can remove this for old browser behavior
   'IFRAME': true,
   // Can result in network requests
@@ -48,7 +50,10 @@ goog.html.sanitizer.TagBlacklist = {
   // Can result in an XSS in FF
   // https://bugzilla.mozilla.org/show_bug.cgi?id=1205631
   'SVG': true,
+  // Blacklisted by default, can be allowed using allowStyleTag.
   'STYLE': true,
+  // Unsafe in most cases, and sanitizing its contents is not supported by the
+  // underlying SafeDomTreeProcessor.
   'TEMPLATE': true,
   'VIDEO': true
 };

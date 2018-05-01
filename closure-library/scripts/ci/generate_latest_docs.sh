@@ -14,6 +14,7 @@ mkdir -p "$GIT_DIR"
 
 # Files to omit from documentation
 BLACKLIST_FILES=(
+  date/relativecommontests.js
   events/eventtargettester.js
   i18n/compactnumberformatsymbolsext.js
   i18n/datetimepatternsext.js
@@ -28,6 +29,7 @@ BLACKLIST_FILES=(
   test_module.js
   test_module_dep.js
   tweak/testhelpers.js
+  transpile.js
   useragent/useragenttestutil.js
 )
 declare -A BLACKLIST

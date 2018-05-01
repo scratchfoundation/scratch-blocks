@@ -19,8 +19,6 @@
  * the logic for the two types of transports we use:
  * XMLHTTP and Image request. It provides timeout detection. More transports
  * to be added in future, such as Fetch, WebSocket.
- *
- * @visibility {:internal}
  */
 
 
@@ -31,6 +29,7 @@ goog.require('goog.async.Throttle');
 goog.require('goog.events.EventHandler');
 goog.require('goog.labs.net.webChannel.Channel');
 goog.require('goog.labs.net.webChannel.WebChannelDebug');
+goog.require('goog.labs.net.webChannel.environment');
 goog.require('goog.labs.net.webChannel.requestStats');
 goog.require('goog.net.ErrorCode');
 goog.require('goog.net.EventType');
@@ -104,10 +103,8 @@ goog.labs.net.webChannel.ChannelRequest = function(
    * onreadystatechange during incremental loading of responseText.
    * @private {goog.Timer}
    */
-  this.pollingTimer_ = new goog.Timer();
-
-  this.pollingTimer_.setInterval(
-      goog.labs.net.webChannel.ChannelRequest.POLLING_INTERVAL_MS_);
+  this.pollingTimer_ =
+      new goog.Timer(goog.labs.net.webChannel.environment.getPollingInterval());
 
   /**
    * Extra HTTP headers to add to all the requests sent to the server.
@@ -167,6 +164,14 @@ goog.labs.net.webChannel.ChannelRequest = function(
    * @private {?string}
    */
   this.postData_ = null;
+
+  /**
+   * An array of pending messages that we have either received a non-successful
+   * response for, or no response at all, and which therefore may or may not
+   * have been received by the server.
+   * @private {!Array<goog.labs.net.webChannel.Wire.QueuedMap>}
+   */
+  this.pendingMessages_ = [];
 
   /**
    * The XhrLte request if the request is using XMLHTTP
@@ -238,6 +243,7 @@ var Channel = goog.labs.net.webChannel.Channel;
 var ChannelRequest = goog.labs.net.webChannel.ChannelRequest;
 var requestStats = goog.labs.net.webChannel.requestStats;
 var WebChannelDebug = goog.labs.net.webChannel.WebChannelDebug;
+var environment = goog.labs.net.webChannel.environment;
 
 
 /**
@@ -246,14 +252,6 @@ var WebChannelDebug = goog.labs.net.webChannel.WebChannelDebug;
  * @private {number}
  */
 ChannelRequest.TIMEOUT_MS_ = 45 * 1000;
-
-
-/**
- * How often to poll (in MS) for changes to responseText in browsers that don't
- * fire onreadystatechange during incremental loading of responseText.
- * @private {number}
- */
-ChannelRequest.POLLING_INTERVAL_MS_ = 250;
 
 
 /**
@@ -405,6 +403,28 @@ ChannelRequest.prototype.setReadyStateChangeThrottle = function(throttle) {
 
 
 /**
+ * Sets the pending messages that this request is handling.
+ *
+ * @param {!Array<goog.labs.net.webChannel.Wire.QueuedMap>} pendingMessages
+ *     The pending messages for this request.
+ */
+ChannelRequest.prototype.setPendingMessages = function(pendingMessages) {
+  this.pendingMessages_ = pendingMessages;
+};
+
+
+/**
+ * Gets the pending messages that this request is handling, in case of a retry.
+ *
+ * @return {!Array<goog.labs.net.webChannel.Wire.QueuedMap>} The pending
+ *     messages for this request.
+ */
+ChannelRequest.prototype.getPendingMessages = function() {
+  return this.pendingMessages_;
+};
+
+
+/**
  * Uses XMLHTTP to send an HTTP POST to the server.
  *
  * @param {goog.Uri} uri  The uri of the request.
@@ -532,8 +552,10 @@ ChannelRequest.prototype.xmlHttpHandler_ = function(xmlhttp) {
   } catch (ex) {
     this.channelDebug_.debug('Failed call to OnXmlHttpReadyStateChanged_');
     if (this.xmlHttp_ && this.xmlHttp_.getResponseText()) {
-      this.channelDebug_.dumpException(
-          ex, 'ResponseText: ' + this.xmlHttp_.getResponseText());
+      var channelRequest = this;
+      this.channelDebug_.dumpException(ex, function() {
+        return 'ResponseText: ' + channelRequest.xmlHttp_.getResponseText();
+      });
     } else {
       this.channelDebug_.dumpException(ex, 'No response text');
     }
@@ -555,13 +577,12 @@ ChannelRequest.prototype.onXmlHttpReadyStateChanged_ = function() {
 
   // we get partial results in browsers that support ready state interactive.
   // We also make sure that getResponseText is not null in interactive mode
-  // before we continue.  However, we don't do it in Opera because it only
-  // fire readyState == INTERACTIVE once.  We need the following code to poll
+  // before we continue.
   if (readyState < goog.net.XmlHttp.ReadyState.INTERACTIVE ||
-      readyState == goog.net.XmlHttp.ReadyState.INTERACTIVE &&
-          !goog.userAgent.OPERA && !this.xmlHttp_.getResponseText()) {
-    // not yet ready
-    return;
+      (readyState == goog.net.XmlHttp.ReadyState.INTERACTIVE &&
+       !environment.isPollingRequired() &&  // otherwise, go on to startPolling
+       !this.xmlHttp_.getResponseText())) {
+    return;  // not yet ready
   }
 
   // Dispatch any appropriate network events.
@@ -585,8 +606,11 @@ ChannelRequest.prototype.onXmlHttpReadyStateChanged_ = function() {
   this.lastStatusCode_ = status;
   var responseText = this.xmlHttp_.getResponseText();
   if (!responseText) {
-    this.channelDebug_.debug(
-        'No response text for uri ' + this.requestUri_ + ' status ' + status);
+    var channelRequest = this;
+    this.channelDebug_.debug(function() {
+      return 'No response text for uri ' + channelRequest.requestUri_ +
+          ' status ' + status;
+    });
   }
   this.successful_ = (status == 200);
 
@@ -617,7 +641,7 @@ ChannelRequest.prototype.onXmlHttpReadyStateChanged_ = function() {
 
   if (this.decodeChunks_) {
     this.decodeNextChunks_(readyState, responseText);
-    if (goog.userAgent.OPERA && this.successful_ &&
+    if (environment.isPollingRequired() && this.successful_ &&
         readyState == goog.net.XmlHttp.ReadyState.INTERACTIVE) {
       this.startPolling_();
     }
@@ -706,6 +730,9 @@ ChannelRequest.prototype.decodeNextChunks_ = function(
  * @private
  */
 ChannelRequest.prototype.pollResponse_ = function() {
+  if (!this.xmlHttp_) {
+    return;  // already closed
+  }
   var readyState = this.xmlHttp_.getReadyState();
   var responseText = this.xmlHttp_.getResponseText();
   if (this.xmlHttpChunkStart_ < responseText.length) {
@@ -786,6 +813,9 @@ ChannelRequest.prototype.getNextChunk_ = function(responseText) {
  * For Chrome Apps, sendBeacon is always necessary due to Content Security
  * Policy (CSP) violation of using an IMG tag.
  *
+ * For react-native, we use xhr to send the actual close request, and assume
+ * there is no page-close issue with react-native.
+ *
  * @param {goog.Uri} uri The uri to send a request to.
  */
 ChannelRequest.prototype.sendCloseRequest = function(uri) {
@@ -800,9 +830,16 @@ ChannelRequest.prototype.sendCloseRequest = function(uri) {
         goog.global.navigator.sendBeacon(this.baseUri_.toString(), '');
   }
 
-  if (!requestSent) {
+  if (!requestSent && goog.global.Image) {
     var eltImg = new Image();
     eltImg.src = this.baseUri_;
+    requestSent = true;
+  }
+
+  if (!requestSent) {
+    // no handler is set to match the sendBeacon/Image behavior
+    this.xmlHttp_ = this.channel_.createXhrIo(null);
+    this.xmlHttp_.send(this.baseUri_);
   }
 
   this.requestStartTime_ = goog.now();

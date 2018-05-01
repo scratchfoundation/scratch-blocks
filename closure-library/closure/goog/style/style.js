@@ -504,7 +504,9 @@ goog.style.getOffsetParent = function(element) {
        parent = parent.parentNode) {
     // Skip shadowDOM roots.
     if (parent.nodeType == goog.dom.NodeType.DOCUMENT_FRAGMENT && parent.host) {
-      parent = parent.host;
+      // Cast because the assignment is not type safe, and without a cast we
+      // start typing parent loosely and get bad disambiguation.
+      parent = /** @type {!Element} */ (parent.host);
     }
     positionStyle =
         goog.style.getStyle_(/** @type {!Element} */ (parent), 'position');
@@ -1279,18 +1281,24 @@ goog.style.isElementShown = function(el) {
  * @param {!goog.html.SafeStyleSheet} safeStyleSheet The style sheet to install.
  * @param {?Node=} opt_node Node whose parent document should have the
  *     styles installed.
- * @return {!Element|!StyleSheet} The style element created.
+ * @return {!HTMLStyleElement|!StyleSheet} In IE<11, a StyleSheet object with no
+ *     owning <style> tag (this is how IE creates style sheets).  In every other
+ *     browser, a <style> element with an attached style.  This doesn't return a
+ *     StyleSheet object so that setSafeStyleSheet can replace it (otherwise, if
+ *     you pass a StyleSheet to setSafeStyleSheet, it will make a new StyleSheet
+ *     and leave the original StyleSheet orphaned).
  */
 goog.style.installSafeStyleSheet = function(safeStyleSheet, opt_node) {
   var dh = goog.dom.getDomHelper(opt_node);
-  var styleSheet = null;
 
   // IE < 11 requires createStyleSheet. Note that doc.createStyleSheet will be
   // undefined as of IE 11.
   var doc = dh.getDocument();
   if (goog.userAgent.IE && doc.createStyleSheet) {
-    styleSheet = doc.createStyleSheet();
+    /** @type {(!HTMLStyleElement|!StyleSheet)} */
+    var styleSheet = doc.createStyleSheet();
     goog.style.setSafeStyleSheet(styleSheet, safeStyleSheet);
+    return styleSheet;
   } else {
     var head = dh.getElementsByTagNameAndClass(goog.dom.TagName.HEAD)[0];
 
@@ -1301,15 +1309,15 @@ goog.style.installSafeStyleSheet = function(safeStyleSheet, opt_node) {
       head = dh.createDom(goog.dom.TagName.HEAD);
       body.parentNode.insertBefore(head, body);
     }
-    styleSheet = dh.createDom(goog.dom.TagName.STYLE);
+    var el = dh.createDom(goog.dom.TagName.STYLE);
     // NOTE(user): Setting styles after the style element has been appended
     // to the head results in a nasty Webkit bug in certain scenarios. Please
     // refer to https://bugs.webkit.org/show_bug.cgi?id=26307 for additional
     // details.
-    goog.style.setSafeStyleSheet(styleSheet, safeStyleSheet);
-    dh.appendChild(head, styleSheet);
+    goog.style.setSafeStyleSheet(el, safeStyleSheet);
+    dh.appendChild(head, el);
+    return el;
   }
-  return styleSheet;
 };
 
 

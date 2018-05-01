@@ -22,59 +22,48 @@ goog.setTestOnly();
 
 goog.require('goog.array');
 goog.require('goog.dom');
+goog.require('goog.functions');
 goog.require('goog.html.SafeHtml');
 goog.require('goog.html.SafeUrl');
 goog.require('goog.html.sanitizer.HtmlSanitizer');
 goog.require('goog.html.sanitizer.HtmlSanitizer.Builder');
 goog.require('goog.html.sanitizer.TagWhitelist');
-goog.require('goog.html.sanitizer.unsafe');
 goog.require('goog.html.testing');
 goog.require('goog.object');
 goog.require('goog.string.Const');
 goog.require('goog.testing.dom');
 goog.require('goog.testing.jsunit');
 goog.require('goog.userAgent');
+goog.require('goog.userAgent.product');
 
 
-/**
- * @return {boolean} Whether the browser is IE8 or below.
- */
-function isIE8() {
-  return goog.userAgent.IE && !goog.userAgent.isVersionOrHigher(9);
-}
+var isSupported = !goog.userAgent.IE || goog.userAgent.isVersionOrHigher(10);
 
 
-/**
- * @return {boolean} Whether the browser is IE9.
- */
-function isIE9() {
-  return goog.userAgent.IE && !goog.userAgent.isVersionOrHigher(10) && !isIE8();
-}
+var justification = goog.string.Const.from('test');
 
 
 /**
  * Sanitizes the original HTML and asserts that it is the same as the expected
- * HTML. If present the config is passed through to the sanitizer.
+ * HTML. If present the config is passed through to the sanitizer. Supports
+ * approximate matching using a RegExp.
  * @param {string} originalHtml
- * @param {string} expectedHtml
+ * @param {string|!RegExp} expectedHtml
  * @param {?goog.html.sanitizer.HtmlSanitizer=} opt_sanitizer
  */
 function assertSanitizedHtml(originalHtml, expectedHtml, opt_sanitizer) {
   var sanitizer =
       opt_sanitizer || new goog.html.sanitizer.HtmlSanitizer.Builder().build();
-  try {
-    var sanitized = sanitizer.sanitize(originalHtml);
-    if (isIE9()) {
-      assertEquals('', goog.html.SafeHtml.unwrap(sanitized));
-      return;
-    }
+  var sanitized = goog.html.SafeHtml.unwrap(sanitizer.sanitize(originalHtml));
+  if (!isSupported) {
+    assertEquals('', sanitized);
+    return;
+  }
+  if (typeof expectedHtml == 'string') {
     goog.testing.dom.assertHtmlMatches(
-        expectedHtml, goog.html.SafeHtml.unwrap(sanitized),
-        true /* opt_strictAttributes */);
-  } catch (err) {
-    if (!isIE8()) {
-      throw err;
-    }
+        expectedHtml, sanitized, true /* opt_strictAttributes */);
+  } else {
+    assertRegExp(expectedHtml, sanitized);
   }
   if (!opt_sanitizer) {
     // Retry with raw sanitizer created without the builder.
@@ -96,6 +85,36 @@ function assertSanitizedHtml(originalHtml, expectedHtml, opt_sanitizer) {
 function getStyle(safeHtml) {
   var tmpElement = goog.dom.safeHtmlToNode(safeHtml);
   return tmpElement.style ? tmpElement.style.cssText : '';
+}
+
+
+/**
+ * Shorthand for sanitized tags
+ * @param {string} tag
+ * @return {string}
+ */
+function otag(tag) {
+  return 'data-sanitizer-original-tag="' + tag + '"';
+}
+
+
+/**
+ * Sanitize content, let the browser apply its own HTML tree correction by
+ * attaching the content to the document, and then assert it matches the
+ * expected value.
+ * @param {string} expected
+ * @param {string} input
+ */
+function assertAfterInsertionEquals(expected, input) {
+  var sanitizer =
+      new Builder().allowFormTag().allowStyleTag().withStyleContainer().build();
+  input = SafeHtml.unwrap(sanitizer.sanitize(input));
+  var div = document.createElement('div');
+  document.body.appendChild(div);
+  div.innerHTML = input;
+  googTestingDom.assertHtmlMatches(
+      expected, div.innerHTML, true /* opt_strictAttributes */);
+  div.parentNode.removeChild(div);
 }
 
 
@@ -143,7 +162,7 @@ function testDefaultCssSanitizeImage() {
 
 function testBuilderCanOnlyBeUsedOnce() {
   var builder = new goog.html.sanitizer.HtmlSanitizer.Builder();
-  var sanitizer = builder.build();
+  builder.build();
   assertThrows(function() {
     builder.build();
   });
@@ -155,33 +174,21 @@ function testBuilderCanOnlyBeUsedOnce() {
 
 function testAllowedCssSanitizeImage() {
   var testUrl = 'http://www.example.com/image3.jpg';
-  var html = '<div style="background: url(' + testUrl + ');"></div>';
-
+  var html = '<div style="background-image: url(' + testUrl + ');"></div>';
   var sanitizer =
       new goog.html.sanitizer.HtmlSanitizer.Builder()
           .allowCssStyles()
           .withCustomNetworkRequestUrlPolicy(goog.html.SafeUrl.sanitize)
           .build();
-
-  try {
-    var sanitizedHtml = sanitizer.sanitize(html);
-    if (isIE9()) {
-      assertEquals('', goog.html.SafeHtml.unwrap(sanitizedHtml));
-      return;
-    }
-    assertRegExp(
-        /background(?:-image)?:.*url\(.?http:\/\/www.example.com\/image3.jpg.?\)/,
-        getStyle(sanitizedHtml));
-  } catch (err) {
-    if (!isIE8()) {
-      throw err;
-    }
-  }
+  assertSanitizedHtml(html, html, sanitizer);
 }
 
 
 function testHtmlSanitizeXSS() {
-  // NOTE(user): xss cheat sheet found on http://ha.ckers.org/xss.html
+  // NOTE: Xss cheat sheet found on http://ha.ckers.org/xss.html
+  // We try all these vectors even though some of them are not exploitable on
+  // any browser supported by the sanitizer.
+
   var safeHtml, xssHtml;
   // Inserting <script> tags is unsafe
   // Browser Support [IE7.0|IE6.0|NS8.1-IE] [NS8.1-G|FF2.0]
@@ -323,7 +330,7 @@ function testHtmlSanitizeXSS() {
   // On IE9, the null character actually causes us to only see <SCR. The
   // sanitizer on IE9 doesn't "recover as well" as other browsers but the
   // result is safe.
-  safeHtml = isIE9() ? '' : '<span>alert("XSS")</span>';
+  safeHtml = '<span>alert("XSS")</span>';
   xssHtml = '<SCR\0IPT>alert(\"XSS\")</SCR\0IPT>';
   assertSanitizedHtml(xssHtml, safeHtml);
 
@@ -419,7 +426,7 @@ function testHtmlSanitizeXSS() {
   // affective against a real world XSS filter I came across using an open
   // ended <IFRAME tag instead of an <IMG tag:
   // Browser support: [IE6.0|NS8.1-IE]
-  safeHtml = isIE9() ? '<img>' : '';
+  safeHtml = '';
   xssHtml = '<IMG SRC="javascript:alert(this)"';
   assertSanitizedHtml(xssHtml, safeHtml);
 
@@ -570,9 +577,8 @@ function testHtmlSanitizeXSS() {
   // TABLE (who would have thought tables were XSS targets... except me, of
   // course):
   // Browser support: [IE6.0|NS8.1-IE] [O9.02]
-  safeHtml = isIE9() ? '<table><div></div></table>' : '<table></table>';
+  safeHtml = '<table></table>';
   xssHtml = '<TABLE BACKGROUND="javascript:alert(window)">';
-  // TODO(danesh): Investigate why this is different for IE9.
   assertSanitizedHtml(xssHtml, safeHtml);
 
   // TD (just like above, TD's are vulnerable to BACKGROUNDs containing
@@ -634,7 +640,7 @@ function testHtmlSanitizeXSS() {
   // vectors, but it really does show how hard STYLE tags can be to parse apart,
   // like above this can send IE into a loop):
   // Browser support: [IE7.0|IE6.0|NS8.1-IE]
-  safeHtml = isIE9() ? 'undefined' : 'exp/*<a></a>';
+  safeHtml = 'exp/*<a></a>';
   xssHtml = 'exp/*<A STYLE="no\\xss:noxss("*//*");xss:&#101;x&#x2F;*XSS*//*' +
       '/*/pression(alert(window))">';
   assertSanitizedHtml(xssHtml, safeHtml);
@@ -647,7 +653,7 @@ function testHtmlSanitizeXSS() {
 
   // STYLE tag using background-image:
   // Browser support: [IE6.0|NS8.1-IE]
-  safeHtml = isIE9() ? 'undefined' : '<a></a>';
+  safeHtml = '<a></a>';
   xssHtml = '<STYLE>.XSS{background-image:url("javascript:alert("XSS")");}' +
       '</STYLE><A CLASS=XSS></A>';
   assertSanitizedHtml(xssHtml, safeHtml);
@@ -712,9 +718,7 @@ function testHtmlSanitizeXSS() {
   // and Netscape 8.1 in IE rendering engine mode) - vector found by Sec Consult
   // while auditing Yahoo:
   // Browser support: [IE6.0|NS8.1-IE]
-  safeHtml = isIE9() ? '<span><span></span></span>' :
-                       '<span><span><span>]]&gt;</span></span></span>' +
-          '<span></span>';
+  safeHtml = '<span><span><span>]]&gt;</span></span></span><span></span>';
   xssHtml = '<XML ID=I><X><C><![CDATA[<IMG SRC="javas]]>' +
       '<![CDATA[cript:xss=true;">]]>' +
       '</C></X></xml><SPAN DATASRC=#I DATAFLD=C DATAFORMATAS=HTML></SPAN>';
@@ -827,6 +831,17 @@ function testDisallowedDataWhitelistingAttributes() {
         .allowDataAttributes(['data-i', 'data-sanitizer-safe'])
         .build();
   });
+}
+
+
+function testBlacklistedWithChildren() {
+  var input = '<form>foo<a>bar</a></form>';
+  var expected = '';
+  assertSanitizedHtml(input, expected);
+
+  input = '<div><form>foo<a>bar</a></form></div>';
+  expected = '<div></div>';
+  assertSanitizedHtml(input, expected);
 }
 
 
@@ -1039,33 +1054,13 @@ function testNRUrlPolicyAffectsCssSanitization() {
           })
           .build();
 
-  var sanitizedHtml;
-  try {
-    sanitizedHtml = sanitizer.sanitize(
-        '<div style="background: url(\'https://www.google.com/i.png\')"></div>');
-    if (isIE9()) {
-      assertEquals('', goog.html.SafeHtml.unwrap(sanitizedHtml));
-      return;
-    }
-    assertRegExp(
-        /background(?:-image)?:.*url\(.?https:\/\/www.google.com\/i.png.?\)/,
-        getStyle(sanitizedHtml));
-  } catch (err) {
-    if (!isIE8()) {
-      throw err;
-    }
-  }
+  var googleUrl = 'https://www.google.com/i.png';
+  var html = '<div style="background-image: url(\'' + googleUrl + '\')"></div>';
+  assertSanitizedHtml(html, html, sanitizer);
 
-  try {
-    sanitizedHtml = sanitizer.sanitize(
-        '<div style="background: url(\'https://wherever/\')"></div>');
-    assertNotContains(
-        'https://wherever/', goog.html.SafeHtml.unwrap(sanitizedHtml));
-  } catch (err) {
-    if (!isIE8()) {
-      throw err;
-    }
-  }
+  var otherUrl = 'https://wherever';
+  html = '<div style="background-image: url(\'' + otherUrl + '\')"></div>';
+  assertSanitizedHtml(html, '<div></div>', sanitizer);
 
   sanitizedHtml = '<img src="https://www.google.com/i.png">';
   assertSanitizedHtml(sanitizedHtml, sanitizedHtml, sanitizer);
@@ -1150,16 +1145,6 @@ function testTemplateRemoved() {
 }
 
 
-/**
- * Shorthand for sanitized tags
- * @param {string} tag
- * @return {string}
- */
-function otag(tag) {
-  return 'data-sanitizer-original-tag="' + tag + '"';
-}
-
-
 function testOriginalTag() {
   var input = '<p>Line1<magic></magic></p>';
   var expected = '<p>Line1<span ' + otag('magic') + '></span></p>';
@@ -1188,6 +1173,191 @@ function testOriginalTagOverwrite() {
                              return null;
                            })
                            .build());
+}
+
+
+function testStyleTag_default() {
+  var input = '<style>a { color: red; qqq: z; ' +
+      'background-image: url("http://foo.com") }</style>';
+  var expected = '';
+  assertSanitizedHtml(
+      input, expected, new goog.html.sanitizer.HtmlSanitizer.Builder().build());
+}
+
+
+function testStyleTag_random() {
+  var input = '<style>a { color: red; }</style>';
+  var expected =
+      /^<span id="(sanitizer-\w+)"><style>#\1 a{color: red;}<\/style><\/span>$/;
+  var sanitizer =
+      new goog.html.sanitizer.HtmlSanitizer.Builder().allowStyleTag().build();
+  assertSanitizedHtml(input, expected, sanitizer);
+}
+
+
+function testStyleTag_withStyleWithoutAllow() {
+  assertThrows(function() {
+    new goog.html.sanitizer.HtmlSanitizer.Builder().withStyleContainer('foo');
+  });
+}
+
+
+function testStyleTag_withStyleInvalid() {
+  assertThrows(function() {
+    new goog.html.sanitizer.HtmlSanitizer.Builder().withStyleContainer(
+        '<script>');
+  });
+}
+
+
+function testStyleTag_wrappingDisabled() {
+  var input = '<style>a { color: red; qqq: z; ' +
+      'background-image: url("http://foo.com") }</style>';
+  var expected = '<style>a{color: red;}</style>';
+  assertSanitizedHtml(
+      input, expected,
+      new goog.html.sanitizer.HtmlSanitizer.Builder()
+          .allowStyleTag()
+          .withStyleContainer()
+          .build());
+}
+
+
+function testStyleTag_withStyleContainer() {
+  var input = '<style>a { color: red; }</style>';
+  var expected = '<style>#foo a{color: red;}</style>';
+  assertSanitizedHtml(
+      input, expected,
+      new goog.html.sanitizer.HtmlSanitizer.Builder()
+          .allowStyleTag()
+          .withStyleContainer('foo')
+          .build());
+}
+
+
+function testStyleTag_networkUrlPolicy() {
+  var input = '<style>a{background-image: url("http://foo.com");}</style>';
+  // Safari will strip quotes if they are not needed and add a slash.
+  var expected = goog.userAgent.product.SAFARI ?
+      '<style>a{background-image: url(http://foo.com/);}</style>' :
+      '<style>a{background-image: url("http://foo.com");}</style>';
+  assertSanitizedHtml(
+      input, expected,
+      new goog.html.sanitizer.HtmlSanitizer.Builder()
+          .allowStyleTag()
+          .withStyleContainer()
+          .withCustomNetworkRequestUrlPolicy(goog.html.SafeUrl.sanitize)
+          .build());
+}
+
+
+function testInlineStyleRules_basic() {
+  var input = '<style>a{color:red}</style><a>foo</a>';
+  var expected = '<a style="color:red;">foo</a>';
+  assertSanitizedHtml(
+      input, expected,
+      new goog.html.sanitizer.HtmlSanitizer.Builder()
+          .allowCssStyles()
+          .inlineStyleRules()
+          .build());
+}
+
+
+function testInlineStyleRules_specificity() {
+  var input = '<style>a{color: red; border-width: 1px}' +
+      '#foo{color: white;}</style>' +
+      '<a id="foo">foo</a>';
+  var expected = '<a id="foo" style="color: white; border-width: 1px">foo</a>';
+  assertSanitizedHtml(
+      input, expected,
+      new goog.html.sanitizer.HtmlSanitizer.Builder()
+          .allowCssStyles()
+          .inlineStyleRules()
+          .withCustomTokenPolicy(goog.functions.identity)
+          .build());
+}
+
+
+function testInlineStyleRules_required() {
+  assertThrows(function() {
+    new goog.html.sanitizer.HtmlSanitizer.Builder()
+        .inlineStyleRules();
+  });
+}
+
+
+function testInlineStyleRules_incompatible() {
+  assertThrows(function() {
+    new goog.html.sanitizer.HtmlSanitizer.Builder()
+        .allowCssStyles()
+        .inlineStyleRules()
+        .allowStyleTag();
+  });
+  assertThrows(function() {
+    new goog.html.sanitizer.HtmlSanitizer.Builder()
+        .allowStyleTag()
+        .allowCssStyles()
+        .inlineStyleRules();
+  });
+}
+
+
+function testInlineStyleRules_allowsExistingStyleAttributes() {
+  var input = '<style>a{color:red}</style><a style="font-weight: bold">foo</a>';
+  var expected = '<a style="color: red; font-weight: bold">foo</a>';
+  assertSanitizedHtml(
+      input, expected,
+      new goog.html.sanitizer.HtmlSanitizer.Builder()
+          .allowCssStyles()
+          .inlineStyleRules()
+          .build());
+}
+
+
+function testInlineStyleRules_inlinedBeforeRenaming() {
+  var input = '<style>#bar{color:red}</style><a id="bar">baz</a>';
+  var expected = '<a id="foo-bar" style="color:red">baz</a>';
+  assertSanitizedHtml(
+      input, expected,
+      new goog.html.sanitizer.HtmlSanitizer.Builder()
+          .allowCssStyles()
+          .inlineStyleRules()
+          .withCustomTokenPolicy(function(id) {
+            return 'foo-' + id;
+          })
+          .build());
+}
+
+function testInlineStyleRules_networkRequestUrlPolicy() {
+  var input =
+      '<style>a{background-image: url("http://foo.com")}</style><a>foo</a>';
+  var expected = '<a>foo</a>';
+  assertSanitizedHtml(
+      input, expected,
+      new goog.html.sanitizer.HtmlSanitizer.Builder()
+          .allowCssStyles()
+          .inlineStyleRules()
+          .build());
+
+  expected = '<a style="background-image: url(\'http://foo.com\')">foo</a>';
+  assertSanitizedHtml(
+      input, expected,
+      new goog.html.sanitizer.HtmlSanitizer.Builder()
+          .allowCssStyles()
+          .inlineStyleRules()
+          .withCustomNetworkRequestUrlPolicy(goog.html.SafeUrl.sanitize)
+          .build());
+
+  input = '<style>a{background-image: url("javascript:alert(1)")}</style>' +
+      '<a>foo</a>';
+  expected = '<a>foo</a>';
+  assertSanitizedHtml(
+      input, expected,
+      new goog.html.sanitizer.HtmlSanitizer.Builder()
+          .allowCssStyles()
+          .inlineStyleRules()
+          .withCustomNetworkRequestUrlPolicy(goog.html.SafeUrl.sanitize)
+          .build());
 }
 
 
@@ -1227,7 +1397,7 @@ function assertAfterInsertionEquals(expected, input) {
 
 
 function testSpanNotCorrectedByBrowsersOuter() {
-  if (isIE8() || isIE9()) {
+  if (!isSupported) {
     return;
   }
   goog.array.forEach(
@@ -1248,8 +1418,8 @@ function testSpanNotCorrectedByBrowsersOuter() {
         }
         if (goog.array.contains(
                 [
-                  'SELECT', 'TABLE', 'TBODY', 'TD', 'TR', 'TEXTAREA', 'TFOOT',
-                  'THEAD', 'TH'
+                  'SELECT', 'STYLE', 'TABLE', 'TBODY', 'TD', 'TR', 'TEXTAREA',
+                  'TFOOT', 'THEAD', 'TH'
                 ],
                 tag)) {
           return;  // consistent in whitelist, ok
@@ -1262,15 +1432,15 @@ function testSpanNotCorrectedByBrowsersOuter() {
 
 
 function testSpanNotCorrectedByBrowsersInner() {
-  if (isIE8() || isIE9()) {
+  if (!isSupported) {
     return;
   }
   goog.array.forEach(
       goog.object.getKeys(goog.html.sanitizer.TagWhitelist), function(tag) {
         if (goog.array.contains(
                 [
-                  'CAPTION', 'TABLE', 'TBODY', 'TD', 'TR', 'TEXTAREA', 'TFOOT',
-                  'THEAD', 'TH'
+                  'CAPTION', 'STYLE', 'TABLE', 'TBODY', 'TD', 'TR', 'TEXTAREA',
+                  'TFOOT', 'THEAD', 'TH'
                 ],
                 tag)) {
           return;  // consistent in whitelist, ok
@@ -1300,48 +1470,10 @@ function testSpanNotCorrectedByBrowsersInner() {
 }
 
 
-function testTemplateTagToSpan() {
-  var input = '<template alt="yes"><p>q</p></template>';
-  var expected = '<span alt="yes"><p>q</p></span>';
-  // TODO(pelizzi): use unblockTag once it's available
-  delete goog.html.sanitizer.TagBlacklist['TEMPLATE'];
-  assertSanitizedHtml(input, expected);
-  goog.html.sanitizer.TagBlacklist['TEMPLATE'] = true;
-}
-
-
-var just = goog.string.Const.from('test');
-
-
-function testTemplateTagWhitelisted() {
-  var input = '<div><template alt="yes"><p>q</p></template></div>';
-  // TODO(pelizzi): use unblockTag once it's available
-  delete goog.html.sanitizer.TagBlacklist['TEMPLATE'];
-  var builder = new goog.html.sanitizer.HtmlSanitizer.Builder();
-  goog.html.sanitizer.unsafe.alsoAllowTags(just, builder, ['TEMPLATE']);
-  assertSanitizedHtml(input, input, builder.build());
-  goog.html.sanitizer.TagBlacklist['TEMPLATE'] = true;
-}
-
-
 function testTemplateTagFake() {
   var input = '<template data-sanitizer-original-tag="template">a</template>';
   var expected = '';
   assertSanitizedHtml(input, expected);
-}
-
-
-function testTemplateNested() {
-  var input = '<template><p>a</p><zzz alt="a"/><script>z</script><template>' +
-      '<p>a</p><zzz alt="a"/><script>z</script></template></template>';
-  var expected = '<template><p>a</p><span alt="a"></span><template>' +
-      '<p>a</p><span alt="a"></span></template></template>';
-  // TODO(pelizzi): use unblockTag once it's available
-  delete goog.html.sanitizer.TagBlacklist['TEMPLATE'];
-  var builder = new goog.html.sanitizer.HtmlSanitizer.Builder();
-  goog.html.sanitizer.unsafe.alsoAllowTags(just, builder, ['TEMPLATE']);
-  assertSanitizedHtml(input, expected, builder.build());
-  goog.html.sanitizer.TagBlacklist['TEMPLATE'] = true;
 }
 
 
@@ -1479,26 +1611,29 @@ function testOnlyAllowAttributeRefineThrows() {
 
 
 function testUrlWithCredentials() {
-  if (isIE8() || isIE9()) {
-    return;
-  }
-  // IE has trouble getting and setting URL attributes with credentials. Both
-  // HTMLSanitizer and assertHtmlMatches are affected by the bug, hence the use
-  // of plain string matching.
-  var url = 'http://foo:bar@example.com';
-  var input = '<div style="background-image: url(\'' + url + '\');">' +
-      '<img src="' + url + '" /></div>';
-  var expectedIE = '<div style="background-image: url(&quot;' + url +
-      '&quot;);"><img src="' + url + '" /></div>';
   var sanitizer =
       new goog.html.sanitizer.HtmlSanitizer.Builder()
           .withCustomNetworkRequestUrlPolicy(goog.html.SafeUrl.sanitize)
           .allowCssStyles()
           .build();
-  if (goog.userAgent.EDGE_OR_IE) {
-    assertEquals(
-        expectedIE, goog.html.SafeHtml.unwrap(sanitizer.sanitize(input)));
-  } else {
-    assertSanitizedHtml(input, input, sanitizer);
-  }
+
+  var url = 'http://foo:bar@example.com';
+  var input = '<div style="background-image: url(\'' + url + '\');">' +
+      '<img src="' + url + '" /></div>';
+  assertSanitizedHtml(input, input, sanitizer);
+}
+
+
+function testClobberedForm() {
+  var input = '<form><input name="nodeType" /></form>';
+  // Passing a string in assertSanitizedHtml uses assertHtmlMatches, which is
+  // also vulnerable to clobbering. We use a regexp to fall back to simple
+  // string matching.
+  var expected = new RegExp('<form><input name="nodeType" /></form>');
+  assertSanitizedHtml(
+      input, expected,
+      new goog.html.sanitizer.HtmlSanitizer.Builder()
+          .allowFormTag()
+          .withCustomNamePolicy(goog.functions.identity)
+          .build());
 }

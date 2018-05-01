@@ -225,7 +225,7 @@ goog.html.testing.matchTrustedResourceUrl = function(expected) {
  *
  *     beforeEach(function() {
  *       jasmine.addCustomEqualityTester(
- *           goog.html.testing.testTypedStringEquality);
+ *           goog.html.testing.checkTypedStringEquality);
  *     });
  *
  *     it('typed string value matches same string', function() {
@@ -241,7 +241,7 @@ goog.html.testing.matchTrustedResourceUrl = function(expected) {
  * @return {boolean|undefined} Undefined if not called with
  *     goog.string.TypedString, true if typed strings equal, false if not.
  */
-goog.html.testing.testTypedStringEquality = function(actual, expected) {
+goog.html.testing.checkTypedStringEquality = function(actual, expected) {
   if (actual.implementsGoogStringTypedString) {
     if (expected.implementsGoogStringTypedString) {
       if (!(actual instanceof expected.constructor)) {

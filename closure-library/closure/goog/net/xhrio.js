@@ -273,6 +273,7 @@ goog.net.XhrIo.HTTP_SCHEME_PATTERN = /^https?$/i;
 /**
  * The methods that typically come along with form data.  We set different
  * headers depending on whether the HTTP action is one of these.
+ * @type {!Array<string>}
  */
 goog.net.XhrIo.METHODS_WITH_FORM_DATA = ['POST', 'PUT'];
 
@@ -974,7 +975,7 @@ goog.net.XhrIo.prototype.cleanUpTimeoutTimer_ = function() {
   if (this.xhr_ && this.useXhr2Timeout_) {
     this.xhr_[goog.net.XhrIo.XHR2_ON_TIMEOUT_] = null;
   }
-  if (goog.isNumber(this.timeoutId_)) {
+  if (this.timeoutId_) {
     goog.Timer.clear(this.timeoutId_);
     this.timeoutId_ = null;
   }
@@ -1258,8 +1259,11 @@ goog.net.XhrIo.prototype.getResponseHeader = function(key) {
  * @return {string} The value of the response headers or empty string.
  */
 goog.net.XhrIo.prototype.getAllResponseHeaders = function() {
-  return this.xhr_ && this.isComplete() ? this.xhr_.getAllResponseHeaders() :
-                                          '';
+  // getAllResponseHeaders can return null if no response has been received,
+  // ensure we always return an empty string.
+  return this.xhr_ && this.isComplete() ?
+      (this.xhr_.getAllResponseHeaders() || '') :
+      '';
 };
 
 
@@ -1319,7 +1323,7 @@ goog.net.XhrIo.prototype.getAllStreamingResponseHeaders = function() {
 
 /**
  * Get the last error message
- * @return {goog.net.ErrorCode} Last error code.
+ * @return {!goog.net.ErrorCode} Last error code.
  */
 goog.net.XhrIo.prototype.getLastErrorCode = function() {
   return this.lastErrorCode_;

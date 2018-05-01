@@ -75,8 +75,9 @@ goog.labs.mock.mockFunction = function(func) {
 /**
  * Mocks a given constructor.
  *
- * @param {!Function} ctor A constructor function to be mocked.
- * @return {!Function} The mocked constructor.
+ * @param {!function(new:T, ...?)} ctor A constructor function to be mocked.
+ * @return {!function(new:T, ...?)} The mocked constructor.
+ * @template T
  */
 goog.labs.mock.mockConstructor = function(ctor) {
   var mockCtor = goog.labs.mock.mockFunction(ctor);
@@ -117,7 +118,7 @@ goog.labs.mock.spy = function(obj) {
  * @param {!Object} obj The mocked object.
  * @param {!goog.labs.mock.verification.VerificationMode=} opt_verificationMode The mode
  *     under which to verify invocations.
- * @return {!Object} The verifier.
+ * @return {?} The verifier. Return type {?} to avoid compilation errors.
  */
 goog.labs.mock.verify = function(obj, opt_verificationMode) {
   var mode = opt_verificationMode || goog.labs.mock.verification.atLeast(1);
@@ -615,7 +616,7 @@ goog.labs.mock.MockObjectManager_ = function(objOrClass) {
 
   var enumerableProperties = goog.object.getAllPropertyNames(obj);
   // The non enumerable properties are added due to the fact that IE8 does not
-  // enumerate any of the prototype Object functions even when overriden and
+  // enumerate any of the prototype Object functions even when overridden and
   // mocking these is sometimes needed.
   for (var i = 0; i < goog.labs.mock.PROTOTYPE_FIELDS_.length; i++) {
     var prop = goog.labs.mock.PROTOTYPE_FIELDS_[i];
@@ -881,7 +882,7 @@ goog.labs.mock.StubBinderImpl_.prototype.thenReturn = function(value) {
  *     });
  *
  * @param {!Object} mockObject The mocked object.
- * @return {!goog.labs.mock.StubBinder} The property binder.
+ * @return {?} The property binder. Return type {?} to avoid compilation errors.
  */
 goog.labs.mock.when = function(mockObject) {
   goog.asserts.assert(mockObject.$stubBinder, 'Stub binder cannot be null!');

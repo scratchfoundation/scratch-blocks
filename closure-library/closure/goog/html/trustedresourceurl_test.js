@@ -62,7 +62,7 @@ function testFormat_validFormatString() {
   assertValidFormat(goog.string.Const.from('/path?x'));
   // Mixed case.
   assertValidFormat(goog.string.Const.from('httpS://www.google.cOm/pAth'));
-  assertValidFormat(goog.string.Const.from('about:blank'));
+  assertValidFormat(goog.string.Const.from('about:blank#'));
   assertValidFormat(goog.string.Const.from('about:blank#x'));
 }
 
@@ -130,6 +130,7 @@ function testFormat_invalidFormatString() {
   assertInvalidFormat(goog.string.Const.from('/\\'));
   // Relative path.
   assertInvalidFormat(goog.string.Const.from('abc'));
+  assertInvalidFormat(goog.string.Const.from('about:blank'));
   assertInvalidFormat(goog.string.Const.from('about:blankX'));
 }
 
@@ -158,6 +159,31 @@ function testFromConstants() {
         goog.string.Const.from('foo'),
         goog.string.Const.from('bar')
       ])));
+}
+
+
+function testCloneWithParams() {
+  var url = goog.html.TrustedResourceUrl.fromConstant(
+      goog.string.Const.from('https://example.com/'));
+
+  assertEquals(
+      'https://example.com/?a=%26',
+      url.cloneWithParams({'a': '&'}).getTypedStringValue());
+
+  assertEquals(
+      'https://example.com/?b=1',
+      url.cloneWithParams({'b': 1, 'c': null, 'd': undefined})
+          .getTypedStringValue());
+
+  assertEquals(
+      'https://example.com/?a=x&a=y',
+      url.cloneWithParams({'a': ['x', 'y']}).getTypedStringValue());
+
+  url = goog.html.TrustedResourceUrl.fromConstant(
+      goog.string.Const.from('https://example.com/?a=x'));
+  assertEquals(
+      'https://example.com/?a=x&b=y',
+      url.cloneWithParams({'b': 'y'}).getTypedStringValue());
 }
 
 

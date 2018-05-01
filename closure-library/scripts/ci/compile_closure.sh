@@ -10,7 +10,6 @@ java -Xmx1G -jar ../closure-compiler-1.0-SNAPSHOT.jar \
   --warning_level VERBOSE \
   --jscomp_error='*' \
   --jscomp_off=strictMissingRequire \
-  --jscomp_off=inferredConstCheck \
   --jscomp_off=extraRequire \
   --jscomp_off=deprecated \
   --jscomp_off=lintChecks \
@@ -21,6 +20,7 @@ java -Xmx1G -jar ../closure-compiler-1.0-SNAPSHOT.jar \
   --js='!**_perf.js' \
   --js='!**tester.js' \
   --js='!**promise/testsuiteadapter.js' \
+  --js='!**relativecommontests.js' \
   --js='!**osapi/osapi.js' \
   --js='!**svgpan/svgpan.js' \
   --js='!**alltests.js' \
@@ -28,5 +28,6 @@ java -Xmx1G -jar ../closure-compiler-1.0-SNAPSHOT.jar \
   --js='!**protractor_spec.js' \
   --js='!**protractor.conf.js' \
   --js='!**browser_capabilities.js' \
+  --js='!**generate_closure_unit_tests.js' \
   --js='!./doc/**.js' \
   --js_output_file=$(mktemp);

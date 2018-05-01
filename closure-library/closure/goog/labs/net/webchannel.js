@@ -67,6 +67,28 @@ goog.require('goog.events.Event');
 goog.net.WebChannel = function() {};
 
 
+
+/**
+ * This interface defines a pluggable API to allow WebChannel runtime to support
+ * customized algorithms in order to recover from transient failures such as
+ * those failures caused by network or proxies (intermediaries).
+ *
+ * The algorithm may also choose to fail-fast, e.g. switch the client to some
+ * offline mode.
+ *
+ * Extra measurements and logging could also be implemented in the custom
+ * module, which has the full knowledge of all the state transitions
+ * (due to failures).
+ *
+ * A default algorithm will be provided by the webchannel library itself. Custom
+ * algorithms are expected to be tailored to specific client platforms or
+ * networking environments, e.g. mobile, cellular network.
+ *
+ * @interface
+ */
+goog.net.WebChannel.FailureRecovery = function() {};
+
+
 /**
  * Configuration spec for newly created WebChannel instances.
  *
@@ -82,6 +104,9 @@ goog.net.WebChannel = function() {};
  * be sent only once when the channel is opened. Typical usage is to send
  * an auth header to the server, which only checks the auth header at the time
  * when the channel is opened.
+ *
+ * messageContentType: sent as initMessageHeaders via X-WebChannel-Content-Type,
+ * to inform the server the MIME type of WebChannel messages.
  *
  * messageUrlParams: custom url query parameters to be added to every message
  * sent to the server. This object is mutable, and custom parameters may be
@@ -131,9 +156,22 @@ goog.net.WebChannel = function() {};
  * messages may be encoded as part of URL and therefore there will be a size
  * limit for those immediate messages (e.g. 4KB).
  *
+ * disableRedact: whether to disable logging redact. By default, redact is
+ * enabled to remove any message payload or user-provided info
+ * from closure logs.
+ *
+ * clientProfile: inform the server about the client profile to enable
+ * customized configs that are optimized for certain clients or environments.
+ * Currently this information is sent via X-WebChannel-Client-Profile header.
+ *
+ * failFast: enable the fail-fast behavior which will immediately abort the
+ * channel when an HTTP request fails, without attempting any recovery logic.
+ * Default is set to false.
+ *
  * @typedef {{
  *   messageHeaders: (!Object<string, string>|undefined),
  *   initMessageHeaders: (!Object<string, string>|undefined),
+ *   messageContentType: (string|undefined),
  *   messageUrlParams: (!Object<string, string>|undefined),
  *   clientProtocolHeaderRequired: (boolean|undefined),
  *   concurrentRequestLimit: (number|undefined),
@@ -143,7 +181,10 @@ goog.net.WebChannel = function() {};
  *   httpSessionIdParam: (string|undefined),
  *   httpHeadersOverwriteParam: (string|undefined),
  *   backgroundChannelTest: (boolean|undefined),
- *   fastHandshake: (boolean|undefined)
+ *   fastHandshake: (boolean|undefined),
+ *   disableRedact: (boolean|undefined),
+ *   clientProfile: (string|undefined),
+ *   failFast: (boolean|undefined),
  * }}
  */
 goog.net.WebChannel.Options;
@@ -158,7 +199,7 @@ goog.net.WebChannel.Options;
  * Unicode strings (sent by the server) may or may not need be escaped, as
  * decided by the server.
  *
- * @typedef {(ArrayBuffer|Blob|Object<string, Object|string>|Array)}
+ * @typedef {(!ArrayBuffer|!Blob|!Object<string, !Object|string>|!Array|string)}
  */
 goog.net.WebChannel.MessageData;
 
@@ -171,8 +212,34 @@ goog.net.WebChannel.prototype.open = goog.abstractMethod;
 
 /**
  * Close the WebChannel.
+ *
+ * This is a full close (shutdown) with no guarantee of FIFO delivery in respect
+ * to any in-flight messages sent to the server.
+ *
+ * If you need such a guarantee, see the Half the halfClose() method.
  */
 goog.net.WebChannel.prototype.close = goog.abstractMethod;
+
+
+/**
+ * Half-close the WebChannel.
+ *
+ * Half-close semantics:
+ * 1. delivered as a regular message in FIFO programming order
+ * 2. the server is expected to return a half-close too (with or without
+ *    application involved), which will trigger a full close (shutdown)
+ *    on the client side
+ * 3. for now, the half-close event defined for server-initiated
+ *    half-close is not exposed to the client application
+ * 4. a client-side half-close may be triggered internally when the client
+ *    receives a half-close from the server; and the client is expected to
+ *    do a full close after the half-close is acked and delivered
+ *    on the server-side.
+ * 5. Full close is always a forced one. See the close() method.
+ *
+ * New messages sent after halfClose() will be dropped.
+ */
+goog.net.WebChannel.prototype.halfClose = goog.abstractMethod;
 
 
 /**
@@ -241,6 +308,14 @@ goog.net.WebChannel.MessageEvent.prototype.data;
 
 
 /**
+ * The metadata key when the MESSAGE event represents a metadata message.
+ *
+ * @type {string|undefined}
+ */
+goog.net.WebChannel.MessageEvent.prototype.metadataKey;
+
+
+/**
  * WebChannel level error conditions.
  *
  * Summary of error debugging and reporting in WebChannel:
@@ -276,6 +351,9 @@ goog.net.WebChannel.MessageEvent.prototype.data;
  *  the client to indicate the HTTP response status code of the last HTTP
  *  request initiated by the WebChannel client library, for debugging
  *  purposes only.
+ *
+ *  See WebChannel.Options.backChannelFailureRecovery and
+ *  WebChannel.FailureRecovery to install a custom failure-recovery algorithm.
  *
  * @enum {number}
  */
@@ -461,6 +539,108 @@ goog.net.WebChannel.RuntimeProperties.prototype.getLastStatusCode =
 
 
 /**
+ * Enum to indicate the current recovery state.
+ *
+ * @enum {string}
+ */
+goog.net.WebChannel.FailureRecovery.State = {
+  /** Initial state. */
+  INIT: 'init',
+
+  /** Once a failure has been detected. */
+  FAILED: 'failed',
+
+  /**
+   * Once a recovery operation has been issued, e.g. a new request to resume
+   * communication.
+   */
+  RECOVERING: 'recovering',
+
+  /** The channel has been closed.  */
+  CLOSED: 'closed'
+};
+
+
+/**
+ * Enum to indicate different failure conditions as detected by the webchannel
+ * runtime.
+ *
+ * This enum is to be used only between the runtime and FailureRecovery module,
+ * and new states are expected to be introduced in future.
+ *
+ * @enum {string}
+ */
+goog.net.WebChannel.FailureRecovery.FailureCondition = {
+  /**
+   * The HTTP response returned a non-successful http status code.
+   */
+  HTTP_ERROR: 'http_error',
+
+  /**
+   * The request was aborted.
+   */
+  ABORT: 'abort',
+
+  /**
+   * The request timed out.
+   */
+  TIMEOUT: 'timeout',
+
+  /**
+   * Exception was thrown while processing the request/response.
+   */
+  EXCEPTION: 'exception'
+};
+
+
+/**
+ * @return {!goog.net.WebChannel.FailureRecovery.State} the current state,
+ * mainly for debugging use.
+ */
+goog.net.WebChannel.FailureRecovery.prototype.getState = goog.abstractMethod;
+
+
+/**
+ * This method is for WebChannel runtime to set the current failure condition
+ * and to provide a callback for the algorithm to signal to the runtime
+ * when it is time to issue a recovery operation, e.g. a new request to the
+ * server.
+ *
+ * Supported transitions include:
+ *   INIT->FAILED
+ *   FAILED->FAILED (re-entry ok)
+ *   RECOVERY->FAILED.
+ *
+ * Ignored if state == CLOSED.
+ *
+ * Advanced implementations are expected to track all the state transitions
+ * and their timestamps for monitoring purposes.
+ *
+ * @param {!goog.net.WebChannel.FailureRecovery.FailureCondition} failure The
+ * new failure condition generated by the WebChannel runtime.
+ * @param {!Function} operation The callback function to the WebChannel
+ * runtime to issue a recovery operation, e.g. a new request. E.g. the default
+ * recovery algorithm will issue timeout-based recovery operations.
+ * Post-condition for the callback: state transition to RECOVERING.
+ *
+ * @return {!goog.net.WebChannel.FailureRecovery.State} The updated state
+ * as decided by the failure recovery module. Upon a recoverable failure event,
+ * the state is transitioned to RECOVERING; or the state is transitioned to
+ * FAILED which indicates a fail-fast decision for the runtime to execute.
+ */
+goog.net.WebChannel.FailureRecovery.prototype.setFailure = goog.abstractMethod;
+
+
+/**
+ * The Webchannel runtime needs call this method when webchannel is closed or
+ * aborted.
+ *
+ * Once the instance is closed, any access to the instance will be a no-op.
+ */
+goog.net.WebChannel.FailureRecovery.prototype.close = goog.abstractMethod;
+
+
+/**
  * A request header to indicate to the server the messaging protocol
  * each HTTP message is speaking.
  *
@@ -496,3 +676,32 @@ goog.net.WebChannel.X_CLIENT_WIRE_PROTOCOL = 'X-Client-Wire-Protocol';
  * @type {string}
  */
 goog.net.WebChannel.X_HTTP_SESSION_ID = 'X-HTTP-Session-Id';
+
+
+/**
+ * A response header for the server to send back any initial response data as a
+ * header to avoid any possible buffering by an intermediary, which may
+ * be undesired during the handshake.
+ *
+ * @type {string}
+ */
+goog.net.WebChannel.X_HTTP_INITIAL_RESPONSE = 'X-HTTP-Initial-Response';
+
+
+/**
+ * A request header for specifying the content-type of WebChannel messages,
+ * e.g. application-defined JSON encoding styles. Currently this header
+ * is sent by the client via initMessageHeaders when the channel is opened.
+ *
+ * @type {string}
+ */
+goog.net.WebChannel.X_WEBCHANNEL_CONTENT_TYPE = 'X-WebChannel-Content-Type';
+
+
+/**
+ * A request header for specifying the client profile in order to apply
+ * customized config params on the server side, e.g. timeouts.
+ *
+ * @type {string}
+ */
+goog.net.WebChannel.X_WEBCHANNEL_CLIENT_PROFILE = 'X-WebChannel-Client-Profile';

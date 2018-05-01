@@ -1,7 +1,7 @@
 {
   "name": "google-closure-library",
   "description": "Google's common JavaScript library",
-  "version": "20170910.0.0",
+  "version": "20180204.0.0",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/google/closure-library.git"
@@ -112,20 +112,20 @@
       "email": "mashedcode@users.noreply.github.com"
     }
   ],
-  "gitHead": "00174dc0c33b927968d487823acf108366a7a1c5",
-  "_id": "google-closure-library@20170910.0.0",
+  "gitHead": "5a2d28bb80ab34bc8f7b0f199c4078279189a00d",
+  "_id": "google-closure-library@20180204.0.0",
   "scripts": {},
-  "_shasum": "d6122ec24472672ee1347b19e8c4a43d18f57bef",
-  "_from": "google-closure-library@20170910.0.0",
-  "_npmVersion": "3.10.3",
-  "_nodeVersion": "6.6.0",
+  "_shasum": "ad3c5a18dfd731c6149c5220d2991c0c9129718a",
+  "_from": "google-closure-library@20180204.0.0",
+  "_npmVersion": "3.10.10",
+  "_nodeVersion": "6.11.0",
   "_npmUser": {
-    "name": "blickly",
-    "email": "blickly+npm@google.com"
+    "name": "johnplaisted",
+    "email": "johnplaisted@google.com"
   },
   "dist": {
-    "shasum": "d6122ec24472672ee1347b19e8c4a43d18f57bef",
-    "tarball": "https://registry.npmjs.org/google-closure-library/-/google-closure-library-20170910.0.0.tgz"
+    "shasum": "ad3c5a18dfd731c6149c5220d2991c0c9129718a",
+    "tarball": "https://registry.npmjs.org/google-closure-library/-/google-closure-library-20180204.0.0.tgz"
   },
   "maintainers": [
     {
@@ -163,8 +163,8 @@
   ],
   "_npmOperationalInternal": {
     "host": "s3://npm-registry-packages",
-    "tmp": "tmp/google-closure-library-20170910.0.0.tgz_1505253745764_0.4481746524106711"
+    "tmp": "tmp/google-closure-library-20180204.0.0.tgz_1517951821895_0.548238093033433"
   },
   "directories": {},
-  "_resolved": "https://registry.npmjs.org/google-closure-library/-/google-closure-library-20170910.0.0.tgz"
+  "_resolved": "https://registry.npmjs.org/google-closure-library/-/google-closure-library-20180204.0.0.tgz"
 }
