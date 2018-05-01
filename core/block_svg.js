@@ -31,9 +31,11 @@ goog.require('Blockly.BlockAnimations');
 goog.require('Blockly.ContextMenu');
 goog.require('Blockly.Grid');
 goog.require('Blockly.RenderedConnection');
+goog.require('Blockly.scratchBlocksUtils');
 goog.require('Blockly.Tooltip');
 goog.require('Blockly.Touch');
 goog.require('Blockly.utils');
+
 goog.require('goog.Timer');
 goog.require('goog.asserts');
 goog.require('goog.dom');
@@ -682,7 +684,7 @@ Blockly.BlockSvg.prototype.duplicateAndDragCallback_ = function() {
         var newBlock = Blockly.Xml.domToBlock(xml, ws);
 
         // Scratch-specific: Give shadow dom new IDs to prevent duplicating on paste
-        Blockly.utils.changeObscuredShadowIds(newBlock);
+        Blockly.scratchBlocksUtils.changeObscuredShadowIds(newBlock);
 
         var svgRootNew = newBlock.getSvgRoot();
         if (!svgRootNew) {
