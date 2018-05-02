@@ -59,7 +59,7 @@ Blockly.scratchBlocksUtils.measureText = function(fontSize, fontFamily,
  */
 Blockly.scratchBlocksUtils.encodeEntities = function(rawStr) {
   // CC-BY-SA https://stackoverflow.com/questions/18749591/encode-html-entities-in-javascript
-  return rawStr.replace(/[\u00A0-\u9999<>\&]/gim, function(i) {
+  return rawStr.replace(/[\u00A0-\u9999<>&]/gim, function(i) {
     return '&#' + i.charCodeAt(0) + ';';
   });
 };

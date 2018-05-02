@@ -48,8 +48,8 @@ goog.require('goog.userAgent');
  */
 Blockly.Field = function(text, opt_validator) {
   this.size_ = new goog.math.Size(
-    Blockly.BlockSvg.FIELD_WIDTH,
-    Blockly.BlockSvg.FIELD_HEIGHT);
+      Blockly.BlockSvg.FIELD_WIDTH,
+      Blockly.BlockSvg.FIELD_HEIGHT);
   this.setValue(text);
   this.setValidator(opt_validator);
 
@@ -236,22 +236,22 @@ Blockly.Field.prototype.init = function() {
   var fieldX = (this.sourceBlock_.RTL) ? -size.width / 2 : size.width / 2;
   /** @type {!Element} */
   this.textElement_ = Blockly.utils.createSvgElement('text',
-      {'class': this.className_,
-       'x': fieldX,
-       'y': size.height / 2 + Blockly.BlockSvg.FIELD_TOP_PADDING,
-       'dominant-baseline': 'middle',
-       'dy': goog.userAgent.EDGE_OR_IE ? Blockly.Field.IE_TEXT_OFFSET : '0',
-       'text-anchor': 'middle'},
-      this.fieldGroup_);
+      {
+        'class': this.className_,
+        'x': fieldX,
+        'y': size.height / 2 + Blockly.BlockSvg.FIELD_TOP_PADDING,
+        'dominant-baseline': 'middle',
+        'dy': goog.userAgent.EDGE_OR_IE ? Blockly.Field.IE_TEXT_OFFSET : '0',
+        'text-anchor': 'middle'
+      }, this.fieldGroup_);
 
   this.updateEditable();
   this.sourceBlock_.getSvgRoot().appendChild(this.fieldGroup_);
   // Force a render.
   this.render_();
   this.size_.width = 0;
-  this.mouseDownWrapper_ =
-      Blockly.bindEventWithChecks_(this.getClickTarget_(), 'mousedown', this,
-      this.onMouseDown_);
+  this.mouseDownWrapper_ = Blockly.bindEventWithChecks_(
+      this.getClickTarget_(), 'mousedown', this, this.onMouseDown_);
 };
 
 /**
