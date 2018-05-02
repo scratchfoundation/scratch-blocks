@@ -237,6 +237,7 @@ Blockly.Procedures.flyoutCategory = function(workspace) {
     //   <mutation ...></mutation>
     // </block>
     var block = goog.dom.createDom('block');
+    block.setAttribute('id', 'proccode:' + mutation.proccode );
     block.setAttribute('type', 'procedures_call');
     block.setAttribute('gap', 16);
     block.appendChild(mutation);
