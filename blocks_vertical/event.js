@@ -117,7 +117,7 @@ Blockly.Blocks['event_whenbackdropswitchesto'] = {
           "type": "field_dropdown",
           "name": "BACKDROP",
           "options": [
-              ['backdrop1', 'BACKDROP1']
+            ['backdrop1', 'BACKDROP1']
           ]
         }
       ],
@@ -140,7 +140,7 @@ Blockly.Blocks['event_whengreaterthan'] = {
           "type": "field_dropdown",
           "name": "WHENGREATERTHANMENU",
           "options": [
-              ['timer', 'TIMER']
+            ['timer', 'TIMER']
           ]
         },
         {
@@ -160,22 +160,21 @@ Blockly.Blocks['event_broadcast_menu'] = {
    * @this Blockly.Block
    */
   init: function() {
-    this.jsonInit(
-      {
-        "message0": "%1",
-        "args0": [
-          {
-            "type": "field_variable",
-            "name": "BROADCAST_OPTION",
-            "variableTypes":[Blockly.BROADCAST_MESSAGE_VARIABLE_TYPE],
-            "variable": Blockly.Msg.DEFAULT_BROADCAST_MESSAGE_NAME
-          }
-        ],
-        "colour": Blockly.Colours.event.secondary,
-        "colourSecondary": Blockly.Colours.event.secondary,
-        "colourTertiary": Blockly.Colours.event.tertiary,
-        "extensions": ["output_string"]
-      });
+    this.jsonInit({
+      "message0": "%1",
+      "args0": [
+        {
+          "type": "field_variable",
+          "name": "BROADCAST_OPTION",
+          "variableTypes":[Blockly.BROADCAST_MESSAGE_VARIABLE_TYPE],
+          "variable": Blockly.Msg.DEFAULT_BROADCAST_MESSAGE_NAME
+        }
+      ],
+      "colour": Blockly.Colours.event.secondary,
+      "colourSecondary": Blockly.Colours.event.secondary,
+      "colourTertiary": Blockly.Colours.event.tertiary,
+      "extensions": ["output_string"]
+    });
   }
 };
 

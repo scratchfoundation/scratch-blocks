@@ -126,23 +126,22 @@ Blockly.Blocks['motion_pointtowards_menu'] = {
    * @this Blockly.Block
    */
   init: function() {
-    this.jsonInit(
-      {
-        "message0": "%1",
-        "args0": [
-          {
-            "type": "field_dropdown",
-            "name": "TOWARDS",
-            "options": [
-              [Blockly.Msg.MOTION_POINTTOWARDS_POINTER, '_mouse_']
-            ]
-          }
-        ],
-        "colour": Blockly.Colours.motion.secondary,
-        "colourSecondary": Blockly.Colours.motion.secondary,
-        "colourTertiary": Blockly.Colours.motion.tertiary,
-        "extensions": ["output_string"]
-      });
+    this.jsonInit({
+      "message0": "%1",
+      "args0": [
+        {
+          "type": "field_dropdown",
+          "name": "TOWARDS",
+          "options": [
+            [Blockly.Msg.MOTION_POINTTOWARDS_POINTER, '_mouse_']
+          ]
+        }
+      ],
+      "colour": Blockly.Colours.motion.secondary,
+      "colourSecondary": Blockly.Colours.motion.secondary,
+      "colourTertiary": Blockly.Colours.motion.tertiary,
+      "extensions": ["output_string"]
+    });
   }
 };
 
@@ -172,24 +171,23 @@ Blockly.Blocks['motion_goto_menu'] = {
    * @this Blockly.Block
    */
   init: function() {
-    this.jsonInit(
-      {
-        "message0": "%1",
-        "args0": [
-          {
-            "type": "field_dropdown",
-            "name": "TO",
-            "options": [
-              [Blockly.Msg.MOTION_GOTO_POINTER, '_mouse_'],
-              [Blockly.Msg.MOTION_GOTO_RANDOM, '_random_']
-            ]
-          }
-        ],
-        "colour": Blockly.Colours.motion.secondary,
-        "colourSecondary": Blockly.Colours.motion.secondary,
-        "colourTertiary": Blockly.Colours.motion.tertiary,
-        "extensions": ["output_string"]
-      });
+    this.jsonInit({
+      "message0": "%1",
+      "args0": [
+        {
+          "type": "field_dropdown",
+          "name": "TO",
+          "options": [
+            [Blockly.Msg.MOTION_GOTO_POINTER, '_mouse_'],
+            [Blockly.Msg.MOTION_GOTO_RANDOM, '_random_']
+          ]
+        }
+      ],
+      "colour": Blockly.Colours.motion.secondary,
+      "colourSecondary": Blockly.Colours.motion.secondary,
+      "colourTertiary": Blockly.Colours.motion.tertiary,
+      "extensions": ["output_string"]
+    });
   }
 };
 
