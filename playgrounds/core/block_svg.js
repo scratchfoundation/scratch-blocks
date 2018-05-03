@@ -304,7 +304,7 @@ Blockly.BlockSvg.prototype.setParent = function(newParent) {
     // If we are a shadow block, inherit tertiary colour.
     if (this.isShadow()) {
       this.setColour(this.getColour(), this.getColourSecondary(),
-        newParent.getColourTertiary());
+          newParent.getColourTertiary());
     }
   }
 };

@@ -18,7 +18,7 @@
  * limitations under the License.
  */
 
- /**
+/**
  * @fileoverview Object representing a map of variables and their types.
  * @author marisaleung@google.com (Marisa Leung)
  */
