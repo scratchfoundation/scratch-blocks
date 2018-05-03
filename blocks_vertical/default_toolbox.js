@@ -217,40 +217,6 @@ Blockly.Blocks.defaultToolbox = '<xml id="toolbox-categories" style="display: no
       '</value>'+
     '</block>'+
     '<block type="sound_stopallsounds" id="sound_stopallsounds"></block>'+
-    '<block type="sound_playdrumforbeats" id="sound_playdrumforbeats">'+
-      '<value name="DRUM">' +
-        '<shadow type="sound_drums_menu"></shadow>' +
-      '</value>' +
-      '<value name="BEATS">'+
-        '<shadow type="math_number">'+
-          '<field name="NUM">0.25</field>'+
-        '</shadow>'+
-      '</value>'+
-    '</block>'+
-    '<block type="sound_restforbeats" id="sound_restforbeats">'+
-      '<value name="BEATS">'+
-        '<shadow type="math_number">'+
-          '<field name="NUM">0.25</field>'+
-        '</shadow>'+
-      '</value>'+
-    '</block>'+
-    '<block type="sound_playnoteforbeats" id="sound_playnoteforbeats">'+
-      '<value name="NOTE">'+
-        '<shadow type="math_number">'+
-          '<field name="NUM">60</field>'+
-        '</shadow>'+
-      '</value>'+
-      '<value name="BEATS">'+
-        '<shadow type="math_number">'+
-          '<field name="NUM">0.5</field>'+
-        '</shadow>'+
-      '</value>'+
-    '</block>'+
-    '<block type="sound_setinstrumentto" id="sound_setinstrumentto">'+
-      '<value name="INSTRUMENT">' +
-        '<shadow type="sound_instruments_menu"></shadow>' +
-      '</value>' +
-    '</block>'+
     '<block type="sound_changeeffectby" id="sound_changeeffectby">' +
       '<value name="VALUE">' +
         '<shadow type="math_number">'+
@@ -281,21 +247,6 @@ Blockly.Blocks.defaultToolbox = '<xml id="toolbox-categories" style="display: no
       '</value>'+
     '</block>'+
     '<block type="sound_volume" id="sound_volume"></block>'+
-    '<block type="sound_changetempoby" id="sound_changetempoby">'+
-      '<value name="TEMPO">'+
-        '<shadow type="math_number">'+
-          '<field name="NUM">20</field>'+
-        '</shadow>'+
-      '</value>'+
-    '</block>'+
-    '<block type="sound_settempotobpm" id="sound_settempotobpm">'+
-      '<value name="TEMPO">'+
-        '<shadow type="math_number">'+
-          '<field name="NUM">60</field>'+
-        '</shadow>'+
-      '</value>'+
-    '</block>'+
-    '<block type="sound_tempo" id="sound_tempo"></block>'+
   '</category>'+
   '<category name="Events" colour="#FFD500" secondaryColour="#CC9900">'+
     '<block type="event_whenflagclicked" id="event_whenflagclicked"></block>'+
@@ -396,74 +347,6 @@ Blockly.Blocks.defaultToolbox = '<xml id="toolbox-categories" style="display: no
     '</block>'+
     '<block type="sensing_current" id="sensing_current"></block>'+
     '<block type="sensing_dayssince2000" id="sensing_dayssince2000"></block>'+
-  '</category>'+
-  '<category name="Pen" colour="#00B295" secondaryColour="#0B8E69">'+
-    '<block type="pen_clear" id="pen_clear"></block>'+
-    '<block type="pen_stamp" id="pen_stamp"></block>'+
-    '<block type="pen_pendown" id="pen_pendown"></block>'+
-    '<block type="pen_penup" id="pen_penup"></block>'+
-    '<block type="pen_setpencolortocolor" id="pen_setpencolortocolor">'+
-      '<value name="COLOR">'+
-        '<shadow type="colour_picker">'+
-        '</shadow>'+
-      '</value>'+
-    '</block>'+
-    '<block type="pen_changepencolorby" id="pen_changepencolorby">'+
-      '<value name="COLOR">'+
-        '<shadow type="math_number">'+
-          '<field name="NUM">10</field>'+
-        '</shadow>'+
-      '</value>'+
-    '</block>'+
-    '<block type="pen_setpencolortonum" id="pen_setpencolortonum">'+
-      '<value name="COLOR">'+
-        '<shadow type="math_number">'+
-          '<field name="NUM">0</field>'+
-        '</shadow>'+
-      '</value>'+
-    '</block>'+
-    '<block type="pen_changepenshadeby" id="pen_changepenshadeby">'+
-      '<value name="SHADE">'+
-        '<shadow type="math_number">'+
-          '<field name="NUM">10</field>'+
-        '</shadow>'+
-      '</value>'+
-    '</block>'+
-    '<block type="pen_setpenshadeto" id="pen_setpenshadeto">'+
-      '<value name="SHADE">'+
-        '<shadow type="math_number">'+
-          '<field name="NUM">50</field>'+
-        '</shadow>'+
-      '</value>'+
-    '</block>'+
-    '<block type="pen_changepensizeby" id="pen_changepensizeby">'+
-      '<value name="SIZE">'+
-        '<shadow type="math_number">'+
-          '<field name="NUM">1</field>'+
-        '</shadow>'+
-      '</value>'+
-    '</block>'+
-    '<block type="pen_setpensizeto" id="pen_setpensizeto">'+
-      '<value name="SIZE">'+
-        '<shadow type="math_number">'+
-          '<field name="NUM">1</field>'+
-        '</shadow>'+
-      '</value>'+
-    '</block>'+
-    '<block type="pen_changepentransparencyby" id="pen_changepentransparencyby">'+
-      '<value name="TRANSPARENCY">'+
-        '<shadow type="math_number">'+
-          '<field name="NUM">10</field>'+
-        '</shadow>'+
-      '</value>'+
-    '</block>'+
-    '<block type="pen_setpentransparencyto" id="pen_setpentransparencyto">'+
-      '<value name="TRANSPARENCY">'+
-        '<shadow type="math_number">'+
-          '<field name="NUM">50</field>'+
-        '</shadow>'+
-      '</value>'+
-    '</block>'+
   '</category>'+
   '<category name="Operators" colour="#40BF4A" secondaryColour="#389438">'+
     '<block type="operator_add" id="operator_add">'+

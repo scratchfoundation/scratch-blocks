@@ -48,6 +48,19 @@ Blockly.FieldLabel = function(text, opt_class) {
 goog.inherits(Blockly.FieldLabel, Blockly.Field);
 
 /**
+ * Construct a FieldLabel from a JSON arg object,
+ * dereferencing any string table references.
+ * @param {!Object} options A JSON object with options (text, and class).
+ * @returns {!Blockly.FieldLabel} The new field instance.
+ * @package
+ * @nocollapse
+ */
+Blockly.FieldLabel.fromJson = function(options) {
+  var text = Blockly.utils.replaceMessageReferences(options['text']);
+  return new Blockly.FieldLabel(text, options['class']);
+};
+
+/**
  * Editable fields usually show some sort of UI for the user to change them.
  * @type {boolean}
  * @public
@@ -72,12 +85,13 @@ Blockly.FieldLabel.prototype.init = function() {
   }
   // Build the DOM.
   this.textElement_ = Blockly.utils.createSvgElement('text',
-      {'class': 'blocklyText',
-      'y': Blockly.BlockSvg.FIELD_TOP_PADDING,
-      'text-anchor': 'middle',
-      'dominant-baseline': 'middle',
-      'dy': goog.userAgent.EDGE_OR_IE ? Blockly.Field.IE_TEXT_OFFSET : '0'
-    }, null);
+      {
+        'class': 'blocklyText',
+        'y': Blockly.BlockSvg.FIELD_TOP_PADDING,
+        'text-anchor': 'middle',
+        'dominant-baseline': 'middle',
+        'dy': goog.userAgent.EDGE_OR_IE ? Blockly.Field.IE_TEXT_OFFSET : '0'
+      }, null);
   if (this.class_) {
     Blockly.utils.addClass(this.textElement_, this.class_);
   }
@@ -118,3 +132,5 @@ Blockly.FieldLabel.prototype.getSvgRoot = function() {
 Blockly.FieldLabel.prototype.setTooltip = function(newTip) {
   this.textElement_.tooltip = newTip;
 };
+
+Blockly.Field.register('field_label', Blockly.FieldLabel);

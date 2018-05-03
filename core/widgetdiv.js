@@ -146,8 +146,8 @@ Blockly.WidgetDiv.hide = function(opt_noAnimate) {
     // If we want to animate out, set the appropriate timer for final dispose.
     if (Blockly.WidgetDiv.disposeAnimationFinished_ && !opt_noAnimate) {
       Blockly.WidgetDiv.disposeAnimationTimer_ = window.setTimeout(
-        Blockly.WidgetDiv.hide, // Come back to hide and take the first branch.
-        Blockly.WidgetDiv.disposeAnimationTimerLength_ * 1000
+          Blockly.WidgetDiv.hide, // Come back to hide and take the first branch.
+          Blockly.WidgetDiv.disposeAnimationTimerLength_ * 1000
       );
     } else {
       // No timer provided (or no animation desired) - auto-hide the DOM now.
@@ -200,7 +200,7 @@ Blockly.WidgetDiv.hideIfOwner = function(oldOwner) {
  * @param {boolean} rtl True if RTL, false if LTR.
  */
 Blockly.WidgetDiv.position = function(anchorX, anchorY, windowSize,
-                                      scrollOffset, rtl) {
+    scrollOffset, rtl) {
   // Don't let the widget go above the top edge of the window.
   if (anchorY < scrollOffset.y) {
     anchorY = scrollOffset.y;

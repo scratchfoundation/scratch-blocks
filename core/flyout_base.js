@@ -50,7 +50,7 @@ Blockly.Flyout = function(workspaceOptions) {
 
   /**
    * @type {!Blockly.Workspace}
-   * @private
+   * @protected
    */
   this.workspace_ = new Blockly.WorkspaceSvg(workspaceOptions);
   this.workspace_.isFlyout = true;
@@ -71,7 +71,7 @@ Blockly.Flyout = function(workspaceOptions) {
   /**
    * Position of the toolbox and flyout relative to the workspace.
    * @type {number}
-   * @private
+   * @protected
    */
   this.toolboxPosition_ = workspaceOptions.toolboxPosition;
 
@@ -93,7 +93,7 @@ Blockly.Flyout = function(workspaceOptions) {
   /**
    * List of visible buttons.
    * @type {!Array.<!Blockly.FlyoutButton>}
-   * @private
+   * @protected
    */
   this.buttons_ = [];
 
@@ -188,14 +188,14 @@ Blockly.Flyout.prototype.SCROLLBAR_PADDING = 2;
 /**
  * Width of flyout.
  * @type {number}
- * @private
+ * @protected
  */
 Blockly.Flyout.prototype.width_ = 0;
 
 /**
  * Height of flyout.
  * @type {number}
- * @private
+ * @protected
  */
 Blockly.Flyout.prototype.height_ = 0;
 
@@ -234,7 +234,7 @@ Blockly.Flyout.prototype.verticalOffset_ = 0;
  * This is used to know when to create a new block and when to scroll the
  * flyout. Setting it to 360 means that all drags create a new block.
  * @type {number}
- * @private
+ * @protected
 */
 Blockly.Flyout.prototype.dragAngleRange_ = 70;
 
@@ -264,7 +264,7 @@ Blockly.Flyout.prototype.createDom = function(tagName) {
   // Setting style to display:none to start. The toolbox and flyout
   // hide/show code will set up proper visibility and size later.
   this.svgGroup_ = Blockly.utils.createSvgElement(tagName,
-      {'class': 'blocklyFlyout', 'style' : 'display: none'}, null);
+      {'class': 'blocklyFlyout', 'style': 'display: none'}, null);
   this.svgBackground_ = Blockly.utils.createSvgElement('path',
       {'class': 'blocklyFlyoutBackground'}, this.svgGroup_);
   this.svgGroup_.appendChild(this.workspace_.createDom());
@@ -289,7 +289,8 @@ Blockly.Flyout.prototype.init = function(targetWorkspace) {
       Blockly.bindEventWithChecks_(this.svgGroup_, 'wheel', this, this.wheel_));
   // Dragging the flyout up and down (or left and right).
   Array.prototype.push.apply(this.eventWrappers_,
-      Blockly.bindEventWithChecks_(this.svgGroup_, 'mousedown', this, this.onMouseDown_));
+      Blockly.bindEventWithChecks_(
+          this.svgGroup_, 'mousedown', this, this.onMouseDown_));
 
   // A flyout connected to a workspace doesn't have its own current gesture.
   this.workspace_.getGesture =
@@ -351,7 +352,7 @@ Blockly.Flyout.prototype.getHeight = function() {
 };
 
 /**
- * Get the flyout's workspace.
+ * Get the workspace inside the flyout.
  * @return {!Blockly.WorkspaceSvg} The workspace inside the flyout.
  * @package
  */
@@ -527,7 +528,7 @@ Blockly.Flyout.prototype.show = function(xmlList) {
 };
 
 /**
- * Store an array of category names and scrollbar positions.
+ * Store an array of category names, scrollbar positions, and category lengths.
  * This is used when scrolling the flyout to cause a category to be selected.
  * @private
  */
@@ -543,6 +544,14 @@ Blockly.Flyout.prototype.recordCategoryScrollPositions_ = function() {
       });
     }
   }
+  var numCategories = this.categoryScrollPositions.length;
+  for (var i = 0; i < numCategories - 1; i++) {
+    var currentPos = this.categoryScrollPositions[i].position;
+    var nextPos = this.categoryScrollPositions[i+1].position;
+    var length = nextPos - currentPos;
+    this.categoryScrollPositions[i].length = length;
+  }
+  this.categoryScrollPositions[numCategories - 1].length = 0;
 };
 
 /**
@@ -715,7 +724,7 @@ Blockly.Flyout.prototype.createBlock = function(originalBlock) {
     Blockly.Events.setGroup(true);
     Blockly.Events.fire(new Blockly.Events.Create(newBlock));
     // Fire a VarCreate event for each (if any) new variable created.
-    for(var i = 0; i < newVariables.length; i++) {
+    for (var i = 0; i < newVariables.length; i++) {
       var thisVariable = newVariables[i];
       Blockly.Events.fire(new Blockly.Events.VarCreate(thisVariable));
     }

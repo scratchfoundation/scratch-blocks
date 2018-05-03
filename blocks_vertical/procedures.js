@@ -56,6 +56,8 @@ Blockly.ScratchBlocks.ProcedureUtils.callerMutationToDom = function() {
  */
 Blockly.ScratchBlocks.ProcedureUtils.callerDomToMutation = function(xmlElement) {
   this.procCode_ = xmlElement.getAttribute('proccode');
+  this.generateShadows_ =
+      JSON.parse(xmlElement.getAttribute('generateshadows'));
   this.argumentIds_ = JSON.parse(xmlElement.getAttribute('argumentids'));
   this.warp_ = JSON.parse(xmlElement.getAttribute('warp'));
   this.updateDisplay_();
@@ -64,11 +66,18 @@ Blockly.ScratchBlocks.ProcedureUtils.callerDomToMutation = function(xmlElement) 
 /**
  * Create XML to represent the (non-editable) name and arguments of a
  * procedures_prototype block or a procedures_declaration block.
+ * @param {boolean=} opt_generateShadows Whether to include the generateshadows
+ *     flag in the generated XML.  False if not provided.
  * @return {!Element} XML storage element.
  * @this Blockly.Block
  */
-Blockly.ScratchBlocks.ProcedureUtils.definitionMutationToDom = function() {
+Blockly.ScratchBlocks.ProcedureUtils.definitionMutationToDom = function(
+    opt_generateShadows) {
   var container = document.createElement('mutation');
+
+  if (opt_generateShadows) {
+    container.setAttribute('generateshadows', true);
+  }
   container.setAttribute('proccode', this.procCode_);
   container.setAttribute('argumentids', JSON.stringify(this.argumentIds_));
   container.setAttribute('argumentnames', JSON.stringify(this.displayNames_));
@@ -134,10 +143,11 @@ Blockly.ScratchBlocks.ProcedureUtils.updateDisplay_ = function() {
 
 /**
  * Disconnect old blocks from all value inputs on this block, but hold onto them
- * in case they can be reattached later.
- * @return {!Object.<string, Blockly.Block>} An object mapping argument IDs to
- *     the blocks that were connected to those IDs at the beginning of the
- *     mutation.
+ * in case they can be reattached later.  Also save the shadow DOM if it exists.
+ * The result is a map from argument ID to information that was associated with
+ * that argument at the beginning of the mutation.
+ * @return {!Object.<string, {shadow: Element, block: Blockly.Block}>} An object
+ *     mapping argument IDs to blocks and shadow DOMs.
  * @private
  * @this Blockly.Block
  */
@@ -146,11 +156,17 @@ Blockly.ScratchBlocks.ProcedureUtils.disconnectOldBlocks_ = function() {
   var connectionMap = {};
   for (var i = 0, input; input = this.inputList[i]; i++) {
     if (input.connection) {
-      // Remove the shadow DOM.  Otherwise a shadow block will respawn
-      // instantly, and we'd have to remove it when we remove the input.
-      input.connection.setShadowDom(null);
       var target = input.connection.targetBlock();
-      connectionMap[input.name] = target;
+      var saveInfo = {
+        shadow: input.connection.getShadowDom(),
+        block: target
+      };
+      connectionMap[input.name] = saveInfo;
+
+      // Remove the shadow DOM, then disconnect the block.  Otherwise a shadow
+      // block will respawn instantly, and we'd have to remove it when we remove
+      // the input.
+      input.connection.setShadowDom(null);
       if (target) {
         input.connection.disconnect();
       }
@@ -177,15 +193,14 @@ Blockly.ScratchBlocks.ProcedureUtils.removeAllInputs_ = function() {
 /**
  * Create all inputs specified by the new procCode, and populate them with
  * shadow blocks or reconnected old blocks as appropriate.
- * @param {!Object.<string, Blockly.Block>} connectionMap An object mapping
- *     argument IDs to the blocks that were connected to those IDs at the
- *     beginning of the mutation.
+ * @param {!Object.<string, {shadow: Element, block: Blockly.Block}>}
+ *     connectionMap An object mapping argument IDs to blocks and shadow DOMs.
  * @private
  * @this Blockly.Block
  */
 Blockly.ScratchBlocks.ProcedureUtils.createAllInputs_ = function(connectionMap) {
   // Split the proc into components, by %n, %b, and %s (ignoring escaped).
-  var procComponents = this.procCode_.split(/(?=[^\\]\%[nbs])/);
+  var procComponents = this.procCode_.split(/(?=[^\\]%[nbs])/);
   procComponents = procComponents.map(function(c) {
     return c.trim(); // Strip whitespace.
   });
@@ -202,16 +217,12 @@ Blockly.ScratchBlocks.ProcedureUtils.createAllInputs_ = function(connectionMap) 
       labelText = component.substring(2).trim();
 
       var id = this.argumentIds_[argumentCount];
-      var oldBlock = null;
-      if (connectionMap && (id in connectionMap)) {
-        oldBlock = connectionMap[id];
-      }
 
       var input = this.appendValueInput(id);
       if (argumentType == 'b') {
         input.setCheck('Boolean');
       }
-      this.populateArgument_(argumentType, argumentCount, connectionMap, oldBlock,
+      this.populateArgument_(argumentType, argumentCount, connectionMap, id,
           input);
       argumentCount++;
     } else {
@@ -233,10 +244,15 @@ Blockly.ScratchBlocks.ProcedureUtils.deleteShadows_ = function(connectionMap) {
   // Get rid of all of the old shadow blocks if they aren't connected.
   if (connectionMap) {
     for (var id in connectionMap) {
-      var block = connectionMap[id];
-      if (block && block.isShadow()) {
-        block.dispose();
-        connectionMap[id] = null;
+      var saveInfo = connectionMap[id];
+      if (saveInfo) {
+        var block = saveInfo['block'];
+        if (block && block.isShadow()) {
+          block.dispose();
+          connectionMap[id] = null;
+          // At this point we know which shadow DOMs are about to be orphaned in
+          // the VM.  What do we do with that information?
+        }
       }
     }
   }
@@ -367,26 +383,33 @@ Blockly.ScratchBlocks.ProcedureUtils.createArgumentReporter_ = function(
  * given input.
  * @param {string} type One of 'b' (boolean), 's' (string) or 'n' (number).
  * @param {number} index The index of this argument into the argument id array.
- * @param {!Object.<string, Blockly.Block>} connectionMap An object mapping
- *     argument IDs to the blocks that were connected to those IDs at the
- *     beginning of the mutation.
- * @param {Blockly.BlockSvg} oldBlock The block that was previously connected to
- *     this input, or null.
+ * @param {!Object.<string, {shadow: Element, block: Blockly.Block}>}
+ *     connectionMap An object mapping argument IDs to blocks and shadow DOMs.
+ * @param {string} id The ID of the input to populate.
  * @param {!Blockly.Input} input The newly created input to populate.
  * @private
  * @this Blockly.Block
  */
 Blockly.ScratchBlocks.ProcedureUtils.populateArgumentOnCaller_ = function(type,
-    index, connectionMap, oldBlock, input) {
+    index, connectionMap, id, input) {
+  var oldBlock = null;
+  var oldShadow = null;
+  if (connectionMap && (id in connectionMap)) {
+    var saveInfo = connectionMap[id];
+    oldBlock = saveInfo['block'];
+    oldShadow = saveInfo['shadow'];
+  }
+
   if (connectionMap && oldBlock) {
-    // Reattach the old block.
+    // Reattach the old block and shadow DOM.
     connectionMap[input.name] = null;
     oldBlock.outputConnection.connect(input.connection);
-    if (type != 'b') {
-      // TODO: Preserve old shadow DOM.
-      input.connection.setShadowDom(this.buildShadowDom_(type));
+    if (type != 'b' && this.generateShadows_) {
+      var shadowDom = oldShadow || this.buildShadowDom_(type);
+      console.log("setting shadow dom: " + shadowDom);
+      input.connection.setShadowDom(shadowDom);
     }
-  } else {
+  } else if (this.generateShadows_) {
     this.attachShadow_(input, type);
   }
 };
@@ -397,17 +420,21 @@ Blockly.ScratchBlocks.ProcedureUtils.populateArgumentOnCaller_ = function(type,
  * @param {string} type One of 'b' (boolean), 's' (string) or 'n' (number).
  * @param {number} index The index of this argument into the argument ID and
  *     argument display name arrays.
- * @param {!Object.<string, Blockly.Block>} connectionMap An object mapping
- *     argument IDs to the blocks that were connected to those IDs at the
- *     beginning of the mutation.
- * @param {Blockly.BlockSvg} oldBlock The argument reporter that was previously
- *     connected to this input, or null.
+ * @param {!Object.<string, {shadow: Element, block: Blockly.Block}>}
+ *     connectionMap An object mapping argument IDs to blocks and shadow DOMs.
+ * @param {string} id The ID of the input to populate.
  * @param {!Blockly.Input} input The newly created input to populate.
  * @private
  * @this Blockly.Block
  */
 Blockly.ScratchBlocks.ProcedureUtils.populateArgumentOnPrototype_ = function(
-    type, index, connectionMap, oldBlock, input) {
+    type, index, connectionMap, id, input) {
+  var oldBlock = null;
+  if (connectionMap && (id in connectionMap)) {
+    var saveInfo = connectionMap[id];
+    oldBlock = saveInfo['block'];
+  }
+
   var oldTypeMatches =
     Blockly.ScratchBlocks.ProcedureUtils.checkOldTypeMatches_(oldBlock, type);
   var displayName = this.displayNames_[index];
@@ -433,17 +460,22 @@ Blockly.ScratchBlocks.ProcedureUtils.populateArgumentOnPrototype_ = function(
  * @param {string} type One of 'b' (boolean), 's' (string) or 'n' (number).
  * @param {number} index The index of this argument into the argument id and
  *     argument display name arrays.
- * @param {!Object.<string, Blockly.Block>} connectionMap An object mapping
- *     argument IDs to the blocks that were connected to those IDs at the
- *     beginning of the mutation.
- * @param {Blockly.BlockSvg} oldBlock The block that was previously connected to
- *     this input, or null.
+ * @param {!Object.<string, {shadow: Element, block: Blockly.Block}>}
+ *     connectionMap An object mapping argument IDs to blocks and shadow DOMs.
+ * @param {string} id The ID of the input to populate.
  * @param {!Blockly.Input} input The newly created input to populate.
  * @private
  * @this Blockly.Block
  */
 Blockly.ScratchBlocks.ProcedureUtils.populateArgumentOnDeclaration_ = function(
-    type, index, connectionMap, oldBlock, input) {
+    type, index, connectionMap, id, input) {
+
+  var oldBlock = null;
+  if (connectionMap && (id in connectionMap)) {
+    var saveInfo = connectionMap[id];
+    oldBlock = saveInfo['block'];
+  }
+
   // TODO: This always returns false, because it checks for argument reporter
   // blocks instead of argument editor blocks.  Create a new version for argument
   // editors.
@@ -452,7 +484,7 @@ Blockly.ScratchBlocks.ProcedureUtils.populateArgumentOnDeclaration_ = function(
   var displayName = this.displayNames_[index];
 
   // Decide which block to attach.
-  if (connectionMap && oldBlock && oldTypeMatches) {
+  if (oldBlock && oldTypeMatches) {
     var argumentEditor = oldBlock;
     oldBlock.setFieldValue(displayName, 'TEXT');
     connectionMap[input.name] = null;
@@ -683,7 +715,7 @@ Blockly.Blocks['procedures_definition'] = {
    */
   init: function() {
     this.jsonInit({
-      "message0": "define %1",
+      "message0": Blockly.Msg.PROCEDURES_DEFINITION,
       "args0": [
         {
           "type": "input_statement",

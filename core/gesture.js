@@ -27,10 +27,12 @@
 
 goog.provide('Blockly.Gesture');
 
+goog.require('Blockly.BlockAnimations');
 goog.require('Blockly.BlockDragger');
 goog.require('Blockly.constants');
 goog.require('Blockly.Events');
 goog.require('Blockly.FlyoutDragger');
+goog.require('Blockly.scratchBlocksUtils');
 goog.require('Blockly.Tooltip');
 goog.require('Blockly.Touch');
 goog.require('Blockly.WorkspaceDragger');
@@ -423,7 +425,7 @@ Blockly.Gesture.prototype.doStart = function(e) {
   }
   this.hasStarted_ = true;
 
-  Blockly.BlockSvg.disconnectUiStop_();
+  Blockly.BlockAnimations.disconnectUiStop();
   this.startWorkspace_.updateScreenCalculationsIfScrolled();
   if (this.startWorkspace_.isMutator) {
     // Mutator's coordinate system could be out of date because the bubble was
@@ -568,8 +570,8 @@ Blockly.Gesture.prototype.handleRightClick = function(e) {
  */
 Blockly.Gesture.prototype.handleWsStart = function(e, ws) {
   goog.asserts.assert(!this.hasStarted_,
-     'Tried to call gesture.handleWsStart, but the gesture had already been ' +
-     'started.');
+      'Tried to call gesture.handleWsStart, but the gesture had already been ' +
+      'started.');
   this.setStartWorkspace_(ws);
   this.mostRecentEvent_ = e;
   this.doStart(e);
@@ -583,8 +585,8 @@ Blockly.Gesture.prototype.handleWsStart = function(e, ws) {
  */
 Blockly.Gesture.prototype.handleFlyoutStart = function(e, flyout) {
   goog.asserts.assert(!this.hasStarted_,
-     'Tried to call gesture.handleFlyoutStart, but the gesture had already been ' +
-     'started.');
+      'Tried to call gesture.handleFlyoutStart, but the gesture had already ' +
+      'been started.');
   this.setStartFlyout_(flyout);
   this.handleWsStart(e, flyout.getWorkspace());
 };
@@ -597,8 +599,8 @@ Blockly.Gesture.prototype.handleFlyoutStart = function(e, flyout) {
  */
 Blockly.Gesture.prototype.handleBlockStart = function(e, block) {
   goog.asserts.assert(!this.hasStarted_,
-     'Tried to call gesture.handleBlockStart, but the gesture had already been ' +
-     'started.');
+      'Tried to call gesture.handleBlockStart, but the gesture had already ' +
+      'been started.');
   this.setStartBlock(block);
   this.mostRecentEvent_ = e;
 };
@@ -641,7 +643,7 @@ Blockly.Gesture.prototype.doBlockClick_ = function() {
       // This is used to toggle the stack when any block in the stack is clicked.
       var rootBlock = this.startBlock_.getRootBlock();
       Blockly.Events.fire(
-        new Blockly.Events.Ui(rootBlock, 'stackclick', undefined, undefined));
+          new Blockly.Events.Ui(rootBlock, 'stackclick', undefined, undefined));
     }
   }
   this.bringBlockToFront_();
@@ -682,8 +684,8 @@ Blockly.Gesture.prototype.bringBlockToFront_ = function() {
  */
 Blockly.Gesture.prototype.setStartField = function(field) {
   goog.asserts.assert(!this.hasStarted_,
-     'Tried to call gesture.setStartField, but the gesture had already been ' +
-     'started.');
+      'Tried to call gesture.setStartField, but the gesture had already been ' +
+      'started.');
   if (!this.startField_) {
     this.startField_ = field;
   }
@@ -698,7 +700,8 @@ Blockly.Gesture.prototype.setStartField = function(field) {
 Blockly.Gesture.prototype.setStartBlock = function(block) {
   if (!this.startBlock_) {
     this.startBlock_ = block;
-    this.shouldDuplicateOnDrag_ = Blockly.utils.isShadowArgumentReporter(block);
+    this.shouldDuplicateOnDrag_ =
+        Blockly.scratchBlocksUtils.isShadowArgumentReporter(block);
     if (block.isInFlyout && block != block.getRootBlock()) {
       this.setTargetBlock_(block.getRootBlock());
     } else {

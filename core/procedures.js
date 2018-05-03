@@ -84,7 +84,7 @@ Blockly.Procedures.allProcedureMutations = function(root) {
   var mutations = [];
   for (var i = 0; i < blocks.length; i++) {
     if (blocks[i].type == Blockly.PROCEDURES_PROTOTYPE_BLOCK_TYPE) {
-      var mutation = blocks[i].mutationToDom();
+      var mutation = blocks[i].mutationToDom(/* opt_generateShadows */ true);
       if (mutation) {
         mutations.push(mutation);
       }

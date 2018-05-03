@@ -131,46 +131,100 @@ Blockly.createDom_ = function(container, options) {
   // Using a dilate distorts the block shape.
   // Instead use a gaussian blur, and then set all alpha to 1 with a transfer.
   var stackGlowFilter = Blockly.utils.createSvgElement('filter',
-      {'id': 'blocklyStackGlowFilter',
-        'height': '160%', 'width': '180%', y: '-30%', x: '-40%'}, defs);
+      {
+        'id': 'blocklyStackGlowFilter',
+        'height': '160%',
+        'width': '180%',
+        y: '-30%',
+        x: '-40%'
+      },
+      defs);
   options.stackGlowBlur = Blockly.utils.createSvgElement('feGaussianBlur',
-      {'in': 'SourceGraphic',
-      'stdDeviation': Blockly.Colours.stackGlowSize}, stackGlowFilter);
+      {
+        'in': 'SourceGraphic',
+        'stdDeviation': Blockly.Colours.stackGlowSize
+      },
+      stackGlowFilter);
   // Set all gaussian blur pixels to 1 opacity before applying flood
   var componentTransfer = Blockly.utils.createSvgElement('feComponentTransfer', {'result': 'outBlur'}, stackGlowFilter);
   Blockly.utils.createSvgElement('feFuncA',
-      {'type': 'table', 'tableValues': '0' + goog.string.repeat(' 1', 16)}, componentTransfer);
+      {
+        'type': 'table',
+        'tableValues': '0' + goog.string.repeat(' 1', 16)
+      },
+      componentTransfer);
   // Color the highlight
   Blockly.utils.createSvgElement('feFlood',
-      {'flood-color': Blockly.Colours.stackGlow,
-       'flood-opacity': Blockly.Colours.stackGlowOpacity, 'result': 'outColor'}, stackGlowFilter);
+      {
+        'flood-color': Blockly.Colours.stackGlow,
+        'flood-opacity': Blockly.Colours.stackGlowOpacity,
+        'result': 'outColor'
+      },
+      stackGlowFilter);
   Blockly.utils.createSvgElement('feComposite',
-      {'in': 'outColor', 'in2': 'outBlur',
-       'operator': 'in', 'result': 'outGlow'}, stackGlowFilter);
+      {
+        'in': 'outColor',
+        'in2': 'outBlur',
+        'operator': 'in',
+        'result': 'outGlow'
+      },
+      stackGlowFilter);
   Blockly.utils.createSvgElement('feComposite',
-      {'in': 'SourceGraphic', 'in2': 'outGlow', 'operator': 'over'}, stackGlowFilter);
+      {
+        'in': 'SourceGraphic',
+        'in2': 'outGlow',
+        'operator': 'over'
+      },
+      stackGlowFilter);
 
   // Filter for replacement marker
   var replacementGlowFilter = Blockly.utils.createSvgElement('filter',
-      {'id': 'blocklyReplacementGlowFilter',
-        'height': '160%', 'width': '180%', y: '-30%', x: '-40%'}, defs);
+      {
+        'id': 'blocklyReplacementGlowFilter',
+        'height': '160%',
+        'width': '180%',
+        y: '-30%',
+        x: '-40%'
+      },
+      defs);
   Blockly.utils.createSvgElement('feGaussianBlur',
-      {'in': 'SourceGraphic',
-      'stdDeviation': Blockly.Colours.replacementGlowSize}, replacementGlowFilter);
+      {
+        'in': 'SourceGraphic',
+        'stdDeviation': Blockly.Colours.replacementGlowSize
+      },
+      replacementGlowFilter);
   // Set all gaussian blur pixels to 1 opacity before applying flood
   var componentTransfer = Blockly.utils.createSvgElement('feComponentTransfer',
       {'result': 'outBlur'}, replacementGlowFilter);
   Blockly.utils.createSvgElement('feFuncA',
-      {'type': 'table', 'tableValues': '0' + goog.string.repeat(' 1', 16)}, componentTransfer);
+      {
+        'type': 'table',
+        'tableValues': '0' + goog.string.repeat(' 1', 16)
+      },
+      componentTransfer);
   // Color the highlight
   Blockly.utils.createSvgElement('feFlood',
-      {'flood-color': Blockly.Colours.replacementGlow,
-       'flood-opacity': Blockly.Colours.replacementGlowOpacity, 'result': 'outColor'}, replacementGlowFilter);
+      {
+        'flood-color': Blockly.Colours.replacementGlow,
+        'flood-opacity': Blockly.Colours.replacementGlowOpacity,
+        'result': 'outColor'
+      },
+      replacementGlowFilter);
   Blockly.utils.createSvgElement('feComposite',
-      {'in': 'outColor', 'in2': 'outBlur',
-       'operator': 'in', 'result': 'outGlow'}, replacementGlowFilter);
+      {
+        'in': 'outColor',
+        'in2': 'outBlur',
+        'operator': 'in',
+        'result': 'outGlow'
+      },
+      replacementGlowFilter);
   Blockly.utils.createSvgElement('feComposite',
-      {'in': 'SourceGraphic', 'in2': 'outGlow', 'operator': 'over'}, replacementGlowFilter);
+      {
+        'in': 'SourceGraphic',
+        'in2': 'outGlow',
+        'operator': 'over'
+      },
+      replacementGlowFilter);
   /*
     <pattern id="blocklyDisabledPattern837493" patternUnits="userSpaceOnUse"
              width="10" height="10">
@@ -179,13 +233,26 @@ Blockly.createDom_ = function(container, options) {
     </pattern>
   */
   var disabledPattern = Blockly.utils.createSvgElement('pattern',
-      {'id': 'blocklyDisabledPattern' + rnd,
-       'patternUnits': 'userSpaceOnUse',
-       'width': 10, 'height': 10}, defs);
+      {
+        'id': 'blocklyDisabledPattern' + rnd,
+        'patternUnits': 'userSpaceOnUse',
+        'width': 10,
+        'height': 10
+      },
+      defs);
   Blockly.utils.createSvgElement('rect',
-      {'width': 10, 'height': 10, 'fill': '#aaa'}, disabledPattern);
+      {
+        'width': 10,
+        'height': 10,
+        'fill': '#aaa'
+      },
+      disabledPattern);
   Blockly.utils.createSvgElement('path',
-      {'d': 'M 0 0 L 10 10 M 10 0 L 0 10', 'stroke': '#cc0'}, disabledPattern);
+      {
+        'd': 'M 0 0 L 10 10 M 10 0 L 0 10',
+        'stroke': '#cc0'
+      },
+      disabledPattern);
   options.disabledPatternId = disabledPattern.id;
 
   options.gridPattern = Blockly.Grid.createDom(rnd, options.gridOptions, defs);
@@ -376,13 +443,19 @@ Blockly.inject.bindDocumentEvents_ = function() {
 Blockly.inject.loadSounds_ = function(pathToMedia, workspace) {
   var audioMgr = workspace.getAudioManager();
   audioMgr.load(
-      [pathToMedia + 'click.mp3',
-       pathToMedia + 'click.wav',
-       pathToMedia + 'click.ogg'], 'click');
+      [
+        pathToMedia + 'click.mp3',
+        pathToMedia + 'click.wav',
+        pathToMedia + 'click.ogg'
+      ],
+      'click');
   audioMgr.load(
-      [pathToMedia + 'delete.mp3',
-       pathToMedia + 'delete.ogg',
-       pathToMedia + 'delete.wav'], 'delete');
+      [
+        pathToMedia + 'delete.mp3',
+        pathToMedia + 'delete.ogg',
+        pathToMedia + 'delete.wav'
+      ],
+      'delete');
 
   // Bind temporary hooks that preload the sounds.
   var soundBinds = [];

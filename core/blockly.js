@@ -126,8 +126,10 @@ Blockly.hueToRgb = function(hue) {
  * @return {!Object} Contains width and height properties.
  */
 Blockly.svgSize = function(svg) {
-  return {width: svg.cachedWidth_,
-          height: svg.cachedHeight_};
+  return {
+    width: svg.cachedWidth_,
+    height: svg.cachedHeight_
+  };
 };
 
 /**
@@ -324,7 +326,6 @@ Blockly.confirm = function(message, callback) {
   callback(window.confirm(message));
 };
 
-/* eslint-disable no-unused-vars */
 /**
  * Wrapper to window.prompt() that app developers may override to provide
  * alternatives to the modal browser window. Built-in browser prompts are
@@ -333,17 +334,16 @@ Blockly.confirm = function(message, callback) {
  * @param {string} message The message to display to the user.
  * @param {string} defaultValue The value to initialize the prompt with.
  * @param {!function(string)} callback The callback for handling user response.
- * @param {?string} opt_title An optional title for the prompt.
- * @param {?string} opt_varType An optional variable type for variable specific
+ * @param {?string} _opt_title An optional title for the prompt.
+ * @param {?string} _opt_varType An optional variable type for variable specific
  *     prompt behavior.
  */
-Blockly.prompt = function(message, defaultValue, callback, opt_title,
-    opt_varType) {
+Blockly.prompt = function(message, defaultValue, callback, _opt_title,
+    _opt_varType) {
   // opt_title and opt_varType are unused because we only need them to pass
   // information to the scratch-gui, which overwrites this function
   callback(window.prompt(message, defaultValue));
 };
-/* eslint-enable no-unused-vars */
 
 /**
  * Helper function for defining a block from JSON.  The resulting function has
@@ -365,19 +365,28 @@ Blockly.jsonInitFactory_ = function(jsonDef) {
  * @param {!Array.<!Object>} jsonArray An array of JSON block definitions.
  */
 Blockly.defineBlocksWithJsonArray = function(jsonArray) {
-  for (var i = 0, elem; elem = jsonArray[i]; i++) {
-    var typename = elem.type;
-    if (typename == null || typename === '') {
-      console.warn('Block definition #' + i +
-        ' in JSON array is missing a type attribute. Skipping.');
+  for (var i = 0; i < jsonArray.length; i++) {
+    var elem = jsonArray[i];
+    if (!elem) {
+      console.warn(
+          'Block definition #' + i + ' in JSON array is ' + elem + '. ' +
+          'Skipping.');
     } else {
-      if (Blockly.Blocks[typename]) {
-        console.warn('Block definition #' + i +
-          ' in JSON array overwrites prior definition of "' + typename + '".');
+      var typename = elem.type;
+      if (typename == null || typename === '') {
+        console.warn(
+            'Block definition #' + i +
+            ' in JSON array is missing a type attribute. Skipping.');
+      } else {
+        if (Blockly.Blocks[typename]) {
+          console.warn(
+              'Block definition #' + i + ' in JSON array' +
+              ' overwrites prior definition of "' + typename + '".');
+        }
+        Blockly.Blocks[typename] = {
+          init: Blockly.jsonInitFactory_(elem)
+        };
       }
-      Blockly.Blocks[typename] = {
-        init: Blockly.jsonInitFactory_(elem)
-      };
     }
   }
 };
@@ -386,19 +395,18 @@ Blockly.defineBlocksWithJsonArray = function(jsonArray) {
  * Bind an event to a function call.  When calling the function, verifies that
  * it belongs to the touch stream that is currently being processed, and splits
  * multitouch events into multiple events as needed.
- * @param {!Node} node Node upon which to listen.
+ * @param {!EventTarget} node Node upon which to listen.
  * @param {string} name Event name to listen to (e.g. 'mousedown').
  * @param {Object} thisObject The value of 'this' in the function.
  * @param {!Function} func Function to call when event is triggered.
- * @param {boolean} opt_noCaptureIdentifier True if triggering on this event
+ * @param {boolean=} opt_noCaptureIdentifier True if triggering on this event
  *     should not block execution of other event handlers on this touch or other
  *     simultaneous touches.
- * @param {boolean} opt_noPreventDefault True if triggering on this event
+ * @param {boolean=} opt_noPreventDefault True if triggering on this event
  *     should prevent the default handler.  False by default.  If
  *     opt_noPreventDefault is provided, opt_noCaptureIdentifier must also be
  *     provided.
  * @return {!Array.<!Array>} Opaque data that can be passed to unbindEvent_.
- * @private
  */
 Blockly.bindEventWithChecks_ = function(node, name, thisObject, func,
     opt_noCaptureIdentifier, opt_noPreventDefault) {
@@ -436,10 +444,9 @@ Blockly.bindEventWithChecks_ = function(node, name, thisObject, func,
         e.preventDefault();
       }
     };
-    for (var i = 0, eventName;
-         eventName = Blockly.Touch.TOUCH_MAP[name][i]; i++) {
-      node.addEventListener(eventName, touchWrapFunc, false);
-      bindData.push([node, eventName, touchWrapFunc]);
+    for (var i = 0, type; type = Blockly.Touch.TOUCH_MAP[name][i]; i++) {
+      node.addEventListener(type, touchWrapFunc, false);
+      bindData.push([node, type, touchWrapFunc]);
     }
   }
   return bindData;
@@ -452,7 +459,7 @@ Blockly.bindEventWithChecks_ = function(node, name, thisObject, func,
  * simultaneous event processing.
  * @deprecated in favor of bindEventWithChecks_, but preserved for external
  * users.
- * @param {!Node} node Node upon which to listen.
+ * @param {!EventTarget} node Node upon which to listen.
  * @param {string} name Event name to listen to (e.g. 'mousedown').
  * @param {Object} thisObject The value of 'this' in the function.
  * @param {!Function} func Function to call when event is triggered.
@@ -486,10 +493,9 @@ Blockly.bindEvent_ = function(node, name, thisObject, func) {
       // Stop the browser from scrolling/zooming the page.
       e.preventDefault();
     };
-    for (var i = 0, eventName;
-         eventName = Blockly.Touch.TOUCH_MAP[name][i]; i++) {
-      node.addEventListener(eventName, touchWrapFunc, false);
-      bindData.push([node, eventName, touchWrapFunc]);
+    for (var i = 0, type; type = Blockly.Touch.TOUCH_MAP[name][i]; i++) {
+      node.addEventListener(type, touchWrapFunc, false);
+      bindData.push([node, type, touchWrapFunc]);
     }
   }
   return bindData;

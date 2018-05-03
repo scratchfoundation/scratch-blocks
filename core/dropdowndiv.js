@@ -183,7 +183,7 @@ Blockly.DropDownDiv.setCategory = function(category) {
  * @return {boolean} True if the menu rendered below block; false if above.
  */
 Blockly.DropDownDiv.showPositionedByBlock = function(owner, block,
-      opt_onHide, opt_secondaryYOffset) {
+    opt_onHide, opt_secondaryYOffset) {
   var scale = block.workspace.scale;
   var bBox = {width: block.width, height: block.height};
   bBox.width *= scale;
@@ -306,16 +306,16 @@ Blockly.DropDownDiv.getPositionMetrics = function(primaryX, primaryY, secondaryX
   renderX -= centerX;
   // Fit horizontally in the bounds.
   renderX = Math.max(
-    boundPosition.left,
-    Math.min(renderX, boundPosition.left + boundSize.width - divSize.width)
+      boundPosition.left,
+      Math.min(renderX, boundPosition.left + boundSize.width - divSize.width)
   );
   // After we've finished caclulating renderX, adjust the arrow to be relative to it.
   arrowX -= renderX;
 
   // Pad the arrow by some pixels, primarily so that it doesn't render on top of a rounded border.
   arrowX = Math.max(
-    Blockly.DropDownDiv.ARROW_HORIZONTAL_PADDING,
-    Math.min(arrowX, divSize.width - Blockly.DropDownDiv.ARROW_HORIZONTAL_PADDING - Blockly.DropDownDiv.ARROW_SIZE)
+      Blockly.DropDownDiv.ARROW_HORIZONTAL_PADDING,
+      Math.min(arrowX, divSize.width - Blockly.DropDownDiv.ARROW_HORIZONTAL_PADDING - Blockly.DropDownDiv.ARROW_SIZE)
   );
 
   // Calculate arrow Y. If we rendered secondary, add on bottom.

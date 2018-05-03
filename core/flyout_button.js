@@ -145,20 +145,31 @@ Blockly.FlyoutButton.prototype.createDom = function() {
   if (!this.isLabel_) {
     // Shadow rectangle (light source does not mirror in RTL).
     var shadow = Blockly.utils.createSvgElement('rect',
-        {'class': 'blocklyFlyoutButtonShadow',
-         'rx': 4, 'ry': 4, 'x': 1, 'y': 1},
-         this.svgGroup_);
+        {
+          'class': 'blocklyFlyoutButtonShadow',
+          'rx': 4,
+          'ry': 4,
+          'x': 1,
+          'y': 1
+        },
+        this.svgGroup_);
   }
   // Background rectangle.
   var rect = Blockly.utils.createSvgElement('rect',
-      {'class': this.isLabel_ ?
-        'blocklyFlyoutLabelBackground' : 'blocklyFlyoutButtonBackground',
-        'rx': 4, 'ry': 4},
+      {
+        'class': this.isLabel_ ?
+            'blocklyFlyoutLabelBackground' : 'blocklyFlyoutButtonBackground',
+        'rx': 4, 'ry': 4
+      },
       this.svgGroup_);
 
   var svgText = Blockly.utils.createSvgElement('text',
-      {'class': this.isLabel_ ? 'blocklyFlyoutLabelText' : 'blocklyText',
-          'x': 0, 'y': 0, 'text-anchor': 'middle'},
+      {
+        'class': this.isLabel_ ? 'blocklyFlyoutLabelText' : 'blocklyText',
+        'x': 0,
+        'y': 0,
+        'text-anchor': 'middle'
+      },
       this.svgGroup_);
   svgText.textContent = this.text_;
 
@@ -174,7 +185,9 @@ Blockly.FlyoutButton.prototype.createDom = function() {
   rect.setAttribute('height', this.height);
 
   svgText.setAttribute('text-anchor', 'middle');
-  svgText.setAttribute('alignment-baseline', 'central');
+  svgText.setAttribute('dominant-baseline', 'central');
+  svgText.setAttribute('dy', goog.userAgent.EDGE_OR_IE ?
+    Blockly.Field.IE_TEXT_OFFSET : '0');
   svgText.setAttribute('x', this.width / 2);
   svgText.setAttribute('y', this.height / 2);
 
@@ -192,7 +205,7 @@ Blockly.FlyoutButton.prototype.show = function() {
 };
 
 /**
- * Update svg attributes to match internal state.
+ * Update SVG attributes to match internal state.
  * @private
  */
 Blockly.FlyoutButton.prototype.updateTransform_ = function() {

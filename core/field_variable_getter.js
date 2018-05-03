@@ -57,6 +57,21 @@ Blockly.FieldVariableGetter = function(text, name, opt_varType) {
 goog.inherits(Blockly.FieldVariableGetter, Blockly.Field);
 
 /**
+ * Construct a FieldVariableGetter from a JSON arg object,
+ * dereferencing any string table references.
+ * @param {!Object} options A JSON object with options (variable,
+ *                          variableTypes, and defaultType).
+ * @returns {!Blockly.FieldVariableGetter} The new field instance.
+ * @package
+ * @nocollapse
+ */
+Blockly.FieldVariableGetter.fromJson = function(options) {
+  var varname = Blockly.utils.replaceMessageReferences(options['text']);
+  return new Blockly.FieldVariableGetter(varname, options['name'],
+      options['class'], options['variableType']);
+};
+
+/**
  * Editable fields usually show some sort of UI for the user to change them.
  * This field should be serialized, but only edited programmatically.
  * @type {boolean}
@@ -155,3 +170,16 @@ Blockly.FieldVariableGetter.prototype.showEditor_ = function() {
 Blockly.FieldVariableGetter.prototype.updateEditable = function() {
   // nop.
 };
+
+/**
+ * Whether this field references any Blockly variables.  If true it may need to
+ * be handled differently during serialization and deserialization.  Subclasses
+ * may override this.
+ * @return {boolean} True if this field has any variable references.
+ * @package
+ */
+Blockly.FieldVariableGetter.prototype.referencesVariables = function() {
+  return true;
+};
+
+Blockly.Field.register('field_variable_getter', Blockly.FieldVariableGetter);
