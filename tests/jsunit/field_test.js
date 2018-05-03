@@ -123,3 +123,4 @@ function test_field_register_with_custom_field() {
   field = Blockly.Field.fromJson(json);
   assertNotNull(field);
   assertEquals(field.getValue(), 'ok');
+}
