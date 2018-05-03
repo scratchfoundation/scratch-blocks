@@ -87,6 +87,8 @@ run_cleanup_fn() {
       exit
   fi
 
+  bold_echo "Running cleanup.sh"
+  sleep .5
   # Cleanup.sh resolves common conflicts.
   ./cleanup.sh
 }
@@ -99,13 +101,11 @@ prompt_for_merge_abort() {
   prompt "Do you want to abort this merge?" false
   if [ $prompt_result = false ]
     then
-      bold_echo "Skipping merge abort."
+      bold_echo "Continuing with merge..."
   else
     bold_echo "Running git merge --abort"
     git merge --abort
-    bold_echo "Current status"
-    sleep .5
-    git status
+    display_status_fn
     bold_echo "Done"
     exit
   fi
@@ -131,6 +131,7 @@ display_status_fn() {
 # next steps should be.
 finish_fn() {
   prompt_for_merge_abort
+  bold_echo "Done.  You may need to manually resolve conflicts."
   # Helpful tips about what to do next.
   empty_lines
   sleep .5
