@@ -302,7 +302,7 @@ Blockly.DataCategory.addItemNumberOfList = function(xmlList, variable) {
   //   <field name="LIST" variabletype="list" id="">variablename</field>
   // </block>
   Blockly.DataCategory.addBlock(xmlList, variable, 'data_itemnumoflist',
-    'LIST', ['ITEM', 'text', 'thing']);
+      'LIST', ['ITEM', 'text', 'thing']);
 };
 
 /**
