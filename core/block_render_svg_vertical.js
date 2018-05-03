@@ -672,9 +672,8 @@ Blockly.BlockSvg.prototype.render = function(opt_bubble) {
  * @return {number} X-coordinate of the end of the field row (plus a gap).
  * @private
  */
-Blockly.BlockSvg.prototype.renderFields_ =
-    function(fieldList, cursorX, cursorY) {
-  /* eslint-disable indent */
+Blockly.BlockSvg.prototype.renderFields_ = function(fieldList, cursorX,
+    cursorY) {
   if (this.RTL) {
     cursorX = -cursorX;
   }
@@ -738,8 +737,7 @@ Blockly.BlockSvg.prototype.renderFields_ =
       translateX += field.renderWidth;
     }
     root.setAttribute('transform',
-      'translate(' + translateX + ', ' + translateY + ') ' + scale
-    );
+        'translate(' + translateX + ', ' + translateY + ') ' + scale);
 
     // Fields are invisible on insertion marker.
     if (this.isInsertionMarker()) {
@@ -747,7 +745,7 @@ Blockly.BlockSvg.prototype.renderFields_ =
     }
   }
   return this.RTL ? -cursorX : cursorX;
-}; /* eslint-enable indent */
+};
 
 /**
  * Computes the height and widths for each row and field.
@@ -1198,7 +1196,6 @@ Blockly.BlockSvg.prototype.renderClassify_ = function() {
  * @private
  */
 Blockly.BlockSvg.prototype.renderDrawTop_ = function(steps, rightEdge) {
-  /* eslint-disable indent */
   if (this.type == Blockly.PROCEDURES_DEFINITION_BLOCK_TYPE) {
     steps.push('m 0, 0');
     steps.push(Blockly.BlockSvg.TOP_LEFT_CORNER_DEFINE_HAT);
@@ -1231,7 +1228,7 @@ Blockly.BlockSvg.prototype.renderDrawTop_ = function(steps, rightEdge) {
     }
   }
   this.width = rightEdge;
-};  /* eslint-enable indent */
+};
 
 /**
  * Render the right edge of the block.
@@ -1379,8 +1376,7 @@ Blockly.BlockSvg.prototype.renderInputShape_ = function(input, x, y) {
     inputShapeY = y - (Blockly.BlockSvg.INPUT_SHAPE_HEIGHT / 2);
     inputShape.setAttribute('d', inputShapeInfo.path);
     inputShape.setAttribute('transform',
-      'translate(' + inputShapeX + ',' + inputShapeY + ')'
-    );
+        'translate(' + inputShapeX + ',' + inputShapeY + ')');
     inputShape.setAttribute('data-argument-type', inputShapeInfo.argType);
     inputShape.setAttribute('style', 'visibility: visible');
   }
@@ -1481,9 +1477,8 @@ Blockly.BlockSvg.prototype.drawEdgeShapeRight_ = function(steps) {
  * @param {!Blockly.Connection} existingConnection The connection on the
  *     existing block, which newBlock should line up with.
  */
-Blockly.BlockSvg.prototype.positionNewBlock =
-    function(newBlock, newConnection, existingConnection) {
-  /* eslint-disable indent */
+Blockly.BlockSvg.prototype.positionNewBlock = function(newBlock, newConnection,
+    existingConnection) {
   // We only need to position the new block if it's before the existing one,
   // otherwise its position is set by the previous block.
   if (newConnection.type == Blockly.NEXT_STATEMENT) {
@@ -1492,7 +1487,7 @@ Blockly.BlockSvg.prototype.positionNewBlock =
 
     newBlock.moveBy(dx, dy);
   }
-};  /* eslint-enable indent */
+};
 
 /**
  * Draw the outline of a statement input, starting at the top right corner.

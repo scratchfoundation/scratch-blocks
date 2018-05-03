@@ -425,7 +425,7 @@ Blockly.WorkspaceSvg.prototype.createDom = function(opt_backgroundClass) {
     bottom = this.addTrashcan_(bottom);
   }
   if (this.options.zoomOptions && this.options.zoomOptions.controls) {
-    bottom = this.addZoomControls_(bottom);
+    this.addZoomControls_(bottom);
   }
 
   if (!this.isFlyout) {
@@ -935,8 +935,8 @@ Blockly.WorkspaceSvg.prototype.reportValue = function(id, value) {
   valueReportBox.innerHTML = Blockly.scratchBlocksUtils.encodeEntities(value);
   contentDiv.appendChild(valueReportBox);
   Blockly.DropDownDiv.setColour(
-    Blockly.Colours.valueReportBackground,
-    Blockly.Colours.valueReportBorder
+      Blockly.Colours.valueReportBackground,
+      Blockly.Colours.valueReportBorder
   );
   Blockly.DropDownDiv.showPositionedByBlock(this, block);
 };
@@ -1067,8 +1067,8 @@ Blockly.WorkspaceSvg.prototype.deleteVariableById = function(id) {
  */
 Blockly.WorkspaceSvg.prototype.createVariable = function(name, opt_type, opt_id) {
   var variableInMap = (this.getVariable(name, opt_type) != null);
-  var newVar = Blockly.WorkspaceSvg.superClass_.createVariable.call(this, name,
-    opt_type, opt_id);
+  var newVar = Blockly.WorkspaceSvg.superClass_.createVariable.call(
+      this, name, opt_type, opt_id);
   // For performance reasons, only refresh the the toolbox for new variables.
   // Variables that already exist should already be there.
   if (!variableInMap && (opt_type != Blockly.BROADCAST_MESSAGE_VARIABLE_TYPE)) {
@@ -1380,8 +1380,8 @@ Blockly.WorkspaceSvg.prototype.showContextMenu_ = function(e) {
       if (deleteList.length < 2 ) {
         deleteNext();
       } else {
-        Blockly.confirm(Blockly.Msg.DELETE_ALL_BLOCKS.
-            replace('%1', String(deleteCount)),
+        Blockly.confirm(
+            Blockly.Msg.DELETE_ALL_BLOCKS.replace('%1', String(deleteCount)),
             function(ok) {
               if (ok) {
                 deleteNext();
@@ -1698,13 +1698,12 @@ Blockly.WorkspaceSvg.prototype.scroll = function(x, y) {
                metrics.contentWidth);
   y = Math.max(y, metrics.viewHeight - metrics.contentTop -
                metrics.contentHeight);
-   // When the workspace starts scrolling, hide the WidgetDiv without animation.
-   // This is to prevent a dispoal animation from happening in the wrong location.
+  // When the workspace starts scrolling, hide the WidgetDiv without animation.
+  // This is to prevent a dispoal animation from happening in the wrong location.
   Blockly.WidgetDiv.hide(true);
   Blockly.DropDownDiv.hideWithoutAnimation();
   // Move the scrollbars and the page will scroll automatically.
-  this.scrollbar.set(-x - metrics.contentLeft,
-                     -y - metrics.contentTop);
+  this.scrollbar.set(-x - metrics.contentLeft, -y - metrics.contentTop);
 };
 
 /**
@@ -1715,8 +1714,7 @@ Blockly.WorkspaceSvg.prototype.updateStackGlowScale_ = function() {
   // No such def in the flyout workspace.
   if (this.options.stackGlowBlur) {
     this.options.stackGlowBlur.setAttribute('stdDeviation',
-      Blockly.Colours.stackGlowSize / this.scale
-    );
+        Blockly.Colours.stackGlowSize / this.scale);
   }
 };
 

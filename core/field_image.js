@@ -187,7 +187,7 @@ Blockly.FieldImage.prototype.render_ = function() {
  * @private
  */
 Blockly.FieldImage.prototype.updateWidth = function() {
- // NOP
+  // NOP
 };
 
 Blockly.Field.register('field_image', Blockly.FieldImage);

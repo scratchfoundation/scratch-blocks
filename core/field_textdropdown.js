@@ -90,17 +90,17 @@ Blockly.FieldTextDropdown.prototype.init = function() {
     this.arrowX_ = 0;
     /** @type {Number} */
     this.arrowY_ = 11;
-    this.arrow_ = Blockly.utils.createSvgElement('image', {
-      'height': this.arrowSize_ + 'px',
-      'width': this.arrowSize_ + 'px'
-    });
+    this.arrow_ = Blockly.utils.createSvgElement('image',
+        {
+          'height': this.arrowSize_ + 'px',
+          'width': this.arrowSize_ + 'px'
+        });
     this.arrow_.setAttributeNS('http://www.w3.org/1999/xlink',
         'xlink:href', Blockly.mainWorkspace.options.pathToMedia + 'dropdown-arrow-dark.svg');
     this.arrow_.style.cursor = 'pointer';
     this.fieldGroup_.appendChild(this.arrow_);
     this.mouseUpWrapper_ =
-        Blockly.bindEvent_(this.arrow_, 'mouseup', this,
-            this.showDropdown_);
+        Blockly.bindEvent_(this.arrow_, 'mouseup', this, this.showDropdown_);
   }
   // Prevent the drop-down handler from changing the field colour on open.
   this.disableColourChange_ = true;
@@ -124,12 +124,12 @@ Blockly.FieldTextDropdown.prototype.dispose = function() {
 Blockly.FieldTextDropdown.prototype.showEditor_ = function() {
   if (!this.dropDownOpen_) {
     Blockly.FieldTextDropdown.superClass_.showEditor_.call(this, null, null,
-      true, function() {
-        // When the drop-down arrow is clicked, hide text editor and show drop-down.
-        Blockly.WidgetDiv.hide();
-        this.showDropdown_();
-        Blockly.Touch.clearTouchIdentifier();
-      });
+        true, function() {
+          // When the drop-down arrow is clicked, hide text editor and show drop-down.
+          Blockly.WidgetDiv.hide();
+          this.showDropdown_();
+          Blockly.Touch.clearTouchIdentifier();
+        });
   }
 };
 
