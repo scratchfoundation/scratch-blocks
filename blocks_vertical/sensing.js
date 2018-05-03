@@ -54,21 +54,20 @@ Blockly.Blocks['sensing_touchingobjectmenu'] = {
    * @this Blockly.Block
    */
   init: function() {
-    this.jsonInit(
-      {
-        "message0": "%1",
-        "args0": [
-          {
-            "type": "field_dropdown",
-            "name": "TOUCHINGOBJECTMENU",
-            "options": [
-              [Blockly.Msg.SENSING_TOUCHINGOBJECT_POINTER, '_mouse_'],
-              [Blockly.Msg.SENSING_TOUCHINGOBJECT_EDGE, '_edge_']
-            ]
-          }
-        ],
-        "extensions": ["colours_sensing", "output_string"]
-      });
+    this.jsonInit({
+      "message0": "%1",
+      "args0": [
+        {
+          "type": "field_dropdown",
+          "name": "TOUCHINGOBJECTMENU",
+          "options": [
+            [Blockly.Msg.SENSING_TOUCHINGOBJECT_POINTER, '_mouse_'],
+            [Blockly.Msg.SENSING_TOUCHINGOBJECT_EDGE, '_edge_']
+          ]
+        }
+      ],
+      "extensions": ["colours_sensing", "output_string"]
+    });
   }
 };
 
@@ -142,20 +141,19 @@ Blockly.Blocks['sensing_distancetomenu'] = {
    * @this Blockly.Block
    */
   init: function() {
-    this.jsonInit(
-      {
-        "message0": "%1",
-        "args0": [
-          {
-            "type": "field_dropdown",
-            "name": "DISTANCETOMENU",
-            "options": [
-              [Blockly.Msg.SENSING_DISTANCETO_POINTER, '_mouse_']
-            ]
-          }
-        ],
-        "extensions": ["colours_sensing", "output_string"]
-      });
+    this.jsonInit({
+      "message0": "%1",
+      "args0": [
+        {
+          "type": "field_dropdown",
+          "name": "DISTANCETOMENU",
+          "options": [
+            [Blockly.Msg.SENSING_DISTANCETO_POINTER, '_mouse_']
+          ]
+        }
+      ],
+      "extensions": ["colours_sensing", "output_string"]
+    });
   }
 };
 
@@ -409,21 +407,20 @@ Blockly.Blocks['sensing_of_object_menu'] = {
    * @this Blockly.Block
    */
   init: function() {
-    this.jsonInit(
-      {
-        "message0": "%1",
-        "args0": [
-          {
-            "type": "field_dropdown",
-            "name": "OBJECT",
-            "options": [
-              ['Sprite1', 'Sprite1'],
-              ['Stage', '_stage_']
-            ]
-          }
-        ],
-        "extensions": ["colours_sensing", "output_string"]
-      });
+    this.jsonInit({
+      "message0": "%1",
+      "args0": [
+        {
+          "type": "field_dropdown",
+          "name": "OBJECT",
+          "options": [
+            ['Sprite1', 'Sprite1'],
+            ['Stage', '_stage_']
+          ]
+        }
+      ],
+      "extensions": ["colours_sensing", "output_string"]
+    });
   }
 };
 

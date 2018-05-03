@@ -66,24 +66,25 @@ Blockly.Blocks['dropdown_whenbroadcast'] = {
    */
   init: function() {
     this.appendDummyInput()
-        .appendField(new Blockly.FieldIconMenu([
-            {src: Blockly.mainWorkspace.options.pathToMedia + 'icons/event_when-broadcast-received_blue.svg',
-              value: 'blue', width: 48, height: 48, alt: 'Blue'},
-            {src: Blockly.mainWorkspace.options.pathToMedia + 'icons/event_when-broadcast-received_green.svg',
-              value: 'green', width: 48, height: 48, alt: 'Green'},
-            {src: Blockly.mainWorkspace.options.pathToMedia + 'icons/event_when-broadcast-received_coral.svg',
-              value: 'coral', width: 48, height: 48, alt: 'Coral'},
-            {src: Blockly.mainWorkspace.options.pathToMedia + 'icons/event_when-broadcast-received_magenta.svg',
-              value: 'magenta', width: 48, height: 48, alt: 'Magenta'},
-            {src: Blockly.mainWorkspace.options.pathToMedia + 'icons/event_when-broadcast-received_orange.svg',
-              value: 'orange', width: 48, height: 48, alt: 'Orange'},
-            {src: Blockly.mainWorkspace.options.pathToMedia + 'icons/event_when-broadcast-received_purple.svg',
-              value: 'purple', width: 48, height: 48, alt: 'Purple'}
-        ]), 'CHOICE');
+        .appendField(new Blockly.FieldIconMenu(
+            [
+              {src: Blockly.mainWorkspace.options.pathToMedia + 'icons/event_when-broadcast-received_blue.svg',
+                value: 'blue', width: 48, height: 48, alt: 'Blue'},
+              {src: Blockly.mainWorkspace.options.pathToMedia + 'icons/event_when-broadcast-received_green.svg',
+                value: 'green', width: 48, height: 48, alt: 'Green'},
+              {src: Blockly.mainWorkspace.options.pathToMedia + 'icons/event_when-broadcast-received_coral.svg',
+                value: 'coral', width: 48, height: 48, alt: 'Coral'},
+              {src: Blockly.mainWorkspace.options.pathToMedia + 'icons/event_when-broadcast-received_magenta.svg',
+                value: 'magenta', width: 48, height: 48, alt: 'Magenta'},
+              {src: Blockly.mainWorkspace.options.pathToMedia + 'icons/event_when-broadcast-received_orange.svg',
+                value: 'orange', width: 48, height: 48, alt: 'Orange'},
+              {src: Blockly.mainWorkspace.options.pathToMedia + 'icons/event_when-broadcast-received_purple.svg',
+                value: 'purple', width: 48, height: 48, alt: 'Purple'}
+            ]), 'CHOICE');
     this.setOutput(true);
     this.setColour(Blockly.Colours.event.primary,
-      Blockly.Colours.event.secondary,
-      Blockly.Colours.event.tertiary
+        Blockly.Colours.event.secondary,
+        Blockly.Colours.event.tertiary
     );
   }
 };
@@ -127,24 +128,25 @@ Blockly.Blocks['dropdown_broadcast'] = {
    */
   init: function() {
     this.appendDummyInput()
-        .appendField(new Blockly.FieldIconMenu([
-            {src: Blockly.mainWorkspace.options.pathToMedia + 'icons/event_broadcast_blue.svg',
-              value: 'blue', width: 48, height: 48, alt: 'Blue'},
-            {src: Blockly.mainWorkspace.options.pathToMedia + 'icons/event_broadcast_green.svg',
-              value: 'green', width: 48, height: 48, alt: 'Green'},
-            {src: Blockly.mainWorkspace.options.pathToMedia + 'icons/event_broadcast_coral.svg',
-              value: 'coral', width: 48, height: 48, alt: 'Coral'},
-            {src: Blockly.mainWorkspace.options.pathToMedia + 'icons/event_broadcast_magenta.svg',
-              value: 'magenta', width: 48, height: 48, alt: 'Magenta'},
-            {src: Blockly.mainWorkspace.options.pathToMedia + 'icons/event_broadcast_orange.svg',
-              value: 'orange', width: 48, height: 48, alt: 'Orange'},
-            {src: Blockly.mainWorkspace.options.pathToMedia + 'icons/event_broadcast_purple.svg',
-              value: 'purple', width: 48, height: 48, alt: 'Purple'}
-        ]), 'CHOICE');
+        .appendField(new Blockly.FieldIconMenu(
+            [
+              {src: Blockly.mainWorkspace.options.pathToMedia + 'icons/event_broadcast_blue.svg',
+                value: 'blue', width: 48, height: 48, alt: 'Blue'},
+              {src: Blockly.mainWorkspace.options.pathToMedia + 'icons/event_broadcast_green.svg',
+                value: 'green', width: 48, height: 48, alt: 'Green'},
+              {src: Blockly.mainWorkspace.options.pathToMedia + 'icons/event_broadcast_coral.svg',
+                value: 'coral', width: 48, height: 48, alt: 'Coral'},
+              {src: Blockly.mainWorkspace.options.pathToMedia + 'icons/event_broadcast_magenta.svg',
+                value: 'magenta', width: 48, height: 48, alt: 'Magenta'},
+              {src: Blockly.mainWorkspace.options.pathToMedia + 'icons/event_broadcast_orange.svg',
+                value: 'orange', width: 48, height: 48, alt: 'Orange'},
+              {src: Blockly.mainWorkspace.options.pathToMedia + 'icons/event_broadcast_purple.svg',
+                value: 'purple', width: 48, height: 48, alt: 'Purple'}
+            ]), 'CHOICE');
     this.setOutput(true);
     this.setColour(Blockly.Colours.event.primary,
-      Blockly.Colours.event.secondary,
-      Blockly.Colours.event.tertiary
+        Blockly.Colours.event.secondary,
+        Blockly.Colours.event.tertiary
     );
   }
 };
