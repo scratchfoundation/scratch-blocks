@@ -33,32 +33,31 @@ Blockly.Blocks['sound_sounds_menu'] = {
    * @this Blockly.Block
    */
   init: function() {
-    this.jsonInit(
-      {
-        "message0": "%1",
-        "args0": [
-          {
-            "type": "field_dropdown",
-            "name": "SOUND_MENU",
-            "options": [
-              ['1', '0'],
-              ['2', '1'],
-              ['3', '2'],
-              ['4', '3'],
-              ['5', '4'],
-              ['6', '5'],
-              ['7', '6'],
-              ['8', '7'],
-              ['9', '8'],
-              ['10', '9']
-            ]
-          }
-        ],
-        "colour": Blockly.Colours.sounds.secondary,
-        "colourSecondary": Blockly.Colours.sounds.secondary,
-        "colourTertiary": Blockly.Colours.sounds.tertiary,
-        "extensions": ["output_string"]
-      });
+    this.jsonInit({
+      "message0": "%1",
+      "args0": [
+        {
+          "type": "field_dropdown",
+          "name": "SOUND_MENU",
+          "options": [
+            ['1', '0'],
+            ['2', '1'],
+            ['3', '2'],
+            ['4', '3'],
+            ['5', '4'],
+            ['6', '5'],
+            ['7', '6'],
+            ['8', '7'],
+            ['9', '8'],
+            ['10', '9']
+          ]
+        }
+      ],
+      "colour": Blockly.Colours.sounds.secondary,
+      "colourSecondary": Blockly.Colours.sounds.secondary,
+      "colourTertiary": Blockly.Colours.sounds.tertiary,
+      "extensions": ["output_string"]
+    });
   }
 };
 
