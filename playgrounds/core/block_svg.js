@@ -276,27 +276,24 @@ Blockly.BlockSvg.prototype.getIcons = function() {
  * @param {Blockly.BlockSvg} newParent New parent block.
  */
 Blockly.BlockSvg.prototype.setParent = function(newParent) {
-  if (newParent == this.parentBlock_) {
+  var oldParent = this.parentBlock_;
+  if (newParent == oldParent) {
     return;
   }
-  var svgRoot = this.getSvgRoot();
-  if (this.parentBlock_ && svgRoot) {
-    // Move this block up the DOM.  Keep track of x/y translations.
-    var xy = this.getRelativeToSurfaceXY();
-    // Avoid moving a block up the DOM if it's currently selected/dragging,
-    // so as to avoid taking things off the drag surface.
-    if (Blockly.selected != this) {
-      this.workspace.getCanvas().appendChild(svgRoot);
-      this.translate(xy.x, xy.y);
-    }
-  }
-
   Blockly.Field.startCache();
   Blockly.BlockSvg.superClass_.setParent.call(this, newParent);
   Blockly.Field.stopCache();
 
+  var svgRoot = this.getSvgRoot();
+
+  // Bail early if workspace is clearing, or we aren't rendered.
+  // We won't need to reattach ourselves anywhere.
+  if (this.workspace.isClearing || !svgRoot) {
+    return;
+  }
+
+  var oldXY = this.getRelativeToSurfaceXY();
   if (newParent) {
-    var oldXY = this.getRelativeToSurfaceXY();
     newParent.getSvgRoot().appendChild(svgRoot);
     var newXY = this.getRelativeToSurfaceXY();
     // Move the connections to match the child's new position.
@@ -307,6 +304,17 @@ Blockly.BlockSvg.prototype.setParent = function(newParent) {
           newParent.getColourTertiary());
     }
   }
+  // If we are losing a parent, we want to move our DOM element to the
+  // root of the workspace.
+  else if (oldParent) {
+    // Avoid moving a block up the DOM if it's currently selected/dragging,
+    // so as to avoid taking things off the drag surface.
+    if (Blockly.selected != this) {
+      this.workspace.getCanvas().appendChild(svgRoot);
+      this.translate(oldXY.x, oldXY.y);
+    }
+  }
+
 };
 
 /**
@@ -1384,4 +1392,43 @@ Blockly.BlockSvg.prototype.scheduleSnapAndBump = function() {
     block.bumpNeighbours_();
     Blockly.Events.setGroup(false);
   }, Blockly.BUMP_DELAY);
+};
+
+/**
+ * Determine if this block can be recycled, basic non-dynamic shadows and no variables
+ * @return {boolean} true if the block can be recycled
+ */
+Blockly.BlockSvg.prototype.isRecyclable = function() {
+
+  // If the block needs to parse mutations, it's probably safest to never recycle.
+  if (this.mutationToDom && this.domToMutation) {
+    return false;
+  }
+
+  for (var i = 0; i < this.inputList.length; i++) {
+    var input = this.inputList[i];
+    for (var j = 0; j < input.fieldRow.length; j++) {
+      var field = input.fieldRow[j];
+      // No variables.
+      if (field instanceof Blockly.FieldVariable ||
+          field instanceof Blockly.FieldVariableGetter) {
+        return false;
+      }
+      if (field instanceof Blockly.FieldDropdown ||
+          field instanceof Blockly.FieldNumberDropdown ||
+          field instanceof Blockly.FieldTextDropdown) {
+        if (field.isOptionListDynamic()) {
+          return false;
+        }
+      }
+    }
+    // Check children.
+    if (input.connection) {
+      var child = input.connection.targetBlock();
+      if (child && !child.isRecyclable()) {
+        return false;
+      }
+    }
+  }
+  return true;
 };
