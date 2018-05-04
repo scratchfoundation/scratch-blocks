@@ -55,12 +55,6 @@ goog.require('goog.userAgent');
 goog.require('goog.math.Rect');
 
 /**
- * This is a unique object that only we have access to.  It is used
- * to mark some properties as dirty so we can recalculate.
- */
-var DIRTY = {};
-
-/**
  * Class for a workspace.  This is an onscreen area with optional trashcan,
  * scrollbars, bubbles, and dragging.
  * @param {!Blockly.Options} options Dictionary of options.
@@ -291,20 +285,21 @@ Blockly.WorkspaceSvg.prototype.toolboxCategoryCallbacks_ = {};
  * @type {SVGMatrix}
  * @private
  */
-Blockly.WorkspaceSvg.prototype.inverseScreenCTM_ = DIRTY;
+Blockly.WorkspaceSvg.prototype.inverseScreenCTM_ = false;
 
 /**
  * Getter for the inverted screen CTM.
  * @return {SVGMatrix} The matrix to use in mouseToSvg
  */
 Blockly.WorkspaceSvg.prototype.getInverseScreenCTM = function() {
-  if (this.inverseScreenCTM_ == DIRTY) {
+  // We use `false` to mark dirty, `null` is a valid value.
+  if (this.inverseScreenCTM_ == false) {
     var ctm = this.getParentSvg().getScreenCTM();
     if (ctm) {
       this.inverseScreenCTM_ = ctm.inverse();
     } else {
-      // When DIRTY, and we can't get a CTM - we are null.
-      return null;
+      // When dirty, and we can't get a CTM, set it to null.
+      this.inverseScreenCTM_ = null;
     }
   }
 
@@ -315,7 +310,7 @@ Blockly.WorkspaceSvg.prototype.getInverseScreenCTM = function() {
  * Mark the inverse screen CTM as dirty.
  */
 Blockly.WorkspaceSvg.prototype.updateInverseScreenCTM = function() {
-  this.inverseScreenCTM_ = DIRTY;
+  this.inverseScreenCTM_ = false;
 };
 
 /**
