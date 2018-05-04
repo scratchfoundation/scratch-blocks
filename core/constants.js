@@ -366,3 +366,9 @@ Blockly.PROCEDURES_PROTOTYPE_BLOCK_TYPE = 'procedures_prototype';
  * @const {string}
  */
 Blockly.PROCEDURES_CALL_BLOCK_TYPE = 'procedures_call';
+
+/**
+ * A constant value that we can use to mark calculated properties as dirty.
+ * @const {string}
+ */
+Blockly.DIRTY = 'dirty';
