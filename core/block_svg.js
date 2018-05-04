@@ -1400,8 +1400,8 @@ Blockly.BlockSvg.prototype.scheduleSnapAndBump = function() {
  */
 Blockly.BlockSvg.prototype.isRecyclable = function() {
 
-  // The procedures_call type is always dynamic as it can be mutated at runtime.
-  if (this.type === 'procedures_call') {
+  // If the block needs to parse mutations, it's probably safest to never recycle.
+  if (this.mutationToDom && this.domToMutation) {
     return false;
   }
 
