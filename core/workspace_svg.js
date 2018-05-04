@@ -285,15 +285,17 @@ Blockly.WorkspaceSvg.prototype.toolboxCategoryCallbacks_ = {};
  * @type {SVGMatrix}
  * @private
  */
-Blockly.WorkspaceSvg.prototype.inverseScreenCTM_ = false;
+Blockly.WorkspaceSvg.prototype.inverseScreenCTM_ = "dirty";
 
 /**
  * Getter for the inverted screen CTM.
  * @return {SVGMatrix} The matrix to use in mouseToSvg
  */
 Blockly.WorkspaceSvg.prototype.getInverseScreenCTM = function() {
-  // We use `false` to mark dirty, `null` is a valid value.
-  if (this.inverseScreenCTM_ == false) {
+
+  // Defer getting the screen CTM until we actually need it, this should
+  // avoid forced reflows from any calls to updateInverseScreenCTM.
+  if (this.inverseScreenCTM_ == "dirty") {
     var ctm = this.getParentSvg().getScreenCTM();
     if (ctm) {
       this.inverseScreenCTM_ = ctm.inverse();
@@ -310,7 +312,7 @@ Blockly.WorkspaceSvg.prototype.getInverseScreenCTM = function() {
  * Mark the inverse screen CTM as dirty.
  */
 Blockly.WorkspaceSvg.prototype.updateInverseScreenCTM = function() {
-  this.inverseScreenCTM_ = false;
+  this.inverseScreenCTM_ = "dirty";
 };
 
 /**
