@@ -95,6 +95,7 @@ Blockly.Blocks['sound_playuntildone'] = {
           "name": "SOUND_MENU"
         }
       ],
+      "category": Blockly.Categories.sound,
       "extensions": ["colours_sounds", "shape_statement"]
     });
   }
@@ -136,6 +137,7 @@ Blockly.Blocks['sound_seteffectto'] = {
           "name": "VALUE"
         }
       ],
+      "category": Blockly.Categories.sound,
       "extensions": ["colours_sounds", "shape_statement"]
     });
   }
@@ -164,6 +166,7 @@ Blockly.Blocks['sound_changeeffectby'] = {
           "name": "VALUE"
         }
       ],
+      "category": Blockly.Categories.sound,
       "extensions": ["colours_sounds", "shape_statement"]
     });
   }
@@ -177,6 +180,7 @@ Blockly.Blocks['sound_cleareffects'] = {
   init: function() {
     this.jsonInit({
       "message0": Blockly.Msg.SOUND_CLEAREFFECTS,
+      "category": Blockly.Categories.sound,
       "extensions": ["colours_sounds", "shape_statement"]
     });
   }
