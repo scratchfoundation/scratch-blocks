@@ -1,30 +1,34 @@
 {
-  "name": "google-closure-library",
-  "description": "Google's common JavaScript library",
-  "version": "20180204.0.0",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/google/closure-library.git"
+  "_from": "google-closure-library@20180204.0.0",
+  "_id": "google-closure-library@20180204.0.0",
+  "_inBundle": false,
+  "_integrity": "sha1-rTxaGN/XMcYUnFIg0pkcDJEpcYo=",
+  "_location": "/google-closure-library",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "version",
+    "registry": true,
+    "raw": "google-closure-library@20180204.0.0",
+    "name": "google-closure-library",
+    "escapedName": "google-closure-library",
+    "rawSpec": "20180204.0.0",
+    "saveSpec": null,
+    "fetchSpec": "20180204.0.0"
   },
-  "main": "closure/goog/bootstrap/nodejs.js",
-  "keywords": [
-    "javascript",
-    "library",
-    "goog",
-    "closure"
+  "_requiredBy": [
+    "#DEV:/"
   ],
+  "_resolved": "https://registry.npmjs.org/google-closure-library/-/google-closure-library-20180204.0.0.tgz",
+  "_shasum": "ad3c5a18dfd731c6149c5220d2991c0c9129718a",
+  "_spec": "google-closure-library@20180204.0.0",
+  "_where": "/home/travis/build/LLK/scratch-blocks",
   "author": {
     "name": "The Closure Library Authors"
   },
-  "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/google/closure-library/issues"
   },
-  "homepage": "https://developers.google.com/closure/library/",
-  "devDependencies": {
-    "promise": "^7.0.4",
-    "protractor": "^2.1.0"
-  },
+  "bundleDependencies": false,
   "contributors": [
     {
       "name": "Google Inc."
@@ -112,59 +116,25 @@
       "email": "mashedcode@users.noreply.github.com"
     }
   ],
-  "gitHead": "5a2d28bb80ab34bc8f7b0f199c4078279189a00d",
-  "_id": "google-closure-library@20180204.0.0",
-  "scripts": {},
-  "_shasum": "ad3c5a18dfd731c6149c5220d2991c0c9129718a",
-  "_from": "google-closure-library@20180204.0.0",
-  "_npmVersion": "3.10.10",
-  "_nodeVersion": "6.11.0",
-  "_npmUser": {
-    "name": "johnplaisted",
-    "email": "johnplaisted@google.com"
+  "deprecated": false,
+  "description": "Google's common JavaScript library",
+  "devDependencies": {
+    "promise": "^7.0.4",
+    "protractor": "^2.1.0"
   },
-  "dist": {
-    "shasum": "ad3c5a18dfd731c6149c5220d2991c0c9129718a",
-    "tarball": "https://registry.npmjs.org/google-closure-library/-/google-closure-library-20180204.0.0.tgz"
-  },
-  "maintainers": [
-    {
-      "name": "blickly",
-      "email": "blickly+npm@google.com"
-    },
-    {
-      "name": "brad4d",
-      "email": "bradfordcsmith@google.com"
-    },
-    {
-      "name": "chadhikes",
-      "email": "chadkillingsworth@gmail.com"
-    },
-    {
-      "name": "dimvar",
-      "email": "dimvar@google.com"
-    },
-    {
-      "name": "joeltine",
-      "email": "jmarti221@gmail.com"
-    },
-    {
-      "name": "johnplaisted",
-      "email": "johnplaisted@google.com"
-    },
-    {
-      "name": "matrixfrog",
-      "email": "tbreisacher@google.com"
-    },
-    {
-      "name": "shicks",
-      "email": "stephenhicks@gmail.com"
-    }
+  "homepage": "https://developers.google.com/closure/library/",
+  "keywords": [
+    "javascript",
+    "library",
+    "goog",
+    "closure"
   ],
-  "_npmOperationalInternal": {
-    "host": "s3://npm-registry-packages",
-    "tmp": "tmp/google-closure-library-20180204.0.0.tgz_1517951821895_0.548238093033433"
+  "license": "Apache-2.0",
+  "main": "closure/goog/bootstrap/nodejs.js",
+  "name": "google-closure-library",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/google/closure-library.git"
   },
-  "directories": {},
-  "_resolved": "https://registry.npmjs.org/google-closure-library/-/google-closure-library-20180204.0.0.tgz"
+  "version": "20180204.0.0"
 }
