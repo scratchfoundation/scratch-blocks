@@ -81,7 +81,9 @@ Blockly.Events.Abstract.prototype.fromJson = function(json) {
 
 /**
  * Does this event record any change of state?
- * @return {boolean} True if null, false if something changed.
+ * By default we assume events are non-null.  Subclasses may override to
+ * indicate that they do not change state.
+ * @return {boolean} False if something changed.
  */
 Blockly.Events.Abstract.prototype.isNull = function() {
   return false;
