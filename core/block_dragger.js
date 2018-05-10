@@ -27,6 +27,9 @@
 goog.provide('Blockly.BlockDragger');
 
 goog.require('Blockly.BlockAnimations');
+goog.require('Blockly.Events.BlockMove');
+goog.require('Blockly.Events.DragBlockOutside');
+goog.require('Blockly.Events.EndBlockDrag');
 goog.require('Blockly.InsertionMarkerManager');
 
 goog.require('goog.math.Coordinate');
@@ -291,7 +294,7 @@ Blockly.BlockDragger.prototype.endBlockDrag = function(e, currentDragDeltaXY) {
  * @private
  */
 Blockly.BlockDragger.prototype.fireDragOutsideEvent_ = function(isOutside) {
-  var event = new Blockly.Events.BlockDragOutside(this.draggingBlock_);
+  var event = new Blockly.Events.DragBlockOutside(this.draggingBlock_);
   event.isOutside = isOutside;
   Blockly.Events.fire(event);
 };
@@ -302,7 +305,7 @@ Blockly.BlockDragger.prototype.fireDragOutsideEvent_ = function(isOutside) {
  * @private
  */
 Blockly.BlockDragger.prototype.fireEndDragEvent_ = function(isOutside) {
-  var event = new Blockly.Events.BlockEndDrag(this.draggingBlock_, isOutside);
+  var event = new Blockly.Events.EndBlockDrag(this.draggingBlock_, isOutside);
   Blockly.Events.fire(event);
 };
 
