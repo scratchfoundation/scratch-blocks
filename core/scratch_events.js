@@ -42,6 +42,9 @@ goog.require('goog.math.Coordinate');
  * @constructor
  */
 Blockly.Events.DragBlockOutside = function(block) {
+  if (!block) {
+    return;  // Blank event to be populated by fromJson.
+  }
   Blockly.Events.DragBlockOutside.superClass_.constructor.call(this, block);
   this.recordUndo = false;
 };
@@ -83,6 +86,9 @@ Blockly.Events.DragBlockOutside.prototype.fromJson = function(json) {
  * @constructor
  */
 Blockly.Events.EndBlockDrag = function(block, isOutside) {
+  if (!block) {
+    return;  // Blank event to be populated by fromJson.
+  }
   Blockly.Events.EndBlockDrag.superClass_.constructor.call(this, block);
   this.isOutside = isOutside;
   // If drag ends outside the blocks workspace, send the block XML
