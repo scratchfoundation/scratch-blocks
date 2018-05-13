@@ -189,8 +189,8 @@ Blockly.Blocks['data_listindexall'] = {
           "precision": 1,
           "options": [
             ["1", "1"],
-            ["last", "last"],
-            ["all", "all"]
+            [Blockly.Msg.DATA_INDEX_LAST, "last"],
+            [Blockly.Msg.DATA_INDEX_ALL, "all"]
           ]
         }
       ],
@@ -217,8 +217,8 @@ Blockly.Blocks['data_listindexrandom'] = {
           "precision": 1,
           "options": [
             ["1", "1"],
-            ["last", "last"],
-            ["random", "random"]
+            [Blockly.Msg.DATA_INDEX_LAST, "last"],
+            [Blockly.Msg.DATA_INDEX_RANDOM, "random"]
           ]
         }
       ],

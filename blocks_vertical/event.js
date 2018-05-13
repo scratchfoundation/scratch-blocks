@@ -140,7 +140,7 @@ Blockly.Blocks['event_whengreaterthan'] = {
           "type": "field_dropdown",
           "name": "WHENGREATERTHANMENU",
           "options": [
-            ['timer', 'TIMER']
+            [Blockly.Msg.EVENT_WHENGREATERTHAN_TIMER, 'TIMER']
           ]
         },
         {
