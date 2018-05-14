@@ -46,6 +46,7 @@ Blockly.Msg.CONTROL_WHILE = "while %1";
 Blockly.Msg.CONTROL_FOREACH = "for each %1 in %2";
 Blockly.Msg.CONTROL_STARTASCLONE = "when I start as a clone";
 Blockly.Msg.CONTROL_CREATECLONEOF = "create clone of %1";
+Blockly.Msg.CONTROL_CREATECLONEOF_MYSELF = "myself";
 Blockly.Msg.CONTROL_DELETETHISCLONE = "delete this clone";
 Blockly.Msg.CONTROL_COUNTER = "counter";
 Blockly.Msg.CONTROL_INCRCOUNTER = "increment counter";
@@ -66,6 +67,9 @@ Blockly.Msg.DATA_LENGTHOFLIST = "length of %1";
 Blockly.Msg.DATA_LISTCONTAINSITEM = "%1 contains %2?";
 Blockly.Msg.DATA_SHOWLIST = "show list %1";
 Blockly.Msg.DATA_HIDELIST = "hide list %1";
+Blockly.Msg.DATA_INDEX_ALL = "all";
+Blockly.Msg.DATA_INDEX_LAST = "last";
+Blockly.Msg.DATA_INDEX_RANDOM = "random";
 
 // Event blocks
 Blockly.Msg.EVENT_WHENFLAGCLICKED = "when %1 clicked";
@@ -74,6 +78,7 @@ Blockly.Msg.EVENT_WHENSTAGECLICKED = "when stage clicked";
 Blockly.Msg.EVENT_WHENBROADCASTRECEIVED = "when I receive %1";
 Blockly.Msg.EVENT_WHENBACKDROPSWITCHESTO = "when backdrop switches to %1";
 Blockly.Msg.EVENT_WHENGREATERTHAN = "when %1 > %2";
+Blockly.Msg.EVENT_WHENGREATERTHAN_TIMER = "timer";
 Blockly.Msg.EVENT_BROADCAST = "broadcast %1";
 Blockly.Msg.EVENT_BROADCASTANDWAIT = "broadcast %1 and wait";
 Blockly.Msg.EVENT_WHENKEYPRESSED = "when %1 key pressed";
@@ -122,6 +127,7 @@ Blockly.Msg.LOOKS_NUMBERNAME_NUMBER = "number";
 Blockly.Msg.LOOKS_NUMBERNAME_NAME = "name";
 Blockly.Msg.LOOKS_SWITCHBACKDROPTOANDWAIT = "switch backdrop to %1 and wait";
 Blockly.Msg.LOOKS_NEXTBACKDROP = "next backdrop";
+Blockly.Msg.LOOKS_PREVIOUSBACKDROP = "previous backdrop";
 
 // Motion blocks
 Blockly.Msg.MOTION_MOVESTEPS = "move %1 steps";
