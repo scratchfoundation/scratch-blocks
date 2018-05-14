@@ -409,7 +409,7 @@ Blockly.Blocks['control_create_clone_of_menu'] = {
           "type": "field_dropdown",
           "name": "CLONE_OPTION",
           "options": [
-            ['myself', '_myself_']
+            [Blockly.Msg.CONTROL_CREATECLONEOF_MYSELF, '_myself_']
           ]
         }
       ],
