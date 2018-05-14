@@ -581,12 +581,13 @@ Blockly.Flyout.prototype.emptyRecycleBlocks_ = function() {
 };
 
 /**
- * Store an array of category names, scrollbar positions, and category lengths.
+ * Store an array of category names, ids, scrollbar positions, and category lengths.
  * This is used when scrolling the flyout to cause a category to be selected.
  * @private
  */
 Blockly.Flyout.prototype.recordCategoryScrollPositions_ = function() {
   this.categoryScrollPositions = [];
+  // Record category names and positions using the text label at the top of each one.
   for (var i = 0; i < this.buttons_.length; i++) {
     if (this.buttons_[i].getIsCategoryLabel()) {
       var categoryLabel = this.buttons_[i];
@@ -597,6 +598,7 @@ Blockly.Flyout.prototype.recordCategoryScrollPositions_ = function() {
       });
     }
   }
+  // Record the length of each category, setting the final one to 0.
   var numCategories = this.categoryScrollPositions.length;
   for (var i = 0; i < numCategories - 1; i++) {
     var currentPos = this.categoryScrollPositions[i].position;
@@ -605,6 +607,13 @@ Blockly.Flyout.prototype.recordCategoryScrollPositions_ = function() {
     this.categoryScrollPositions[i].length = length;
   }
   this.categoryScrollPositions[numCategories - 1].length = 0;
+  // Record the id of each category.
+  for (var i = 0; i < numCategories; i++) {
+    var category = this.parentToolbox_.getCategoryByIndex(i);
+    if (category && category.id_) {
+      this.categoryScrollPositions[i].categoryId = category.id_;
+    }
+  }
 };
 
 /**
@@ -623,7 +632,7 @@ Blockly.Flyout.prototype.selectCategoryByScrollPosition = function(pos) {
   // category that the scroll position is beyond.
   for (var i = this.categoryScrollPositions.length - 1; i >= 0; i--) {
     if (workspacePos >= this.categoryScrollPositions[i].position) {
-      this.parentToolbox_.selectCategoryByName(this.categoryScrollPositions[i].categoryName);
+      this.parentToolbox_.selectCategoryById(this.categoryScrollPositions[i].categoryId);
       return;
     }
   }
