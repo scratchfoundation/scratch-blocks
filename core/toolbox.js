@@ -346,6 +346,7 @@ Blockly.Toolbox.prototype.getSelectedCategoryName = function() {
 
 /**
  * @return {string} The id of the currently selected category.
+ * @public
  */
 Blockly.Toolbox.prototype.getSelectedCategoryId = function() {
   return this.selectedItem_.id_;
@@ -378,6 +379,7 @@ Blockly.Toolbox.prototype.getCategoryPositionByName = function(name) {
  * Get the position of a category by id.
  * @param  {string} id The id of the category.
  * @return {number} The position of the category.
+ * @public
  */
 Blockly.Toolbox.prototype.getCategoryPositionById = function(id) {
   var scrollPositions = this.flyout_.categoryScrollPositions;
@@ -406,6 +408,7 @@ Blockly.Toolbox.prototype.getCategoryLengthByName = function(name) {
  * Get the length of a category by id.
  * @param  {string} id The id of the category.
  * @return {number} The length of the category.
+ * @public
  */
 Blockly.Toolbox.prototype.getCategoryLengthById = function(id) {
   var scrollPositions = this.flyout_.categoryScrollPositions;
@@ -461,6 +464,7 @@ Blockly.Toolbox.prototype.setSelectedCategoryByName = function(name) {
 /**
  * Select and scroll to a category by id.
  * @param {string} id The id of the category to select and scroll to.
+ * @public
  */
 Blockly.Toolbox.prototype.setSelectedCategoryById = function(id) {
   this.selectCategoryById(id);
@@ -486,7 +490,7 @@ Blockly.Toolbox.prototype.scrollToCategoryByName = function(name) {
 /**
  * Scroll to a category by id.
  * @param {string} id The id of the category to scroll to.
- * @package
+ * @public
  */
 Blockly.Toolbox.prototype.scrollToCategoryById = function(id) {
   var scrollPositions = this.flyout_.categoryScrollPositions;
@@ -503,6 +507,7 @@ Blockly.Toolbox.prototype.scrollToCategoryById = function(id) {
  * Get a category by its index.
  * @param  {number} index The index of the category.
  * @return {Blockly.Toolbox.Category} the category, or null if there are no categories.
+ * @package
  */
 Blockly.Toolbox.prototype.getCategoryByIndex = function(index) {
   if (!this.categoryMenu_.categories_) return null;
