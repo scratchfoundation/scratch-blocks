@@ -502,10 +502,10 @@ Blockly.Toolbox.prototype.scrollToCategoryById = function(id) {
 /**
  * Get a category by its index.
  * @param  {number} index The index of the category.
- * @return {Blockly.Toolbox.Category} the category.
+ * @return {Blockly.Toolbox.Category} the category, or null if there are no categories.
  */
 Blockly.Toolbox.prototype.getCategoryByIndex = function(index) {
-  if (!this.categoryMenu_.categories_) return;
+  if (!this.categoryMenu_.categories_) return null;
   return this.categoryMenu_.categories_[index];
 };
 
