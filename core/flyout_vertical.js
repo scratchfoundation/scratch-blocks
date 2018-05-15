@@ -213,7 +213,10 @@ Blockly.VerticalFlyout.prototype.getMetrics_ = function() {
       this.categoryScrollPositions.length - 1];
   var lastPos = lastLabel.position * this.workspace_.scale;
   var lastCategoryHeight = contentHeight - lastPos;
-  var bottomPadding = viewHeight - lastCategoryHeight;
+  var bottomPadding = this.MARGIN;
+  if (lastCategoryHeight < viewHeight) {
+    bottomPadding = viewHeight - lastCategoryHeight;
+  }
 
   var metrics = {
     viewHeight: viewHeight,
