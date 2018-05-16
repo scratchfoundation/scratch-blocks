@@ -27,6 +27,7 @@
 goog.provide('Blockly.Workspace');
 
 goog.require('Blockly.VariableMap');
+goog.require('Blockly.WorkspaceComment');
 goog.require('goog.array');
 goog.require('goog.math');
 
@@ -55,6 +56,16 @@ Blockly.Workspace = function(opt_options) {
    * @private
    */
   this.topBlocks_ = [];
+  /**
+   * @type {!Array.<!Blockly.WorkspaceComment>}
+   * @private
+   */
+  this.topComments_ = [];
+  /**
+   * @type {!Object}
+   * @private
+   */
+  this.commentDB_ = Object.create(null);
   /**
    * @type {!Array.<!Function>}
    * @private
@@ -194,6 +205,61 @@ Blockly.Workspace.prototype.getTopBlocks = function(ordered) {
 };
 
 /**
+ * Add a comment to the list of top comments.
+ * @param {!Blockly.WorkspaceComment} comment comment to add.
+ * @package
+ */
+Blockly.Workspace.prototype.addTopComment = function(comment) {
+  this.topComments_.push(comment);
+
+  // Note: If the comment database starts to hold block comments, this may need
+  // to move to a separate function.
+  if (this.commentDB_[comment.id]) {
+    console.warn('Overriding an existing comment on this workspace, with id "' +
+        comment.id + '"');
+  }
+  this.commentDB_[comment.id] = comment;
+};
+
+/**
+ * Remove a comment from the list of top comments.
+ * @param {!Blockly.WorkspaceComment} comment comment to remove.
+ * @package
+ */
+Blockly.Workspace.prototype.removeTopComment = function(comment) {
+  if (!goog.array.remove(this.topComments_, comment)) {
+    throw 'Comment not present in workspace\'s list of top-most comments.';
+  }
+  // Note: If the comment database starts to hold block comments, this may need
+  // to move to a separate function.
+  delete this.commentDB_[comment.id];
+};
+
+/**
+ * Finds the top-level comments and returns them.  Comments are optionally sorted
+ * by position; top to bottom (with slight LTR or RTL bias).
+ * @param {boolean} ordered Sort the list if true.
+ * @return {!Array.<!Blockly.WorkspaceComment>} The top-level comment objects.
+ * @package
+ */
+Blockly.Workspace.prototype.getTopComments = function(ordered) {
+  // Copy the topComments_ list.
+  var comments = [].concat(this.topComments_);
+  if (ordered && comments.length > 1) {
+    var offset = Math.sin(goog.math.toRadians(Blockly.Workspace.SCAN_ANGLE));
+    if (this.RTL) {
+      offset *= -1;
+    }
+    comments.sort(function(a, b) {
+      var aXY = a.getRelativeToSurfaceXY();
+      var bXY = b.getRelativeToSurfaceXY();
+      return (aXY.y + offset * aXY.x) - (bXY.y + offset * bXY.x);
+    });
+  }
+  return comments;
+};
+
+/**
  * Find all blocks in workspace.  No particular order.
  * @return {!Array.<!Blockly.Block>} Array of blocks.
  */
@@ -216,6 +282,9 @@ Blockly.Workspace.prototype.clear = function() {
   }
   while (this.topBlocks_.length) {
     this.topBlocks_[0].dispose();
+  }
+  while (this.topComments_.length) {
+    this.topComments_[this.topComments_.length - 1].dispose();
   }
   if (!existingGroup) {
     Blockly.Events.setGroup(false);
@@ -485,6 +554,17 @@ Blockly.Workspace.prototype.getBlockById = function(id) {
     block = this.getFlyout().getWorkspace().blockDB_[id];
   }
   return block || null;
+};
+
+/**
+ * Find the comment on this workspace with the specified ID.
+ * @param {string} id ID of comment to find.
+ * @return {Blockly.WorkspaceComment} The sought after comment or null if not
+ *     found.
+ * @package
+ */
+Blockly.Workspace.prototype.getCommentById = function(id) {
+  return this.commentDB_[id] || null;
 };
 
 /**

@@ -275,47 +275,52 @@ Blockly.Bubble.prototype.createDom_ = function(content, hasResize) {
 };
 
 /**
+ * Return the root node of the bubble's SVG group.
+ * @return {Element} The root SVG node of the bubble's group.
+ */
+Blockly.Bubble.prototype.getSvgRoot = function() {
+  return this.bubbleGroup_;
+};
+
+/**
+ * Expose the block's ID on the bubble's top-level SVG group.
+ * @param {string} id ID of block.
+ */
+Blockly.Bubble.prototype.setSvgId = function(id) {
+  if (this.bubbleGroup_.dataset) {
+    this.bubbleGroup_.dataset.blockId = id;
+  }
+};
+
+/**
  * Handle a mouse-down on bubble's border.
  * @param {!Event} e Mouse down event.
  * @private
  */
 Blockly.Bubble.prototype.bubbleMouseDown_ = function(e) {
-  this.promote_();
-  Blockly.Bubble.unbindDragEvents_();
-  if (Blockly.utils.isRightButton(e)) {
-    // No right-click.
-    e.stopPropagation();
-    return;
-  } else if (Blockly.utils.isTargetInput(e)) {
-    // When focused on an HTML text input widget, don't trap any events.
-    return;
+  var gesture = this.workspace_.getGesture(e);
+  if (gesture) {
+    gesture.handleBubbleStart(e, this);
   }
-  // Left-click (or middle click)
-  this.workspace_.startDrag(e, new goog.math.Coordinate(
-      this.workspace_.RTL ? -this.relativeLeft_ : this.relativeLeft_,
-      this.relativeTop_));
-
-  Blockly.Bubble.onMouseUpWrapper_ = Blockly.bindEventWithChecks_(document,
-      'mouseup', this, Blockly.Bubble.bubbleMouseUp_);
-  Blockly.Bubble.onMouseMoveWrapper_ = Blockly.bindEventWithChecks_(document,
-      'mousemove', this, this.bubbleMouseMove_);
-  Blockly.hideChaff();
-  // This event has been handled.  No need to bubble up to the document.
-  e.stopPropagation();
 };
 
 /**
- * Drag this bubble to follow the mouse.
- * @param {!Event} e Mouse move event.
+ * Show the context menu for this bubble.
+ * @param {!Event} _e Mouse event.
  * @private
  */
-Blockly.Bubble.prototype.bubbleMouseMove_ = function(e) {
-  this.autoLayout_ = false;
-  var newXY = this.workspace_.moveDrag(e);
-  this.relativeLeft_ = this.workspace_.RTL ? -newXY.x : newXY.x;
-  this.relativeTop_ = newXY.y;
-  this.positionBubble_();
-  this.renderArrow_();
+Blockly.Bubble.prototype.showContextMenu_ = function(_e) {
+  // NOP on bubbles, but used by the bubble dragger to pass events to
+  // workspace comments.
+};
+
+/**
+ * Get whether this bubble is deletable or not.
+ * @return {boolean} True if deletable.
+ * @package
+ */
+Blockly.Bubble.prototype.isDeletable = function() {
+  return false;
 };
 
 /**
@@ -609,4 +614,51 @@ Blockly.Bubble.prototype.dispose = function() {
   this.workspace_ = null;
   this.content_ = null;
   this.shape_ = null;
+};
+
+/**
+ * Move this bubble during a drag, taking into account whether or not there is
+ * a drag surface.
+ * @param {?Blockly.BlockDragSurfaceSvg} dragSurface The surface that carries
+ *     rendered items during a drag, or null if no drag surface is in use.
+ * @param {!goog.math.Coordinate} newLoc The location to translate to, in
+ *     workspace coordinates.
+ * @package
+ */
+Blockly.Bubble.prototype.moveDuringDrag = function(dragSurface, newLoc) {
+  if (dragSurface) {
+    dragSurface.translateSurface(newLoc.x, newLoc.y);
+  } else {
+    this.moveTo(newLoc.x, newLoc.y);
+  }
+  if (this.workspace_.RTL) {
+    this.relativeLeft_ = this.anchorXY_.x - newLoc.x - this.width_;
+  } else {
+    this.relativeLeft_ = newLoc.x - this.anchorXY_.x;
+  }
+  this.relativeTop_ = newLoc.y - this.anchorXY_.y;
+  this.renderArrow_();
+};
+
+/**
+ * Return the coordinates of the top-left corner of this bubble's body relative
+ * to the drawing surface's origin (0,0), in workspace units.
+ * @return {!goog.math.Coordinate} Object with .x and .y properties.
+ */
+Blockly.Bubble.prototype.getRelativeToSurfaceXY = function() {
+  return new goog.math.Coordinate(
+      this.anchorXY_.x + this.relativeLeft_,
+      this.anchorXY_.y + this.relativeTop_);
+};
+
+/**
+ * Set whether auto-layout of this bubble is enabled.  The first time a bubble
+ * is shown it positions itself to not cover any blocks.  Once a user has
+ * dragged it to reposition, it renders where the user put it.
+ * @param {boolean} enable True if auto-layout should be enabled, false
+ *     otherwise.
+ * @package
+ */
+Blockly.Bubble.prototype.setAutoLayout = function(enable) {
+  this.autoLayout_ = enable;
 };

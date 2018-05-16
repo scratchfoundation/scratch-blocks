@@ -35,7 +35,6 @@ goog.require('Blockly.Events.VarCreate');
 
 goog.require('goog.asserts');
 goog.require('goog.dom');
-goog.require('goog.userAgent');
 
 
 /**
@@ -47,6 +46,10 @@ goog.require('goog.userAgent');
 Blockly.Xml.workspaceToDom = function(workspace, opt_noId) {
   var xml = goog.dom.createDom('xml');
   xml.appendChild(Blockly.Xml.variablesToDom(workspace.getAllVariables()));
+  var comments = workspace.getTopComments(true);
+  for (var i = 0, comment; comment = comments[i]; i++) {
+    xml.appendChild(comment.toXmlWithXY(opt_noId));
+  }
   var blocks = workspace.getTopBlocks(true);
   for (var i = 0, block; block = blocks[i]; i++) {
     xml.appendChild(Blockly.Xml.blockToDomWithXY(block, opt_noId));
@@ -433,6 +436,12 @@ Blockly.Xml.domToWorkspace = function(xml, workspace) {
       } else if (name == 'shadow') {
         goog.asserts.fail('Shadow block cannot be a top-level block.');
         variablesFirst = false;
+      } else if (name == 'comment') {
+        if (workspace.rendered) {
+          Blockly.WorkspaceCommentSvg.fromXml(xmlChild, workspace, width);
+        } else {
+          Blockly.WorkspaceComment.fromXml(xmlChild, workspace);
+        }
       } else if (name == 'variables') {
         if (variablesFirst) {
           Blockly.Xml.domToVariables(xmlChild, workspace);
