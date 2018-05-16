@@ -538,8 +538,8 @@ Blockly.compareStrings = function(str1, str2) {
   return str1.localeCompare(str2, undefined, {
     sensitivity: 'base',
     numeric: true
-  })
-}
+  });
+};
 
 // IE9 does not have a console.  Create a stub to stop errors.
 if (!goog.global['console']) {
