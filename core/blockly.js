@@ -528,6 +528,19 @@ Blockly.isNumber = function(str) {
   return !!str.match(/^\s*-?\d+(\.\d+)?\s*$/);
 };
 
+/**
+ * Compare strings with natural number sorting.
+ * @param {string} str1 First input.
+ * @param {string} str2 Second input.
+ * @return {number} -1, 0, or 1 to signify greater than, equality, or less than.
+ */
+Blockly.compareStrings = function(str1, str2) {
+  return str1.localeCompare(str2, undefined, {
+    sensitivity: 'base',
+    numeric: true
+  })
+}
+
 // IE9 does not have a console.  Create a stub to stop errors.
 if (!goog.global['console']) {
   goog.global['console'] = {

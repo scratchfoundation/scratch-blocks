@@ -108,10 +108,7 @@ Blockly.Procedures.sortProcedureMutations_ = function(mutations) {
     var procCodeA = a.getAttribute('proccode');
     var procCodeB = b.getAttribute('proccode');
 
-    return procCodeA.localeCompare(procCodeB, undefined, {
-      sensitivity: 'base',
-      numeric: true
-    });
+    return Blockly.compareStrings(procCodeA, procCodeB)
   });
 
   return newMutations;
@@ -126,10 +123,7 @@ Blockly.Procedures.sortProcedureMutations_ = function(mutations) {
  * @private
  */
 Blockly.Procedures.procTupleComparator_ = function(ta, tb) {
-  return ta[0].localeCompare(tb[0], undefined, {
-    sensitivity: 'base',
-    numeric: true
-  });
+  return Blockly.compareStrings(ta[0], tb[0])
 };
 
 /**
