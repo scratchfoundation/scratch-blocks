@@ -97,5 +97,5 @@ Blockly.VariableModel.prototype.getId = function() {
  * @package
  */
 Blockly.VariableModel.compareByName = function(var1, var2) {
-  return Blockly.compareStrings(var1.name, var2.name);
+  return Blockly.scratchBlocksUtils.compareStrings(var1.name, var2.name);
 };
