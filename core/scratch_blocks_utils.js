@@ -71,7 +71,7 @@ Blockly.scratchBlocksUtils.encodeEntities = function(rawStr) {
  * @package
  */
 Blockly.scratchBlocksUtils.changeObscuredShadowIds = function(block) {
-  var blocks = block.getDescendants();
+  var blocks = block.getDescendants(false);
   for (var i = blocks.length - 1; i >= 0; i--) {
     var descendant = blocks[i];
     for (var j = 0; j < descendant.inputList.length; j++) {
