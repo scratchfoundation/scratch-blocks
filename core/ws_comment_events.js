@@ -191,7 +191,8 @@ Blockly.Events.CommentCreate.prototype.type = Blockly.Events.COMMENT_CREATE;
 
 /**
  * Encode the event as JSON.
- * TODO (#1266): "Full" and "minimal" serialization.
+ * TODO (github.com/google/blockly/issues/1266): "Full" and "minimal"
+ * serialization.
  * @return {!Object} JSON representation.
  */
 Blockly.Events.CommentCreate.prototype.toJson = function() {
@@ -255,7 +256,8 @@ Blockly.Events.CommentDelete.prototype.type = Blockly.Events.COMMENT_DELETE;
 
 /**
  * Encode the event as JSON.
- * TODO (#1266): "Full" and "minimal" serialization.
+ * TODO (github.com/google/blockly/issues/1266): "Full" and "minimal"
+ * serialization.
  * @return {!Object} JSON representation.
  */
 Blockly.Events.CommentDelete.prototype.toJson = function() {
@@ -283,7 +285,7 @@ Blockly.Events.CommentDelete.prototype.run = function(forward) {
       comment.dispose(false, false);
     } else {
       // Only complain about root-level block.
-      console.warn("Can't uncreate non-existent comment: " + this.commentId);
+      console.warn("Can't delete non-existent comment: " + this.commentId);
     }
   } else {
     var xml = goog.dom.createDom('xml');
@@ -357,7 +359,8 @@ Blockly.Events.CommentMove.prototype.setOldCoordinate = function(xy) {
 
 /**
  * Encode the event as JSON.
- * TODO (#1266): "Full" and "minimal" serialization.
+ * TODO (github.com/google/blockly/issues/1266): "Full" and "minimal"
+ * serialization.
  * @return {!Object} JSON representation.
  */
 Blockly.Events.CommentMove.prototype.toJson = function() {

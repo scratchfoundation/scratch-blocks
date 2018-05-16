@@ -239,8 +239,6 @@ Blockly.copy_ = function(toCopy) {
     var xml = toCopy.toXmlWithXY();
   } else {
     var xml = Blockly.Xml.blockToDom(toCopy);
-    // Copy only the selected block and internal blocks.
-    Blockly.Xml.deleteNext(xml);
     // Encode start position in XML.
     var xy = toCopy.getRelativeToSurfaceXY();
     xml.setAttribute('x', toCopy.RTL ? -xy.x : xy.x);

@@ -71,7 +71,7 @@ Blockly.Gesture = function(e, creatorWorkspace) {
    * @type {goog.math.Coordinate}
    * @private
    */
-  this.currentDragDeltaXY_ = 0;
+  this.currentDragDeltaXY_ = null;
 
   /**
    * The bubble that the gesture started on, or null if it did not start on a
@@ -718,7 +718,8 @@ Blockly.Gesture.prototype.handleBubbleStart = function(e, bubble) {
  * @private
  */
 Blockly.Gesture.prototype.doBubbleClick_ = function() {
-  // TODO (#1673): Consistent handling of single clicks.
+  // TODO (github.com/google/blockly/issues/1673): Consistent handling of single
+  // clicks.
   this.startBubble_.setFocus && this.startBubble_.setFocus();
   this.startBubble_.select && this.startBubble_.select();
 };

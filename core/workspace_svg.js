@@ -1067,7 +1067,8 @@ Blockly.WorkspaceSvg.prototype.pasteWorkspaceComment_ = function(xmlComment) {
         commentX = -commentX;
       }
       // Offset workspace comment.
-      // TODO: #1719 properly offset comment such that it's not interfereing with any blocks
+      // TODO: (github.com/google/blockly/issues/1719) properly offset comment
+      // such that it's not interfereing with any blocks
       commentX += 50;
       commentY += 50;
       comment.moveBy(commentX, commentY);
@@ -1076,7 +1077,7 @@ Blockly.WorkspaceSvg.prototype.pasteWorkspaceComment_ = function(xmlComment) {
     Blockly.Events.enable();
   }
   if (Blockly.Events.isEnabled()) {
-    // TODO: Fire a Workspace Comment Create event
+    Blockly.WorkspaceComment.fireCreateEvent(comment);
   }
   comment.select();
 };

@@ -104,7 +104,7 @@ Blockly.WorkspaceCommentSvg.prototype.dispose = function() {
     // The comment has already been deleted.
     return;
   }
-  // If this comment is being dragged, unlink the mouse events.
+  // If this comment is being deleted, unlink the mouse events.
   if (Blockly.selected == this) {
     this.unselect();
     this.workspace.cancelCurrentGesture();
@@ -191,7 +191,7 @@ Blockly.WorkspaceCommentSvg.prototype.select = function() {
   var oldId = null;
   if (Blockly.selected) {
     oldId = Blockly.selected.id;
-    // Unselect any previously selected block.
+    // Unselect any previously selected block or comment.
     Blockly.Events.disable();
     try {
       Blockly.selected.unselect();
@@ -219,7 +219,6 @@ Blockly.WorkspaceCommentSvg.prototype.unselect = function() {
   Blockly.Events.fire(event);
   Blockly.selected = null;
   this.removeSelect();
-  this.blurFocus();
 };
 
 /**
@@ -312,7 +311,6 @@ Blockly.WorkspaceCommentSvg.prototype.moveBy = function(dx, dy) {
   // TODO: Do I need to look up the relative to surface XY position here?
   var xy = this.getRelativeToSurfaceXY();
   this.translate(xy.x + dx, xy.y + dy);
-  this.xy_ = new goog.math.Coordinate(xy.x + dx, xy.y + dy);
   event.recordNew();
   Blockly.Events.fire(event);
   this.workspace.resizeContents();
