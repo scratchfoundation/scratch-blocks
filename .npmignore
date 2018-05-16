@@ -1,3 +1,14 @@
+# Development files
+.eslintrc
+/.editorconfig
+/.eslintignore
+/.gitattributes
+/.github
+/.travis.yml
+/.tx
+/tests
+/webpack.config.js
+
 # Localization / I18N
 common.pyc
 .settings
@@ -7,3 +18,9 @@ common.pyc
 /nbproject/private/
 
 /accessible/*
+
+# Build created files
+/gh-pages
+
+# Exclude already built packages from testing with npm pack
+/scratch-blocks-*.{tar,tgz}
