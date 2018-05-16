@@ -41,7 +41,8 @@ goog.require('goog.math.Coordinate');
  * @param {number} height Height of the comment.
  * @param {number} width Width of the comment.
  * @param {string=} opt_id Optional ID.  Use this ID if provided, otherwise
- *     create a new ID.
+ *     create a new ID.  If the ID conflicts with an in-use ID, a new one will
+ *     be generated.
  * @constructor
  */
 Blockly.WorkspaceComment = function(workspace, content, height, width, opt_id) {

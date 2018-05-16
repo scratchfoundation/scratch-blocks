@@ -52,7 +52,8 @@ goog.require('goog.userAgent');
  * @param {?string} prototypeName Name of the language object containing
  *     type-specific functions for this block.
  * @param {string=} opt_id Optional ID.  Use this ID if provided, otherwise
- *     create a new ID.
+ *     create a new ID.  If the ID conflicts with an in-use ID, a new one will
+ *     be generated.
  * @extends {Blockly.Block}
  * @constructor
  */
