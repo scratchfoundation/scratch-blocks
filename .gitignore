@@ -13,6 +13,9 @@ common.pyc
 *.komodoproject
 /nbproject/private/
 
+# Editor
+.vscode
+
 /accessible/*
 /dist
 /msg/json/synonyms.json
@@ -31,3 +34,4 @@ common.pyc
 /gh-pages/_site
 /*compiler*.jar
 /local_blockly_compressed_vertical.js
+

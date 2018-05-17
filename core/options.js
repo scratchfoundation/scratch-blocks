@@ -127,7 +127,13 @@ Blockly.Options = function(options) {
           Blockly.Colours.hasOwnProperty(colourProperty)) {
         // If a property is in both colours option and Blockly.Colours,
         // set the Blockly.Colours value to the override.
-        Blockly.Colours[colourProperty] = colours[colourProperty];
+        // Ensure references are kept by extending a property when it's an object
+        var colourPropertyValue = colours[colourProperty];
+        if (goog.isObject(colourPropertyValue)) {
+          goog.object.extend(Blockly.Colours[colourProperty], colourPropertyValue);
+        } else {
+          Blockly.Colours[colourProperty] = colourPropertyValue;
+        }
       }
     }
   }
