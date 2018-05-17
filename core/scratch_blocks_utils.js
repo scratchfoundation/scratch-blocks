@@ -109,7 +109,7 @@ Blockly.scratchBlocksUtils.isShadowArgumentReporter = function(block) {
  * @return {number} -1, 0, or 1 to signify greater than, equality, or less than.
  */
 Blockly.scratchBlocksUtils.compareStrings = function(str1, str2) {
-  return str1.localeCompare(str2, undefined, {
+  return str1.localeCompare(str2, [], {
     sensitivity: 'base',
     numeric: true
   });
