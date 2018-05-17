@@ -101,3 +101,16 @@ Blockly.scratchBlocksUtils.isShadowArgumentReporter = function(block) {
   return (block.isShadow() && (block.type == 'argument_reporter_boolean' ||
       block.type == 'argument_reporter_string_number'));
 };
+
+/**
+ * Compare strings with natural number sorting.
+ * @param {string} str1 First input.
+ * @param {string} str2 Second input.
+ * @return {number} -1, 0, or 1 to signify greater than, equality, or less than.
+ */
+Blockly.scratchBlocksUtils.compareStrings = function(str1, str2) {
+  return str1.localeCompare(str2, [], {
+    sensitivity: 'base',
+    numeric: true
+  });
+};
