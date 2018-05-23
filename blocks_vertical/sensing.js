@@ -515,7 +515,6 @@ Blockly.Blocks['sensing_username'] = {
     this.jsonInit({
       "message0": Blockly.Msg.SENSING_USERNAME,
       "category": Blockly.Categories.sensing,
-      "checkboxInFlyout": true,
       "extensions": ["colours_sensing", "output_number"]
     });
   }
