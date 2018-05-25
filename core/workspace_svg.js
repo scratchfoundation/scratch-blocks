@@ -1494,7 +1494,7 @@ Blockly.WorkspaceSvg.buildDeleteList_ = function(topBlocks) {
   var deleteList = [];
   function addDeletableBlocks(block) {
     if (block.isDeletable()) {
-      deleteList = deleteList.concat(block.getDescendants());
+      deleteList = deleteList.concat(block.getDescendants(false));
     } else {
       var children = block.getChildren();
       for (var i = 0; i < children.length; i++) {

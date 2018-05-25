@@ -509,12 +509,30 @@ Blockly.Block.prototype.getRootBlock = function() {
 
 /**
  * Find all the blocks that are directly nested inside this one.
- * Includes value and block inputs, as well as any following statement.
+ * Includes value and statement inputs, as well as any following statement.
  * Excludes any connection on an output tab or any preceding statement.
+ * Blocks are optionally sorted by position; top to bottom.
+ * @param {boolean} ordered Sort the list if true.
  * @return {!Array.<!Blockly.Block>} Array of blocks.
  */
-Blockly.Block.prototype.getChildren = function() {
-  return this.childBlocks_;
+Blockly.Block.prototype.getChildren = function(ordered) {
+  if (!ordered) {
+    return this.childBlocks_;
+  }
+  var blocks = [];
+  for (var i = 0, input; input = this.inputList[i]; i++) {
+    if (input.connection) {
+      var child = input.connection.targetBlock();
+      if (child) {
+        blocks.push(child);
+      }
+    }
+  }
+  var next = this.getNextBlock();
+  if (next) {
+    blocks.push(next);
+  }
+  return blocks;
 };
 
 /**
@@ -556,16 +574,20 @@ Blockly.Block.prototype.setParent = function(newParent) {
 /**
  * Find all the blocks that are directly or indirectly nested inside this one.
  * Includes this block in the list.
- * Includes value and block inputs, as well as any following statements.
+ * Includes value and statement inputs, as well as any following statements.
  * Excludes any connection on an output tab or any preceding statements.
+ * Blocks are optionally sorted by position, top to bottom.
+ * @param {boolean} ordered Sort the list if true.
  * @param {boolean=} opt_ignoreShadows If set, don't include shadow blocks.
  * @return {!Array.<!Blockly.Block>} Flattened array of blocks.
  */
-Blockly.Block.prototype.getDescendants = function(opt_ignoreShadows) {
+Blockly.Block.prototype.getDescendants = function(ordered, opt_ignoreShadows) {
   var blocks = [this];
-  for (var child, x = 0; child = this.childBlocks_[x]; x++) {
+  var childBlocks = this.getChildren(ordered);
+  for (var child, i = 0; child = childBlocks[i]; i++) {
     if (!opt_ignoreShadows || !child.isShadow_) {
-      blocks.push.apply(blocks, child.getDescendants(opt_ignoreShadows));
+      blocks.push.apply(
+          blocks, child.getDescendants(ordered, opt_ignoreShadows));
     }
   }
   return blocks;
