@@ -268,7 +268,7 @@ Blockly.Workspace.prototype.getTopComments = function(ordered) {
 Blockly.Workspace.prototype.getAllBlocks = function(ordered) {
   if (ordered) {
     // Slow, but ordered.
-    // This gets all levels of descendants because getDescendants 
+    // This gets all levels of descendants because getDescendants
     // is called recuusively.  They are added to a new list, not the
     // list that it's iterating over.
     var topBlocks = this.getTopBlocks(true);
@@ -278,7 +278,7 @@ Blockly.Workspace.prototype.getAllBlocks = function(ordered) {
     }
   } else {
     // Fast, but in no particular order.
-    // This gets all of levels of descendants by always adding to the 
+    // This gets all of levels of descendants by always adding to the
     // list that it's iterating over.
     var blocks = this.getTopBlocks(false);
     for (var i = 0; i < blocks.length; i++) {
