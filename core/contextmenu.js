@@ -260,7 +260,7 @@ Blockly.ContextMenu.blockHelpOption = function(block) {
  */
 Blockly.ContextMenu.blockDuplicateOption = function(block) {
   var duplicateOption = {
-    text: Blockly.Msg.DUPLICATE_BLOCK,
+    text: Blockly.Msg.DUPLICATE,
     enabled: true,
     callback: block.duplicateAndDragCallback_()
   };
@@ -288,7 +288,7 @@ Blockly.ContextMenu.blockCommentOption = function(block) {
     // If there's no comment, add an option to create a comment.
     commentOption.text = Blockly.Msg.ADD_COMMENT;
     commentOption.callback = function() {
-      block.setCommentText('');
+      block.setCommentText('', 'scratch');
     };
   }
   return commentOption;
@@ -408,12 +408,14 @@ Blockly.ContextMenu.wsExpandOption = function(hasCollapsedBlocks, topBlocks) {
  * Make a context menu option for deleting the current workspace comment.
  * @param {!Blockly.WorkspaceCommentSvg} comment The workspace comment where the
  *     right-click originated.
+ * @param {?string} optLabel An optional label for the comment. Defaults to
+ * Blockly.Msg.REMOVE_COMMENT
  * @return {!Object} A menu option, containing text, enabled, and a callback.
  * @package
  */
-Blockly.ContextMenu.commentDeleteOption = function(comment) {
+Blockly.ContextMenu.commentDeleteOption = function(comment, optLabel) {
   var deleteOption = {
-    text: Blockly.Msg.REMOVE_COMMENT,
+    text: typeof optLabel == 'string' ? optLabel : Blockly.Msg.REMOVE_COMMENT,
     enabled: true,
     callback: function() {
       Blockly.Events.setGroup(true);
@@ -433,7 +435,7 @@ Blockly.ContextMenu.commentDeleteOption = function(comment) {
  */
 Blockly.ContextMenu.commentDuplicateOption = function(comment) {
   var duplicateOption = {
-    text: Blockly.Msg.DUPLICATE_COMMENT,
+    text: Blockly.Msg.DUPLICATE,
     enabled: true,
     callback: function() {
       Blockly.duplicate_(comment);

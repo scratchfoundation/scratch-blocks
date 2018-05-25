@@ -980,12 +980,20 @@ Blockly.BlockSvg.prototype.getCommentText = function() {
 /**
  * Set this block's comment text.
  * @param {?string} text The text, or null to delete.
+ * @param {?string} type If 'scratch', treat as ScratchBlockComment, else Comment
+ * @param {?number} commentX Optional x position for scratch comment
+ * @param {?number} commentY Optional y position for scratch comment
+ * @param {?boolean} minimized Optional minimized state for comment, defaults to false
  */
-Blockly.BlockSvg.prototype.setCommentText = function(text) {
+Blockly.BlockSvg.prototype.setCommentText = function(text, type, commentX, commentY, minimized) {
   var changedState = false;
   if (goog.isString(text)) {
     if (!this.comment) {
-      this.comment = new Blockly.Comment(this);
+      if (type === 'scratch') {
+        this.comment = new Blockly.ScratchBlockComment(this, commentX, commentY, minimized);
+      } else {
+        this.comment = new Blockly.Comment(this);
+      }
       changedState = true;
     }
     this.comment.setText(/** @type {string} */ (text));
@@ -997,6 +1005,9 @@ Blockly.BlockSvg.prototype.setCommentText = function(text) {
   }
   if (changedState && this.rendered) {
     this.render();
+    if (type === 'scratch' && goog.isString(text)) {
+      this.comment.setVisible(true);
+    }
     // Adding or removing a comment icon will cause the block to change shape.
     this.bumpNeighbours_();
   }
