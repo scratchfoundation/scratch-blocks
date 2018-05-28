@@ -370,7 +370,7 @@ Blockly.Blocks['data_itemnumoflist'] = {
    */
   init: function() {
     this.jsonInit({
-      "message0": "item # of %1 in %2",
+      "message0": "location of %1 in %2",
       "args0": [
         {
           "type": "input_value",
