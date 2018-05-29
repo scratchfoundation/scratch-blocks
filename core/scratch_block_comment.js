@@ -179,7 +179,7 @@ Blockly.ScratchBlockComment.prototype.createEditor_ = function() {
  * Resize the text area accordingly.
  * @private
  */
-Blockly.Comment.prototype.resizeBubble_ = function() {
+Blockly.ScratchBlockComment.prototype.resizeBubble_ = function() {
   if (this.isVisible() && !this.isMinimized_) {
     var size = this.bubble_.getBubbleSize();
     var doubleBorderWidth = 2 * Blockly.ScratchBubble.BORDER_WIDTH;
@@ -305,7 +305,7 @@ Blockly.ScratchBlockComment.prototype.setMinimized = function(minimize) {
  * @param {number} width Width of the bubble.
  * @param {number} height Height of the bubble.
  */
-Blockly.Comment.prototype.setBubbleSize = function(width, height) {
+Blockly.ScratchBlockComment.prototype.setBubbleSize = function(width, height) {
   if (this.bubble_) {
     if (this.isMinimized_) {
       this.bubble_.setBubbleSize(width, Blockly.ScratchBubble.TOP_BAR_HEIGHT);
@@ -337,7 +337,7 @@ Blockly.ScratchBlockComment.prototype.getLabelText = function() {
  * Set this comment's text.
  * @param {string} text Comment text.
  */
-Blockly.Comment.prototype.setText = function(text) {
+Blockly.ScratchBlockComment.prototype.setText = function(text) {
   if (this.text_ != text) {
     Blockly.Events.fire(new Blockly.Events.BlockChange(
         this.block_, 'comment', null, this.text_, text));
