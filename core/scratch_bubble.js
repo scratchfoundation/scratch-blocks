@@ -36,6 +36,8 @@ goog.require('goog.userAgent');
 
 /**
  * Class for Scratch comment UI bubble.
+ * @param {!Blockly.ScratchBlockComment} comment The comment this bubble belongs
+ *     to.
  * @param {!Blockly.WorkspaceSvg} workspace The workspace on which to draw the
  *     bubble.
  * @param {!Element} content SVG content for the bubble.
@@ -50,8 +52,11 @@ goog.require('goog.userAgent');
  * @extends {Blockly.Bubble}
  * @constructor
  */
-Blockly.ScratchBubble = function(workspace, content, anchorXY,
+Blockly.ScratchBubble = function(comment, workspace, content, anchorXY,
     bubbleWidth, bubbleHeight, bubbleX, bubbleY, minimized) {
+
+  // Needed for Events
+  this.comment = comment;
 
   this.workspace_ = workspace;
   this.content_ = content;
@@ -59,7 +64,8 @@ Blockly.ScratchBubble = function(workspace, content, anchorXY,
   this.y = bubbleY;
   this.isMinimized_ = minimized || false;
   var canvas = workspace.getBubbleCanvas();
-  canvas.appendChild(this.createDom_(content, !!(bubbleWidth && bubbleHeight), this.isMinimized_));
+  canvas.appendChild(this.createDom_(content, !!(bubbleWidth && bubbleHeight),
+      this.isMinimized_));
 
   this.setAnchorLocation(anchorXY);
   if (!bubbleWidth || !bubbleHeight) {

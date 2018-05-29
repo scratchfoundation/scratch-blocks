@@ -43,14 +43,22 @@ goog.require('goog.userAgent');
  * @param {number=} y Initial y position for comment, in workspace coordinates.
  * @param {boolean=} minimized Whether or not this comment is minimized
  *     (only the top bar displays), defaults to false.
+ * @param {string=} id Optional uid for comment, will be generated if
+ * not provided.
  * @extends {Blockly.Comment}
  * @constructor
  */
-Blockly.ScratchBlockComment = function(block, x, y, minimized) {
+Blockly.ScratchBlockComment = function(block, x, y, minimized, id) {
   Blockly.ScratchBlockComment.superClass_.constructor.call(this, block);
   this.x_ = x;
   this.y_ = y;
   this.isMinimized_ = minimized || false;
+
+  this.workspace = block.workspace;
+  this.id = (id && !this.workspace.getCommentById(id)) ?
+      id : Blockly.utils.genUid();
+
+  Blockly.ScratchBlockComment.fireCreateEvent(this);
 };
 goog.inherits(Blockly.ScratchBlockComment, Blockly.Comment);
 
@@ -268,7 +276,7 @@ Blockly.ScratchBlockComment.prototype.setVisible = function(visible) {
 
     // Create the bubble.
     this.bubble_ = new Blockly.ScratchBubble(
-        /** @type {!Blockly.WorkspaceSvg} */ (this.block_.workspace),
+        this, /** @type {!Blockly.WorkspaceSvg} */ (this.block_.workspace),
         this.createEditor_(), this.iconXY_, this.width_, this.height_,
         this.x_, this.y_, this.isMinimized_);
     this.bubble_.setAutoLayout(false);
@@ -433,4 +441,53 @@ Blockly.ScratchBlockComment.prototype.showContextMenu_ = function(e) {
   var menuOptions = [];
   menuOptions.push(Blockly.ContextMenu.commentDeleteOption(this, Blockly.Msg.DELETE));
   Blockly.ContextMenu.show(e, menuOptions, this.block_.RTL);
+};
+
+/**
+ * Encode a comment subtree as XML with XY coordinates.
+ * @param {boolean=} opt_noId True if the encoder should skip the comment id.
+ * @return {!Element} Tree of XML elements.
+ * @package
+ */
+Blockly.ScratchBlockComment.prototype.toXmlWithXY = function() {
+  var element = goog.dom.createDom('comment');
+  element.setAttribute('id', this.id);
+  element.textContent = this.text_;
+  element.setAttribute('x', Math.round(this.x));
+  element.setAttribute('y', Math.round(this.y));
+  element.setAttribute('h', this.height_);
+  element.setAttribute('w', this.width_);
+  return element;
+};
+
+
+/**
+ * Fire a create event for the given workspace comment, if comments are enabled.
+ * @param {!Blockly.WorkspaceComment} comment The comment that was just created.
+ * @package
+ */
+Blockly.ScratchBlockComment.fireCreateEvent = function(comment) {
+  if (Blockly.Events.isEnabled()) {
+    var existingGroup = Blockly.Events.getGroup();
+    if (!existingGroup) {
+      Blockly.Events.setGroup(true);
+    }
+    try {
+      Blockly.Events.fire(new Blockly.Events.CommentCreate(comment));
+    } finally {
+      if (!existingGroup) {
+        Blockly.Events.setGroup(false);
+      }
+    }
+  }
+};
+
+/**
+ * Dispose of this comment.
+ */
+Blockly.ScratchBlockComment.prototype.dispose = function() {
+  Blockly.ScratchBlockComment.superClass_.dispose.call(this);
+  if (Blockly.Events.isEnabled()) {
+    Blockly.Events.fire(new Blockly.Events.CommentDelete(this));
+  }
 };

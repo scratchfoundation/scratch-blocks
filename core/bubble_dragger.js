@@ -240,6 +240,11 @@ Blockly.BubbleDragger.prototype.fireMoveEvent_ = function() {
     event.setOldCoordinate(this.startXY_);
     event.recordNew();
     Blockly.Events.fire(event);
+  } else if (this.draggingBubble_ instanceof Blockly.ScratchBubble) {
+    var event = new Blockly.Events.CommentMove(this.draggingBubble_.comment);
+    event.setOldCoordinate(this.startXY_);
+    event.recordNew();
+    Blockly.Events.fire(event);
   }
   // TODO (fenichel): move events for comments.
   return;
