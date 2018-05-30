@@ -68,6 +68,7 @@ Blockly.ScratchBlockComment.prototype.height_ = 200;
 
 /**
  * Comment Icon Size.
+ * @package
  */
 Blockly.ScratchBlockComment.prototype.SIZE = 0;
 
@@ -132,17 +133,10 @@ Blockly.ScratchBlockComment.prototype.renderIcon = function(cursorX, topMargin) 
 };
 
 /**
- * @typedef CommentContent The comment editor and label text to display in the
- *     comment top bar.
- * @property {!Element} commentEditor The DOM element that contains the
- *     text area for writing and editing the comment.
- * @property {!String} labelText The truncated label text for the comment to
- *     display in its minimized state.
- */
-
-/**
  * Create the editor for the comment's bubble.
- * @return {!CommentContent} The top-level node of the editor.
+ * @return {{commentEditor: !Element, labelText: !string}} The components used
+ *     to render the comment editing/writing area and the truncated label text
+ *     to display in the minimized comment top bar.
  * @private
  */
 Blockly.ScratchBlockComment.prototype.createEditor_ = function() {
@@ -223,6 +217,7 @@ Blockly.ScratchBlockComment.prototype.updateColour = function() {
 /**
  * Show or hide the comment bubble.
  * @param {boolean} visible True if the bubble should be visible.
+ * @package
  */
 Blockly.ScratchBlockComment.prototype.setVisible = function(visible) {
   if (visible == this.isVisible()) {
@@ -298,6 +293,7 @@ Blockly.ScratchBlockComment.prototype.toggleMinimize_ = function() {
 /**
  * Set the minimized state for this comment.
  * @param {boolean} minimize Whether the comment should be minimized
+ * @package
  */
 Blockly.ScratchBlockComment.prototype.setMinimized = function(minimize) {
   if (this.isMinimized_ == minimize) return;
@@ -320,6 +316,7 @@ Blockly.ScratchBlockComment.prototype.setMinimized = function(minimize) {
  * Size this comment's bubble.
  * @param {number} width Width of the bubble.
  * @param {number} height Height of the bubble.
+ * @package
  */
 Blockly.ScratchBlockComment.prototype.setBubbleSize = function(width, height) {
   if (this.bubble_) {
@@ -341,6 +338,7 @@ Blockly.ScratchBlockComment.prototype.setBubbleSize = function(width, height) {
  * Get the truncated text for this comment to display in the minimized
  * top bar.
  * @return {string} The truncated comment text
+ * @package
  */
 Blockly.ScratchBlockComment.prototype.getLabelText = function() {
   if (this.text_.length > Blockly.ScratchBlockComment.MAX_LABEL_LENGTH) {
@@ -353,6 +351,7 @@ Blockly.ScratchBlockComment.prototype.getLabelText = function() {
 /**
  * Set this comment's text.
  * @param {string} text Comment text.
+ * @package
  */
 Blockly.ScratchBlockComment.prototype.setText = function(text) {
   if (this.text_ != text) {
@@ -369,6 +368,7 @@ Blockly.ScratchBlockComment.prototype.setText = function(text) {
  * Move this comment to a position given x and y coordinates.
  * @param {number} x The x-coordinate on the workspace.
  * @param {number} y The y-coordinate on the workspace.
+ * @package
  */
 Blockly.ScratchBlockComment.prototype.moveTo = function(x, y) {
   if (this.bubble_) {
@@ -381,6 +381,7 @@ Blockly.ScratchBlockComment.prototype.moveTo = function(x, y) {
 /**
  * Get the x and y position of this comment.
  * @return {goog.math.Coordinate} The XY position
+ * @package
  */
 Blockly.ScratchBlockComment.prototype.getXY = function() {
   if (this.bubble_) {
@@ -397,6 +398,7 @@ Blockly.ScratchBlockComment.prototype.getXY = function() {
  * @return {{height: number, width: number}} The height and width of
  *     this comment when it is full size. These numbers do not change
  *     as the workspace zoom changes.
+ * @package
  */
 Blockly.ScratchBlockComment.prototype.getHeightWidth = function() {
   return {height: this.height_, width: this.width_};
@@ -405,6 +407,7 @@ Blockly.ScratchBlockComment.prototype.getHeightWidth = function() {
 /**
  * Check whether this comment is currently minimized.
  * @return {boolean} True if minimized
+ * @package
  */
 Blockly.ScratchBlockComment.prototype.isMinimized = function() {
   return this.isMinimized_;

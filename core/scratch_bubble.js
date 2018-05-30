@@ -98,27 +98,32 @@ goog.inherits(Blockly.ScratchBubble, Blockly.Bubble);
 
 /**
  * Width of the border around the bubble.
+ * @package
  */
 Blockly.ScratchBubble.BORDER_WIDTH = 1;
 
 /**
  * Thickness of the line connecting the bubble
  * to the block.
+ * @private
  */
 Blockly.ScratchBubble.LINE_THICKNESS = 1;
 
 /**
  * The height of the comment top bar.
+ * @package
  */
 Blockly.ScratchBubble.TOP_BAR_HEIGHT = 32;
 
 /**
  * The size of the top bar icons.
+ * @private
  */
 Blockly.ScratchBubble.TOP_BAR_ICON_SIZE = 12;
 
 /**
  * The inset for the top bar icons.
+ * @private
  */
 Blockly.ScratchBubble.TOP_BAR_ICON_INSET = 6;
 
@@ -241,6 +246,10 @@ Blockly.ScratchBubble.prototype.createTopBarLabel_ = function() {
   this.topBarLabel_.appendChild(this.labelTextNode_);
 };
 
+/**
+ * Create the comment resize handle.
+ * @private
+ */
 Blockly.ScratchBubble.prototype.createResizeHandle_ = function() {
   this.resizeGroup_ = Blockly.utils.createSvgElement('g',
       {'class': this.workspace_.RTL ?
@@ -328,6 +337,7 @@ Blockly.ScratchBubble.prototype.deleteMouseUp_ = function(e) {
  * @param {boolean} minimize Whether the bubble should be minimized
  * @param {?string} labelText Optional label text for the comment top bar
  *    when it is minimized.
+ * @package
  */
 Blockly.ScratchBubble.prototype.setMinimized = function(minimize, labelText) {
   if (minimize == this.isMinimized_) {
@@ -371,6 +381,7 @@ Blockly.ScratchBubble.prototype.setMinimized = function(minimize, labelText) {
 /**
  * Register a function as a callback event for when the bubble is minimized.
  * @param {!Function} callback The function to call on resize.
+ * @package
  */
 Blockly.ScratchBubble.prototype.registerMinimizeToggleEvent = function(callback) {
   this.minimizeToggleCallback_ = callback;
@@ -379,6 +390,7 @@ Blockly.ScratchBubble.prototype.registerMinimizeToggleEvent = function(callback)
 /**
  * Register a function as a callback event for when the bubble is resized.
  * @param {!Function} callback The function to call on resize.
+ * @package
  */
 Blockly.ScratchBubble.prototype.registerDeleteEvent = function(callback) {
   this.deleteCallback_ = callback;
@@ -387,6 +399,7 @@ Blockly.ScratchBubble.prototype.registerDeleteEvent = function(callback) {
 /**
  * Register a function as a callback to show the context menu for this comment.
  * @param {!Function} callback The function to call on resize.
+ * @package
  */
 Blockly.ScratchBubble.prototype.registerContextMenuCallback = function(callback) {
   this.contextMenuCallback_ = callback;
@@ -396,6 +409,7 @@ Blockly.ScratchBubble.prototype.registerContextMenuCallback = function(callback)
  * Notification that the anchor has moved.
  * Update the arrow and bubble accordingly.
  * @param {!goog.math.Coordinate} xy Absolute location.
+ * @package
  */
 Blockly.ScratchBubble.prototype.setAnchorLocation = function(xy) {
   this.anchorXY_ = xy;
@@ -419,6 +433,7 @@ Blockly.ScratchBubble.prototype.moveTo = function(x, y) {
  * Size this bubble.
  * @param {number} width Width of the bubble.
  * @param {number} height Height of the bubble.
+ * @package
  */
 Blockly.ScratchBubble.prototype.setBubbleSize = function(width, height) {
   var doubleBorderWidth = 2 * Blockly.ScratchBubble.BORDER_WIDTH;
@@ -492,6 +507,7 @@ Blockly.ScratchBubble.prototype.renderArrow_ = function() {
 /**
  * Change the colour of a bubble.
  * @param {string} hexColour Hex code of colour.
+ * @package
  */
 Blockly.ScratchBubble.prototype.setColour = function(hexColour) {
   this.bubbleBack_.setAttribute('stroke', hexColour);
@@ -534,6 +550,7 @@ Blockly.ScratchBubble.prototype.updatePosition_ = function(x, y) {
 
 /**
  * Dispose of this bubble.
+ * @package
  */
 Blockly.ScratchBubble.prototype.dispose = function() {
   Blockly.ScratchBubble.superClass_.dispose.call(this);

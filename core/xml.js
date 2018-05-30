@@ -258,9 +258,10 @@ Blockly.Xml.blockToDom = function(block, opt_noId) {
 /**
  * Encode a ScratchBlockComment as XML.
  * @param {!Blockly.ScratchBlockComment} block The block possibly containing
- *     a comment to endcode.
+ *     a comment to encode.
  * @param {!Element} element The XML element to which the comment should
  *     encoding should be attached.
+ * @private
  */
 Blockly.Xml.scratchCommentToDom_ = function(block, element) {
   var commentText = block.getCommentText();
