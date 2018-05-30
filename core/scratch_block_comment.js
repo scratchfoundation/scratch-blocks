@@ -242,21 +242,25 @@ Blockly.ScratchBlockComment.prototype.setVisible = function(visible) {
     // based on knowledge of the block that owns this comment:
     if (!this.x_ && this.x_ != 0 && !this.y_ && this.y_ != 0) {
       if (this.isMinimized_) {
-        this.x_ = this.block_.RTL ? this.iconXY_.x - 16 : this.iconXY_.x + 16;
+        var minimizedOffset = 4 * Blockly.BlockSvg.GRID_UNIT;
+        this.x_ = this.block_.RTL ?
+            this.iconXY_.x - minimizedOffset :
+            this.iconXY_.x + minimizedOffset;
         this.y_ = this.iconXY_.y - (Blockly.ScratchBubble.TOP_BAR_HEIGHT / 2);
       } else {
         // Check if the width of this block (and all it's children/descendents) is the
         // same as the width of just this block
         var fullStackWidth = Math.floor(this.block_.getHeightWidth().width);
         var thisBlockWidth = Math.floor(this.block_.svgPath_.getBBox().width);
+        var offset = 8 * Blockly.BlockSvg.GRID_UNIT;
         if (fullStackWidth == thisBlockWidth && !this.block_.parentBlock_) {
           this.x_ = this.block_.RTL ?
-              this.iconXY_.x - this.width_ - 32 :
-              this.iconXY_.x + 32;
+              this.iconXY_.x - this.width_ - offset :
+              this.iconXY_.x + offset;
         } else {
           this.x_ = this.block_.RTL ?
-              this.iconXY_.x - this.width_ - fullStackWidth - 32 :
-              this.iconXY_.x + fullStackWidth + 32;
+              this.iconXY_.x - this.width_ - fullStackWidth - offset :
+              this.iconXY_.x + fullStackWidth + offset;
         }
         this.y_ = this.iconXY_.y - (Blockly.ScratchBubble.TOP_BAR_HEIGHT / 2);
       }
