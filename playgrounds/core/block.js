@@ -29,6 +29,7 @@ goog.provide('Blockly.Block');
 goog.require('Blockly.Blocks');
 goog.require('Blockly.Colours');
 goog.require('Blockly.Comment');
+goog.require('Blockly.ScratchBlockComment');
 goog.require('Blockly.Connection');
 goog.require('Blockly.Events.BlockChange');
 goog.require('Blockly.Events.BlockCreate');

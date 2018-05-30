@@ -600,18 +600,20 @@ Blockly.Flyout.prototype.recordCategoryScrollPositions_ = function() {
   }
   // Record the length of each category, setting the final one to 0.
   var numCategories = this.categoryScrollPositions.length;
-  for (var i = 0; i < numCategories - 1; i++) {
-    var currentPos = this.categoryScrollPositions[i].position;
-    var nextPos = this.categoryScrollPositions[i+1].position;
-    var length = nextPos - currentPos;
-    this.categoryScrollPositions[i].length = length;
-  }
-  this.categoryScrollPositions[numCategories - 1].length = 0;
-  // Record the id of each category.
-  for (var i = 0; i < numCategories; i++) {
-    var category = this.parentToolbox_.getCategoryByIndex(i);
-    if (category && category.id_) {
-      this.categoryScrollPositions[i].categoryId = category.id_;
+  if (numCategories > 0) {
+    for (var i = 0; i < numCategories - 1; i++) {
+      var currentPos = this.categoryScrollPositions[i].position;
+      var nextPos = this.categoryScrollPositions[i+1].position;
+      var length = nextPos - currentPos;
+      this.categoryScrollPositions[i].length = length;
+    }
+    this.categoryScrollPositions[numCategories - 1].length = 0;
+    // Record the id of each category.
+    for (var i = 0; i < numCategories; i++) {
+      var category = this.parentToolbox_.getCategoryByIndex(i);
+      if (category && category.id_) {
+        this.categoryScrollPositions[i].categoryId = category.id_;
+      }
     }
   }
 };

@@ -209,13 +209,15 @@ Blockly.VerticalFlyout.prototype.getMetrics_ = function() {
   // the last category.
   var contentHeight = optionBox.height * this.workspace_.scale;
   this.recordCategoryScrollPositions_();
-  var lastLabel = this.categoryScrollPositions[
-      this.categoryScrollPositions.length - 1];
-  var lastPos = lastLabel.position * this.workspace_.scale;
-  var lastCategoryHeight = contentHeight - lastPos;
   var bottomPadding = this.MARGIN;
-  if (lastCategoryHeight < viewHeight) {
-    bottomPadding = viewHeight - lastCategoryHeight;
+  if (this.categoryScrollPositions.length > 0) {
+    var lastLabel = this.categoryScrollPositions[
+        this.categoryScrollPositions.length - 1];
+    var lastPos = lastLabel.position * this.workspace_.scale;
+    var lastCategoryHeight = contentHeight - lastPos;
+    if (lastCategoryHeight < viewHeight) {
+      bottomPadding = viewHeight - lastCategoryHeight;
+    }
   }
 
   var metrics = {

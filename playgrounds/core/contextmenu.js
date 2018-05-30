@@ -261,7 +261,7 @@ Blockly.ContextMenu.blockHelpOption = function(block) {
  */
 Blockly.ContextMenu.blockDuplicateOption = function(block) {
   var duplicateOption = {
-    text: Blockly.Msg.DUPLICATE_BLOCK,
+    text: Blockly.Msg.DUPLICATE,
     enabled: true,
     callback: block.duplicateAndDragCallback_()
   };
@@ -414,7 +414,7 @@ Blockly.ContextMenu.wsExpandOption = function(hasCollapsedBlocks, topBlocks) {
  */
 Blockly.ContextMenu.commentDeleteOption = function(comment) {
   var deleteOption = {
-    text: Blockly.Msg.REMOVE_COMMENT,
+    text: Blockly.Msg.DELETE,
     enabled: true,
     callback: function() {
       Blockly.Events.setGroup(true);
@@ -434,7 +434,7 @@ Blockly.ContextMenu.commentDeleteOption = function(comment) {
  */
 Blockly.ContextMenu.commentDuplicateOption = function(comment) {
   var duplicateOption = {
-    text: Blockly.Msg.DUPLICATE_COMMENT,
+    text: Blockly.Msg.DUPLICATE,
     enabled: true,
     callback: function() {
       Blockly.duplicate_(comment);
