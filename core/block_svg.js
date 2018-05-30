@@ -979,12 +979,15 @@ Blockly.BlockSvg.prototype.getCommentText = function() {
 /**
  * Set this block's comment text.
  * @param {?string} text The text, or null to delete.
+ * @param {number=} commentX Optional x position for scratch comment in workspace coordinates
+ * @param {number=} commentY Optional y position for scratch comment in workspace coordinates
+ * @param {boolean=} minimized Optional minimized state for scratch comment, defaults to false
  */
-Blockly.BlockSvg.prototype.setCommentText = function(text) {
+Blockly.BlockSvg.prototype.setCommentText = function(text, commentX, commentY, minimized) {
   var changedState = false;
   if (goog.isString(text)) {
     if (!this.comment) {
-      this.comment = new Blockly.Comment(this);
+      this.comment = new Blockly.ScratchBlockComment(this, commentX, commentY, minimized);
       changedState = true;
     }
     this.comment.setText(/** @type {string} */ (text));
@@ -996,6 +999,9 @@ Blockly.BlockSvg.prototype.setCommentText = function(text) {
   }
   if (changedState && this.rendered) {
     this.render();
+    if (goog.isString(text)) {
+      this.comment.setVisible(true);
+    }
     // Adding or removing a comment icon will cause the block to change shape.
     this.bumpNeighbours_();
   }
