@@ -264,7 +264,6 @@ Blockly.Msg.SOUND_VOLUME = "volume";
 Blockly.Msg.DUPLICATE = 'Duplicate';
 Blockly.Msg.DELETE = 'Delete';
 Blockly.Msg.ADD_COMMENT = 'Add Comment';
-Blockly.Msg.REMOVE_COMMENT = 'Remove Comment';
 Blockly.Msg.DELETE_BLOCK = 'Delete Block';
 Blockly.Msg.DELETE_X_BLOCKS = 'Delete %1 Blocks';
 Blockly.Msg.DELETE_ALL_BLOCKS = 'Delete all %1 blocks?';

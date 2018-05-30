@@ -408,14 +408,12 @@ Blockly.ContextMenu.wsExpandOption = function(hasCollapsedBlocks, topBlocks) {
  * Make a context menu option for deleting the current workspace comment.
  * @param {!Blockly.WorkspaceCommentSvg} comment The workspace comment where the
  *     right-click originated.
- * @param {?string} optLabel An optional label for the comment. Defaults to
- * Blockly.Msg.REMOVE_COMMENT
  * @return {!Object} A menu option, containing text, enabled, and a callback.
  * @package
  */
-Blockly.ContextMenu.commentDeleteOption = function(comment, optLabel) {
+Blockly.ContextMenu.commentDeleteOption = function(comment) {
   var deleteOption = {
-    text: typeof optLabel == 'string' ? optLabel : Blockly.Msg.REMOVE_COMMENT,
+    text: Blockly.Msg.DELETE,
     enabled: true,
     callback: function() {
       Blockly.Events.setGroup(true);
