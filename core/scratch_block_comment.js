@@ -324,7 +324,8 @@ Blockly.ScratchBlockComment.prototype.setMinimized = function(minimize) {
 Blockly.ScratchBlockComment.prototype.setBubbleSize = function(width, height) {
   if (this.bubble_) {
     if (this.isMinimized_) {
-      this.bubble_.setBubbleSize(width, Blockly.ScratchBubble.TOP_BAR_HEIGHT);
+      this.bubble_.setBubbleSize(Blockly.ScratchBlockComment.MINIMIZE_WIDTH,
+          Blockly.ScratchBubble.TOP_BAR_HEIGHT);
     } else {
       this.bubble_.setBubbleSize(width, height);
       this.width_ = width;
