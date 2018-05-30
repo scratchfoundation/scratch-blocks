@@ -2,7 +2,7 @@
  * @license
  * Visual Blocks Editor
  *
- * Copyright 2011 Google Inc.
+ * Copyright 2018 Google Inc.
  * https://developers.google.com/blockly/
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -27,28 +27,29 @@
 goog.provide('Blockly.ScratchBlockComment');
 
 goog.require('Blockly.Comment');
-goog.require('Blockly.ScratchBubble');
 goog.require('Blockly.Events.BlockChange');
 goog.require('Blockly.Events.Ui');
 goog.require('Blockly.Icon');
-goog.require('goog.userAgent');
+goog.require('Blockly.ScratchBubble');
+
 goog.require('goog.math.Coordinate');
+goog.require('goog.userAgent');
 
 
 /**
  * Class for a comment.
  * @param {!Blockly.Block} block The block associated with this comment.
- * @param {?number} x Initial x position for comment
- * @param {?number} y Initial y position for comment
- * @param {?boolean} minimized Whether or not this comment is minimized
- * (only the top bar displays), defaults to false
+ * @param {number=} x Initial x position for comment, in workspace coordinates.
+ * @param {number=} y Initial y position for comment, in workspace coordinates.
+ * @param {boolean=} minimized Whether or not this comment is minimized
+ *     (only the top bar displays), defaults to false.
  * @extends {Blockly.Comment}
  * @constructor
  */
 Blockly.ScratchBlockComment = function(block, x, y, minimized) {
   Blockly.ScratchBlockComment.superClass_.constructor.call(this, block);
-  this.x = x;
-  this.y = y;
+  this.x_ = x;
+  this.y_ = y;
   this.isMinimized_ = minimized || false;
 };
 goog.inherits(Blockly.ScratchBlockComment, Blockly.Comment);
@@ -72,17 +73,20 @@ Blockly.ScratchBlockComment.prototype.SIZE = 0;
 
 /**
  * Offset for text area in comment bubble.
+ * @private
  */
 Blockly.ScratchBlockComment.TEXTAREA_OFFSET = 12;
 
 /**
  * Maximum lable length (actual label length will include
- * one additional character, the ellipsis)
+ * one additional character, the ellipsis).
+ * @private
  */
 Blockly.ScratchBlockComment.MAX_LABEL_LENGTH = 16;
 
 /**
  * Width that a minimized comment should have.
+ * @private
  */
 Blockly.ScratchBlockComment.MINIMIZE_WIDTH = 200;
 
@@ -103,6 +107,7 @@ Blockly.ScratchBlockComment.prototype.drawIcon_ = function(_group) {
  * @param {number} cursorX Horizontal offset at which to position the icon.
  * @param {number} topMargin Vertical offset from the top of the block to position the icon.
  * @return {number} Horizontal offset for next item to draw.
+ * @package
  */
 Blockly.ScratchBlockComment.prototype.renderIcon = function(cursorX, topMargin) {
   if (this.collapseHidden && this.block_.isCollapsed()) {
@@ -127,8 +132,17 @@ Blockly.ScratchBlockComment.prototype.renderIcon = function(cursorX, topMargin) 
 };
 
 /**
+ * @typedef CommentContent The comment editor and label text to display in the
+ *     comment top bar.
+ * @property {!Element} commentEditor The DOM element that contains the
+ *     text area for writing and editing the comment.
+ * @property {!String} labelText The truncated label text for the comment to
+ *     display in its minimized state.
+ */
+
+/**
  * Create the editor for the comment's bubble.
- * @return {!Element} The top-level node of the editor.
+ * @return {!CommentContent} The top-level node of the editor.
  * @private
  */
 Blockly.ScratchBlockComment.prototype.createEditor_ = function() {
@@ -198,6 +212,7 @@ Blockly.ScratchBlockComment.prototype.resizeBubble_ = function() {
 
 /**
  * Change the colour of the associated bubble to match its block.
+ * @package
  */
 Blockly.ScratchBlockComment.prototype.updateColour = function() {
   if (this.isVisible()) {
@@ -230,21 +245,21 @@ Blockly.ScratchBlockComment.prototype.setVisible = function(visible) {
   if (visible) {
     // Decide on placement of the bubble if x and y coordinates are not provided
     // based on knowledge of the block that owns this comment:
-    if (!this.x && this.x != 0 && !this.y && this.y != 0) {
+    if (!this.x_ && this.x_ != 0 && !this.y_ && this.y_ != 0) {
       if (this.isMinimized_) {
-        this.x = this.iconXY_.x + 16;
-        this.y = this.iconXY_.y - (Blockly.ScratchBubble.TOP_BAR_HEIGHT / 2);
+        this.x_ = this.iconXY_.x + 16;
+        this.y_ = this.iconXY_.y - (Blockly.ScratchBubble.TOP_BAR_HEIGHT / 2);
       } else {
         // Check if the width of this block (and all it's children/descendents) is the
         // same as the width of just this block
         var fullStackWidth = Math.floor(this.block_.getHeightWidth().width);
         var thisBlockWidth = Math.floor(this.block_.svgPath_.getBBox().width);
         if (fullStackWidth == thisBlockWidth && !this.block_.parentBlock_) {
-          this.x = this.iconXY_.x + 32;
+          this.x_ = this.iconXY_.x + 32;
         } else {
-          this.x = this.iconXY_.x + fullStackWidth + 32;
+          this.x_ = this.iconXY_.x + fullStackWidth + 32;
         }
-        this.y = this.iconXY_.y - (Blockly.ScratchBubble.TOP_BAR_HEIGHT / 2);
+        this.y_ = this.iconXY_.y - (Blockly.ScratchBubble.TOP_BAR_HEIGHT / 2);
       }
     }
 
@@ -252,7 +267,7 @@ Blockly.ScratchBlockComment.prototype.setVisible = function(visible) {
     this.bubble_ = new Blockly.ScratchBubble(
         /** @type {!Blockly.WorkspaceSvg} */ (this.block_.workspace),
         this.createEditor_(), this.iconXY_, this.width_, this.height_,
-        this.x, this.y, this.isMinimized_);
+        this.x_, this.y_, this.isMinimized_);
     this.bubble_.setAutoLayout(false);
     this.bubble_.registerResizeEvent(this.resizeBubble_.bind(this));
     this.bubble_.registerMinimizeToggleEvent(this.toggleMinimize_.bind(this));
@@ -351,8 +366,8 @@ Blockly.ScratchBlockComment.prototype.setText = function(text) {
 
 /**
  * Move this comment to a position given x and y coordinates.
- * @param {number} x The x-coordinate
- * @param {number} y The y-coordinate
+ * @param {number} x The x-coordinate on the workspace.
+ * @param {number} y The y-coordinate on the workspace.
  */
 Blockly.ScratchBlockComment.prototype.moveTo = function(x, y) {
   if (this.bubble_) {
@@ -376,10 +391,11 @@ Blockly.ScratchBlockComment.prototype.getXY = function() {
 
 /**
  * Get the height and width of this comment.
- * Note: this does not use the bubble XY because
+ * Note: this does not use the current bubble size because
  * the bubble may be minimized.
  * @return {{height: number, width: number}} The height and width of
- * this comment when it is full size.
+ *     this comment when it is full size. These numbers do not change
+ *     as the workspace zoom changes.
  */
 Blockly.ScratchBlockComment.prototype.getHeightWidth = function() {
   return {height: this.height_, width: this.width_};

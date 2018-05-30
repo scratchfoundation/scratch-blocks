@@ -2,7 +2,7 @@
  * @license
  * Visual Blocks Editor
  *
- * Copyright 2012 Google Inc.
+ * Copyright 2018 Google Inc.
  * https://developers.google.com/blockly/
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -46,7 +46,8 @@ goog.require('goog.userAgent');
  * @param {?number} bubbleX X position of bubble
  * @param {?number} bubbleY Y position of bubble
  * @param {?boolean} minimized Whether or not this comment bubble is minimized
- * (only the top bar displays), defaults to false if not provided.
+ *     (only the top bar displays), defaults to false if not provided.
+ * @extends {Blockly.Bubble}
  * @constructor
  */
 Blockly.ScratchBubble = function(workspace, content, anchorXY,
