@@ -189,27 +189,7 @@ Blockly.Xml.blockToDom = function(block, opt_noId) {
 
   Blockly.Xml.allFieldsToDom_(block, element);
 
-  var commentText = block.getCommentText();
-  if (commentText) {
-    var commentElement = goog.dom.createDom('comment', null, commentText);
-    if (typeof block.comment == 'object') {
-      commentElement.setAttribute('pinned', block.comment.isVisible());
-      var hw;
-      if (block.comment instanceof Blockly.ScratchBlockComment) {
-        commentElement.setAttribute('type', 'scratch');
-        var xy = block.comment.getXY();
-        commentElement.setAttribute('x', xy.x);
-        commentElement.setAttribute('y', xy.y);
-        commentElement.setAttribute('minimized', block.comment.isMinimized());
-        hw = block.comment.getHeightWidth();
-      } else {
-        hw = block.comment.getBubbleSize();
-      }
-      commentElement.setAttribute('h', hw.height);
-      commentElement.setAttribute('w', hw.width);
-    }
-    element.appendChild(commentElement);
-  }
+  Blockly.Xml.scratchCommentToDom_(block, element);
 
   if (block.data) {
     var dataElement = goog.dom.createDom('data', null, block.data);
@@ -273,6 +253,36 @@ Blockly.Xml.blockToDom = function(block, opt_noId) {
   }
 
   return element;
+};
+
+/**
+ * Encode a ScratchBlockComment as XML.
+ * @param {!Blockly.ScratchBlockComment} block The block possibly containing
+ *     a comment to endcode.
+ * @param {!Element} element The XML element to which the comment should
+ *     encoding should be attached.
+ */
+Blockly.Xml.scratchCommentToDom_ = function(block, element) {
+  var commentText = block.getCommentText();
+  if (commentText) {
+    var commentElement = goog.dom.createDom('comment', null, commentText);
+    if (typeof block.comment == 'object') {
+      commentElement.setAttribute('pinned', block.comment.isVisible());
+      var xy = block.comment.getXY();
+      commentElement.setAttribute('x', xy.x);
+      commentElement.setAttribute('y', xy.y);
+      commentElement.setAttribute('minimized', block.comment.isMinimized());
+      var hw;
+      if (block.comment instanceof Blockly.ScratchBlockComment) {
+        hw = block.comment.getHeightWidth();
+      } else {
+        hw = block.comment.getBubbleSize();
+      }
+      commentElement.setAttribute('h', hw.height);
+      commentElement.setAttribute('w', hw.width);
+    }
+    element.appendChild(commentElement);
+  }
 };
 
 /**
@@ -671,19 +681,12 @@ Blockly.Xml.domToBlockHeadless_ = function(xmlBlock, workspace) {
         }
         break;
       case 'comment':
-        if (xmlChild.getAttribute('type') &&
-          xmlChild.getAttribute('type') === 'scratch') {
-          // Position bubble if x and y are specified
-          var bubbleX = parseInt(xmlChild.getAttribute('x'), 10);
-          var bubbleY = parseInt(xmlChild.getAttribute('y'), 10);
-          var minimized = xmlChild.getAttribute('minimized') || false;
+        var bubbleX = parseInt(xmlChild.getAttribute('x'), 10);
+        var bubbleY = parseInt(xmlChild.getAttribute('y'), 10);
+        var minimized = xmlChild.getAttribute('minimized') || false;
 
-          block.setCommentText(xmlChild.textContent, 'scratch', bubbleX, bubbleY,
-              minimized == 'true');
-
-        } else {
-          block.setCommentText(xmlChild.textContent);
-        }
+        block.setCommentText(xmlChild.textContent, bubbleX, bubbleY,
+            minimized == 'true');
 
         var visible = xmlChild.getAttribute('pinned');
         if (visible && !block.isInFlyout) {
