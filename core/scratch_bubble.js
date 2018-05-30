@@ -453,7 +453,8 @@ Blockly.ScratchBubble.prototype.setBubbleSize = function(width, height) {
     if (this.workspace_.RTL) {
       // Mirror the resize group.
       this.resizeGroup_.setAttribute('transform', 'translate(' +
-          resizeSize + ',' + (height - doubleBorderWidth) + ') scale(-1 1)');
+          (resizeSize + doubleBorderWidth) + ',' +
+          (this.height_ - doubleBorderWidth - resizeSize) + ') scale(-1, 1)');
     } else {
       this.resizeGroup_.setAttribute('transform', 'translate(' +
           (this.width_ - doubleBorderWidth - resizeSize) + ',' +
