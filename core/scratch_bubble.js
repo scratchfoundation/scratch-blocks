@@ -145,7 +145,40 @@ Blockly.ScratchBubble.prototype.createDom_ = function(content, hasResize, minimi
       },
       this.bubbleGroup_);
 
-  // Comment Top Bar
+  this.labelText_ = content.labelText;
+  this.createCommentTopBar_();
+
+  // Comment Text Editor
+  this.commentEditor_ = content.commentEditor;
+  this.bubbleGroup_.appendChild(this.commentEditor_);
+
+  // Comment Resize Handle
+  if (hasResize) {
+    this.createResizeHandle_();
+  } else {
+    this.resizeGroup_ = null;
+  }
+
+  // Show / hide relevant things based on minimized state
+  if (minimized) {
+    this.minimizeArrow_.setAttributeNS('http://www.w3.org/1999/xlink',
+        'xlink:href', Blockly.mainWorkspace.options.pathToMedia + 'comment-arrow-up.svg');
+    this.commentEditor_.setAttribute('display', 'none');
+    this.resizeGroup_.setAttribute('display', 'none');
+  } else {
+    this.minimizeArrow_.setAttributeNS('http://www.w3.org/1999/xlink',
+        'xlink:href', Blockly.mainWorkspace.options.pathToMedia + 'comment-arrow-down.svg');
+    this.topBarLabel_.setAttribute('display', 'none');
+  }
+
+  return this.bubbleGroup_;
+};
+
+/**
+ * Create the comment top bar and its contents.
+ * @private
+ */
+Blockly.ScratchBubble.prototype.createCommentTopBar_ = function() {
   this.commentTopBar_ = Blockly.utils.createSvgElement('rect',
       {
         'class': 'blocklyDraggable scratchCommentTopBar',
@@ -154,6 +187,15 @@ Blockly.ScratchBubble.prototype.createDom_ = function(content, hasResize, minimi
         'height': Blockly.ScratchBubble.TOP_BAR_HEIGHT
       }, this.bubbleGroup_);
 
+  this.createTopBarIcons_();
+  this.createTopBarLabel_();
+};
+
+/**
+ * Create the minimize toggle and delete icons that in the comment top bar.
+ * @private
+ */
+Blockly.ScratchBubble.prototype.createTopBarIcons_ = function() {
   var topBarMiddleY = (Blockly.ScratchBubble.TOP_BAR_HEIGHT / 2) +
       Blockly.ScratchBubble.BORDER_WIDTH;
 
@@ -178,14 +220,14 @@ Blockly.ScratchBubble.prototype.createDom_ = function(content, hasResize, minimi
       }, this.bubbleGroup_);
   this.deleteIcon_.setAttributeNS('http://www.w3.org/1999/xlink',
       'xlink:href', Blockly.mainWorkspace.options.pathToMedia + 'delete-x.svg');
+};
 
-  // Comment Text Editor
-  this.commentEditor_ = content.commentEditor;
-  this.bubbleGroup_.appendChild(this.commentEditor_);
-
-  // Comment Top Bar Label (truncated comment text that shows when comment is
-  // minimized)
-  this.labelText_ = content.labelText;
+/**
+ * Create the comment top bar label. This is the truncated comment text
+ * that shows when comment is minimized.
+ * @private
+ */
+Blockly.ScratchBubble.prototype.createTopBarLabel_ = function() {
   this.topBarLabel_ = Blockly.utils.createSvgElement('text',
       {
         'class': 'scratchCommentText',
@@ -197,48 +239,31 @@ Blockly.ScratchBubble.prototype.createDom_ = function(content, hasResize, minimi
 
   this.labelTextNode_ = document.createTextNode(this.labelText_);
   this.topBarLabel_.appendChild(this.labelTextNode_);
+};
 
-  // Comment Resize Handle
-  if (hasResize) {
-    this.resizeGroup_ = Blockly.utils.createSvgElement('g',
-        {'class': this.workspace_.RTL ?
-                  'scratchCommentResizeSW' : 'scratchCommentResizeSE'},
-        this.bubbleGroup_);
-    var resizeSize = 12 * Blockly.ScratchBubble.BORDER_WIDTH;
-    Blockly.utils.createSvgElement('polygon',
-        {'points': '0,x x,x x,0'.replace(/x/g, resizeSize.toString())},
-        this.resizeGroup_);
-    Blockly.utils.createSvgElement('line',
-        {
-          'class': 'blocklyResizeLine',
-          'x1': resizeSize / 3, 'y1': resizeSize - 1,
-          'x2': resizeSize - 1, 'y2': resizeSize / 3
-        }, this.resizeGroup_);
-    Blockly.utils.createSvgElement('line',
-        {
-          'class': 'blocklyResizeLine',
-          'x1': resizeSize * 2 / 3,
-          'y1': resizeSize - 1,
-          'x2': resizeSize - 1,
-          'y2': resizeSize * 2 / 3
-        }, this.resizeGroup_);
-  } else {
-    this.resizeGroup_ = null;
-  }
-
-  // Show / hide relevant things based on minimized state
-  if (minimized) {
-    this.minimizeArrow_.setAttributeNS('http://www.w3.org/1999/xlink',
-        'xlink:href', Blockly.mainWorkspace.options.pathToMedia + 'comment-arrow-up.svg');
-    this.commentEditor_.setAttribute('display', 'none');
-    this.resizeGroup_.setAttribute('display', 'none');
-  } else {
-    this.minimizeArrow_.setAttributeNS('http://www.w3.org/1999/xlink',
-        'xlink:href', Blockly.mainWorkspace.options.pathToMedia + 'comment-arrow-down.svg');
-    this.topBarLabel_.setAttribute('display', 'none');
-  }
-
-  return this.bubbleGroup_;
+Blockly.ScratchBubble.prototype.createResizeHandle_ = function() {
+  this.resizeGroup_ = Blockly.utils.createSvgElement('g',
+      {'class': this.workspace_.RTL ?
+                'scratchCommentResizeSW' : 'scratchCommentResizeSE'},
+      this.bubbleGroup_);
+  var resizeSize = 12 * Blockly.ScratchBubble.BORDER_WIDTH;
+  Blockly.utils.createSvgElement('polygon',
+      {'points': '0,x x,x x,0'.replace(/x/g, resizeSize.toString())},
+      this.resizeGroup_);
+  Blockly.utils.createSvgElement('line',
+      {
+        'class': 'blocklyResizeLine',
+        'x1': resizeSize / 3, 'y1': resizeSize - 1,
+        'x2': resizeSize - 1, 'y2': resizeSize / 3
+      }, this.resizeGroup_);
+  Blockly.utils.createSvgElement('line',
+      {
+        'class': 'blocklyResizeLine',
+        'x1': resizeSize * 2 / 3,
+        'y1': resizeSize - 1,
+        'x2': resizeSize - 1,
+        'y2': resizeSize * 2 / 3
+      }, this.resizeGroup_);
 };
 
 /**
