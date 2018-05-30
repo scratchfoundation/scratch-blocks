@@ -79,7 +79,7 @@ Blockly.ScratchBlockComment.TEXTAREA_OFFSET = 12;
  * Maximum lable length (actual label length will include
  * one additional character, the ellipsis)
  */
-Blockly.ScratchBlockComment.MAX_LABEL_LENGTH = 20;
+Blockly.ScratchBlockComment.MAX_LABEL_LENGTH = 16;
 
 /**
  * Width that a minimized comment should have.
@@ -228,23 +228,24 @@ Blockly.ScratchBlockComment.prototype.setVisible = function(visible) {
   var text = this.getText();
   var size = this.getBubbleSize();
   if (visible) {
-    // Decide on placement of the bubble based on knowledge of the block
-    // that owns this comment:
-    if (this.isMinimized_) {
-      // If the block is minimized, ignore the given x and y
-      this.x = this.iconXY_.x + 16;
-      this.y = this.iconXY_.y - (Blockly.ScratchBubble.TOP_BAR_HEIGHT / 2);
-    } else if (!this.x && this.x != 0 && !this.y && this.y != 0) {
-      // Check if the width of this block (and all it's children/descendents) is the
-      // same as the width of just this block
-      var fullStackWidth = Math.floor(this.block_.getHeightWidth().width);
-      var thisBlockWidth = Math.floor(this.block_.svgPath_.getBBox().width);
-      if (fullStackWidth == thisBlockWidth && !this.block_.parentBlock_) {
-        this.x = this.iconXY_.x + 32;
+    // Decide on placement of the bubble if x and y coordinates are not provided
+    // based on knowledge of the block that owns this comment:
+    if (!this.x && this.x != 0 && !this.y && this.y != 0) {
+      if (this.isMinimized_) {
+        this.x = this.iconXY_.x + 16;
+        this.y = this.iconXY_.y - (Blockly.ScratchBubble.TOP_BAR_HEIGHT / 2);
       } else {
-        this.x = this.iconXY_.x + fullStackWidth + 32;
+        // Check if the width of this block (and all it's children/descendents) is the
+        // same as the width of just this block
+        var fullStackWidth = Math.floor(this.block_.getHeightWidth().width);
+        var thisBlockWidth = Math.floor(this.block_.svgPath_.getBBox().width);
+        if (fullStackWidth == thisBlockWidth && !this.block_.parentBlock_) {
+          this.x = this.iconXY_.x + 32;
+        } else {
+          this.x = this.iconXY_.x + fullStackWidth + 32;
+        }
+        this.y = this.iconXY_.y - (Blockly.ScratchBubble.TOP_BAR_HEIGHT / 2);
       }
-      this.y = this.iconXY_.y - (Blockly.ScratchBubble.TOP_BAR_HEIGHT / 2);
     }
 
     // Create the bubble.
