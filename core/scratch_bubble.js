@@ -116,10 +116,16 @@ Blockly.ScratchBubble.LINE_THICKNESS = 1;
 Blockly.ScratchBubble.TOP_BAR_HEIGHT = 32;
 
 /**
- * The size of the top bar icons.
+ * The size of the minimize arrow icon in the comment top bar.
  * @private
  */
-Blockly.ScratchBubble.TOP_BAR_ICON_SIZE = 12;
+Blockly.ScratchBubble.MINIMIZE_ICON_SIZE = 16;
+
+/**
+ * The size of the delete icon in the comment top bar.
+ * @private
+ */
+Blockly.ScratchBubble.DELETE_ICON_SIZE = 12;
 
 /**
  * The inset for the top bar icons.
@@ -205,23 +211,22 @@ Blockly.ScratchBubble.prototype.createTopBarIcons_ = function() {
       Blockly.ScratchBubble.BORDER_WIDTH;
 
   // Minimize Toggle Icon in Comment Top Bar
-  var minArrowX = Blockly.ScratchBubble.TOP_BAR_ICON_INSET;
-  var minArrowY = topBarMiddleY  - (Blockly.ScratchBubble.TOP_BAR_ICON_SIZE / 2);
+  var xInset = Blockly.ScratchBubble.TOP_BAR_ICON_INSET;
   this.minimizeArrow_ = Blockly.utils.createSvgElement('image',
       {
-        'x': minArrowX,
-        'y': minArrowY,
-        'width': Blockly.ScratchBubble.TOP_BAR_ICON_SIZE,
-        'height': Blockly.ScratchBubble.TOP_BAR_ICON_SIZE
+        'x': xInset,
+        'y': topBarMiddleY - Blockly.ScratchBubble.MINIMIZE_ICON_SIZE / 2,
+        'width': Blockly.ScratchBubble.MINIMIZE_ICON_SIZE,
+        'height': Blockly.ScratchBubble.MINIMIZE_ICON_SIZE
       }, this.bubbleGroup_);
 
   // Delete Icon in Comment Top Bar
   this.deleteIcon_ = Blockly.utils.createSvgElement('image',
       {
-        'x': this.width_ - Blockly.ScratchBubble.TOP_BAR_ICON_INSET,
-        'y': topBarMiddleY - Blockly.ScratchBubble.TOP_BAR_ICON_SIZE / 2,
-        'width': Blockly.ScratchBubble.TOP_BAR_ICON_SIZE,
-        'height': Blockly.ScratchBubble.TOP_BAR_ICON_SIZE
+        'x': xInset,
+        'y': topBarMiddleY - Blockly.ScratchBubble.DELETE_ICON_SIZE / 2,
+        'width': Blockly.ScratchBubble.DELETE_ICON_SIZE,
+        'height': Blockly.ScratchBubble.DELETE_ICON_SIZE
       }, this.bubbleGroup_);
   this.deleteIcon_.setAttributeNS('http://www.w3.org/1999/xlink',
       'xlink:href', Blockly.mainWorkspace.options.pathToMedia + 'delete-x.svg');
@@ -446,8 +451,15 @@ Blockly.ScratchBubble.prototype.setBubbleSize = function(width, height) {
   this.bubbleBack_.setAttribute('height', height);
   this.commentTopBar_.setAttribute('width', width - doubleBorderWidth);
   this.commentTopBar_.setAttribute('height', Blockly.ScratchBubble.TOP_BAR_HEIGHT);
-  this.deleteIcon_.setAttribute('x', width - (Blockly.ScratchBubble.TOP_BAR_ICON_SIZE) -
-    Blockly.ScratchBubble.TOP_BAR_ICON_INSET);
+  if (this.workspace_.RTL) {
+    this.minimizeArrow_.setAttribute('x', width -
+        (Blockly.ScratchBubble.MINIMIZE_ICON_SIZE) -
+        Blockly.ScratchBubble.TOP_BAR_ICON_INSET);
+  } else {
+    this.deleteIcon_.setAttribute('x', width -
+        Blockly.ScratchBubble.DELETE_ICON_SIZE -
+        Blockly.ScratchBubble.TOP_BAR_ICON_INSET);
+  }
   if (this.resizeGroup_) {
     var resizeSize = 12 * Blockly.ScratchBubble.BORDER_WIDTH;
     if (this.workspace_.RTL) {
