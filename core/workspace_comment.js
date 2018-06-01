@@ -171,6 +171,15 @@ Blockly.WorkspaceComment.prototype.setWidth = function(width) {
 };
 
 /**
+ * Get the height and width of this comment.
+ * @return {{height: number, width: number}} The height and width of this comment;
+ *     these numbers do not change as the workspace scales.
+ */
+Blockly.WorkspaceComment.prototype.getHeightWidth = function() {
+  return {height: this.height_, width: this.width_};
+};
+
+/**
  * Get stored location.
  * @return {!goog.math.Coordinate} The comment's stored location.  This is not
  *     valid if the comment is currently being dragged.
@@ -383,4 +392,3 @@ Blockly.WorkspaceComment.parseAttributes = function(xml) {
     content: xml.textContent
   };
 };
-
