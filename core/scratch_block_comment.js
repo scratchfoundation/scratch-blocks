@@ -39,26 +39,30 @@ goog.require('goog.userAgent');
 /**
  * Class for a comment.
  * @param {!Blockly.Block} block The block associated with this comment.
+ * @param {string=} id Optional uid for comment; a new one will be generated if
+ *     not provided.
  * @param {number=} x Initial x position for comment, in workspace coordinates.
  * @param {number=} y Initial y position for comment, in workspace coordinates.
  * @param {boolean=} minimized Whether or not this comment is minimized
  *     (only the top bar displays), defaults to false.
- * @param {string=} id Optional uid for comment, will be generated if
- * not provided.
  * @extends {Blockly.Comment}
  * @constructor
  */
-Blockly.ScratchBlockComment = function(block, x, y, minimized, id) {
+Blockly.ScratchBlockComment = function(block, id, x, y, minimized) {
   Blockly.ScratchBlockComment.superClass_.constructor.call(this, block);
   this.x_ = x;
   this.y_ = y;
   this.isMinimized_ = minimized || false;
 
   this.workspace = block.workspace;
-  this.id = (id && !this.workspace.getCommentById(id)) ?
-      id : Blockly.utils.genUid();
+  this.id = goog.isString(id) ? id : Blockly.utils.genUid();
+  this.blockId = block.id;
 
-  Blockly.ScratchBlockComment.fireCreateEvent(this);
+  if (!block.rendered) {
+    Blockly.ScratchBlockComment.fireCreateEvent(this);
+  }
+  // If the block is rendered, fire event the create event when the comment is made
+  // visible
 };
 goog.inherits(Blockly.ScratchBlockComment, Blockly.Comment);
 
@@ -232,8 +236,6 @@ Blockly.ScratchBlockComment.prototype.setVisible = function(visible) {
     // No change.
     return;
   }
-  Blockly.Events.fire(
-      new Blockly.Events.Ui(this.block_, 'commentOpen', !visible, visible));
   if ((!this.block_.isEditable() && !this.textarea_) || goog.userAgent.IE) {
     // Steal the code from warnings to make an uneditable text bubble.
     // MSIE does not support foreignobject; textareas are impossible.
@@ -296,6 +298,7 @@ Blockly.ScratchBlockComment.prototype.setVisible = function(visible) {
   // Restore the bubble stats after the visibility switch.
   this.setText(text);
   this.setBubbleSize(size.width, size.height);
+  if (visible) Blockly.ScratchBlockComment.fireCreateEvent(this);
 };
 
 /**
@@ -313,6 +316,8 @@ Blockly.ScratchBlockComment.prototype.toggleMinimize_ = function() {
  */
 Blockly.ScratchBlockComment.prototype.setMinimized = function(minimize) {
   if (this.isMinimized_ == minimize) return;
+  Blockly.Events.fire(new Blockly.Events.CommentChange(this,
+      {minimized: this.isMinimized_}, {minimized: minimize}));
   this.isMinimized_ = minimize;
   if (minimize) {
     this.bubble_.setMinimized(true, this.getLabelText());
@@ -486,8 +491,11 @@ Blockly.ScratchBlockComment.fireCreateEvent = function(comment) {
  * Dispose of this comment.
  */
 Blockly.ScratchBlockComment.prototype.dispose = function() {
-  Blockly.ScratchBlockComment.superClass_.dispose.call(this);
   if (Blockly.Events.isEnabled()) {
+    // Emit delete event before disposal begins so that the
+    // event's reference to this comment contains all the relevant
+    // information (for undoing this event)
     Blockly.Events.fire(new Blockly.Events.CommentDelete(this));
   }
+  Blockly.ScratchBlockComment.superClass_.dispose.call(this);
 };

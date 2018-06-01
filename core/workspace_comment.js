@@ -254,6 +254,24 @@ Blockly.WorkspaceComment.prototype.setContent = function(content) {
 };
 
 /**
+ * Same as Blockly.WorkspaceComment.prototype.getContent.
+ * @return {string} The text content of this comment.
+ * @package
+ */
+Blockly.WorkspaceComment.prototype.getText = function() {
+  return this.getContent();
+};
+
+/**
+ * Same as Blockly.WorkspaceComment.prototype.setContent.
+ * @param {string} text The text content of this comment.
+ * @package
+ */
+Blockly.WorkspaceComment.prototype.setText = function(text) {
+  this.setContent(text);
+};
+
+/**
  * Encode a comment subtree as XML with XY coordinates.
  * @param {boolean=} opt_noId True if the encoder should skip the comment id.
  * @return {!Element} Tree of XML elements.

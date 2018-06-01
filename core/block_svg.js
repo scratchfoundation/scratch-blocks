@@ -979,15 +979,18 @@ Blockly.BlockSvg.prototype.getCommentText = function() {
 /**
  * Set this block's comment text.
  * @param {?string} text The text, or null to delete.
+ * @param {string=} commentId Id of the comment, or a new one will be generated if not provided.
  * @param {number=} commentX Optional x position for scratch comment in workspace coordinates
  * @param {number=} commentY Optional y position for scratch comment in workspace coordinates
  * @param {boolean=} minimized Optional minimized state for scratch comment, defaults to false
  */
-Blockly.BlockSvg.prototype.setCommentText = function(text, commentX, commentY, minimized) {
+Blockly.BlockSvg.prototype.setCommentText = function(text, commentId,
+    commentX, commentY, minimized) {
   var changedState = false;
   if (goog.isString(text)) {
     if (!this.comment) {
-      this.comment = new Blockly.ScratchBlockComment(this, commentX, commentY, minimized);
+      this.comment = new Blockly.ScratchBlockComment(this, commentId,
+          commentX, commentY, minimized);
       changedState = true;
     }
     this.comment.setText(/** @type {string} */ (text));
