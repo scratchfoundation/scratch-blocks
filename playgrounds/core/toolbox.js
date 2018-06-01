@@ -161,7 +161,8 @@ Blockly.Toolbox.prototype.createFlyout_ = function() {
     RTL: workspace.RTL,
     oneBasedIndex: workspace.options.oneBasedIndex,
     horizontalLayout: workspace.horizontalLayout,
-    toolboxPosition: workspace.options.toolboxPosition
+    toolboxPosition: workspace.options.toolboxPosition,
+    stackGlowFilterId: workspace.options.stackGlowFilterId
   };
 
   if (workspace.horizontalLayout) {
