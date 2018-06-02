@@ -173,7 +173,7 @@ Blockly.WorkspaceCommentSvg.prototype.createEditor_ = function() {
   Blockly.bindEventWithChecks_(textarea, 'change', this, function(
       /* eslint-disable no-unused-vars */ e
       /* eslint-enable no-unused-vars */) {
-    this.setContent(textarea.value);
+    this.setText(textarea.value);
   });
   return this.foreignObject_;
 };

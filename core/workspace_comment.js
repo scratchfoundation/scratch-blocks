@@ -245,39 +245,21 @@ Blockly.WorkspaceComment.prototype.setMovable = function(movable) {
  * @return {string} Comment text.
  * @package
  */
-Blockly.WorkspaceComment.prototype.getContent = function() {
+Blockly.WorkspaceComment.prototype.getText = function() {
   return this.content_;
 };
 
 /**
- * Set this comment's content.
- * @param {string} content Comment content.
- * @package
- */
-Blockly.WorkspaceComment.prototype.setContent = function(content) {
-  if (this.content_ != content) {
-    Blockly.Events.fire(
-        new Blockly.Events.CommentChange(this, this.content_, content));
-    this.content_ = content;
-  }
-};
-
-/**
- * Same as Blockly.WorkspaceComment.prototype.getContent.
- * @return {string} The text content of this comment.
- * @package
- */
-Blockly.WorkspaceComment.prototype.getText = function() {
-  return this.getContent();
-};
-
-/**
- * Same as Blockly.WorkspaceComment.prototype.setContent.
- * @param {string} text The text content of this comment.
+ * Set this comment's text content.
+ * @param {string} text Comment text.
  * @package
  */
 Blockly.WorkspaceComment.prototype.setText = function(text) {
-  this.setContent(text);
+  if (this.content_ != text) {
+    Blockly.Events.fire(
+        new Blockly.Events.CommentChange(this, this.content_, text));
+    this.content_ = text;
+  }
 };
 
 /**
@@ -307,7 +289,7 @@ Blockly.WorkspaceComment.prototype.toXml = function(opt_noId) {
   if (!opt_noId) {
     commentElement.setAttribute('id', this.id);
   }
-  commentElement.textContent = this.getContent();
+  commentElement.textContent = this.getText();
   return commentElement;
 };
 

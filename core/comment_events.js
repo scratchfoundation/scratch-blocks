@@ -177,11 +177,7 @@ Blockly.Events.CommentChange.prototype.run = function(forward) {
   var contents = forward ? this.newContents_ : this.oldContents_;
 
   if (goog.isString(contents)) {
-    if (comment instanceof Blockly.ScratchBlockComment) {
-      comment.setText(contents);
-    } else {
-      comment.setContent(contents);
-    }
+    comment.setText(contents);
     return;
   } else if (typeof contents == 'object') {
     if (contents.hasOwnProperty('minimized')) {
