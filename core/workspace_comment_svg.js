@@ -51,19 +51,9 @@ Blockly.WorkspaceCommentSvg = function(workspace, content, height, width,
    * @private
    */
   this.svgGroup_ = Blockly.utils.createSvgElement(
-      'g', {'class': 'blocklyComment'}, null);
+      'g', {}, null);
   this.svgGroup_.translate_ = '';
 
-  this.svgRect_ = Blockly.utils.createSvgElement(
-      'rect',
-      {
-        'class': 'blocklyCommentRect',
-        'x': 0,
-        'y': 0,
-        'rx': Blockly.WorkspaceCommentSvg.BORDER_RADIUS,
-        'ry': Blockly.WorkspaceCommentSvg.BORDER_RADIUS
-      });
-  this.svgGroup_.appendChild(this.svgRect_);
 
   /**
    * Whether the comment is rendered onscreen and is a part of the DOM.
@@ -543,7 +533,7 @@ Blockly.WorkspaceCommentSvg.fromXml = function(xmlComment, workspace,
     var info = Blockly.WorkspaceComment.parseAttributes(xmlComment);
 
     var comment = new Blockly.WorkspaceCommentSvg(workspace,
-        info.content, info.h, info.w, info.id);
+        info.content, info.h, info.w, info.minimized, info.id);
     if (workspace.rendered) {
       comment.initSvg();
       comment.render(false);
