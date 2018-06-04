@@ -93,7 +93,7 @@ Blockly.WorkspaceCommentSvg = function(workspace, content, height, width,
  * @type {number}
  * @package
  */
-Blockly.WorkspaceCommentSvg.DEFAULT_SIZE = 100;
+Blockly.WorkspaceCommentSvg.DEFAULT_SIZE = 200;
 
 /**
  * Dispose of this comment.
