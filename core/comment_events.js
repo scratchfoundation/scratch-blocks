@@ -57,6 +57,13 @@ Blockly.Events.CommentBase = function(comment) {
   this.workspaceId = comment.workspace.id;
 
   /**
+   * The ID of the block this comment belongs to or null if it is not a block
+   * comment.
+   * @type {string}
+   */
+  this.blockId = comment.blockId || null;
+
+  /**
    * The event group id for the group this event belongs to. Groups define
    * events that should be treated as an single action from the user's
    * perspective, and should be undone together.
@@ -86,6 +93,9 @@ Blockly.Events.CommentBase.prototype.toJson = function() {
   if (this.commentId) {
     json['commentId'] = this.commentId;
   }
+  if (this.blockId) {
+    json['blockId'] = this.blockId;
+  }
   return json;
 };
 
@@ -96,6 +106,23 @@ Blockly.Events.CommentBase.prototype.toJson = function() {
 Blockly.Events.CommentBase.prototype.fromJson = function(json) {
   this.commentId = json['commentId'];
   this.group = json['group'];
+  this.blockId = json['blockId'];
+};
+
+/**
+ * Helper function for finding the comment this event pertains to.
+ * @return {Blockly.WorkspaceComment | Blockly.ScratchBlockComment}
+ *     The comment this event pertains to.
+ * @private
+ */
+Blockly.Events.CommentBase.prototype.getComment_ = function() {
+  var workspace = this.getEventWorkspace_();
+  if (this.blockId) {
+    var block = workspace.getBlockById(this.blockId);
+    if (block) return block.comment;
+  } else {
+    return workspace.getCommentById(this.commentId);
+  }
 };
 
 /**
@@ -114,11 +141,6 @@ Blockly.Events.CommentChange = function(comment, oldContents, newContents) {
   Blockly.Events.CommentChange.superClass_.constructor.call(this, comment);
   this.oldContents_ = oldContents;
   this.newContents_ = newContents;
-  /**
-   * The id of the block this comment belongs to or null if it's a workspace comment.
-   * @type {?string}
-   */
-  this.blockId = comment.blockId || null;
 };
 goog.inherits(Blockly.Events.CommentChange, Blockly.Events.CommentBase);
 
@@ -135,7 +157,7 @@ Blockly.Events.CommentChange.prototype.type = Blockly.Events.COMMENT_CHANGE;
 Blockly.Events.CommentChange.prototype.toJson = function() {
   var json = Blockly.Events.CommentChange.superClass_.toJson.call(this);
   json['newContents'] = this.newContents_;
-  json['blockId'] = this.blockId;
+
   return json;
 };
 
@@ -146,7 +168,6 @@ Blockly.Events.CommentChange.prototype.toJson = function() {
 Blockly.Events.CommentChange.prototype.fromJson = function(json) {
   Blockly.Events.CommentChange.superClass_.fromJson.call(this, json);
   this.newContents_ = json['newValue'];
-  this.blockId = json['blockId'];
 };
 
 /**
@@ -162,14 +183,7 @@ Blockly.Events.CommentChange.prototype.isNull = function() {
  * @param {boolean} forward True if run forward, false if run backward (undo).
  */
 Blockly.Events.CommentChange.prototype.run = function(forward) {
-  var comment = null;
-  var workspace = this.getEventWorkspace_();
-  if (this.blockId) {
-    var block = workspace.getBlockById(this.blockId);
-    if (block) comment = block.comment;
-  } else {
-    comment = workspace.getCommentById(this.commentId);
-  }
+  var comment = this.getComment_();
   if (!comment) {
     console.warn('Can\'t change non-existent comment: ' + this.commentId);
     return;
@@ -215,12 +229,6 @@ Blockly.Events.CommentCreate = function(comment) {
     return;  // Blank event to be populated by fromJson.
   }
   Blockly.Events.CommentCreate.superClass_.constructor.call(this, comment);
-
-  /**
-   * The id of the block this comment belongs to or null if it's a workspace comment.
-   * @type {?string}
-   */
-  this.blockId = comment.blockId || null;
 
   /**
    * The text content of this comment.
@@ -272,7 +280,6 @@ Blockly.Events.CommentCreate.prototype.type = Blockly.Events.COMMENT_CREATE;
  */
 Blockly.Events.CommentCreate.prototype.toJson = function() {
   var json = Blockly.Events.CommentCreate.superClass_.toJson.call(this);
-  json['blockId'] = this.blockId;
   json['xml'] = Blockly.Xml.domToText(this.xml);
   return json;
 };
@@ -283,7 +290,6 @@ Blockly.Events.CommentCreate.prototype.toJson = function() {
  */
 Blockly.Events.CommentCreate.prototype.fromJson = function(json) {
   Blockly.Events.CommentCreate.superClass_.fromJson.call(this, json);
-  this.blockId = json['blockId'];
   this.xml = Blockly.Xml.textToDom('<xml>' + json['xml'] + '</xml>').firstChild;
 };
 
@@ -292,8 +298,8 @@ Blockly.Events.CommentCreate.prototype.fromJson = function(json) {
  * @param {boolean} forward True if run forward, false if run backward (undo).
  */
 Blockly.Events.CommentCreate.prototype.run = function(forward) {
-  var workspace = this.getEventWorkspace_();
   if (forward) {
+    var workspace = this.getEventWorkspace_();
     if (this.blockId) {
       var block = workspace.getBlockById(this.blockId);
       if (block) {
@@ -305,12 +311,7 @@ Blockly.Events.CommentCreate.prototype.run = function(forward) {
       Blockly.Xml.domToWorkspace(xml, workspace);
     }
   } else {
-    var comment;
-    if (this.blockId) {
-      comment = workspace.getBlockById(this.blockId).comment;
-    } else {
-      comment = workspace.getCommentById(this.commentId);
-    }
+    var comment = this.getComment_();
     if (comment) {
       comment.dispose(false, false);
     } else {
@@ -332,7 +333,6 @@ Blockly.Events.CommentDelete = function(comment) {
     return;  // Blank event to be populated by fromJson.
   }
   Blockly.Events.CommentDelete.superClass_.constructor.call(this, comment);
-  this.blockId = comment.blockId || null;
   this.xy = comment.getXY();
   this.minimized = comment.minimized || false;
 
@@ -354,7 +354,6 @@ Blockly.Events.CommentDelete.prototype.type = Blockly.Events.COMMENT_DELETE;
  */
 Blockly.Events.CommentDelete.prototype.toJson = function() {
   var json = Blockly.Events.CommentDelete.superClass_.toJson.call(this);
-  json['blockId'] = this.blockId;
   return json;
 };
 
@@ -364,7 +363,6 @@ Blockly.Events.CommentDelete.prototype.toJson = function() {
  */
 Blockly.Events.CommentDelete.prototype.fromJson = function(json) {
   Blockly.Events.CommentDelete.superClass_.fromJson.call(this, json);
-  this.blockId = json['blockId'];
 };
 
 /**
@@ -372,15 +370,8 @@ Blockly.Events.CommentDelete.prototype.fromJson = function(json) {
  * @param {boolean} forward True if run forward, false if run backward (undo).
  */
 Blockly.Events.CommentDelete.prototype.run = function(forward) {
-  var workspace = this.getEventWorkspace_();
-  var comment = null;
   if (forward) {
-    if (this.blockId) {
-      var block = workspace.getBlockById(this.blockId);
-      comment = block.comment;
-    } else {
-      comment = workspace.getCommentById(this.commentId);
-    }
+    var comment = this.getComment_();
     if (comment) {
       comment.dispose(false, false);
     } else {
@@ -388,6 +379,7 @@ Blockly.Events.CommentDelete.prototype.run = function(forward) {
       console.warn("Can't delete non-existent comment: " + this.commentId);
     }
   } else {
+    var workspace = this.getEventWorkspace_();
     if (this.blockId) {
       var block = workspace.getBlockById(this.blockId);
       block.setCommentText('', this.commentId, this.xy.x, this.xy.y, this.minimized);
@@ -430,12 +422,6 @@ Blockly.Events.CommentMove = function(comment) {
    * @type {!goog.math.Coordinate}
    */
   this.newCoordinate_ = null;
-
-  /**
-   * The id of the block this comment belongs to or null if it's a workspace comment.
-   * @type {?string}
-   */
-  this.blockId = comment.blockId || null;
 };
 goog.inherits(Blockly.Events.CommentMove, Blockly.Events.CommentBase);
 
@@ -480,9 +466,6 @@ Blockly.Events.CommentMove.prototype.toJson = function() {
     json['newCoordinate'] = Math.round(this.newCoordinate_.x) + ',' +
         Math.round(this.newCoordinate_.y);
   }
-  if (this.blockId) {
-    json['blockId'] = this.blockId;
-  }
   return json;
 };
 
@@ -497,9 +480,6 @@ Blockly.Events.CommentMove.prototype.fromJson = function(json) {
     var xy = json['newCoordinate'].split(',');
     this.newCoordinate_ =
         new goog.math.Coordinate(parseFloat(xy[0]), parseFloat(xy[1]));
-  }
-  if (json['blockId']) {
-    this.blockId = json['blockId'];
   }
 };
 
@@ -516,14 +496,7 @@ Blockly.Events.CommentMove.prototype.isNull = function() {
  * @param {boolean} forward True if run forward, false if run backward (undo).
  */
 Blockly.Events.CommentMove.prototype.run = function(forward) {
-  var workspace = this.getEventWorkspace_();
-  var comment = null;
-  if (this.blockId) {
-    var block = workspace.getBlockById(this.blockId);
-    comment = block.comment;
-  } else {
-    comment = workspace.getCommentById(this.commentId);
-  }
+  var comment = this.getComment_();
   if (!comment) {
     console.warn('Can\'t move non-existent comment: ' + this.commentId);
     return;

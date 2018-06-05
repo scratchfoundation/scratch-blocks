@@ -354,7 +354,18 @@ Blockly.WorkspaceCommentSvg.prototype.resizeMouseUp_ = function(/*e*/) {
 Blockly.WorkspaceCommentSvg.prototype.resizeMouseMove_ = function(e) {
   this.autoLayout_ = false;
   var newXY = this.workspace.moveDrag(e);
+  // The call to setSize below emits a CommentChange event,
+  // but we don't want multiple CommentChange events to be
+  // emitted while the user is still in the process of resizing
+  // the comment, so disable events here. The event is emitted in
+  // resizeMouseUp_.
+  var disabled = false;
+  if (Blockly.Events.isEnabled()) {
+    Blockly.Events.disable();
+    disabled = true;
+  }
   this.setSize(this.RTL ? -newXY.x : newXY.x, newXY.y);
+  if (disabled) Blockly.Events.enable();
 };
 
 /**
@@ -388,11 +399,16 @@ Blockly.WorkspaceCommentSvg.prototype.resizeComment_ = function() {
  * @package
  */
 Blockly.WorkspaceCommentSvg.prototype.setSize = function(width, height) {
+  var oldWidth = this.width_;
+  var oldHeight = this.height_;
   // Minimum size of a comment.
   width = Math.max(width, 45);
   height = Math.max(height, 20 + Blockly.WorkspaceCommentSvg.TOP_OFFSET);
   this.width_ = width;
   this.height_ = height;
+  Blockly.Events.fire(new Blockly.Events.CommentChange(this,
+      {width: oldWidth, height: oldHeight},
+      {width: this.width_, height: this.height_}));
   this.svgRect_.setAttribute('width', width);
   this.svgRect_.setAttribute('height', height);
   this.svgRectTarget_.setAttribute('width', width);

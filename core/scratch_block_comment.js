@@ -345,9 +345,17 @@ Blockly.ScratchBlockComment.prototype.setBubbleSize = function(width, height) {
       this.bubble_.setBubbleSize(Blockly.ScratchBlockComment.MINIMIZE_WIDTH,
           Blockly.ScratchBubble.TOP_BAR_HEIGHT);
     } else {
+      var oldWidth = this.width_;
+      var oldHeight = this.height_;
       this.bubble_.setBubbleSize(width, height);
       this.width_ = width;
       this.height_ = height;
+      if (oldWidth != this.width_ || oldHeight != this.height_) {
+        Blockly.Events.fire(new Blockly.Events.CommentChange(
+            this,
+            {width: oldWidth, height: oldHeight},
+            {width: this.width_, height: this.height_}));
+      }
     }
   } else {
     this.width_ = width;
@@ -395,11 +403,14 @@ Blockly.ScratchBlockComment.prototype.setText = function(text) {
  * @package
  */
 Blockly.ScratchBlockComment.prototype.moveTo = function(x, y) {
+  var event = new Blockly.Events.CommentMove(this);
   if (this.bubble_) {
     this.bubble_.moveTo(x, y);
   }
   this.x_ = x;
   this.y_ = y;
+  event.recordNew();
+  Blockly.Events.fire(event);
 };
 
 /**
