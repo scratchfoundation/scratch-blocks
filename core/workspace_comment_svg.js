@@ -38,12 +38,13 @@ goog.require('Blockly.WorkspaceComment');
  * @param {string} content The content of this workspace comment.
  * @param {number} height Height of the comment.
  * @param {number} width Width of the comment.
+ * @param {boolean} minimized Whether this comment is minimized.
  * @param {string=} opt_id Optional ID.  Use this ID if provided, otherwise
  *     create a new ID.
  * @extends {Blockly.WorkspaceComment}
  * @constructor
  */
-Blockly.WorkspaceCommentSvg = function(workspace, content, height, width,
+Blockly.WorkspaceCommentSvg = function(workspace, content, height, width, minimized,
     opt_id) {
   // Create core elements for the block.
   /**
@@ -72,7 +73,7 @@ Blockly.WorkspaceCommentSvg = function(workspace, content, height, width,
       Blockly.utils.is3dSupported() && !!workspace.blockDragSurface_;
 
   Blockly.WorkspaceCommentSvg.superClass_.constructor.call(this,
-      workspace, content, height, width, opt_id);
+      workspace, content, height, width, minimized, opt_id);
 
   this.render();
 }; goog.inherits(Blockly.WorkspaceCommentSvg, Blockly.WorkspaceComment);
