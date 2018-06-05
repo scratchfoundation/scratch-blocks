@@ -133,25 +133,26 @@ Blockly.Events.VAR_DELETE = 'var_delete';
 Blockly.Events.VAR_RENAME = 'var_rename';
 
 /**
- * Name of event that creates a variable.
+ * Name of event that creates a comment.
  * @const
  */
 Blockly.Events.COMMENT_CREATE = 'comment_create';
 
 /**
- * Name of event that creates a variable.
+ * Name of event that moves a comment.
  * @const
  */
 Blockly.Events.COMMENT_MOVE = 'comment_move';
 
 /**
- * Name of event that creates a variable.
+ * Name of event that changes a comment's property
+ * (text content, size, or minimized state).
  * @const
  */
 Blockly.Events.COMMENT_CHANGE = 'comment_change';
 
 /**
- * Name of event that creates a variable.
+ * Name of event that deletes a comment.
  * @const
  */
 Blockly.Events.COMMENT_DELETE = 'comment_delete';
