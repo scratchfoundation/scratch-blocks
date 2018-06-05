@@ -191,11 +191,7 @@ Blockly.Events.CommentChange.prototype.run = function(forward) {
   var contents = forward ? this.newContents_ : this.oldContents_;
 
   if (contents.hasOwnProperty('minimized')) {
-    if (comment instanceof Blockly.ScratchBlockComment) {
-      // TODO remove this check when workspace comments also get a minimized
-      // state
-      comment.setMinimized(contents.minimized);
-    }
+    comment.setMinimized(contents.minimized);
   }
   if (contents.hasOwnProperty('width') && contents.hasOwnProperty('height')) {
     comment.setSize(contents.width, contents.height);
