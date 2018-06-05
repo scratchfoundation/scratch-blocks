@@ -459,7 +459,11 @@ Blockly.ContextMenu.workspaceCommentOption = function(ws, e) {
     // so that we can fire a single create event for this comment
     // at the end (instead of CommentCreate followed by CommentMove,
     // which results in unexpected undo behavior).
-    if (Blockly.Events.isEnabled()) Blockly.Events.disable();
+    var disabled = false;
+    if (Blockly.Events.isEnabled()) {
+      Blockly.Events.disable();
+      disabled = true;
+    }
     var comment = new Blockly.WorkspaceCommentSvg(
         ws, Blockly.Msg.WORKSPACE_COMMENT_DEFAULT_TEXT,
         Blockly.WorkspaceCommentSvg.DEFAULT_SIZE,
@@ -495,7 +499,7 @@ Blockly.ContextMenu.workspaceCommentOption = function(ws, e) {
       comment.render(false);
       comment.select();
     }
-    Blockly.Events.enable();
+    if (disabled) Blockly.Events.enable();
     Blockly.WorkspaceComment.fireCreateEvent(comment);
   };
 
