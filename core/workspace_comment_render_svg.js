@@ -28,6 +28,13 @@ goog.provide('Blockly.WorkspaceCommentSvg.render');
 
 goog.require('Blockly.WorkspaceCommentSvg');
 
+/**
+ * Radius of the border around the comment.
+ * @type {number}
+ * @const
+ * @private
+ */
+Blockly.WorkspaceCommentSvg.BORDER_WIDTH = 1;
 
 /**
  * Size of the resize icon.
@@ -36,14 +43,6 @@ goog.require('Blockly.WorkspaceCommentSvg');
  * @private
  */
 Blockly.WorkspaceCommentSvg.RESIZE_SIZE = 12 * Blockly.WorkspaceCommentSvg.BORDER_WIDTH;
-
-/**
- * Radius of the border around the comment.
- * @type {number}
- * @const
- * @private
- */
-Blockly.WorkspaceCommentSvg.BORDER_WIDTH = 1;
 
 /**
  * Offset from the foreignobject edge to the textarea edge.
@@ -198,8 +197,6 @@ Blockly.WorkspaceCommentSvg.prototype.createEditor_ = function() {
   });
   Blockly.bindEventWithChecks_(textarea, 'change', this, function(_e) {
     if (this.text_ != textarea.value) {
-      Blockly.Events.fire(new Blockly.Events.CommentChange(
-          this, this.text_, textarea.value));
       this.setText(textarea.value);
     }
   });
