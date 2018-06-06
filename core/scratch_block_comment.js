@@ -55,7 +55,10 @@ Blockly.ScratchBlockComment = function(block, id, x, y, minimized) {
   this.isMinimized_ = minimized || false;
 
   this.workspace = block.workspace;
-  this.id = goog.isString(id) ? id : Blockly.utils.genUid();
+  this.id = goog.isString(id) && !this.workspace.getCommentById(id) ?
+      id : Blockly.utils.genUid();
+  this.workspace.addTopComment(this);
+
   this.blockId = block.id;
 
   if (!block.rendered) {
@@ -437,6 +440,33 @@ Blockly.ScratchBlockComment.prototype.getXY = function() {
  */
 Blockly.ScratchBlockComment.prototype.getHeightWidth = function() {
   return {height: this.height_, width: this.width_};
+};
+
+/**
+ * Returns the coordinates of a bounding box describing the dimensions of this
+ * comment.
+ * Coordinate system: workspace coordinates.
+ * @return {!{topLeft: goog.math.Coordinate, bottomRight: goog.math.Coordinate}}
+ *    Object with top left and bottom right coordinates of the bounding box.
+ * @package
+ */
+Blockly.ScratchBlockComment.prototype.getBoundingRectangle = function() {
+  var commentXY = this.getXY();
+  var commentBounds = this.getHeightWidth();
+  var topLeft;
+  var bottomRight;
+  if (this.workspace.RTL) {
+    // TODO for some reason this doesn't work with workspace scroll in RTL
+    topLeft = new goog.math.Coordinate(commentXY.x - commentBounds.width,
+        commentXY.y);
+    bottomRight = new goog.math.Coordinate(commentXY.x,
+        commentXY.y + commentBounds.height);
+  } else {
+    topLeft = new goog.math.Coordinate(commentXY.x, commentXY.y);
+    bottomRight = new goog.math.Coordinate(commentXY.x + commentBounds.width,
+        commentXY.y + commentBounds.height);
+  }
+  return {topLeft: topLeft, bottomRight: bottomRight};
 };
 
 /**
