@@ -503,7 +503,7 @@ Blockly.ScratchBlockComment.prototype.getBoundingRectangle = function() {
   var topLeft;
   var bottomRight;
   if (this.workspace.RTL) {
-    // TODO for some reason this doesn't work with workspace scroll in RTL
+    // TODO (#1562) for some reason this doesn't work with workspace scroll in RTL
     topLeft = new goog.math.Coordinate(commentXY.x - commentBounds.width,
         commentXY.y);
     bottomRight = new goog.math.Coordinate(commentXY.x,
