@@ -256,8 +256,8 @@ Blockly.WorkspaceComment.prototype.getText = function() {
  */
 Blockly.WorkspaceComment.prototype.setText = function(text) {
   if (this.content_ != text) {
-    Blockly.Events.fire(
-        new Blockly.Events.CommentChange(this, this.content_, text));
+    Blockly.Events.fire(new Blockly.Events.CommentChange(
+        this, {text: this.content_}, {text: text}));
     this.content_ = text;
   }
 };

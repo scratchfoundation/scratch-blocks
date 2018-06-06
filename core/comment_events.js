@@ -124,8 +124,14 @@ Blockly.Events.CommentBase.prototype.getComment_ = function() {
  * Class for a comment change event.
  * @param {Blockly.WorkspaceComment} comment The comment that is being changed.
  *     Null for a blank event.
- * @param {string} oldContents Previous contents of the comment.
- * @param {string} newContents New contents of the comment.
+ * @param {!object} oldContents Object containing previous state of a comment's
+ *     properties. The possible properties can be: 'minimized', 'text', or
+ *     'width' and 'height' together. Must contain the same property (or in the
+ *     case of 'width' and 'height' properties) as the 'newContents' param.
+ * @param {!object} newContents Object containing the new state of a comment's
+ *     properties. The possible properties can be: 'minimized', 'text', or
+ *     'width' and 'height' together. Must contain the same property (or in the
+ *     case of 'width' and 'height' properties) as the 'oldContents' param.
  * @extends {Blockly.Events.CommentBase}
  * @constructor
  */
@@ -184,21 +190,19 @@ Blockly.Events.CommentChange.prototype.run = function(forward) {
   }
   var contents = forward ? this.newContents_ : this.oldContents_;
 
-  if (goog.isString(contents)) {
-    comment.setText(contents);
-    return;
-  } else if (typeof contents == 'object') {
-    if (contents.hasOwnProperty('minimized')) {
-      if (comment instanceof Blockly.ScratchBlockComment) {
-        // TODO remove this check when workspace comments also get a minimized
-        // state
-        comment.setMinimized(contents.minimized);
-      }
-      return;
-    } else if (contents.hasOwnProperty('width') && contents.hasOwnProperty('height')) {
-      comment.setSize(contents.width, contents.height);
-      return;
+  if (contents.hasOwnProperty('minimized')) {
+    if (comment instanceof Blockly.ScratchBlockComment) {
+      // TODO remove this check when workspace comments also get a minimized
+      // state
+      comment.setMinimized(contents.minimized);
     }
+    return;
+  } else if (contents.hasOwnProperty('width') && contents.hasOwnProperty('height')) {
+    comment.setSize(contents.width, contents.height);
+    return;
+  } else if (contents.hasOwnProperty('text')) {
+    comment.setText(contents.text);
+    return;
   }
 
   console.warn('Unrecognized comment change: ' + JSON.stringify(contents) + '; cannot undo/redo');

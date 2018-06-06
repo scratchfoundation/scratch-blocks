@@ -210,7 +210,7 @@ Blockly.ScratchBlockComment.prototype.createEditor_ = function() {
   Blockly.bindEventWithChecks_(textarea, 'change', this, function(_e) {
     if (this.text_ != textarea.value) {
       Blockly.Events.fire(new Blockly.Events.CommentChange(
-          this, this.text_, textarea.value));
+          this, {text: this.text_}, {text: textarea.value}));
       this.text_ = textarea.value;
     }
   });
@@ -438,7 +438,7 @@ Blockly.ScratchBlockComment.prototype.getLabelText = function() {
 Blockly.ScratchBlockComment.prototype.setText = function(text) {
   if (this.text_ != text) {
     Blockly.Events.fire(new Blockly.Events.CommentChange(
-        this, this.text_, text));
+        this, {text: this.text_}, {text: text}));
     this.text_ = text;
   }
   if (this.textarea_) {
