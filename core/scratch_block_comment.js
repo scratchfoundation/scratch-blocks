@@ -51,16 +51,44 @@ goog.require('goog.userAgent');
  */
 Blockly.ScratchBlockComment = function(block, text, id, x, y, minimized) {
   Blockly.ScratchBlockComment.superClass_.constructor.call(this, block);
+  /**
+   * The text content of this comment.
+   * @type {string}
+   */
   this.text_ = text;
+  /**
+   * The x position of this comment in workspace coordinates.
+   * @type {number}
+   */
   this.x_ = x;
+  /**
+   * The y position of this comment in workspace coordinates.
+   * @type {number}
+   */
   this.y_ = y;
+  /**
+   * Whether this comment is minimized.
+   * @type {boolean}
+   */
   this.isMinimized_ = minimized || false;
 
+  /**
+   * The workspace this comment belongs to.
+   * @type {Blockly.Workspace}
+   */
   this.workspace = block.workspace;
+  /**
+   * The unique identifier for this comment.
+   * @type {string}
+   */
   this.id = goog.isString(id) && !this.workspace.getCommentById(id) ?
       id : Blockly.utils.genUid();
   this.workspace.addTopComment(this);
 
+  /**
+   * The id of the block this comment belongs to.
+   * @type {string}
+   */
   this.blockId = block.id;
 
   if (!block.rendered) {
@@ -303,7 +331,9 @@ Blockly.ScratchBlockComment.prototype.setVisible = function(visible) {
   // Restore the bubble stats after the visibility switch.
   this.setText(text);
   this.setBubbleSize(size.width, size.height);
-  if (visible) Blockly.ScratchBlockComment.fireCreateEvent(this);
+  if (visible) {
+    Blockly.ScratchBlockComment.fireCreateEvent(this);
+  }
 };
 
 /**
@@ -320,7 +350,9 @@ Blockly.ScratchBlockComment.prototype.toggleMinimize_ = function() {
  * @package
  */
 Blockly.ScratchBlockComment.prototype.setMinimized = function(minimize) {
-  if (this.isMinimized_ == minimize) return;
+  if (this.isMinimized_ == minimize) {
+    return;
+  }
   Blockly.Events.fire(new Blockly.Events.CommentChange(this,
       {minimized: this.isMinimized_}, {minimized: minimize}));
   this.isMinimized_ = minimize;
@@ -360,6 +392,7 @@ Blockly.ScratchBlockComment.prototype.setBubbleSize = function(width, height) {
  * bubble, also set the bubble's size.
  * @param {number} width Width of the unminimized comment.
  * @param {number} height Height of the unminimized comment.
+ * @package
  */
 Blockly.ScratchBlockComment.prototype.setSize = function(width, height) {
   var oldWidth = this.width_;
@@ -519,7 +552,6 @@ Blockly.ScratchBlockComment.prototype.toXmlWithXY = function() {
   element.setAttribute('w', this.width_);
   return element;
 };
-
 
 /**
  * Fire a create event for the given workspace comment, if comments are enabled.

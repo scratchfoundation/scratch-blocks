@@ -499,7 +499,9 @@ Blockly.ContextMenu.workspaceCommentOption = function(ws, e) {
       comment.render(false);
       comment.select();
     }
-    if (disabled) Blockly.Events.enable();
+    if (disabled) {
+      Blockly.Events.enable();
+    }
     Blockly.WorkspaceComment.fireCreateEvent(comment);
   };
 

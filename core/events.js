@@ -361,6 +361,18 @@ Blockly.Events.fromJson = function(json, workspace) {
     case Blockly.Events.VAR_RENAME:
       event = new Blockly.Events.VarRename(null);
       break;
+    case Blockly.Events.COMMENT_CREATE:
+      event = new Blockly.Events.CommentCreate(null);
+      break;
+    case Blockly.Events.COMMENT_CHANGE:
+      event = new Blockly.Events.CommentChange(null);
+      break;
+    case Blockly.Events.COMMENT_MOVE:
+      event = new Blockly.Events.CommentMove(null);
+      break;
+    case Blockly.Events.COMMENT_DELETE:
+      event = new Blockly.Events.CommentDelete(null);
+      break;
     case Blockly.Events.UI:
       event = new Blockly.Events.Ui(null);
       break;

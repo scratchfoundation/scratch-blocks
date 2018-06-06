@@ -706,7 +706,7 @@ Blockly.Xml.domToBlockHeadless_ = function(xmlBlock, workspace) {
         if (!isNaN(bubbleW) && !isNaN(bubbleH) &&
             block.comment && block.comment.setVisible) {
           if (block.comment instanceof Blockly.ScratchBlockComment) {
-            block.commet.setSize(bubbleW, bubbleH);
+            block.comment.setSize(bubbleW, bubbleH);
           } else {
             block.comment.setBubbleSize(bubbleW, bubbleH);
           }

@@ -337,8 +337,9 @@ Blockly.WorkspaceCommentSvg.prototype.resizeMouseUp_ = function(/*e*/) {
   this.unbindDragEvents_();
   var oldHW = this.resizeStartSize_;
   this.resizeStartSize_ = null;
-  if (this.width_ == oldHW.width &&
-      this.height_ == oldHW.height) return;
+  if (this.width_ == oldHW.width && this.height_ == oldHW.height) {
+    return;
+  }
   // Fire a change event for the new width/height after
   // resize mouse up
   Blockly.Events.fire(new Blockly.Events.CommentChange(
@@ -365,7 +366,9 @@ Blockly.WorkspaceCommentSvg.prototype.resizeMouseMove_ = function(e) {
     disabled = true;
   }
   this.setSize(this.RTL ? -newXY.x : newXY.x, newXY.y);
-  if (disabled) Blockly.Events.enable();
+  if (disabled) {
+    Blockly.Events.enable();
+  }
 };
 
 /**

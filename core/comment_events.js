@@ -111,8 +111,8 @@ Blockly.Events.CommentBase.prototype.fromJson = function(json) {
 
 /**
  * Helper function for finding the comment this event pertains to.
- * @return {Blockly.WorkspaceComment | Blockly.ScratchBlockComment}
- *     The comment this event pertains to.
+ * @return {?(Blockly.WorkspaceComment | Blockly.ScratchBlockComment)}
+ *     The comment this event pertains to, or null if it no longer exists.
  * @private
  */
 Blockly.Events.CommentBase.prototype.getComment_ = function() {
@@ -202,13 +202,12 @@ Blockly.Events.CommentChange.prototype.run = function(forward) {
   }
 
   console.warn('Unrecognized comment change: ' + JSON.stringify(contents) + '; cannot undo/redo');
-  return;
 };
 
 /**
  * Class for a comment creation event.
- * @param {Blockly.WorkspaceComment} comment The created comment.
- *     Null for a blank event.
+ * @param {Blockly.WorkspaceComment | Blockly.ScratchBlockComment} comment
+ *     The created comment. Null for a blank event.
  * @param {string=} opt_blockId Optional id for the block this comment belongs
  *     to, if it is a block comment.
  * @extends {Blockly.Events.CommentBase}
@@ -222,13 +221,13 @@ Blockly.Events.CommentCreate = function(comment) {
 
   /**
    * The text content of this comment.
-   * @type{string}
+   * @type {string}
    */
   this.text = comment.getText();
 
   /**
    * The XY position of this comment on the workspace.
-   * @type{goog.math.Coordinate}
+   * @type {goog.math.Coordinate}
    */
   this.xy = comment.getXY();
 
@@ -236,13 +235,13 @@ Blockly.Events.CommentCreate = function(comment) {
 
   /**
    * The width of this comment when it is full size.
-   * @type{number}
+   * @type {number}
    */
   this.width = hw.width;
 
   /**
    * The height of this comment when it is full size.
-   * @type{number}
+   * @type {number}
    */
   this.height = hw.height;
 

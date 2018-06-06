@@ -56,6 +56,11 @@ Blockly.ScratchBubble = function(comment, workspace, content, anchorXY,
     bubbleWidth, bubbleHeight, bubbleX, bubbleY, minimized) {
 
   // Needed for Events
+  /**
+   * The comment this bubble belongs to.
+   * @type {Blockly.ScratchBlockComment}
+   * @package
+   */
   this.comment = comment;
 
   this.workspace_ = workspace;
@@ -363,8 +368,9 @@ Blockly.ScratchBubble.prototype.resizeMouseDown_ = function(e) {
 Blockly.ScratchBubble.prototype.resizeMouseUp_ = function(_e) {
   var oldHW = this.resizeStartSize_;
   this.resizeStartSize_ = null;
-  if (this.width_ == oldHW.width &&
-      this.height_ == oldHW.height) return;
+  if (this.width_ == oldHW.width && this.height_ == oldHW.height) {
+    return;
+  }
   // Fire a change event for the new width/height after
   // resize mouse up
   Blockly.Events.fire(new Blockly.Events.CommentChange(
