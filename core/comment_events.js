@@ -152,7 +152,6 @@ Blockly.Events.CommentChange.prototype.type = Blockly.Events.COMMENT_CHANGE;
 Blockly.Events.CommentChange.prototype.toJson = function() {
   var json = Blockly.Events.CommentChange.superClass_.toJson.call(this);
   json['newContents'] = this.newContents_;
-
   return json;
 };
 
