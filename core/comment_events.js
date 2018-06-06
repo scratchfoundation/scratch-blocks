@@ -117,12 +117,7 @@ Blockly.Events.CommentBase.prototype.fromJson = function(json) {
  */
 Blockly.Events.CommentBase.prototype.getComment_ = function() {
   var workspace = this.getEventWorkspace_();
-  if (this.blockId) {
-    var block = workspace.getBlockById(this.blockId);
-    if (block) return block.comment;
-  } else {
-    return workspace.getCommentById(this.commentId);
-  }
+  return workspace.getCommentById(this.commentId);
 };
 
 /**
@@ -202,11 +197,7 @@ Blockly.Events.CommentChange.prototype.run = function(forward) {
       }
       return;
     } else if (contents.hasOwnProperty('width') && contents.hasOwnProperty('height')) {
-      if (comment instanceof Blockly.ScratchBlockComment) {
-        comment.setBubbleSize(contents.width, contents.height);
-      } else {
-        comment.setSize(contents.width, contents.height);
-      }
+      comment.setSize(contents.width, contents.height);
       return;
     }
   }
@@ -260,7 +251,10 @@ Blockly.Events.CommentCreate = function(comment) {
    * Whether or not this comment is minimized.
    * @type {boolean}
    */
-  this.minimized = comment.minimized || false;
+  // TODO remove the instanceof check after adding minimize state to
+  // workspace comments
+  this.minimized = (comment instanceof Blockly.ScratchBlockComment &&
+      comment.isMinimized()) || false;
 
   this.xml = comment.toXmlWithXY();
 };
@@ -334,7 +328,12 @@ Blockly.Events.CommentDelete = function(comment) {
   }
   Blockly.Events.CommentDelete.superClass_.constructor.call(this, comment);
   this.xy = comment.getXY();
-  this.minimized = comment.minimized || false;
+  this.minimized = (comment instanceof Blockly.ScratchBlockComment &&
+      comment.isMinimized()) || false;
+  this.text = comment.getText();
+  var hw = comment.getHeightWidth();
+  this.height = hw.height;
+  this.width = hw.width;
 
   this.xml = comment.toXmlWithXY();
 };
@@ -382,7 +381,8 @@ Blockly.Events.CommentDelete.prototype.run = function(forward) {
     var workspace = this.getEventWorkspace_();
     if (this.blockId) {
       var block = workspace.getBlockById(this.blockId);
-      block.setCommentText('', this.commentId, this.xy.x, this.xy.y, this.minimized);
+      block.setCommentText(this.text, this.commentId, this.xy.x, this.xy.y, this.minimized);
+      block.comment.setSize(this.width, this.height);
     } else {
       var xml = goog.dom.createDom('xml');
       xml.appendChild(this.xml);

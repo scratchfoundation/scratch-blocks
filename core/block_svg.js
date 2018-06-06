@@ -989,11 +989,12 @@ Blockly.BlockSvg.prototype.setCommentText = function(text, commentId,
   var changedState = false;
   if (goog.isString(text)) {
     if (!this.comment) {
-      this.comment = new Blockly.ScratchBlockComment(this, commentId,
+      this.comment = new Blockly.ScratchBlockComment(this, text, commentId,
           commentX, commentY, minimized);
       changedState = true;
+    } else {
+      this.comment.setText(/** @type {string} */ (text));
     }
-    this.comment.setText(/** @type {string} */ (text));
   } else {
     if (this.comment) {
       this.comment.dispose();

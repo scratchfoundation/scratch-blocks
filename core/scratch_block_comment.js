@@ -39,6 +39,7 @@ goog.require('goog.userAgent');
 /**
  * Class for a comment.
  * @param {!Blockly.Block} block The block associated with this comment.
+ * @param {string} text The text content of this comment.
  * @param {string=} id Optional uid for comment; a new one will be generated if
  *     not provided.
  * @param {number=} x Initial x position for comment, in workspace coordinates.
@@ -48,8 +49,9 @@ goog.require('goog.userAgent');
  * @extends {Blockly.Comment}
  * @constructor
  */
-Blockly.ScratchBlockComment = function(block, id, x, y, minimized) {
+Blockly.ScratchBlockComment = function(block, text, id, x, y, minimized) {
   Blockly.ScratchBlockComment.superClass_.constructor.call(this, block);
+  this.text_ = text;
   this.x_ = x;
   this.y_ = y;
   this.isMinimized_ = minimized || false;
@@ -348,21 +350,33 @@ Blockly.ScratchBlockComment.prototype.setBubbleSize = function(width, height) {
       this.bubble_.setBubbleSize(Blockly.ScratchBlockComment.MINIMIZE_WIDTH,
           Blockly.ScratchBubble.TOP_BAR_HEIGHT);
     } else {
-      var oldWidth = this.width_;
-      var oldHeight = this.height_;
       this.bubble_.setBubbleSize(width, height);
-      this.width_ = width;
-      this.height_ = height;
-      if (oldWidth != this.width_ || oldHeight != this.height_) {
-        Blockly.Events.fire(new Blockly.Events.CommentChange(
-            this,
-            {width: oldWidth, height: oldHeight},
-            {width: this.width_, height: this.height_}));
-      }
     }
-  } else {
-    this.width_ = width;
-    this.height_ = height;
+  }
+};
+
+/**
+ * Set the un-minimized size of this comment. If the comment has an un-minimized
+ * bubble, also set the bubble's size.
+ * @param {number} width Width of the unminimized comment.
+ * @param {number} height Height of the unminimized comment.
+ */
+Blockly.ScratchBlockComment.prototype.setSize = function(width, height) {
+  var oldWidth = this.width_;
+  var oldHeight = this.height_;
+
+  if (!this.isMinimized_) {
+    this.setBubbleSize(width, height);
+  }
+
+  this.height_ = height;
+  this.width_ = width;
+
+  if (oldWidth != this.width_ || oldHeight != this.height_) {
+    Blockly.Events.fire(new Blockly.Events.CommentChange(
+        this,
+        {width: oldWidth, height: oldHeight},
+        {width: this.width_, height: this.height_}));
   }
 };
 
@@ -538,5 +552,7 @@ Blockly.ScratchBlockComment.prototype.dispose = function() {
     // information (for undoing this event)
     Blockly.Events.fire(new Blockly.Events.CommentDelete(this));
   }
-  Blockly.ScratchBlockComment.superClass_.dispose.call(this);
+  this.block_.comment = null;
+  this.workspace.removeTopComment(this);
+  Blockly.Icon.prototype.dispose.call(this);
 };
