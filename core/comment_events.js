@@ -203,8 +203,6 @@ Blockly.Events.CommentChange.prototype.run = function(forward) {
   if (contents.hasOwnProperty('text')) {
     comment.setText(contents.text);
   }
-
-  console.warn('Unrecognized comment change: ' + JSON.stringify(contents) + '; cannot undo/redo');
 };
 
 /**
