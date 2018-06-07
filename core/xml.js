@@ -268,6 +268,7 @@ Blockly.Xml.scratchCommentToDom_ = function(block, element) {
   if (commentText) {
     var commentElement = goog.dom.createDom('comment', null, commentText);
     if (typeof block.comment == 'object') {
+      commentElement.setAttribute('id', block.comment.id);
       commentElement.setAttribute('pinned', block.comment.isVisible());
       var xy = block.comment.getXY();
       commentElement.setAttribute('x', xy.x);
@@ -682,11 +683,12 @@ Blockly.Xml.domToBlockHeadless_ = function(xmlBlock, workspace) {
         }
         break;
       case 'comment':
+        var commentId = xmlChild.getAttribute('id');
         var bubbleX = parseInt(xmlChild.getAttribute('x'), 10);
         var bubbleY = parseInt(xmlChild.getAttribute('y'), 10);
         var minimized = xmlChild.getAttribute('minimized') || false;
 
-        block.setCommentText(xmlChild.textContent, bubbleX, bubbleY,
+        block.setCommentText(xmlChild.textContent, commentId, bubbleX, bubbleY,
             minimized == 'true');
 
         var visible = xmlChild.getAttribute('pinned');
@@ -703,7 +705,11 @@ Blockly.Xml.domToBlockHeadless_ = function(xmlBlock, workspace) {
         var bubbleH = parseInt(xmlChild.getAttribute('h'), 10);
         if (!isNaN(bubbleW) && !isNaN(bubbleH) &&
             block.comment && block.comment.setVisible) {
-          block.comment.setBubbleSize(bubbleW, bubbleH);
+          if (block.comment instanceof Blockly.ScratchBlockComment) {
+            block.comment.setSize(bubbleW, bubbleH);
+          } else {
+            block.comment.setBubbleSize(bubbleW, bubbleH);
+          }
         }
         break;
       case 'data':

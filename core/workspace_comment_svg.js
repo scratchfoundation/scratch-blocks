@@ -491,19 +491,19 @@ Blockly.WorkspaceCommentSvg.prototype.getSvgRoot = function() {
  * @return {string} Comment text.
  * @package
  */
-Blockly.WorkspaceCommentSvg.prototype.getContent = function() {
+Blockly.WorkspaceCommentSvg.prototype.getText = function() {
   return this.textarea_ ? this.textarea_.value : this.content_;
 };
 
 /**
- * Set this comment's content.
- * @param {string} content Comment content.
+ * Set this comment's text.
+ * @param {string} text Comment text.
  * @package
  */
-Blockly.WorkspaceCommentSvg.prototype.setContent = function(content) {
-  Blockly.WorkspaceCommentSvg.superClass_.setContent.call(this, content);
+Blockly.WorkspaceCommentSvg.prototype.setText = function(text) {
+  Blockly.WorkspaceCommentSvg.superClass_.setText.call(this, text);
   if (this.textarea_) {
-    this.textarea_.value = content;
+    this.textarea_.value = text;
   }
 };
 

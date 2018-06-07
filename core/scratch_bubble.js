@@ -36,6 +36,8 @@ goog.require('goog.userAgent');
 
 /**
  * Class for Scratch comment UI bubble.
+ * @param {!Blockly.ScratchBlockComment} comment The comment this bubble belongs
+ *     to.
  * @param {!Blockly.WorkspaceSvg} workspace The workspace on which to draw the
  *     bubble.
  * @param {!Element} content SVG content for the bubble.
@@ -50,8 +52,16 @@ goog.require('goog.userAgent');
  * @extends {Blockly.Bubble}
  * @constructor
  */
-Blockly.ScratchBubble = function(workspace, content, anchorXY,
+Blockly.ScratchBubble = function(comment, workspace, content, anchorXY,
     bubbleWidth, bubbleHeight, bubbleX, bubbleY, minimized) {
+
+  // Needed for Events
+  /**
+   * The comment this bubble belongs to.
+   * @type {Blockly.ScratchBlockComment}
+   * @package
+   */
+  this.comment = comment;
 
   this.workspace_ = workspace;
   this.content_ = content;
@@ -59,7 +69,8 @@ Blockly.ScratchBubble = function(workspace, content, anchorXY,
   this.y = bubbleY;
   this.isMinimized_ = minimized || false;
   var canvas = workspace.getBubbleCanvas();
-  canvas.appendChild(this.createDom_(content, !!(bubbleWidth && bubbleHeight), this.isMinimized_));
+  canvas.appendChild(this.createDom_(content, !!(bubbleWidth && bubbleHeight),
+      this.isMinimized_));
 
   this.setAnchorLocation(anchorXY);
   if (!bubbleWidth || !bubbleHeight) {
@@ -88,6 +99,8 @@ Blockly.ScratchBubble = function(workspace, content, anchorXY,
     if (this.resizeGroup_) {
       Blockly.bindEventWithChecks_(
           this.resizeGroup_, 'mousedown', this, this.resizeMouseDown_);
+      Blockly.bindEventWithChecks_(
+          this.resizeGroup_, 'mouseup', this, this.resizeMouseUp_);
     }
   }
 
@@ -338,6 +351,34 @@ Blockly.ScratchBubble.prototype.deleteMouseUp_ = function(e) {
 };
 
 /**
+ * Handle a mouse-down on bubble's resize corner.
+ * @param {!Event} e Mouse down event.
+ * @private
+ */
+Blockly.ScratchBubble.prototype.resizeMouseDown_ = function(e) {
+  this.resizeStartSize_ = {width: this.width_, height: this.height_};
+  Blockly.ScratchBubble.superClass_.resizeMouseDown_.call(this, e);
+};
+
+/**
+ * Handle a mouse-up on bubble's resize corner.
+ * @param {!Event} _e Mouse up event.
+ * @private
+ */
+Blockly.ScratchBubble.prototype.resizeMouseUp_ = function(_e) {
+  var oldHW = this.resizeStartSize_;
+  this.resizeStartSize_ = null;
+  if (this.width_ == oldHW.width && this.height_ == oldHW.height) {
+    return;
+  }
+  // Fire a change event for the new width/height after
+  // resize mouse up
+  Blockly.Events.fire(new Blockly.Events.CommentChange(
+      this.comment, {width: oldHW.width , height: oldHW.height},
+      {width: this.width_, height: this.height_}));
+};
+
+/**
  * Set the minimized state of the bubble.
  * @param {boolean} minimize Whether the bubble should be minimized
  * @param {?string} labelText Optional label text for the comment top bar
@@ -543,7 +584,6 @@ Blockly.ScratchBubble.prototype.moveDuringDrag = function(dragSurface, newLoc) {
   } else {
     this.moveTo(newLoc.x, newLoc.y);
   }
-  this.renderArrow_();
 };
 
 /**
@@ -559,6 +599,7 @@ Blockly.ScratchBubble.prototype.updatePosition_ = function(x, y) {
     this.relativeLeft_ = x - this.anchorXY_.x;
   }
   this.relativeTop_ = y - this.anchorXY_.y;
+  this.renderArrow_();
 };
 
 /**
