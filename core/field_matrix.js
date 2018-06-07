@@ -104,8 +104,6 @@ Blockly.FieldMatrix.prototype.init = function() {
 
   this.sourceBlock_.getSvgRoot().appendChild(this.fieldGroup_);
 
-  this.getSourceColours_();
-
   if (!this.ledThumbs_) {
     var thumbX = Blockly.BlockSvg.DROPDOWN_ARROW_PADDING / 2;
     var thumbY = (this.size_.height - Blockly.FieldMatrix.MATRIX_THUMB_SIZE) / 2;
@@ -149,26 +147,6 @@ Blockly.FieldMatrix.prototype.init = function() {
 
   this.mouseDownWrapper_ = Blockly.bindEventWithChecks_(
       this.getClickTarget_(), 'mousedown', this, this.onMouseDown_);
-};
-
-/**
- * Check for source block colours.
- */
-Blockly.FieldMatrix.prototype.getSourceColours_ = function() {
-  if (this.sourceBlock_.colour_ == '#FF0000' && this.sourceBlock_.parentBlock_) {
-    // Extension blocks must get colours from the source's parent block.
-    this.sourceBlock_.colour_ =
-      this.sourceBlock_.parentBlock_.colour_;
-    this.sourceBlock_.colourSecondary_ =
-      this.sourceBlock_.parentBlock_.colourSecondary_;
-    this.sourceBlock_.colourTertiary_ =
-      this.sourceBlock_.parentBlock_.colourTertiary_;
-  } else {
-    // FIXME
-    // The parent block is null when a reporter block
-    // removed from an extension input field.
-    console.log('unable to find colours');
-  }
 };
 
 /**
