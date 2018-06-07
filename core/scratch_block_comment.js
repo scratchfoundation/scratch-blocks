@@ -54,32 +54,38 @@ Blockly.ScratchBlockComment = function(block, text, id, x, y, minimized) {
   /**
    * The text content of this comment.
    * @type {string}
+   * @private
    */
   this.text_ = text;
   /**
    * The x position of this comment in workspace coordinates.
    * @type {number}
+   * @private
    */
   this.x_ = x;
   /**
    * The y position of this comment in workspace coordinates.
    * @type {number}
+   * @private
    */
   this.y_ = y;
   /**
    * Whether this comment is minimized.
    * @type {boolean}
+   * @private
    */
   this.isMinimized_ = minimized || false;
 
   /**
    * The workspace this comment belongs to.
    * @type {Blockly.Workspace}
+   * @package
    */
   this.workspace = block.workspace;
   /**
    * The unique identifier for this comment.
    * @type {string}
+   * @package
    */
   this.id = goog.isString(id) && !this.workspace.getCommentById(id) ?
       id : Blockly.utils.genUid();
@@ -88,6 +94,7 @@ Blockly.ScratchBlockComment = function(block, text, id, x, y, minimized) {
   /**
    * The id of the block this comment belongs to.
    * @type {string}
+   * @package
    */
   this.blockId = block.id;
 
@@ -546,8 +553,8 @@ Blockly.ScratchBlockComment.prototype.toXmlWithXY = function() {
   var element = goog.dom.createDom('comment');
   element.setAttribute('id', this.id);
   element.textContent = this.text_;
-  element.setAttribute('x', Math.round(this.x));
-  element.setAttribute('y', Math.round(this.y));
+  element.setAttribute('x', Math.round(this.x_));
+  element.setAttribute('y', Math.round(this.y_));
   element.setAttribute('h', this.height_);
   element.setAttribute('w', this.width_);
   return element;
