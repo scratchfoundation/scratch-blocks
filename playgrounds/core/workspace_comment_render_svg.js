@@ -110,7 +110,7 @@ Blockly.WorkspaceCommentSvg.prototype.render = function() {
     this.addDeleteDom_();
   }
 
-  this.setSize_(size.width, size.height);
+  this.setSize(size.width, size.height);
 
   // Set the content
   this.textarea_.value = this.content_;
@@ -120,6 +120,8 @@ Blockly.WorkspaceCommentSvg.prototype.render = function() {
   if (this.resizeGroup_) {
     Blockly.bindEventWithChecks_(
         this.resizeGroup_, 'mousedown', this, this.resizeMouseDown_);
+    Blockly.bindEventWithChecks_(
+        this.resizeGroup_, 'mouseup', this, this.resizeMouseUp_);
   }
 
   if (this.isDeletable()) {
@@ -171,7 +173,7 @@ Blockly.WorkspaceCommentSvg.prototype.createEditor_ = function() {
   Blockly.bindEventWithChecks_(textarea, 'change', this, function(
       /* eslint-disable no-unused-vars */ e
       /* eslint-enable no-unused-vars */) {
-    this.setContent(textarea.value);
+    this.setText(textarea.value);
   });
   return this.foreignObject_;
 };
@@ -254,6 +256,7 @@ Blockly.WorkspaceCommentSvg.prototype.addDeleteDom_ = function() {
  * @private
  */
 Blockly.WorkspaceCommentSvg.prototype.resizeMouseDown_ = function(e) {
+  this.resizeStartSize_ = {width: this.width_, height: this.height_};
   this.unbindDragEvents_();
   if (Blockly.utils.isRightButton(e)) {
     // No right-click.
@@ -332,6 +335,16 @@ Blockly.WorkspaceCommentSvg.prototype.unbindDragEvents_ = function() {
 Blockly.WorkspaceCommentSvg.prototype.resizeMouseUp_ = function(/*e*/) {
   Blockly.Touch.clearTouchIdentifier();
   this.unbindDragEvents_();
+  var oldHW = this.resizeStartSize_;
+  this.resizeStartSize_ = null;
+  if (this.width_ == oldHW.width && this.height_ == oldHW.height) {
+    return;
+  }
+  // Fire a change event for the new width/height after
+  // resize mouse up
+  Blockly.Events.fire(new Blockly.Events.CommentChange(
+      this, {width: oldHW.width , height: oldHW.height},
+      {width: this.width_, height: this.height_}));
 };
 
 /**
@@ -342,7 +355,20 @@ Blockly.WorkspaceCommentSvg.prototype.resizeMouseUp_ = function(/*e*/) {
 Blockly.WorkspaceCommentSvg.prototype.resizeMouseMove_ = function(e) {
   this.autoLayout_ = false;
   var newXY = this.workspace.moveDrag(e);
-  this.setSize_(this.RTL ? -newXY.x : newXY.x, newXY.y);
+  // The call to setSize below emits a CommentChange event,
+  // but we don't want multiple CommentChange events to be
+  // emitted while the user is still in the process of resizing
+  // the comment, so disable events here. The event is emitted in
+  // resizeMouseUp_.
+  var disabled = false;
+  if (Blockly.Events.isEnabled()) {
+    Blockly.Events.disable();
+    disabled = true;
+  }
+  this.setSize(this.RTL ? -newXY.x : newXY.x, newXY.y);
+  if (disabled) {
+    Blockly.Events.enable();
+  }
 };
 
 /**
@@ -373,14 +399,19 @@ Blockly.WorkspaceCommentSvg.prototype.resizeComment_ = function() {
  * Set size
  * @param {number} width width of the container
  * @param {number} height height of the container
- * @private
+ * @package
  */
-Blockly.WorkspaceCommentSvg.prototype.setSize_ = function(width, height) {
+Blockly.WorkspaceCommentSvg.prototype.setSize = function(width, height) {
+  var oldWidth = this.width_;
+  var oldHeight = this.height_;
   // Minimum size of a comment.
   width = Math.max(width, 45);
   height = Math.max(height, 20 + Blockly.WorkspaceCommentSvg.TOP_OFFSET);
   this.width_ = width;
   this.height_ = height;
+  Blockly.Events.fire(new Blockly.Events.CommentChange(this,
+      {width: oldWidth, height: oldHeight},
+      {width: this.width_, height: this.height_}));
   this.svgRect_.setAttribute('width', width);
   this.svgRect_.setAttribute('height', height);
   this.svgRectTarget_.setAttribute('width', width);

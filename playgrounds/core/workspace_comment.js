@@ -171,6 +171,15 @@ Blockly.WorkspaceComment.prototype.setWidth = function(width) {
 };
 
 /**
+ * Get the height and width of this comment.
+ * @return {{height: number, width: number}} The height and width of this comment;
+ *     these numbers do not change as the workspace scales.
+ */
+Blockly.WorkspaceComment.prototype.getHeightWidth = function() {
+  return {height: this.height_, width: this.width_};
+};
+
+/**
  * Get stored location.
  * @return {!goog.math.Coordinate} The comment's stored location.  This is not
  *     valid if the comment is currently being dragged.
@@ -236,20 +245,20 @@ Blockly.WorkspaceComment.prototype.setMovable = function(movable) {
  * @return {string} Comment text.
  * @package
  */
-Blockly.WorkspaceComment.prototype.getContent = function() {
+Blockly.WorkspaceComment.prototype.getText = function() {
   return this.content_;
 };
 
 /**
- * Set this comment's content.
- * @param {string} content Comment content.
+ * Set this comment's text content.
+ * @param {string} text Comment text.
  * @package
  */
-Blockly.WorkspaceComment.prototype.setContent = function(content) {
-  if (this.content_ != content) {
-    Blockly.Events.fire(
-        new Blockly.Events.CommentChange(this, this.content_, content));
-    this.content_ = content;
+Blockly.WorkspaceComment.prototype.setText = function(text) {
+  if (this.content_ != text) {
+    Blockly.Events.fire(new Blockly.Events.CommentChange(
+        this, {text: this.content_}, {text: text}));
+    this.content_ = text;
   }
 };
 
@@ -280,7 +289,7 @@ Blockly.WorkspaceComment.prototype.toXml = function(opt_noId) {
   if (!opt_noId) {
     commentElement.setAttribute('id', this.id);
   }
-  commentElement.textContent = this.getContent();
+  commentElement.textContent = this.getText();
   return commentElement;
 };
 
@@ -365,4 +374,3 @@ Blockly.WorkspaceComment.parseAttributes = function(xml) {
     content: xml.textContent
   };
 };
-
