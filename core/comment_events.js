@@ -196,13 +196,12 @@ Blockly.Events.CommentChange.prototype.run = function(forward) {
       // state
       comment.setMinimized(contents.minimized);
     }
-    return;
-  } else if (contents.hasOwnProperty('width') && contents.hasOwnProperty('height')) {
+  }
+  if (contents.hasOwnProperty('width') && contents.hasOwnProperty('height')) {
     comment.setSize(contents.width, contents.height);
-    return;
-  } else if (contents.hasOwnProperty('text')) {
+  }
+  if (contents.hasOwnProperty('text')) {
     comment.setText(contents.text);
-    return;
   }
 
   console.warn('Unrecognized comment change: ' + JSON.stringify(contents) + '; cannot undo/redo');
