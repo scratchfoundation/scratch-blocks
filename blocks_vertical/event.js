@@ -29,12 +29,12 @@ goog.require('Blockly.ScratchBlocks.VerticalExtensions');
 
 Blockly.Blocks['event_whentouchingobject'] = {
   /**
-   * Block to when a sprite is touching an object.
+   * Block for when a sprite is touching an object.
    * @this Blockly.Block
    */
   init: function() {
     this.jsonInit({
-      "message0": "when this sprite touches %1",
+      "message0": Blockly.Msg.EVENT_WHENTOUCHINGOBJECT,
       "args0": [
         {
           "type": "input_value",

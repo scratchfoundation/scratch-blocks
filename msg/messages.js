@@ -75,6 +75,7 @@ Blockly.Msg.DATA_INDEX_RANDOM = "random";
 Blockly.Msg.EVENT_WHENFLAGCLICKED = "when %1 clicked";
 Blockly.Msg.EVENT_WHENTHISSPRITECLICKED = "when this sprite clicked";
 Blockly.Msg.EVENT_WHENSTAGECLICKED = "when stage clicked";
+Blockly.Msg.EVENT_WHENTOUCHINGOBJECT = "when this sprite touches %1";
 Blockly.Msg.EVENT_WHENBROADCASTRECEIVED = "when I receive %1";
 Blockly.Msg.EVENT_WHENBACKDROPSWITCHESTO = "when backdrop switches to %1";
 Blockly.Msg.EVENT_WHENGREATERTHAN = "when %1 > %2";
