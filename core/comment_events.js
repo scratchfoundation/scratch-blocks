@@ -122,8 +122,8 @@ Blockly.Events.CommentBase.prototype.getComment_ = function() {
 
 /**
  * Class for a comment change event.
- * @param {Blockly.WorkspaceComment} comment The comment that is being changed.
- *     Null for a blank event.
+ * @param {Blockly.WorkspaceComment | Blockly.ScratchBlockComment} comment
+ *     The comment that is being changed. Null for a blank event.
  * @param {!object} oldContents Object containing previous state of a comment's
  *     properties. The possible properties can be: 'minimized', 'text', or
  *     'width' and 'height' together. Must contain the same property (or in the
@@ -319,8 +319,8 @@ Blockly.Events.CommentCreate.prototype.run = function(forward) {
 
 /**
  * Class for a comment deletion event.
- * @param {Blockly.WorkspaceComment} comment The deleted comment.
- *     Null for a blank event.
+ * @param {Blockly.WorkspaceComment | Blockly.ScratchBlockComment} comment
+ *     The deleted comment. Null for a blank event.
  * @extends {Blockly.Events.CommentBase}
  * @constructor
  */
@@ -395,8 +395,8 @@ Blockly.Events.CommentDelete.prototype.run = function(forward) {
 
 /**
  * Class for a comment move event.  Created before the move.
- * @param {Blockly.WorkspaceComment} comment The comment that is being moved.
- *     Null for a blank event.
+ * @param {Blockly.WorkspaceComment | Blockly.ScratchBlockComment} comment
+ *     The comment that is being moved. Null for a blank event.
  * @extends {Blockly.Events.CommentBase}
  * @constructor
  */
@@ -409,7 +409,7 @@ Blockly.Events.CommentMove = function(comment) {
   /**
    * The comment that is being moved.  Will be cleared after recording the new
    * location.
-   * @type {?Blockly.WorkspaceComment}
+   * @type {?Blockly.WorkspaceComment | Blockly.ScratchBlockComment}
    */
   this.comment_ = comment;
 
