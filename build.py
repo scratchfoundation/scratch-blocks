@@ -134,11 +134,7 @@ window.BLOCKLY_BOOT = function() {
       alert('Error: Closure not found.  Read this:\\n' +
             'developers.google.com/blockly/guides/modify/web/closure');
     }
-    if (window.BLOCKLY_DIR.search(/node_modules/)) {
-      dir = '..';
-    } else {
-      dir = window.BLOCKLY_DIR.match(/[^\\/]+$/)[0];
-    }
+    dir = window.BLOCKLY_DIR.match(/[^\\/]+$/)[0];
   }
 """))
     add_dependency = []
