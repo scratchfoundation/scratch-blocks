@@ -419,7 +419,7 @@ Blockly.WorkspaceComment.parseAttributes = function(xml) {
      * the XML.
      * @type {boolean}
      */
-    minimized: xml.getAttribute('minimized') || false,
+    minimized: xml.getAttribute('minimized') == 'true' || false,
     /* @type {string} */
     content: xml.textContent
   };
