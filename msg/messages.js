@@ -263,6 +263,17 @@ Blockly.Msg.SOUND_CHANGEVOLUMEBY = "change volume by %1";
 Blockly.Msg.SOUND_SETVOLUMETO = "set volume to %1%";
 Blockly.Msg.SOUND_VOLUME = "volume";
 
+// Category labels
+Blockly.Msg.CATEGORY_MOTION = "Motion";
+Blockly.Msg.CATEGORY_LOOKS = "Looks";
+Blockly.Msg.CATEGORY_SOUND = "Sound";
+Blockly.Msg.CATEGORY_EVENTS = "Events";
+Blockly.Msg.CATEGORY_CONTROL = "Control";
+Blockly.Msg.CATEGORY_SENSING = "Sensing";
+Blockly.Msg.CATEGORY_OPERATORS = "Operators";
+Blockly.Msg.CATEGORY_VARIABLES = "Variables";
+Blockly.Msg.CATEGORY_MYBLOCKS = "My Blocks";
+
 // Context menus
 Blockly.Msg.DUPLICATE = "Duplicate";
 Blockly.Msg.DELETE = "Delete";
