@@ -349,9 +349,11 @@
       }
 
       function setLocale(locale) {
+        workspace.getFlyout().setRecyclingEnabled(false);
         var xml = Blockly.Xml.workspaceToDom(workspace);
         Blockly.ScratchMsgs.setLocale(locale);
         Blockly.Xml.clearWorkspaceAndLoadFromXml(xml, workspace);
+        workspace.getFlyout().setRecyclingEnabled(true);
       }
     </script>
 
