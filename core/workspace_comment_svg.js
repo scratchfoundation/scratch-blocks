@@ -55,6 +55,17 @@ Blockly.WorkspaceCommentSvg = function(workspace, content, height, width, minimi
       'g', {}, null);
   this.svgGroup_.translate_ = '';
 
+  this.svgRect_ = Blockly.utils.createSvgElement(
+      'rect',
+      {
+        'class': 'scratchCommentRect scratchWorkspaceCommentBorder',
+        'x': 0,
+        'y': 0,
+        'rx': 4 * Blockly.WorkspaceCommentSvg.BORDER_WIDTH,
+        'ry': 4 * Blockly.WorkspaceCommentSvg.BORDER_WIDTH
+      });
+  this.svgGroup_.appendChild(this.svgRect_);
+
 
   /**
    * Whether the comment is rendered onscreen and is a part of the DOM.
