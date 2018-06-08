@@ -11,7 +11,8 @@ const CONCURRENCY_LIMIT = 4;
 // Processing task
 const work = function (uri, callback) {
     fs.readFile(uri, function (err, body) {
-        if (err) return callback(err);
+      const name = path.parse(uri).name;
+      if (err) return callback(err);
 
         // Convert file body into an object (let this throw if invalid JSON)
         body = JSON.parse(body);
@@ -22,7 +23,7 @@ const work = function (uri, callback) {
         file += '\n';
         file += '\'use strict\';\n';
         file += '\n';
-        file += 'goog.provide(\'Blockly.Msg.en\');\n';
+        file += `goog.provide(\'Blockly.Msg.${name}\');\n`;
         file += 'goog.require(\'Blockly.Msg\');\n';
         file += '\n';
 
@@ -32,7 +33,6 @@ const work = function (uri, callback) {
         }
 
         // Write file to disk
-        const name = path.parse(uri).name;
         fs.writeFile(`${PATH_OUTPUT}/${name}.js`, file, callback);
     });
 };

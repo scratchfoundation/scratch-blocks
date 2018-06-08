@@ -24,6 +24,8 @@
  *
  * After modifying this file, run `npm run translate` from the root directory
  * to regenerate `./msg/json/en.json`.
+ * IMPORTANT:
+ * All message strings must use double quotes for the scripts to work properly
  */
 'use strict';
 
@@ -262,58 +264,58 @@ Blockly.Msg.SOUND_SETVOLUMETO = "set volume to %1%";
 Blockly.Msg.SOUND_VOLUME = "volume";
 
 // Context menus
-Blockly.Msg.DUPLICATE = 'Duplicate';
-Blockly.Msg.DELETE = 'Delete';
-Blockly.Msg.ADD_COMMENT = 'Add Comment';
-Blockly.Msg.REMOVE_COMMENT = 'Remove Comment';
-Blockly.Msg.DELETE_BLOCK = 'Delete Block';
-Blockly.Msg.DELETE_X_BLOCKS = 'Delete %1 Blocks';
-Blockly.Msg.DELETE_ALL_BLOCKS = 'Delete all %1 blocks?';
-Blockly.Msg.CLEAN_UP = 'Clean up Blocks';
-Blockly.Msg.HELP = 'Help';
-Blockly.Msg.UNDO = 'Undo';
-Blockly.Msg.REDO = 'Redo';
-Blockly.Msg.EDIT_PROCEDURE = 'Edit';
-Blockly.Msg.SHOW_PROCEDURE_DEFINITION = 'Go to definition';
-Blockly.Msg.WORKSPACE_COMMENT_DEFAULT_TEXT = 'Say something...';
+Blockly.Msg.DUPLICATE = "Duplicate";
+Blockly.Msg.DELETE = "Delete";
+Blockly.Msg.ADD_COMMENT = "Add Comment";
+Blockly.Msg.REMOVE_COMMENT = "Remove Comment";
+Blockly.Msg.DELETE_BLOCK = "Delete Block";
+Blockly.Msg.DELETE_X_BLOCKS = "Delete %1 Blocks";
+Blockly.Msg.DELETE_ALL_BLOCKS = "Delete all %1 blocks?";
+Blockly.Msg.CLEAN_UP = "Clean up Blocks";
+Blockly.Msg.HELP = "Help";
+Blockly.Msg.UNDO = "Undo";
+Blockly.Msg.REDO = "Redo";
+Blockly.Msg.EDIT_PROCEDURE = "Edit";
+Blockly.Msg.SHOW_PROCEDURE_DEFINITION = "Go to definition";
+Blockly.Msg.WORKSPACE_COMMENT_DEFAULT_TEXT = "Say something...";
 
 // Color
-Blockly.Msg.COLOUR_HUE_LABEL = 'Color';
-Blockly.Msg.COLOUR_SATURATION_LABEL = 'Saturation';
-Blockly.Msg.COLOUR_BRIGHTNESS_LABEL = 'Brightness';
+Blockly.Msg.COLOUR_HUE_LABEL = "Color";
+Blockly.Msg.COLOUR_SATURATION_LABEL = "Saturation";
+Blockly.Msg.COLOUR_BRIGHTNESS_LABEL = "Brightness";
 
 // Variables
 // @todo Remove these once fully managed by Scratch VM / Scratch GUI
-Blockly.Msg.CHANGE_VALUE_TITLE = 'Change value:';
-Blockly.Msg.RENAME_VARIABLE = 'Rename variable';
-Blockly.Msg.RENAME_VARIABLE_TITLE = 'Rename all "%1" variables to:';
-Blockly.Msg.RENAME_VARIABLE_MODAL_TITLE = 'Rename Variable';
-Blockly.Msg.NEW_VARIABLE = 'Make a Variable';
-Blockly.Msg.NEW_VARIABLE_TITLE = 'New variable name:';
-Blockly.Msg.VARIABLE_MODAL_TITLE = 'New Variable';
-Blockly.Msg.VARIABLE_ALREADY_EXISTS = 'A variable named "%1" already exists.';
-Blockly.Msg.VARIABLE_ALREADY_EXISTS_FOR_ANOTHER_TYPE = 'A variable named "%1" already exists for another variable of type "%2".';
-Blockly.Msg.DELETE_VARIABLE_CONFIRMATION = 'Delete %1 uses of the "%2" variable?';
-Blockly.Msg.CANNOT_DELETE_VARIABLE_PROCEDURE = 'Can\'t delete the variable "%1" because it\'s part of the definition of the function "%2"';
-Blockly.Msg.DELETE_VARIABLE = 'Delete the "%1" variable';
+Blockly.Msg.CHANGE_VALUE_TITLE = "Change value:";
+Blockly.Msg.RENAME_VARIABLE = "Rename variable";
+Blockly.Msg.RENAME_VARIABLE_TITLE = "Rename all '%1' variables to:";
+Blockly.Msg.RENAME_VARIABLE_MODAL_TITLE = "Rename Variable";
+Blockly.Msg.NEW_VARIABLE = "Make a Variable";
+Blockly.Msg.NEW_VARIABLE_TITLE = "New variable name:";
+Blockly.Msg.VARIABLE_MODAL_TITLE = "New Variable";
+Blockly.Msg.VARIABLE_ALREADY_EXISTS = "A variable named '%1' already exists.";
+Blockly.Msg.VARIABLE_ALREADY_EXISTS_FOR_ANOTHER_TYPE = "A variable named '%1' already exists for another variable of type '%2'.";
+Blockly.Msg.DELETE_VARIABLE_CONFIRMATION = "Delete %1 uses of the '%2' variable?";
+Blockly.Msg.CANNOT_DELETE_VARIABLE_PROCEDURE = "Can't delete the variable '%1' because it's part of the definition of the function '%2'";
+Blockly.Msg.DELETE_VARIABLE = "Delete the '%1' variable";
 
 // Custom Procedures
 // @todo Remove these once fully managed by Scratch VM / Scratch GUI
-Blockly.Msg.NEW_PROCEDURE = 'Make a Block';
-Blockly.Msg.PROCEDURE_ALREADY_EXISTS = 'A procedure named "%1" already exists.';
+Blockly.Msg.NEW_PROCEDURE = "Make a Block";
+Blockly.Msg.PROCEDURE_ALREADY_EXISTS = "A procedure named '%1' already exists.";
 
 // Lists
 // @todo Remove these once fully managed by Scratch VM / Scratch GUI
-Blockly.Msg.NEW_LIST = 'Make a List';
-Blockly.Msg.NEW_LIST_TITLE = 'New list name:';
-Blockly.Msg.LIST_MODAL_TITLE = 'New List';
-Blockly.Msg.LIST_ALREADY_EXISTS = 'A list named "%1" already exists.';
-Blockly.Msg.RENAME_LIST_TITLE = 'Rename all "%1" lists to:';
-Blockly.Msg.RENAME_LIST_MODAL_TITLE = 'Rename List';
+Blockly.Msg.NEW_LIST = "Make a List";
+Blockly.Msg.NEW_LIST_TITLE = "New list name:";
+Blockly.Msg.LIST_MODAL_TITLE = "New List";
+Blockly.Msg.LIST_ALREADY_EXISTS = "A list named '%1' already exists.";
+Blockly.Msg.RENAME_LIST_TITLE = "Rename all '%1' lists to:";
+Blockly.Msg.RENAME_LIST_MODAL_TITLE = "Rename List";
 
 // Broadcast Messages
 // @todo Remove these once fully managed by Scratch VM / Scratch GUI
-Blockly.Msg.NEW_BROADCAST_MESSAGE = 'New message';
-Blockly.Msg.NEW_BROADCAST_MESSAGE_TITLE = 'New message name:';
-Blockly.Msg.BROADCAST_MODAL_TITLE = 'New Message';
-Blockly.Msg.DEFAULT_BROADCAST_MESSAGE_NAME = 'message1';
+Blockly.Msg.NEW_BROADCAST_MESSAGE = "New message";
+Blockly.Msg.NEW_BROADCAST_MESSAGE_TITLE = "New message name:";
+Blockly.Msg.BROADCAST_MODAL_TITLE = "New Message";
+Blockly.Msg.DEFAULT_BROADCAST_MESSAGE_NAME = "message1";

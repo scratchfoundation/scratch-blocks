@@ -62,6 +62,7 @@ goog.require('Blockly.inject');
 goog.require('Blockly.utils');
 goog.require('goog.color');
 
+goog.require('Blockly.ScratchMsgs');
 
 // Turn off debugging when compiled.
 /* eslint-disable no-unused-vars */

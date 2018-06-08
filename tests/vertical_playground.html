@@ -8,6 +8,7 @@
 
     <script src="../blockly_uncompressed_vertical.js"></script>
     <script src="../msg/messages.js"></script>
+    <script src="../msg/scratch_msgs.js"></script>
     <script src="../blocks_vertical/vertical_extensions.js"></script>
     <script src="../blocks_common/math.js"></script>
     <script src="../blocks_common/text.js"></script>
@@ -59,6 +60,11 @@
         var side = match ? match[1] : 'start';
 
         document.forms.options.elements.side.value = side;
+
+        match = location.search.match(/locale=([^&]+)/);
+        var locale = match ? match[1] : 'en';
+        Blockly.ScratchMsgs.setLocale(locale);
+        document.forms.options.elements.locale.value = locale;
 
         // Create main workspace.
         workspace = Blockly.inject('blocklyDiv', {
@@ -297,6 +303,12 @@
             document.getElementById('reportValue').value
           );
         }
+      }
+
+      function setLocale(locale) {
+        var xml = Blockly.Xml.workspaceToDom(workspace);
+        Blockly.ScratchMsgs.setLocale(locale);
+        Blockly.Xml.clearWorkspaceAndLoadFromXml(xml, workspace);
       }
     </script>
 

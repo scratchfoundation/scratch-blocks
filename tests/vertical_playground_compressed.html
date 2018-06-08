@@ -8,6 +8,7 @@
 
     <script src="../blockly_compressed_vertical.js"></script>
     <script src="../msg/messages.js"></script>
+    <script src="../msg/scratch_msgs.js"></script>
     <script src="../blocks_compressed.js"></script>
     <script src="../blocks_compressed_vertical.js"></script>
     <script>
@@ -46,6 +47,11 @@
 
         document.forms.options.elements.side.value = side;
 
+        match = location.search.match(/locale=([^&]+)/);
+        var locale = match ? match[1] : 'en';
+        Blockly.ScratchMsgs.setLocale(locale);
+        document.forms.options.elements.locale.value = locale;
+
         // Create main workspace.
         workspace = Blockly.inject('blocklyDiv', {
           comments: true,
@@ -80,7 +86,7 @@
           document.getElementById('importExport').value = text;
         }
         taChange();
-        
+
         if (sessionStorage) {
           // Restore event logging state.
           var state = sessionStorage.getItem('logEvents');
@@ -340,6 +346,12 @@
             document.getElementById('reportValue').value
           );
         }
+      }
+
+      function setLocale(locale) {
+        var xml = Blockly.Xml.workspaceToDom(workspace);
+        Blockly.ScratchMsgs.setLocale(locale);
+        Blockly.Xml.clearWorkspaceAndLoadFromXml(xml, workspace);
       }
     </script>
 
