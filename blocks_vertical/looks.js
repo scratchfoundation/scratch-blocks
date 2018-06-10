@@ -554,6 +554,22 @@ Blockly.Blocks['looks_costumenumbername'] = {
   }
 };
 
+Blockly.Blocks['looks_costumename'] = {
+  /**
+   * Block to report costume's name. This is an obsolete block that is
+   * implemented for compatibility with Scratch 2.0 projects that use this
+   * block.
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.jsonInit({
+      "message0": Blockly.Msg.LOOKS_COSTUMENAME,
+      "category": Blockly.Categories.looks,
+      "extensions": ["colours_looks", "output_number"]
+    });
+  }
+};
+
 Blockly.Blocks['looks_switchbackdroptoandwait'] = {
   /**
    * Block to switch the backdrop to the selected one and wait.
