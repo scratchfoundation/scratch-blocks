@@ -32,6 +32,7 @@ goog.provide('Blockly.Procedures');
 
 goog.require('Blockly.Blocks');
 goog.require('Blockly.constants');
+goog.require('Blockly.Events.BlockChange');
 goog.require('Blockly.Field');
 goog.require('Blockly.Names');
 goog.require('Blockly.Workspace');
@@ -107,13 +108,7 @@ Blockly.Procedures.sortProcedureMutations_ = function(mutations) {
     var procCodeA = a.getAttribute('proccode');
     var procCodeB = b.getAttribute('proccode');
 
-    if (procCodeA < procCodeB) {
-      return -1;
-    } else if (procCodeA > procCodeB) {
-      return 1;
-    } else {
-      return 0;
-    }
+    return Blockly.scratchBlocksUtils.compareStrings(procCodeA, procCodeB);
   });
 
   return newMutations;
@@ -128,7 +123,7 @@ Blockly.Procedures.sortProcedureMutations_ = function(mutations) {
  * @private
  */
 Blockly.Procedures.procTupleComparator_ = function(ta, tb) {
-  return ta[0].toLowerCase().localeCompare(tb[0].toLowerCase());
+  return Blockly.scratchBlocksUtils.compareStrings(ta[0], tb[0]);
 };
 
 /**
@@ -287,7 +282,7 @@ Blockly.Procedures.getCallers = function(name, ws, definitionRoot,
     if (block.id == definitionRoot.id && !allowRecursive) {
       continue;
     }
-    allBlocks.push.apply(allBlocks, block.getDescendants());
+    allBlocks.push.apply(allBlocks, block.getDescendants(false));
   }
 
   var callers = [];

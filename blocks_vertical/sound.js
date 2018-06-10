@@ -33,32 +33,31 @@ Blockly.Blocks['sound_sounds_menu'] = {
    * @this Blockly.Block
    */
   init: function() {
-    this.jsonInit(
-      {
-        "message0": "%1",
-        "args0": [
-          {
-            "type": "field_dropdown",
-            "name": "SOUND_MENU",
-            "options": [
-              ['1', '0'],
-              ['2', '1'],
-              ['3', '2'],
-              ['4', '3'],
-              ['5', '4'],
-              ['6', '5'],
-              ['7', '6'],
-              ['8', '7'],
-              ['9', '8'],
-              ['10', '9']
-            ]
-          }
-        ],
-        "colour": Blockly.Colours.sounds.secondary,
-        "colourSecondary": Blockly.Colours.sounds.secondary,
-        "colourTertiary": Blockly.Colours.sounds.tertiary,
-        "extensions": ["output_string"]
-      });
+    this.jsonInit({
+      "message0": "%1",
+      "args0": [
+        {
+          "type": "field_dropdown",
+          "name": "SOUND_MENU",
+          "options": [
+            ['1', '0'],
+            ['2', '1'],
+            ['3', '2'],
+            ['4', '3'],
+            ['5', '4'],
+            ['6', '5'],
+            ['7', '6'],
+            ['8', '7'],
+            ['9', '8'],
+            ['10', '9']
+          ]
+        }
+      ],
+      "colour": Blockly.Colours.sounds.secondary,
+      "colourSecondary": Blockly.Colours.sounds.secondary,
+      "colourTertiary": Blockly.Colours.sounds.tertiary,
+      "extensions": ["output_string"]
+    });
   }
 };
 
@@ -96,6 +95,7 @@ Blockly.Blocks['sound_playuntildone'] = {
           "name": "SOUND_MENU"
         }
       ],
+      "category": Blockly.Categories.sound,
       "extensions": ["colours_sounds", "shape_statement"]
     });
   }
@@ -137,6 +137,7 @@ Blockly.Blocks['sound_seteffectto'] = {
           "name": "VALUE"
         }
       ],
+      "category": Blockly.Categories.sound,
       "extensions": ["colours_sounds", "shape_statement"]
     });
   }
@@ -165,6 +166,7 @@ Blockly.Blocks['sound_changeeffectby'] = {
           "name": "VALUE"
         }
       ],
+      "category": Blockly.Categories.sound,
       "extensions": ["colours_sounds", "shape_statement"]
     });
   }
@@ -178,6 +180,7 @@ Blockly.Blocks['sound_cleareffects'] = {
   init: function() {
     this.jsonInit({
       "message0": Blockly.Msg.SOUND_CLEAREFFECTS,
+      "category": Blockly.Categories.sound,
       "extensions": ["colours_sounds", "shape_statement"]
     });
   }

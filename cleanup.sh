@@ -80,7 +80,8 @@ echo Miscellaneous cleanup...
 keep_ours=".github/ISSUE_TEMPLATE.md \
 .github/PULL_REQUEST_TEMPLATE.md \
 .gitignore \
-.travis.yml"
+.travis.yml \
+core/block_animations.js"
 
 for filename in $keep_ours
 do

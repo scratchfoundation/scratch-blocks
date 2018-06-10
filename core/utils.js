@@ -288,8 +288,8 @@ Blockly.utils.getRelativeXY.XY_2D_REGEX_ =
  * @return {!SVGElement} Newly created SVG element.
  */
 Blockly.utils.createSvgElement = function(name, attrs, parent /*, opt_workspace */) {
-  var e = /** @type {!SVGElement} */ (
-      document.createElementNS(Blockly.SVG_NS, name));
+  var e = /** @type {!SVGElement} */
+      (document.createElementNS(Blockly.SVG_NS, name));
   for (var key in attrs) {
     e.setAttribute(key, attrs[key]);
   }
@@ -567,7 +567,7 @@ Blockly.utils.tokenizeInterpolation_ = function(message,
             if (goog.isString(rawValue)) {
               // Attempt to dereference substrings, too, appending to the end.
               Array.prototype.push.apply(tokens,
-                Blockly.utils.tokenizeInterpolation(rawValue));
+                  Blockly.utils.tokenizeInterpolation(rawValue));
             } else if (parseInterpolationTokens) {
               // When parsing interpolation tokens, numbers are special
               // placeholders (%1, %2, etc). Make sure all other values are

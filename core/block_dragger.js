@@ -27,6 +27,9 @@
 goog.provide('Blockly.BlockDragger');
 
 goog.require('Blockly.BlockAnimations');
+goog.require('Blockly.Events.BlockMove');
+goog.require('Blockly.Events.DragBlockOutside');
+goog.require('Blockly.Events.EndBlockDrag');
 goog.require('Blockly.InsertionMarkerManager');
 
 goog.require('goog.math.Coordinate');
@@ -132,7 +135,7 @@ Blockly.BlockDragger.prototype.dispose = function() {
 Blockly.BlockDragger.initIconData_ = function(block) {
   // Build a list of icons that need to be moved and where they started.
   var dragIconData = [];
-  var descendants = block.getDescendants();
+  var descendants = block.getDescendants(false);
   for (var i = 0, descendant; descendant = descendants[i]; i++) {
     var icons = descendant.getIcons();
     for (var j = 0; j < icons.length; j++) {
@@ -176,8 +179,11 @@ Blockly.BlockDragger.prototype.startBlockDrag = function(currentDragDeltaXY) {
   // surface.
   this.draggingBlock_.moveToDragSurface_();
 
-  if (this.workspace_.toolbox_) {
-    this.workspace_.toolbox_.addDeleteStyle();
+  var toolbox = this.workspace_.getToolbox();
+  if (toolbox) {
+    var style = this.draggingBlock_.isDeletable() ? 'blocklyToolboxDelete' :
+        'blocklyToolboxGrab';
+    toolbox.addStyle(style);
   }
 };
 
@@ -246,8 +252,11 @@ Blockly.BlockDragger.prototype.endBlockDrag = function(e, currentDragDeltaXY) {
   }
   this.workspace_.setResizesEnabled(true);
 
-  if (this.workspace_.toolbox_) {
-    this.workspace_.toolbox_.removeDeleteStyle();
+  var toolbox = this.workspace_.getToolbox();
+  if (toolbox) {
+    var style = this.draggingBlock_.isDeletable() ? 'blocklyToolboxDelete' :
+        'blocklyToolboxGrab';
+    toolbox.removeStyle(style);
   }
   Blockly.Events.setGroup(false);
 
@@ -291,7 +300,7 @@ Blockly.BlockDragger.prototype.endBlockDrag = function(e, currentDragDeltaXY) {
  * @private
  */
 Blockly.BlockDragger.prototype.fireDragOutsideEvent_ = function(isOutside) {
-  var event = new Blockly.Events.BlockDragOutside(this.draggingBlock_);
+  var event = new Blockly.Events.DragBlockOutside(this.draggingBlock_);
   event.isOutside = isOutside;
   Blockly.Events.fire(event);
 };
@@ -302,7 +311,7 @@ Blockly.BlockDragger.prototype.fireDragOutsideEvent_ = function(isOutside) {
  * @private
  */
 Blockly.BlockDragger.prototype.fireEndDragEvent_ = function(isOutside) {
-  var event = new Blockly.Events.BlockEndDrag(this.draggingBlock_, isOutside);
+  var event = new Blockly.Events.EndBlockDrag(this.draggingBlock_, isOutside);
   Blockly.Events.fire(event);
 };
 

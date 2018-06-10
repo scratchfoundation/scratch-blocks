@@ -59,7 +59,7 @@ Blockly.scratchBlocksUtils.measureText = function(fontSize, fontFamily,
  */
 Blockly.scratchBlocksUtils.encodeEntities = function(rawStr) {
   // CC-BY-SA https://stackoverflow.com/questions/18749591/encode-html-entities-in-javascript
-  return rawStr.replace(/[\u00A0-\u9999<>\&]/gim, function(i) {
+  return rawStr.replace(/[\u00A0-\u9999<>&]/gim, function(i) {
     return '&#' + i.charCodeAt(0) + ';';
   });
 };
@@ -71,7 +71,7 @@ Blockly.scratchBlocksUtils.encodeEntities = function(rawStr) {
  * @package
  */
 Blockly.scratchBlocksUtils.changeObscuredShadowIds = function(block) {
-  var blocks = block.getDescendants();
+  var blocks = block.getDescendants(false);
   for (var i = blocks.length - 1; i >= 0; i--) {
     var descendant = blocks[i];
     for (var j = 0; j < descendant.inputList.length; j++) {
@@ -100,4 +100,17 @@ Blockly.scratchBlocksUtils.changeObscuredShadowIds = function(block) {
 Blockly.scratchBlocksUtils.isShadowArgumentReporter = function(block) {
   return (block.isShadow() && (block.type == 'argument_reporter_boolean' ||
       block.type == 'argument_reporter_string_number'));
+};
+
+/**
+ * Compare strings with natural number sorting.
+ * @param {string} str1 First input.
+ * @param {string} str2 Second input.
+ * @return {number} -1, 0, or 1 to signify greater than, equality, or less than.
+ */
+Blockly.scratchBlocksUtils.compareStrings = function(str1, str2) {
+  return str1.localeCompare(str2, [], {
+    sensitivity: 'base',
+    numeric: true
+  });
 };

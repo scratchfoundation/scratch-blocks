@@ -77,14 +77,15 @@ Blockly.FieldVerticalSeparator.prototype.init = function() {
     this.fieldGroup_.style.display = 'none';
   }
   /** @type {SVGElement} */
-  this.lineElement_ = Blockly.utils.createSvgElement('line', {
-    'stroke': this.sourceBlock_.getColourSecondary(),
-    'stroke-linecap': 'round',
-    'x1': 0,
-    'y1': 0,
-    'x2': 0,
-    'y2': this.height_
-  }, this.fieldGroup_);
+  this.lineElement_ = Blockly.utils.createSvgElement('line',
+      {
+        'stroke': this.sourceBlock_.getColourSecondary(),
+        'stroke-linecap': 'round',
+        'x1': 0,
+        'y1': 0,
+        'x2': 0,
+        'y2': this.height_
+      }, this.fieldGroup_);
 
   this.sourceBlock_.getSvgRoot().appendChild(this.fieldGroup_);
 };
@@ -153,7 +154,7 @@ Blockly.FieldVerticalSeparator.prototype.render_ = function() {
  * @private
  */
 Blockly.FieldVerticalSeparator.prototype.updateWidth = function() {
- // NOP
+  // NOP
 };
 
 Blockly.Field.register(

@@ -29,7 +29,12 @@ goog.provide('Blockly.Block');
 goog.require('Blockly.Blocks');
 goog.require('Blockly.Colours');
 goog.require('Blockly.Comment');
+goog.require('Blockly.ScratchBlockComment');
 goog.require('Blockly.Connection');
+goog.require('Blockly.Events.BlockChange');
+goog.require('Blockly.Events.BlockCreate');
+goog.require('Blockly.Events.BlockDelete');
+goog.require('Blockly.Events.BlockMove');
 goog.require('Blockly.Extensions');
 goog.require('Blockly.FieldLabelSerializable');
 goog.require('Blockly.FieldVariableGetter');
@@ -51,7 +56,8 @@ goog.require('goog.string');
  * @param {?string} prototypeName Name of the language object containing
  *     type-specific functions for this block.
  * @param {string=} opt_id Optional ID.  Use this ID if provided, otherwise
- *     create a new ID.
+ *     create a new ID.  If the ID conflicts with an in-use ID, a new one will
+ *     be generated.
  * @constructor
  */
 Blockly.Block = function(workspace, prototypeName, opt_id) {
@@ -504,12 +510,30 @@ Blockly.Block.prototype.getRootBlock = function() {
 
 /**
  * Find all the blocks that are directly nested inside this one.
- * Includes value and block inputs, as well as any following statement.
+ * Includes value and statement inputs, as well as any following statement.
  * Excludes any connection on an output tab or any preceding statement.
+ * Blocks are optionally sorted by position; top to bottom.
+ * @param {boolean} ordered Sort the list if true.
  * @return {!Array.<!Blockly.Block>} Array of blocks.
  */
-Blockly.Block.prototype.getChildren = function() {
-  return this.childBlocks_;
+Blockly.Block.prototype.getChildren = function(ordered) {
+  if (!ordered) {
+    return this.childBlocks_;
+  }
+  var blocks = [];
+  for (var i = 0, input; input = this.inputList[i]; i++) {
+    if (input.connection) {
+      var child = input.connection.targetBlock();
+      if (child) {
+        blocks.push(child);
+      }
+    }
+  }
+  var next = this.getNextBlock();
+  if (next) {
+    blocks.push(next);
+  }
+  return blocks;
 };
 
 /**
@@ -551,16 +575,20 @@ Blockly.Block.prototype.setParent = function(newParent) {
 /**
  * Find all the blocks that are directly or indirectly nested inside this one.
  * Includes this block in the list.
- * Includes value and block inputs, as well as any following statements.
+ * Includes value and statement inputs, as well as any following statements.
  * Excludes any connection on an output tab or any preceding statements.
+ * Blocks are optionally sorted by position, top to bottom.
+ * @param {boolean} ordered Sort the list if true.
  * @param {boolean=} opt_ignoreShadows If set, don't include shadow blocks.
  * @return {!Array.<!Blockly.Block>} Flattened array of blocks.
  */
-Blockly.Block.prototype.getDescendants = function(opt_ignoreShadows) {
+Blockly.Block.prototype.getDescendants = function(ordered, opt_ignoreShadows) {
   var blocks = [this];
-  for (var child, x = 0; child = this.childBlocks_[x]; x++) {
+  var childBlocks = this.getChildren(ordered);
+  for (var child, i = 0; child = childBlocks[i]; i++) {
     if (!opt_ignoreShadows || !child.isShadow_) {
-      blocks.push.apply(blocks, child.getDescendants(opt_ignoreShadows));
+      blocks.push.apply(
+          blocks, child.getDescendants(ordered, opt_ignoreShadows));
     }
   }
   return blocks;
@@ -790,15 +818,13 @@ Blockly.Block.prototype.setColour = function(colour, colourSecondary, colourTert
     this.colourSecondary_ = this.makeColour_(colourSecondary);
   } else {
     this.colourSecondary_ = goog.color.rgbArrayToHex(
-        goog.color.darken(goog.color.hexToRgb(this.colour_),
-        0.1));
+        goog.color.darken(goog.color.hexToRgb(this.colour_), 0.1));
   }
   if (colourTertiary !== undefined) {
     this.colourTertiary_ = this.makeColour_(colourTertiary);
   } else {
     this.colourTertiary_ = goog.color.rgbArrayToHex(
-        goog.color.darken(goog.color.hexToRgb(this.colour_),
-        0.2));
+        goog.color.darken(goog.color.hexToRgb(this.colour_), 0.2));
   }
   if (this.rendered) {
     this.updateColour();

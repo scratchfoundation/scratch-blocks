@@ -18,7 +18,7 @@
  * limitations under the License.
  */
 
- /**
+/**
  * @fileoverview Object representing a map of variables and their types.
  * @author marisaleung@google.com (Marisa Leung)
  */
@@ -26,7 +26,10 @@
 
 goog.provide('Blockly.VariableMap');
 
+goog.require('Blockly.Events.VarDelete');
+goog.require('Blockly.Events.VarRename');
 goog.require('Blockly.VariableModel');
+
 
 /**
  * Class for a variable map.  This contains a dictionary data structure with

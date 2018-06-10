@@ -26,6 +26,8 @@
 
 goog.provide('Blockly.Connection');
 
+goog.require('Blockly.Events.BlockMove');
+
 goog.require('goog.asserts');
 goog.require('goog.dom');
 
@@ -455,10 +457,10 @@ Blockly.Connection.prototype.isConnectionAllowed = function(candidate) {
       break;
     }
     case Blockly.NEXT_STATEMENT: {
-        // Scratch-specific behaviour:
-        // If this is a c-block, we can't connect this block's
-        // previous connection unless we're connecting to the end of the last
-        // block on a stack or there's already a block connected inside the c.
+      // Scratch-specific behaviour:
+      // If this is a c-block, we can't connect this block's
+      // previous connection unless we're connecting to the end of the last
+      // block on a stack or there's already a block connected inside the c.
       if (firstStatementConnection &&
           this == this.sourceBlock_.previousConnection &&
           candidate.isConnectedToNonInsertionMarker() &&

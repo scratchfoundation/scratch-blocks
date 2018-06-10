@@ -122,12 +122,11 @@ Blockly.Blocks['looks_show'] = {
    * @this Blockly.Block
    */
   init: function() {
-    this.jsonInit(
-      {
-        "message0": Blockly.Msg.LOOKS_SHOW,
-        "category": Blockly.Categories.looks,
-        "extensions": ["colours_looks", "shape_statement"]
-      });
+    this.jsonInit({
+      "message0": Blockly.Msg.LOOKS_SHOW,
+      "category": Blockly.Categories.looks,
+      "extensions": ["colours_looks", "shape_statement"]
+    });
   }
 };
 
@@ -137,12 +136,11 @@ Blockly.Blocks['looks_hide'] = {
    * @this Blockly.Block
    */
   init: function() {
-    this.jsonInit(
-      {
-        "message0": Blockly.Msg.LOOKS_HIDE,
-        "category": Blockly.Categories.looks,
-        "extensions": ["colours_looks", "shape_statement"]
-      });
+    this.jsonInit({
+      "message0": Blockly.Msg.LOOKS_HIDE,
+      "category": Blockly.Categories.looks,
+      "extensions": ["colours_looks", "shape_statement"]
+    });
   }
 };
 
@@ -154,12 +152,11 @@ Blockly.Blocks['looks_hideallsprites'] = {
    * @this Blockly.Block
    */
   init: function() {
-    this.jsonInit(
-      {
-        "message0": Blockly.Msg.LOOKS_HIDEALLSPRITES,
-        "category": Blockly.Categories.looks,
-        "extensions": ["colours_looks", "shape_statement"]
-      });
+    this.jsonInit({
+      "message0": Blockly.Msg.LOOKS_HIDEALLSPRITES,
+      "category": Blockly.Categories.looks,
+      "extensions": ["colours_looks", "shape_statement"]
+    });
   }
 };
 
@@ -355,24 +352,23 @@ Blockly.Blocks['looks_costume'] = {
    * @this Blockly.Block
    */
   init: function() {
-    this.jsonInit(
-      {
-        "message0": "%1",
-        "args0": [
-          {
-            "type": "field_dropdown",
-            "name": "COSTUME",
-            "options": [
-              ['costume1', 'COSTUME1'],
-              ['costume2', 'COSTUME2']
-            ]
-          }
-        ],
-        "colour": Blockly.Colours.looks.secondary,
-        "colourSecondary": Blockly.Colours.looks.secondary,
-        "colourTertiary": Blockly.Colours.looks.tertiary,
-        "extensions": ["output_string"]
-      });
+    this.jsonInit({
+      "message0": "%1",
+      "args0": [
+        {
+          "type": "field_dropdown",
+          "name": "COSTUME",
+          "options": [
+            ['costume1', 'COSTUME1'],
+            ['costume2', 'COSTUME2']
+          ]
+        }
+      ],
+      "colour": Blockly.Colours.looks.secondary,
+      "colourSecondary": Blockly.Colours.looks.secondary,
+      "colourTertiary": Blockly.Colours.looks.tertiary,
+      "extensions": ["output_string"]
+    });
   }
 };
 
@@ -402,12 +398,11 @@ Blockly.Blocks['looks_nextcostume'] = {
    * @this Blockly.Block
    */
   init: function() {
-    this.jsonInit(
-      {
-        "message0": Blockly.Msg.LOOKS_NEXTCOSTUME,
-        "category": Blockly.Categories.looks,
-        "extensions": ["colours_looks", "shape_statement"]
-      });
+    this.jsonInit({
+      "message0": Blockly.Msg.LOOKS_NEXTCOSTUME,
+      "category": Blockly.Categories.looks,
+      "extensions": ["colours_looks", "shape_statement"]
+    });
   }
 };
 
@@ -445,7 +440,7 @@ Blockly.Blocks['looks_backdrops'] = {
           "type": "field_dropdown",
           "name": "BACKDROP",
           "options": [
-              ['backdrop1', 'BACKDROP1']
+            ['backdrop1', 'BACKDROP1']
           ]
         }
       ],
@@ -463,22 +458,21 @@ Blockly.Blocks['looks_gotofrontback'] = {
    * @this Blockly.Block
    */
   init: function() {
-    this.jsonInit(
-      {
-        "message0": Blockly.Msg.LOOKS_GOTOFRONTBACK,
-        "args0": [
-          {
-            "type": "field_dropdown",
-            "name": "FRONT_BACK",
-            "options": [
-              [Blockly.Msg.LOOKS_GOTOFRONTBACK_FRONT, 'front'],
-              [Blockly.Msg.LOOKS_GOTOFRONTBACK_BACK, 'back']
-            ]
-          }
-        ],
-        "category": Blockly.Categories.looks,
-        "extensions": ["colours_looks", "shape_statement"]
-      });
+    this.jsonInit({
+      "message0": Blockly.Msg.LOOKS_GOTOFRONTBACK,
+      "args0": [
+        {
+          "type": "field_dropdown",
+          "name": "FRONT_BACK",
+          "options": [
+            [Blockly.Msg.LOOKS_GOTOFRONTBACK_FRONT, 'front'],
+            [Blockly.Msg.LOOKS_GOTOFRONTBACK_BACK, 'back']
+          ]
+        }
+      ],
+      "category": Blockly.Categories.looks,
+      "extensions": ["colours_looks", "shape_statement"]
+    });
   }
 };
 
@@ -586,11 +580,10 @@ Blockly.Blocks['looks_nextbackdrop'] = {
    * @this Blockly.Block
    */
   init: function() {
-    this.jsonInit(
-      {
-        "message0": Blockly.Msg.LOOKS_NEXTBACKDROP,
-        "category": Blockly.Categories.looks,
-        "extensions": ["colours_looks", "shape_statement"]
-      });
+    this.jsonInit({
+      "message0": Blockly.Msg.LOOKS_NEXTBACKDROP,
+      "category": Blockly.Categories.looks,
+      "extensions": ["colours_looks", "shape_statement"]
+    });
   }
 };

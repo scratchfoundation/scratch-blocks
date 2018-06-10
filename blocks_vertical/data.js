@@ -189,8 +189,8 @@ Blockly.Blocks['data_listindexall'] = {
           "precision": 1,
           "options": [
             ["1", "1"],
-            ["last", "last"],
-            ["all", "all"]
+            [Blockly.Msg.DATA_INDEX_LAST, "last"],
+            [Blockly.Msg.DATA_INDEX_ALL, "all"]
           ]
         }
       ],
@@ -217,8 +217,8 @@ Blockly.Blocks['data_listindexrandom'] = {
           "precision": 1,
           "options": [
             ["1", "1"],
-            ["last", "last"],
-            ["random", "random"]
+            [Blockly.Msg.DATA_INDEX_LAST, "last"],
+            [Blockly.Msg.DATA_INDEX_RANDOM, "random"]
           ]
         }
       ],
@@ -363,6 +363,33 @@ Blockly.Blocks['data_itemoflist'] = {
   }
 };
 
+Blockly.Blocks['data_itemnumoflist'] = {
+  /**
+   * Block for reporting the item # of a string in a list.
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.jsonInit({
+      "message0": "item # of %1 in %2",
+      "args0": [
+        {
+          "type": "input_value",
+          "name": "ITEM"
+        },
+        {
+          "type": "field_variable",
+          "name": "LIST",
+          "variableTypes": [Blockly.LIST_VARIABLE_TYPE]
+        }
+      ],
+      "output": null,
+      "category": Blockly.Categories.dataLists,
+      "extensions": ["colours_data_lists"],
+      "outputShape": Blockly.OUTPUT_SHAPE_ROUND
+    });
+  }
+};
+
 Blockly.Blocks['data_lengthoflist'] = {
   /**
    * Block for reporting length of list.
@@ -478,7 +505,7 @@ Blockly.Constants.Data.CUSTOM_CONTEXT_MENU_GET_VARIABLE_MIXIN = {
 
         option.callback =
             Blockly.Constants.Data.VARIABLE_OPTION_CALLBACK_FACTORY(this,
-            option.text);
+                option.text);
         options.push(option);
       }
     } else {
@@ -500,7 +527,7 @@ Blockly.Constants.Data.CUSTOM_CONTEXT_MENU_GET_VARIABLE_MIXIN = {
 };
 
 Blockly.Extensions.registerMixin('contextMenu_getVariableBlock',
-  Blockly.Constants.Data.CUSTOM_CONTEXT_MENU_GET_VARIABLE_MIXIN);
+    Blockly.Constants.Data.CUSTOM_CONTEXT_MENU_GET_VARIABLE_MIXIN);
 
 /**
  * Callback factory for dropdown menu options associated with a variable getter

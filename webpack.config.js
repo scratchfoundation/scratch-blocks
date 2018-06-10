@@ -5,8 +5,10 @@ gracefulFs.gracefulify(realFs);
 
 var CopyWebpackPlugin = require('copy-webpack-plugin');
 var path = require('path');
+var UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
 module.exports = [{
+  mode: process.env.NODE_ENV === 'production' ? 'production' : 'development',
   entry: {
     horizontal: './shim/horizontal.js',
     vertical: './shim/vertical.js'
@@ -16,8 +18,15 @@ module.exports = [{
     libraryTarget: 'commonjs2',
     path: path.resolve(__dirname, 'dist'),
     filename: '[name].js'
+  },
+  optimization: {
+    minimize: false
+  },
+  performance: {
+    hints: false
   }
 }, {
+  mode: process.env.NODE_ENV === 'production' ? 'production' : 'development',
   entry: {
     horizontal: './shim/horizontal.js',
     vertical: './shim/vertical.js'
@@ -27,12 +36,30 @@ module.exports = [{
     libraryTarget: 'umd',
     path: path.resolve(__dirname, 'dist', 'web'),
     filename: '[name].js'
-  }
+  },
+  optimization: {
+    minimizer: [
+      new UglifyJsPlugin({
+        uglifyOptions: {
+          mangle: false
+        }
+      })
+    ]
+  },
+  plugins: []
 },
 {
+  mode: process.env.NODE_ENV === 'production' ? 'production' : 'development',
+  entry: './shim/gh-pages.js',
   output: {
     filename: '[name].js',
     path: path.resolve(__dirname, 'gh-pages')
+  },
+  optimization: {
+    minimize: false
+  },
+  performance: {
+    hints: false
   },
   plugins: [
       new CopyWebpackPlugin([{

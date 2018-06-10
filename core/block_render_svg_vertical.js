@@ -560,7 +560,9 @@ Blockly.BlockSvg.prototype.updateColour = function() {
  */
 Blockly.BlockSvg.prototype.highlightForReplacement = function(add) {
   if (add) {
-    this.svgPath_.setAttribute('filter', 'url(#blocklyReplacementGlowFilter)');
+    var replacementGlowFilterId = this.workspace.options.replacementGlowFilterId
+      || 'blocklyReplacementGlowFilter';
+    this.svgPath_.setAttribute('filter', 'url(#' + replacementGlowFilterId + ')');
     Blockly.utils.addClass(/** @type {!Element} */ (this.svgGroup_),
         'blocklyReplaceable');
   } else {
@@ -585,8 +587,10 @@ Blockly.BlockSvg.prototype.highlightShapeForInput = function(conn, add) {
     return;
   }
   if (add) {
+    var replacementGlowFilterId = this.workspace.options.replacementGlowFilterId
+      || 'blocklyReplacementGlowFilter';
     input.outlinePath.setAttribute('filter',
-        'url(#blocklyReplacementGlowFilter)');
+        'url(#' + replacementGlowFilterId + ')');
     Blockly.utils.addClass(/** @type {!Element} */ (this.svgGroup_),
         'blocklyReplaceable');
   } else {
@@ -631,8 +635,15 @@ Blockly.BlockSvg.prototype.render = function(opt_bubble) {
   }
   // Move the icons into position.
   var icons = this.getIcons();
+  var scratchCommentIcon = null;
   for (var i = 0; i < icons.length; i++) {
-    cursorX = icons[i].renderIcon(cursorX);
+    if (icons[i] instanceof Blockly.ScratchBlockComment) {
+      // Don't render scratch block comment icon until
+      // after the inputs
+      scratchCommentIcon = icons[i];
+    } else {
+      cursorX = icons[i].renderIcon(cursorX);
+    }
   }
   cursorX += this.RTL ?
       Blockly.BlockSvg.SEP_SPACE_X : -Blockly.BlockSvg.SEP_SPACE_X;
@@ -650,6 +661,13 @@ Blockly.BlockSvg.prototype.render = function(opt_bubble) {
   this.renderMoveConnections_();
 
   this.renderClassify_();
+
+  // Position the Scratch Block Comment Icon at the end of the block
+  if (scratchCommentIcon) {
+    var iconX = this.RTL ? -inputRows.rightEdge : inputRows.rightEdge;
+    var inputMarginY = inputRows[0].height / 2;
+    scratchCommentIcon.renderIcon(iconX, inputMarginY);
+  }
 
   if (opt_bubble !== false) {
     // Render all blocks above this one (propagate a reflow).
@@ -672,9 +690,8 @@ Blockly.BlockSvg.prototype.render = function(opt_bubble) {
  * @return {number} X-coordinate of the end of the field row (plus a gap).
  * @private
  */
-Blockly.BlockSvg.prototype.renderFields_ =
-    function(fieldList, cursorX, cursorY) {
-  /* eslint-disable indent */
+Blockly.BlockSvg.prototype.renderFields_ = function(fieldList, cursorX,
+    cursorY) {
   if (this.RTL) {
     cursorX = -cursorX;
   }
@@ -738,8 +755,7 @@ Blockly.BlockSvg.prototype.renderFields_ =
       translateX += field.renderWidth;
     }
     root.setAttribute('transform',
-      'translate(' + translateX + ', ' + translateY + ') ' + scale
-    );
+        'translate(' + translateX + ', ' + translateY + ') ' + scale);
 
     // Fields are invisible on insertion marker.
     if (this.isInsertionMarker()) {
@@ -747,7 +763,7 @@ Blockly.BlockSvg.prototype.renderFields_ =
     }
   }
   return this.RTL ? -cursorX : cursorX;
-}; /* eslint-enable indent */
+};
 
 /**
  * Computes the height and widths for each row and field.
@@ -1198,7 +1214,6 @@ Blockly.BlockSvg.prototype.renderClassify_ = function() {
  * @private
  */
 Blockly.BlockSvg.prototype.renderDrawTop_ = function(steps, rightEdge) {
-  /* eslint-disable indent */
   if (this.type == Blockly.PROCEDURES_DEFINITION_BLOCK_TYPE) {
     steps.push('m 0, 0');
     steps.push(Blockly.BlockSvg.TOP_LEFT_CORNER_DEFINE_HAT);
@@ -1231,7 +1246,7 @@ Blockly.BlockSvg.prototype.renderDrawTop_ = function(steps, rightEdge) {
     }
   }
   this.width = rightEdge;
-};  /* eslint-enable indent */
+};
 
 /**
  * Render the right edge of the block.
@@ -1379,8 +1394,7 @@ Blockly.BlockSvg.prototype.renderInputShape_ = function(input, x, y) {
     inputShapeY = y - (Blockly.BlockSvg.INPUT_SHAPE_HEIGHT / 2);
     inputShape.setAttribute('d', inputShapeInfo.path);
     inputShape.setAttribute('transform',
-      'translate(' + inputShapeX + ',' + inputShapeY + ')'
-    );
+        'translate(' + inputShapeX + ',' + inputShapeY + ')');
     inputShape.setAttribute('data-argument-type', inputShapeInfo.argType);
     inputShape.setAttribute('style', 'visibility: visible');
   }
@@ -1481,9 +1495,8 @@ Blockly.BlockSvg.prototype.drawEdgeShapeRight_ = function(steps) {
  * @param {!Blockly.Connection} existingConnection The connection on the
  *     existing block, which newBlock should line up with.
  */
-Blockly.BlockSvg.prototype.positionNewBlock =
-    function(newBlock, newConnection, existingConnection) {
-  /* eslint-disable indent */
+Blockly.BlockSvg.prototype.positionNewBlock = function(newBlock, newConnection,
+    existingConnection) {
   // We only need to position the new block if it's before the existing one,
   // otherwise its position is set by the previous block.
   if (newConnection.type == Blockly.NEXT_STATEMENT) {
@@ -1492,7 +1505,7 @@ Blockly.BlockSvg.prototype.positionNewBlock =
 
     newBlock.moveBy(dx, dy);
   }
-};  /* eslint-enable indent */
+};
 
 /**
  * Draw the outline of a statement input, starting at the top right corner.

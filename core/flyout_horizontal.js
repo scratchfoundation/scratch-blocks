@@ -230,7 +230,7 @@ Blockly.HorizontalFlyout.prototype.setBackgroundPath_ = function(width, height) 
     path.push('a', this.CORNER_RADIUS, this.CORNER_RADIUS, 0, 0, 1,
         this.CORNER_RADIUS, -this.CORNER_RADIUS);
     path.push('h', width);
-     // Right.
+    // Right.
     path.push('a', this.CORNER_RADIUS, this.CORNER_RADIUS, 0, 0, 1,
         this.CORNER_RADIUS, this.CORNER_RADIUS);
     path.push('v', height);
@@ -328,7 +328,7 @@ Blockly.HorizontalFlyout.prototype.layout_ = function(contents, gaps) {
   for (var i = 0, item; item = contents[i]; i++) {
     if (item.type == 'block') {
       var block = item.block;
-      var allBlocks = block.getDescendants();
+      var allBlocks = block.getDescendants(false);
       for (var j = 0, child; child = allBlocks[j]; j++) {
         // Mark blocks as being inside a flyout.  This is used to detect and
         // prevent the closure of the flyout if the user right-clicks on such a
@@ -365,7 +365,7 @@ Blockly.HorizontalFlyout.prototype.layout_ = function(contents, gaps) {
       // Clicking on a flyout button or label is a lot like clicking on the
       // flyout background.
       this.listeners_.push(Blockly.bindEventWithChecks_(buttonSvg, 'mousedown',
-           this, this.onMouseDown_));
+          this, this.onMouseDown_));
 
 
       this.buttons_.push(button);

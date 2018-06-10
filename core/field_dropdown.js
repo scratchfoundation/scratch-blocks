@@ -221,10 +221,10 @@ Blockly.FieldDropdown.prototype.showEditor_ = function() {
     // Activate the menu item.
     control.performActionInternal(e);
   }
-  menu.getHandler().listen(menu.getElement(), goog.events.EventType.TOUCHSTART,
-                           callbackTouchStart);
-  menu.getHandler().listen(menu.getElement(), goog.events.EventType.TOUCHEND,
-                           callbackTouchEnd);
+  menu.getHandler().listen(
+      menu.getElement(), goog.events.EventType.TOUCHSTART, callbackTouchStart);
+  menu.getHandler().listen(
+      menu.getElement(), goog.events.EventType.TOUCHEND, callbackTouchEnd);
 
   // Record windowSize and scrollOffset before adding menu.
   menu.render(contentDiv);
@@ -256,8 +256,8 @@ Blockly.FieldDropdown.prototype.showEditor_ = function() {
   var secondaryY = position.top;
   // Set bounds to workspace; show the drop-down.
   Blockly.DropDownDiv.setBoundsElement(this.sourceBlock_.workspace.getParentSvg().parentNode);
-  Blockly.DropDownDiv.show(this, primaryX, primaryY, secondaryX, secondaryY,
-    this.onHide.bind(this));
+  Blockly.DropDownDiv.show(
+      this, primaryX, primaryY, secondaryX, secondaryY, this.onHide.bind(this));
 
   menu.setAllowAutoFocus(true);
   menuDom.focus();
@@ -267,7 +267,8 @@ Blockly.FieldDropdown.prototype.showEditor_ = function() {
     if (this.sourceBlock_.isShadow()) {
       this.savedPrimary_ = this.sourceBlock_.getColour();
       this.sourceBlock_.setColour(this.sourceBlock_.getColourTertiary(),
-        this.sourceBlock_.getColourSecondary(), this.sourceBlock_.getColourTertiary());
+          this.sourceBlock_.getColourSecondary(),
+          this.sourceBlock_.getColourTertiary());
     } else if (this.box_) {
       this.box_.setAttribute('fill', this.sourceBlock_.getColourTertiary());
     }
@@ -283,7 +284,8 @@ Blockly.FieldDropdown.prototype.onHide = function() {
   if (!this.disableColourChange_ && this.sourceBlock_) {
     if (this.sourceBlock_.isShadow()) {
       this.sourceBlock_.setColour(this.savedPrimary_,
-        this.sourceBlock_.getColourSecondary(), this.sourceBlock_.getColourTertiary());
+          this.sourceBlock_.getColourSecondary(),
+          this.sourceBlock_.getColourTertiary());
     } else if (this.box_) {
       this.box_.setAttribute('fill', this.sourceBlock_.getColour());
     }
@@ -480,8 +482,7 @@ Blockly.FieldDropdown.prototype.positionArrow = function(x) {
     this.arrowX_ += Blockly.BlockSvg.BOX_FIELD_PADDING;
   }
   this.arrow_.setAttribute('transform',
-    'translate(' + this.arrowX_ + ',' + this.arrowY_ + ')'
-  );
+      'translate(' + this.arrowX_ + ',' + this.arrowY_ + ')');
   return addedWidth;
 };
 

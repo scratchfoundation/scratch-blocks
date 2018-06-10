@@ -112,13 +112,14 @@ Blockly.BlockDragSurfaceSvg.prototype.createDom = function() {
   if (this.SVG_) {
     return;  // Already created.
   }
-  this.SVG_ = Blockly.utils.createSvgElement('svg', {
-    'xmlns': Blockly.SVG_NS,
-    'xmlns:html': Blockly.HTML_NS,
-    'xmlns:xlink': 'http://www.w3.org/1999/xlink',
-    'version': '1.1',
-    'class': 'blocklyBlockDragSurface'
-  }, this.container_);
+  this.SVG_ = Blockly.utils.createSvgElement('svg',
+      {
+        'xmlns': Blockly.SVG_NS,
+        'xmlns:html': Blockly.HTML_NS,
+        'xmlns:xlink': 'http://www.w3.org/1999/xlink',
+        'version': '1.1',
+        'class': 'blocklyBlockDragSurface'
+      }, this.container_);
   this.dragGroup_ = Blockly.utils.createSvgElement('g', {}, this.SVG_);
   // Belongs in Scratch Blocks, but not Blockly.
   var defs = Blockly.utils.createSvgElement('defs', {}, this.SVG_);
@@ -152,7 +153,7 @@ Blockly.BlockDragSurfaceSvg.prototype.createDropShadowDom_ = function(defs) {
       },
       dragShadowFilter);
   var componentTransfer = Blockly.utils.createSvgElement(
-    'feComponentTransfer', {'result': 'offsetBlur'}, dragShadowFilter);
+      'feComponentTransfer', {'result': 'offsetBlur'}, dragShadowFilter);
   // Shadow opacity is specified in the adjustable colour library,
   // since the darkness of the shadow largely depends on the workspace colour.
   Blockly.utils.createSvgElement('feFuncA',

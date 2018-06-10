@@ -434,6 +434,12 @@ Blockly.Css.CONTENT = [
     'cursor: url("<<<PATH>>>/handdelete.cur"), auto;',
   '}',
 
+  '.blocklyToolboxGrab {',
+    'cursor: url("<<<PATH>>>/handclosed.cur"), auto;',
+    'cursor: grabbing;',
+    'cursor: -webkit-grabbing;',
+  '}',
+
   '.blocklyDragging>.blocklyPath,',
   '.blocklyDragging>.blocklyPathLight {',
     'fill-opacity: 1.0;',
@@ -505,7 +511,7 @@ Blockly.Css.CONTENT = [
   '}',
 
   '.blocklyFlyoutButtonShadow {',
-    'fill: none;',
+    'fill: transparent;',
   '}',
 
   '.blocklyFlyoutButton:hover {',
@@ -571,12 +577,118 @@ Blockly.Css.CONTENT = [
     'padding: 0;',
   '}',
 
+  '.blocklyCommentForeignObject {',
+    'position: relative;',
+    'z-index: 0;',
+  '}',
+
+  '.blocklyCommentRect {',
+    'fill: #E7DE8E;',
+    'stroke: #bcA903;',
+    'stroke-width: 1px',
+  '}',
+
+  '.blocklyCommentTarget {',
+    'fill: transparent;',
+    'stroke: #bcA903;',
+  '}',
+
+  '.blocklyCommentTargetFocused {',
+    'fill: none;',
+  '}',
+
+  '.blocklyCommentHandleTarget {',
+    'fill: none;',
+  '}',
+
+  '.blocklyCommentHandleTargetFocused {',
+    'fill: transparent;',
+  '}',
+
+  '.blocklyFocused>.blocklyCommentRect {',
+    'fill: #B9B272;',
+    'stroke: #B9B272;',
+  '}',
+
+  '.blocklySelected>.blocklyCommentTarget {',
+    'stroke: #fc3;',
+    'stroke-width: 3px;',
+  '}',
+
+
   '.blocklyCommentTextarea {',
-    'background-color: #ffc;',
+    'background-color: #fef49c;',
     'border: 0;',
+    'outline: 0;',
     'margin: 0;',
-    'padding: 2px;',
+    'padding: 3px;',
     'resize: none;',
+    'display: block;',
+    'overflow: hidden;',
+  '}',
+
+  '.blocklyCommentDeleteIcon {',
+    'cursor: pointer;',
+    'fill: #000;',
+    'display: none',
+  '}',
+
+  '.blocklySelected > .blocklyCommentDeleteIcon {',
+    'display: block',
+  '}',
+
+  '.blocklyDeleteIconShape {',
+    'fill: #000;',
+    'stroke: #000;',
+    'stroke-width: 1px;',
+  '}',
+
+  '.blocklyDeleteIconShape.blocklyDeleteIconHighlighted {',
+    'stroke: #fc3;',
+  '}',
+
+  // Scratch Comments
+
+  '.scratchCommentBody {',
+    'background-color: #fef49c;',
+    'display: flex',
+    'justify-content: center;',
+    'align-items: center;',
+  '}',
+
+  '.scratchCommentRect {',
+    'fill: #fef49c;',
+    'stroke-width: 1px',
+  '}',
+
+  '.scratchCommentTopBar {',
+    'fill: #000000;',
+    'fill-opacity: 0.1',
+  '}',
+
+  '.scratchCommentText {',
+    'font-family: "Helvetica Neue", Helvetica, sans-serif;',
+    'font-size: 12pt;',
+    'font-weight: 400;',
+  '}',
+
+  '.scratchCommentTextarea {',
+    'background-color: #fef49c;',
+    'border: 0;',
+    'outline: 0;',
+    'padding: 0;',
+    'resize: none;',
+    'overflow: hidden;',
+  '}',
+
+  '.scratchCommentResizeSE {',
+    'cursor: se-resize;',
+    'fill: transparent;',
+  '}',
+
+  '.scratchCommentResizeSW {',
+    'cursor: sw-resize;',
+    'fill: transparent;',
   '}',
 
   '.blocklyHtmlInput {',
