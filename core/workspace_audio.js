@@ -27,6 +27,9 @@
 
 goog.provide('Blockly.WorkspaceAudio');
 
+goog.require('goog.userAgent');
+
+
 /**
  * Class for loading, storing, and playing audio for a workspace.
  * @param {Blockly.WorkspaceSvg} parentWorkspace The parent of the workspace
