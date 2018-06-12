@@ -260,8 +260,8 @@ Blockly.ScratchBubble.prototype.createTopBarLabel_ = function() {
         'dominant-baseline': 'middle'
       }, this.bubbleGroup_);
 
-  this.labelTextNode_ = document.createTextNode(this.labelText_);
-  this.topBarLabel_.appendChild(this.labelTextNode_);
+  var labelTextNode = document.createTextNode(this.labelText_);
+  this.topBarLabel_.appendChild(labelTextNode);
 };
 
 /**
@@ -402,10 +402,7 @@ Blockly.ScratchBubble.prototype.setMinimized = function(minimize, labelText) {
     }
     if (labelText && this.labelText_ != labelText) {
       // Update label and display
-      // TODO is there a better way to do this?
-      this.topBarLabel_.removeChild(this.labelTextNode_);
-      this.labelTextNode_ = document.createTextNode(labelText);
-      this.topBarLabel_.appendChild(this.labelTextNode_);
+      this.topBarLabel_.textContent = labelText;
     }
     Blockly.utils.removeAttribute(this.topBarLabel_, 'display');
   } else {
