@@ -580,7 +580,9 @@ Blockly.WorkspaceComment.prototype.toggleMinimize_ = function() {
  * @package
  */
 Blockly.WorkspaceComment.prototype.setMinimized = function(minimize) {
-  if (this.isMinimized_ == minimize) return;
+  if (this.isMinimized_ == minimize) {
+    return;
+  }
   Blockly.Events.fire(new Blockly.Events.CommentChange(this,
       {minimized: this.isMinimized_}, {minimized: minimize}));
   this.isMinimized_ = minimize;
