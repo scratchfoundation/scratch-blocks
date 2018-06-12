@@ -151,9 +151,13 @@ Blockly.WorkspaceCommentSvg.prototype.render = function() {
   Blockly.bindEventWithChecks_(
       this.minimizeArrow_, 'mousedown', this, this.minimizeArrowMouseDown_);
   Blockly.bindEventWithChecks_(
+      this.minimizeArrow_, 'mouseout', this, this.minimizeArrowMouseOut_);
+  Blockly.bindEventWithChecks_(
       this.minimizeArrow_, 'mouseup', this, this.minimizeArrowMouseUp_);
   Blockly.bindEventWithChecks_(
       this.deleteIcon_, 'mousedown', this, this.deleteMouseDown_);
+  Blockly.bindEventWithChecks_(
+      this.deleteIcon_, 'mouseout', this, this.deleteMouseOut_);
   Blockly.bindEventWithChecks_(
       this.deleteIcon_, 'mouseup', this, this.deleteMouseUp_);
 };
@@ -306,11 +310,26 @@ Blockly.WorkspaceCommentSvg.prototype.createTopBarIcons_ = function() {
 
 /**
  * Handle a mouse-down on bubble's minimize icon.
- * @param {!Event} e Mouse up event.
+ * @param {!Event} e Mouse down event.
  * @private
  */
 Blockly.WorkspaceCommentSvg.prototype.minimizeArrowMouseDown_ = function(e) {
+  // Set a property to indicate that this minimize arrow icon had a mouse down
+  // event. This property will get reset if the mouse leaves the icon, or when
+  // a mouse up event occurs on this icon.
+  this.shouldToggleMinimize_ = true;
   e.stopPropagation();
+};
+
+/**
+ * Handle a mouse-out on bubble's minimize icon.
+ * @param {!Event} _e Mouse out event.
+ * @private
+ */
+Blockly.WorkspaceCommentSvg.prototype.minimizeArrowMouseOut_ = function(_e) {
+  // If the mouse leaves the minimize arrow icon, make sure the
+  // shouldToggleMinimize_ property gets reset.
+  this.shouldToggleMinimize_ = false;
 };
 
 /**
@@ -319,17 +338,36 @@ Blockly.WorkspaceCommentSvg.prototype.minimizeArrowMouseDown_ = function(e) {
  * @private
  */
 Blockly.WorkspaceCommentSvg.prototype.minimizeArrowMouseUp_ = function(e) {
-  this.toggleMinimize_();
+  // First check if this is the icon that had a mouse down event on it and that
+  // the mouse never left the icon.
+  if (this.shouldToggleMinimize_) {
+    this.shouldToggleMinimize = false;
+    this.toggleMinimize_();
+  }
   e.stopPropagation();
 };
 
 /**
  * Handle a mouse-down on bubble's minimize icon.
- * @param {!Event} e Mouse up event.
+ * @param {!Event} e Mouse down event.
  * @private
  */
 Blockly.WorkspaceCommentSvg.prototype.deleteMouseDown_ = function(e) {
+  // Set a property to indicate that this delete icon had a mouse down event.
+  // This property will get reset if the mouse leaves the icon, or when
+  // a mouse up event occurs on this icon.
+  this.shouldDelete_ = true;
   e.stopPropagation();
+};
+
+/**
+ * Handle a mouse-out on bubble's minimize icon.
+ * @param {!Event} _e Mouse out event.
+ * @private
+ */
+Blockly.WorkspaceCommentSvg.prototype.deleteMouseOut_ = function(_e) {
+  // If the mouse leaves the delete icon, reset the shouldDelete_ property.
+  this.shouldDelete_ = false;
 };
 
 /**
@@ -338,7 +376,11 @@ Blockly.WorkspaceCommentSvg.prototype.deleteMouseDown_ = function(e) {
  * @private
  */
 Blockly.WorkspaceCommentSvg.prototype.deleteMouseUp_ = function(e) {
-  this.dispose();
+  // First check that this same icon had a mouse down event on it and that the
+  // mouse never left the icon.
+  if (this.shouldDelete_) {
+    this.dispose();
+  }
   e.stopPropagation();
 };
 

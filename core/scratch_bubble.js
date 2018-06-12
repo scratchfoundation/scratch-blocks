@@ -89,9 +89,13 @@ Blockly.ScratchBubble = function(comment, workspace, content, anchorXY,
     Blockly.bindEventWithChecks_(
         this.minimizeArrow_, 'mousedown', this, this.minimizeArrowMouseDown_);
     Blockly.bindEventWithChecks_(
+        this.minimizeArrow_, 'mouseout', this, this.minimizeArrowMouseOut_);
+    Blockly.bindEventWithChecks_(
         this.minimizeArrow_, 'mouseup', this, this.minimizeArrowMouseUp_);
     Blockly.bindEventWithChecks_(
         this.deleteIcon_, 'mousedown', this, this.deleteMouseDown_);
+    Blockly.bindEventWithChecks_(
+        this.deleteIcon_, 'mouseout', this, this.deleteMouseOut_);
     Blockly.bindEventWithChecks_(
         this.deleteIcon_, 'mouseup', this, this.deleteMouseUp_);
     Blockly.bindEventWithChecks_(
@@ -314,7 +318,22 @@ Blockly.ScratchBubble.prototype.showContextMenu_ = function(e) {
  * @private
  */
 Blockly.ScratchBubble.prototype.minimizeArrowMouseDown_ = function(e) {
+  // Set a property indicating that this comment's minimize arrow got a mouse
+  // down event. This property will get reset if the mouse leaves the icon or
+  // when a mouse up occurs on this icon after this mouse down.
+  this.shouldToggleMinimize_ = true;
   e.stopPropagation();
+};
+
+/**
+ * Handle a mouse-out on bubble's minimize icon.
+ * @param {!Event} _e Mouse up event.
+ * @private
+ */
+Blockly.ScratchBubble.prototype.minimizeArrowMouseOut_ = function(_e) {
+  // If the mouse has left the minimize arrow icon, the
+  // shouldToggleMinimize property should get reset to false.
+  this.shouldToggleMinimize_ = false;
 };
 
 /**
@@ -323,19 +342,37 @@ Blockly.ScratchBubble.prototype.minimizeArrowMouseDown_ = function(e) {
  * @private
  */
 Blockly.ScratchBubble.prototype.minimizeArrowMouseUp_ = function(e) {
-  if (this.minimizeToggleCallback_) {
-    this.minimizeToggleCallback_.call(this);
+  // First check if this icon had a mouse down event
+  // on it and that the mouse never left the icon
+  if (this.shouldToggleMinimize_) {
+    this.shouldToggleMinimize_ = false;
+
+    if (this.minimizeToggleCallback_) {
+      this.minimizeToggleCallback_.call(this);
+    }
   }
   e.stopPropagation();
 };
 
 /**
- * Handle a mouse-down on bubble's minimize icon.
+ * Handle a mouse-down on bubble's delete icon.
  * @param {!Event} e Mouse up event.
  * @private
  */
 Blockly.ScratchBubble.prototype.deleteMouseDown_ = function(e) {
+  this.shouldDelete_ = true;
   e.stopPropagation();
+};
+
+/**
+ * Handle a mouse-out on bubble's delete icon.
+ * @param {!Event} _e Mouse out event.
+ * @private
+ */
+Blockly.ScratchBubble.prototype.deleteMouseOut_ = function(_e) {
+  // If the mouse has left the delete icon, the shouldDelete_ property
+  // should get reset to false.
+  this.shouldDelete_ = false;
 };
 
 /**
@@ -344,8 +381,14 @@ Blockly.ScratchBubble.prototype.deleteMouseDown_ = function(e) {
  * @private
  */
 Blockly.ScratchBubble.prototype.deleteMouseUp_ = function(e) {
-  if (this.deleteCallback_) {
-    this.deleteCallback_.call(this);
+  // First check that this is actually the same icon that had a mouse down event
+  // on it and that the mouse never left the icon
+  if (this.shouldDelete_) {
+    this.shouldDelete_ = false;
+
+    if (this.deleteCallback_) {
+      this.deleteCallback_.call(this);
+    }
   }
   e.stopPropagation();
 };
