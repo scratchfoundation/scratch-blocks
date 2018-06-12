@@ -171,7 +171,7 @@ function test_workspaceCommentMinimizedFromXml() {
   workspaceCommentTest_setUp();
   try {
     var comment = new Blockly.WorkspaceComment(workspace, 'comment text', 0, 0, true, 'comment id');
-    var commentXml = workspace.toXml();
+    var commentXml = comment.toXml();
     var xml = goog.dom.createDom('xml');
     xml.appendChild(commentXml);
     comment.dispose();
