@@ -124,6 +124,7 @@ Blockly.Msg.LOOKS_GOFORWARDBACKWARDLAYERS_FORWARD = "forward";
 Blockly.Msg.LOOKS_GOFORWARDBACKWARDLAYERS_BACKWARD = "backward";
 Blockly.Msg.LOOKS_BACKDROPNUMBERNAME = "backdrop %1";
 Blockly.Msg.LOOKS_COSTUMENUMBERNAME = "costume %1";
+Blockly.Msg.LOOKS_COSTUMENAME = "costume name";
 Blockly.Msg.LOOKS_NUMBERNAME_NUMBER = "number";
 Blockly.Msg.LOOKS_NUMBERNAME_NAME = "name";
 Blockly.Msg.LOOKS_SWITCHBACKDROPTOANDWAIT = "switch backdrop to %1 and wait";
