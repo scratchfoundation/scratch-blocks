@@ -370,7 +370,11 @@ Blockly.WorkspaceCommentSvg.prototype.resizeMouseDown_ = function(e) {
 
 
 /**
- * Set the minimized state of the bubble.
+ * Set the apperance of the workspace comment bubble to the minimized or full size
+ * appearance. In the minimized state, the comment should only have the top bar
+ * displayed, with the minimize icon swapped to the minimized state, and
+ * truncated comment text is shown in the middle of the top bar. There should be
+ * no resize handle when the workspace comment is in its minimized state.
  * @param {boolean} minimize Whether the bubble should be minimized
  * @param {?string} labelText Optional label text for the comment top bar
  *    when it is minimized.
@@ -570,7 +574,8 @@ Blockly.WorkspaceComment.prototype.toggleMinimize_ = function() {
 };
 
 /**
- * Set the minimized state for this comment.
+ * Set the minimized state for this comment. If the comment is rendered,
+ * change the appearance of the comment accordingly.
  * @param {boolean} minimize Whether the comment should be minimized
  * @package
  */
