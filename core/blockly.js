@@ -53,6 +53,7 @@ goog.require('Blockly.FieldVerticalSeparator');
 goog.require('Blockly.Generator');
 goog.require('Blockly.Msg');
 goog.require('Blockly.Procedures');
+goog.require('Blockly.ScratchMsgs');
 goog.require('Blockly.Toolbox');
 goog.require('Blockly.Touch');
 goog.require('Blockly.WidgetDiv');
@@ -62,7 +63,6 @@ goog.require('Blockly.inject');
 goog.require('Blockly.utils');
 goog.require('goog.color');
 
-goog.require('Blockly.ScratchMsgs');
 
 // Turn off debugging when compiled.
 /* eslint-disable no-unused-vars */

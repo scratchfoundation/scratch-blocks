@@ -12,15 +12,16 @@ en = JSON.parse(en);
 const enKeys = Object.keys(en).sort().toString();
 
 // Check that translation is valid:
-// elt: array [key, translation] from <locale>.json
+// entry: array [key, translation]  corresponding to a single string from <locale>.json
 // - messages with placeholders have the same number of placeholders
-const validatePlaceholders = function (elt) {
+// - messages must not have newlines embedded
+const validateEntry = function (entry) {
     const re = /(%\d)/g;
-    const [key, translation] = elt;
-    const placeholdersCount = en[key].match(re) ? en[key].match(re).length : 0;
+    const [key, translation] = entry;
+    const enMatch = en[key].match(re);
+    const placeholdersCount = enMatch ? enMatch.length : 0;
     if (placeholdersCount > 0) {
       const tMatch = translation.match(re);
-      const enMatch = en[key].match(re);
       assert.notStrictEqual(tMatch, null, `${key} is missing a placeholder: ${translation}`);
       assert.strictEqual(
           tMatch.sort().toString(),
@@ -28,22 +29,23 @@ const validatePlaceholders = function (elt) {
           `${key} is missing or has duplicate placeholders: ${translation}`
       );
     }
+    assert.strictEqual(translation.match(/[\n]/), null, `${key} contains a newline character ${translation}`);
 };
 
 const validate = function (json, name) {
-    // this is a little stricter than we need - it would be harmless if the translation had extra keys
     assert.strictEqual(Object.keys(json).sort().toString(), enKeys, `${name}: Locale json keys do not match en.json`);
-    Object.entries(json).forEach(validatePlaceholders);
+    Object.entries(json).forEach(validateEntry);
 };
 
-let file = '';
-file += '// This file was automatically generated.  Do not modify.\n';
-file += '\n';
-file += '\'use strict\';\n';
-file += '\n';
-file += `goog.provide(\'Blockly.ScratchMsgs.locales\');\n`;
-file += `goog.require(\'Blockly.ScratchMsgs\');\n`;
-file += '\n';
+let file = `// This file was automatically generated.  Do not modify.
+
+'use strict';
+
+goog.provide('Blockly.ScratchMsgs.locales');
+
+goog.require('Blockly.ScratchMsgs');
+
+`;
 
 let files = glob.sync(PATH_INPUT);
 files.forEach(function (uri) {

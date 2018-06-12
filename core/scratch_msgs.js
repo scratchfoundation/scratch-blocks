@@ -29,6 +29,7 @@
  * Msg gets populated in the message files.
  */
 goog.provide('Blockly.ScratchMsgs');
+
 goog.require('Blockly.Msg');
 
 /**
@@ -40,5 +41,8 @@ goog.require('Blockly.Msg');
 Blockly.ScratchMsgs.setLocale = function(locale) {
   if (Object.keys(Blockly.ScratchMsgs.locales).includes(locale)) {
     Blockly.Msg = Blockly.ScratchMsgs.locales[locale];
+  } else {
+    // keep current locale
+    console.warn('Ignoring unrecognized locale: ' + locale);
   }
 };

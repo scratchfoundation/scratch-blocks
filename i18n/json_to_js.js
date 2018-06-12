@@ -4,7 +4,10 @@ const path = require('path');
 const glob = require('glob');
 
 // Globals
-const PATH_INPUT = path.resolve(__dirname, '../msg/json/*.json');
+const PATH_INPUT = path.resolve(__dirname, '../msg/json/en.json');
+// If you want to generate js files for other languages, comment out the line above,
+// and use the one below instead.
+// const PATH_INPUT = path.resolve(__dirname, '../msg/json/*.json');
 const PATH_OUTPUT = path.resolve(__dirname, '../msg/js');
 const CONCURRENCY_LIMIT = 4;
 
@@ -29,7 +32,7 @@ const work = function (uri, callback) {
 
         // Iterate over object and build up file
         for (let i in body) {
-            file += `Blockly.Msg["${i}"] = "${body[i]}";\n`
+            file += `Blockly.Msg["${i}"] = "${body[i].replace(/"/g, '\\"')}";\n`
         }
 
         // Write file to disk

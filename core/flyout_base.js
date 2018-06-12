@@ -265,8 +265,8 @@ Blockly.Flyout.prototype.dragAngleRange_ = 70;
 Blockly.Flyout.prototype.scrollAnimationFraction = 0.3;
 
 /**
- * Whether to recycle blocks when refreshing the flyout. Nothing can be
- * recycled when the locale changes.
+ * Whether to recycle blocks when refreshing the flyout. When false, do not allow
+ * anything to be recycled. The default is to recycle.
  * @type {boolean}
  * @private
  */
