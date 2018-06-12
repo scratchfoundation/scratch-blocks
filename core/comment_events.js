@@ -191,11 +191,7 @@ Blockly.Events.CommentChange.prototype.run = function(forward) {
   var contents = forward ? this.newContents_ : this.oldContents_;
 
   if (contents.hasOwnProperty('minimized')) {
-    if (comment instanceof Blockly.ScratchBlockComment) {
-      // TODO remove this check when workspace comments also get a minimized
-      // state
-      comment.setMinimized(contents.minimized);
-    }
+    comment.setMinimized(contents.minimized);
   }
   if (contents.hasOwnProperty('width') && contents.hasOwnProperty('height')) {
     comment.setSize(contents.width, contents.height);
@@ -250,10 +246,7 @@ Blockly.Events.CommentCreate = function(comment) {
    * Whether or not this comment is minimized.
    * @type {boolean}
    */
-  // TODO remove the instanceof check after adding minimize state to
-  // workspace comments
-  this.minimized = (comment instanceof Blockly.ScratchBlockComment &&
-      comment.isMinimized()) || false;
+  this.minimized = comment.isMinimized() || false;
 
   this.xml = comment.toXmlWithXY();
 };
@@ -327,8 +320,7 @@ Blockly.Events.CommentDelete = function(comment) {
   }
   Blockly.Events.CommentDelete.superClass_.constructor.call(this, comment);
   this.xy = comment.getXY();
-  this.minimized = (comment instanceof Blockly.ScratchBlockComment &&
-      comment.isMinimized()) || false;
+  this.minimized = comment.isMinimized() || false;
   this.text = comment.getText();
   var hw = comment.getHeightWidth();
   this.height = hw.height;

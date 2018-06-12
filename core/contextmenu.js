@@ -467,7 +467,7 @@ Blockly.ContextMenu.workspaceCommentOption = function(ws, e) {
     var comment = new Blockly.WorkspaceCommentSvg(
         ws, Blockly.Msg.WORKSPACE_COMMENT_DEFAULT_TEXT,
         Blockly.WorkspaceCommentSvg.DEFAULT_SIZE,
-        Blockly.WorkspaceCommentSvg.DEFAULT_SIZE);
+        Blockly.WorkspaceCommentSvg.DEFAULT_SIZE, false);
 
     var injectionDiv = ws.getInjectionDiv();
     // Bounding rect coordinates are in client coordinates, meaning that they
