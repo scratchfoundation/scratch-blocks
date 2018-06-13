@@ -4,14 +4,18 @@ const path = require('path');
 const glob = require('glob');
 
 // Globals
-const PATH_INPUT = path.resolve(__dirname, '../msg/json/*.json');
+const PATH_INPUT = path.resolve(__dirname, '../msg/json/en.json');
+// If you want to generate js files for other languages, comment out the line above,
+// and use the one below instead.
+// const PATH_INPUT = path.resolve(__dirname, '../msg/json/*.json');
 const PATH_OUTPUT = path.resolve(__dirname, '../msg/js');
 const CONCURRENCY_LIMIT = 4;
 
 // Processing task
 const work = function (uri, callback) {
     fs.readFile(uri, function (err, body) {
-        if (err) return callback(err);
+      const name = path.parse(uri).name;
+      if (err) return callback(err);
 
         // Convert file body into an object (let this throw if invalid JSON)
         body = JSON.parse(body);
@@ -22,17 +26,16 @@ const work = function (uri, callback) {
         file += '\n';
         file += '\'use strict\';\n';
         file += '\n';
-        file += 'goog.provide(\'Blockly.Msg.en\');\n';
+        file += `goog.provide(\'Blockly.Msg.${name}\');\n`;
         file += 'goog.require(\'Blockly.Msg\');\n';
         file += '\n';
 
         // Iterate over object and build up file
         for (let i in body) {
-            file += `Blockly.Msg["${i}"] = "${body[i]}";\n`
+            file += `Blockly.Msg["${i}"] = "${body[i].replace(/"/g, '\\"')}";\n`
         }
 
         // Write file to disk
-        const name = path.parse(uri).name;
         fs.writeFile(`${PATH_OUTPUT}/${name}.js`, file, callback);
     });
 };

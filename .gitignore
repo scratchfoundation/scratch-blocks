@@ -15,8 +15,10 @@ common.pyc
 
 /accessible/*
 /dist
-/msg/json/synonyms.json
-/msg/json/qqq.json
+/msg/js/*
+!/msg/js/en.js
+/msg/json/*
+!/msg/json/en.json
 /blockly_compressed_horizontal.js
 /blockly_compressed_vertical.js
 /blockly_uncompressed_horizontal.js
