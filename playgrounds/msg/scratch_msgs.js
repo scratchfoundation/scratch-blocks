@@ -1,3 +1,13 @@
+// This file was automatically generated.  Do not modify.
+
+'use strict';
+
+goog.provide('Blockly.ScratchMsgs.locales');
+
+goog.require('Blockly.ScratchMsgs');
+
+
+Blockly.ScratchMsgs.locales["en"] =
 {
     "CONTROL_FOREVER": "forever",
     "CONTROL_REPEAT": "repeat %1",
@@ -262,4 +272,4 @@
     "NEW_BROADCAST_MESSAGE_TITLE": "New message name:",
     "BROADCAST_MODAL_TITLE": "New Message",
     "DEFAULT_BROADCAST_MESSAGE_NAME": "message1"
-}
+};
