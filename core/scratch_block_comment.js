@@ -58,17 +58,27 @@ Blockly.ScratchBlockComment = function(block, text, id, x, y, minimized) {
    */
   this.text_ = text;
   /**
-   * The x position of this comment in workspace coordinates.
-   * @type {number}
+   * Whether this comment needs to be auto-positioned (based on provided values
+   * for x and y position).
+   * @type {boolean}
    * @private
    */
-  this.x_ = x;
+  this.needsAutoPositioning_ = !x && x != 0 && !y && y != 0;
+
   /**
-   * The y position of this comment in workspace coordinates.
+   * The x position of this comment in workspace coordinates. Default to 0 if
+   * x position is not provided or is not a valid number.
    * @type {number}
    * @private
    */
-  this.y_ = y;
+  this.x_ = typeof x == 'number' && !isNaN(x) ? x : 0;
+  /**
+   * The y position of this comment in workspace coordinates. Default to 0 if
+   * y position is not provided or is not a valid number.
+   * @type {number}
+   * @private
+   */
+  this.y_ = typeof y == 'number' && !isNaN(y) ? y : 0;
   /**
    * Whether this comment is minimized.
    * @type {boolean}
@@ -290,7 +300,7 @@ Blockly.ScratchBlockComment.prototype.setVisible = function(visible) {
   if (visible) {
     // Decide on placement of the bubble if x and y coordinates are not provided
     // based on knowledge of the block that owns this comment:
-    if (!this.x_ && this.x_ != 0 && !this.y_ && this.y_ != 0) {
+    if (this.needsAutoPositioning_) {
       if (this.isMinimized_) {
         var minimizedOffset = 4 * Blockly.BlockSvg.GRID_UNIT;
         this.x_ = this.block_.RTL ?
@@ -314,6 +324,8 @@ Blockly.ScratchBlockComment.prototype.setVisible = function(visible) {
         }
         this.y_ = this.iconXY_.y - (Blockly.ScratchBubble.TOP_BAR_HEIGHT / 2);
       }
+      // This comment has been auto-positioned so reset the flag
+      this.needsAutoPositioning_ = false;
     }
 
     // Create the bubble.
