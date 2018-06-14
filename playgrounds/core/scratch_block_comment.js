@@ -211,7 +211,7 @@ Blockly.ScratchBlockComment.prototype.createEditor_ = function() {
       {
         'x': Blockly.ScratchBubble.BORDER_WIDTH,
         'y': Blockly.ScratchBubble.BORDER_WIDTH + Blockly.ScratchBubble.TOP_BAR_HEIGHT,
-        'class': 'blocklyCommentForeignObject'
+        'class': 'scratchCommentForeignObject'
       },
       null);
   var body = document.createElementNS(Blockly.HTML_NS, 'body');
