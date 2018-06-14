@@ -690,6 +690,8 @@ Blockly.Xml.domToBlockHeadless_ = function(xmlBlock, workspace) {
         var bubbleY = parseInt(xmlChild.getAttribute('y'), 10);
         var minimized = xmlChild.getAttribute('minimized') || false;
 
+        // Note bubbleX and bubbleY can be NaN, but the ScratchBlockComment
+        // constructor will handle that.
         block.setCommentText(xmlChild.textContent, commentId, bubbleX, bubbleY,
             minimized == 'true');
 
