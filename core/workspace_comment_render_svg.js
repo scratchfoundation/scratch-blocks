@@ -168,21 +168,12 @@ Blockly.WorkspaceCommentSvg.prototype.render = function() {
  * @private
  */
 Blockly.WorkspaceCommentSvg.prototype.createEditor_ = function() {
-  /* Create the editor.  Here's the markup that will be generated:
-    <foreignObject class="blocklyCommentForeignObject" x="0" y="10" width="164" height="164">
-      <body xmlns="http://www.w3.org/1999/xhtml" class="blocklyMinimalBody">
-        <textarea xmlns="http://www.w3.org/1999/xhtml"
-            class="blocklyCommentTextarea"
-            style="height: 164px; width: 164px;"></textarea>
-      </body>
-    </foreignObject>
-  */
   this.foreignObject_ = Blockly.utils.createSvgElement(
       'foreignObject',
       {
         'x': Blockly.WorkspaceCommentSvg.BORDER_WIDTH,
         'y': Blockly.WorkspaceCommentSvg.BORDER_WIDTH + Blockly.WorkspaceCommentSvg.TOP_BAR_HEIGHT,
-        'class': 'blocklyCommentForeignObject'
+        'class': 'scratchCommentForeignObject'
       },
       null);
   var body = document.createElementNS(Blockly.HTML_NS, 'body');

@@ -649,6 +649,10 @@ Blockly.Css.CONTENT = [
 
   // Scratch Comments
 
+  '.scratchCommentForeignObject {',
+    'position: relative;',
+  '}',
+
   '.scratchCommentBody {',
     'background-color: #fef49c;',
   '}',
