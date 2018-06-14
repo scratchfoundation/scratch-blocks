@@ -57,13 +57,18 @@ Blockly.ScratchBlockComment = function(block, text, id, x, y, minimized) {
    * @private
    */
   this.text_ = text;
+
+  var xIsValidNumber = typeof x == 'number' && !isNaN(x);
+  var yIsValidNumber = typeof y == 'number' && !isNaN(y);
+
   /**
    * Whether this comment needs to be auto-positioned (based on provided values
    * for x and y position).
    * @type {boolean}
    * @private
    */
-  this.needsAutoPositioning_ = !x && x != 0 && !y && y != 0;
+  this.needsAutoPositioning_ = !xIsValidNumber && !yIsValidNumber;
+  // If both of the given x and y params are invalid, this comment needs to be auto positioned.
 
   /**
    * The x position of this comment in workspace coordinates. Default to 0 if
@@ -71,14 +76,14 @@ Blockly.ScratchBlockComment = function(block, text, id, x, y, minimized) {
    * @type {number}
    * @private
    */
-  this.x_ = typeof x == 'number' && !isNaN(x) ? x : 0;
+  this.x_ = xIsValidNumber ? x : 0;
   /**
    * The y position of this comment in workspace coordinates. Default to 0 if
    * y position is not provided or is not a valid number.
    * @type {number}
    * @private
    */
-  this.y_ = typeof y == 'number' && !isNaN(y) ? y : 0;
+  this.y_ = yIsValidNumber ? y : 0;
   /**
    * Whether this comment is minimized.
    * @type {boolean}
