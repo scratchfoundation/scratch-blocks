@@ -536,16 +536,13 @@ Blockly.Flyout.prototype.show = function(xmlList) {
         } else {
           gaps.push(default_gap);
         }
-      } else if ((tagName == 'BUTTON') &&
-        (xml.getAttribute('type') === 'status')) {
+      } else if ((tagName == 'BUTTON') && (xml.getAttribute('type') == 'status')) {
         // Scratch extensions can display a status button
         var extensionId = xml.getAttribute('extensionId');
         if (extensionId) {
           var callbackKey = 'STATUS_PRESSED_' + extensionId.toUpperCase();
           xml.setAttribute('callbackKey', callbackKey);
-          var callback = function(id) {
-            Blockly.statusButtonCallback(id);
-          }.bind(this, extensionId);
+          var callback = Blockly.statusButtonCallback.bind(this, extensionId);
           this.workspace_.registerButtonCallback(callbackKey, callback);
           // @todo: make a new image button class to use here
           var curButton = new Blockly.FlyoutButton(this.workspace_,
