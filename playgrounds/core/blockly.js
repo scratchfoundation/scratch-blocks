@@ -375,6 +375,15 @@ Blockly.prompt = function(message, defaultValue, callback, _opt_title,
 };
 
 /**
+ * A callback for status buttons. The window.alert is here for testing and
+ * should be overridden.
+ * @param {string} id An identifier.
+ */
+Blockly.statusButtonCallback = function(id) {
+  window.alert('status button was pressed for ' + id);
+};
+
+/**
  * Helper function for defining a block from JSON.  The resulting function has
  * the correct value of jsonDef at the point in code where jsonInit is called.
  * @param {!Object} jsonDef The JSON definition of a block.
