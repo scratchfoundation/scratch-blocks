@@ -400,6 +400,7 @@ Blockly.ScratchBubble.prototype.deleteMouseUp_ = function(e) {
  */
 Blockly.ScratchBubble.prototype.resizeMouseDown_ = function(e) {
   this.resizeStartSize_ = {width: this.width_, height: this.height_};
+  this.workspace_.setResizesEnabled(false);
   Blockly.ScratchBubble.superClass_.resizeMouseDown_.call(this, e);
 };
 
@@ -419,6 +420,8 @@ Blockly.ScratchBubble.prototype.resizeMouseUp_ = function(_e) {
   Blockly.Events.fire(new Blockly.Events.CommentChange(
       this.comment, {width: oldHW.width , height: oldHW.height},
       {width: this.width_, height: this.height_}));
+
+  this.workspace_.setResizesEnabled(true);
 };
 
 /**

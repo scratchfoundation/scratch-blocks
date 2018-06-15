@@ -383,6 +383,7 @@ Blockly.WorkspaceCommentSvg.prototype.deleteMouseUp_ = function(e) {
 Blockly.WorkspaceCommentSvg.prototype.resizeMouseDown_ = function(e) {
   this.resizeStartSize_ = {width: this.width_, height: this.height_};
   this.unbindDragEvents_();
+  this.workspace.setResizesEnabled(false);
   if (Blockly.utils.isRightButton(e)) {
     // No right-click.
     e.stopPropagation();
@@ -478,6 +479,8 @@ Blockly.WorkspaceCommentSvg.prototype.resizeMouseUp_ = function(/*e*/) {
   Blockly.Events.fire(new Blockly.Events.CommentChange(
       this, {width: oldHW.width , height: oldHW.height},
       {width: this.width_, height: this.height_}));
+
+  this.workspace.setResizesEnabled(true);
 };
 
 /**
