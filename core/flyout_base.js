@@ -545,8 +545,6 @@ Blockly.Flyout.prototype.show = function(xmlList) {
           xml.setAttribute('callbackKey', callbackKey);
           var callback = Blockly.statusButtonCallback.bind(this, extensionId);
           this.workspace_.registerButtonCallback(callbackKey, callback);
-          xml.setAttribute('imageSrc',
-              Blockly.mainWorkspace.options.pathToMedia + 'status-not-ready.svg');
           var curButton = new Blockly.FlyoutStatusButton(this.workspace_,
               this.targetWorkspace_, xml);
           contents.push({type: 'button', button: curButton});

@@ -377,13 +377,18 @@ Blockly.prompt = function(message, defaultValue, callback, _opt_title,
 /**
  * A callback for status buttons. The window.alert is here for testing and
  * should be overridden.
- * @param {string} id An identifier.
+ * @param {string} id An identifier for the status button.
  */
 Blockly.statusButtonCallback = function(id) {
   window.alert('status button was pressed for ' + id);
-  Blockly.updateStatusButton(id, 'ready');
+  Blockly.updateStatusButton(id, Blockly.StatusButtonState.READY);
 };
 
+/**
+ * Update a status button with a new status.
+ * @param {string} id An identifier for the status button.
+ * @param {string} newStatus The new status to set.
+ */
 Blockly.updateStatusButton = function(id, newStatus) {
   var buttons = this.getMainWorkspace().getFlyout().buttons_;
   for (var i=0; i<buttons.length; i++) {
