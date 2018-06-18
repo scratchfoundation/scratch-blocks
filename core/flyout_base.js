@@ -32,6 +32,7 @@ goog.require('Blockly.Events');
 goog.require('Blockly.Events.BlockCreate');
 goog.require('Blockly.Events.VarCreate');
 goog.require('Blockly.FlyoutButton');
+goog.require('Blockly.FlyoutStatusButton');
 goog.require('Blockly.Gesture');
 goog.require('Blockly.Touch');
 goog.require('Blockly.WorkspaceSvg');
@@ -544,9 +545,10 @@ Blockly.Flyout.prototype.show = function(xmlList) {
           xml.setAttribute('callbackKey', callbackKey);
           var callback = Blockly.statusButtonCallback.bind(this, extensionId);
           this.workspace_.registerButtonCallback(callbackKey, callback);
-          // @todo: make a new image button class to use here
-          var curButton = new Blockly.FlyoutButton(this.workspace_,
-              this.targetWorkspace_, xml, false);
+          xml.setAttribute('imageSrc',
+              Blockly.mainWorkspace.options.pathToMedia + 'status-not-ready.svg');
+          var curButton = new Blockly.FlyoutStatusButton(this.workspace_,
+              this.targetWorkspace_, xml);
           contents.push({type: 'button', button: curButton});
         }
       } else if (tagName == 'BUTTON' || tagName == 'LABEL') {

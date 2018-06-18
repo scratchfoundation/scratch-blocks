@@ -381,6 +381,18 @@ Blockly.prompt = function(message, defaultValue, callback, _opt_title,
  */
 Blockly.statusButtonCallback = function(id) {
   window.alert('status button was pressed for ' + id);
+  Blockly.updateStatusButton(id, 'ready');
+};
+
+Blockly.updateStatusButton = function(id, newStatus) {
+  var buttons = this.getMainWorkspace().getFlyout().buttons_;
+  for (var i=0; i<buttons.length; i++) {
+    if (buttons[i] instanceof Blockly.FlyoutStatusButton) {
+      if (buttons[i].extensionId == id) {
+        buttons[i].setStatus(newStatus);
+      }
+    }
+  }
 };
 
 /**
