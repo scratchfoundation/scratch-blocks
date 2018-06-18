@@ -153,6 +153,12 @@ Blockly.ScratchBlockComment.TEXTAREA_OFFSET = 12;
 Blockly.ScratchBlockComment.MAX_LABEL_LENGTH = 16;
 
 /**
+ * Maximum character length for comment text.
+ * @private
+ */
+Blockly.ScratchBlockComment.COMMENT_TEXT_LIMIT = 8000;
+
+/**
  * Width that a minimized comment should have.
  * @private
  */
@@ -220,6 +226,7 @@ Blockly.ScratchBlockComment.prototype.createEditor_ = function() {
   var textarea = document.createElementNS(Blockly.HTML_NS, 'textarea');
   textarea.className = 'scratchCommentTextarea scratchCommentText';
   textarea.setAttribute('dir', this.block_.RTL ? 'RTL' : 'LTR');
+  textarea.setAttribute('maxlength', Blockly.ScratchBlockComment.COMMENT_TEXT_LIMIT);
   body.appendChild(textarea);
   this.textarea_ = textarea;
   this.textarea_.style.margin = (Blockly.ScratchBlockComment.TEXTAREA_OFFSET) + 'px';
