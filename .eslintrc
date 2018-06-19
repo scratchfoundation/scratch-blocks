@@ -41,6 +41,7 @@
         "quotes": ["off"], # Blockly mixes single and double quotes
         "semi": ["error", "always"],
         "space-before-function-paren": ["error", "never"], # Blockly doesn't have space before function paren
+        "space-infix-ops": ["error"],
         "strict": ["off"], # Blockly uses 'use strict' in files
         "no-cond-assign": ["off"], # Blockly often uses cond-assignment in loops
         "no-redeclare": ["off"], # Closure style allows redeclarations
