@@ -150,7 +150,7 @@ Blockly.ScratchBlockComment.TEXTAREA_OFFSET = 12;
  * one additional character, the ellipsis).
  * @private
  */
-Blockly.ScratchBlockComment.MAX_LABEL_LENGTH = 16;
+Blockly.ScratchBlockComment.MAX_LABEL_LENGTH = 12;
 
 /**
  * Maximum character length for comment text.
