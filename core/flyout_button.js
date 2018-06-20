@@ -171,7 +171,7 @@ Blockly.FlyoutButton.prototype.createDom = function() {
         'text-anchor': 'middle'
       },
       this.svgGroup_);
-  svgText.textContent = this.text_;
+  svgText.textContent = Blockly.utils.replaceMessageReferences(this.text_);
 
   this.width = Blockly.Field.getCachedWidth(svgText);
 
