@@ -125,7 +125,7 @@ Blockly.WorkspaceComment = function(workspace, content, height, width, minimized
  * one additional character, the ellipsis).
  * @private
  */
-Blockly.WorkspaceComment.MAX_LABEL_LENGTH = 16;
+Blockly.WorkspaceComment.MAX_LABEL_LENGTH = 12;
 
 /**
  * Maximum character length for comment text.
