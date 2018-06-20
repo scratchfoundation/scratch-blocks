@@ -688,7 +688,8 @@ Blockly.Toolbox.Category.prototype.createDom = function() {
   this.item_ = goog.dom.createDom('div',
       {'class': 'scratchCategoryMenuItem'});
   this.label_ = goog.dom.createDom('div',
-      {'class': 'scratchCategoryMenuItemLabel'}, this.name_);
+      {'class': 'scratchCategoryMenuItemLabel'},
+      Blockly.utils.replaceMessageReferences(this.name_));
   if (this.iconURI_) {
     this.bubble_ = goog.dom.createDom('div',
         {'class': 'scratchCategoryItemIcon'});
