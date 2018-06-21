@@ -361,7 +361,7 @@ Blockly.FieldAngle.prototype.updateGraph_ = function() {
   this.gauge_.setAttribute('d', path.join(''));
   this.line_.setAttribute('x2', x2);
   this.line_.setAttribute('y2', y2);
-  this.handle_.setAttribute('transform', 'translate(' + x2 + ',' + y2 +')');
+  this.handle_.setAttribute('transform', 'translate(' + x2 + ',' + y2 + ')');
 };
 
 /**

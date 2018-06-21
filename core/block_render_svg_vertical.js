@@ -173,7 +173,7 @@ Blockly.BlockSvg.NOTCH_PATH_LEFT = (
  * @const
  */
 Blockly.BlockSvg.NOTCH_PATH_RIGHT = (
-  'c -2,0 -3,1 -4,2 '+
+  'c -2,0 -3,1 -4,2 ' +
   'l -4,4 ' +
   'c -1,1 -2,2 -4,2 ' +
   'h -12 ' +
@@ -1452,7 +1452,7 @@ Blockly.BlockSvg.prototype.renderDrawLeft_ = function(steps) {
     // Draw the left-side edge shape.
     if (this.edgeShape_ === Blockly.OUTPUT_SHAPE_ROUND) {
       // Draw a rounded arc.
-      steps.push('a ' + this.edgeShapeWidth_ + ' ' + this.edgeShapeWidth_ + ' 0 0 1 0 -' + this.edgeShapeWidth_*2);
+      steps.push('a ' + this.edgeShapeWidth_ + ' ' + this.edgeShapeWidth_ + ' 0 0 1 0 -' + this.edgeShapeWidth_ * 2);
     } else if (this.edgeShape_ === Blockly.OUTPUT_SHAPE_HEXAGONAL) {
       // Draw a half-hexagon.
       steps.push('l ' + -this.edgeShapeWidth_ + ' ' + -this.edgeShapeWidth_ +
