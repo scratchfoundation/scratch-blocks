@@ -25,13 +25,19 @@
 'use strict';
 
 /**
- * Name space for the Msg singleton.
+ * Name space for the ScratchMsgs singleton.
  * Msg gets populated in the message files.
  */
 goog.provide('Blockly.ScratchMsgs');
 
 goog.require('Blockly.Msg');
 
+
+/**
+ * The object containing messages for all locales - loaded from msg/scratch_msgs.
+ * @type {Object}
+ */
+Blockly.ScratchMsgs.locales = {};
 /**
  * Change the Blockly.Msg strings to a new Locale
  * Does not exist in Blockly, but needed in scratch-blocks
