@@ -17,9 +17,10 @@
     "test:setup": "tests/scripts/test_setup.sh",
     "test:unit": "node tests/jsunit/test_runner.js",
     "test:lint": "eslint .",
-    "test": "npm run test:lint && npm run translate && npm run test:setup && npm run test:unit",
+    "test:messages": "node i18n/js_to_json.js",
+    "test": "npm run test:lint && npm run test:messages && npm run test:setup && npm run test:unit",
     "version": "json -f package.json -I -e \"this.repository.sha = '$(git log -n1 --pretty=format:%H)'\"",
-    "translate": "node i18n/js_to_json.js && node i18n/json_to_js.js && node i18n/create_scratch_msgs.js"
+    "translate": "npm run test:messages && node i18n/json_to_js.js && node i18n/create_scratch_msgs.js"
   },
   "dependencies": {
     "exports-loader": "0.6.3",
