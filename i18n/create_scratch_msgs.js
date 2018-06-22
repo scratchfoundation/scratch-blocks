@@ -41,7 +41,7 @@ let file = `// This file was automatically generated.  Do not modify.
 
 'use strict';
 
-goog.provide('Blockly.ScratchMsgs.locales');
+goog.provide('Blockly.ScratchMsgs.allLocales');
 
 goog.require('Blockly.ScratchMsgs');
 
