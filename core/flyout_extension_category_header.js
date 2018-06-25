@@ -63,9 +63,8 @@ Blockly.FlyoutExtensionCategoryHeader = function(workspace, targetWorkspace, xml
 
   /**
    * @type {string}
-   * @private
    */
-  this.extensionId_ = xml.getAttribute('id');
+  this.extensionId = xml.getAttribute('id');
 
   /**
    * Whether this is a label at the top of a category.
@@ -117,7 +116,7 @@ Blockly.FlyoutExtensionCategoryHeader.prototype.createDom = function() {
     this.setImageSrc(this.imageSrc_);
   }
 
-  this.callback_ = Blockly.statusButtonCallback.bind(this, this.extensionId_);
+  this.callback_ = Blockly.statusButtonCallback.bind(this, this.extensionId);
 
   this.mouseUpWrapper_ = Blockly.bindEventWithChecks_(this.imageElement_, 'mouseup',
       this, this.onMouseUp_);
