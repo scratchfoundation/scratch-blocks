@@ -149,6 +149,11 @@ Blockly.FlyoutButton.prototype.createDom = function() {
   return this.svgGroup_;
 };
 
+/**
+ * Add the text element for the label or button.
+ * @param {boolean} isLabel True if this is a label and not button.
+ * @package
+ */
 Blockly.FlyoutButton.prototype.addTextSvg = function(isLabel) {
   if (!isLabel) {
     // Shadow rectangle (light source does not mirror in RTL).

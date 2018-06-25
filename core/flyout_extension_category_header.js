@@ -19,7 +19,8 @@
  */
 
 /**
- * @fileoverview Class for a button in the flyout that displays an image.
+ * @fileoverview Class for a category header in the flyout for Scratch
+ * extensions which can display a textual label and a status button.
  * @author ericr@media.mit.edu (Eric Rosenbaum)
  */
 'use strict';
@@ -29,11 +30,12 @@ goog.provide('Blockly.FlyoutExtensionCategoryHeader');
 goog.require('Blockly.FlyoutButton');
 
 /**
- * Class for a button in the flyout that displays an image.
+ * Class for a category header in the flyout for Scratch extensions which can
+ * display a textual label and a status button.
  * @param {!Blockly.WorkspaceSvg} workspace The workspace in which to place this
- *     button.
+ *     header.
  * @param {!Blockly.WorkspaceSvg} targetWorkspace The flyout's target workspace.
- * @param {!Element} xml The XML specifying the button.
+ * @param {!Element} xml The XML specifying the header.
  * @constructor
  */
 Blockly.FlyoutExtensionCategoryHeader = function(workspace, targetWorkspace, xml) {
@@ -71,7 +73,7 @@ Blockly.FlyoutExtensionCategoryHeader = function(workspace, targetWorkspace, xml
    * @type {boolean}
    * @private
    */
-  this.isCategoryLabel_  = true;
+  this.isCategoryLabel_ = true;
 
   /**
    * @type {!goog.math.Coordinate}
@@ -125,7 +127,7 @@ Blockly.FlyoutExtensionCategoryHeader.prototype.createDom = function() {
 
 /**
  * Set the image on the status button using a status string.
- * @param {string} status The status string.
+ * @param {Blockly.StatusButtonState} status The status string.
  */
 Blockly.FlyoutExtensionCategoryHeader.prototype.setStatus = function(status) {
   var basePath = Blockly.mainWorkspace.options.pathToMedia;
