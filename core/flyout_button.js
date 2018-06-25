@@ -142,6 +142,17 @@ Blockly.FlyoutButton.prototype.createDom = function() {
   this.svgGroup_ = Blockly.utils.createSvgElement('g', {'class': cssClass},
       this.workspace_.getCanvas());
 
+  this.addTextSvg();
+
+  this.mouseUpWrapper_ = Blockly.bindEventWithChecks_(this.svgGroup_, 'mouseup',
+      this, this.onMouseUp_);
+  return this.svgGroup_;
+};
+
+Blockly.FlyoutButton.prototype.addTextSvg = function() {
+  var ws = this.getTargetWorkspace();
+  var flyoutWidth = ws.getFlyout().getWidth();
+
   if (!this.isLabel_) {
     // Shadow rectangle (light source does not mirror in RTL).
     var shadow = Blockly.utils.createSvgElement('rect',
@@ -190,10 +201,6 @@ Blockly.FlyoutButton.prototype.createDom = function() {
     Blockly.Field.IE_TEXT_OFFSET : '0');
   svgText.setAttribute('x', this.width / 2);
   svgText.setAttribute('y', this.height / 2);
-
-  this.mouseUpWrapper_ = Blockly.bindEventWithChecks_(this.svgGroup_, 'mouseup',
-      this, this.onMouseUp_);
-  return this.svgGroup_;
 };
 
 /**
