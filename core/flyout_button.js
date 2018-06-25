@@ -142,18 +142,15 @@ Blockly.FlyoutButton.prototype.createDom = function() {
   this.svgGroup_ = Blockly.utils.createSvgElement('g', {'class': cssClass},
       this.workspace_.getCanvas());
 
-  this.addTextSvg();
+  this.addTextSvg(this.isLabel_);
 
   this.mouseUpWrapper_ = Blockly.bindEventWithChecks_(this.svgGroup_, 'mouseup',
       this, this.onMouseUp_);
   return this.svgGroup_;
 };
 
-Blockly.FlyoutButton.prototype.addTextSvg = function() {
-  var ws = this.getTargetWorkspace();
-  var flyoutWidth = ws.getFlyout().getWidth();
-
-  if (!this.isLabel_) {
+Blockly.FlyoutButton.prototype.addTextSvg = function(isLabel) {
+  if (!isLabel) {
     // Shadow rectangle (light source does not mirror in RTL).
     var shadow = Blockly.utils.createSvgElement('rect',
         {
@@ -168,7 +165,7 @@ Blockly.FlyoutButton.prototype.addTextSvg = function() {
   // Background rectangle.
   var rect = Blockly.utils.createSvgElement('rect',
       {
-        'class': this.isLabel_ ?
+        'class': isLabel ?
             'blocklyFlyoutLabelBackground' : 'blocklyFlyoutButtonBackground',
         'rx': 4, 'ry': 4
       },
@@ -176,7 +173,7 @@ Blockly.FlyoutButton.prototype.addTextSvg = function() {
 
   var svgText = Blockly.utils.createSvgElement('text',
       {
-        'class': this.isLabel_ ? 'blocklyFlyoutLabelText' : 'blocklyText',
+        'class': isLabel ? 'blocklyFlyoutLabelText' : 'blocklyText',
         'x': 0,
         'y': 0,
         'text-anchor': 'middle'
@@ -186,7 +183,7 @@ Blockly.FlyoutButton.prototype.addTextSvg = function() {
 
   this.width = Blockly.Field.getCachedWidth(svgText);
 
-  if (!this.isLabel_) {
+  if (!isLabel) {
     this.width += 2 * Blockly.FlyoutButton.MARGIN;
     shadow.setAttribute('width', this.width);
     shadow.setAttribute('height', this.height);
