@@ -38,6 +38,14 @@ goog.require('Blockly.Msg');
  * @type {Object}
  */
 Blockly.ScratchMsgs.locales = {};
+
+/**
+ * The current locale.
+ * @type {String}
+ * @private
+ */
+Blockly.ScratchMsgs.currentLocale_ = 'en';
+
 /**
  * Change the Blockly.Msg strings to a new Locale
  * Does not exist in Blockly, but needed in scratch-blocks
@@ -46,9 +54,32 @@ Blockly.ScratchMsgs.locales = {};
  */
 Blockly.ScratchMsgs.setLocale = function(locale) {
   if (Object.keys(Blockly.ScratchMsgs.locales).includes(locale)) {
+    Blockly.ScratchMsgs.currentLocale_ = locale;
     Blockly.Msg = Blockly.ScratchMsgs.locales[locale];
   } else {
     // keep current locale
     console.warn('Ignoring unrecognized locale: ' + locale);
   }
+};
+
+/**
+ * Gets a localized message, for use in the Scratch VM with json init.
+ * Does not interpolate placeholders. Provided to allow default values in
+ * dynamic menus, for example, 'next backdrop', or 'random position'
+ * @param {string} msgId id for the message, key in Msg table.
+ * @param {string} defaultMsg string to use if the id isn't found.
+ * @param {string} useLocale optional locale to use in place of currentLocale_.
+ * @return {string} message with placeholders filled.
+ * @package
+ */
+Blockly.ScratchMsgs.translate = function(msgId, defaultMsg, useLocale) {
+  var locale = useLocale || Blockly.ScratchMsgs.currentLocale_;
+
+  if (Object.keys(Blockly.ScratchMsgs.locales).includes(locale)) {
+    var messages = Blockly.ScratchMsgs.locales[locale];
+    if (Object.keys(messages).includes(msgId)) {
+      return messages[msgId];
+    }
+  }
+  return defaultMsg;
 };
