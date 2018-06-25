@@ -50,6 +50,7 @@ Blockly.ScratchMsgs.currentLocale_ = 'en';
  * Change the Blockly.Msg strings to a new Locale
  * Does not exist in Blockly, but needed in scratch-blocks
  * @param {string} locale E.g., 'de', or 'zh-tw'
+ * @package
  */
 Blockly.ScratchMsgs.setLocale = function(locale) {
   if (Object.keys(Blockly.ScratchMsgs.locales).includes(locale)) {
@@ -69,7 +70,7 @@ Blockly.ScratchMsgs.setLocale = function(locale) {
  * @param {string} defaultMsg string to use if the id isn't found.
  * @param {string} useLocale optional locale to use in place of currentLocale_.
  * @return {string} message with placeholders filled.
- * @suppress {duplicate}
+ * @package
  */
 Blockly.ScratchMsgs.translate = function(msgId, defaultMsg, useLocale) {
   var locale = useLocale || Blockly.ScratchMsgs.currentLocale_;
