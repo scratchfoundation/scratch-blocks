@@ -384,6 +384,23 @@ Blockly.statusButtonCallback = function(id) {
 };
 
 /**
+ * Update the visual state of a status button in an extension category header.
+ * @param {Blockly.Workspace} workspace A workspace.
+ * @param {string} id An extension id.
+ * @param {Blockly.StatusButtonState} newStatus the new state for the button.
+ */
+Blockly.updateStatusButton = function(workspace, id, newStatus) {
+  var buttons = workspace.getFlyout().buttons_;
+  for (var i = 0; i < buttons.length; i++) {
+    if (buttons[i] instanceof Blockly.FlyoutExtensionCategoryHeader) {
+      if (buttons[i].extensionId == id) {
+        buttons[i].setStatus(newStatus);
+      }
+    }
+  }
+};
+
+/**
  * Helper function for defining a block from JSON.  The resulting function has
  * the correct value of jsonDef at the point in code where jsonInit is called.
  * @param {!Object} jsonDef The JSON definition of a block.

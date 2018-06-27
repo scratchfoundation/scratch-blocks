@@ -199,10 +199,13 @@ Blockly.Toolbox.prototype.showAll_ = function() {
 
     // create a label node to go at the top of the category
     var labelString = '<xml><label text="' + category.name_ + '"' +
+      ' id="' + category.id_ + '"' +
       ' category-label="true"' +
+      ' showStatusButton="' + category.showStatusButton_ + '"' +
       ' web-class="categoryLabel">' +
       '</label></xml>';
     var labelXML = Blockly.Xml.textToDom(labelString);
+
     allContents.push(labelXML.firstChild);
 
     allContents = allContents.concat(category.getContents());
@@ -660,6 +663,7 @@ Blockly.Toolbox.Category = function(parent, parentHtml, domTree) {
   this.setColour(domTree);
   this.custom_ = domTree.getAttribute('custom');
   this.iconURI_ = domTree.getAttribute('iconURI');
+  this.showStatusButton_ = domTree.getAttribute('showStatusButton');
   this.contents_ = [];
   if (!this.custom_) {
     this.parseContents_(domTree);

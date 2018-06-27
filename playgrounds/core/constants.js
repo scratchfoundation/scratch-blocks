@@ -366,3 +366,12 @@ Blockly.PROCEDURES_PROTOTYPE_BLOCK_TYPE = 'procedures_prototype';
  * @const {string}
  */
 Blockly.PROCEDURES_CALL_BLOCK_TYPE = 'procedures_call';
+
+/**
+ * ENUM for flyout status button states.
+ * @const
+ */
+Blockly.StatusButtonState = {
+  "READY": "ready",
+  "NOT_READY": "not ready",
+};
