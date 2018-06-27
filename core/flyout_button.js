@@ -42,6 +42,62 @@ goog.require('goog.math.Coordinate');
  */
 Blockly.FlyoutButton = function(workspace, targetWorkspace, xml, isLabel) {
 
+  this.init(workspace, targetWorkspace, xml, isLabel);
+
+  /**
+   * Function to call when this button is clicked.
+   * @type {function(!Blockly.FlyoutButton)}
+   * @private
+   */
+  this.callback_ = null;
+
+  var callbackKey = xml.getAttribute('callbackKey');
+  if (this.isLabel_ && callbackKey) {
+    console.warn('Labels should not have callbacks. Label text: ' + this.text_);
+  } else if (!this.isLabel_ &&
+      !(callbackKey && targetWorkspace.getButtonCallback(callbackKey))) {
+    console.warn('Buttons should have callbacks. Button text: ' + this.text_);
+  } else {
+    this.callback_ = targetWorkspace.getButtonCallback(callbackKey);
+  }
+};
+
+/**
+ * The margin around the text in the button.
+ */
+Blockly.FlyoutButton.MARGIN = 40;
+
+/**
+ * The width of the button's rect.
+ * @type {number}
+ */
+Blockly.FlyoutButton.prototype.width = 0;
+
+/**
+ * The height of the button's rect.
+ * @type {number}
+ */
+Blockly.FlyoutButton.prototype.height = 40; // Can't be computed like the width
+
+/**
+ * Opaque data that can be passed to Blockly.unbindEvent_.
+ * @type {Array.<!Array>}
+ * @private
+ */
+Blockly.FlyoutButton.prototype.onMouseUpWrapper_ = null;
+
+/**
+* Initialize the button or label. This is a helper function to so that the
+* constructor can be overridden.
+* @param {!Blockly.WorkspaceSvg} workspace The workspace in which to place this
+*     button.
+* @param {!Blockly.WorkspaceSvg} targetWorkspace The flyout's target workspace.
+* @param {!Element} xml The XML specifying the label/button.
+* @param {boolean} isLabel Whether this button should be styled as a label.
+ */
+Blockly.FlyoutButton.prototype.init = function(
+    workspace, targetWorkspace, xml, isLabel) {
+
   /**
    * @type {!Blockly.WorkspaceSvg}
    * @private
@@ -81,53 +137,12 @@ Blockly.FlyoutButton = function(workspace, targetWorkspace, xml, isLabel) {
   this.isCategoryLabel_ = xml.getAttribute('category-label') === 'true';
 
   /**
-   * Function to call when this button is clicked.
-   * @type {function(!Blockly.FlyoutButton)}
-   * @private
-   */
-  this.callback_ = null;
-
-  var callbackKey = xml.getAttribute('callbackKey');
-  if (this.isLabel_ && callbackKey) {
-    console.warn('Labels should not have callbacks. Label text: ' + this.text_);
-  } else if (!this.isLabel_ &&
-      !(callbackKey && targetWorkspace.getButtonCallback(callbackKey))) {
-    console.warn('Buttons should have callbacks. Button text: ' + this.text_);
-  } else {
-    this.callback_ = targetWorkspace.getButtonCallback(callbackKey);
-  }
-
-  /**
    * If specified, a CSS class to add to this button.
    * @type {?string}
    * @private
    */
   this.cssClass_ = xml.getAttribute('web-class') || null;
 };
-
-/**
- * The margin around the text in the button.
- */
-Blockly.FlyoutButton.MARGIN = 40;
-
-/**
- * The width of the button's rect.
- * @type {number}
- */
-Blockly.FlyoutButton.prototype.width = 0;
-
-/**
- * The height of the button's rect.
- * @type {number}
- */
-Blockly.FlyoutButton.prototype.height = 40; // Can't be computed like the width
-
-/**
- * Opaque data that can be passed to Blockly.unbindEvent_.
- * @type {Array.<!Array>}
- * @private
- */
-Blockly.FlyoutButton.prototype.onMouseUpWrapper_ = null;
 
 /**
  * Create the button elements.

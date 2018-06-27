@@ -36,26 +36,12 @@ goog.require('Blockly.FlyoutButton');
  *     header.
  * @param {!Blockly.WorkspaceSvg} targetWorkspace The flyout's target workspace.
  * @param {!Element} xml The XML specifying the header.
+ * @extends {Blockly.FlyoutButton}
  * @constructor
  */
 Blockly.FlyoutExtensionCategoryHeader = function(workspace, targetWorkspace, xml) {
-  /**
-   * @type {!Blockly.WorkspaceSvg}
-   * @private
-   */
-  this.workspace_ = workspace;
 
-  /**
-   * @type {!Blockly.Workspace}
-   * @private
-   */
-  this.targetWorkspace_ = targetWorkspace;
-
-  /**
-  * @type {string}
-  * @private
-  */
-  this.text_ = xml.getAttribute('text');
+  this.init(workspace, targetWorkspace, xml, false);
 
   /**
    * @type {number}
@@ -74,12 +60,6 @@ Blockly.FlyoutExtensionCategoryHeader = function(workspace, targetWorkspace, xml
    * @private
    */
   this.isCategoryLabel_ = true;
-
-  /**
-   * @type {!goog.math.Coordinate}
-   * @private
-   */
-  this.position_ = new goog.math.Coordinate(0, 0);
 };
 goog.inherits(Blockly.FlyoutExtensionCategoryHeader, Blockly.FlyoutButton);
 
