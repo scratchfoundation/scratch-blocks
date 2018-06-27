@@ -31,7 +31,8 @@ goog.require('goog.math.Coordinate');
 
 
 /**
- * Class for a button in the flyout.
+ * Class for a button or label in the flyout. Labels behave the same as buttons,
+ * but are styled differently.
  * @param {!Blockly.WorkspaceSvg} workspace The workspace in which to place this
  *     button.
  * @param {!Blockly.WorkspaceSvg} targetWorkspace The flyout's target workspace.
@@ -40,7 +41,6 @@ goog.require('goog.math.Coordinate');
  * @constructor
  */
 Blockly.FlyoutButton = function(workspace, targetWorkspace, xml, isLabel) {
-  // Labels behave the same as buttons, but are styled differently.
 
   /**
    * @type {!Blockly.WorkspaceSvg}
