@@ -44,6 +44,7 @@
     "EVENT_WHENBACKDROPSWITCHESTO": "when backdrop switches to %1",
     "EVENT_WHENGREATERTHAN": "when %1 > %2",
     "EVENT_WHENGREATERTHAN_TIMER": "timer",
+    "EVENT_WHENGREATERTHAN_LOUDNESS": "loudness",
     "EVENT_BROADCAST": "broadcast %1",
     "EVENT_BROADCASTANDWAIT": "broadcast %1 and wait",
     "EVENT_WHENKEYPRESSED": "when %1 key pressed",
