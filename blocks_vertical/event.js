@@ -182,6 +182,7 @@ Blockly.Blocks['event_whengreaterthan'] = {
           "type": "field_dropdown",
           "name": "WHENGREATERTHANMENU",
           "options": [
+            [Blockly.Msg.EVENT_WHENGREATERTHAN_LOUDNESS, 'LOUDNESS'],
             [Blockly.Msg.EVENT_WHENGREATERTHAN_TIMER, 'TIMER']
           ]
         },
