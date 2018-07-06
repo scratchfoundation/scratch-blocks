@@ -71,6 +71,7 @@ Blockly.Xml.variablesToDom = function(variableList) {
     var element = goog.dom.createDom('variable', null, variable.name);
     element.setAttribute('type', variable.type);
     element.setAttribute('id', variable.getId());
+    element.setAttribute('islocal', variable.isLocal);
     variables.appendChild(element);
   }
   return variables;
@@ -622,12 +623,13 @@ Blockly.Xml.domToVariables = function(xmlVariables, workspace) {
   for (var i = 0, xmlChild; xmlChild = xmlVariables.children[i]; i++) {
     var type = xmlChild.getAttribute('type');
     var id = xmlChild.getAttribute('id');
+    var isLocal = xmlChild.getAttribute('islocal') == 'true';
     var name = xmlChild.textContent;
 
     if (typeof(type) === undefined || type === null) {
       throw Error('Variable with id, ' + id + ' is without a type');
     }
-    workspace.createVariable(name, type, id);
+    workspace.createVariable(name, type, id, isLocal);
   }
 };
 
