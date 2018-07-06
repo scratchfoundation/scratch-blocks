@@ -291,6 +291,7 @@ Blockly.Variables.createVariable = function(workspace, opt_callback, opt_type) {
   Blockly.prompt(newMsg, '',
       function(text, scope, additionalVars) {
         var isLocal = (scope === 'local') || false;
+        additionalVars = additionalVars || [];
         var validatedText = validate(text, workspace, additionalVars, opt_callback);
         if (validatedText) {
           // The name is valid according to the type, create the variable
