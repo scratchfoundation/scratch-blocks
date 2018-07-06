@@ -289,8 +289,10 @@ Blockly.Variables.createVariable = function(workspace, opt_callback, opt_type) {
 
   // Prompt the user to enter a name for the variable
   Blockly.prompt(newMsg, '',
-      function(text) {
-        var validatedText = validate(text, workspace, opt_callback);
+      function(text, scope, additionalVars) {
+        var isLocal = (scope === 'local') || false;
+        additionalVars = additionalVars || [];
+        var validatedText = validate(text, workspace, additionalVars, opt_callback);
         if (validatedText) {
           // The name is valid according to the type, create the variable
           var potentialVarMap = workspace.getPotentialVariableMap();
@@ -305,7 +307,7 @@ Blockly.Variables.createVariable = function(workspace, opt_callback, opt_type) {
                 opt_type, workspace, false);
           }
           if (!variable) {
-            variable = workspace.createVariable(validatedText, opt_type);
+            variable = workspace.createVariable(validatedText, opt_type, null, isLocal);
           }
 
           var flyout = workspace.isFlyout ? workspace : workspace.getFlyout();
@@ -338,6 +340,8 @@ Blockly.Variables.createVariable = function(workspace, opt_callback, opt_type) {
  * @param {!Blockly.Workspace} workspace The workspace on which to validate the
  *     variable name. This is the workspace used to check whether the variable
  *     already exists.
+ * @param {Array<string>} additionalVars A list of additional var names to check
+ *     for conflicts against.
  * @param {function(?string=)=} opt_callback An optional function to be called on
  *     a pre-existing variable of the user-provided name. This function is currently
  *     only used for broadcast messages.
@@ -347,7 +351,7 @@ Blockly.Variables.createVariable = function(workspace, opt_callback, opt_type) {
  *     proceed with creating or renaming the variable.
  * @private
  */
-Blockly.Variables.nameValidator_ = function(type, text, workspace, opt_callback) {
+Blockly.Variables.nameValidator_ = function(type, text, workspace, additionalVars, opt_callback) {
   // The validators for the different variable types require slightly different arguments.
   // For broadcast messages, if a broadcast message of the provided name already exists,
   // the validator needs to call a function that updates the selected
@@ -359,10 +363,10 @@ Blockly.Variables.nameValidator_ = function(type, text, workspace, opt_callback)
   if (type == Blockly.BROADCAST_MESSAGE_VARIABLE_TYPE) {
     return Blockly.Variables.validateBroadcastMessageName_(text, workspace, opt_callback);
   } else if (type == Blockly.LIST_VARIABLE_TYPE) {
-    return Blockly.Variables.validateScalarVarOrListName_(text, workspace, type,
+    return Blockly.Variables.validateScalarVarOrListName_(text, workspace, additionalVars, type,
         Blockly.Msg.LIST_ALREADY_EXISTS);
   } else {
-    return Blockly.Variables.validateScalarVarOrListName_(text, workspace, type,
+    return Blockly.Variables.validateScalarVarOrListName_(text, workspace, additionalVars, type,
         Blockly.Msg.VARIABLE_ALREADY_EXISTS);
   }
 };
@@ -407,6 +411,8 @@ Blockly.Variables.validateBroadcastMessageName_ = function(name, workspace, opt_
  * @param {string} name The name to validate
  * @param {!Blockly.Workspace} workspace The workspace the name should be validated
  *     against.
+ * @param {Array<string>} additionalVars A list of additional variable names to check
+ *     for conflicts against.
  * @param {string} type The type to validate the variable as. This should be one of
  *     Blockly.SCALAR_VARIABLE_TYPE or Blockly.LIST_VARIABLE_TYPE.
  * @param {string} errorMsg The type-specific error message the user should see
@@ -414,14 +420,14 @@ Blockly.Variables.validateBroadcastMessageName_ = function(name, workspace, opt_
  * @return {string} The validated name, or null if invalid.
  * @private
  */
-Blockly.Variables.validateScalarVarOrListName_ = function(name, workspace,
+Blockly.Variables.validateScalarVarOrListName_ = function(name, workspace, additionalVars,
     type, errorMsg) {
   // For scalar variables, we don't want leading or trailing white space
   name = Blockly.Variables.trimName_(name);
   if (!name) {
     return null;
   }
-  if (workspace.getVariable(name, type)) {
+  if (workspace.getVariable(name, type) || additionalVars.indexOf(name) >= 0) {
     // error
     Blockly.alert(errorMsg.replace('%1', name));
     return null;
