@@ -54,6 +54,7 @@ goog.require('Blockly.FieldVerticalSeparator');
 goog.require('Blockly.Generator');
 goog.require('Blockly.Msg');
 goog.require('Blockly.Procedures');
+goog.require('Blockly.ScratchMsgs');
 goog.require('Blockly.Toolbox');
 goog.require('Blockly.Touch');
 goog.require('Blockly.WidgetDiv');
@@ -372,6 +373,32 @@ Blockly.prompt = function(message, defaultValue, callback, _opt_title,
   // opt_title and opt_varType are unused because we only need them to pass
   // information to the scratch-gui, which overwrites this function
   callback(window.prompt(message, defaultValue));
+};
+
+/**
+ * A callback for status buttons. The window.alert is here for testing and
+ * should be overridden.
+ * @param {string} id An identifier.
+ */
+Blockly.statusButtonCallback = function(id) {
+  window.alert('status button was pressed for ' + id);
+};
+
+/**
+ * Update the visual state of a status button in an extension category header.
+ * @param {Blockly.Workspace} workspace A workspace.
+ * @param {string} id An extension id.
+ * @param {Blockly.StatusButtonState} newStatus the new state for the button.
+ */
+Blockly.updateStatusButton = function(workspace, id, newStatus) {
+  var buttons = workspace.getFlyout().buttons_;
+  for (var i = 0; i < buttons.length; i++) {
+    if (buttons[i] instanceof Blockly.FlyoutExtensionCategoryHeader) {
+      if (buttons[i].extensionId == id) {
+        buttons[i].setStatus(newStatus);
+      }
+    }
+  }
 };
 
 /**

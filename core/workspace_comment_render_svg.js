@@ -28,6 +28,13 @@ goog.provide('Blockly.WorkspaceCommentSvg.render');
 
 goog.require('Blockly.WorkspaceCommentSvg');
 
+/**
+ * Radius of the border around the comment.
+ * @type {number}
+ * @const
+ * @private
+ */
+Blockly.WorkspaceCommentSvg.BORDER_WIDTH = 1;
 
 /**
  * Size of the resize icon.
@@ -35,15 +42,7 @@ goog.require('Blockly.WorkspaceCommentSvg');
  * @const
  * @private
  */
-Blockly.WorkspaceCommentSvg.RESIZE_SIZE = 8;
-
-/**
- * Radius of the border around the comment.
- * @type {number}
- * @const
- * @private
- */
-Blockly.WorkspaceCommentSvg.BORDER_RADIUS = 3;
+Blockly.WorkspaceCommentSvg.RESIZE_SIZE = 12 * Blockly.WorkspaceCommentSvg.BORDER_WIDTH;
 
 /**
  * Offset from the foreignobject edge to the textarea edge.
@@ -51,15 +50,37 @@ Blockly.WorkspaceCommentSvg.BORDER_RADIUS = 3;
  * @const
  * @private
  */
-Blockly.WorkspaceCommentSvg.TEXTAREA_OFFSET = 2;
+Blockly.WorkspaceCommentSvg.TEXTAREA_OFFSET = 12;
 
 /**
- * Offset from the top to make room for a top bar.
- * @type {number}
- * @const
+ * The height of the comment top bar.
+ * @package
+ */
+Blockly.WorkspaceCommentSvg.TOP_BAR_HEIGHT = 32;
+
+/**
+ * The size of the minimize arrow icon in the comment top bar.
  * @private
  */
-Blockly.WorkspaceCommentSvg.TOP_OFFSET = 10;
+Blockly.WorkspaceCommentSvg.MINIMIZE_ICON_SIZE = 16;
+
+/**
+ * The size of the delete icon in the comment top bar.
+ * @private
+ */
+Blockly.WorkspaceCommentSvg.DELETE_ICON_SIZE = 12;
+
+/**
+ * The inset for the top bar icons.
+ * @private
+ */
+Blockly.WorkspaceCommentSvg.TOP_BAR_ICON_INSET = 6;
+
+/**
+ * Width that a minimized comment should have.
+ * @private
+ */
+Blockly.WorkspaceCommentSvg.MINIMIZE_WIDTH = 200;
 
 /**
  * Returns a bounding box describing the dimensions of this comment.
@@ -83,34 +104,37 @@ Blockly.WorkspaceCommentSvg.prototype.render = function() {
   var size = this.getHeightWidth();
 
   // Add text area
-  this.createEditor_();
-  this.svgGroup_.appendChild(this.foreignObject_);
+  this.commentEditor_ = this.createEditor_();
+  this.svgGroup_.appendChild(this.commentEditor_);
 
-  this.svgHandleTarget_ = Blockly.utils.createSvgElement('rect',
-      {
-        'class': 'blocklyCommentHandleTarget',
-        'x': 0,
-        'y': 0
-      });
-  this.svgGroup_.appendChild(this.svgHandleTarget_);
+  this.createCommentTopBar_();
+
   this.svgRectTarget_ = Blockly.utils.createSvgElement('rect',
       {
-        'class': 'blocklyCommentTarget',
+        'class': 'blocklyDraggable scratchCommentTarget',
         'x': 0,
         'y': 0,
-        'rx': Blockly.WorkspaceCommentSvg.BORDER_RADIUS,
-        'ry': Blockly.WorkspaceCommentSvg.BORDER_RADIUS
+        'rx': 4 * Blockly.WorkspaceCommentSvg.BORDER_WIDTH,
+        'ry': 4 * Blockly.WorkspaceCommentSvg.BORDER_WIDTH
       });
   this.svgGroup_.appendChild(this.svgRectTarget_);
 
   // Add the resize icon
   this.addResizeDom_();
-  if (this.isDeletable()) {
-    // Add the delete icon
-    this.addDeleteDom_();
+
+  // Show / hide relevant things based on minimized state
+  if (this.isMinimized()) {
+    this.minimizeArrow_.setAttributeNS('http://www.w3.org/1999/xlink',
+        'xlink:href', Blockly.mainWorkspace.options.pathToMedia + 'comment-arrow-up.svg');
+    this.commentEditor_.setAttribute('display', 'none');
+    this.resizeGroup_.setAttribute('display', 'none');
+  } else {
+    this.minimizeArrow_.setAttributeNS('http://www.w3.org/1999/xlink',
+        'xlink:href', Blockly.mainWorkspace.options.pathToMedia + 'comment-arrow-down.svg');
+    this.topBarLabel_.setAttribute('display', 'none');
   }
 
-  this.setSize_(size.width, size.height);
+  this.setSize(size.width, size.height);
 
   // Set the content
   this.textarea_.value = this.content_;
@@ -120,16 +144,22 @@ Blockly.WorkspaceCommentSvg.prototype.render = function() {
   if (this.resizeGroup_) {
     Blockly.bindEventWithChecks_(
         this.resizeGroup_, 'mousedown', this, this.resizeMouseDown_);
+    Blockly.bindEventWithChecks_(
+        this.resizeGroup_, 'mouseup', this, this.resizeMouseUp_);
   }
 
-  if (this.isDeletable()) {
-    Blockly.bindEventWithChecks_(
-        this.deleteGroup_, 'mousedown', this, this.deleteMouseDown_);
-    Blockly.bindEventWithChecks_(
-        this.deleteGroup_, 'mouseout', this, this.deleteMouseOut_);
-    Blockly.bindEventWithChecks_(
-        this.deleteGroup_, 'mouseup', this, this.deleteMouseUp_);
-  }
+  Blockly.bindEventWithChecks_(
+      this.minimizeArrow_, 'mousedown', this, this.minimizeArrowMouseDown_);
+  Blockly.bindEventWithChecks_(
+      this.minimizeArrow_, 'mouseout', this, this.minimizeArrowMouseOut_);
+  Blockly.bindEventWithChecks_(
+      this.minimizeArrow_, 'mouseup', this, this.minimizeArrowMouseUp_);
+  Blockly.bindEventWithChecks_(
+      this.deleteIcon_, 'mousedown', this, this.deleteMouseDown_);
+  Blockly.bindEventWithChecks_(
+      this.deleteIcon_, 'mouseout', this, this.deleteMouseOut_);
+  Blockly.bindEventWithChecks_(
+      this.deleteIcon_, 'mouseup', this, this.deleteMouseUp_);
 };
 
 /**
@@ -138,41 +168,37 @@ Blockly.WorkspaceCommentSvg.prototype.render = function() {
  * @private
  */
 Blockly.WorkspaceCommentSvg.prototype.createEditor_ = function() {
-  /* Create the editor.  Here's the markup that will be generated:
-    <foreignObject class="blocklyCommentForeignObject" x="0" y="10" width="164" height="164">
-      <body xmlns="http://www.w3.org/1999/xhtml" class="blocklyMinimalBody">
-        <textarea xmlns="http://www.w3.org/1999/xhtml"
-            class="blocklyCommentTextarea"
-            style="height: 164px; width: 164px;"></textarea>
-      </body>
-    </foreignObject>
-  */
   this.foreignObject_ = Blockly.utils.createSvgElement(
       'foreignObject',
       {
-        'x': 0,
-        'y': Blockly.WorkspaceCommentSvg.TOP_OFFSET,
-        'class': 'blocklyCommentForeignObject'
+        'x': Blockly.WorkspaceCommentSvg.BORDER_WIDTH,
+        'y': Blockly.WorkspaceCommentSvg.BORDER_WIDTH + Blockly.WorkspaceCommentSvg.TOP_BAR_HEIGHT,
+        'class': 'scratchCommentForeignObject'
       },
       null);
   var body = document.createElementNS(Blockly.HTML_NS, 'body');
   body.setAttribute('xmlns', Blockly.HTML_NS);
-  body.className = 'blocklyMinimalBody';
+  body.className = 'blocklyMinimalBody scratchCommentBody';
   var textarea = document.createElementNS(Blockly.HTML_NS, 'textarea');
-  textarea.className = 'blocklyCommentTextarea';
+  textarea.className = 'scratchCommentTextarea scratchCommentText';
   textarea.setAttribute('dir', this.RTL ? 'RTL' : 'LTR');
+  textarea.setAttribute('maxlength', Blockly.WorkspaceComment.COMMENT_TEXT_LIMIT);
   body.appendChild(textarea);
   this.textarea_ = textarea;
+  this.textarea_.style.margin = (Blockly.WorkspaceCommentSvg.TEXTAREA_OFFSET) + 'px';
   this.foreignObject_.appendChild(body);
   // Don't zoom with mousewheel.
   Blockly.bindEventWithChecks_(textarea, 'wheel', this, function(e) {
     e.stopPropagation();
   });
-  Blockly.bindEventWithChecks_(textarea, 'change', this, function(
-      /* eslint-disable no-unused-vars */ e
-      /* eslint-enable no-unused-vars */) {
-    this.setContent(textarea.value);
+  Blockly.bindEventWithChecks_(textarea, 'change', this, function(_e) {
+    if (this.text_ != textarea.value) {
+      this.setText(textarea.value);
+    }
   });
+
+  this.labelText_ = this.getLabelText();
+
   return this.foreignObject_;
 };
 
@@ -184,7 +210,7 @@ Blockly.WorkspaceCommentSvg.prototype.addResizeDom_ = function() {
   this.resizeGroup_ = Blockly.utils.createSvgElement(
       'g',
       {
-        'class': this.RTL ? 'blocklyResizeSW' : 'blocklyResizeSE'
+        'class': this.RTL ? 'scratchCommentResizeSW' : 'scratchCommentResizeSE'
       },
       this.svgGroup_);
   var resizeSize = Blockly.WorkspaceCommentSvg.RESIZE_SIZE;
@@ -209,43 +235,145 @@ Blockly.WorkspaceCommentSvg.prototype.addResizeDom_ = function() {
 };
 
 /**
- * Add the delete icon to the DOM
+ * Create the comment top bar and its contents.
  * @private
  */
-Blockly.WorkspaceCommentSvg.prototype.addDeleteDom_ = function() {
-  this.deleteGroup_ = Blockly.utils.createSvgElement(
-      'g',
+Blockly.WorkspaceCommentSvg.prototype.createCommentTopBar_ = function() {
+  this.svgHandleTarget_ = Blockly.utils.createSvgElement('rect',
       {
-        'class': 'blocklyCommentDeleteIcon'
-      },
-      this.svgGroup_);
-  this.deleteIconBorder_ = Blockly.utils.createSvgElement('circle',
+        'class': 'blocklyDraggable scratchCommentTopBar',
+        'x': Blockly.WorkspaceCommentSvg.BORDER_WIDTH,
+        'y': Blockly.WorkspaceCommentSvg.BORDER_WIDTH,
+        'height': Blockly.WorkspaceCommentSvg.TOP_BAR_HEIGHT
+      }, this.svgGroup_);
+
+  this.createTopBarIcons_();
+  this.createTopBarLabel_();
+};
+
+/**
+ * Create the comment top bar label. This is the truncated comment text
+ * that shows when comment is minimized.
+ * @private
+ */
+Blockly.WorkspaceCommentSvg.prototype.createTopBarLabel_ = function() {
+  this.topBarLabel_ = Blockly.utils.createSvgElement('text',
       {
-        'class': 'blocklyDeleteIconShape',
-        'r': '7',
-        'cx': '7.5',
-        'cy': '7.5'
-      },
-      this.deleteGroup_);
-  // x icon.
-  Blockly.utils.createSvgElement(
-      'line',
+        'class': 'scratchCommentText',
+        'x': this.width_ / 2,
+        'y': (Blockly.WorkspaceCommentSvg.TOP_BAR_HEIGHT / 2) + Blockly.WorkspaceCommentSvg.BORDER_WIDTH,
+        'text-anchor': 'middle',
+        'dominant-baseline': 'middle'
+      }, this.svgGroup_);
+
+  var labelTextNode = document.createTextNode(this.labelText_);
+  this.topBarLabel_.appendChild(labelTextNode);
+};
+
+/**
+ * Create the minimize toggle and delete icons that in the comment top bar.
+ * @private
+ */
+Blockly.WorkspaceCommentSvg.prototype.createTopBarIcons_ = function() {
+  var topBarMiddleY = (Blockly.WorkspaceCommentSvg.TOP_BAR_HEIGHT / 2) +
+      Blockly.WorkspaceCommentSvg.BORDER_WIDTH;
+
+  // Minimize Toggle Icon in Comment Top Bar
+  var xInset = Blockly.WorkspaceCommentSvg.TOP_BAR_ICON_INSET;
+  this.minimizeArrow_ = Blockly.utils.createSvgElement('image',
       {
-        'x1': '5', 'y1': '10',
-        'x2': '10', 'y2': '5',
-        'stroke': '#fff',
-        'stroke-width': '2'
-      },
-      this.deleteGroup_);
-  Blockly.utils.createSvgElement(
-      'line',
+        'x': xInset,
+        'y': topBarMiddleY - Blockly.WorkspaceCommentSvg.MINIMIZE_ICON_SIZE / 2,
+        'width': Blockly.WorkspaceCommentSvg.MINIMIZE_ICON_SIZE,
+        'height': Blockly.WorkspaceCommentSvg.MINIMIZE_ICON_SIZE
+      }, this.svgGroup_);
+
+  // Delete Icon in Comment Top Bar
+  this.deleteIcon_ = Blockly.utils.createSvgElement('image',
       {
-        'x1': '5', 'y1': '5',
-        'x2': '10', 'y2': '10',
-        'stroke': '#fff',
-        'stroke-width': '2'
-      },
-      this.deleteGroup_);
+        'x': xInset,
+        'y': topBarMiddleY - Blockly.WorkspaceCommentSvg.DELETE_ICON_SIZE / 2,
+        'width': Blockly.WorkspaceCommentSvg.DELETE_ICON_SIZE,
+        'height': Blockly.WorkspaceCommentSvg.DELETE_ICON_SIZE
+      }, this.svgGroup_);
+  this.deleteIcon_.setAttributeNS('http://www.w3.org/1999/xlink',
+      'xlink:href', Blockly.mainWorkspace.options.pathToMedia + 'delete-x.svg');
+};
+
+/**
+ * Handle a mouse-down on bubble's minimize icon.
+ * @param {!Event} e Mouse down event.
+ * @private
+ */
+Blockly.WorkspaceCommentSvg.prototype.minimizeArrowMouseDown_ = function(e) {
+  // Set a property to indicate that this minimize arrow icon had a mouse down
+  // event. This property will get reset if the mouse leaves the icon, or when
+  // a mouse up event occurs on this icon.
+  this.shouldToggleMinimize_ = true;
+  e.stopPropagation();
+};
+
+/**
+ * Handle a mouse-out on bubble's minimize icon.
+ * @param {!Event} _e Mouse out event.
+ * @private
+ */
+Blockly.WorkspaceCommentSvg.prototype.minimizeArrowMouseOut_ = function(_e) {
+  // If the mouse leaves the minimize arrow icon, make sure the
+  // shouldToggleMinimize_ property gets reset.
+  this.shouldToggleMinimize_ = false;
+};
+
+/**
+ * Handle a mouse-up on bubble's minimize icon.
+ * @param {!Event} e Mouse up event.
+ * @private
+ */
+Blockly.WorkspaceCommentSvg.prototype.minimizeArrowMouseUp_ = function(e) {
+  // First check if this is the icon that had a mouse down event on it and that
+  // the mouse never left the icon.
+  if (this.shouldToggleMinimize_) {
+    this.shouldToggleMinimize = false;
+    this.toggleMinimize_();
+  }
+  e.stopPropagation();
+};
+
+/**
+ * Handle a mouse-down on bubble's minimize icon.
+ * @param {!Event} e Mouse down event.
+ * @private
+ */
+Blockly.WorkspaceCommentSvg.prototype.deleteMouseDown_ = function(e) {
+  // Set a property to indicate that this delete icon had a mouse down event.
+  // This property will get reset if the mouse leaves the icon, or when
+  // a mouse up event occurs on this icon.
+  this.shouldDelete_ = true;
+  e.stopPropagation();
+};
+
+/**
+ * Handle a mouse-out on bubble's minimize icon.
+ * @param {!Event} _e Mouse out event.
+ * @private
+ */
+Blockly.WorkspaceCommentSvg.prototype.deleteMouseOut_ = function(_e) {
+  // If the mouse leaves the delete icon, reset the shouldDelete_ property.
+  this.shouldDelete_ = false;
+};
+
+/**
+ * Handle a mouse-up on bubble's delete icon.
+ * @param {!Event} e Mouse up event.
+ * @private
+ */
+Blockly.WorkspaceCommentSvg.prototype.deleteMouseUp_ = function(e) {
+  // First check that this same icon had a mouse down event on it and that the
+  // mouse never left the icon.
+  if (this.shouldDelete_) {
+    this.dispose();
+  }
+  e.stopPropagation();
 };
 
 /**
@@ -254,7 +382,9 @@ Blockly.WorkspaceCommentSvg.prototype.addDeleteDom_ = function() {
  * @private
  */
 Blockly.WorkspaceCommentSvg.prototype.resizeMouseDown_ = function(e) {
+  this.resizeStartSize_ = {width: this.width_, height: this.height_};
   this.unbindDragEvents_();
+  this.workspace.setResizesEnabled(false);
   if (Blockly.utils.isRightButton(e)) {
     // No right-click.
     e.stopPropagation();
@@ -273,40 +403,48 @@ Blockly.WorkspaceCommentSvg.prototype.resizeMouseDown_ = function(e) {
   e.stopPropagation();
 };
 
-/**
- * Handle a mouse-down on comment's delete icon.
- * @param {!Event} e Mouse down event.
- * @private
- */
-Blockly.WorkspaceCommentSvg.prototype.deleteMouseDown_ = function(e) {
-  // highlight the delete icon
-  Blockly.utils.addClass(
-      /** @type {!Element} */ (this.deleteIconBorder_), 'blocklyDeleteIconHighlighted');
-  // This event has been handled.  No need to bubble up to the document.
-  e.stopPropagation();
-};
 
 /**
- * Handle a mouse-out on comment's delete icon.
- * @param {!Event} e Mouse out event.
+ * Set the apperance of the workspace comment bubble to the minimized or full size
+ * appearance. In the minimized state, the comment should only have the top bar
+ * displayed, with the minimize icon swapped to the minimized state, and
+ * truncated comment text is shown in the middle of the top bar. There should be
+ * no resize handle when the workspace comment is in its minimized state.
+ * @param {boolean} minimize Whether the bubble should be minimized
+ * @param {?string} labelText Optional label text for the comment top bar
+ *    when it is minimized.
  * @private
  */
-Blockly.WorkspaceCommentSvg.prototype.deleteMouseOut_ = function(/*e*/) {
-  // restore highlight on the delete icon
-  Blockly.utils.removeClass(
-      /** @type {!Element} */ (this.deleteIconBorder_), 'blocklyDeleteIconHighlighted');
-};
-
-/**
- * Handle a mouse-up on comment's delete icon.
- * @param {!Event} e Mouse up event.
- * @private
- */
-Blockly.WorkspaceCommentSvg.prototype.deleteMouseUp_ = function(e) {
-  // Delete this comment
-  this.dispose(true, true);
-  // This event has been handled.  No need to bubble up to the document.
-  e.stopPropagation();
+Blockly.WorkspaceCommentSvg.prototype.setRenderedMinimizeState_ = function(minimize, labelText) {
+  if (minimize) {
+    // Change minimize icon
+    this.minimizeArrow_.setAttributeNS('http://www.w3.org/1999/xlink',
+        'xlink:href', Blockly.mainWorkspace.options.pathToMedia + 'comment-arrow-up.svg');
+    // Hide text area
+    this.commentEditor_.setAttribute('display', 'none');
+    // Hide resize handle if it exists
+    if (this.resizeGroup_) {
+      this.resizeGroup_.setAttribute('display', 'none');
+    }
+    if (labelText && this.labelText_ != labelText) {
+      // Update label and display
+      // TODO is there a better way to do this?
+      this.topBarLabel_.textContent = labelText;
+    }
+    Blockly.utils.removeAttribute(this.topBarLabel_, 'display');
+  } else {
+    // Change minimize icon
+    this.minimizeArrow_.setAttributeNS('http://www.w3.org/1999/xlink',
+        'xlink:href', Blockly.mainWorkspace.options.pathToMedia + 'comment-arrow-down.svg');
+    // Hide label
+    this.topBarLabel_.setAttribute('display', 'none');
+    // Show text area
+    Blockly.utils.removeAttribute(this.commentEditor_, 'display');
+    // Display resize handle if it exists
+    if (this.resizeGroup_) {
+      Blockly.utils.removeAttribute(this.resizeGroup_, 'display');
+    }
+  }
 };
 
 /**
@@ -332,6 +470,18 @@ Blockly.WorkspaceCommentSvg.prototype.unbindDragEvents_ = function() {
 Blockly.WorkspaceCommentSvg.prototype.resizeMouseUp_ = function(/*e*/) {
   Blockly.Touch.clearTouchIdentifier();
   this.unbindDragEvents_();
+  var oldHW = this.resizeStartSize_;
+  this.resizeStartSize_ = null;
+  if (this.width_ == oldHW.width && this.height_ == oldHW.height) {
+    return;
+  }
+  // Fire a change event for the new width/height after
+  // resize mouse up
+  Blockly.Events.fire(new Blockly.Events.CommentChange(
+      this, {width: oldHW.width , height: oldHW.height},
+      {width: this.width_, height: this.height_}));
+
+  this.workspace.setResizesEnabled(true);
 };
 
 /**
@@ -342,7 +492,20 @@ Blockly.WorkspaceCommentSvg.prototype.resizeMouseUp_ = function(/*e*/) {
 Blockly.WorkspaceCommentSvg.prototype.resizeMouseMove_ = function(e) {
   this.autoLayout_ = false;
   var newXY = this.workspace.moveDrag(e);
-  this.setSize_(this.RTL ? -newXY.x : newXY.x, newXY.y);
+  // The call to setSize below emits a CommentChange event,
+  // but we don't want multiple CommentChange events to be
+  // emitted while the user is still in the process of resizing
+  // the comment, so disable events here. The event is emitted in
+  // resizeMouseUp_.
+  var disabled = false;
+  if (Blockly.Events.isEnabled()) {
+    Blockly.Events.disable();
+    disabled = true;
+  }
+  this.setSize(this.RTL ? -newXY.x : newXY.x, newXY.y);
+  if (disabled) {
+    Blockly.Events.enable();
+  }
 };
 
 /**
@@ -351,45 +514,68 @@ Blockly.WorkspaceCommentSvg.prototype.resizeMouseMove_ = function(e) {
  * @private
  */
 Blockly.WorkspaceCommentSvg.prototype.resizeComment_ = function() {
-  var size = this.getHeightWidth();
-  var topOffset = Blockly.WorkspaceCommentSvg.TOP_OFFSET;
+  var doubleBorderWidth = 2 * Blockly.WorkspaceCommentSvg.BORDER_WIDTH;
+  var topOffset = Blockly.WorkspaceCommentSvg.TOP_BAR_HEIGHT;
   var textOffset = Blockly.WorkspaceCommentSvg.TEXTAREA_OFFSET * 2;
 
   this.foreignObject_.setAttribute('width',
-      size.width);
+      this.width_ - doubleBorderWidth);
   this.foreignObject_.setAttribute('height',
-      size.height - topOffset);
+      this.height_ - doubleBorderWidth - topOffset);
   if (this.RTL) {
     this.foreignObject_.setAttribute('x',
-        -size.width);
+        -this.width_);
   }
   this.textarea_.style.width =
-      (size.width - textOffset) + 'px';
+      (this.width_ - textOffset) + 'px';
   this.textarea_.style.height =
-      (size.height - textOffset - topOffset) + 'px';
+      (this.height_ - doubleBorderWidth - textOffset - topOffset) + 'px';
 };
 
 /**
  * Set size
  * @param {number} width width of the container
  * @param {number} height height of the container
- * @private
+ * @package
  */
-Blockly.WorkspaceCommentSvg.prototype.setSize_ = function(width, height) {
-  // Minimum size of a comment.
-  width = Math.max(width, 45);
-  height = Math.max(height, 20 + Blockly.WorkspaceCommentSvg.TOP_OFFSET);
-  this.width_ = width;
-  this.height_ = height;
+Blockly.WorkspaceCommentSvg.prototype.setSize = function(width, height) {
+  var oldWidth = this.width_;
+  var oldHeight = this.height_;
+
+  var doubleBorderWidth = 2 * Blockly.WorkspaceCommentSvg.BORDER_WIDTH;
+
+  if (this.isMinimized_) {
+    width = Blockly.WorkspaceCommentSvg.MINIMIZE_WIDTH;
+    height = Blockly.WorkspaceCommentSvg.TOP_BAR_HEIGHT;
+  } else {
+    // Minimum size of a 'full size' (not minimized) comment.
+    width = Math.max(width, doubleBorderWidth + 50);
+    height = Math.max(height, doubleBorderWidth + 20 + Blockly.WorkspaceCommentSvg.TOP_BAR_HEIGHT);
+
+    // Note we are only updating this.width_ or this.height_ here
+    // and not in the case above, because when we're minimizing a comment,
+    // we want to keep track of the width/height of the maximized comment
+    this.width_ = width;
+    this.height_ = height;
+    Blockly.Events.fire(new Blockly.Events.CommentChange(this,
+        {width: oldWidth, height: oldHeight},
+        {width: this.width_, height: this.height_}));
+  }
   this.svgRect_.setAttribute('width', width);
   this.svgRect_.setAttribute('height', height);
   this.svgRectTarget_.setAttribute('width', width);
   this.svgRectTarget_.setAttribute('height', height);
-  this.svgHandleTarget_.setAttribute('width', width);
-  this.svgHandleTarget_.setAttribute('height', Blockly.WorkspaceCommentSvg.TOP_OFFSET);
+  this.svgHandleTarget_.setAttribute('width', width - doubleBorderWidth);
+  this.svgHandleTarget_.setAttribute('height', Blockly.WorkspaceCommentSvg.TOP_BAR_HEIGHT);
   if (this.RTL) {
+    this.minimizeArrow_.setAttribute('x', width -
+        (Blockly.WorkspaceCommentSvg.MINIMIZE_ICON_SIZE) -
+        Blockly.WorkspaceCommentSvg.TOP_BAR_ICON_INSET);
     this.svgRect_.setAttribute('transform', 'scale(-1 1)');
-    this.svgRectTarget_.setAttribute('transform', 'scale(-1 1)');
+  } else {
+    this.deleteIcon_.setAttribute('x', width -
+        Blockly.WorkspaceCommentSvg.DELETE_ICON_SIZE -
+        Blockly.WorkspaceCommentSvg.TOP_BAR_ICON_INSET);
   }
 
   var resizeSize = Blockly.WorkspaceCommentSvg.RESIZE_SIZE;
@@ -398,20 +584,56 @@ Blockly.WorkspaceCommentSvg.prototype.setSize_ = function(width, height) {
       // Mirror the resize group.
       this.resizeGroup_.setAttribute('transform', 'translate(' +
         (-width + resizeSize) + ',' + (height - resizeSize) + ') scale(-1 1)');
-      this.deleteGroup_.setAttribute('transform', 'translate(' +
-        (-width + resizeSize) + ',' + (-resizeSize) + ') scale(-1 1)');
     } else {
       this.resizeGroup_.setAttribute('transform', 'translate(' +
-        (width - resizeSize) + ',' +
-        (height - resizeSize) + ')');
-      this.deleteGroup_.setAttribute('transform', 'translate(' +
-        (width - resizeSize) + ',' +
-        (-resizeSize) + ')');
+        (width - doubleBorderWidth - resizeSize) + ',' +
+        (height -  doubleBorderWidth - resizeSize) + ')');
     }
+  }
+
+  if (this.isMinimized_) {
+    this.topBarLabel_.setAttribute('x', width / 2);
+    this.topBarLabel_.setAttribute('y', height / 2);
   }
 
   // Allow the contents to resize.
   this.resizeComment_();
+};
+
+/**
+ * Toggle the minimization state of this comment.
+ * @private
+ */
+Blockly.WorkspaceComment.prototype.toggleMinimize_ = function() {
+  this.setMinimized(!this.isMinimized_);
+};
+
+/**
+ * Set the minimized state for this comment. If the comment is rendered,
+ * change the appearance of the comment accordingly.
+ * @param {boolean} minimize Whether the comment should be minimized
+ * @package
+ */
+Blockly.WorkspaceComment.prototype.setMinimized = function(minimize) {
+  if (this.isMinimized_ == minimize) {
+    return;
+  }
+  Blockly.Events.fire(new Blockly.Events.CommentChange(this,
+      {minimized: this.isMinimized_}, {minimized: minimize}));
+  this.isMinimized_ = minimize;
+  if (minimize) {
+    if (this.rendered_) {
+      this.setRenderedMinimizeState_(true, this.getLabelText());
+    }
+    this.setSize(Blockly.WorkspaceCommentSvg.MINIMIZE_WIDTH,
+        Blockly.WorkspaceCommentSvg.TOP_BAR_HEIGHT);
+  } else {
+    if (this.rendered_) {
+      this.setRenderedMinimizeState_(false);
+    }
+    this.setText(this.content_);
+    this.setSize(this.width_, this.height_);
+  }
 };
 
 /**
@@ -421,6 +643,7 @@ Blockly.WorkspaceCommentSvg.prototype.setSize_ = function(width, height) {
 Blockly.WorkspaceCommentSvg.prototype.disposeInternal_ = function() {
   this.textarea_ = null;
   this.foreignObject_ = null;
+  this.svgRect_ = null;
   this.svgRectTarget_ = null;
   this.svgHandleTarget_ = null;
 };
@@ -437,9 +660,9 @@ Blockly.WorkspaceCommentSvg.prototype.setFocus = function() {
     comment.textarea_.focus();
     comment.addFocus();
     Blockly.utils.addClass(
-        comment.svgRectTarget_, 'blocklyCommentTargetFocused');
+        comment.svgRectTarget_, 'scratchCommentTargetFocused');
     Blockly.utils.addClass(
-        comment.svgHandleTarget_, 'blocklyCommentHandleTargetFocused');
+        comment.svgHandleTarget_, 'scratchCommentHandleTargetFocused');
   }, 0);
 };
 
@@ -457,8 +680,8 @@ Blockly.WorkspaceCommentSvg.prototype.blurFocus = function() {
     comment.textarea_.blur();
     comment.removeFocus();
     Blockly.utils.removeClass(
-        comment.svgRectTarget_, 'blocklyCommentTargetFocused');
+        comment.svgRectTarget_, 'scratchCommentTargetFocused');
     Blockly.utils.removeClass(
-        comment.svgHandleTarget_, 'blocklyCommentHandleTargetFocused');
+        comment.svgHandleTarget_, 'scratchCommentHandleTargetFocused');
   }, 0);
 };

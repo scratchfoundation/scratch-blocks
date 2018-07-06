@@ -27,6 +27,48 @@ goog.require('Blockly.Colours');
 goog.require('Blockly.constants');
 goog.require('Blockly.ScratchBlocks.VerticalExtensions');
 
+Blockly.Blocks['event_whentouchingobject'] = {
+  /**
+   * Block for when a sprite is touching an object.
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.jsonInit({
+      "message0": Blockly.Msg.EVENT_WHENTOUCHINGOBJECT,
+      "args0": [
+        {
+          "type": "input_value",
+          "name": "TOUCHINGOBJECTMENU"
+        }
+      ],
+      "category": Blockly.Categories.event,
+      "extensions": ["colours_event", "shape_hat"]
+    });
+  }
+};
+
+Blockly.Blocks['event_touchingobjectmenu'] = {
+  /**
+   * "Touching [Object]" Block Menu.
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.jsonInit({
+      "message0": "%1",
+      "args0": [
+        {
+          "type": "field_dropdown",
+          "name": "TOUCHINGOBJECTMENU",
+          "options": [
+            [Blockly.Msg.SENSING_TOUCHINGOBJECT_POINTER, '_mouse_'],
+            [Blockly.Msg.SENSING_TOUCHINGOBJECT_EDGE, '_edge_']
+          ]
+        }
+      ],
+      "extensions": ["colours_event", "output_string"]
+    });
+  }
+};
 
 Blockly.Blocks['event_whenflagclicked'] = {
   /**
@@ -140,6 +182,7 @@ Blockly.Blocks['event_whengreaterthan'] = {
           "type": "field_dropdown",
           "name": "WHENGREATERTHANMENU",
           "options": [
+            [Blockly.Msg.EVENT_WHENGREATERTHAN_LOUDNESS, 'LOUDNESS'],
             [Blockly.Msg.EVENT_WHENGREATERTHAN_TIMER, 'TIMER']
           ]
         },

@@ -235,14 +235,17 @@ Blockly.BubbleDragger.prototype.endBubbleDrag = function(
  * @private
  */
 Blockly.BubbleDragger.prototype.fireMoveEvent_ = function() {
+  var event = null;
   if (this.draggingBubble_.isComment) {
-    var event = new Blockly.Events.CommentMove(this.draggingBubble_);
-    event.setOldCoordinate(this.startXY_);
-    event.recordNew();
-    Blockly.Events.fire(event);
+    event = new Blockly.Events.CommentMove(this.draggingBubble_);
+  } else if (this.draggingBubble_ instanceof Blockly.ScratchBubble) {
+    event = new Blockly.Events.CommentMove(this.draggingBubble_.comment);
+  } else {
+    return;
   }
-  // TODO (fenichel): move events for comments.
-  return;
+  event.setOldCoordinate(this.startXY_);
+  event.recordNew();
+  Blockly.Events.fire(event);
 };
 
 /**

@@ -40,12 +40,13 @@ goog.require('goog.math.Coordinate');
  * @param {string} content The content of this workspace comment.
  * @param {number} height Height of the comment.
  * @param {number} width Width of the comment.
+ * @param {boolean} minimized Whether this comment is in the minimized state
  * @param {string=} opt_id Optional ID.  Use this ID if provided, otherwise
  *     create a new ID.  If the ID conflicts with an in-use ID, a new one will
  *     be generated.
  * @constructor
  */
-Blockly.WorkspaceComment = function(workspace, content, height, width, opt_id) {
+Blockly.WorkspaceComment = function(workspace, content, height, width, minimized, opt_id) {
   /** @type {string} */
   this.id = (opt_id && !workspace.getCommentById(opt_id)) ?
       opt_id : Blockly.utils.genUid();
@@ -73,6 +74,13 @@ Blockly.WorkspaceComment = function(workspace, content, height, width, opt_id) {
    * @private
    */
   this.width_ = width;
+
+  /**
+   * The comment's minimized state.
+   * @type{boolean}
+   * @private
+   */
+  this.isMinimized_ = minimized;
 
   /**
    * @type {!Blockly.Workspace}
@@ -111,6 +119,19 @@ Blockly.WorkspaceComment = function(workspace, content, height, width, opt_id) {
 
   Blockly.WorkspaceComment.fireCreateEvent(this);
 };
+
+/**
+ * Maximum lable length (actual label length will include
+ * one additional character, the ellipsis).
+ * @private
+ */
+Blockly.WorkspaceComment.MAX_LABEL_LENGTH = 12;
+
+/**
+ * Maximum character length for comment text.
+ * @private
+ */
+Blockly.WorkspaceComment.COMMENT_TEXT_LIMIT = 8000;
 
 /**
  * Dispose of this comment.
@@ -168,6 +189,15 @@ Blockly.WorkspaceComment.prototype.getWidth = function() {
  */
 Blockly.WorkspaceComment.prototype.setWidth = function(width) {
   this.width_ = width;
+};
+
+/**
+ * Get the height and width of this comment.
+ * @return {{height: number, width: number}} The height and width of this comment;
+ *     these numbers do not change as the workspace scales.
+ */
+Blockly.WorkspaceComment.prototype.getHeightWidth = function() {
+  return {height: this.height_, width: this.width_};
 };
 
 /**
@@ -236,21 +266,30 @@ Blockly.WorkspaceComment.prototype.setMovable = function(movable) {
  * @return {string} Comment text.
  * @package
  */
-Blockly.WorkspaceComment.prototype.getContent = function() {
+Blockly.WorkspaceComment.prototype.getText = function() {
   return this.content_;
 };
 
 /**
- * Set this comment's content.
- * @param {string} content Comment content.
+ * Set this comment's text content.
+ * @param {string} text Comment text.
  * @package
  */
-Blockly.WorkspaceComment.prototype.setContent = function(content) {
-  if (this.content_ != content) {
-    Blockly.Events.fire(
-        new Blockly.Events.CommentChange(this, this.content_, content));
-    this.content_ = content;
+Blockly.WorkspaceComment.prototype.setText = function(text) {
+  if (this.content_ != text) {
+    Blockly.Events.fire(new Blockly.Events.CommentChange(
+        this, {text: this.content_}, {text: text}));
+    this.content_ = text;
   }
+};
+
+/**
+ * Check whether this comment is currently minimized.
+ * @return {boolean} True if minimized
+ * @package
+ */
+Blockly.WorkspaceComment.prototype.isMinimized = function() {
+  return this.isMinimized_;
 };
 
 /**
@@ -269,6 +308,23 @@ Blockly.WorkspaceComment.prototype.toXmlWithXY = function(opt_noId) {
 };
 
 /**
+ * Get the truncated text for this comment to display in the minimized
+ * top bar.
+ * @return {string} The truncated comment text
+ * @package
+ */
+Blockly.WorkspaceComment.prototype.getLabelText = function() {
+  if (this.content_.length > Blockly.WorkspaceComment.MAX_LABEL_LENGTH) {
+    if (this.RTL) {
+      return '\u2026' + this.content_.slice(0, Blockly.WorkspaceComment.MAX_LABEL_LENGTH);
+    }
+    return this.content_.slice(0, Blockly.WorkspaceComment.MAX_LABEL_LENGTH) + '\u2026';
+  } else {
+    return this.content_;
+  }
+};
+
+/**
  * Encode a comment subtree as XML, but don't serialize the XY coordinates or
  * width and height.  If you need that additional information use toXmlWithXY.
  * @param {boolean=} opt_noId True if the encoder should skip the comment id.
@@ -280,7 +336,10 @@ Blockly.WorkspaceComment.prototype.toXml = function(opt_noId) {
   if (!opt_noId) {
     commentElement.setAttribute('id', this.id);
   }
-  commentElement.textContent = this.getContent();
+  if (this.isMinimized_) {
+    commentElement.setAttribute('minimized', true);
+  }
+  commentElement.textContent = this.getText();
   return commentElement;
 };
 
@@ -316,7 +375,7 @@ Blockly.WorkspaceComment.fromXml = function(xmlComment, workspace) {
   var info = Blockly.WorkspaceComment.parseAttributes(xmlComment);
 
   var comment = new Blockly.WorkspaceComment(
-      workspace, info.content, info.h, info.w, info.id);
+      workspace, info.content, info.h, info.w, info.minimized, info.id);
 
   if (!isNaN(info.x) && !isNaN(info.y)) {
     comment.moveBy(info.x, info.y);
@@ -361,8 +420,13 @@ Blockly.WorkspaceComment.parseAttributes = function(xml) {
      * @type {number}
      */
     y: parseInt(xml.getAttribute('y'), 10),
+    /**
+     * Whether this comment is minimized. Defaults to false if not specified in
+     * the XML.
+     * @type {boolean}
+     */
+    minimized: xml.getAttribute('minimized') == 'true' || false,
     /* @type {string} */
     content: xml.textContent
   };
 };
-

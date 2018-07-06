@@ -36,6 +36,8 @@ goog.require('goog.userAgent');
 
 /**
  * Class for Scratch comment UI bubble.
+ * @param {!Blockly.ScratchBlockComment} comment The comment this bubble belongs
+ *     to.
  * @param {!Blockly.WorkspaceSvg} workspace The workspace on which to draw the
  *     bubble.
  * @param {!Element} content SVG content for the bubble.
@@ -50,8 +52,16 @@ goog.require('goog.userAgent');
  * @extends {Blockly.Bubble}
  * @constructor
  */
-Blockly.ScratchBubble = function(workspace, content, anchorXY,
+Blockly.ScratchBubble = function(comment, workspace, content, anchorXY,
     bubbleWidth, bubbleHeight, bubbleX, bubbleY, minimized) {
+
+  // Needed for Events
+  /**
+   * The comment this bubble belongs to.
+   * @type {Blockly.ScratchBlockComment}
+   * @package
+   */
+  this.comment = comment;
 
   this.workspace_ = workspace;
   this.content_ = content;
@@ -59,7 +69,8 @@ Blockly.ScratchBubble = function(workspace, content, anchorXY,
   this.y = bubbleY;
   this.isMinimized_ = minimized || false;
   var canvas = workspace.getBubbleCanvas();
-  canvas.appendChild(this.createDom_(content, !!(bubbleWidth && bubbleHeight), this.isMinimized_));
+  canvas.appendChild(this.createDom_(content, !!(bubbleWidth && bubbleHeight),
+      this.isMinimized_));
 
   this.setAnchorLocation(anchorXY);
   if (!bubbleWidth || !bubbleHeight) {
@@ -78,9 +89,13 @@ Blockly.ScratchBubble = function(workspace, content, anchorXY,
     Blockly.bindEventWithChecks_(
         this.minimizeArrow_, 'mousedown', this, this.minimizeArrowMouseDown_);
     Blockly.bindEventWithChecks_(
+        this.minimizeArrow_, 'mouseout', this, this.minimizeArrowMouseOut_);
+    Blockly.bindEventWithChecks_(
         this.minimizeArrow_, 'mouseup', this, this.minimizeArrowMouseUp_);
     Blockly.bindEventWithChecks_(
         this.deleteIcon_, 'mousedown', this, this.deleteMouseDown_);
+    Blockly.bindEventWithChecks_(
+        this.deleteIcon_, 'mouseout', this, this.deleteMouseOut_);
     Blockly.bindEventWithChecks_(
         this.deleteIcon_, 'mouseup', this, this.deleteMouseUp_);
     Blockly.bindEventWithChecks_(
@@ -88,6 +103,8 @@ Blockly.ScratchBubble = function(workspace, content, anchorXY,
     if (this.resizeGroup_) {
       Blockly.bindEventWithChecks_(
           this.resizeGroup_, 'mousedown', this, this.resizeMouseDown_);
+      Blockly.bindEventWithChecks_(
+          this.resizeGroup_, 'mouseup', this, this.resizeMouseUp_);
     }
   }
 
@@ -247,8 +264,8 @@ Blockly.ScratchBubble.prototype.createTopBarLabel_ = function() {
         'dominant-baseline': 'middle'
       }, this.bubbleGroup_);
 
-  this.labelTextNode_ = document.createTextNode(this.labelText_);
-  this.topBarLabel_.appendChild(this.labelTextNode_);
+  var labelTextNode = document.createTextNode(this.labelText_);
+  this.topBarLabel_.appendChild(labelTextNode);
 };
 
 /**
@@ -301,7 +318,22 @@ Blockly.ScratchBubble.prototype.showContextMenu_ = function(e) {
  * @private
  */
 Blockly.ScratchBubble.prototype.minimizeArrowMouseDown_ = function(e) {
+  // Set a property indicating that this comment's minimize arrow got a mouse
+  // down event. This property will get reset if the mouse leaves the icon or
+  // when a mouse up occurs on this icon after this mouse down.
+  this.shouldToggleMinimize_ = true;
   e.stopPropagation();
+};
+
+/**
+ * Handle a mouse-out on bubble's minimize icon.
+ * @param {!Event} _e Mouse up event.
+ * @private
+ */
+Blockly.ScratchBubble.prototype.minimizeArrowMouseOut_ = function(_e) {
+  // If the mouse has left the minimize arrow icon, the
+  // shouldToggleMinimize property should get reset to false.
+  this.shouldToggleMinimize_ = false;
 };
 
 /**
@@ -310,19 +342,37 @@ Blockly.ScratchBubble.prototype.minimizeArrowMouseDown_ = function(e) {
  * @private
  */
 Blockly.ScratchBubble.prototype.minimizeArrowMouseUp_ = function(e) {
-  if (this.minimizeToggleCallback_) {
-    this.minimizeToggleCallback_.call(this);
+  // First check if this icon had a mouse down event
+  // on it and that the mouse never left the icon
+  if (this.shouldToggleMinimize_) {
+    this.shouldToggleMinimize_ = false;
+
+    if (this.minimizeToggleCallback_) {
+      this.minimizeToggleCallback_.call(this);
+    }
   }
   e.stopPropagation();
 };
 
 /**
- * Handle a mouse-down on bubble's minimize icon.
+ * Handle a mouse-down on bubble's delete icon.
  * @param {!Event} e Mouse up event.
  * @private
  */
 Blockly.ScratchBubble.prototype.deleteMouseDown_ = function(e) {
+  this.shouldDelete_ = true;
   e.stopPropagation();
+};
+
+/**
+ * Handle a mouse-out on bubble's delete icon.
+ * @param {!Event} _e Mouse out event.
+ * @private
+ */
+Blockly.ScratchBubble.prototype.deleteMouseOut_ = function(_e) {
+  // If the mouse has left the delete icon, the shouldDelete_ property
+  // should get reset to false.
+  this.shouldDelete_ = false;
 };
 
 /**
@@ -331,10 +381,47 @@ Blockly.ScratchBubble.prototype.deleteMouseDown_ = function(e) {
  * @private
  */
 Blockly.ScratchBubble.prototype.deleteMouseUp_ = function(e) {
-  if (this.deleteCallback_) {
-    this.deleteCallback_.call(this);
+  // First check that this is actually the same icon that had a mouse down event
+  // on it and that the mouse never left the icon
+  if (this.shouldDelete_) {
+    this.shouldDelete_ = false;
+
+    if (this.deleteCallback_) {
+      this.deleteCallback_.call(this);
+    }
   }
   e.stopPropagation();
+};
+
+/**
+ * Handle a mouse-down on bubble's resize corner.
+ * @param {!Event} e Mouse down event.
+ * @private
+ */
+Blockly.ScratchBubble.prototype.resizeMouseDown_ = function(e) {
+  this.resizeStartSize_ = {width: this.width_, height: this.height_};
+  this.workspace_.setResizesEnabled(false);
+  Blockly.ScratchBubble.superClass_.resizeMouseDown_.call(this, e);
+};
+
+/**
+ * Handle a mouse-up on bubble's resize corner.
+ * @param {!Event} _e Mouse up event.
+ * @private
+ */
+Blockly.ScratchBubble.prototype.resizeMouseUp_ = function(_e) {
+  var oldHW = this.resizeStartSize_;
+  this.resizeStartSize_ = null;
+  if (this.width_ == oldHW.width && this.height_ == oldHW.height) {
+    return;
+  }
+  // Fire a change event for the new width/height after
+  // resize mouse up
+  Blockly.Events.fire(new Blockly.Events.CommentChange(
+      this.comment, {width: oldHW.width , height: oldHW.height},
+      {width: this.width_, height: this.height_}));
+
+  this.workspace_.setResizesEnabled(true);
 };
 
 /**
@@ -361,10 +448,7 @@ Blockly.ScratchBubble.prototype.setMinimized = function(minimize, labelText) {
     }
     if (labelText && this.labelText_ != labelText) {
       // Update label and display
-      // TODO is there a better way to do this?
-      this.topBarLabel_.removeChild(this.labelTextNode_);
-      this.labelTextNode_ = document.createTextNode(labelText);
-      this.topBarLabel_.appendChild(this.labelTextNode_);
+      this.topBarLabel_.textContent = labelText;
     }
     Blockly.utils.removeAttribute(this.topBarLabel_, 'display');
   } else {
@@ -543,7 +627,6 @@ Blockly.ScratchBubble.prototype.moveDuringDrag = function(dragSurface, newLoc) {
   } else {
     this.moveTo(newLoc.x, newLoc.y);
   }
-  this.renderArrow_();
 };
 
 /**
@@ -559,6 +642,7 @@ Blockly.ScratchBubble.prototype.updatePosition_ = function(x, y) {
     this.relativeLeft_ = x - this.anchorXY_.x;
   }
   this.relativeTop_ = y - this.anchorXY_.y;
+  this.renderArrow_();
 };
 
 /**

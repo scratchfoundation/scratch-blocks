@@ -39,6 +39,9 @@ goog.require('goog.userAgent');
 /**
  * Class for a comment.
  * @param {!Blockly.Block} block The block associated with this comment.
+ * @param {string} text The text content of this comment.
+ * @param {string=} id Optional uid for comment; a new one will be generated if
+ *     not provided.
  * @param {number=} x Initial x position for comment, in workspace coordinates.
  * @param {number=} y Initial y position for comment, in workspace coordinates.
  * @param {boolean=} minimized Whether or not this comment is minimized
@@ -46,11 +49,75 @@ goog.require('goog.userAgent');
  * @extends {Blockly.Comment}
  * @constructor
  */
-Blockly.ScratchBlockComment = function(block, x, y, minimized) {
+Blockly.ScratchBlockComment = function(block, text, id, x, y, minimized) {
   Blockly.ScratchBlockComment.superClass_.constructor.call(this, block);
-  this.x_ = x;
-  this.y_ = y;
+  /**
+   * The text content of this comment.
+   * @type {string}
+   * @private
+   */
+  this.text_ = text;
+
+  var xIsValidNumber = typeof x == 'number' && !isNaN(x);
+  var yIsValidNumber = typeof y == 'number' && !isNaN(y);
+
+  /**
+   * Whether this comment needs to be auto-positioned (based on provided values
+   * for x and y position).
+   * @type {boolean}
+   * @private
+   */
+  this.needsAutoPositioning_ = !xIsValidNumber && !yIsValidNumber;
+  // If both of the given x and y params are invalid, this comment needs to be auto positioned.
+
+  /**
+   * The x position of this comment in workspace coordinates. Default to 0 if
+   * x position is not provided or is not a valid number.
+   * @type {number}
+   * @private
+   */
+  this.x_ = xIsValidNumber ? x : 0;
+  /**
+   * The y position of this comment in workspace coordinates. Default to 0 if
+   * y position is not provided or is not a valid number.
+   * @type {number}
+   * @private
+   */
+  this.y_ = yIsValidNumber ? y : 0;
+  /**
+   * Whether this comment is minimized.
+   * @type {boolean}
+   * @private
+   */
   this.isMinimized_ = minimized || false;
+
+  /**
+   * The workspace this comment belongs to.
+   * @type {Blockly.Workspace}
+   * @package
+   */
+  this.workspace = block.workspace;
+  /**
+   * The unique identifier for this comment.
+   * @type {string}
+   * @package
+   */
+  this.id = goog.isString(id) && !this.workspace.getCommentById(id) ?
+      id : Blockly.utils.genUid();
+  this.workspace.addTopComment(this);
+
+  /**
+   * The id of the block this comment belongs to.
+   * @type {string}
+   * @package
+   */
+  this.blockId = block.id;
+
+  if (!block.rendered) {
+    Blockly.ScratchBlockComment.fireCreateEvent(this);
+  }
+  // If the block is rendered, fire event the create event when the comment is made
+  // visible
 };
 goog.inherits(Blockly.ScratchBlockComment, Blockly.Comment);
 
@@ -83,7 +150,13 @@ Blockly.ScratchBlockComment.TEXTAREA_OFFSET = 12;
  * one additional character, the ellipsis).
  * @private
  */
-Blockly.ScratchBlockComment.MAX_LABEL_LENGTH = 16;
+Blockly.ScratchBlockComment.MAX_LABEL_LENGTH = 12;
+
+/**
+ * Maximum character length for comment text.
+ * @private
+ */
+Blockly.ScratchBlockComment.COMMENT_TEXT_LIMIT = 8000;
 
 /**
  * Width that a minimized comment should have.
@@ -144,7 +217,7 @@ Blockly.ScratchBlockComment.prototype.createEditor_ = function() {
       {
         'x': Blockly.ScratchBubble.BORDER_WIDTH,
         'y': Blockly.ScratchBubble.BORDER_WIDTH + Blockly.ScratchBubble.TOP_BAR_HEIGHT,
-        'class': 'blocklyCommentForeignObject'
+        'class': 'scratchCommentForeignObject'
       },
       null);
   var body = document.createElementNS(Blockly.HTML_NS, 'body');
@@ -153,6 +226,7 @@ Blockly.ScratchBlockComment.prototype.createEditor_ = function() {
   var textarea = document.createElementNS(Blockly.HTML_NS, 'textarea');
   textarea.className = 'scratchCommentTextarea scratchCommentText';
   textarea.setAttribute('dir', this.block_.RTL ? 'RTL' : 'LTR');
+  textarea.setAttribute('maxlength', Blockly.ScratchBlockComment.COMMENT_TEXT_LIMIT);
   body.appendChild(textarea);
   this.textarea_ = textarea;
   this.textarea_.style.margin = (Blockly.ScratchBlockComment.TEXTAREA_OFFSET) + 'px';
@@ -164,8 +238,8 @@ Blockly.ScratchBlockComment.prototype.createEditor_ = function() {
   });
   Blockly.bindEventWithChecks_(textarea, 'change', this, function(_e) {
     if (this.text_ != textarea.value) {
-      Blockly.Events.fire(new Blockly.Events.BlockChange(
-          this.block_, 'comment', null, this.text_, textarea.value));
+      Blockly.Events.fire(new Blockly.Events.CommentChange(
+          this, {text: this.text_}, {text: textarea.value}));
       this.text_ = textarea.value;
     }
   });
@@ -215,6 +289,38 @@ Blockly.ScratchBlockComment.prototype.updateColour = function() {
 };
 
 /**
+ * Auto position this comment given information about the block that owns this
+ * comment and the comment state, if this block needs auto positioning.
+ * @private
+ */
+Blockly.ScratchBlockComment.prototype.autoPosition_ = function() {
+  if (!this.needsAutoPositioning_) return;
+  if (this.isMinimized_) {
+    var minimizedOffset = 4 * Blockly.BlockSvg.GRID_UNIT;
+    this.x_ = this.block_.RTL ?
+        this.iconXY_.x - minimizedOffset :
+        this.iconXY_.x + minimizedOffset;
+    this.y_ = this.iconXY_.y - (Blockly.ScratchBubble.TOP_BAR_HEIGHT / 2);
+  } else {
+    // Check if the width of this block (and all it's children/descendents) is the
+    // same as the width of just this block
+    var fullStackWidth = Math.floor(this.block_.getHeightWidth().width);
+    var thisBlockWidth = Math.floor(this.block_.svgPath_.getBBox().width);
+    var offset = 8 * Blockly.BlockSvg.GRID_UNIT;
+    if (fullStackWidth == thisBlockWidth && !this.block_.parentBlock_) {
+      this.x_ = this.block_.RTL ?
+          this.iconXY_.x - this.width_ - offset :
+          this.iconXY_.x + offset;
+    } else {
+      this.x_ = this.block_.RTL ?
+          this.iconXY_.x - this.width_ - fullStackWidth - offset :
+          this.iconXY_.x + fullStackWidth + offset;
+    }
+    this.y_ = this.iconXY_.y - (Blockly.ScratchBubble.TOP_BAR_HEIGHT / 2);
+  }
+};
+
+/**
  * Show or hide the comment bubble.
  * @param {boolean} visible True if the bubble should be visible.
  * @package
@@ -224,8 +330,6 @@ Blockly.ScratchBlockComment.prototype.setVisible = function(visible) {
     // No change.
     return;
   }
-  Blockly.Events.fire(
-      new Blockly.Events.Ui(this.block_, 'commentOpen', !visible, visible));
   if ((!this.block_.isEditable() && !this.textarea_) || goog.userAgent.IE) {
     // Steal the code from warnings to make an uneditable text bubble.
     // MSIE does not support foreignobject; textareas are impossible.
@@ -238,37 +342,16 @@ Blockly.ScratchBlockComment.prototype.setVisible = function(visible) {
   var text = this.getText();
   var size = this.getBubbleSize();
   if (visible) {
-    // Decide on placement of the bubble if x and y coordinates are not provided
-    // based on knowledge of the block that owns this comment:
-    if (!this.x_ && this.x_ != 0 && !this.y_ && this.y_ != 0) {
-      if (this.isMinimized_) {
-        var minimizedOffset = 4 * Blockly.BlockSvg.GRID_UNIT;
-        this.x_ = this.block_.RTL ?
-            this.iconXY_.x - minimizedOffset :
-            this.iconXY_.x + minimizedOffset;
-        this.y_ = this.iconXY_.y - (Blockly.ScratchBubble.TOP_BAR_HEIGHT / 2);
-      } else {
-        // Check if the width of this block (and all it's children/descendents) is the
-        // same as the width of just this block
-        var fullStackWidth = Math.floor(this.block_.getHeightWidth().width);
-        var thisBlockWidth = Math.floor(this.block_.svgPath_.getBBox().width);
-        var offset = 8 * Blockly.BlockSvg.GRID_UNIT;
-        if (fullStackWidth == thisBlockWidth && !this.block_.parentBlock_) {
-          this.x_ = this.block_.RTL ?
-              this.iconXY_.x - this.width_ - offset :
-              this.iconXY_.x + offset;
-        } else {
-          this.x_ = this.block_.RTL ?
-              this.iconXY_.x - this.width_ - fullStackWidth - offset :
-              this.iconXY_.x + fullStackWidth + offset;
-        }
-        this.y_ = this.iconXY_.y - (Blockly.ScratchBubble.TOP_BAR_HEIGHT / 2);
-      }
+    // Auto position this comment, if necessary.
+    if (this.needsAutoPositioning_) {
+      this.autoPosition_();
+      // This comment has been auto-positioned so reset the flag
+      this.needsAutoPositioning_ = false;
     }
 
     // Create the bubble.
     this.bubble_ = new Blockly.ScratchBubble(
-        /** @type {!Blockly.WorkspaceSvg} */ (this.block_.workspace),
+        this, /** @type {!Blockly.WorkspaceSvg} */ (this.block_.workspace),
         this.createEditor_(), this.iconXY_, this.width_, this.height_,
         this.x_, this.y_, this.isMinimized_);
     this.bubble_.setAutoLayout(false);
@@ -288,6 +371,9 @@ Blockly.ScratchBlockComment.prototype.setVisible = function(visible) {
   // Restore the bubble stats after the visibility switch.
   this.setText(text);
   this.setBubbleSize(size.width, size.height);
+  if (visible) {
+    Blockly.ScratchBlockComment.fireCreateEvent(this);
+  }
 };
 
 /**
@@ -304,7 +390,11 @@ Blockly.ScratchBlockComment.prototype.toggleMinimize_ = function() {
  * @package
  */
 Blockly.ScratchBlockComment.prototype.setMinimized = function(minimize) {
-  if (this.isMinimized_ == minimize) return;
+  if (this.isMinimized_ == minimize) {
+    return;
+  }
+  Blockly.Events.fire(new Blockly.Events.CommentChange(this,
+      {minimized: this.isMinimized_}, {minimized: minimize}));
   this.isMinimized_ = minimize;
   if (minimize) {
     this.bubble_.setMinimized(true, this.getLabelText());
@@ -333,12 +423,33 @@ Blockly.ScratchBlockComment.prototype.setBubbleSize = function(width, height) {
           Blockly.ScratchBubble.TOP_BAR_HEIGHT);
     } else {
       this.bubble_.setBubbleSize(width, height);
-      this.width_ = width;
-      this.height_ = height;
     }
-  } else {
-    this.width_ = width;
-    this.height_ = height;
+  }
+};
+
+/**
+ * Set the un-minimized size of this comment. If the comment has an un-minimized
+ * bubble, also set the bubble's size.
+ * @param {number} width Width of the unminimized comment.
+ * @param {number} height Height of the unminimized comment.
+ * @package
+ */
+Blockly.ScratchBlockComment.prototype.setSize = function(width, height) {
+  var oldWidth = this.width_;
+  var oldHeight = this.height_;
+
+  if (!this.isMinimized_) {
+    this.setBubbleSize(width, height);
+  }
+
+  this.height_ = height;
+  this.width_ = width;
+
+  if (oldWidth != this.width_ || oldHeight != this.height_) {
+    Blockly.Events.fire(new Blockly.Events.CommentChange(
+        this,
+        {width: oldWidth, height: oldHeight},
+        {width: this.width_, height: this.height_}));
   }
 };
 
@@ -366,8 +477,8 @@ Blockly.ScratchBlockComment.prototype.getLabelText = function() {
  */
 Blockly.ScratchBlockComment.prototype.setText = function(text) {
   if (this.text_ != text) {
-    Blockly.Events.fire(new Blockly.Events.BlockChange(
-        this.block_, 'comment', null, this.text_, text));
+    Blockly.Events.fire(new Blockly.Events.CommentChange(
+        this, {text: this.text_}, {text: text}));
     this.text_ = text;
   }
   if (this.textarea_) {
@@ -382,11 +493,14 @@ Blockly.ScratchBlockComment.prototype.setText = function(text) {
  * @package
  */
 Blockly.ScratchBlockComment.prototype.moveTo = function(x, y) {
+  var event = new Blockly.Events.CommentMove(this);
   if (this.bubble_) {
     this.bubble_.moveTo(x, y);
   }
   this.x_ = x;
   this.y_ = y;
+  event.recordNew();
+  Blockly.Events.fire(event);
 };
 
 /**
@@ -397,9 +511,16 @@ Blockly.ScratchBlockComment.prototype.moveTo = function(x, y) {
 Blockly.ScratchBlockComment.prototype.getXY = function() {
   if (this.bubble_) {
     return this.bubble_.getRelativeToSurfaceXY();
-  } else {
-    return new goog.math.Coordinate(this.x_, this.y_);
   }
+  // Auto position this comment if iconXY_ is provided
+  // (auto positioning will only occur if it is necessary).
+  if (this.needsAutoPositioning_ && this.iconXY_) {
+    this.autoPosition_();
+    // Do not reset the needsAutoPositioning flag here. This will be reset
+    // after the comment has been made visible and the re-auto positioned,
+    // because the block may have moved by that point.
+  }
+  return new goog.math.Coordinate(this.x_, this.y_);
 };
 
 /**
@@ -413,6 +534,33 @@ Blockly.ScratchBlockComment.prototype.getXY = function() {
  */
 Blockly.ScratchBlockComment.prototype.getHeightWidth = function() {
   return {height: this.height_, width: this.width_};
+};
+
+/**
+ * Returns the coordinates of a bounding box describing the dimensions of this
+ * comment.
+ * Coordinate system: workspace coordinates.
+ * @return {!{topLeft: goog.math.Coordinate, bottomRight: goog.math.Coordinate}}
+ *    Object with top left and bottom right coordinates of the bounding box.
+ * @package
+ */
+Blockly.ScratchBlockComment.prototype.getBoundingRectangle = function() {
+  var commentXY = this.getXY();
+  var commentBounds = this.getHeightWidth();
+  var topLeft;
+  var bottomRight;
+  if (this.workspace.RTL) {
+    // TODO (#1562) for some reason this doesn't work with workspace scroll in RTL
+    topLeft = new goog.math.Coordinate(commentXY.x - commentBounds.width,
+        commentXY.y);
+    bottomRight = new goog.math.Coordinate(commentXY.x,
+        commentXY.y + commentBounds.height);
+  } else {
+    topLeft = new goog.math.Coordinate(commentXY.x, commentXY.y);
+    bottomRight = new goog.math.Coordinate(commentXY.x + commentBounds.width,
+        commentXY.y + commentBounds.height);
+  }
+  return {topLeft: topLeft, bottomRight: bottomRight};
 };
 
 /**
@@ -433,4 +581,57 @@ Blockly.ScratchBlockComment.prototype.showContextMenu_ = function(e) {
   var menuOptions = [];
   menuOptions.push(Blockly.ContextMenu.commentDeleteOption(this, Blockly.Msg.DELETE));
   Blockly.ContextMenu.show(e, menuOptions, this.block_.RTL);
+};
+
+/**
+ * Encode a comment subtree as XML with XY coordinates.
+ * @param {boolean=} opt_noId True if the encoder should skip the comment id.
+ * @return {!Element} Tree of XML elements.
+ * @package
+ */
+Blockly.ScratchBlockComment.prototype.toXmlWithXY = function() {
+  var element = goog.dom.createDom('comment');
+  element.setAttribute('id', this.id);
+  element.textContent = this.text_;
+  element.setAttribute('x', Math.round(this.x_));
+  element.setAttribute('y', Math.round(this.y_));
+  element.setAttribute('h', this.height_);
+  element.setAttribute('w', this.width_);
+  return element;
+};
+
+/**
+ * Fire a create event for the given workspace comment, if comments are enabled.
+ * @param {!Blockly.WorkspaceComment} comment The comment that was just created.
+ * @package
+ */
+Blockly.ScratchBlockComment.fireCreateEvent = function(comment) {
+  if (Blockly.Events.isEnabled()) {
+    var existingGroup = Blockly.Events.getGroup();
+    if (!existingGroup) {
+      Blockly.Events.setGroup(true);
+    }
+    try {
+      Blockly.Events.fire(new Blockly.Events.CommentCreate(comment));
+    } finally {
+      if (!existingGroup) {
+        Blockly.Events.setGroup(false);
+      }
+    }
+  }
+};
+
+/**
+ * Dispose of this comment.
+ */
+Blockly.ScratchBlockComment.prototype.dispose = function() {
+  if (Blockly.Events.isEnabled()) {
+    // Emit delete event before disposal begins so that the
+    // event's reference to this comment contains all the relevant
+    // information (for undoing this event)
+    Blockly.Events.fire(new Blockly.Events.CommentDelete(this));
+  }
+  this.block_.comment = null;
+  this.workspace.removeTopComment(this);
+  Blockly.Icon.prototype.dispose.call(this);
 };

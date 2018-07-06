@@ -118,7 +118,7 @@ Blockly.BlockSvg.FIELD_DEFAULT_CORNER_RADIUS = 4 * Blockly.BlockSvg.GRID_UNIT;
  * Minimum width of a block.
  * @const
  */
-Blockly.BlockSvg.MIN_BLOCK_X = 1/2 * 16 * Blockly.BlockSvg.GRID_UNIT;
+Blockly.BlockSvg.MIN_BLOCK_X = 1 / 2 * 16 * Blockly.BlockSvg.GRID_UNIT;
 
 /**
  * Minimum height of a block.
@@ -176,7 +176,7 @@ Blockly.BlockSvg.NOTCH_PATH_DOWN =
  * @const
  */
 Blockly.BlockSvg.NOTCH_PATH_UP =
-  'c 0,-2 1,-3 2,-4 '+
+  'c 0,-2 1,-3 2,-4 ' +
   'l 4,-4 ' +
   'c 1,-1 2,-2 2,-4 ' +
   'v -12 ' +

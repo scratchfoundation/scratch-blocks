@@ -1,6 +1,7 @@
 const es = require('event-stream');
 const fs = require('fs');
 const path = require('path');
+const assert = require('assert');
 
 // Storage object
 const storage = {};
@@ -12,7 +13,8 @@ const PATH_OUTPUT = path.resolve(__dirname, '../msg/json/en.json');
 // Match function
 const match = function (str) {
     if (str.indexOf('Blockly.Msg.') !== 0) return false;
-    if (str.indexOf('";') !== str.length - 2) return false;
+    assert.notStrictEqual(str.indexOf('";'), str.length - 2, `[${str}] uses double quoted string, should use single quotes.`);
+    if (str.indexOf("';") !== str.length - 2) return false;
     return true;
 }
 
@@ -24,7 +26,8 @@ const extract = function (str) {
         value: str
             .splice(2, str.length)
             .join(' ')
-            .replace(/[;"]/g, '')
+            .slice(1, -2) // strip off initial ', and ending ';
+            .replace(/\\'/g, "'")
     };
 };
 

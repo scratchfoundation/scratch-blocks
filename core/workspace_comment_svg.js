@@ -38,12 +38,13 @@ goog.require('Blockly.WorkspaceComment');
  * @param {string} content The content of this workspace comment.
  * @param {number} height Height of the comment.
  * @param {number} width Width of the comment.
+ * @param {boolean} minimized Whether this comment is minimized.
  * @param {string=} opt_id Optional ID.  Use this ID if provided, otherwise
  *     create a new ID.
  * @extends {Blockly.WorkspaceComment}
  * @constructor
  */
-Blockly.WorkspaceCommentSvg = function(workspace, content, height, width,
+Blockly.WorkspaceCommentSvg = function(workspace, content, height, width, minimized,
     opt_id) {
   // Create core elements for the block.
   /**
@@ -51,19 +52,20 @@ Blockly.WorkspaceCommentSvg = function(workspace, content, height, width,
    * @private
    */
   this.svgGroup_ = Blockly.utils.createSvgElement(
-      'g', {'class': 'blocklyComment'}, null);
+      'g', {}, null);
   this.svgGroup_.translate_ = '';
 
   this.svgRect_ = Blockly.utils.createSvgElement(
       'rect',
       {
-        'class': 'blocklyCommentRect',
+        'class': 'scratchCommentRect scratchWorkspaceCommentBorder',
         'x': 0,
         'y': 0,
-        'rx': Blockly.WorkspaceCommentSvg.BORDER_RADIUS,
-        'ry': Blockly.WorkspaceCommentSvg.BORDER_RADIUS
+        'rx': 4 * Blockly.WorkspaceCommentSvg.BORDER_WIDTH,
+        'ry': 4 * Blockly.WorkspaceCommentSvg.BORDER_WIDTH
       });
   this.svgGroup_.appendChild(this.svgRect_);
+
 
   /**
    * Whether the comment is rendered onscreen and is a part of the DOM.
@@ -82,7 +84,7 @@ Blockly.WorkspaceCommentSvg = function(workspace, content, height, width,
       Blockly.utils.is3dSupported() && !!workspace.blockDragSurface_;
 
   Blockly.WorkspaceCommentSvg.superClass_.constructor.call(this,
-      workspace, content, height, width, opt_id);
+      workspace, content, height, width, minimized, opt_id);
 
   this.render();
 }; goog.inherits(Blockly.WorkspaceCommentSvg, Blockly.WorkspaceComment);
@@ -93,7 +95,7 @@ Blockly.WorkspaceCommentSvg = function(workspace, content, height, width,
  * @type {number}
  * @package
  */
-Blockly.WorkspaceCommentSvg.DEFAULT_SIZE = 100;
+Blockly.WorkspaceCommentSvg.DEFAULT_SIZE = 200;
 
 /**
  * Dispose of this comment.
@@ -491,19 +493,19 @@ Blockly.WorkspaceCommentSvg.prototype.getSvgRoot = function() {
  * @return {string} Comment text.
  * @package
  */
-Blockly.WorkspaceCommentSvg.prototype.getContent = function() {
+Blockly.WorkspaceCommentSvg.prototype.getText = function() {
   return this.textarea_ ? this.textarea_.value : this.content_;
 };
 
 /**
- * Set this comment's content.
- * @param {string} content Comment content.
+ * Set this comment's text.
+ * @param {string} text Comment text.
  * @package
  */
-Blockly.WorkspaceCommentSvg.prototype.setContent = function(content) {
-  Blockly.WorkspaceCommentSvg.superClass_.setContent.call(this, content);
+Blockly.WorkspaceCommentSvg.prototype.setText = function(text) {
+  Blockly.WorkspaceCommentSvg.superClass_.setText.call(this, text);
   if (this.textarea_) {
-    this.textarea_.value = content;
+    this.textarea_.value = text;
   }
 };
 
@@ -543,7 +545,7 @@ Blockly.WorkspaceCommentSvg.fromXml = function(xmlComment, workspace,
     var info = Blockly.WorkspaceComment.parseAttributes(xmlComment);
 
     var comment = new Blockly.WorkspaceCommentSvg(workspace,
-        info.content, info.h, info.w, info.id);
+        info.content, info.h, info.w, info.minimized, info.id);
     if (workspace.rendered) {
       comment.initSvg();
       comment.render(false);
