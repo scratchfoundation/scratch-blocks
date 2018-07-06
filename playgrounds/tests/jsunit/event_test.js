@@ -368,7 +368,7 @@ function test_varCreate_toJson() {
     var event = new Blockly.Events.VarCreate(variable);
     var json = event.toJson();
     var expectedJson = ({type: "var_create", varId: "id1", varType: "type1",
-      varName: "name1"});
+      varName: "name1", isLocal: false});
 
     assertEquals(JSON.stringify(expectedJson), JSON.stringify(json));
   } finally {
@@ -427,7 +427,7 @@ function test_varDelete_toJson() {
   var event = new Blockly.Events.VarDelete(variable);
   var json = event.toJson();
   var expectedJson = ({type: "var_delete", varId: "id1", varType: "type1",
-    varName: "name1"});
+    varName: "name1", isLocal: false});
 
   assertEquals(JSON.stringify(expectedJson), JSON.stringify(json));
   eventTest_tearDown();

@@ -174,10 +174,11 @@ Blockly.VariableMap.prototype.renameVariableWithConflict_ = function(variable,
  *     their type. This will default to '' which is a specific type.
  * @param {string=} opt_id The unique ID of the variable. This will default to
  *     a UUID.
+ * @param {boolean=} opt_isLocal Whether the variable is locally scoped.
  * @return {?Blockly.VariableModel} The newly created variable.
  */
 Blockly.VariableMap.prototype.createVariable = function(name,
-    opt_type, opt_id) {
+    opt_type, opt_id, opt_isLocal) {
   var variable = this.getVariable(name, opt_type);
   if (variable) {
     if (opt_id && variable.getId() != opt_id) {
@@ -194,7 +195,8 @@ Blockly.VariableMap.prototype.createVariable = function(name,
   opt_id = opt_id || Blockly.utils.genUid();
   opt_type = opt_type || '';
 
-  variable = new Blockly.VariableModel(this.workspace, name, opt_type, opt_id);
+  variable = new Blockly.VariableModel(this.workspace, name, opt_type, opt_id,
+      opt_isLocal);
   // If opt_type is not a key, create a new list.
   if (!this.variableMap_[opt_type]) {
     this.variableMap_[opt_type] = [variable];
