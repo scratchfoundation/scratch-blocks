@@ -50,6 +50,7 @@ Blockly.Msg["EVENT_WHENBROADCASTRECEIVED"] = "when I receive %1";
 Blockly.Msg["EVENT_WHENBACKDROPSWITCHESTO"] = "when backdrop switches to %1";
 Blockly.Msg["EVENT_WHENGREATERTHAN"] = "when %1 > %2";
 Blockly.Msg["EVENT_WHENGREATERTHAN_TIMER"] = "timer";
+Blockly.Msg["EVENT_WHENGREATERTHAN_LOUDNESS"] = "loudness";
 Blockly.Msg["EVENT_BROADCAST"] = "broadcast %1";
 Blockly.Msg["EVENT_BROADCASTANDWAIT"] = "broadcast %1 and wait";
 Blockly.Msg["EVENT_WHENKEYPRESSED"] = "when %1 key pressed";
