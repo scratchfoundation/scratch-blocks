@@ -541,6 +541,7 @@ Blockly.Flyout.prototype.show = function(xmlList) {
         var curButton = new Blockly.FlyoutExtensionCategoryHeader(this.workspace_,
             this.targetWorkspace_, xml);
         contents.push({type: 'button', button: curButton});
+        gaps.push(default_gap);
       } else if (tagName == 'BUTTON' || tagName == 'LABEL') {
         // Labels behave the same as buttons, but are styled differently.
         var isLabel = tagName == 'LABEL';
