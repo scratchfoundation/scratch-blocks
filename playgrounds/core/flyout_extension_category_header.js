@@ -107,9 +107,8 @@ Blockly.FlyoutExtensionCategoryHeader.prototype.createDom = function() {
 
 /**
  * Set the image on the status button using a status string.
- * @param {Blockly.StatusButtonState} status The status string.
  */
-Blockly.FlyoutExtensionCategoryHeader.prototype.refreshStatus = function(status) {
+Blockly.FlyoutExtensionCategoryHeader.prototype.refreshStatus = function() {
   var status = Blockly.FlyoutExtensionCategoryHeader.getExtensionState(this.extensionId);
   var basePath = Blockly.mainWorkspace.options.pathToMedia;
   if (status == Blockly.StatusButtonState.READY) {
@@ -126,8 +125,8 @@ Blockly.FlyoutExtensionCategoryHeader.prototype.refreshStatus = function(status)
  * @package
  */
 Blockly.FlyoutExtensionCategoryHeader.prototype.setImageSrc = function(src) {
-  if (src === null || this.imageSrc_ === src) {
-    // No change if null or already set.
+  if (src === null) {
+    // No change if null.
     return;
   }
   this.imageSrc_ = src;
