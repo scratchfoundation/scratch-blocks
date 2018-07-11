@@ -1,14 +1,11 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Generator: Adobe Illustrator 21.0.2, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 viewBox="0 0 20 20" style="enable-background:new 0 0 20 20;" xml:space="preserve">
-<style type="text/css">
-	.st0{fill:#FF8C1A;}
-	.st1{fill:#FFFFFF;}
-</style>
-<circle class="st0" cx="10" cy="10" r="8.5"/>
-<path class="st1" d="M9.1,10.6l-0.3-3C8.7,7,8.6,6.6,8.6,6.4c0-0.3,0.2-0.6,0.5-0.8c0.3-0.2,0.7-0.3,1.2-0.3c0.6,0,1,0.1,1.2,0.4
-	c0.2,0.2,0.3,0.6,0.3,1.1c0,0.3,0,0.6-0.1,0.8l-0.5,3.1c-0.1,0.4-0.2,0.7-0.3,0.8c-0.2,0.2-0.4,0.3-0.8,0.3c-0.4,0-0.7-0.1-0.8-0.3
-	C9.2,11.3,9.1,11,9.1,10.6z M10.3,14.8c-0.4,0-0.8-0.1-1.1-0.2c-0.3-0.2-0.5-0.4-0.5-0.7c0-0.3,0.2-0.5,0.5-0.7
-	c0.3-0.2,0.7-0.3,1.1-0.3s0.8,0.1,1.2,0.3s0.5,0.4,0.5,0.7c0,0.3-0.2,0.5-0.5,0.7C11.1,14.7,10.7,14.8,10.3,14.8z"/>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="20px" height="20px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->
+    <title>not-connected</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="not-connected" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <circle id="Oval" fill="#FF8C1A" cx="10" cy="10" r="7"></circle>
+        <path d="M10,10.9974105 C9.43821855,10.9974105 8.98339364,11.445385 8.98339364,11.9987052 C8.98339364,12.5520254 9.43821855,13 10,13 C10.5617815,13 11.0166064,12.5520254 11.0166064,11.9987052 C11.0166064,11.445385 10.5617815,10.9974105 10,10.9974105 M10.5835881,10.0851124 C10.3250233,10.6554582 9.67497672,10.6554582 9.41641187,10.0851124 L8.59087351,8.27442805 C8.33230867,7.70801558 8.65629353,7 9.17446164,7 L10.8255384,7 C11.3437065,7 11.6676913,7.70801558 11.4091265,8.27442805 L10.5835881,10.0851124 Z" id="Fill-1" fill="#FFFFFF"></path>
+    </g>
 </svg>
