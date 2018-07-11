@@ -48,6 +48,7 @@ goog.require('Blockly.FieldTextInputRemovable');
 goog.require('Blockly.FieldTextDropdown');
 goog.require('Blockly.FieldNumber');
 goog.require('Blockly.FieldNumberDropdown');
+goog.require('Blockly.FieldMatrix');
 goog.require('Blockly.FieldVariable');
 goog.require('Blockly.FieldVerticalSeparator');
 goog.require('Blockly.Generator');
@@ -384,18 +385,14 @@ Blockly.statusButtonCallback = function(id) {
 };
 
 /**
- * Update the visual state of a status button in an extension category header.
+ * Refresh the visual state of a status button in all extension category headers.
  * @param {Blockly.Workspace} workspace A workspace.
- * @param {string} id An extension id.
- * @param {Blockly.StatusButtonState} newStatus the new state for the button.
  */
-Blockly.updateStatusButton = function(workspace, id, newStatus) {
+Blockly.refreshStatusButtons = function(workspace) {
   var buttons = workspace.getFlyout().buttons_;
   for (var i = 0; i < buttons.length; i++) {
     if (buttons[i] instanceof Blockly.FlyoutExtensionCategoryHeader) {
-      if (buttons[i].extensionId == id) {
-        buttons[i].setStatus(newStatus);
-      }
+      buttons[i].refreshStatus();
     }
   }
 };
