@@ -26,6 +26,7 @@
     "DATA_HIDEVARIABLE": "hide variable %1",
     "DATA_ADDTOLIST": "add %1 to %2",
     "DATA_DELETEOFLIST": "delete %1 of %2",
+    "DATA_DELETEALLOFLIST": "delete all of %1",
     "DATA_INSERTATLIST": "insert %1 at %2 of %3",
     "DATA_REPLACEITEMOFLIST": "replace item %1 of %2 with %3",
     "DATA_ITEMOFLIST": "item %1 of %2",
