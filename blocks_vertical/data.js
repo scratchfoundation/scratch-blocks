@@ -278,6 +278,27 @@ Blockly.Blocks['data_deleteoflist'] = {
   }
 };
 
+Blockly.Blocks['data_deletealloflist'] = {
+  /**
+   * Block to delete all items from list.
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.jsonInit({
+      "message0": Blockly.Msg.DATA_DELETEALLOFLIST,
+      "args0": [
+        {
+          "type": "field_variable",
+          "name": "LIST",
+          "variableTypes": [Blockly.LIST_VARIABLE_TYPE]
+        }
+      ],
+      "category": Blockly.Categories.dataLists,
+      "extensions": ["colours_data_lists", "shape_statement"]
+    });
+  }
+};
+
 Blockly.Blocks['data_insertatlist'] = {
   /**
    * Block to insert item to list.
