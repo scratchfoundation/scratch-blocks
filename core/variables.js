@@ -289,10 +289,14 @@ Blockly.Variables.createVariable = function(workspace, opt_callback, opt_type) {
 
   // Prompt the user to enter a name for the variable
   Blockly.prompt(newMsg, '',
-      function(text, scope, additionalVars) {
+      function(text, additionalVars, scope) {
         var isLocal = (scope === 'local') || false;
+        // Default to [] if additionalVars is not provided
         additionalVars = additionalVars || [];
-        var validatedText = validate(text, workspace, additionalVars, opt_callback);
+        // Only use additionalVars for global variable creation.
+        var additionalVarNames = isLocal ? [] : additionalVars;
+
+        var validatedText = validate(text, workspace, additionalVarNames, opt_callback);
         if (validatedText) {
           // The name is valid according to the type, create the variable
           var potentialVarMap = workspace.getPotentialVariableMap();
@@ -467,8 +471,10 @@ Blockly.Variables.renameVariable = function(workspace, variable,
 
   var promptText = promptMsg.replace('%1', variable.name);
   Blockly.prompt(promptText, '',
-      function(newName) {
-        var validatedText = validate(newName, workspace);
+      function(newName, additionalVars) {
+        additionalVars = additionalVars || [];
+        var additionalVarNames = variable.isLocal ? [] : additionalVars;
+        var validatedText = validate(newName, workspace, additionalVarNames);
         if (validatedText) {
           workspace.renameVariableById(variable.getId(), validatedText);
           if (opt_callback) {
