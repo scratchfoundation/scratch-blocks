@@ -374,7 +374,7 @@ Blockly.Procedures.getPrototypeBlock = function(procCode, workspace) {
 Blockly.Procedures.newProcedureMutation = function() {
   var mutationText = '<xml>' +
       '<mutation' +
-      ' proccode="' + Blockly.Msg.PROCEDURE_DEFAULT_NAME + '"' +
+      ' proccode="' + Blockly.Msg['PROCEDURE_DEFAULT_NAME'] + '"' +
       ' argumentids="[]"' +
       ' argumentnames="[]"' +
       ' argumentdefaults="[]"' +
