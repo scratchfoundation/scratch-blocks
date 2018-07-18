@@ -337,6 +337,7 @@ Blockly.Msg.LIST_MODAL_TITLE = 'New List';
 Blockly.Msg.LIST_ALREADY_EXISTS = 'A list named "%1" already exists.';
 Blockly.Msg.RENAME_LIST_TITLE = 'Rename all "%1" lists to:';
 Blockly.Msg.RENAME_LIST_MODAL_TITLE = 'Rename List';
+Blockly.Msg.DEFAULT_LIST_ITEM = 'thing';
 
 // Broadcast Messages
 // @todo Remove these once fully managed by Scratch VM / Scratch GUI
