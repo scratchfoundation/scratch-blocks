@@ -19,9 +19,12 @@ const validateEntry = function (entry) {
     const re = /(%\d)/g;
     const [key, translation] = entry;
     const enMatch = en[key].match(re);
-    const placeholdersCount = enMatch ? enMatch.length : 0;
-    if (placeholdersCount > 0) {
-      const tMatch = translation.match(re);
+    const tMatch = translation.match(re);
+    const enCount = enMatch ? enMatch.length : 0;
+    const tCount = tMatch ? tMatch.length : 0;
+    assert.strictEqual(tCount, enCount, `${key}:${en[key]} - "${translation}" placeholder mismatch`);
+    if (enCount > 0) {
+
       assert.notStrictEqual(tMatch, null, `${key} is missing a placeholder: ${translation}`);
       assert.strictEqual(
           tMatch.sort().toString(),
