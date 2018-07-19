@@ -127,8 +127,8 @@ Blockly.Options = function(options) {
           Blockly.Colours.hasOwnProperty(colourProperty)) {
         // If a property is in both colours option and Blockly.Colours,
         // set the Blockly.Colours value to the override.
-        // Ensure to override old Blockly category colours by reference instead
-        // of overriding them, as theya re used by reference elsewhere.
+        // Override Blockly category color object properties with those
+        // provided.
         var colourPropertyValue = colours[colourProperty];
         if (goog.isObject(colourPropertyValue)) {
           for (var colourSequence in colourPropertyValue) {
