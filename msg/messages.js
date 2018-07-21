@@ -322,6 +322,8 @@ Blockly.Msg.VARIABLE_ALREADY_EXISTS_FOR_ANOTHER_TYPE = 'A variable named "%1" al
 Blockly.Msg.DELETE_VARIABLE_CONFIRMATION = 'Delete %1 uses of the "%2" variable?';
 Blockly.Msg.CANNOT_DELETE_VARIABLE_PROCEDURE = 'Can\'t delete the variable "%1" because it\'s part of the definition of the function "%2"';
 Blockly.Msg.DELETE_VARIABLE = 'Delete the "%1" variable';
+Blockly.Msg.FOR_ALL_SPRITES = 'For all sprites';
+Blockly.Msg.FOR_THIS_SPRITE_ONLY = 'For this sprite only';
 
 // Custom Procedures
 // @todo Remove these once fully managed by Scratch VM / Scratch GUI

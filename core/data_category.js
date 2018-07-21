@@ -42,13 +42,39 @@ goog.require('Blockly.Workspace');
  */
 Blockly.DataCategory = function(workspace) {
   var variableModelList = workspace.getVariablesOfType('');
-  variableModelList.sort(Blockly.VariableModel.compareByName);
+
+  var globalVariableList = variableModelList.filter(function(entry) {
+    return !entry.isLocal;
+  });
+  var localVariableList = variableModelList.filter(function(entry) {
+    return entry.isLocal;
+  });
+
+  globalVariableList.sort(Blockly.VariableModel.compareByName);
+  localVariableList.sort(Blockly.VariableModel.compareByName);
+
   var xmlList = [];
 
   Blockly.DataCategory.addCreateButton(xmlList, workspace, 'VARIABLE');
 
-  for (var i = 0; i < variableModelList.length; i++) {
-    Blockly.DataCategory.addDataVariable(xmlList, variableModelList[i]);
+  if (globalVariableList.length > 0) {
+    Blockly.DataCategory.addLabel(xmlList, Blockly.Msg.FOR_ALL_SPRITES + ':');
+  }
+
+  for (var i = 0; i < globalVariableList.length; i++) {
+    Blockly.DataCategory.addDataVariable(xmlList, globalVariableList[i]);
+  }
+
+  if (globalVariableList.length > 0) {
+    xmlList[xmlList.length - 1].setAttribute('gap', 24);
+  }
+
+  if (localVariableList.length > 0) {
+    Blockly.DataCategory.addLabel(xmlList, Blockly.Msg.FOR_THIS_SPRITE_ONLY + ':');
+  }
+
+  for (var i = 0; i < localVariableList.length; i++) {
+    Blockly.DataCategory.addDataVariable(xmlList, localVariableList[i]);
   }
 
   if (variableModelList.length > 0) {
@@ -438,6 +464,18 @@ Blockly.DataCategory.addBlock = function(xmlList, variable, blockType,
     xmlList.push(block);
   }
 };
+
+/**
+ * Construct a flyout label with the given text tag. Add the label to the given
+ *     xmlList.
+ * @param {!Array.<!Element>} xmlList Array of XML block elements.
+ * @param {string} text Text content of the label.
+ */
+Blockly.DataCategory.addLabel = function(xmlList, text) {
+  var labelText = '<xml><label text="' + text + '"></label></xml>';
+  var label = Blockly.Xml.textToDom(labelText).firstChild;
+  xmlList.push(label);
+}
 
 /**
  * Create the text representation of a value dom element with a shadow of the
