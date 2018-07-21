@@ -475,7 +475,7 @@ Blockly.DataCategory.addLabel = function(xmlList, text) {
   var labelText = '<xml><label text="' + text + '"></label></xml>';
   var label = Blockly.Xml.textToDom(labelText).firstChild;
   xmlList.push(label);
-}
+};
 
 /**
  * Create the text representation of a value dom element with a shadow of the
