@@ -41,41 +41,12 @@ goog.require('Blockly.Workspace');
  * @return {!Array.<!Element>} Array of XML block elements.
  */
 Blockly.DataCategory = function(workspace) {
-  var variableModelList = workspace.getVariablesOfType('');
-
-  var globalVariableList = variableModelList.filter(function(entry) {
-    return !entry.isLocal;
-  });
-  var localVariableList = variableModelList.filter(function(entry) {
-    return entry.isLocal;
-  });
-
-  globalVariableList.sort(Blockly.VariableModel.compareByName);
-  localVariableList.sort(Blockly.VariableModel.compareByName);
-
   var xmlList = [];
+  var variableModelList;
 
   Blockly.DataCategory.addCreateButton(xmlList, workspace, 'VARIABLE');
-
-  if (globalVariableList.length > 0) {
-    Blockly.DataCategory.addLabel(xmlList, Blockly.Msg.FOR_ALL_SPRITES + ':');
-  }
-
-  for (var i = 0; i < globalVariableList.length; i++) {
-    Blockly.DataCategory.addDataVariable(xmlList, globalVariableList[i]);
-  }
-
-  if (globalVariableList.length > 0) {
-    xmlList[xmlList.length - 1].setAttribute('gap', 24);
-  }
-
-  if (localVariableList.length > 0) {
-    Blockly.DataCategory.addLabel(xmlList, Blockly.Msg.FOR_THIS_SPRITE_ONLY + ':');
-  }
-
-  for (var i = 0; i < localVariableList.length; i++) {
-    Blockly.DataCategory.addDataVariable(xmlList, localVariableList[i]);
-  }
+  variableModelList = workspace.getVariablesOfType('');
+  Blockly.DataCategory.buildCategory(xmlList, variableModelList, false);
 
   if (variableModelList.length > 0) {
     xmlList[xmlList.length - 1].setAttribute('gap', 24);
@@ -90,10 +61,7 @@ Blockly.DataCategory = function(workspace) {
   // Now add list variables to the flyout
   Blockly.DataCategory.addCreateButton(xmlList, workspace, 'LIST');
   variableModelList = workspace.getVariablesOfType(Blockly.LIST_VARIABLE_TYPE);
-  variableModelList.sort(Blockly.VariableModel.compareByName);
-  for (var i = 0; i < variableModelList.length; i++) {
-    Blockly.DataCategory.addDataList(xmlList, variableModelList[i]);
-  }
+  Blockly.DataCategory.buildCategory(xmlList, variableModelList, true);
 
   if (variableModelList.length > 0) {
     xmlList[xmlList.length - 1].setAttribute('gap', 24);
@@ -475,6 +443,50 @@ Blockly.DataCategory.addLabel = function(xmlList, text) {
   var labelText = '<xml><label text="' + text + '"></label></xml>';
   var label = Blockly.Xml.textToDom(labelText).firstChild;
   xmlList.push(label);
+};
+
+/**
+ * Construct variable blocks from the given variable model list, with global
+ *     (for all sprites) and local (for this sprite only) variables separated
+ *     into labeled groups. Add the blocks and labels to the given xmlList.
+ * @param {!Array.<!Element}> xmlList Array of XML block elements.
+ * @param {!Array.<!Blockly.VariableModel>} variableModelList List of variable
+ *     models to create variable blocks from.
+ * @param {boolean} forLists Whether or not the variables are lists. (This
+ *     determines whether "variable" or "list" blocks are created.)
+ */
+Blockly.DataCategory.addVariableBlocks = function(xmlList, variableModelList, forLists) {
+  var globalVariableList = variableModelList.filter(function(entry) {
+    return !entry.isLocal;
+  });
+  var localVariableList = variableModelList.filter(function(entry) {
+    return entry.isLocal;
+  });
+
+  globalVariableList.sort(Blockly.VariableModel.compareByName);
+  localVariableList.sort(Blockly.VariableModel.compareByName);
+
+  // Helper function to add the blocks for all the variables in the passed array.
+  var addVariables = function(array) {
+    for (var i = 0; i < array.length; i++) {
+      if (forLists) {
+        Blockly.DataCategory.addDataList(xmlList, array[i]);
+      } else {
+        Blockly.DataCategory.addDataVariable(xmlList, array[i]);
+      }
+    }
+  };
+
+  if (globalVariableList.length > 0) {
+    Blockly.DataCategory.addLabel(xmlList, Blockly.Msg.FOR_ALL_SPRITES + ':');
+    addVariables(globalVariableList);
+    xmlList[xmlList.length - 1].setAttribute('gap', 24);
+  }
+
+  if (localVariableList.length > 0) {
+    Blockly.DataCategory.addLabel(xmlList, Blockly.Msg.FOR_THIS_SPRITE_ONLY + ':');
+    addVariables(localVariableList);
+  }
 };
 
 /**
