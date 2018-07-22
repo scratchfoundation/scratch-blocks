@@ -46,7 +46,7 @@ Blockly.DataCategory = function(workspace) {
 
   Blockly.DataCategory.addCreateButton(xmlList, workspace, 'VARIABLE');
   variableModelList = workspace.getVariablesOfType('');
-  Blockly.DataCategory.buildCategory(xmlList, variableModelList, false);
+  Blockly.DataCategory.addVariableBlocks(xmlList, variableModelList, 'VARIABLE');
 
   if (variableModelList.length > 0) {
     xmlList[xmlList.length - 1].setAttribute('gap', 24);
@@ -61,7 +61,7 @@ Blockly.DataCategory = function(workspace) {
   // Now add list variables to the flyout
   Blockly.DataCategory.addCreateButton(xmlList, workspace, 'LIST');
   variableModelList = workspace.getVariablesOfType(Blockly.LIST_VARIABLE_TYPE);
-  Blockly.DataCategory.buildCategory(xmlList, variableModelList, true);
+  Blockly.DataCategory.addVariableBlocks(xmlList, variableModelList, 'LIST');
 
   if (variableModelList.length > 0) {
     xmlList[xmlList.length - 1].setAttribute('gap', 24);
@@ -452,10 +452,10 @@ Blockly.DataCategory.addLabel = function(xmlList, text) {
  * @param {!Array.<!Element>} xmlList Array of XML block elements.
  * @param {!Array.<!Blockly.VariableModel>} variableModelList List of variable
  *     models to create variable blocks from.
- * @param {boolean} forLists Whether or not the variables are lists. (This
- *     determines whether "variable" or "list" blocks are created.)
+ * @param {string} type Type of variable this is for. (This determines whether
+ *     "variable" or "list" blocks are created.)
  */
-Blockly.DataCategory.addVariableBlocks = function(xmlList, variableModelList, forLists) {
+Blockly.DataCategory.addVariableBlocks = function(xmlList, variableModelList, type) {
   var globalVariableList = variableModelList.filter(function(entry) {
     return !entry.isLocal;
   });
@@ -469,7 +469,7 @@ Blockly.DataCategory.addVariableBlocks = function(xmlList, variableModelList, fo
   // Helper function to add the blocks for all the variables in the passed array.
   var addVariables = function(array) {
     for (var i = 0; i < array.length; i++) {
-      if (forLists) {
+      if (type === 'LIST') {
         Blockly.DataCategory.addDataList(xmlList, array[i]);
       } else {
         Blockly.DataCategory.addDataVariable(xmlList, array[i]);
