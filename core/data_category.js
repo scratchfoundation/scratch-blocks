@@ -475,6 +475,7 @@ Blockly.DataCategory.createValue = function(valueName, type, value) {
       '</value>';
   return valueField;
 };
+
 /**
  * Construct a block separator. Add the separator to the given xmlList.
  * @param {!Array.<!Element>} xmlList Array of XML block elements.
