@@ -449,7 +449,7 @@ Blockly.DataCategory.addLabel = function(xmlList, text) {
  * Construct variable blocks from the given variable model list, with global
  *     (for all sprites) and local (for this sprite only) variables separated
  *     into labeled groups. Add the blocks and labels to the given xmlList.
- * @param {!Array.<!Element}> xmlList Array of XML block elements.
+ * @param {!Array.<!Element>} xmlList Array of XML block elements.
  * @param {!Array.<!Blockly.VariableModel>} variableModelList List of variable
  *     models to create variable blocks from.
  * @param {boolean} forLists Whether or not the variables are lists. (This
