@@ -193,16 +193,6 @@ Blockly.WorkspaceSvg.prototype.startScrollY = 0;
  */
 Blockly.WorkspaceSvg.prototype.dragDeltaXY_ = null;
 
-/***
- * Distance to scroll when a mouse wheel event is received and
- * its delta mode is line (0x1) instead of pixel (0x0). In these
- * cases, a single "scroll" has a delta of 1, which makes the
- * workspace scroll very slowly (just one pixel). To compensate,
- * that delta is multiplied by this value.
- * @type {number}
- */
-Blockly.WorkspaceSvg.prototype.lineScrollMultiplier = 15;
-
 /**
  * Current scale.
  * @type {number}
@@ -1311,7 +1301,7 @@ Blockly.WorkspaceSvg.prototype.onMouseWheel_ = function(e) {
 
   // Multiplier variable, so that non-pixel-deltaModes are supported.
   // See LLK/scratch-blocks#1190.
-  var multiplier = e.deltaMode === 0x1 ? this.lineScrollMultiplier : 1;
+  var multiplier = e.deltaMode === 0x1 ? Blockly.LINE_SCROLL_MULTIPLIER : 1;
 
   if (e.ctrlKey) {
     // The vertical scroll distance that corresponds to a click of a zoom button.
