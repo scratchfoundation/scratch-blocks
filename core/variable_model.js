@@ -26,24 +26,27 @@
 
 goog.provide('Blockly.VariableModel');
 
+goog.require('Blockly.Events.VarCreate');
+
 goog.require('goog.string');
 
 
 /**
  * Class for a variable model.
- * Holds information for the variable including name, id, and type.
+ * Holds information for the variable including name, ID, and type.
  * @param {!Blockly.Workspace} workspace The variable's workspace.
  * @param {!string} name The name of the variable. This must be unique across
  *     each variable type.
  * @param {?string} opt_type The type of the variable like 'int' or 'string'.
  *     Does not need to be unique. Field_variable can filter variables based on
  *     their type. This will default to '' which is a specific type.
- * @param {?string} opt_id The unique id of the variable. This will default to
+ * @param {string=} opt_id The unique ID of the variable. This will default to
  *     a UUID.
+ * @param {boolean=} opt_isLocal Whether the variable is locally scoped.
  * @see {Blockly.FieldVariable}
  * @constructor
  */
-Blockly.VariableModel = function(workspace, name, opt_type, opt_id) {
+Blockly.VariableModel = function(workspace, name, opt_type, opt_id, opt_isLocal) {
   /**
    * The workspace the variable is in.
    * @type {!Blockly.Workspace}
@@ -76,11 +79,17 @@ Blockly.VariableModel = function(workspace, name, opt_type, opt_id) {
    */
   this.id_ = opt_id || Blockly.utils.genUid();
 
+  /**
+   * Whether this variable is locally scoped.
+   * @package
+   */
+  this.isLocal = opt_isLocal || false;
+
   Blockly.Events.fire(new Blockly.Events.VarCreate(this));
 };
 
 /**
- * @return {!string} The id for the variable.
+ * @return {!string} The ID for the variable.
  */
 Blockly.VariableModel.prototype.getId = function() {
   return this.id_;
@@ -95,5 +104,5 @@ Blockly.VariableModel.prototype.getId = function() {
  * @package
  */
 Blockly.VariableModel.compareByName = function(var1, var2) {
-  return goog.string.caseInsensitiveCompare(var1.name, var2.name);
+  return Blockly.scratchBlocksUtils.compareStrings(var1.name, var2.name);
 };

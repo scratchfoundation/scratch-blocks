@@ -63,6 +63,20 @@ Blockly.FieldVariable = function(varname, opt_validator, opt_variableTypes) {
 };
 goog.inherits(Blockly.FieldVariable, Blockly.FieldDropdown);
 
+/**
+ * Construct a FieldVariable from a JSON arg object,
+ * dereferencing any string table references.
+ * @param {!Object} options A JSON object with options (variable,
+ *                          variableTypes, and defaultType).
+ * @returns {!Blockly.FieldVariable} The new field instance.
+ * @package
+ * @nocollapse
+ */
+Blockly.FieldVariable.fromJson = function(options) {
+  var varname = Blockly.utils.replaceMessageReferences(options['variable']);
+  var variableTypes = options['variableTypes'];
+  return new Blockly.FieldVariable(varname, null, variableTypes);
+};
 
 /**
  * Initialize everything needed to render this field.  This includes making sure
@@ -295,12 +309,16 @@ Blockly.FieldVariable.dropdownCreate = function() {
     options[i] = [variableModelList[i].name, variableModelList[i].getId()];
   }
   if (this.defaultType_ == Blockly.BROADCAST_MESSAGE_VARIABLE_TYPE) {
-    options.push([Blockly.Msg.NEW_BROADCAST_MESSAGE, Blockly.NEW_BROADCAST_MESSAGE_ID]);
+    options.unshift(
+        [Blockly.Msg.NEW_BROADCAST_MESSAGE, Blockly.NEW_BROADCAST_MESSAGE_ID]);
   } else {
     options.push([Blockly.Msg.RENAME_VARIABLE, Blockly.RENAME_VARIABLE_ID]);
     if (Blockly.Msg.DELETE_VARIABLE) {
-      options.push([Blockly.Msg.DELETE_VARIABLE.replace('%1', name),
-          Blockly.DELETE_VARIABLE_ID]);
+      options.push(
+          [
+            Blockly.Msg.DELETE_VARIABLE.replace('%1', name),
+            Blockly.DELETE_VARIABLE_ID
+          ]);
     }
   }
 
@@ -343,3 +361,15 @@ Blockly.FieldVariable.prototype.onItemSelected = function(menu, menuItem) {
   }
   this.setValue(id);
 };
+
+/**
+ * Overrides referencesVariables(), indicating this field refers to a variable.
+ * @return {boolean} True.
+ * @package
+ * @override
+ */
+Blockly.FieldVariable.prototype.referencesVariables = function() {
+  return true;
+};
+
+Blockly.Field.register('field_variable', Blockly.FieldVariable);

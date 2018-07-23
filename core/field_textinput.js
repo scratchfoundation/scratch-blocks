@@ -30,7 +30,9 @@ goog.require('Blockly.BlockSvg.render');
 goog.require('Blockly.Colours');
 goog.require('Blockly.Field');
 goog.require('Blockly.Msg');
+goog.require('Blockly.scratchBlocksUtils');
 goog.require('Blockly.utils');
+
 goog.require('goog.asserts');
 goog.require('goog.dom');
 goog.require('goog.dom.TagName');
@@ -57,6 +59,24 @@ Blockly.FieldTextInput = function(text, opt_validator, opt_restrictor) {
   this.addArgType('text');
 };
 goog.inherits(Blockly.FieldTextInput, Blockly.Field);
+
+/**
+ * Construct a FieldTextInput from a JSON arg object,
+ * dereferencing any string table references.
+ * @param {!Object} options A JSON object with options (text, class, and
+ *                          spellcheck).
+ * @returns {!Blockly.FieldTextInput} The new field instance.
+ * @package
+ * @nocollapse
+ */
+Blockly.FieldTextInput.fromJson = function(options) {
+  var text = Blockly.utils.replaceMessageReferences(options['text']);
+  var field = new Blockly.FieldTextInput(text, options['class']);
+  if (typeof options['spellcheck'] === 'boolean') {
+    field.setSpellcheck(options['spellcheck']);
+  }
+  return field;
+};
 
 /**
  * Length of animations in seconds.
@@ -106,13 +126,15 @@ Blockly.FieldTextInput.prototype.init = function() {
 
   // If not in a shadow block, draw a box.
   if (notInShadow) {
-    this.box_ = Blockly.utils.createSvgElement('rect', {
-      'x': 0,
-      'y': 0,
-      'width': this.size_.width,
-      'height': this.size_.height,
-      'fill': this.sourceBlock_.getColourTertiary()
-    });
+    this.box_ = Blockly.utils.createSvgElement('rect',
+        {
+          'x': 0,
+          'y': 0,
+          'width': this.size_.width,
+          'height': this.size_.height,
+          'fill': this.sourceBlock_.getColourTertiary()
+        }
+    );
     this.fieldGroup_.insertBefore(this.box_, this.textElement_);
   }
 };
@@ -218,7 +240,7 @@ Blockly.FieldTextInput.prototype.showEditor_ = function(
   if (opt_withArrow) {
     // Move text in input to account for displayed drop-down arrow.
     if (this.sourceBlock_.RTL) {
-      htmlInput.style.paddingLeft = (this.arrowSize_+ Blockly.BlockSvg.DROPDOWN_ARROW_PADDING) + 'px';
+      htmlInput.style.paddingLeft = (this.arrowSize_ + Blockly.BlockSvg.DROPDOWN_ARROW_PADDING) + 'px';
     } else {
       htmlInput.style.paddingRight = (this.arrowSize_ + Blockly.BlockSvg.DROPDOWN_ARROW_PADDING) + 'px';
     }
@@ -226,7 +248,7 @@ Blockly.FieldTextInput.prototype.showEditor_ = function(
     var dropDownArrow =
         goog.dom.createDom(goog.dom.TagName.IMG, 'blocklyTextDropDownArrow');
     dropDownArrow.setAttribute('src',
-      Blockly.mainWorkspace.options.pathToMedia + 'dropdown-arrow-dark.svg');
+        Blockly.mainWorkspace.options.pathToMedia + 'dropdown-arrow-dark.svg');
     dropDownArrow.style.width = this.arrowSize_ + 'px';
     dropDownArrow.style.height = this.arrowSize_ + 'px';
     dropDownArrow.style.top = this.arrowY_ + 'px';
@@ -240,7 +262,7 @@ Blockly.FieldTextInput.prototype.showEditor_ = function(
     }
     if (opt_arrowCallback) {
       htmlInput.dropDownArrowMouseWrapper_ = Blockly.bindEvent_(dropDownArrow,
-        'mousedown', this, opt_arrowCallback);
+          'mousedown', this, opt_arrowCallback);
     }
     div.appendChild(dropDownArrow);
   }
@@ -283,15 +305,15 @@ Blockly.FieldTextInput.prototype.bindEvents_ = function(htmlInput) {
   // Bind to keydown -- trap Enter without IME and Esc to hide.
   htmlInput.onKeyDownWrapper_ =
       Blockly.bindEventWithChecks_(htmlInput, 'keydown', this,
-      this.onHtmlInputKeyDown_);
+          this.onHtmlInputKeyDown_);
   // Bind to keyup -- trap Enter; resize after every keystroke.
   htmlInput.onKeyUpWrapper_ =
       Blockly.bindEventWithChecks_(htmlInput, 'keyup', this,
-      this.onHtmlInputChange_);
+          this.onHtmlInputChange_);
   // Bind to keyPress -- repeatedly resize when holding down a key.
   htmlInput.onKeyPressWrapper_ =
       Blockly.bindEventWithChecks_(htmlInput, 'keypress', this,
-      this.onHtmlInputChange_);
+          this.onHtmlInputChange_);
   // For modern browsers (IE 9+, Chrome, Firefox, etc.) that support the
   // DOM input event, also trigger onHtmlInputChange_ then. The input event
   // is triggered on keypress but after the value of the text input
@@ -437,11 +459,11 @@ Blockly.FieldTextInput.prototype.resizeEditor_ = function() {
   var width;
   if (Blockly.BlockSvg.FIELD_TEXTINPUT_EXPAND_PAST_TRUNCATION) {
     // Resize the box based on the measured width of the text, pre-truncation
-    var textWidth = Blockly.utils.measureText(
-      Blockly.FieldTextInput.htmlInput_.style.fontSize,
-      Blockly.FieldTextInput.htmlInput_.style.fontFamily,
-      Blockly.FieldTextInput.htmlInput_.style.fontWeight,
-      Blockly.FieldTextInput.htmlInput_.value
+    var textWidth = Blockly.scratchBlocksUtils.measureText(
+        Blockly.FieldTextInput.htmlInput_.style.fontSize,
+        Blockly.FieldTextInput.htmlInput_.style.fontFamily,
+        Blockly.FieldTextInput.htmlInput_.style.fontWeight,
+        Blockly.FieldTextInput.htmlInput_.value
     );
     // Size drawn in the canvas needs padding and scaling
     textWidth += Blockly.FieldTextInput.TEXT_MEASURE_PADDING_MAGIC;
@@ -622,3 +644,5 @@ Blockly.FieldTextInput.nonnegativeIntegerValidator = function(text) {
   }
   return n;
 };
+
+Blockly.Field.register('field_input', Blockly.FieldTextInput);

@@ -29,15 +29,6 @@ goog.require('goog.testing.MockControl');
 
 var mockControl_;
 var workspace;
-var savedFireFunc = Blockly.Events.fire;
-
-function temporary_fireEvent(event) {
-  if (!Blockly.Events.isEnabled()) {
-    return;
-  }
-  Blockly.Events.FIRE_QUEUE_.push(event);
-  Blockly.Events.fireNow_();
-}
 
 function eventTest_setUp() {
   workspace = new Blockly.Workspace();
@@ -76,14 +67,14 @@ function eventTest_tearDownWithMockBlocks() {
   delete Blockly.Blocks.field_variable_test_block;
 }
 
-function test_abstract_constructor_block() {
+function test_block_base_constructor() {
   eventTest_setUpWithMockBlocks();
   setUpMockMethod(mockControl_, Blockly.utils, 'genUid', null, '1');
   try {
     var block = createSimpleTestBlock(workspace);
 
     // Here's the event we care about.
-    var event = new Blockly.Events.Abstract(block);
+    var event = new Blockly.Events.BlockBase(block);
     assertUndefined(event.varId);
     checkExactEventValues(event, {'blockId': '1', 'workspaceId': workspace.id,
       'group': '', 'recordUndo': true});
@@ -92,13 +83,13 @@ function test_abstract_constructor_block() {
   }
 }
 
-function test_abstract_constructor_variable() {
+function test_var_base_constructor() {
   eventTest_setUpWithMockBlocks();
   setUpMockMethod(mockControl_, Blockly.utils, 'genUid', null, '1');
   try {
     var variable = workspace.createVariable('name1', 'type1', 'id1');
 
-    var event = new Blockly.Events.Abstract(variable);
+    var event = new Blockly.Events.VarBase(variable);
     assertUndefined(event.blockId);
     checkExactEventValues(event, {'varId': 'id1',
       'workspaceId': workspace.id, 'group': '', 'recordUndo': true});
@@ -107,12 +98,13 @@ function test_abstract_constructor_variable() {
   }
 }
 
-function test_abstract_constructor_null() {
+function test_abstract_constructor() {
   eventTest_setUpWithMockBlocks();
   try {
-    var event = new Blockly.Events.Abstract(null);
+    var event = new Blockly.Events.Abstract();
     assertUndefined(event.blockId);
     assertUndefined(event.workspaceId);
+    assertUndefined(event.varId);
     checkExactEventValues(event, {'group': '', 'recordUndo': true});
   } finally {
     eventTest_tearDownWithMockBlocks();
@@ -311,6 +303,52 @@ function test_blockMove_constructoroldParentId() {
   }
 }
 
+function test_uiEvent_constructor_null() {
+  try {
+    Blockly.Events.setGroup('testGroup');
+    var event = new Blockly.Events.Ui(null, 'foo', 'bar', 'baz');
+    checkExactEventValues(event,
+        {
+          'blockId': null,
+          'workspaceId': null,
+          'type': 'ui',
+          'oldValue': 'bar',
+          'newValue': 'baz',
+          'element': 'foo',
+          'recordUndo': false,
+          'group': 'testGroup'
+        }
+    );
+  } finally {
+    Blockly.Events.setGroup(false);
+  }
+}
+
+function test_uiEvent_constructor_block() {
+  eventTest_setUpWithMockBlocks();
+  setUpMockMethod(mockControl_, Blockly.utils, 'genUid', null, ['1']);
+  try {
+    var block1 = createSimpleTestBlock(workspace);
+    Blockly.Events.setGroup('testGroup');
+    var event = new Blockly.Events.Ui(block1, 'foo', 'bar', 'baz');
+    checkExactEventValues(event,
+        {
+          'blockId': '1',
+          'workspaceId': workspace.id,
+          'type': 'ui',
+          'oldValue': 'bar',
+          'newValue': 'baz',
+          'element': 'foo',
+          'recordUndo': false,
+          'group': 'testGroup'
+        }
+    );
+  } finally {
+    Blockly.Events.setGroup(false);
+    eventTest_tearDownWithMockBlocks();
+  }
+}
+
 function test_varCreate_constructor() {
   eventTest_setUp();
   try {
@@ -330,7 +368,7 @@ function test_varCreate_toJson() {
     var event = new Blockly.Events.VarCreate(variable);
     var json = event.toJson();
     var expectedJson = ({type: "var_create", varId: "id1", varType: "type1",
-      varName: "name1"});
+      varName: "name1", isLocal: false});
 
     assertEquals(JSON.stringify(expectedJson), JSON.stringify(json));
   } finally {
@@ -389,7 +427,7 @@ function test_varDelete_toJson() {
   var event = new Blockly.Events.VarDelete(variable);
   var json = event.toJson();
   var expectedJson = ({type: "var_delete", varId: "id1", varType: "type1",
-    varName: "name1"});
+    varName: "name1", isLocal: false});
 
   assertEquals(JSON.stringify(expectedJson), JSON.stringify(json));
   eventTest_tearDown();

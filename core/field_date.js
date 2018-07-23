@@ -30,6 +30,7 @@ goog.require('Blockly.Field');
 goog.require('Blockly.utils');
 
 goog.require('goog.date');
+goog.require('goog.date.DateTime');
 goog.require('goog.dom');
 goog.require('goog.events');
 goog.require('goog.i18n.DateTimeSymbols');
@@ -58,6 +59,17 @@ Blockly.FieldDate = function(date, opt_validator) {
   this.addArgType('date');
 };
 goog.inherits(Blockly.FieldDate, Blockly.Field);
+
+/**
+ * Construct a FieldDate from a JSON arg object.
+ * @param {!Object} options A JSON object with options (date).
+ * @returns {!Blockly.FieldDate} The new field instance.
+ * @package
+ * @nocollapse
+ */
+Blockly.FieldDate.fromJson = function(options) {
+  return new Blockly.FieldDate(options['date']);
+};
 
 /**
  * Mouse cursor style when over the hotspot that initiates the editor.
@@ -145,7 +157,7 @@ Blockly.FieldDate.prototype.createWidget_ = function() {
   picker.setShowWeekNum(false);
   var div = Blockly.WidgetDiv.DIV;
   picker.render(div);
-  picker.setDate(goog.date.fromIsoString(this.getValue()));
+  picker.setDate(goog.date.DateTime.fromIsoString(this.getValue()));
   return picker;
 };
 
@@ -337,3 +349,5 @@ Blockly.FieldDate.CSS = [
   '  color: #fff;',
   '}'
 ];
+
+Blockly.Field.register('field_date', Blockly.FieldDate);

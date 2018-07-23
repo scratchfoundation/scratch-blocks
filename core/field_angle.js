@@ -56,6 +56,17 @@ Blockly.FieldAngle = function(opt_value, opt_validator) {
 goog.inherits(Blockly.FieldAngle, Blockly.FieldTextInput);
 
 /**
+ * Construct a FieldAngle from a JSON arg object.
+ * @param {!Object} options A JSON object with options (angle).
+ * @returns {!Blockly.FieldAngle} The new field instance.
+ * @package
+ * @nocollapse
+ */
+Blockly.FieldAngle.fromJson = function(options) {
+  return new Blockly.FieldAngle(options['angle']);
+};
+
+/**
  * Round angles to the nearest 15 degrees when using mouse.
  * Set to 0 to disable rounding.
  */
@@ -213,20 +224,18 @@ Blockly.FieldAngle.prototype.showEditor_ = function() {
     'r': Blockly.FieldAngle.HANDLE_RADIUS,
     'class': 'blocklyAngleDragHandle'
   }, this.handle_);
-  this.arrowSvg_ = Blockly.utils.createSvgElement(
-    'image',
-    {
-      'width': Blockly.FieldAngle.ARROW_WIDTH,
-      'height': Blockly.FieldAngle.ARROW_WIDTH,
-      'x': -Blockly.FieldAngle.ARROW_WIDTH / 2,
-      'y': -Blockly.FieldAngle.ARROW_WIDTH / 2
-    },
-    this.handle_
-  );
+  this.arrowSvg_ = Blockly.utils.createSvgElement('image',
+      {
+        'width': Blockly.FieldAngle.ARROW_WIDTH,
+        'height': Blockly.FieldAngle.ARROW_WIDTH,
+        'x': -Blockly.FieldAngle.ARROW_WIDTH / 2,
+        'y': -Blockly.FieldAngle.ARROW_WIDTH / 2
+      },
+      this.handle_);
   this.arrowSvg_.setAttributeNS(
-    'http://www.w3.org/1999/xlink',
-    'xlink:href',
-    Blockly.mainWorkspace.options.pathToMedia + Blockly.FieldAngle.ARROW_SVG_PATH
+      'http://www.w3.org/1999/xlink',
+      'xlink:href',
+      Blockly.mainWorkspace.options.pathToMedia + Blockly.FieldAngle.ARROW_SVG_PATH
   );
 
   Blockly.DropDownDiv.setColour(this.sourceBlock_.parentBlock_.getColour(),
@@ -352,7 +361,7 @@ Blockly.FieldAngle.prototype.updateGraph_ = function() {
   this.gauge_.setAttribute('d', path.join(''));
   this.line_.setAttribute('x2', x2);
   this.line_.setAttribute('y2', y2);
-  this.handle_.setAttribute('transform', 'translate(' + x2 + ',' + y2 +')');
+  this.handle_.setAttribute('transform', 'translate(' + x2 + ',' + y2 + ')');
 };
 
 /**
@@ -377,3 +386,5 @@ Blockly.FieldAngle.prototype.classValidator = function(text) {
   }
   return String(n);
 };
+
+Blockly.Field.register('field_angle', Blockly.FieldAngle);

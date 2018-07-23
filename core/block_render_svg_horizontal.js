@@ -118,7 +118,7 @@ Blockly.BlockSvg.FIELD_DEFAULT_CORNER_RADIUS = 4 * Blockly.BlockSvg.GRID_UNIT;
  * Minimum width of a block.
  * @const
  */
-Blockly.BlockSvg.MIN_BLOCK_X = 1/2 * 16 * Blockly.BlockSvg.GRID_UNIT;
+Blockly.BlockSvg.MIN_BLOCK_X = 1 / 2 * 16 * Blockly.BlockSvg.GRID_UNIT;
 
 /**
  * Minimum height of a block.
@@ -176,7 +176,7 @@ Blockly.BlockSvg.NOTCH_PATH_DOWN =
  * @const
  */
 Blockly.BlockSvg.NOTCH_PATH_UP =
-  'c 0,-2 1,-3 2,-4 '+
+  'c 0,-2 1,-3 2,-4 ' +
   'l 4,-4 ' +
   'c 1,-1 2,-2 2,-4 ' +
   'v -12 ' +
@@ -335,7 +335,9 @@ Blockly.BlockSvg.prototype.updateColour = function() {
  */
 Blockly.BlockSvg.prototype.highlightForReplacement = function(add) {
   if (add) {
-    this.svgPath_.setAttribute('filter', 'url(#blocklyReplacementGlowFilter)');
+    var replacementGlowFilterId = this.workspace.options.replacementGlowFilterId
+      || 'blocklyReplacementGlowFilter';
+    this.svgPath_.setAttribute('filter', 'url(#' + replacementGlowFilterId + ')');
     Blockly.utils.addClass(/** @type {!Element} */ (this.svgGroup_),
         'blocklyReplaceable');
   } else {
@@ -679,10 +681,10 @@ Blockly.BlockSvg.prototype.renderDrawLeft_ = function(steps, connectionsXY, metr
     steps.push('m', metrics.fieldRadius + ',0');
     // Top-left rounded corner.
     steps.push(
-      'A', metrics.fieldRadius + ',' + metrics.fieldRadius,
-      '0', '0,0', '0,' + metrics.fieldRadius);
+        'A', metrics.fieldRadius + ',' + metrics.fieldRadius,
+        '0', '0,0', '0,' + metrics.fieldRadius);
     steps.push(
-      'V', metrics.height - metrics.fieldRadius);
+        'V', metrics.height - metrics.fieldRadius);
   }
 };
 
@@ -710,8 +712,8 @@ Blockly.BlockSvg.prototype.renderDrawBottom_ = function(steps,
   } else {
     // Input
     steps.push(
-      'a', metrics.fieldRadius + ',' + metrics.fieldRadius,
-      '0', '0,0', metrics.fieldRadius + ',' + metrics.fieldRadius);
+        'a', metrics.fieldRadius + ',' + metrics.fieldRadius,
+        '0', '0,0', metrics.fieldRadius + ',' + metrics.fieldRadius);
   }
 
   // Has statement
@@ -787,8 +789,8 @@ Blockly.BlockSvg.prototype.renderDrawRight_ = function(steps, connectionsXY, met
   } else {
     // Input
     steps.push(
-      'a', metrics.fieldRadius + ',' + metrics.fieldRadius,
-      '0', '0,0', metrics.fieldRadius + ',' + -1 * metrics.fieldRadius);
+        'a', metrics.fieldRadius + ',' + metrics.fieldRadius,
+        '0', '0,0', metrics.fieldRadius + ',' + -1 * metrics.fieldRadius);
     steps.push('v', -1 * (metrics.height - metrics.fieldRadius * 2));
   }
 
@@ -833,8 +835,8 @@ Blockly.BlockSvg.prototype.renderDrawTop_ = function(steps, connectionsXY, metri
                Blockly.BlockSvg.CORNER_RADIUS);
   } else {
     steps.push(
-      'a', metrics.fieldRadius + ',' + metrics.fieldRadius,
-      '0', '0,0', '-' + metrics.fieldRadius + ',-' + metrics.fieldRadius);
+        'a', metrics.fieldRadius + ',' + metrics.fieldRadius,
+        '0', '0,0', '-' + metrics.fieldRadius + ',-' + metrics.fieldRadius);
   }
   steps.push('z');
 };

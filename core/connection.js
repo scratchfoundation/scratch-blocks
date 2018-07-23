@@ -26,6 +26,8 @@
 
 goog.provide('Blockly.Connection');
 
+goog.require('Blockly.Events.BlockMove');
+
 goog.require('goog.asserts');
 goog.require('goog.dom');
 
@@ -39,7 +41,7 @@ goog.require('goog.dom');
 Blockly.Connection = function(source, type) {
   /**
    * @type {!Blockly.Block}
-   * @private
+   * @protected
    */
   this.sourceBlock_ = source;
   /** @type {number} */
@@ -89,28 +91,28 @@ Blockly.Connection.prototype.shadowDom_ = null;
 /**
  * Horizontal location of this connection.
  * @type {number}
- * @private
+ * @protected
  */
 Blockly.Connection.prototype.x_ = 0;
 
 /**
  * Vertical location of this connection.
  * @type {number}
- * @private
+ * @protected
  */
 Blockly.Connection.prototype.y_ = 0;
 
 /**
  * Has this connection been added to the connection database?
  * @type {boolean}
- * @private
+ * @protected
  */
 Blockly.Connection.prototype.inDB_ = false;
 
 /**
  * Connection database for connections of this type on the current workspace.
  * @type {Blockly.ConnectionDB}
- * @private
+ * @protected
  */
 Blockly.Connection.prototype.db_ = null;
 
@@ -118,14 +120,14 @@ Blockly.Connection.prototype.db_ = null;
  * Connection database for connections compatible with this type on the
  * current workspace.
  * @type {Blockly.ConnectionDB}
- * @private
+ * @protected
  */
 Blockly.Connection.prototype.dbOpposite_ = null;
 
 /**
  * Whether this connections is hidden (not tracked in a database) or not.
  * @type {boolean}
- * @private
+ * @protected
  */
 Blockly.Connection.prototype.hidden_ = null;
 
@@ -133,7 +135,7 @@ Blockly.Connection.prototype.hidden_ = null;
  * Connect two connections together.  This is the connection on the superior
  * block.
  * @param {!Blockly.Connection} childConnection Connection on inferior block.
- * @private
+ * @protected
  */
 Blockly.Connection.prototype.connect_ = function(childConnection) {
   var parentConnection = this;
@@ -455,10 +457,10 @@ Blockly.Connection.prototype.isConnectionAllowed = function(candidate) {
       break;
     }
     case Blockly.NEXT_STATEMENT: {
-        // Scratch-specific behaviour:
-        // If this is a c-block, we can't connect this block's
-        // previous connection unless we're connecting to the end of the last
-        // block on a stack or there's already a block connected inside the c.
+      // Scratch-specific behaviour:
+      // If this is a c-block, we can't connect this block's
+      // previous connection unless we're connecting to the end of the last
+      // block on a stack or there's already a block connected inside the c.
       if (firstStatementConnection &&
           this == this.sourceBlock_.previousConnection &&
           candidate.isConnectedToNonInsertionMarker() &&
@@ -537,7 +539,7 @@ Blockly.Connection.singleConnection_ = function(block, orphanBlock) {
     if (thisConnection && thisConnection.type == Blockly.INPUT_VALUE &&
         orphanBlock.outputConnection.checkType_(thisConnection)) {
       if (connection) {
-        return null;  // More than   one connection.
+        return null;  // More than one connection.
       }
       connection = thisConnection;
     }
@@ -574,7 +576,7 @@ Blockly.Connection.prototype.disconnect = function() {
  * Disconnect two blocks that are connected by this connection.
  * @param {!Blockly.Block} parentBlock The superior block.
  * @param {!Blockly.Block} childBlock The inferior block.
- * @private
+ * @protected
  */
 Blockly.Connection.prototype.disconnectInternal_ = function(parentBlock,
     childBlock) {
@@ -594,7 +596,7 @@ Blockly.Connection.prototype.disconnectInternal_ = function(parentBlock,
 
 /**
  * Respawn the shadow block if there was one connected to the this connection.
- * @private
+ * @protected
  */
 Blockly.Connection.prototype.respawnShadow_ = function() {
   var parentBlock = this.getSourceBlock();
@@ -628,7 +630,7 @@ Blockly.Connection.prototype.targetBlock = function() {
  * value type system.  E.g. square_root("Hello") is not compatible.
  * @param {!Blockly.Connection} otherConnection Connection to compare against.
  * @return {boolean} True if the connections share a type.
- * @private
+ * @protected
  */
 Blockly.Connection.prototype.checkType_ = function(otherConnection) {
   if (!this.check_ || !otherConnection.check_) {

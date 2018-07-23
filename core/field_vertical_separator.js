@@ -45,6 +45,19 @@ Blockly.FieldVerticalSeparator = function() {
 goog.inherits(Blockly.FieldVerticalSeparator, Blockly.Field);
 
 /**
+ * Construct a FieldVerticalSeparator from a JSON arg object.
+ * @param {!Object} _element A JSON object with options (unused, but passed in
+ *     by Field.fromJson).
+ * @returns {!Blockly.FieldVerticalSeparator} The new field instance.
+ * @package
+ * @nocollapse
+ */
+Blockly.FieldVerticalSeparator.fromJson = function(
+    /* eslint-disable no-unused-vars */ _element
+    /* eslint-enable no-unused-vars */) {
+  return new Blockly.FieldVerticalSeparator();
+};
+/**
  * Editable fields are saved by the XML renderer, non-editable fields are not.
  */
 Blockly.FieldVerticalSeparator.prototype.EDITABLE = false;
@@ -64,14 +77,15 @@ Blockly.FieldVerticalSeparator.prototype.init = function() {
     this.fieldGroup_.style.display = 'none';
   }
   /** @type {SVGElement} */
-  this.lineElement_ = Blockly.utils.createSvgElement('line', {
-    'stroke': this.sourceBlock_.getColourSecondary(),
-    'stroke-linecap': 'round',
-    'x1': 0,
-    'y1': 0,
-    'x2': 0,
-    'y2': this.height_
-  }, this.fieldGroup_);
+  this.lineElement_ = Blockly.utils.createSvgElement('line',
+      {
+        'stroke': this.sourceBlock_.getColourSecondary(),
+        'stroke-linecap': 'round',
+        'x1': 0,
+        'y1': 0,
+        'x2': 0,
+        'y2': this.height_
+      }, this.fieldGroup_);
 
   this.sourceBlock_.getSvgRoot().appendChild(this.fieldGroup_);
 };
@@ -140,5 +154,8 @@ Blockly.FieldVerticalSeparator.prototype.render_ = function() {
  * @private
  */
 Blockly.FieldVerticalSeparator.prototype.updateWidth = function() {
- // NOP
+  // NOP
 };
+
+Blockly.Field.register(
+    'field_vertical_separator', Blockly.FieldVerticalSeparator);

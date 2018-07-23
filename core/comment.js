@@ -27,6 +27,8 @@
 goog.provide('Blockly.Comment');
 
 goog.require('Blockly.Bubble');
+goog.require('Blockly.Events.BlockChange');
+goog.require('Blockly.Events.Ui');
 goog.require('Blockly.Icon');
 goog.require('goog.userAgent');
 
@@ -70,21 +72,28 @@ Blockly.Comment.prototype.drawIcon_ = function(group) {
   // Circle.
   Blockly.utils.createSvgElement('circle',
       {'class': 'blocklyIconShape', 'r': '8', 'cx': '8', 'cy': '8'},
-       group);
+      group);
   // Can't use a real '?' text character since different browsers and operating
   // systems render it differently.
   // Body of question mark.
   Blockly.utils.createSvgElement('path',
-      {'class': 'blocklyIconSymbol',
-       'd': 'm6.8,10h2c0.003,-0.617 0.271,-0.962 0.633,-1.266 2.875,-2.405' +
-       ' 0.607,-5.534 -3.765,-3.874v1.7c3.12,-1.657 3.698,0.118 2.336,1.25' +
-       ' -1.201,0.998 -1.201,1.528 -1.204,2.19z'},
-       group);
+      {
+        'class': 'blocklyIconSymbol',
+        'd': 'm6.8,10h2c0.003,-0.617 0.271,-0.962 0.633,-1.266 2.875,-2.405' +
+          '0.607,-5.534 -3.765,-3.874v1.7c3.12,-1.657 3.698,0.118 2.336,1.25' +
+          '-1.201,0.998 -1.201,1.528 -1.204,2.19z'
+      },
+      group);
   // Dot of question mark.
   Blockly.utils.createSvgElement('rect',
-      {'class': 'blocklyIconSymbol',
-       'x': '6.8', 'y': '10.78', 'height': '2', 'width': '2'},
-       group);
+      {
+        'class': 'blocklyIconSymbol',
+        'x': '6.8',
+        'y': '10.78',
+        'height': '2',
+        'width': '2'
+      },
+      group);
 };
 
 /**
@@ -119,10 +128,10 @@ Blockly.Comment.prototype.createEditor_ = function() {
   Blockly.bindEventWithChecks_(textarea, 'wheel', this, function(e) {
     e.stopPropagation();
   });
-  Blockly.bindEventWithChecks_(textarea, 'change', this, function(/* e */) {
+  Blockly.bindEventWithChecks_(textarea, 'change', this, function(_e) {
     if (this.text_ != textarea.value) {
       Blockly.Events.fire(new Blockly.Events.BlockChange(
-        this.block_, 'comment', null, this.text_, textarea.value));
+          this.block_, 'comment', null, this.text_, textarea.value));
       this.text_ = textarea.value;
     }
   });
@@ -206,17 +215,18 @@ Blockly.Comment.prototype.setVisible = function(visible) {
 
 /**
  * Bring the comment to the top of the stack when clicked on.
- * @param {!Event} e Mouse up event.
+ * @param {!Event} _e Mouse up event.
  * @private
  */
-Blockly.Comment.prototype.textareaFocus_ = function(/*e*/) {
+Blockly.Comment.prototype.textareaFocus_ = function(_e) {
   // Ideally this would be hooked to the focus event for the comment.
   // However doing so in Firefox swallows the cursor for unknown reasons.
   // So this is hooked to mouseup instead.  No big deal.
-  this.bubble_.promote_();
-  // Since the act of moving this node within the DOM causes a loss of focus,
-  // we need to reapply the focus.
-  this.textarea_.focus();
+  if (this.bubble_.promote_()) {
+    // Since the act of moving this node within the DOM causes a loss of focus,
+    // we need to reapply the focus.
+    this.textarea_.focus();
+  }
 };
 
 /**
@@ -260,7 +270,7 @@ Blockly.Comment.prototype.getText = function() {
 Blockly.Comment.prototype.setText = function(text) {
   if (this.text_ != text) {
     Blockly.Events.fire(new Blockly.Events.BlockChange(
-      this.block_, 'comment', null, this.text_, text));
+        this.block_, 'comment', null, this.text_, text));
     this.text_ = text;
   }
   if (this.textarea_) {

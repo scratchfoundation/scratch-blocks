@@ -184,7 +184,7 @@ Blockly.ScratchBlocks.VerticalExtensions.PROCEDURE_DEF_CONTEXTMENU = {
     }
     // Find and remove the duplicate option
     for (var i = 0, option; option = menuOptions[i]; i++) {
-      if (option.text == Blockly.Msg.DUPLICATE_BLOCK) {
+      if (option.text == Blockly.Msg.DUPLICATE) {
         menuOptions.splice(i, 1);
         break;
       }
@@ -223,10 +223,10 @@ Blockly.ScratchBlocks.VerticalExtensions.SCRATCH_EXTENSION = function() {
 Blockly.ScratchBlocks.VerticalExtensions.registerAll = function() {
   var categoryNames =
       ['control', 'data', 'data_lists', 'sounds', 'motion', 'looks', 'event',
-      'sensing', 'pen', 'operators', 'more'];
+        'sensing', 'pen', 'operators', 'more'];
   // Register functions for all category colours.
   for (var i = 0; i < categoryNames.length; i++) {
-    name = categoryNames[i];
+    var name = categoryNames[i];
     Blockly.Extensions.register('colours_' + name,
         Blockly.ScratchBlocks.VerticalExtensions.colourHelper(name));
   }
@@ -259,7 +259,7 @@ Blockly.ScratchBlocks.VerticalExtensions.registerAll = function() {
 
   // Extension blocks have slightly different block rendering.
   Blockly.Extensions.register('scratch_extension',
-    Blockly.ScratchBlocks.VerticalExtensions.SCRATCH_EXTENSION);
+      Blockly.ScratchBlocks.VerticalExtensions.SCRATCH_EXTENSION);
 };
 
 Blockly.ScratchBlocks.VerticalExtensions.registerAll();

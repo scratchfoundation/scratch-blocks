@@ -18,7 +18,7 @@
  * limitations under the License.
  */
 
- /**
+/**
  * @fileoverview Object representing a map of variables and their types.
  * @author marisaleung@google.com (Marisa Leung)
  */
@@ -26,7 +26,10 @@
 
 goog.provide('Blockly.VariableMap');
 
+goog.require('Blockly.Events.VarDelete');
+goog.require('Blockly.Events.VarRename');
 goog.require('Blockly.VariableModel');
+
 
 /**
  * Class for a variable map.  This contains a dictionary data structure with
@@ -36,11 +39,11 @@ goog.require('Blockly.VariableModel');
  * @constructor
  */
 Blockly.VariableMap = function(workspace) {
- /**
+  /**
    * A map from variable type to list of variable names.  The lists contain all
    * of the named variables in the workspace, including variables
    * that are not currently in use.
-   * @type {!Object<string, !Array.<Blockly.VariableModel>>}
+   * @type {!Object.<string, !Array.<Blockly.VariableModel>>}
    * @private
    */
   this.variableMap_ = {};
@@ -169,29 +172,38 @@ Blockly.VariableMap.prototype.renameVariableWithConflict_ = function(variable,
  * @param {?string} opt_type The type of the variable like 'int' or 'string'.
  *     Does not need to be unique. Field_variable can filter variables based on
  *     their type. This will default to '' which is a specific type.
- * @param {?string} opt_id The unique id of the variable. This will default to
+ * @param {string=} opt_id The unique ID of the variable. This will default to
  *     a UUID.
+ * @param {boolean=} opt_isLocal Whether the variable is locally scoped.
  * @return {?Blockly.VariableModel} The newly created variable.
  */
 Blockly.VariableMap.prototype.createVariable = function(name,
-    opt_type, opt_id) {
+    opt_type, opt_id, opt_isLocal) {
   var variable = this.getVariable(name, opt_type);
   if (variable) {
     if (opt_id && variable.getId() != opt_id) {
-      throw Error('Variable "' + name + '" is already in use and its id is "'
+      // There is a variable conflict. Variable conflicts should be eliminated
+      // in the scratch-vm, or before we get to this point,
+      // so log a warning, because throwing an error crashes projects.
+      console.warn('Variable "' + name + '" is already in use and its id is "'
                   + variable.getId() + '" which conflicts with the passed in ' +
                   'id, "' + opt_id + '".');
     }
     // The variable already exists and has the same ID.
     return variable;
   }
-  if (opt_id && this.getVariableById(opt_id)) {
-    throw Error('Variable id, "' + opt_id + '", is already in use.');
+  if (opt_id) {
+    variable = this.getVariableById(opt_id);
+    if (variable) {
+      console.warn('Variable id, "' + opt_id + '", is already in use.');
+      return variable;
+    }
   }
   opt_id = opt_id || Blockly.utils.genUid();
   opt_type = opt_type || '';
 
-  variable = new Blockly.VariableModel(this.workspace, name, opt_type, opt_id);
+  variable = new Blockly.VariableModel(this.workspace, name, opt_type, opt_id,
+      opt_isLocal);
   // If opt_type is not a key, create a new list.
   if (!this.variableMap_[opt_type]) {
     this.variableMap_[opt_type] = [variable];
@@ -313,7 +325,7 @@ Blockly.VariableMap.prototype.getVariable = function(name, opt_type) {
 };
 
 /**
- * Find the variable by the given id and return it. Return null if it is not
+ * Find the variable by the given ID and return it. Return null if it is not
  *     found.
  * @param {!string} id The id to check for.
  * @return {?Blockly.VariableModel} The variable with the given id.
@@ -335,7 +347,7 @@ Blockly.VariableMap.prototype.getVariableById = function(id) {
  * Get a list containing all of the variables of a specified type. If type is
  *     null, return list of variables with empty string type.
  * @param {?string} type Type of the variables to find.
- * @return {Array.<Blockly.VariableModel>} The sought after variables of the
+ * @return {!Array.<!Blockly.VariableModel>} The sought after variables of the
  *     passed in type. An empty array if none are found.
  */
 Blockly.VariableMap.prototype.getVariablesOfType = function(type) {
@@ -368,7 +380,7 @@ Blockly.VariableMap.prototype.getVariableTypes = function() {
 
 /**
  * Return all variables of all types.
- * @return {!Array.<Blockly.VariableModel>} List of variable models.
+ * @return {!Array.<!Blockly.VariableModel>} List of variable models.
  */
 Blockly.VariableMap.prototype.getAllVariables = function() {
   var all_variables = [];

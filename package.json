@@ -10,27 +10,39 @@
     "url": "https://github.com/LLK/scratch-blocks.git"
   },
   "main": "./dist/vertical.js",
+  "browser": "./shim/vertical.js",
   "scripts": {
     "deploy": "rimraf gh-pages/closure-library/scripts/ci/CloseAdobeDialog.exe && gh-pages -t -d gh-pages -m \"Build for $(git log --pretty=format:%H -n1)\"",
     "prepublish": "python build.py && webpack",
     "test:setup": "tests/scripts/test_setup.sh",
     "test:unit": "node tests/jsunit/test_runner.js",
     "test:lint": "eslint .",
-    "test": "npm run test:lint && npm run test:setup && npm run test:unit",
-    "version": "json -f package.json -I -e \"this.repository.sha = '$(git log -n1 --pretty=format:%H)'\""
+    "test:messages": "node i18n/js_to_json.js",
+    "test": "npm run test:lint && npm run test:messages && npm run test:setup && npm run test:unit",
+    "version": "json -f package.json -I -e \"this.repository.sha = '$(git log -n1 --pretty=format:%H)'\"",
+    "translate": "npm run test:messages && node i18n/json_to_js.js",
+    "translate:update":  "node i18n/create_scratch_msgs.js"
+  },
+  "dependencies": {
+    "exports-loader": "0.6.3",
+    "imports-loader": "0.6.5"
   },
   "devDependencies": {
-    "copy-webpack-plugin": "4.0.1",
-    "eslint": "2.9.0",
-    "exports-loader": "0.6.3",
+    "async": "2.6.0",
+    "copy-webpack-plugin": "4.5.1",
+    "eslint": "^4.16",
+    "event-stream": "3.3.4",
     "gh-pages": "0.12.0",
-    "google-closure-library": "20170910.0.0",
+    "glob": "7.1.2",
+    "google-closure-compiler": "20180402.0.0",
+    "google-closure-library": "20180204.0.0",
     "graceful-fs": "4.1.11",
-    "imports-loader": "0.6.5",
     "json": "9.0.4",
     "rimraf": "2.6.2",
     "travis-after-all": "1.4.4",
+    "uglifyjs-webpack-plugin": "^1.2.5",
     "webdriverio": "4.8.0",
-    "webpack": "1.13.2"
+    "webpack": "^4.8.0",
+    "webpack-cli": "^2.0.15"
   }
 }

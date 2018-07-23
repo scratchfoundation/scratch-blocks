@@ -26,6 +26,7 @@
 
 goog.provide('Blockly.DraggedConnectionManager');
 
+goog.require('Blockly.BlockAnimations');
 goog.require('Blockly.RenderedConnection');
 
 goog.require('goog.math.Coordinate');
@@ -138,7 +139,8 @@ Blockly.DraggedConnectionManager.prototype.applyConnections = function() {
       // Determine which connection is inferior (lower in the source stack).
       var inferiorConnection = this.localConnection_.isSuperior() ?
           this.closestConnection_ : this.localConnection_;
-      inferiorConnection.getSourceBlock().connectionUiEffect();
+      Blockly.BlockAnimations.connectionUiEffect(
+          inferiorConnection.getSourceBlock());
       // Bring the just-edited stack to the front.
       var rootBlock = this.topBlock_.getRootBlock();
       rootBlock.bringToFront();
@@ -171,8 +173,8 @@ Blockly.DraggedConnectionManager.prototype.update = function(dxy, deleteArea, is
     this.closestConnection_ = null;
   }
 
- // Prefer connecting over dropping into the trash can, but prefer dragging to
- // the toolbox over connecting to other blocks.
+  // Prefer connecting over dropping into the trash can, but prefer dragging to
+  // the toolbox over connecting to other blocks.
   var wouldConnect = !!this.closestConnection_ &&
       deleteArea != Blockly.DELETE_AREA_TOOLBOX;
   var wouldDelete = !!deleteArea && !this.topBlock_.getParent() &&

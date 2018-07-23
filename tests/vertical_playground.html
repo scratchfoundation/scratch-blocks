@@ -8,8 +8,10 @@
 
     <script src="../blockly_uncompressed_vertical.js"></script>
     <script src="../msg/messages.js"></script>
+    <script src="../msg/scratch_msgs.js"></script>
     <script src="../blocks_vertical/vertical_extensions.js"></script>
     <script src="../blocks_common/math.js"></script>
+    <script src="../blocks_common/matrix.js"></script>
     <script src="../blocks_common/text.js"></script>
     <script src="../blocks_common/colour.js"></script>
     <script src="../blocks_vertical/control.js"></script>
@@ -60,9 +62,14 @@
 
         document.forms.options.elements.side.value = side;
 
+        match = location.search.match(/locale=([^&]+)/);
+        var locale = match ? match[1] : 'en';
+        Blockly.ScratchMsgs.setLocale(locale);
+        document.forms.options.elements.locale.value = locale;
+
         // Create main workspace.
         workspace = Blockly.inject('blocklyDiv', {
-          comments: false,
+          comments: true,
           disable: false,
           collapse: false,
           media: '../media/',
@@ -298,6 +305,14 @@
           );
         }
       }
+
+      function setLocale(locale) {
+        workspace.getFlyout().setRecyclingEnabled(false);
+        var xml = Blockly.Xml.workspaceToDom(workspace);
+        Blockly.ScratchMsgs.setLocale(locale);
+        Blockly.Xml.clearWorkspaceAndLoadFromXml(xml, workspace);
+        workspace.getFlyout().setRecyclingEnabled(true);
+      }
     </script>
 
     <style>
@@ -481,6 +496,40 @@
           <option value="end">End</option>
           <option value="top">Top</option>
           <option value="bottom">Bottom</option>
+        </select>
+        <select name="locale" onchange="setLocale(this.value)">
+          <option value="en">English</option>
+          <option value="ca">Catalan</option>
+          <option value="cs">Czech</option>
+          <option value="da">Danish</option>
+          <option value="nl">Dutch</option>
+          <option value="fi">Finnish</option>
+          <option value="fr">French</option>
+          <option value="de">German</option>
+          <option value="el">Greek</option>
+          <option value="he">Hebrew</option>
+          <option value="hu">Hungarian</option>
+          <option value="id">Indonesian</option>
+          <option value="ga">Irish Gaelic</option>
+          <option value="it">Italian</option>
+          <option value="ja">Japanese</option>
+          <option value="ja-Hira">Japanese(Hira)</option>
+          <option value="mi">Maori</option>
+          <option value="nb">Norwegian (Bokmal)</option>
+          <option value="pt">Portuguese</option>
+          <option value="pt-br">Portuguese (Brazil)</option>
+          <option value="gd">Scottish Gaelic</option>
+          <option value="sr">Serbian</option>
+          <option value="sl">Slovenian</option>
+          <option value="es">Spanish</option>
+          <option value="es-419">Spanish (Latin America)</option>
+          <option value="sv">Swedish</option>
+          <option value="tr">Turkish</option>
+          <option value="uk">Ukranian</option>
+          <option value="vi">Vietnamese</option>
+          <option value="cy">Welsh</option>
+          <option value="zh-cn">Chinese (China)</option>
+          <option value="zh-tw">Chinese (TW)</option>
         </select>
       </form>
 

@@ -266,15 +266,20 @@ Blockly.Input.prototype.dispose = function() {
  * @package
  */
 Blockly.Input.prototype.initOutlinePath = function(svgRoot) {
+  if (!this.sourceBlock_.workspace.rendered) {
+    return;  // Headless blocks don't need field outlines.
+  }
+  if (this.outlinePath) {
+    return;
+  }
   if (this.type == Blockly.INPUT_VALUE) {
     this.outlinePath = Blockly.utils.createSvgElement(
-      'path',
-      {
-        'class': 'blocklyPath',
-        'style': 'visibility: hidden', // Hide by default - shown when not connected.
-        'd': ''  // IE doesn't like paths without the data definition, set an empty default
-      },
-      svgRoot
-      );
+        'path',
+        {
+          'class': 'blocklyPath',
+          'style': 'visibility: hidden', // Hide by default - shown when not connected.
+          'd': ''  // IE doesn't like paths without the data definition, set an empty default
+        },
+        svgRoot);
   }
 };

@@ -15,8 +15,10 @@ common.pyc
 
 /accessible/*
 /dist
-/msg/json/synonyms.json
-/msg/json/qqq.json
+/msg/js/*
+!/msg/js/en.js
+/msg/json/*
+!/msg/json/en.json
 /blockly_compressed_horizontal.js
 /blockly_compressed_vertical.js
 /blockly_uncompressed_horizontal.js
@@ -24,7 +26,10 @@ common.pyc
 /blocks_compressed_horizontal.js
 /blocks_compressed_vertical.js
 /blocks_compressed.js
+/gh-pages/main.js
 /gh-pages/playgrounds
 /gh-pages/Gemfile.lock
 /gh-pages/closure-library
 /gh-pages/_site
+/*compiler*.jar
+/local_blockly_compressed_vertical.js

@@ -27,17 +27,21 @@
 goog.provide('Blockly.BlockSvg');
 
 goog.require('Blockly.Block');
+goog.require('Blockly.BlockAnimations');
 goog.require('Blockly.ContextMenu');
+goog.require('Blockly.Events.Ui');
+goog.require('Blockly.Events.BlockMove');
 goog.require('Blockly.Grid');
 goog.require('Blockly.RenderedConnection');
+goog.require('Blockly.scratchBlocksUtils');
 goog.require('Blockly.Tooltip');
 goog.require('Blockly.Touch');
 goog.require('Blockly.utils');
+
 goog.require('goog.Timer');
 goog.require('goog.asserts');
 goog.require('goog.dom');
 goog.require('goog.math.Coordinate');
-goog.require('goog.userAgent');
 
 
 /**
@@ -47,7 +51,8 @@ goog.require('goog.userAgent');
  * @param {?string} prototypeName Name of the language object containing
  *     type-specific functions for this block.
  * @param {string=} opt_id Optional ID.  Use this ID if provided, otherwise
- *     create a new id.
+ *     create a new ID.  If the ID conflicts with an in-use ID, a new one will
+ *     be generated.
  * @extends {Blockly.Block}
  * @constructor
  */
@@ -59,7 +64,8 @@ Blockly.BlockSvg = function(workspace, prototypeName, opt_id) {
    */
   this.svgGroup_ = Blockly.utils.createSvgElement('g', {}, null);
   /** @type {SVGElement} */
-  this.svgPath_ = Blockly.utils.createSvgElement('path', {'class': 'blocklyPath blocklyBlockBackground'},
+  this.svgPath_ = Blockly.utils.createSvgElement('path',
+      {'class': 'blocklyPath blocklyBlockBackground'},
       this.svgGroup_);
   this.svgPath_.tooltip = this;
 
@@ -153,8 +159,8 @@ Blockly.BlockSvg.prototype.initSvg = function() {
   this.updateColour();
   this.updateMovable();
   if (!this.workspace.options.readOnly && !this.eventsInit_) {
-    Blockly.bindEventWithChecks_(this.getSvgRoot(), 'mousedown', this,
-                       this.onMouseDown_);
+    Blockly.bindEventWithChecks_(
+        this.getSvgRoot(), 'mousedown', this, this.onMouseDown_);
   }
   this.eventsInit_ = true;
 
@@ -225,7 +231,8 @@ Blockly.BlockSvg.prototype.setGlowStack = function(isGlowingStack) {
   // Update the applied SVG filter if the property has changed
   var svg = this.getSvgRoot();
   if (this.isGlowingStack_ && !svg.hasAttribute('filter')) {
-    svg.setAttribute('filter', 'url(#blocklyStackGlowFilter)');
+    var stackGlowFilterId = this.workspace.options.stackGlowFilterId || 'blocklyStackGlowFilter';
+    svg.setAttribute('filter', 'url(#' + stackGlowFilterId + ')');
   } else if (!this.isGlowingStack_ && svg.hasAttribute('filter')) {
     svg.removeAttribute('filter');
   }
@@ -272,27 +279,24 @@ Blockly.BlockSvg.prototype.getIcons = function() {
  * @param {Blockly.BlockSvg} newParent New parent block.
  */
 Blockly.BlockSvg.prototype.setParent = function(newParent) {
-  if (newParent == this.parentBlock_) {
+  var oldParent = this.parentBlock_;
+  if (newParent == oldParent) {
     return;
   }
-  var svgRoot = this.getSvgRoot();
-  if (this.parentBlock_ && svgRoot) {
-    // Move this block up the DOM.  Keep track of x/y translations.
-    var xy = this.getRelativeToSurfaceXY();
-    // Avoid moving a block up the DOM if it's currently selected/dragging,
-    // so as to avoid taking things off the drag surface.
-    if (Blockly.selected != this) {
-      this.workspace.getCanvas().appendChild(svgRoot);
-      this.translate(xy.x, xy.y);
-    }
-  }
-
   Blockly.Field.startCache();
   Blockly.BlockSvg.superClass_.setParent.call(this, newParent);
   Blockly.Field.stopCache();
 
+  var svgRoot = this.getSvgRoot();
+
+  // Bail early if workspace is clearing, or we aren't rendered.
+  // We won't need to reattach ourselves anywhere.
+  if (this.workspace.isClearing || !svgRoot) {
+    return;
+  }
+
+  var oldXY = this.getRelativeToSurfaceXY();
   if (newParent) {
-    var oldXY = this.getRelativeToSurfaceXY();
     newParent.getSvgRoot().appendChild(svgRoot);
     var newXY = this.getRelativeToSurfaceXY();
     // Move the connections to match the child's new position.
@@ -300,9 +304,16 @@ Blockly.BlockSvg.prototype.setParent = function(newParent) {
     // If we are a shadow block, inherit tertiary colour.
     if (this.isShadow()) {
       this.setColour(this.getColour(), this.getColourSecondary(),
-        newParent.getColourTertiary());
+          newParent.getColourTertiary());
     }
   }
+  // If we are losing a parent, we want to move our DOM element to the
+  // root of the workspace.
+  else if (oldParent) {
+    this.workspace.getCanvas().appendChild(svgRoot);
+    this.translate(oldXY.x, oldXY.y);
+  }
+
 };
 
 /**
@@ -536,7 +547,7 @@ Blockly.BlockSvg.prototype.setCollapsed = function(collapsed) {
   var COLLAPSED_INPUT_NAME = '_TEMP_COLLAPSED_INPUT';
   if (collapsed) {
     var icons = this.getIcons();
-    for (i = 0; i < icons.length; i++) {
+    for (var i = 0; i < icons.length; i++) {
       icons[i].setVisible(false);
     }
     var text = this.toString(Blockly.COLLAPSE_CHARS);
@@ -597,7 +608,7 @@ Blockly.BlockSvg.prototype.tab = function(start, forward) {
 
 /**
  * Create an ordered list of all text fields and connected inputs.
- * @return {!Array<!Blockly.FieldTextInput|!Blockly.Input>} The ordered list.
+ * @return {!Array.<!Blockly.FieldTextInput|!Blockly.Input>} The ordered list.
  * @private
  */
 Blockly.BlockSvg.prototype.createTabList_ = function() {
@@ -680,7 +691,7 @@ Blockly.BlockSvg.prototype.duplicateAndDragCallback_ = function() {
         var newBlock = Blockly.Xml.domToBlock(xml, ws);
 
         // Scratch-specific: Give shadow dom new IDs to prevent duplicating on paste
-        Blockly.utils.changeObscuredShadowIds(newBlock);
+        Blockly.scratchBlocksUtils.changeObscuredShadowIds(newBlock);
 
         var svgRootNew = newBlock.getSvgRoot();
         if (!svgRootNew) {
@@ -814,12 +825,12 @@ Blockly.BlockSvg.prototype.setDragging = function(adding) {
     group.skew_ = '';
     Blockly.draggingConnections_ =
         Blockly.draggingConnections_.concat(this.getConnections_(true));
-    Blockly.utils.addClass(/** @type {!Element} */ (this.svgGroup_),
-                      'blocklyDragging');
+    Blockly.utils.addClass(
+        /** @type {!Element} */ (this.svgGroup_), 'blocklyDragging');
   } else {
     Blockly.draggingConnections_ = [];
-    Blockly.utils.removeClass(/** @type {!Element} */ (this.svgGroup_),
-                         'blocklyDragging');
+    Blockly.utils.removeClass(
+        /** @type {!Element} */ (this.svgGroup_), 'blocklyDragging');
   }
   // Recurse through all blocks attached under this one.
   for (var i = 0; i < this.childBlocks_.length; i++) {
@@ -832,11 +843,11 @@ Blockly.BlockSvg.prototype.setDragging = function(adding) {
  */
 Blockly.BlockSvg.prototype.updateMovable = function() {
   if (this.isMovable()) {
-    Blockly.utils.addClass(/** @type {!Element} */ (this.svgGroup_),
-                      'blocklyDraggable');
+    Blockly.utils.addClass(
+        /** @type {!Element} */ (this.svgGroup_), 'blocklyDraggable');
   } else {
-    Blockly.utils.removeClass(/** @type {!Element} */ (this.svgGroup_),
-                         'blocklyDraggable');
+    Blockly.utils.removeClass(
+        /** @type {!Element} */ (this.svgGroup_), 'blocklyDraggable');
   }
 };
 
@@ -918,7 +929,7 @@ Blockly.BlockSvg.prototype.dispose = function(healStack, animate) {
 
   if (animate && this.rendered) {
     this.unplug(healStack);
-    this.disposeUiEffect();
+    Blockly.BlockAnimations.disposeUiEffect(this);
   }
   // Stop rerendering.
   this.rendered = false;
@@ -940,76 +951,6 @@ Blockly.BlockSvg.prototype.dispose = function(healStack, animate) {
   this.svgGroup_ = null;
   this.svgPath_ = null;
   Blockly.Field.stopCache();
-};
-
-/**
- * Play some UI effects (sound, animation) when disposing of a block.
- */
-Blockly.BlockSvg.prototype.disposeUiEffect = function() {
-  this.workspace.getAudioManager().play('delete');
-
-  var xy = this.workspace.getSvgXY(/** @type {!Element} */ (this.svgGroup_));
-  // Deeply clone the current block.
-  var clone = this.svgGroup_.cloneNode(true);
-  clone.translateX_ = xy.x;
-  clone.translateY_ = xy.y;
-  clone.setAttribute('transform',
-      'translate(' + clone.translateX_ + ',' + clone.translateY_ + ')');
-  this.workspace.getParentSvg().appendChild(clone);
-  clone.bBox_ = clone.getBBox();
-  // Start the animation.
-  Blockly.BlockSvg.disposeUiStep_(clone, this.RTL, new Date,
-      this.workspace.scale);
-};
-
-/**
- * Play some UI effects (sound) after a connection has been established.
- */
-Blockly.BlockSvg.prototype.connectionUiEffect = function() {
-  this.workspace.getAudioManager().play('click');
-};
-
-/**
- * Animate a cloned block and eventually dispose of it.
- * This is a class method, not an instance method since the original block has
- * been destroyed and is no longer accessible.
- * @param {!Element} clone SVG element to animate and dispose of.
- * @param {boolean} rtl True if RTL, false if LTR.
- * @param {!Date} start Date of animation's start.
- * @param {number} workspaceScale Scale of workspace.
- * @private
- */
-Blockly.BlockSvg.disposeUiStep_ = function(clone, rtl, start, workspaceScale) {
-  var ms = new Date - start;
-  var percent = ms / 150;
-  if (percent > 1) {
-    goog.dom.removeNode(clone);
-  } else {
-    var x = clone.translateX_ +
-        (rtl ? -1 : 1) * clone.bBox_.width * workspaceScale / 2 * percent;
-    var y = clone.translateY_ + clone.bBox_.height * workspaceScale * percent;
-    var scale = (1 - percent) * workspaceScale;
-    clone.setAttribute('transform', 'translate(' + x + ',' + y + ')' +
-        ' scale(' + scale + ')');
-    setTimeout(Blockly.BlockSvg.disposeUiStep_, 10, clone, rtl, start,
-               workspaceScale);
-  }
-};
-
-/**
- * Play some UI effects (sound, animation) when disconnecting a block.
- * No-op in scratch-blocks, which has no disconnect animation.
- * @private
- */
-Blockly.BlockSvg.prototype.disconnectUiEffect = function() {
-};
-
-/**
- * Stop the disconnect UI animation immediately.
- * No-op in scratch-blocks, which has no disconnect animation.
- * @private
- */
-Blockly.BlockSvg.disconnectUiStop_ = function() {
 };
 
 /**
@@ -1035,15 +976,22 @@ Blockly.BlockSvg.prototype.getCommentText = function() {
 /**
  * Set this block's comment text.
  * @param {?string} text The text, or null to delete.
+ * @param {string=} commentId Id of the comment, or a new one will be generated if not provided.
+ * @param {number=} commentX Optional x position for scratch comment in workspace coordinates
+ * @param {number=} commentY Optional y position for scratch comment in workspace coordinates
+ * @param {boolean=} minimized Optional minimized state for scratch comment, defaults to false
  */
-Blockly.BlockSvg.prototype.setCommentText = function(text) {
+Blockly.BlockSvg.prototype.setCommentText = function(text, commentId,
+    commentX, commentY, minimized) {
   var changedState = false;
   if (goog.isString(text)) {
     if (!this.comment) {
-      this.comment = new Blockly.Comment(this);
+      this.comment = new Blockly.ScratchBlockComment(this, text, commentId,
+          commentX, commentY, minimized);
       changedState = true;
+    } else {
+      this.comment.setText(/** @type {string} */ (text));
     }
-    this.comment.setText(/** @type {string} */ (text));
   } else {
     if (this.comment) {
       this.comment.dispose();
@@ -1052,6 +1000,9 @@ Blockly.BlockSvg.prototype.setCommentText = function(text) {
   }
   if (changedState && this.rendered) {
     this.render();
+    if (goog.isString(text)) {
+      this.comment.setVisible(true);
+    }
     // Adding or removing a comment icon will cause the block to change shape.
     this.bumpNeighbours_();
   }
@@ -1105,7 +1056,7 @@ Blockly.BlockSvg.prototype.setWarningText = function(text, opt_id) {
     }
     this.warning.setText(/** @type {string} */ (text), id);
   } else {
-    // Dispose all warnings if no id is given.
+    // Dispose all warnings if no ID is given.
     if (this.warning && !id) {
       this.warning.dispose();
       changedState = true;
@@ -1145,16 +1096,16 @@ Blockly.BlockSvg.prototype.setMutator = function(mutator) {
  * Select this block.  Highlight it visually.
  */
 Blockly.BlockSvg.prototype.addSelect = function() {
-  Blockly.utils.addClass(/** @type {!Element} */ (this.svgGroup_),
-                    'blocklySelected');
+  Blockly.utils.addClass(
+      /** @type {!Element} */ (this.svgGroup_), 'blocklySelected');
 };
 
 /**
  * Unselect this block.  Remove its highlighting.
  */
 Blockly.BlockSvg.prototype.removeSelect = function() {
-  Blockly.utils.removeClass(/** @type {!Element} */ (this.svgGroup_),
-                       'blocklySelected');
+  Blockly.utils.removeClass(
+      /** @type {!Element} */ (this.svgGroup_),  'blocklySelected');
 };
 
 /**
@@ -1212,8 +1163,8 @@ Blockly.BlockSvg.prototype.setColour = function(colour, colourSecondary,
 
 /**
  * Move this block to the front of the visible workspace.
- * <g> tags do not respect z-index so svg renders them in the
- * order that they are in the dom.  By placing this block first within the
+ * <g> tags do not respect z-index so SVG renders them in the
+ * order that they are in the DOM.  By placing this block first within the
  * block group's <g>, it will render on top of any other blocks.
  * @package
  */
@@ -1229,12 +1180,11 @@ Blockly.BlockSvg.prototype.bringToFront = function() {
 /**
  * Set whether this block can chain onto the bottom of another block.
  * @param {boolean} newBoolean True if there can be a previous statement.
- * @param {string|Array.<string>|null|undefined} opt_check Statement type or
+ * @param {(string|Array.<string>|null)=} opt_check Statement type or
  *     list of statement types.  Null/undefined if any type could be connected.
  */
-Blockly.BlockSvg.prototype.setPreviousStatement =
-    function(newBoolean, opt_check) {
-  /* eslint-disable indent */
+Blockly.BlockSvg.prototype.setPreviousStatement = function(newBoolean,
+    opt_check) {
   Blockly.BlockSvg.superClass_.setPreviousStatement.call(this, newBoolean,
       opt_check);
 
@@ -1242,12 +1192,12 @@ Blockly.BlockSvg.prototype.setPreviousStatement =
     this.render();
     this.bumpNeighbours_();
   }
-};  /* eslint-enable indent */
+};
 
 /**
  * Set whether another block can chain onto the bottom of this block.
  * @param {boolean} newBoolean True if there can be a next statement.
- * @param {string|Array.<string>|null|undefined} opt_check Statement type or
+ * @param {(string|Array.<string>|null)=} opt_check Statement type or
  *     list of statement types.  Null/undefined if any type could be connected.
  */
 Blockly.BlockSvg.prototype.setNextStatement = function(newBoolean, opt_check) {
@@ -1263,7 +1213,7 @@ Blockly.BlockSvg.prototype.setNextStatement = function(newBoolean, opt_check) {
 /**
  * Set whether this block returns a value.
  * @param {boolean} newBoolean True if there is an output.
- * @param {string|Array.<string>|null|undefined} opt_check Returned type or list
+ * @param {(string|Array.<string>|null)=} opt_check Returned type or list
  *     of returned types.  Null or undefined if any type could be returned
  *     (e.g. variable get).
  */
@@ -1451,4 +1401,43 @@ Blockly.BlockSvg.prototype.scheduleSnapAndBump = function() {
     block.bumpNeighbours_();
     Blockly.Events.setGroup(false);
   }, Blockly.BUMP_DELAY);
+};
+
+/**
+ * Determine if this block can be recycled, basic non-dynamic shadows and no variables
+ * @return {boolean} true if the block can be recycled
+ */
+Blockly.BlockSvg.prototype.isRecyclable = function() {
+
+  // If the block needs to parse mutations, it's probably safest to never recycle.
+  if (this.mutationToDom && this.domToMutation) {
+    return false;
+  }
+
+  for (var i = 0; i < this.inputList.length; i++) {
+    var input = this.inputList[i];
+    for (var j = 0; j < input.fieldRow.length; j++) {
+      var field = input.fieldRow[j];
+      // No variables.
+      if (field instanceof Blockly.FieldVariable ||
+          field instanceof Blockly.FieldVariableGetter) {
+        return false;
+      }
+      if (field instanceof Blockly.FieldDropdown ||
+          field instanceof Blockly.FieldNumberDropdown ||
+          field instanceof Blockly.FieldTextDropdown) {
+        if (field.isOptionListDynamic()) {
+          return false;
+        }
+      }
+    }
+    // Check children.
+    if (input.connection) {
+      var child = input.connection.targetBlock();
+      if (child && !child.isRecyclable()) {
+        return false;
+      }
+    }
+  }
+  return true;
 };

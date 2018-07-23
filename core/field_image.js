@@ -56,6 +56,25 @@ Blockly.FieldImage = function(src, width, height, opt_alt, flip_rtl) {
 goog.inherits(Blockly.FieldImage, Blockly.Field);
 
 /**
+ * Construct a FieldImage from a JSON arg object,
+ * dereferencing any string table references.
+ * @param {!Object} options A JSON object with options (src, width, height, alt,
+ *     and flipRtl/flip_rtl).
+ * @returns {!Blockly.FieldImage} The new field instance.
+ * @package
+ * @nocollapse
+ */
+Blockly.FieldImage.fromJson = function(options) {
+  var src = Blockly.utils.replaceMessageReferences(options['src']);
+  var width = Number(Blockly.utils.replaceMessageReferences(options['width']));
+  var height =
+      Number(Blockly.utils.replaceMessageReferences(options['height']));
+  var alt = Blockly.utils.replaceMessageReferences(options['alt']);
+  var flip_rtl = !!options['flip_rtl'] || !!options['flipRtl'];
+  return new Blockly.FieldImage(src, width, height, alt, flip_rtl);
+};
+
+/**
  * Editable fields are saved by the XML renderer, non-editable fields are not.
  */
 Blockly.FieldImage.prototype.EDITABLE = false;
@@ -76,12 +95,12 @@ Blockly.FieldImage.prototype.init = function() {
   }
   /** @type {SVGElement} */
   this.imageElement_ = Blockly.utils.createSvgElement(
-    'image',
-    {
-      'height': this.height_ + 'px',
-      'width': this.width_ + 'px'
-    },
-    this.fieldGroup_);
+      'image',
+      {
+        'height': this.height_ + 'px',
+        'width': this.width_ + 'px'
+      },
+      this.fieldGroup_);
   this.setValue(this.src_);
   this.sourceBlock_.getSvgRoot().appendChild(this.fieldGroup_);
 
@@ -168,5 +187,7 @@ Blockly.FieldImage.prototype.render_ = function() {
  * @private
  */
 Blockly.FieldImage.prototype.updateWidth = function() {
- // NOP
+  // NOP
 };
+
+Blockly.Field.register('field_image', Blockly.FieldImage);

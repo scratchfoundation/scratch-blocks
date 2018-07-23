@@ -20,10 +20,10 @@
 
 /**
  * @fileoverview A class that manages a surface for dragging blocks.  When a
- * block drag is started, we move the block (and children) to a separate dom
+ * block drag is started, we move the block (and children) to a separate DOM
  * element that we move around using translate3d. At the end of the drag, the
- * blocks are put back in into the svg they came from. This helps performance by
- * avoiding repainting the entire svg on every mouse move while dragging blocks.
+ * blocks are put back in into the SVG they came from. This helps performance by
+ * avoiding repainting the entire SVG on every mouse move while dragging blocks.
  * @author picklesrus
  */
 
@@ -91,6 +91,7 @@ Blockly.BlockDragSurfaceSvg.prototype.surfaceXY_ = null;
 
 /**
  * ID for the drag shadow filter, set in createDom.
+ * Belongs in Scratch Blocks but not Blockly.
  * @type {string}
  * @private
  */
@@ -98,6 +99,7 @@ Blockly.BlockDragSurfaceSvg.prototype.dragShadowFilterId_ = '';
 
 /**
  * Standard deviation for gaussian blur on drag shadow, in px.
+ * Belongs in Scratch Blocks but not Blockly.
  * @type {number}
  * @const
  */
@@ -110,39 +112,63 @@ Blockly.BlockDragSurfaceSvg.prototype.createDom = function() {
   if (this.SVG_) {
     return;  // Already created.
   }
-  this.SVG_ = Blockly.utils.createSvgElement('svg', {
-    'xmlns': Blockly.SVG_NS,
-    'xmlns:html': Blockly.HTML_NS,
-    'xmlns:xlink': 'http://www.w3.org/1999/xlink',
-    'version': '1.1',
-    'class': 'blocklyBlockDragSurface'
-  }, this.container_);
+  this.SVG_ = Blockly.utils.createSvgElement('svg',
+      {
+        'xmlns': Blockly.SVG_NS,
+        'xmlns:html': Blockly.HTML_NS,
+        'xmlns:xlink': 'http://www.w3.org/1999/xlink',
+        'version': '1.1',
+        'class': 'blocklyBlockDragSurface'
+      }, this.container_);
+  this.dragGroup_ = Blockly.utils.createSvgElement('g', {}, this.SVG_);
+  // Belongs in Scratch Blocks, but not Blockly.
   var defs = Blockly.utils.createSvgElement('defs', {}, this.SVG_);
   this.dragShadowFilterId_ = this.createDropShadowDom_(defs);
-  this.dragGroup_ = Blockly.utils.createSvgElement('g', {}, this.SVG_);
-  this.dragGroup_.setAttribute('filter', 'url(#' + this.dragShadowFilterId_ + ')');
+  this.dragGroup_.setAttribute(
+      'filter', 'url(#' + this.dragShadowFilterId_ + ')');
 };
 
 /**
  * Scratch-specific: Create the SVG def for the drop shadow.
  * @param {Element} defs Defs element to insert the shadow filter definition
  * @return {string} ID for the filter element
+ * @private
  */
 Blockly.BlockDragSurfaceSvg.prototype.createDropShadowDom_ = function(defs) {
   var rnd = String(Math.random()).substring(2);
-  // Adjust these width/height, x/y properties to prevent the shadow from clipping
+  // Adjust these width/height, x/y properties to stop the shadow from clipping
   var dragShadowFilter = Blockly.utils.createSvgElement('filter',
-    {'id': 'blocklyDragShadowFilter' + rnd, 'height': '140%', 'width': '140%', y: '-20%', x: '-20%'}, defs);
+      {
+        'id': 'blocklyDragShadowFilter' + rnd,
+        'height': '140%',
+        'width': '140%',
+        'y': '-20%',
+        'x': '-20%'
+      },
+      defs);
   Blockly.utils.createSvgElement('feGaussianBlur',
-    {'in': 'SourceAlpha', 'stdDeviation': Blockly.BlockDragSurfaceSvg.SHADOW_STD_DEVIATION}, dragShadowFilter);
-  var componentTransfer = Blockly.utils.createSvgElement('feComponentTransfer',
-    {'result': 'offsetBlur'}, dragShadowFilter);
+      {
+        'in': 'SourceAlpha',
+        'stdDeviation': Blockly.BlockDragSurfaceSvg.SHADOW_STD_DEVIATION
+      },
+      dragShadowFilter);
+  var componentTransfer = Blockly.utils.createSvgElement(
+      'feComponentTransfer', {'result': 'offsetBlur'}, dragShadowFilter);
   // Shadow opacity is specified in the adjustable colour library,
   // since the darkness of the shadow largely depends on the workspace colour.
   Blockly.utils.createSvgElement('feFuncA',
-    {'type': 'linear', 'slope': Blockly.Colours.dragShadowOpacity}, componentTransfer);
+      {
+        'type': 'linear',
+        'slope': Blockly.Colours.dragShadowOpacity
+      },
+      componentTransfer);
   Blockly.utils.createSvgElement('feComposite',
-    {'in': 'SourceGraphic', 'in2': 'offsetBlur', 'operator': 'over'}, dragShadowFilter);
+      {
+        'in': 'SourceGraphic',
+        'in2': 'offsetBlur',
+        'operator': 'over'
+      },
+      dragShadowFilter);
   return dragShadowFilter.id;
 };
 
@@ -153,8 +179,8 @@ Blockly.BlockDragSurfaceSvg.prototype.createDropShadowDom_ = function(defs) {
  * surface.
  */
 Blockly.BlockDragSurfaceSvg.prototype.setBlocksAndShow = function(blocks) {
-  goog.asserts.assert(this.dragGroup_.childNodes.length == 0,
-    'Already dragging a block.');
+  goog.asserts.assert(
+      this.dragGroup_.childNodes.length == 0, 'Already dragging a block.');
   // appendChild removes the blocks from the previous parent
   this.dragGroup_.appendChild(blocks);
   this.SVG_.style.display = 'block';
@@ -178,10 +204,10 @@ Blockly.BlockDragSurfaceSvg.prototype.translateAndScaleGroup = function(x, y, sc
   this.scale_ = scale;
   // This is a work-around to prevent a the blocks from rendering
   // fuzzy while they are being dragged on the drag surface.
-  x = x.toFixed(0);
-  y = y.toFixed(0);
-  this.dragGroup_.setAttribute('transform', 'translate('+ x + ','+ y + ')' +
-      ' scale(' + scale + ')');
+  var fixedX = x.toFixed(0);
+  var fixedY = y.toFixed(0);
+  this.dragGroup_.setAttribute('transform',
+      'translate(' + fixedX + ',' + fixedY + ') scale(' + scale + ')');
 };
 
 /**
@@ -248,7 +274,7 @@ Blockly.BlockDragSurfaceSvg.prototype.getCurrentBlock = function() {
  * element.
  * If the block is being deleted it doesn't need to go back to the original
  * surface, since it would be removed immediately during dispose.
- * @param {Element} opt_newSurface Surface the dragging blocks should be moved
+ * @param {Element=} opt_newSurface Surface the dragging blocks should be moved
  *     to, or null if the blocks should be removed from this surface without
  *     being moved to a different surface.
  */
@@ -260,8 +286,8 @@ Blockly.BlockDragSurfaceSvg.prototype.clearAndHide = function(opt_newSurface) {
     this.dragGroup_.removeChild(this.getCurrentBlock());
   }
   this.SVG_.style.display = 'none';
-  goog.asserts.assert(this.dragGroup_.childNodes.length == 0,
-    'Drag group was not cleared.');
+  goog.asserts.assert(
+      this.dragGroup_.childNodes.length == 0, 'Drag group was not cleared.');
   this.surfaceXY_ = null;
 
   // Reset the overflow property back to hidden so that nothing appears outside

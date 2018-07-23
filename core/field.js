@@ -28,6 +28,7 @@
 
 goog.provide('Blockly.Field');
 
+goog.require('Blockly.Events.BlockChange');
 goog.require('Blockly.Gesture');
 
 goog.require('goog.asserts');
@@ -48,8 +49,8 @@ goog.require('goog.userAgent');
  */
 Blockly.Field = function(text, opt_validator) {
   this.size_ = new goog.math.Size(
-    Blockly.BlockSvg.FIELD_WIDTH,
-    Blockly.BlockSvg.FIELD_HEIGHT);
+      Blockly.BlockSvg.FIELD_WIDTH,
+      Blockly.BlockSvg.FIELD_HEIGHT);
   this.setValue(text);
   this.setValidator(opt_validator);
 
@@ -59,6 +60,53 @@ Blockly.Field = function(text, opt_validator) {
    * @type {number}
    */
   this.maxDisplayLength = Blockly.BlockSvg.MAX_DISPLAY_LENGTH;
+};
+
+
+/**
+ * The set of all registered fields, keyed by field type as used in the JSON
+ * definition of a block.
+ * @type {!Object<string, !{fromJson: Function}>}
+ * @private
+ */
+Blockly.Field.TYPE_MAP_ = {};
+
+/**
+ * Registers a field type. May also override an existing field type.
+ * Blockly.Field.fromJson uses this registry to find the appropriate field.
+ * @param {!string} type The field type name as used in the JSON definition.
+ * @param {!{fromJson: Function}} fieldClass The field class containing a
+ *     fromJson function that can construct an instance of the field.
+ * @throws {Error} if the type name is empty, or the fieldClass is not an
+ *     object containing a fromJson function.
+ */
+Blockly.Field.register = function(type, fieldClass) {
+  if (!goog.isString(type) || goog.string.isEmptyOrWhitespace(type)) {
+    throw new Error('Invalid field type "' + type + '"');
+  }
+  if (!goog.isObject(fieldClass) || !goog.isFunction(fieldClass.fromJson)) {
+    throw new Error('Field "' + fieldClass +
+        '" must have a fromJson function');
+  }
+  Blockly.Field.TYPE_MAP_[type] = fieldClass;
+};
+
+/**
+ * Construct a Field from a JSON arg object.
+ * Finds the appropriate registered field by the type name as registered using
+ * Blockly.Field.register.
+ * @param {!Object} options A JSON object with a type and options specific
+ *     to the field type.
+ * @returns {?Blockly.Field} The new field instance or null if a field wasn't
+ *     found with the given type name
+ * @package
+ */
+Blockly.Field.fromJson = function(options) {
+  var fieldClass = Blockly.Field.TYPE_MAP_[options['type']];
+  if (fieldClass) {
+    return fieldClass.fromJson(options);
+  }
+  return null;
 };
 
 /**
@@ -189,22 +237,22 @@ Blockly.Field.prototype.init = function() {
   var fieldX = (this.sourceBlock_.RTL) ? -size.width / 2 : size.width / 2;
   /** @type {!Element} */
   this.textElement_ = Blockly.utils.createSvgElement('text',
-      {'class': this.className_,
-       'x': fieldX,
-       'y': size.height / 2 + Blockly.BlockSvg.FIELD_TOP_PADDING,
-       'dominant-baseline': 'middle',
-       'dy': goog.userAgent.EDGE_OR_IE ? Blockly.Field.IE_TEXT_OFFSET : '0',
-       'text-anchor': 'middle'},
-      this.fieldGroup_);
+      {
+        'class': this.className_,
+        'x': fieldX,
+        'y': size.height / 2 + Blockly.BlockSvg.FIELD_TOP_PADDING,
+        'dominant-baseline': 'middle',
+        'dy': goog.userAgent.EDGE_OR_IE ? Blockly.Field.IE_TEXT_OFFSET : '0',
+        'text-anchor': 'middle'
+      }, this.fieldGroup_);
 
   this.updateEditable();
   this.sourceBlock_.getSvgRoot().appendChild(this.fieldGroup_);
   // Force a render.
   this.render_();
   this.size_.width = 0;
-  this.mouseDownWrapper_ =
-      Blockly.bindEventWithChecks_(this.getClickTarget_(), 'mousedown', this,
-      this.onMouseDown_);
+  this.mouseDownWrapper_ = Blockly.bindEventWithChecks_(
+      this.getClickTarget_(), 'mousedown', this, this.onMouseDown_);
 };
 
 /**
@@ -375,9 +423,7 @@ Blockly.Field.prototype.getSvgRoot = function() {
 Blockly.Field.prototype.render_ = function() {
   if (this.visible_ && this.textElement_) {
     // Replace the text.
-    goog.dom.removeChildren(/** @type {!Element} */ (this.textElement_));
-    var textNode = document.createTextNode(this.getDisplayText_());
-    this.textElement_.appendChild(textNode);
+    this.textElement_.textContent = this.getDisplayText_();
     this.updateWidth();
 
     // Update text centering, based on newly calculated width.
@@ -688,14 +734,13 @@ Blockly.Field.prototype.onMouseDown_ = function(e) {
   }
 };
 
-
 /**
  * Change the tooltip text for this field.
- * @param {string|!Element} newTip Text for tooltip or a parent element to
+ * @param {string|!Element} _newTip Text for tooltip or a parent element to
  *     link to for its tooltip.
  * @abstract
  */
-Blockly.Field.prototype.setTooltip = function(/*newTip*/) {
+Blockly.Field.prototype.setTooltip = function(_newTip) {
   // Non-abstract sub-classes may wish to implement this.  See FieldLabel.
 };
 
@@ -731,4 +776,15 @@ Blockly.Field.prototype.getClickTarget_ = function() {
  */
 Blockly.Field.prototype.getAbsoluteXY_ = function() {
   return goog.style.getPageOffset(this.getClickTarget_());
+};
+
+/**
+ * Whether this field references any Blockly variables.  If true it may need to
+ * be handled differently during serialization and deserialization.  Subclasses
+ * may override this.
+ * @return {boolean} True if this field has any variable references.
+ * @package
+ */
+Blockly.Field.prototype.referencesVariables = function() {
+  return false;
 };
