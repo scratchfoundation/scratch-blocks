@@ -13,6 +13,9 @@ common.pyc
 *.komodoproject
 /nbproject/private/
 
+# Editor
+.vscode
+
 /accessible/*
 /dist
 /msg/js/*
