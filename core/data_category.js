@@ -487,5 +487,4 @@ Blockly.DataCategory.addSep = function(xmlList) {
         '</xml>';
     var sep = Blockly.Xml.textToDom(sepText).firstChild;
     xmlList.push(sep);
-  }
 };
