@@ -481,10 +481,10 @@ Blockly.DataCategory.createValue = function(valueName, type, value) {
  * @param {!Array.<!Element>} xmlList Array of XML block elements.
  */
 Blockly.DataCategory.addSep = function(xmlList) {
-    var gap = 36;
-    var sepText = '<xml>' +
-        '<sep gap="' + gap + '"/>' +
-        '</xml>';
-    var sep = Blockly.Xml.textToDom(sepText).firstChild;
-    xmlList.push(sep);
+  var gap = 36;
+  var sepText = '<xml>' +
+      '<sep gap="' + gap + '"/>' +
+      '</xml>';
+  var sep = Blockly.Xml.textToDom(sepText).firstChild;
+  xmlList.push(sep);
 };
