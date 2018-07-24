@@ -213,7 +213,13 @@ Blockly.Xml.blockToDom = function(block, opt_noId) {
       }
       var shadow = input.connection.getShadowDom();
       if (shadow && (!childBlock || !childBlock.isShadow())) {
-        container.appendChild(Blockly.Xml.cloneShadow_(shadow));
+        var shadowClone = Blockly.Xml.cloneShadow_(shadow);
+        // Remove the ID from the shadow dom clone if opt_noId
+        // is specified to true.
+        if (opt_noId && shadowClone.getAttribute('id')) {
+          shadowClone.removeAttribute('id');
+        }
+        container.appendChild(shadowClone);
       }
       if (childBlock) {
         container.appendChild(Blockly.Xml.blockToDom(childBlock, opt_noId));
