@@ -127,7 +127,19 @@ Blockly.Options = function(options) {
           Blockly.Colours.hasOwnProperty(colourProperty)) {
         // If a property is in both colours option and Blockly.Colours,
         // set the Blockly.Colours value to the override.
-        Blockly.Colours[colourProperty] = colours[colourProperty];
+        // Override Blockly category color object properties with those
+        // provided.
+        var colourPropertyValue = colours[colourProperty];
+        if (goog.isObject(colourPropertyValue)) {
+          for (var colourSequence in colourPropertyValue) {
+            if (colourPropertyValue.hasOwnProperty(colourSequence) &&
+              Blockly.Colours[colourProperty].hasOwnProperty(colourSequence)) {
+              Blockly.Colours[colourProperty][colourSequence] = colourPropertyValue[colourSequence];
+            }
+          }
+        } else {
+          Blockly.Colours[colourProperty] = colourPropertyValue;
+        }
       }
     }
   }
