@@ -488,15 +488,10 @@ Blockly.Css.CONTENT = [
   '.blocklyBubbleText {',
     'fill: $colour_text;',
   '}',
-
   '.blocklyFlyout {',
     'position: absolute;',
     'z-index: 20;',
-  '}',
-
-  '.blocklyFlyout {',
-    'position: absolute;',
-    'z-index: 20;',
+    'pointer-events: all;',
   '}',
   '.blocklyFlyoutButton {',
     'fill: none;',
