@@ -81,7 +81,8 @@ Blockly.FlyoutExtensionCategoryHeader.prototype.createDom = function() {
   var marginX = 15;
   var marginY = 10;
 
-  var statusButtonX = (this.flyoutWidth_ - statusButtonWidth - marginX) / this.workspace_.scale;
+  var statusButtonX = this.workspace_.RTL ? (marginX - this.flyoutWidth_ + statusButtonWidth) :
+      (this.flyoutWidth_ - statusButtonWidth - marginX) / this.workspace_.scale;
 
   if (this.imageSrc_) {
     /** @type {SVGElement} */

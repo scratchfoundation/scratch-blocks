@@ -490,7 +490,11 @@ Blockly.VerticalFlyout.prototype.layout_ = function(contents, gaps) {
     } else if (item.type == 'button') {
       var button = item.button;
       var buttonSvg = button.createDom();
-      button.moveTo(cursorX, cursorY);
+      if (this.RTL) {
+        button.moveTo(flyoutWidth - this.MARGIN - button.width, cursorY);
+      } else {
+        button.moveTo(cursorX, cursorY);
+      }
       button.show();
       // Clicking on a flyout button or label is a lot like clicking on the
       // flyout background.
