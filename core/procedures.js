@@ -418,6 +418,7 @@ Blockly.Procedures.createProcedureCallbackFactory_ = function(workspace) {
       Blockly.Events.setGroup(true);
       var block = Blockly.Xml.domToBlock(blockDom, workspace);
       var scale = workspace.scale; // To convert from pixel units to workspace units
+      // Position the block so that it is at the top left of the visible workspace.
       block.moveBy((-workspace.scrollX + 30) / scale, (-workspace.scrollY + 30) / scale);
       block.scheduleSnapAndBump();
       Blockly.Events.setGroup(false);
