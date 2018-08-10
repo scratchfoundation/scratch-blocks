@@ -1,0 +1,9 @@
+[main]
+host = https://www.transifex.com
+lang_map = zh_CN:zh-cn, zh_TW:zh-tw, pt_BR:pt-br, es_419:es-419
+
+[scratch-editor.blocks]
+file_filter = msg/json/<lang>.json
+source_file = msg/json/en.json
+source_lang = en
+type = KEYVALUEJSON
