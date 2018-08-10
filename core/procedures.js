@@ -417,7 +417,8 @@ Blockly.Procedures.createProcedureCallbackFactory_ = function(workspace) {
       var blockDom = Blockly.Xml.textToDom(blockText).firstChild;
       Blockly.Events.setGroup(true);
       var block = Blockly.Xml.domToBlock(blockDom, workspace);
-      block.moveBy(30, 30);
+      var scale = workspace.scale; // To convert from pixel units to workspace units
+      block.moveBy((-workspace.scrollX + 30) / scale, (-workspace.scrollY + 30) / scale);
       block.scheduleSnapAndBump();
       Blockly.Events.setGroup(false);
     }
