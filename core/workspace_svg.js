@@ -1338,6 +1338,14 @@ Blockly.WorkspaceSvg.prototype.onMouseWheel_ = function(e) {
     var x = this.scrollX - e.deltaX * multiplier;
     var y = this.scrollY - e.deltaY * multiplier;
 
+    if (e.shiftKey && e.deltaX === 0) {
+      // Scroll horizontally (based on vertical scroll delta)
+      // This is needed as for some browser/system combinations which do not
+      // set deltaX. See #1662.
+      x = this.scrollX - e.deltaY * multiplier;
+      y = this.scrollY; // Don't scroll vertically
+    }
+
     this.startDragMetrics = this.getMetrics();
     this.scroll(x, y);
   }
