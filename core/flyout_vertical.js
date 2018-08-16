@@ -33,7 +33,6 @@ goog.require('Blockly.Flyout');
 goog.require('Blockly.FlyoutButton');
 goog.require('Blockly.utils');
 goog.require('Blockly.WorkspaceSvg');
-goog.require('goog.dom');
 goog.require('goog.dom.animationFrame.polyfill');
 goog.require('goog.events');
 goog.require('goog.math.Rect');
@@ -414,7 +413,7 @@ Blockly.VerticalFlyout.prototype.clearOldBlocks_ = function() {
   // Do the same for checkboxes.
   for (var i = 0, elem; elem = this.checkboxes_[i]; i++) {
     elem.block.flyoutCheckbox = null;
-    goog.dom.removeNode(elem.svgRoot);
+    elem.svgRoot.parentNode.removeChild(elem.svgRoot);
   }
   this.checkboxes_ = [];
 };

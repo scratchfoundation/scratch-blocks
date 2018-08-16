@@ -292,7 +292,7 @@ Blockly.FlyoutButton.prototype.dispose = function() {
     Blockly.unbindEvent_(this.onMouseUpWrapper_);
   }
   if (this.svgGroup_) {
-    goog.dom.removeNode(this.svgGroup_);
+    this.svgGroup_.parentNode.removeChild(this.svgGroup_);
     this.svgGroup_ = null;
   }
   this.workspace_ = null;
