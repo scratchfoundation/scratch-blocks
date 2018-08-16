@@ -31,7 +31,6 @@
 
 goog.provide('Blockly.BlockDragSurfaceSvg');
 goog.require('Blockly.utils');
-goog.require('goog.asserts');
 goog.require('goog.math.Coordinate');
 
 
@@ -179,8 +178,9 @@ Blockly.BlockDragSurfaceSvg.prototype.createDropShadowDom_ = function(defs) {
  * surface.
  */
 Blockly.BlockDragSurfaceSvg.prototype.setBlocksAndShow = function(blocks) {
-  goog.asserts.assert(
-      this.dragGroup_.childNodes.length == 0, 'Already dragging a block.');
+  if (this.dragGroup_.childNodes.length) {
+    throw Error('Already dragging a block.');
+  }
   // appendChild removes the blocks from the previous parent
   this.dragGroup_.appendChild(blocks);
   this.SVG_.style.display = 'block';
@@ -286,8 +286,9 @@ Blockly.BlockDragSurfaceSvg.prototype.clearAndHide = function(opt_newSurface) {
     this.dragGroup_.removeChild(this.getCurrentBlock());
   }
   this.SVG_.style.display = 'none';
-  goog.asserts.assert(
-      this.dragGroup_.childNodes.length == 0, 'Drag group was not cleared.');
+  if (this.dragGroup_.childNodes.length) {
+    throw Error('Drag group was not cleared.');
+  }
   this.surfaceXY_ = null;
 
   // Reset the overflow property back to hidden so that nothing appears outside

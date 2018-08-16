@@ -36,9 +36,6 @@ goog.provide('Blockly.Extensions');
 goog.require('Blockly.Mutator');
 goog.require('Blockly.utils');
 
-goog.require('goog.string');
-
-
 /**
  * The set of all registered extensions, keyed by extension name/id.
  * @private
@@ -56,13 +53,13 @@ Blockly.Extensions.ALL_ = {};
  *     registered, or extensionFn is not a function.
  */
 Blockly.Extensions.register = function(name, initFn) {
-  if (!goog.isString(name) || goog.string.isEmptyOrWhitespace(name)) {
+  if ((typeof name != 'string') || (name.trim() == '')) {
     throw new Error('Error: Invalid extension name "' + name + '"');
   }
   if (Blockly.Extensions.ALL_[name]) {
     throw new Error('Error: Extension "' + name + '" is already registered.');
   }
-  if (!goog.isFunction(initFn)) {
+  if (typeof initFn != 'function') {
     throw new Error('Error: Extension "' + name + '" must be a function');
   }
   Blockly.Extensions.ALL_[name] = initFn;
@@ -76,7 +73,7 @@ Blockly.Extensions.register = function(name, initFn) {
  *     registered.
  */
 Blockly.Extensions.registerMixin = function(name, mixinObj) {
-  if (!goog.isObject(mixinObj)){
+  if (!mixinObj || typeof mixinObj != 'object'){
     throw new Error('Error: Mixin "' + name + '" must be a object');
   }
   Blockly.Extensions.register(name, function() {
@@ -110,7 +107,7 @@ Blockly.Extensions.registerMutator = function(name, mixinObj, opt_helperFn,
   var hasMutatorDialog =
       Blockly.Extensions.checkMutatorDialog_(mixinObj, errorPrefix);
 
-  if (opt_helperFn && !goog.isFunction(opt_helperFn)) {
+  if (opt_helperFn && (typeof opt_helperFn != 'function')) {
     throw new Error('Extension "' + name + '" is not a function');
   }
 
@@ -138,7 +135,7 @@ Blockly.Extensions.registerMutator = function(name, mixinObj, opt_helperFn,
  */
 Blockly.Extensions.apply = function(name, block, isMutator) {
   var extensionFn = Blockly.Extensions.ALL_[name];
-  if (!goog.isFunction(extensionFn)) {
+  if (typeof extensionFn != 'function') {
     throw new Error('Error: Extension "' + name + '" not found.');
   }
   if (isMutator) {
@@ -332,7 +329,7 @@ Blockly.Extensions.buildTooltipForDropdown = function(dropdownName,
   if (document) { // Relies on document.readyState
     Blockly.utils.runAfterPageLoad(function() {
       for (var key in lookupTable) {
-        // Will print warnings is reference is missing.
+        // Will print warnings if reference is missing.
         Blockly.utils.checkMessageReferences(lookupTable[key]);
       }
     });
