@@ -114,3 +114,44 @@ Blockly.scratchBlocksUtils.compareStrings = function(str1, str2) {
     numeric: true
   });
 };
+
+/**
+ * Determine if this block can be recycled in the flyout.  Blocks that have no
+ * variablees and are not dynamic shadows can be recycled.
+ * @param {Blockly.Block} block The block to check.
+ * @return {boolean} True if the block can be recycled.
+ * @package
+ */
+Blockly.scratchBlocksUtils.blockIsRecyclable = function(block) {
+  // If the block needs to parse mutations, never recycle.
+  if (block.mutationToDom && block.domToMutation) {
+    return false;
+  }
+
+  for (var i = 0; i < block.inputList.length; i++) {
+    var input = block.inputList[i];
+    for (var j = 0; j < input.fieldRow.length; j++) {
+      var field = input.fieldRow[j];
+      // No variables.
+      if (field instanceof Blockly.FieldVariable ||
+          field instanceof Blockly.FieldVariableGetter) {
+        return false;
+      }
+      if (field instanceof Blockly.FieldDropdown ||
+          field instanceof Blockly.FieldNumberDropdown ||
+          field instanceof Blockly.FieldTextDropdown) {
+        if (field.isOptionListDynamic()) {
+          return false;
+        }
+      }
+    }
+    // Check children.
+    if (input.connection) {
+      var child = input.connection.targetBlock();
+      if (child && !Blockly.scratchBlocksUtils.blockIsRecyclable(child)) {
+        return false;
+      }
+    }
+  }
+  return true;
+};
