@@ -112,3 +112,36 @@ Blockly.Colours = {
   "valueReportBackground": "#FFFFFF",
   "valueReportBorder": "#AAAAAA"
 };
+
+/**
+ * Override the colours in Blockly.Colours with new values basded on the
+ * given dictionary.
+ * @param {!Object} colours Dictionary of colour properties and new values.
+ * @package
+ */
+Blockly.Colours.overrideColours = function(colours) {
+  // Colour overrides provided by the injection
+  if (colours) {
+    for (var colourProperty in colours) {
+      if (colours.hasOwnProperty(colourProperty) &&
+          Blockly.Colours.hasOwnProperty(colourProperty)) {
+        // If a property is in both colours option and Blockly.Colours,
+        // set the Blockly.Colours value to the override.
+        // Override Blockly category color object properties with those
+        // provided.
+        var colourPropertyValue = colours[colourProperty];
+        if (goog.isObject(colourPropertyValue)) {
+          for (var colourSequence in colourPropertyValue) {
+            if (colourPropertyValue.hasOwnProperty(colourSequence) &&
+              Blockly.Colours[colourProperty].hasOwnProperty(colourSequence)) {
+              Blockly.Colours[colourProperty][colourSequence] =
+                  colourPropertyValue[colourSequence];
+            }
+          }
+        } else {
+          Blockly.Colours[colourProperty] = colourPropertyValue;
+        }
+      }
+    }
+  }
+};
