@@ -31,7 +31,6 @@
 goog.provide('Blockly.ContextMenu');
 
 goog.require('Blockly.Events.BlockCreate');
-goog.require('Blockly.scratchBlocksUtils');
 goog.require('Blockly.utils');
 goog.require('Blockly.utils.uiMenu');
 
@@ -265,7 +264,7 @@ Blockly.ContextMenu.blockDuplicateOption = function(block) {
   var duplicateOption = {
     text: Blockly.Msg.DUPLICATE,
     enabled: true,
-    callback: Blockly.scratchBlocksUtils.duplicateAndDragCallback(block)
+    callback: block.duplicateAndDragCallback_()
   };
   return duplicateOption;
 };
