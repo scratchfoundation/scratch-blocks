@@ -168,7 +168,6 @@ Blockly.scratchBlocksUtils.blockIsRecyclable = function(block) {
  * @package
  */
 Blockly.scratchBlocksUtils.duplicateAndDragCallback = function(oldBlock) {
-  var oldBlock = this;
   return function(e) {
     // Give the context menu a chance to close.
     setTimeout(function() {
