@@ -116,30 +116,7 @@ Blockly.Options = function(options) {
     var oneBasedIndex = !!options['oneBasedIndex'];
   }
 
-  // Colour overrides provided by the injection
-  var colours = options['colours'];
-  if (colours) {
-    for (var colourProperty in colours) {
-      if (colours.hasOwnProperty(colourProperty) &&
-          Blockly.Colours.hasOwnProperty(colourProperty)) {
-        // If a property is in both colours option and Blockly.Colours,
-        // set the Blockly.Colours value to the override.
-        // Override Blockly category color object properties with those
-        // provided.
-        var colourPropertyValue = colours[colourProperty];
-        if (goog.isObject(colourPropertyValue)) {
-          for (var colourSequence in colourPropertyValue) {
-            if (colourPropertyValue.hasOwnProperty(colourSequence) &&
-              Blockly.Colours[colourProperty].hasOwnProperty(colourSequence)) {
-              Blockly.Colours[colourProperty][colourSequence] = colourPropertyValue[colourSequence];
-            }
-          }
-        } else {
-          Blockly.Colours[colourProperty] = colourPropertyValue;
-        }
-      }
-    }
-  }
+  Blockly.Colours.overrideColours(options['colours']);
 
   this.RTL = rtl;
   this.oneBasedIndex = oneBasedIndex;
