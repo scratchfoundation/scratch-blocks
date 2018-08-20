@@ -34,6 +34,7 @@ goog.require('Blockly.Events.VarCreate');
 goog.require('Blockly.FlyoutButton');
 goog.require('Blockly.FlyoutExtensionCategoryHeader');
 goog.require('Blockly.Gesture');
+goog.require('Blockly.scratchBlocksUtils');
 goog.require('Blockly.Touch');
 goog.require('Blockly.WorkspaceSvg');
 goog.require('goog.dom');
@@ -712,7 +713,8 @@ Blockly.Flyout.prototype.clearOldBlocks_ = function() {
   var oldBlocks = this.workspace_.getTopBlocks(false);
   for (var i = 0, block; block = oldBlocks[i]; i++) {
     if (block.workspace == this.workspace_) {
-      if (this.recyclingEnabled_ && block.isRecyclable()) {
+      if (this.recyclingEnabled_ &&
+          Blockly.scratchBlocksUtils.blockIsRecyclable(block)) {
         this.recycleBlock_(block);
       } else {
         block.dispose(false, false);
