@@ -116,9 +116,6 @@ Blockly.Options = function(options) {
     var oneBasedIndex = !!options['oneBasedIndex'];
   }
 
-  var enableRealtime = !!options['realtime'];
-  var realtimeOptions = enableRealtime ? options['realtimeOptions'] : undefined;
-
   Blockly.Colours.overrideColours(options['colours']);
 
   this.RTL = rtl;
@@ -137,8 +134,6 @@ Blockly.Options = function(options) {
   this.languageTree = languageTree;
   this.gridOptions = Blockly.Options.parseGridOptions_(options);
   this.zoomOptions = Blockly.Options.parseZoomOptions_(options);
-  this.enableRealtime = enableRealtime;
-  this.realtimeOptions = realtimeOptions;
   this.toolboxPosition = toolboxPosition;
 };
 
