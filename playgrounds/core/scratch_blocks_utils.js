@@ -114,3 +114,141 @@ Blockly.scratchBlocksUtils.compareStrings = function(str1, str2) {
     numeric: true
   });
 };
+
+/**
+ * Determine if this block can be recycled in the flyout.  Blocks that have no
+ * variablees and are not dynamic shadows can be recycled.
+ * @param {Blockly.Block} block The block to check.
+ * @return {boolean} True if the block can be recycled.
+ * @package
+ */
+Blockly.scratchBlocksUtils.blockIsRecyclable = function(block) {
+  // If the block needs to parse mutations, never recycle.
+  if (block.mutationToDom && block.domToMutation) {
+    return false;
+  }
+
+  for (var i = 0; i < block.inputList.length; i++) {
+    var input = block.inputList[i];
+    for (var j = 0; j < input.fieldRow.length; j++) {
+      var field = input.fieldRow[j];
+      // No variables.
+      if (field instanceof Blockly.FieldVariable ||
+          field instanceof Blockly.FieldVariableGetter) {
+        return false;
+      }
+      if (field instanceof Blockly.FieldDropdown ||
+          field instanceof Blockly.FieldNumberDropdown ||
+          field instanceof Blockly.FieldTextDropdown) {
+        if (field.isOptionListDynamic()) {
+          return false;
+        }
+      }
+    }
+    // Check children.
+    if (input.connection) {
+      var child = input.connection.targetBlock();
+      if (child && !Blockly.scratchBlocksUtils.blockIsRecyclable(child)) {
+        return false;
+      }
+    }
+  }
+  return true;
+};
+
+
+/**
+ * Creates a callback function for a click on the "duplicate" context menu
+ * option in Scratch Blocks.  The block is duplicated and attached to the mouse,
+ * which acts as though it were pressed and mid-drag.  Clicking the mouse
+ * releases the new dragging block.
+ * @param {!Blockly.BlockSvg} oldBlock The block that will be duplicated.
+ * @return {Function} A callback function that duplicates the block and starts a
+ *     drag.
+ * @package
+ */
+Blockly.scratchBlocksUtils.duplicateAndDragCallback = function(oldBlock) {
+  return function(e) {
+    // Give the context menu a chance to close.
+    setTimeout(function() {
+      var ws = oldBlock.workspace;
+      var svgRootOld = oldBlock.getSvgRoot();
+      if (!svgRootOld) {
+        throw new Error('oldBlock is not rendered.');
+      }
+
+      // Create the new block by cloning the block in the flyout (via XML).
+      var xml = Blockly.Xml.blockToDom(oldBlock);
+      // The target workspace would normally resize during domToBlock, which
+      // will lead to weird jumps.
+      // Resizing will be enabled when the drag ends.
+      ws.setResizesEnabled(false);
+
+      // Disable events and manually emit events after the block has been
+      // positioned and has had its shadow IDs fixed (Scratch-specific).
+      Blockly.Events.disable();
+      try {
+        // Using domToBlock instead of domToWorkspace means that the new block
+        // will be placed at position (0, 0) in main workspace units.
+        var newBlock = Blockly.Xml.domToBlock(xml, ws);
+
+        // Scratch-specific: Give shadow dom new IDs to prevent duplicating on paste
+        Blockly.scratchBlocksUtils.changeObscuredShadowIds(newBlock);
+
+        var svgRootNew = newBlock.getSvgRoot();
+        if (!svgRootNew) {
+          throw new Error('newBlock is not rendered.');
+        }
+
+        // The position of the old block in workspace coordinates.
+        var oldBlockPosWs = oldBlock.getRelativeToSurfaceXY();
+
+        // Place the new block as the same position as the old block.
+        // TODO: Offset by the difference between the mouse position and the upper
+        // left corner of the block.
+        newBlock.moveBy(oldBlockPosWs.x, oldBlockPosWs.y);
+      } finally {
+        Blockly.Events.enable();
+      }
+      if (Blockly.Events.isEnabled()) {
+        Blockly.Events.fire(new Blockly.Events.BlockCreate(newBlock));
+      }
+
+      // The position of the old block in pixels relative to the main
+      // workspace's origin.
+      var oldBlockPosPixels = oldBlockPosWs.scale(ws.scale);
+
+      // The offset in pixels between the main workspace's origin and the upper left
+      // corner of the injection div.
+      var mainOffsetPixels = ws.getOriginOffsetInPixels();
+
+      // The position of the old block in pixels relative to the upper left corner
+      // of the injection div.
+      var finalOffsetPixels = goog.math.Coordinate.sum(mainOffsetPixels,
+          oldBlockPosPixels);
+
+      var injectionDiv = ws.getInjectionDiv();
+      // Bounding rect coordinates are in client coordinates, meaning that they
+      // are in pixels relative to the upper left corner of the visible browser
+      // window.  These coordinates change when you scroll the browser window.
+      var boundingRect = injectionDiv.getBoundingClientRect();
+
+      // e is not a real mouseEvent/touchEvent/pointerEvent.  It's an event
+      // created by the context menu and doesn't have the correct coordinates.
+      // But it does have some information that we need.
+      var fakeEvent = {
+        clientX: finalOffsetPixels.x + boundingRect.left,
+        clientY: finalOffsetPixels.y + boundingRect.top,
+        type: 'mousedown',
+        preventDefault: function() {
+          e.preventDefault();
+        },
+        stopPropagation: function() {
+          e.stopPropagation();
+        },
+        target: e.target
+      };
+      ws.startDragWithFakeEvent(fakeEvent, newBlock);
+    }, 0);
+  };
+};
