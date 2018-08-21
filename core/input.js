@@ -248,7 +248,7 @@ Blockly.Input.prototype.init = function() {
  */
 Blockly.Input.prototype.dispose = function() {
   if (this.outlinePath) {
-    goog.dom.removeNode(this.outlinePath);
+    this.outlinePath.parentNode.removeChild(this.outlinePath);
   }
   for (var i = 0, field; field = this.fieldRow[i]; i++) {
     field.dispose();

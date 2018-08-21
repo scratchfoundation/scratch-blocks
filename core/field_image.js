@@ -27,7 +27,6 @@
 goog.provide('Blockly.FieldImage');
 
 goog.require('Blockly.Field');
-goog.require('goog.dom');
 goog.require('goog.math.Size');
 goog.require('goog.userAgent');
 
@@ -113,8 +112,10 @@ Blockly.FieldImage.prototype.init = function() {
  * Dispose of all DOM objects belonging to this text.
  */
 Blockly.FieldImage.prototype.dispose = function() {
-  goog.dom.removeNode(this.fieldGroup_);
-  this.fieldGroup_ = null;
+  if (this.fieldGroup_) {
+    this.fieldGroup_.parentNode.removeChild(this.fieldGroup_);
+    this.fieldGroup_ = null;
+  }
   this.imageElement_ = null;
 };
 

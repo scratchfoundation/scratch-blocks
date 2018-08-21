@@ -26,7 +26,6 @@
 
 goog.provide('Blockly.Icon');
 
-goog.require('goog.dom');
 goog.require('goog.math.Coordinate');
 
 
@@ -95,7 +94,7 @@ Blockly.Icon.prototype.createIcon = function() {
  */
 Blockly.Icon.prototype.dispose = function() {
   // Dispose of and unlink the icon.
-  goog.dom.removeNode(this.iconGroup_);
+  this.iconGroup_.parentNode.removeChild(this.iconGroup_);
   this.iconGroup_ = null;
   // Dispose of and unlink the bubble.
   this.setVisible(false);

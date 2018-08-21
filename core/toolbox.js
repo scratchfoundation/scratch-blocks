@@ -143,7 +143,7 @@ Blockly.Toolbox.prototype.dispose = function() {
   this.flyout_.dispose();
   this.categoryMenu_.dispose();
   this.categoryMenu_ = null;
-  goog.dom.removeNode(this.HtmlDiv);
+  this.HtmlDiv.parentNode.removeChild(this.HtmlDiv);
   this.workspace_ = null;
   this.lastCategory_ = null;
 };
@@ -640,7 +640,7 @@ Blockly.Toolbox.CategoryMenu.prototype.dispose = function() {
   }
   this.categories_ = [];
   if (this.table) {
-    goog.dom.removeNode(this.table);
+    this.table.parentNode.removeChild(this.table);
     this.table = null;
   }
 };
@@ -676,7 +676,7 @@ Blockly.Toolbox.Category = function(parent, parentHtml, domTree) {
  */
 Blockly.Toolbox.Category.prototype.dispose = function() {
   if (this.item_) {
-    goog.dom.removeNode(this.item_);
+    this.item_.parentNode.removeChild(this.item_);
     this.item = null;
   }
   this.parent_ = null;

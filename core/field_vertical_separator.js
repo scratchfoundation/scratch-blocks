@@ -27,7 +27,6 @@
 goog.provide('Blockly.FieldVerticalSeparator');
 
 goog.require('Blockly.Field');
-goog.require('goog.dom');
 goog.require('goog.math.Size');
 
 
@@ -105,8 +104,10 @@ Blockly.FieldVerticalSeparator.prototype.setLineHeight = function(newHeight) {
  * Dispose of all DOM objects belonging to this text.
  */
 Blockly.FieldVerticalSeparator.prototype.dispose = function() {
-  goog.dom.removeNode(this.fieldGroup_);
-  this.fieldGroup_ = null;
+  if (this.fieldGroup_) {
+    this.fieldGroup_.parentNode.removeChild(this.fieldGroup_);
+    this.fieldGroup_ = null;
+  }
   this.lineElement_ = null;
 };
 

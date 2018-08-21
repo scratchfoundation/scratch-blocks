@@ -65,7 +65,7 @@ Blockly.BlockAnimations.disposeUiStep_ = function(clone, rtl, start,
   var ms = new Date - start;
   var percent = ms / 150;
   if (percent > 1) {
-    goog.dom.removeNode(clone);
+    clone.parentNode.removeChild(clone);
   } else {
     var x = clone.translateX_ +
         (rtl ? -1 : 1) * clone.bBox_.width * workspaceScale / 2 * percent;

@@ -27,7 +27,6 @@
 goog.provide('Blockly.Scrollbar');
 goog.provide('Blockly.ScrollbarPair');
 
-goog.require('goog.dom');
 goog.require('goog.events');
 
 
@@ -70,7 +69,7 @@ Blockly.ScrollbarPair.prototype.oldHostMetrics_ = null;
  * Unlink from all DOM elements to prevent memory leaks.
  */
 Blockly.ScrollbarPair.prototype.dispose = function() {
-  goog.dom.removeNode(this.corner_);
+  this.corner_.parentNode.removeChild(this.corner_);
   this.corner_ = null;
   this.workspace_ = null;
   this.oldHostMetrics_ = null;
@@ -343,7 +342,7 @@ Blockly.Scrollbar.prototype.dispose = function() {
   Blockly.unbindEvent_(this.onMouseDownHandleWrapper_);
   this.onMouseDownHandleWrapper_ = null;
 
-  goog.dom.removeNode(this.outerSvg_);
+  this.outerSvg_.parentNode.removeChild(this.outerSvg_);
   this.outerSvg_ = null;
   this.svgGroup_ = null;
   this.svgBackground_ = null;
