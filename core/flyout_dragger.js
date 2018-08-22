@@ -28,6 +28,7 @@ goog.provide('Blockly.FlyoutDragger');
 
 goog.require('Blockly.WorkspaceDragger');
 
+goog.require('goog.asserts');
 goog.require('goog.math.Coordinate');
 
 

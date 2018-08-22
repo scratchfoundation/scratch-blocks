@@ -40,11 +40,11 @@ goog.require('Blockly.FieldLabelSerializable');
 goog.require('Blockly.FieldVariableGetter');
 goog.require('Blockly.Input');
 goog.require('Blockly.Mutator');
-goog.require('Blockly.utils');
 goog.require('Blockly.Warning');
 goog.require('Blockly.Workspace');
 goog.require('Blockly.Xml');
-
+goog.require('goog.array');
+goog.require('goog.asserts');
 goog.require('goog.math.Coordinate');
 goog.require('goog.string');
 
@@ -174,16 +174,15 @@ Blockly.Block = function(workspace, prototypeName, opt_id) {
     /** @type {string} */
     this.type = prototypeName;
     var prototype = Blockly.Blocks[prototypeName];
-    if (!prototype || typeof prototype != 'object') {
-      throw TypeError('Unknown block type: ' + prototypeName);
-    }
+    goog.asserts.assertObject(prototype,
+        'Error: Unknown block type "%s".', prototypeName);
     goog.mixin(this, prototype);
   }
 
   workspace.addTopBlock(this);
 
   // Call an initialization function, if it exists.
-  if (typeof this.init == 'function') {
+  if (goog.isFunction(this.init)) {
     this.init();
   }
   // Record initial inline state.
@@ -206,7 +205,7 @@ Blockly.Block = function(workspace, prototypeName, opt_id) {
 
   }
   // Bind an onchange function, if it exists.
-  if (typeof this.onchange == 'function') {
+  if (goog.isFunction(this.onchange)) {
     this.setOnChange(this.onchange);
   }
 };
@@ -547,14 +546,14 @@ Blockly.Block.prototype.setParent = function(newParent) {
   }
   if (this.parentBlock_) {
     // Remove this block from the old parent's child list.
-    Blockly.utils.arrayRemove(this.parentBlock_.childBlocks_, this);
+    goog.array.remove(this.parentBlock_.childBlocks_, this);
 
     // Disconnect from superior blocks.
     if (this.previousConnection && this.previousConnection.isConnected()) {
-      throw Error('Still connected to previous block.');
+      throw 'Still connected to previous block.';
     }
     if (this.outputConnection && this.outputConnection.isConnected()) {
-      throw Error('Still connected to parent block.');
+      throw 'Still connected to parent block.';
     }
     this.parentBlock_ = null;
     // This block hasn't actually moved on-screen, so there's no need to update
@@ -842,8 +841,8 @@ Blockly.Block.prototype.setColour = function(colour, colourSecondary, colourTert
  * @throws {Error} if onchangeFn is not falsey or a function.
  */
 Blockly.Block.prototype.setOnChange = function(onchangeFn) {
-  if (onchangeFn && typeof onchangeFn != 'function') {
-    throw new Error('onchange must be a function.');
+  if (onchangeFn && !goog.isFunction(onchangeFn)) {
+    throw new Error("onchange must be a function.");
   }
   if (this.onchangeWrapper_) {
     this.workspace.removeChangeListener(this.onchangeWrapper_);
@@ -965,9 +964,7 @@ Blockly.Block.prototype.getFieldValue = function(name) {
  */
 Blockly.Block.prototype.setFieldValue = function(newValue, name) {
   var field = this.getField(name);
-  if (!field) {
-    throw Error('Field "' + name + '" not found.');
-  }
+  goog.asserts.assertObject(field, 'Field "%s" not found.', name);
   field.setValue(newValue);
 };
 
@@ -983,20 +980,16 @@ Blockly.Block.prototype.setPreviousStatement = function(newBoolean, opt_check) {
       opt_check = null;
     }
     if (!this.previousConnection) {
-      if (this.outputConnection) {
-        throw Error('Remove output connection prior to adding previous ' +
-            'connection.');
-      }
+      goog.asserts.assert(!this.outputConnection,
+          'Remove output connection prior to adding previous connection.');
       this.previousConnection =
           this.makeConnection_(Blockly.PREVIOUS_STATEMENT);
     }
     this.previousConnection.setCheck(opt_check);
   } else {
     if (this.previousConnection) {
-      if (this.previousConnection.isConnected()) {
-        throw Error('Must disconnect previous statement before removing ' +
-            'connection.');
-      }
+      goog.asserts.assert(!this.previousConnection.isConnected(),
+          'Must disconnect previous statement before removing connection.');
       this.previousConnection.dispose();
       this.previousConnection = null;
     }
@@ -1020,10 +1013,8 @@ Blockly.Block.prototype.setNextStatement = function(newBoolean, opt_check) {
     this.nextConnection.setCheck(opt_check);
   } else {
     if (this.nextConnection) {
-      if (this.nextConnection.isConnected()) {
-        throw Error('Must disconnect next statement before removing ' +
-            'connection.');
-      }
+      goog.asserts.assert(!this.nextConnection.isConnected(),
+          'Must disconnect next statement before removing connection.');
       this.nextConnection.dispose();
       this.nextConnection = null;
     }
@@ -1043,18 +1034,15 @@ Blockly.Block.prototype.setOutput = function(newBoolean, opt_check) {
       opt_check = null;
     }
     if (!this.outputConnection) {
-      if (this.previousConnection) {
-        throw Error('Remove previous connection prior to adding output ' +
-            'connection.');
-      }
+      goog.asserts.assert(!this.previousConnection,
+          'Remove previous connection prior to adding output connection.');
       this.outputConnection = this.makeConnection_(Blockly.OUTPUT_VALUE);
     }
     this.outputConnection.setCheck(opt_check);
   } else {
     if (this.outputConnection) {
-      if (this.outputConnection.isConnected()) {
-        throw Error('Must disconnect output value before removing connection.');
-      }
+      goog.asserts.assert(!this.outputConnection.isConnected(),
+          'Must disconnect output value before removing connection.');
       this.outputConnection.dispose();
       this.outputConnection = null;
     }
@@ -1180,14 +1168,12 @@ Blockly.Block.prototype.toString = function(opt_maxLength, opt_emptyToken) {
       }
     }
   }
-  text = text.join(' ').trim() || '???';
+  text = goog.string.trim(text.join(' ')) || '???';
   if (opt_maxLength) {
     // TODO: Improve truncation so that text from this block is given priority.
     // E.g. "1+2+3+4+5+6+7+8+9=0" should be "...6+7+8+9=0", not "1+2+3+4+5...".
     // E.g. "1+2+3+4+5=6+7+8+9+0" should be "...4+5=6+7...".
-    if (text.length > opt_maxLength) {
-      text = text.substring(0, opt_maxLength - 3) + '...';
-    }
+    text = goog.string.truncate(text, opt_maxLength);
   }
   return text;
 };
@@ -1231,10 +1217,9 @@ Blockly.Block.prototype.jsonInit = function(json) {
   var warningPrefix = json['type'] ? 'Block "' + json['type'] + '": ' : '';
 
   // Validate inputs.
-  if (json['output'] && json['previousStatement']) {
-    throw Error(warningPrefix +
-        'Must not have both an output and a previousStatement.');
-  }
+  goog.asserts.assert(
+      json['output'] == undefined || json['previousStatement'] == undefined,
+      warningPrefix + 'Must not have both an output and a previousStatement.');
 
   // Set basic properties of block.
   if (json['colour'] !== undefined) {
@@ -1276,11 +1261,9 @@ Blockly.Block.prototype.jsonInit = function(json) {
     var localizedValue = Blockly.utils.replaceMessageReferences(rawValue);
     this.setHelpUrl(localizedValue);
   }
-  if (typeof json['extensions'] == 'string') {
-    console.warn(
-        warningPrefix + 'JSON attribute \'extensions\' should be an array of' +
-        ' strings. Found raw string in JSON for \'' + json['type'] +
-        '\' block.');
+  if (goog.isString(json['extensions'])) {
+    console.warn('JSON attribute \'extensions\' should be an array of ' +
+      'strings. Found raw string in JSON for \'' + json['type'] + '\' block.');
     json['extensions'] = [json['extensions']];  // Correct and continue.
   }
 
@@ -1317,8 +1300,8 @@ Blockly.Block.prototype.jsonInit = function(json) {
  * @param {boolean=} opt_disableCheck Option flag to disable overwrite checks.
  */
 Blockly.Block.prototype.mixin = function(mixinObj, opt_disableCheck) {
-  if (opt_disableCheck !== undefined && typeof opt_disableCheck != 'boolean') {
-    throw new Error('opt_disableCheck must be a boolean if provided');
+  if (goog.isDef(opt_disableCheck) && !goog.isBoolean(opt_disableCheck)) {
+    throw new Error("opt_disableCheck must be a boolean if provided");
   }
   if (!opt_disableCheck) {
     var overwrites = [];
@@ -1410,7 +1393,7 @@ Blockly.Block.prototype.interpolate_ = function(message, args, lastDummyAlign) {
   }
   // Add last dummy input if needed.
   if (elements.length && (typeof elements[elements.length - 1] == 'string' ||
-      Blockly.utils.startsWith(
+      goog.string.startsWith(
           elements[elements.length - 1]['type'], 'field_'))) {
     var dummyInput = {type: 'input_dummy'};
     if (lastDummyAlign) {
@@ -1530,12 +1513,9 @@ Blockly.Block.prototype.moveInputBefore = function(name, refName) {
       }
     }
   }
-  if (inputIndex == -1) {
-    throw Error('Named input "' + name + '" not found.');
-  }
-  if (refIndex == -1) {
-    throw Error('Reference input "' + refName + '" not found.');
-  }
+  goog.asserts.assert(inputIndex != -1, 'Named input "%s" not found.', name);
+  goog.asserts.assert(
+      refIndex != -1, 'Reference input "%s" not found.', refName);
   this.moveNumberedInputBefore(inputIndex, refIndex);
 };
 
@@ -1547,15 +1527,11 @@ Blockly.Block.prototype.moveInputBefore = function(name, refName) {
 Blockly.Block.prototype.moveNumberedInputBefore = function(
     inputIndex, refIndex) {
   // Validate arguments.
-  if (inputIndex == refIndex) {
-    throw Error('Can\'t move input to itself.');
-  }
-  if (inputIndex >= this.inputList.length) {
-    throw RangeError('Input index ' + inputIndex + ' out of bounds.');
-  }
-  if (refIndex > this.inputList.length) {
-    throw RangeError('Reference input ' + refIndex + ' out of bounds.');
-  }
+  goog.asserts.assert(inputIndex != refIndex, 'Can\'t move input to itself.');
+  goog.asserts.assert(inputIndex < this.inputList.length,
+      'Input index ' + inputIndex + ' out of bounds.');
+  goog.asserts.assert(refIndex <= this.inputList.length,
+      'Reference input ' + refIndex + ' out of bounds.');
   // Remove input.
   var input = this.inputList[inputIndex];
   this.inputList.splice(inputIndex, 1);
@@ -1570,7 +1546,7 @@ Blockly.Block.prototype.moveNumberedInputBefore = function(
  * Remove an input from this block.
  * @param {string} name The name of the input.
  * @param {boolean=} opt_quiet True to prevent error if input is not present.
- * @throws {Error} if the input is not present and
+ * @throws {goog.asserts.AssertionError} if the input is not present and
  *     opt_quiet is not true.
  */
 Blockly.Block.prototype.removeInput = function(name, opt_quiet) {
@@ -1593,7 +1569,7 @@ Blockly.Block.prototype.removeInput = function(name, opt_quiet) {
     }
   }
   if (!opt_quiet) {
-    throw Error('Input not found: ' + name);
+    goog.asserts.fail('Input "%s" not found.', name);
   }
 };
 
@@ -1726,9 +1702,7 @@ Blockly.Block.prototype.getRelativeToSurfaceXY = function() {
  * @param {number} dy Vertical offset, in workspace units.
  */
 Blockly.Block.prototype.moveBy = function(dx, dy) {
-  if (this.parentBlock_) {
-    throw Error('Block has parent.');
-  }
+  goog.asserts.assert(!this.parentBlock_, 'Block has parent.');
   var event = new Blockly.Events.BlockMove(this);
   this.xy_.translate(dx, dy);
   event.recordNew();

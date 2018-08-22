@@ -28,6 +28,7 @@
 goog.provide('Blockly.Generator');
 
 goog.require('Blockly.Block');
+goog.require('goog.asserts');
 
 
 /**
@@ -98,7 +99,7 @@ Blockly.Generator.prototype.workspaceToCode = function(workspace) {
   var blocks = workspace.getTopBlocks(true);
   for (var x = 0, block; block = blocks[x]; x++) {
     var line = this.blockToCode(block);
-    if (Array.isArray(line)) {
+    if (goog.isArray(line)) {
       // Value blocks return tuples of code and operator order.
       // Top-level blocks don't care about operator order.
       line = line[0];
@@ -172,32 +173,31 @@ Blockly.Generator.prototype.blockToCode = function(block) {
   }
 
   var func = this[block.type];
-  if (typeof func != 'function') {
-    throw Error('Language "' + this.name_ + '" does not know how to generate ' +
-        ' code for block type "' + block.type + '".');
-  }
+  goog.asserts.assertFunction(func,
+      'Language "%s" does not know how to generate code for block type "%s".',
+      this.name_, block.type);
   // First argument to func.call is the value of 'this' in the generator.
   // Prior to 24 September 2013 'this' was the only way to access the block.
   // The current prefered method of accessing the block is through the second
   // argument to func.call, which becomes the first parameter to the generator.
   var code = func.call(block, block);
-  if (Array.isArray(code)) {
+  if (goog.isArray(code)) {
     // Value blocks return tuples of code and operator order.
-    if (!block.outputConnection) {
-      throw TypeError('Expecting string from statement block: ' + block.type);
-    }
+    goog.asserts.assert(block.outputConnection,
+        'Expecting string from statement block "%s".', block.type);
     return [this.scrub_(block, code[0]), code[1]];
-  } else if (typeof code == 'string') {
+  } else if (goog.isString(code)) {
     var id = block.id.replace(/\$/g, '$$$$');  // Issue 251.
     if (this.STATEMENT_PREFIX) {
-      code = this.STATEMENT_PREFIX.replace(/%1/g, '\'' + id + '\'') + code;
+      code = this.STATEMENT_PREFIX.replace(/%1/g, '\'' + id + '\'') +
+          code;
     }
     return this.scrub_(block, code);
   } else if (code === null) {
     // Block has handled code generation itself.
     return '';
   } else {
-    throw SyntaxError('Invalid code generated: ' + code);
+    goog.asserts.fail('Invalid code generated: %s', code);
   }
 };
 
@@ -212,7 +212,7 @@ Blockly.Generator.prototype.blockToCode = function(block) {
  */
 Blockly.Generator.prototype.valueToCode = function(block, name, outerOrder) {
   if (isNaN(outerOrder)) {
-    throw TypeError('Expecting valid order from block: ' + block.type);
+    goog.asserts.fail('Expecting valid order from block "%s".', block.type);
   }
   var targetBlock = block.getInputTargetBlock(name);
   if (!targetBlock) {
@@ -225,13 +225,12 @@ Blockly.Generator.prototype.valueToCode = function(block, name, outerOrder) {
   }
   // Value blocks must return code and order of operations info.
   // Statement blocks must only return code.
-  if (!Array.isArray(tuple)) {
-    throw TypeError('Expecting tuple from value block: ' + targetBlock.type);
-  }
+  goog.asserts.assertArray(tuple, 'Expecting tuple from value block "%s".',
+      targetBlock.type);
   var code = tuple[0];
   var innerOrder = tuple[1];
   if (isNaN(innerOrder)) {
-    throw TypeError('Expecting valid order from value block: ' +
+    goog.asserts.fail('Expecting valid order from value block "%s".',
         targetBlock.type);
   }
   if (!code) {
@@ -283,10 +282,8 @@ Blockly.Generator.prototype.statementToCode = function(block, name) {
   var code = this.blockToCode(targetBlock);
   // Value blocks must return code and order of operations info.
   // Statement blocks must only return code.
-  if (typeof code != 'string') {
-    throw TypeError('Expecting code from statement block: ' +
-        (targetBlock && targetBlock.type));
-  }
+  goog.asserts.assertString(code, 'Expecting code from statement block "%s".',
+      targetBlock && targetBlock.type);
   if (code) {
     code = this.prefixLines(/** @type {string} */ (code), this.INDENT);
   }

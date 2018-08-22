@@ -31,6 +31,7 @@ goog.provide('Blockly.Field');
 goog.require('Blockly.Events.BlockChange');
 goog.require('Blockly.Gesture');
 
+goog.require('goog.asserts');
 goog.require('goog.dom');
 goog.require('goog.math.Size');
 goog.require('goog.style');
@@ -80,10 +81,10 @@ Blockly.Field.TYPE_MAP_ = {};
  *     object containing a fromJson function.
  */
 Blockly.Field.register = function(type, fieldClass) {
-  if ((typeof type != 'string') || (type.trim() == '')) {
+  if (!goog.isString(type) || goog.string.isEmptyOrWhitespace(type)) {
     throw new Error('Invalid field type "' + type + '"');
   }
-  if (!fieldClass || (typeof fieldClass.fromJson != 'function')) {
+  if (!goog.isObject(fieldClass) || !goog.isFunction(fieldClass.fromJson)) {
     throw new Error('Field "' + fieldClass +
         '" must have a fromJson function');
   }
@@ -204,9 +205,7 @@ Blockly.Field.prototype.SERIALIZABLE = true;
  * @param {!Blockly.Block} block The block containing this field.
  */
 Blockly.Field.prototype.setSourceBlock = function(block) {
-  if (this.sourceBlock_) {
-    throw Error('Field already bound to a block.');
-  }
+  goog.asserts.assert(!this.sourceBlock_, 'Field already bound to a block.');
   this.sourceBlock_ = block;
 };
 

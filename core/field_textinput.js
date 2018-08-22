@@ -33,6 +33,7 @@ goog.require('Blockly.Msg');
 goog.require('Blockly.scratchBlocksUtils');
 goog.require('Blockly.utils');
 
+goog.require('goog.asserts');
 goog.require('goog.dom');
 goog.require('goog.dom.TagName');
 goog.require('goog.userAgent');
@@ -428,9 +429,7 @@ Blockly.FieldTextInput.prototype.onHtmlInputChange_ = function(e) {
  */
 Blockly.FieldTextInput.prototype.validate_ = function() {
   var valid = true;
-  if (!Blockly.FieldTextInput.htmlInput_) {
-    throw Error('htmlInput not defined');
-  }
+  goog.asserts.assertObject(Blockly.FieldTextInput.htmlInput_);
   var htmlInput = Blockly.FieldTextInput.htmlInput_;
   if (this.sourceBlock_) {
     valid = this.callValidator(htmlInput.value);

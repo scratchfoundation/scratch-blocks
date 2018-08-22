@@ -27,6 +27,7 @@
 goog.provide('Blockly.WorkspaceDragger');
 
 goog.require('goog.math.Coordinate');
+goog.require('goog.asserts');
 
 
 /**

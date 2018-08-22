@@ -167,8 +167,7 @@ Blockly.Tooltip.onMouseOver_ = function(e) {
   // If the tooltip is an object, treat it as a pointer to the next object in
   // the chain to look at.  Terminate when a string or function is found.
   var element = e.target;
-  while ((typeof element.tooltip != 'string') &&
-         (typeof element.tooltip != 'function')) {
+  while (!goog.isString(element.tooltip) && !goog.isFunction(element.tooltip)) {
     element = element.tooltip;
   }
   if (Blockly.Tooltip.element_ != element) {
@@ -290,7 +289,7 @@ Blockly.Tooltip.show_ = function() {
   goog.dom.removeChildren(/** @type {!Element} */ (Blockly.Tooltip.DIV));
   // Get the new text.
   var tip = Blockly.Tooltip.element_.tooltip;
-  while (typeof tip == 'function') {
+  while (goog.isFunction(tip)) {
     tip = tip();
   }
   tip = Blockly.utils.wrap(tip, Blockly.Tooltip.LIMIT);
