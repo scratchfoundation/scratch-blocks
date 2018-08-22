@@ -30,6 +30,7 @@ goog.require('Blockly.FieldDropdown');
 goog.require('Blockly.Msg');
 goog.require('Blockly.VariableModel');
 goog.require('Blockly.Variables');
+goog.require('goog.asserts');
 goog.require('goog.string');
 
 
@@ -158,9 +159,8 @@ Blockly.FieldVariable.dispose = function() {
  * @param {!Blockly.Block} block The block containing this field.
  */
 Blockly.FieldVariable.prototype.setSourceBlock = function(block) {
-  if (block.isShadow()) {
-    throw Error('Variable fields are not allowed to exist on shadow blocks.');
-  }
+  goog.asserts.assert(!block.isShadow(),
+      'Variable fields are not allowed to exist on shadow blocks.');
   Blockly.FieldVariable.superClass_.setSourceBlock.call(this, block);
 };
 

@@ -930,7 +930,7 @@ Blockly.WorkspaceSvg.prototype.highlightBlock = function(id, opt_state) {
     var state = (opt_state === undefined) || opt_state;
     // Using Set here would be great, but at the cost of IE10 support.
     if (!state) {
-      Blockly.utils.arrayRemove(this.highlightedBlocks_, block);
+      goog.array.remove(this.highlightedBlocks_, block);
     } else if (this.highlightedBlocks_.indexOf(block) == -1) {
       this.highlightedBlocks_.push(block);
     }
@@ -1552,23 +1552,23 @@ Blockly.WorkspaceSvg.prototype.updateToolbox = function(tree) {
   tree = Blockly.Options.parseToolboxTree(tree);
   if (!tree) {
     if (this.options.languageTree) {
-      throw Error('Can\'t nullify an existing toolbox.');
+      throw 'Can\'t nullify an existing toolbox.';
     }
     return;  // No change (null to null).
   }
   if (!this.options.languageTree) {
-    throw Error('Existing toolbox is null.  Can\'t create new toolbox.');
+    throw 'Existing toolbox is null.  Can\'t create new toolbox.';
   }
   if (tree.getElementsByTagName('category').length) {
     if (!this.toolbox_) {
-      throw Error('Existing toolbox has no categories.  Can\'t change mode.');
+      throw 'Existing toolbox has no categories.  Can\'t change mode.';
     }
     this.options.languageTree = tree;
     this.toolbox_.populate_(tree);
     this.toolbox_.position();
   } else {
     if (!this.flyout_) {
-      throw Error('Existing toolbox has categories.  Can\'t change mode.');
+      throw 'Existing toolbox has categories.  Can\'t change mode.';
     }
     this.options.languageTree = tree;
     this.flyout_.show(tree.childNodes);
@@ -1603,7 +1603,7 @@ Blockly.WorkspaceSvg.prototype.setBrowserFocus = function() {
   try {
     // Focus the workspace SVG - this is for Chrome and Firefox.
     this.getParentSvg().focus();
-  } catch (e) {
+  }  catch (e) {
     // IE and Edge do not support focus on SVG elements. When that fails
     // above, get the injectionDiv (the workspace's parent) and focus that
     // instead.  This doesn't work in Chrome.
@@ -2044,14 +2044,13 @@ Blockly.WorkspaceSvg.getTopLevelWorkspaceMetrics_ = function() {
  */
 Blockly.WorkspaceSvg.setTopLevelWorkspaceMetrics_ = function(xyRatio) {
   if (!this.scrollbar) {
-    throw Error('Attempt to set top level workspace scroll without ' +
-        'scrollbars.');
+    throw 'Attempt to set top level workspace scroll without scrollbars.';
   }
   var metrics = this.getMetrics();
-  if (typeof xyRatio.x == 'number') {
+  if (goog.isNumber(xyRatio.x)) {
     this.scrollX = -metrics.contentWidth * xyRatio.x - metrics.contentLeft;
   }
-  if (typeof xyRatio.y == 'number') {
+  if (goog.isNumber(xyRatio.y)) {
     this.scrollY = -metrics.contentHeight * xyRatio.y - metrics.contentTop;
   }
   var x = this.scrollX + metrics.absoluteLeft;
@@ -2116,9 +2115,8 @@ Blockly.WorkspaceSvg.prototype.clear = function() {
  *     given button is clicked.
  */
 Blockly.WorkspaceSvg.prototype.registerButtonCallback = function(key, func) {
-  if (typeof func != 'function') {
-    throw TypeError('Button callbacks must be functions.');
-  }
+  goog.asserts.assert(goog.isFunction(func),
+      'Button callbacks must be functions.');
   this.flyoutButtonCallbacks_[key] = func;
 };
 
@@ -2152,9 +2150,8 @@ Blockly.WorkspaceSvg.prototype.removeButtonCallback = function(key) {
  */
 Blockly.WorkspaceSvg.prototype.registerToolboxCategoryCallback = function(key,
     func) {
-  if (typeof func != 'function') {
-    throw TypeError('Toolbox category callbacks must be functions.');
-  }
+  goog.asserts.assert(goog.isFunction(func),
+      'Toolbox category callbacks must be functions.');
   this.toolboxCategoryCallbacks_[key] = func;
 };
 

@@ -317,7 +317,7 @@ Blockly.FieldDropdown.prototype.trimOptions_ = function() {
   this.prefixField = null;
   this.suffixField = null;
   var options = this.menuGenerator_;
-  if (!Array.isArray(options)) {
+  if (!goog.isArray(options)) {
     return;
   }
   var hasImages = false;
@@ -373,7 +373,7 @@ Blockly.FieldDropdown.prototype.trimOptions_ = function() {
  *     Otherwise false.
  */
 Blockly.FieldDropdown.prototype.isOptionListDynamic = function() {
-  return typeof this.menuGenerator_ == 'function';
+  return goog.isFunction(this.menuGenerator_);
 };
 
 /**

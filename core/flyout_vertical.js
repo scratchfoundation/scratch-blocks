@@ -248,7 +248,7 @@ Blockly.VerticalFlyout.prototype.setMetrics_ = function(xyRatio) {
   if (!metrics) {
     return;
   }
-  if (typeof xyRatio.y == 'number') {
+  if (goog.isNumber(xyRatio.y)) {
     this.workspace_.scrollY = -metrics.contentHeight * xyRatio.y;
   }
   this.workspace_.translate(this.workspace_.scrollX + metrics.absoluteLeft,
