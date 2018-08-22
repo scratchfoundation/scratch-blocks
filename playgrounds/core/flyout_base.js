@@ -860,7 +860,7 @@ Blockly.Flyout.prototype.placeNewBlock_ = function(oldBlock) {
   var targetWorkspace = this.targetWorkspace_;
   var svgRootOld = oldBlock.getSvgRoot();
   if (!svgRootOld) {
-    throw Error('oldBlock is not rendered.');
+    throw 'oldBlock is not rendered.';
   }
 
   // Create the new block by cloning the block in the flyout (via XML).
@@ -874,7 +874,7 @@ Blockly.Flyout.prototype.placeNewBlock_ = function(oldBlock) {
   var block = Blockly.Xml.domToBlock(xml, targetWorkspace);
   var svgRootNew = block.getSvgRoot();
   if (!svgRootNew) {
-    throw Error('block is not rendered.');
+    throw 'block is not rendered.';
   }
 
   // The offset in pixels between the main workspace's origin and the upper left

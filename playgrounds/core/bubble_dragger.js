@@ -31,6 +31,7 @@ goog.require('Blockly.Events.CommentMove');
 goog.require('Blockly.WorkspaceCommentSvg');
 
 goog.require('goog.math.Coordinate');
+goog.require('goog.asserts');
 
 
 /**
