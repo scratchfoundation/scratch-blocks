@@ -99,7 +99,9 @@ Blockly.ScratchBubble = function(comment, workspace, content, anchorXY,
     Blockly.bindEventWithChecks_(
         this.deleteIcon_, 'mouseup', this, this.deleteMouseUp_);
     Blockly.bindEventWithChecks_(
-        this.bubbleGroup_, 'mousedown', this, this.bubbleMouseDown_);
+        this.commentTopBar_, 'mousedown', this, this.bubbleMouseDown_);
+    Blockly.bindEventWithChecks_(
+        this.bubbleBack_, 'mousedown', this, this.bubbleMouseDown_);
     if (this.resizeGroup_) {
       Blockly.bindEventWithChecks_(
           this.resizeGroup_, 'mousedown', this, this.resizeMouseDown_);
