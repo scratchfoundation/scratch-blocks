@@ -75,7 +75,7 @@ Blockly.Css.mediaPath_ = '';
  *     (providing CSS becomes the document's responsibility).
  * @param {string} pathToMedia Path from page to the Blockly media directory.
  */
-Blockly.Css.inject = function(hasCss, pathToMedia) {
+Blockly.Css.inject = function(hasCss, pathToMedia, isRtl) {
   // Only inject the CSS once.
   if (Blockly.Css.styleSheet_) {
     return;
@@ -86,6 +86,13 @@ Blockly.Css.inject = function(hasCss, pathToMedia) {
     text += Blockly.Css.CONTENT.join('\n');
     if (Blockly.FieldDate) {
       text += Blockly.FieldDate.CSS.join('\n');
+    }
+    if (isRtl) {
+      text += [
+        '.blocklyText {',
+          'direction: rtl;',
+        '}'
+      ].join('\n');
     }
   }
   // Strip off any trailing slash (either Unix or Windows).
@@ -1088,9 +1095,10 @@ Blockly.Css.CONTENT = [
   /* #noflip */
   '.blocklyWidgetDiv .goog-menuitem.goog-menuitem-rtl, ',
   '.blocklyDropDownDiv .goog-menuitem.goog-menuitem-rtl {',
-     /* Flip left/right padding for BiDi. */
+     /* Flip left/right padding for BiDi. Set direction to right align text */
     'padding-left: 7em;',
     'padding-right: 28px;',
+    'direction: rtl;',
   '}',
 
   /* If a menu doesn't have checkable items or items with icons, remove padding. */
@@ -1182,7 +1190,7 @@ Blockly.Css.CONTENT = [
   '.blocklyDropDownDiv .goog-menuitem-rtl .goog-menuitem-icon {',
      /* Flip left/right positioning. */
      'float: right;',
-     'margin-left: 6px;',
+     'margin-right: -24px;',
   '}',
 
   /* Keyboard shortcut ("accelerator") style. */
