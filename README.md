@@ -3,6 +3,8 @@
 [![Build Status](https://travis-ci.org/LLK/scratch-blocks.svg?branch=develop)](https://travis-ci.org/LLK/scratch-blocks)
 [![Dependency Status](https://david-dm.org/LLK/scratch-blocks.svg)](https://david-dm.org/LLK/scratch-blocks)
 [![devDependency Status](https://david-dm.org/LLK/scratch-blocks/dev-status.svg)](https://david-dm.org/LLK/scratch-blocks#info=devDependencies)
+[![Code Quality: Javascript](https://img.shields.io/lgtm/grade/javascript/g/LLK/scratch-blocks.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/LLK/scratch-blocks/context:javascript)
+[![Total Alerts](https://img.shields.io/lgtm/alerts/g/LLK/scratch-blocks.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/LLK/scratch-blocks/alerts)
 
 ![](https://cloud.githubusercontent.com/assets/747641/15227351/c37c09da-1854-11e6-8dc7-9a298f2b1f01.jpg)
 
