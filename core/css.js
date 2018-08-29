@@ -1095,10 +1095,9 @@ Blockly.Css.CONTENT = [
   /* #noflip */
   '.blocklyWidgetDiv .goog-menuitem.goog-menuitem-rtl, ',
   '.blocklyDropDownDiv .goog-menuitem.goog-menuitem-rtl {',
-     /* Flip left/right padding for BiDi. Set direction to right align text */
+     /* Flip left/right padding for BiDi. */
     'padding-left: 7em;',
     'padding-right: 28px;',
-    'direction: rtl;',
   '}',
 
   /* If a menu doesn't have checkable items or items with icons, remove padding. */
