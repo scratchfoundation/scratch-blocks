@@ -87,13 +87,6 @@ Blockly.Css.inject = function(hasCss, pathToMedia, isRtl) {
     if (Blockly.FieldDate) {
       text += Blockly.FieldDate.CSS.join('\n');
     }
-    if (isRtl) {
-      text += [
-        '.blocklyText {',
-          'direction: rtl;',
-        '}'
-      ].join('\n');
-    }
   }
   // Strip off any trailing slash (either Unix or Windows).
   Blockly.Css.mediaPath_ = pathToMedia.replace(/[\\\/]$/, '');
