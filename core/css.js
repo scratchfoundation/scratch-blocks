@@ -75,7 +75,7 @@ Blockly.Css.mediaPath_ = '';
  *     (providing CSS becomes the document's responsibility).
  * @param {string} pathToMedia Path from page to the Blockly media directory.
  */
-Blockly.Css.inject = function(hasCss, pathToMedia, isRtl) {
+Blockly.Css.inject = function(hasCss, pathToMedia) {
   // Only inject the CSS once.
   if (Blockly.Css.styleSheet_) {
     return;
