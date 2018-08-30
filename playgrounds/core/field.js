@@ -603,8 +603,12 @@ Blockly.Field.prototype.getDisplayText_ = function() {
   // Replace whitespace with non-breaking spaces so the text doesn't collapse.
   text = text.replace(/\s/g, Blockly.Field.NBSP);
   if (this.sourceBlock_.RTL) {
-    // The SVG is LTR, force text to be RTL.
-    text += '\u200F';
+    // The SVG is LTR, force text to be RTL unless a number.
+    if (this.sourceBlock_.editable_ && this.sourceBlock_.type === 'math_number') {
+      text = '\u202A' + text + '\u202C';
+    } else {
+      text = '\u202B' + text + '\u202C';
+    }
   }
   return text;
 };
@@ -676,7 +680,11 @@ Blockly.Field.prototype.updateTextNode_ = function() {
   text = text.replace(/\s/g, Blockly.Field.NBSP);
   if (this.sourceBlock_.RTL && text) {
     // The SVG is LTR, force text to be RTL.
-    text += '\u200F';
+    if (this.sourceBlock_.editable_ && this.sourceBlock_.type === 'math_number') {
+      text = '\u202A' + text + '\u202C';
+    } else {
+      text = '\u202B' + text + '\u202C';
+    }
   }
   if (!text) {
     // Prevent the field from disappearing if empty.
