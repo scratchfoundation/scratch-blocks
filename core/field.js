@@ -605,7 +605,7 @@ Blockly.Field.prototype.getDisplayText_ = function() {
   if (this.sourceBlock_.RTL) {
     // The SVG is LTR, force text to be RTL unless a number.
     if (this.sourceBlock_.editable_ && this.sourceBlock_.type === 'math_number') {
-      text += '\u200E';
+      text = '\u202A' + text + '\u202C';
     } else {
       text = '\u202B' + text + '\u202C';
     }
@@ -681,7 +681,7 @@ Blockly.Field.prototype.updateTextNode_ = function() {
   if (this.sourceBlock_.RTL && text) {
     // The SVG is LTR, force text to be RTL.
     if (this.sourceBlock_.editable_ && this.sourceBlock_.type === 'math_number') {
-      text += '\u200E';
+      text = '\u202A' + text + '\u202C';
     } else {
       text = '\u202B' + text + '\u202C';
     }
