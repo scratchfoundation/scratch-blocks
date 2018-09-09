@@ -401,9 +401,39 @@ Blockly.Blocks['sensing_resettimer'] = {
   }
 };
 
+Blockly.Blocks['sensing_of_property_menu'] = {
+  /**
+   * "* of _" property menu (the first dropdown).
+   * @this Blockly.block
+   */
+  init: function() {
+    this.jsonInit({
+      "message0": "%1",
+      "args0": [
+        {
+          "type": "field_dropdown",
+          "name": "PROPERTY",
+          "options": [
+            [Blockly.Msg.SENSING_OF_XPOSITION, 'x position'],
+            [Blockly.Msg.SENSING_OF_YPOSITION, 'y position'],
+            [Blockly.Msg.SENSING_OF_DIRECTION, 'direction'],
+            [Blockly.Msg.SENSING_OF_COSTUMENUMBER, 'costume #'],
+            [Blockly.Msg.SENSING_OF_COSTUMENAME, 'costume name'],
+            [Blockly.Msg.SENSING_OF_SIZE, 'size'],
+            [Blockly.Msg.SENSING_OF_VOLUME, 'volume'],
+            [Blockly.Msg.SENSING_OF_BACKDROPNUMBER, 'backdrop #'],
+            [Blockly.Msg.SENSING_OF_BACKDROPNAME, 'backdrop name']
+          ]
+        }
+      ],
+      "extensions": ["colours_sensing", "output_string"]
+    });
+  }
+};
+
 Blockly.Blocks['sensing_of_object_menu'] = {
   /**
-   * "* of _" object menu.
+   * "* of _" object menu (the second dropdown).
    * @this Blockly.Block
    */
   init: function() {
@@ -424,7 +454,6 @@ Blockly.Blocks['sensing_of_object_menu'] = {
   }
 };
 
-
 Blockly.Blocks['sensing_of'] = {
   /**
    * Block to report properties of sprites.
@@ -435,19 +464,8 @@ Blockly.Blocks['sensing_of'] = {
       "message0": Blockly.Msg.SENSING_OF,
       "args0": [
         {
-          "type": "field_dropdown",
-          "name": "PROPERTY",
-          "options": [
-            [Blockly.Msg.SENSING_OF_XPOSITION, 'x position'],
-            [Blockly.Msg.SENSING_OF_YPOSITION, 'y position'],
-            [Blockly.Msg.SENSING_OF_DIRECTION, 'direction'],
-            [Blockly.Msg.SENSING_OF_COSTUMENUMBER, 'costume #'],
-            [Blockly.Msg.SENSING_OF_COSTUMENAME, 'costume name'],
-            [Blockly.Msg.SENSING_OF_SIZE, 'size'],
-            [Blockly.Msg.SENSING_OF_VOLUME, 'volume'],
-            [Blockly.Msg.SENSING_OF_BACKDROPNUMBER, 'backdrop #'],
-            [Blockly.Msg.SENSING_OF_BACKDROPNAME, 'backdrop name']
-          ]
+          "type": "input_value",
+          "name": "PROPERTY"
         },
         {
           "type": "input_value",
