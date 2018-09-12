@@ -39,6 +39,7 @@ goog.require('Blockly.Touch');
 goog.require('Blockly.utils');
 
 goog.require('goog.Timer');
+goog.require('goog.asserts');
 goog.require('goog.dom');
 goog.require('goog.math.Coordinate');
 
@@ -143,9 +144,7 @@ Blockly.BlockSvg.INLINE = -1;
  * May be called more than once.
  */
 Blockly.BlockSvg.prototype.initSvg = function() {
-  if (!this.workspace.rendered) {
-    throw TypeError('Workspace is headless.');
-  }
+  goog.asserts.assert(this.workspace.rendered, 'Workspace is headless.');
   if (!this.isInsertionMarker()) { // Insertion markers not allowed to have inputs or icons
     // Input shapes are empty holes drawn when a value input is not connected.
     for (var i = 0, input; input = this.inputList[i]; i++) {
@@ -363,9 +362,7 @@ Blockly.BlockSvg.prototype.getRelativeToSurfaceXY = function() {
  * @param {number} dy Vertical offset in workspace units.
  */
 Blockly.BlockSvg.prototype.moveBy = function(dx, dy) {
-  if (this.parentBlock_) {
-    throw Error('Block has parent.');
-  }
+  goog.asserts.assert(!this.parentBlock_, 'Block has parent.');
   var eventsEnabled = Blockly.Events.isEnabled();
   if (eventsEnabled) {
     var event = new Blockly.Events.BlockMove(this);
@@ -651,7 +648,7 @@ Blockly.BlockSvg.prototype.onMouseDown_ = function(e) {
  * @private
  */
 Blockly.BlockSvg.prototype.showHelp_ = function() {
-  var url = (typeof this.helpUrl == 'function') ? this.helpUrl() : this.helpUrl;
+  var url = goog.isFunction(this.helpUrl) ? this.helpUrl() : this.helpUrl;
   if (url) {
     // @todo rewrite
     alert(url);
@@ -892,7 +889,7 @@ Blockly.BlockSvg.prototype.getCommentText = function() {
 Blockly.BlockSvg.prototype.setCommentText = function(text, commentId,
     commentX, commentY, minimized) {
   var changedState = false;
-  if (typeof text == 'string') {
+  if (goog.isString(text)) {
     if (!this.comment) {
       this.comment = new Blockly.ScratchBlockComment(this, text, commentId,
           commentX, commentY, minimized);
@@ -908,7 +905,7 @@ Blockly.BlockSvg.prototype.setCommentText = function(text, commentId,
   }
   if (changedState && this.rendered) {
     this.render();
-    if (typeof text == 'string') {
+    if (goog.isString(text)) {
       this.comment.setVisible(true);
     }
     // Adding or removing a comment icon will cause the block to change shape.
@@ -957,7 +954,7 @@ Blockly.BlockSvg.prototype.setWarningText = function(text, opt_id) {
   }
 
   var changedState = false;
-  if (typeof text == 'string') {
+  if (goog.isString(text)) {
     if (!this.warning) {
       this.warning = new Blockly.Warning(this);
       changedState = true;

@@ -31,6 +31,7 @@ goog.provide('Blockly.Field');
 goog.require('Blockly.Events.BlockChange');
 goog.require('Blockly.Gesture');
 
+goog.require('goog.asserts');
 goog.require('goog.dom');
 goog.require('goog.math.Size');
 goog.require('goog.style');
@@ -80,10 +81,10 @@ Blockly.Field.TYPE_MAP_ = {};
  *     object containing a fromJson function.
  */
 Blockly.Field.register = function(type, fieldClass) {
-  if ((typeof type != 'string') || (type.trim() == '')) {
+  if (!goog.isString(type) || goog.string.isEmptyOrWhitespace(type)) {
     throw new Error('Invalid field type "' + type + '"');
   }
-  if (!fieldClass || (typeof fieldClass.fromJson != 'function')) {
+  if (!goog.isObject(fieldClass) || !goog.isFunction(fieldClass.fromJson)) {
     throw new Error('Field "' + fieldClass +
         '" must have a fromJson function');
   }
@@ -204,9 +205,7 @@ Blockly.Field.prototype.SERIALIZABLE = true;
  * @param {!Blockly.Block} block The block containing this field.
  */
 Blockly.Field.prototype.setSourceBlock = function(block) {
-  if (this.sourceBlock_) {
-    throw Error('Field already bound to a block.');
-  }
+  goog.asserts.assert(!this.sourceBlock_, 'Field already bound to a block.');
   this.sourceBlock_ = block;
 };
 
@@ -604,8 +603,12 @@ Blockly.Field.prototype.getDisplayText_ = function() {
   // Replace whitespace with non-breaking spaces so the text doesn't collapse.
   text = text.replace(/\s/g, Blockly.Field.NBSP);
   if (this.sourceBlock_.RTL) {
-    // The SVG is LTR, force text to be RTL.
-    text += '\u200F';
+    // The SVG is LTR, force text to be RTL unless a number.
+    if (this.sourceBlock_.editable_ && this.sourceBlock_.type === 'math_number') {
+      text = '\u202A' + text + '\u202C';
+    } else {
+      text = '\u202B' + text + '\u202C';
+    }
   }
   return text;
 };
@@ -677,7 +680,11 @@ Blockly.Field.prototype.updateTextNode_ = function() {
   text = text.replace(/\s/g, Blockly.Field.NBSP);
   if (this.sourceBlock_.RTL && text) {
     // The SVG is LTR, force text to be RTL.
-    text += '\u200F';
+    if (this.sourceBlock_.editable_ && this.sourceBlock_.type === 'math_number') {
+      text = '\u202A' + text + '\u202C';
+    } else {
+      text = '\u202B' + text + '\u202C';
+    }
   }
   if (!text) {
     // Prevent the field from disappearing if empty.

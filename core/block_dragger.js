@@ -33,6 +33,7 @@ goog.require('Blockly.Events.EndBlockDrag');
 goog.require('Blockly.InsertionMarkerManager');
 
 goog.require('goog.math.Coordinate');
+goog.require('goog.asserts');
 
 
 /**
