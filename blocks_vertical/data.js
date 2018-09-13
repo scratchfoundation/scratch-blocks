@@ -607,6 +607,7 @@ Blockly.Extensions.registerMixin('contextMenu_getListBlock',
  * block.
  * @param {!Blockly.Block} block The block to update.
  * @param {string} name The new name to display on the block.
+ * @param {string} type The type of the field (VARIABLE or LIST).
  * @return {!function()} A function that updates the block with the new name.
  */
 Blockly.Constants.Data.VARIABLE_OPTION_CALLBACK_FACTORY = function(block, name, type) {
@@ -623,6 +624,7 @@ Blockly.Constants.Data.VARIABLE_OPTION_CALLBACK_FACTORY = function(block, name, 
  * Callback for rename variable dropdown menu option associated with a
  * variable getter block.
  * @param {!Blockly.Block} block The block with the variable to rename.
+ * @param {string} type The type of the field (VARIABLE or LIST).
  * @return {!function()} A function that renames the variable.
  */
 Blockly.Constants.Data.RENAME_OPTION_CALLBACK_FACTORY = function(block, type) {
@@ -637,6 +639,7 @@ Blockly.Constants.Data.RENAME_OPTION_CALLBACK_FACTORY = function(block, type) {
  * Callback for delete variable dropdown menu option associated with a
  * variable getter block.
  * @param {!Blockly.Block} block The block with the variable to delete.
+ * @param {string} type The type of the field (VARIABLE or LIST).
  * @return {!function()} A function that deletes the variable.
  */
 Blockly.Constants.Data.DELETE_OPTION_CALLBACK_FACTORY = function(block, type) {
