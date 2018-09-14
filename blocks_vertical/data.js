@@ -579,13 +579,13 @@ Blockly.Constants.Data.CUSTOM_CONTEXT_MENU_GET_LIST_MIXIN = {
       }
     } else {
       var renameOption = {
-        text: Blockly.Msg.RENAME_VARIABLE,
+        text: Blockly.Msg.RENAME_LIST,
         enabled: true,
         callback: Blockly.Constants.Data.RENAME_OPTION_CALLBACK_FACTORY(this, 'LIST')
       };
       var name = this.getField('LIST').text_;
       var deleteOption = {
-        text: Blockly.Msg.DELETE_VARIABLE.replace('%1', name),
+        text: Blockly.Msg.DELETE_LIST.replace('%1', name),
         enabled: true,
         callback: Blockly.Constants.Data.DELETE_OPTION_CALLBACK_FACTORY(this, 'LIST')
       };

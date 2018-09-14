@@ -335,9 +335,13 @@ Blockly.Msg.NEW_LIST = 'Make a List';
 Blockly.Msg.NEW_LIST_TITLE = 'New list name:';
 Blockly.Msg.LIST_MODAL_TITLE = 'New List';
 Blockly.Msg.LIST_ALREADY_EXISTS = 'A list named "%1" already exists.';
+Blockly.Msg.RENAME_LIST = 'Rename list';
 Blockly.Msg.RENAME_LIST_TITLE = 'Rename all "%1" lists to:';
 Blockly.Msg.RENAME_LIST_MODAL_TITLE = 'Rename List';
 Blockly.Msg.DEFAULT_LIST_ITEM = 'thing';
+Blockly.Msg.DELETE_LIST_CONFIRMATION = 'Delete %1 uses of the "%2" list?';
+Blockly.Msg.CANNOT_DELETE_LIST_PROCEDURE = 'Can\'t delete the list "%1" because it\'s part of the definition of the function "%2"';
+Blockly.Msg.DELETE_LIST = 'Delete the "%1" list';
 
 // Broadcast Messages
 // @todo Remove these once fully managed by Scratch VM / Scratch GUI

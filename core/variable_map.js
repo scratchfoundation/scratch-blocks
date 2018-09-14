@@ -240,13 +240,20 @@ Blockly.VariableMap.prototype.deleteVariableById = function(id) {
   var variable = this.getVariableById(id);
   if (variable) {
     // Check whether this variable is a function parameter before deleting.
+    var variableType = variable.type;
     var variableName = variable.name;
     var uses = this.getVariableUsesById(id);
     for (var i = 0, block; block = uses[i]; i++) {
       if (block.type == Blockly.PROCEDURES_DEFINITION_BLOCK_TYPE ||
         block.type == 'procedures_defreturn') {
         var procedureName = block.getFieldValue('NAME');
-        var deleteText = Blockly.Msg.CANNOT_DELETE_VARIABLE_PROCEDURE.
+        // Check whether variable is a list
+        if (variableType == Blockly.LIST_VARIABLE_TYPE) {
+          var deleteText = Blockly.Msg.CANNOT_DELETE_LIST_PROCEDURE;
+        } else {
+          var deleteText = Blockly.Msg.CANNOT_DELETE_VARIABLE_PROCEDURE;
+        }
+        deleteText = deleteText.
             replace('%1', variableName).
             replace('%2', procedureName);
         Blockly.alert(deleteText);
@@ -256,10 +263,16 @@ Blockly.VariableMap.prototype.deleteVariableById = function(id) {
 
     var map = this;
     if (uses.length > 1) {
-      // Confirm before deleting multiple blocks.
-      var confirmText = Blockly.Msg.DELETE_VARIABLE_CONFIRMATION.
+      // Check whether variable is a list
+      if (variableType == Blockly.LIST_VARIABLE_TYPE) {
+        var confirmText = Blockly.Msg.DELETE_LIST_CONFIRMATION;
+      } else {
+        var confirmText = Blockly.Msg.DELETE_VARIABLE_CONFIRMATION;
+      }
+      confirmText = confirmText.
           replace('%1', String(uses.length)).
           replace('%2', variableName);
+      // Confirm before deleting multiple blocks.
       Blockly.confirm(confirmText,
           function(ok) {
             if (ok) {
