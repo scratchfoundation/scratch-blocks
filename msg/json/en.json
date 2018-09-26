@@ -30,6 +30,7 @@
     "DATA_INSERTATLIST": "insert %1 at %2 of %3",
     "DATA_REPLACEITEMOFLIST": "replace item %1 of %2 with %3",
     "DATA_ITEMOFLIST": "item %1 of %2",
+    "DATA_ITEMNUMOFLIST": "item # of %1 in %2",
     "DATA_LENGTHOFLIST": "length of %1",
     "DATA_LISTCONTAINSITEM": "%1 contains %2?",
     "DATA_SHOWLIST": "show list %1",
