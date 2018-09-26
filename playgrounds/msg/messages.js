@@ -67,6 +67,7 @@ Blockly.Msg.DATA_DELETEALLOFLIST = 'delete all of %1';
 Blockly.Msg.DATA_INSERTATLIST = 'insert %1 at %2 of %3';
 Blockly.Msg.DATA_REPLACEITEMOFLIST = 'replace item %1 of %2 with %3';
 Blockly.Msg.DATA_ITEMOFLIST = 'item %1 of %2';
+Blockly.Msg.DATA_ITEMNUMOFLIST = 'item # of %1 in %2';
 Blockly.Msg.DATA_LENGTHOFLIST = 'length of %1';
 Blockly.Msg.DATA_LISTCONTAINSITEM = '%1 contains %2?';
 Blockly.Msg.DATA_SHOWLIST = 'show list %1';
