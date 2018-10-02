@@ -298,7 +298,7 @@ Blockly.ScratchBlockComment.prototype.autoPosition_ = function() {
   if (this.isMinimized_) {
     var minimizedOffset = 4 * Blockly.BlockSvg.GRID_UNIT;
     this.x_ = this.block_.RTL ?
-        this.iconXY_.x - minimizedOffset :
+        this.iconXY_.x - this.getBubbleSize().width - minimizedOffset :
         this.iconXY_.x + minimizedOffset;
     this.y_ = this.iconXY_.y - (Blockly.ScratchBubble.TOP_BAR_HEIGHT / 2);
   } else {
@@ -546,7 +546,7 @@ Blockly.ScratchBlockComment.prototype.getHeightWidth = function() {
  */
 Blockly.ScratchBlockComment.prototype.getBoundingRectangle = function() {
   var commentXY = this.getXY();
-  var commentBounds = this.getHeightWidth();
+  var commentBounds = this.getBubbleSize();
   var topLeft;
   var bottomRight;
   if (this.workspace.RTL) {
@@ -593,7 +593,8 @@ Blockly.ScratchBlockComment.prototype.toXmlWithXY = function() {
   var element = goog.dom.createDom('comment');
   element.setAttribute('id', this.id);
   element.textContent = this.text_;
-  element.setAttribute('x', Math.round(this.x_));
+  element.setAttribute('x', Math.round(
+      this.workspace.RTL ? this.workspace.getWidth() - this.x_ : this.x_));
   element.setAttribute('y', Math.round(this.y_));
   element.setAttribute('h', this.height_);
   element.setAttribute('w', this.width_);

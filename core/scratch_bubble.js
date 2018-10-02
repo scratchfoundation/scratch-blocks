@@ -590,6 +590,7 @@ Blockly.ScratchBubble.prototype.renderArrow_ = function() {
     var run = relAnchorX - relBubbleX;
     if (this.workspace_.RTL) {
       run *= -1;
+      run -= this.width_;
     }
 
     var baseX1 = relBubbleX;
@@ -638,8 +639,12 @@ Blockly.ScratchBubble.prototype.moveDuringDrag = function(dragSurface, newLoc) {
  * @private
  */
 Blockly.ScratchBubble.prototype.updatePosition_ = function(x, y) {
+  // Relative left is the distance *and* direction to get from the comment
+  // anchor position on the block to the starting edge of the comment (e.g.
+  // the left edge of the comment in LTR and the right edge of the comment in RTL)
   if (this.workspace_.RTL) {
-    this.relativeLeft_ = this.anchorXY_.x - x - this.width_;
+    // we want relativeLeft_ to actually be the distance from the anchor point to the *right* edge of the comment in RTL
+    this.relativeLeft_ = this.anchorXY_.x - x;
   } else {
     this.relativeLeft_ = x - this.anchorXY_.x;
   }

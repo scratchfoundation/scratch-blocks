@@ -251,8 +251,8 @@ Blockly.Workspace.prototype.getTopComments = function(ordered) {
       offset *= -1;
     }
     comments.sort(function(a, b) {
-      var aXY = a.getRelativeToSurfaceXY();
-      var bXY = b.getRelativeToSurfaceXY();
+      var aXY = a instanceof Blockly.ScratchBlockComment ? a.getXY() : a.getRelativeToSurfaceXY();
+      var bXY = b instanceof Blockly.ScratchBlockComment ? b.getXY() : b.getRelativeToSurfaceXY();
       return (aXY.y + offset * aXY.x) - (bXY.y + offset * bXY.x);
     });
   }

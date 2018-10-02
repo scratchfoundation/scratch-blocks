@@ -451,7 +451,7 @@ Blockly.Bubble.prototype.layoutBubble_ = function() {
 Blockly.Bubble.prototype.positionBubble_ = function() {
   var left = this.anchorXY_.x;
   if (this.workspace_.RTL) {
-    left -= this.relativeLeft_ + this.width_;
+    left -= this.relativeLeft_ ;
   } else {
     left += this.relativeLeft_;
   }
@@ -647,7 +647,7 @@ Blockly.Bubble.prototype.moveDuringDrag = function(dragSurface, newLoc) {
  */
 Blockly.Bubble.prototype.getRelativeToSurfaceXY = function() {
   return new goog.math.Coordinate(
-      this.anchorXY_.x + this.relativeLeft_,
+      this.workspace_.RTL ? this.anchorXY_.x - this.relativeLeft_ : this.anchorXY_.x + this.relativeLeft_,
       this.anchorXY_.y + this.relativeTop_);
 };
 
