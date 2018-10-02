@@ -419,8 +419,8 @@ Blockly.WorkspaceCommentSvg.prototype.clearTransformAttributes_ = function() {
 Blockly.WorkspaceCommentSvg.prototype.getBubbleSize = function() {
   if (this.rendered_) {
     return {
-      width: this.svgRect_.getAttribute('width'),
-      height: this.svgRect_.getAttribute('height')
+      width: parseInt(this.svgRect_.getAttribute('width')),
+      height: parseInt(this.svgRect_.getAttribute('height'))
     };
   } else {
     this.getHeightWidth();
