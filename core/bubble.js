@@ -641,7 +641,8 @@ Blockly.Bubble.prototype.moveDuringDrag = function(dragSurface, newLoc) {
 };
 
 /**
- * Return the coordinates of the top-left corner of this bubble's body relative
+ * Return the coordinates of the top corner of this bubble's starting edge (e.g.
+ * top left corner in LTR and top right corner in RTL) relative
  * to the drawing surface's origin (0,0), in workspace units.
  * @return {!goog.math.Coordinate} Object with .x and .y properties.
  */
