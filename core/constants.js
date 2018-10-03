@@ -385,3 +385,9 @@ Blockly.StatusButtonState = {
   "READY": "ready",
   "NOT_READY": "not ready",
 };
+
+/**
+ * String for use in field_sound_dropdown.
+ * @const {string}
+ */
+Blockly.SOUND_RECORD_ID = 'SOUND_RECORD_ID';

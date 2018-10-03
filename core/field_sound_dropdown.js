@@ -55,7 +55,7 @@ goog.inherits(Blockly.FieldSoundDropdown, Blockly.FieldDropdown);
 Blockly.FieldSoundDropdown.prototype.onItemSelected = function(menu, menuItem) {
   var value = menuItem.getValue();
 
-  if (value == '_record_') {
+  if (value == Blockly.SOUND_RECORD_ID) {
     Blockly.recordSoundCallback();
     return;
   }
