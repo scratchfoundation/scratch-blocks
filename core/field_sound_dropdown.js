@@ -70,23 +70,6 @@ Blockly.FieldSoundDropdown.prototype.onItemSelected = function(menu, menuItem) {
 };
 
 /**
- * Initialize everything needed to render this field.  This includes making sure
- * that the field's value is valid.
- * @public
- */
-Blockly.FieldSoundDropdown.prototype.init = function() {
-  if (this.fieldGroup_) {
-    // Dropdown has already been initialized once.
-    return;
-  }
-  Blockly.FieldSoundDropdown.superClass_.init.call(this);
-
-  var options = this.getOptions();
-  options.push(['record...', '_record_']);
-
-};
-
-/**
  * Construct a FieldDropdown from a JSON arg object.
  * @param {!Object} element A JSON object with options.
  * @returns {!Blockly.FieldSoundDropdown} The new field instance.
