@@ -241,8 +241,12 @@ function test_move_constructorCoordinate() {
     block1.xy_ = coordinate;
 
     var event = new Blockly.Events.Move(block1);
-    checkExactEventValues(event, {'oldCoordinate': coordinate,
-      'type': 'move'});
+    // Need to check for individual equality of the coordinate values since
+    // the move event creates a new goog.math.Coordinate object
+    assertEquals(event.oldCoordinate.x, coordinate.x);
+    assertEquals(event.oldCoordinate.y, coordinate.y);
+    assertEquals(event.type, 'move');
+
   } finally {
     eventTest_tearDownWithMockBlocks();
   }
@@ -277,8 +281,11 @@ function test_blockMove_constructorCoordinate() {
     block1.xy_ = coordinate;
 
     var event = new Blockly.Events.BlockMove(block1);
-    checkExactEventValues(event, {'oldCoordinate': coordinate,
-      'type': 'move'});
+    // Need to check for individual equality of the coordinate values since
+    // the move event creates a new goog.math.Coordinate object
+    assertEquals(event.oldCoordinate.x, coordinate.x);
+    assertEquals(event.oldCoordinate.y, coordinate.y);
+    assertEquals(event.type, 'move');
   } finally {
     eventTest_tearDownWithMockBlocks();
   }
