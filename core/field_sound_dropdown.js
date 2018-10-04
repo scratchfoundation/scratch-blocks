@@ -2,7 +2,7 @@
  * @license
  * Visual Blocks Editor
  *
- * Copyright 2013 Google Inc.
+ * Copyright 2018 Massachusetts Institute of Technology
  * https://developers.google.com/blockly/
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -29,7 +29,7 @@ goog.provide('Blockly.FieldSoundDropdown');
 goog.require('Blockly.FieldDropdown');
 
 /**
- * Class for an editable dropdown field.
+ * Class for a dropdown field showing a menu of sounds, with additional options.
  * @param {(!Array.<!Array>|!Function)} menuGenerator An array of options
  *     for a dropdown list, or a function which generates these options.
  * @param {Function=} opt_validator A function that is executed when a new
@@ -55,6 +55,8 @@ goog.inherits(Blockly.FieldSoundDropdown, Blockly.FieldDropdown);
 Blockly.FieldSoundDropdown.prototype.onItemSelected = function(menu, menuItem) {
   var value = menuItem.getValue();
 
+  // If the 'record' option is selected, call the callback and do not set the
+  // selection.
   if (value == Blockly.SOUND_RECORD_ID) {
     Blockly.recordSoundCallback();
     return;
