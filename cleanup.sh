@@ -45,7 +45,7 @@ do
   git rm -rf $directory | indent_more
 done
 
-# Scratch-blocks but does not use generators
+# Scratch-blocks does not use generators
 empty_lines
 echo Removing generators...
 generated_langs="dart javascript lua php python"
