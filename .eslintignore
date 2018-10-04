@@ -6,8 +6,6 @@
 /tests/jsunit/*
 /tests/workspace_svg/*
 /tests/blocks/*
-/tests/generators/*
-/generators/*
 /demos/*
 /accessible/*
 /appengine/*
