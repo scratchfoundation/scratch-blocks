@@ -56,7 +56,6 @@ Blockly.Events.BlockBase = function(block) {
    */
   this.blockId = block.id;
   this.workspaceId = block.workspace.id;
-  this.workspace = block.workspace;
 };
 goog.inherits(Blockly.Events.BlockBase, Blockly.Events.Abstract);
 
