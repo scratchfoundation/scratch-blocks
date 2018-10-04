@@ -49,7 +49,8 @@ Blockly.Blocks['sound_sounds_menu'] = {
             ['7', '6'],
             ['8', '7'],
             ['9', '8'],
-            ['10', '9']
+            ['10', '9'],
+            ['record...', Blockly.SOUND_RECORD_ID]
           ]
         }
       ],
