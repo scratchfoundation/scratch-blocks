@@ -463,7 +463,11 @@ Blockly.Events.Move.prototype.currentLocation_ = function() {
       location.inputName = input.name;
     }
   } else {
-    location.coordinate = block.getRelativeToSurfaceXY();
+    var blockXY = block.getRelativeToSurfaceXY();
+    // The X position in the block move event should be the language agnostic
+    // position of the block. I.e. it should not be different in LTR vs. RTL.
+    var rtlAwareX = workspace.RTL ? workspace.getWidth() - blockXY.x : blockXY.x;
+    location.coordinate = new goog.math.Coordinate(rtlAwareX, blockXY.y);
   }
   return location;
 };
@@ -505,7 +509,8 @@ Blockly.Events.Move.prototype.run = function(forward) {
   }
   if (coordinate) {
     var xy = block.getRelativeToSurfaceXY();
-    block.moveBy(coordinate.x - xy.x, coordinate.y - xy.y);
+    var rtlAwareX = workspace.RTL ? workspace.getWidth() - coordinate.x : coordinate.x;
+    block.moveBy(rtlAwareX - xy.x, coordinate.y - xy.y);
   } else {
     var blockConnection = block.outputConnection || block.previousConnection;
     var parentConnection;

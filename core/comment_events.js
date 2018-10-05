@@ -402,11 +402,12 @@ Blockly.Events.CommentMove = function(comment) {
    */
   this.comment_ = comment;
 
+  this.workspaceWidth_ = comment.workspace.getWidth();
   /**
    * The location before the move, in workspace coordinates.
    * @type {!goog.math.Coordinate}
    */
-  this.oldCoordinate_ = comment.getXY();
+  this.oldCoordinate_ = this.currentLocation_();
 
   /**
    * The location after the move, in workspace coordinates.
@@ -417,6 +418,28 @@ Blockly.Events.CommentMove = function(comment) {
 goog.inherits(Blockly.Events.CommentMove, Blockly.Events.CommentBase);
 
 /**
+ * Calculate the current, language agnostic location of the comment.
+ * This value should not report different numbers in LTR vs. RTL.
+ * @return {goog.math.Coordinate} The location of the comment.
+ * @private
+ */
+Blockly.Events.CommentMove.prototype.currentLocation_ = function() {
+  var xy = this.comment_.getXY();
+  if (!this.comment_.workspace.RTL) {
+    return xy;
+  }
+
+  var rtlAwareX;
+  if (this.comment_ instanceof Blockly.ScratchBlockComment) {
+    var commentWidth = this.comment_.getBubbleSize().width;
+    rtlAwareX = this.workspaceWidth_ - xy.x - commentWidth;
+  } else {
+    rtlAwareX = this.workspaceWidth_ - xy.x;
+  }
+  return new goog.math.Coordinate(rtlAwareX, xy.y);
+};
+
+/**
  * Record the comment's new location.  Called after the move.  Can only be
  * called once.
  */
@@ -425,7 +448,7 @@ Blockly.Events.CommentMove.prototype.recordNew = function() {
     throw new Error('Tried to record the new position of a comment on the ' +
         'same event twice.');
   }
-  this.newCoordinate_ = this.comment_.getXY();
+  this.newCoordinate_ = this.currentLocation_();
   this.comment_ = null;
 };
 
@@ -442,7 +465,8 @@ Blockly.Events.CommentMove.prototype.type = Blockly.Events.COMMENT_MOVE;
  *     coordinates.
  */
 Blockly.Events.CommentMove.prototype.setOldCoordinate = function(xy) {
-  this.oldCoordinate_ = xy;
+  this.oldCoordinate_ = new goog.math.Coordinate(this.comment_.workspace.RTL ?
+      this.workspaceWidth_ - xy.x : xy.x, xy.y);
 };
 
 /**
@@ -496,10 +520,20 @@ Blockly.Events.CommentMove.prototype.run = function(forward) {
   var target = forward ? this.newCoordinate_ : this.oldCoordinate_;
 
   if (comment instanceof Blockly.ScratchBlockComment) {
-    comment.moveTo(target.x, target.y);
+    if (comment.workspace.RTL) {
+      comment.moveTo(this.workspaceWidth_ - target.x, target.y);
+    } else {
+      comment.moveTo(target.x, target.y);
+    }
   } else {
     // TODO: Check if the comment is being dragged, and give up if so.
     var current = comment.getXY();
-    comment.moveBy(target.x - current.x, target.y - current.y);
+    if (comment.workspace.RTL) {
+      var deltaX = target.x - (this.workspaceWidth_ - current.x);
+      comment.moveBy(-deltaX, target.y - current.y);
+    } else {
+      comment.moveBy(target.x - current.x, target.y - current.y);
+    }
+
   }
 };

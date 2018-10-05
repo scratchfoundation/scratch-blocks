@@ -408,6 +408,26 @@ Blockly.WorkspaceCommentSvg.prototype.clearTransformAttributes_ = function() {
 };
 
 /**
+ * Return the rendered size of the comment or the stored size if the comment is
+ * not rendered. This differs from getHeightWidth in the behavior of rendered
+ * minimized comments. This function reports the actual size of the minimized
+ * comment instead of the full sized comment height/width.
+ * @return {!{height: number, width: number}} Object with height and width
+ *    properties in workspace units.
+ * @package
+ */
+Blockly.WorkspaceCommentSvg.prototype.getBubbleSize = function() {
+  if (this.rendered_) {
+    return {
+      width: parseInt(this.svgRect_.getAttribute('width')),
+      height: parseInt(this.svgRect_.getAttribute('height'))
+    };
+  } else {
+    this.getHeightWidth();
+  }
+};
+
+/**
  * Returns the coordinates of a bounding box describing the dimensions of this
  * comment.
  * Coordinate system: workspace coordinates.
