@@ -571,7 +571,14 @@ Blockly.WorkspaceCommentSvg.prototype.setSize = function(width, height) {
     this.minimizeArrow_.setAttribute('x', width -
         (Blockly.WorkspaceCommentSvg.MINIMIZE_ICON_SIZE) -
         Blockly.WorkspaceCommentSvg.TOP_BAR_ICON_INSET);
+    this.deleteIcon_.setAttribute('x', (-width +
+        Blockly.WorkspaceCommentSvg.DELETE_ICON_SIZE -
+        Blockly.WorkspaceCommentSvg.TOP_BAR_ICON_INSET));
     this.svgRect_.setAttribute('transform', 'scale(-1 1)');
+    this.svgHandleTarget_.setAttribute('transform', 'scale(-1 1)');
+    this.svgHandleTarget_.setAttribute('transform', 'translate(' + -width + ', 1)');
+    this.minimizeArrow_.setAttribute('transform', 'translate(' + -width + ', 1)');
+    this.deleteIcon_.setAttribute('tranform', 'translate(' + -width + ', 1)');
   } else {
     this.deleteIcon_.setAttribute('x', width -
         Blockly.WorkspaceCommentSvg.DELETE_ICON_SIZE -
