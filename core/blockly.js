@@ -41,6 +41,7 @@ goog.require('Blockly.FieldColourSlider');
 // Add it only if you need it.
 //goog.require('Blockly.FieldDate');
 goog.require('Blockly.FieldDropdown');
+goog.require('Blockly.FieldSoundDropdown');
 goog.require('Blockly.FieldIconMenu');
 goog.require('Blockly.FieldImage');
 goog.require('Blockly.FieldTextInput');
@@ -400,6 +401,14 @@ Blockly.refreshStatusButtons = function(workspace) {
       buttons[i].refreshStatus();
     }
   }
+};
+
+/**
+ * A callback for initiating the process of recording a sound. Should be
+ * overridden.
+ */
+Blockly.recordSoundCallback = function() {
+  window.alert('record a sound');
 };
 
 /**

@@ -37,7 +37,7 @@ Blockly.Blocks['sound_sounds_menu'] = {
       "message0": "%1",
       "args0": [
         {
-          "type": "field_dropdown",
+          "type": "field_sounddropdown",
           "name": "SOUND_MENU",
           "options": [
             ['1', '0'],
@@ -49,7 +49,8 @@ Blockly.Blocks['sound_sounds_menu'] = {
             ['7', '6'],
             ['8', '7'],
             ['9', '8'],
-            ['10', '9']
+            ['10', '9'],
+            ['record...', Blockly.SOUND_RECORD_ID]
           ]
         }
       ],
