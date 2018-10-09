@@ -13,6 +13,13 @@ common.pyc
 *.komodoproject
 /nbproject/private/
 
+# Unused by scratch-blocks
+dart_compressed.js
+javascript_compressed.js
+lua_compressed.js
+php_compressed.js
+python_compressed.js
+
 # Editor
 .vscode
 
@@ -36,3 +43,4 @@ common.pyc
 /gh-pages/_site
 /*compiler*.jar
 /local_blockly_compressed_vertical.js
+/chromedriver

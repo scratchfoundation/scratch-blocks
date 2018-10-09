@@ -45,8 +45,7 @@ do
   git rm -rf $directory | indent_more
 done
 
-# Scratch-blocks keeps the language generators (e.g. dart.js) but does not
-# keep generators for each block in each language.
+# Scratch-blocks does not use generators
 empty_lines
 echo Removing generators...
 generated_langs="dart javascript lua php python"
@@ -55,9 +54,6 @@ do
   echo 'Cleaning up' $lang | indent
   # Directories containing block generators.
   git rm -rf generators/${lang} | indent_more
-  # Individual generator files.  Use Blockly's.
-  git checkout --theirs generators/${lang}.js && git add generators/${lang}.js | indent_more
-  git checkout --theirs ${lang}_compressed.js && git add ${lang}_compressed.js | indent_more
 done
 
 # Built stuff that we should get rid of.
@@ -67,7 +63,12 @@ built_files="blockly_compressed.js \
 blockly_uncompressed.js \
 blockly_accessible_compressed.js \
 blockly_accessible_uncompressed.js \
-blocks_compressed.js"
+blocks_compressed.js \
+dart_compressed.js \
+php_compressed.js \
+python_compressed.js \
+javascript_compressed.js \
+lua_compressed.js"
 
 for filename in $built_files
 do
