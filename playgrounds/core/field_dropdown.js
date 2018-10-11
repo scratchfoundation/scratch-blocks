@@ -303,6 +303,11 @@ Blockly.FieldDropdown.prototype.onItemSelected = function(menu, menuItem) {
     // Call any validation function, and allow it to override.
     value = this.callValidator(value);
   }
+  // If the value of the menu item is a function, call it and do not select it.
+  if (typeof value == 'function') {
+    value();
+    return;
+  }
   if (value !== null) {
     this.setValue(value);
   }

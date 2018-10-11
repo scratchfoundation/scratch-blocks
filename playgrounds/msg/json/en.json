@@ -225,6 +225,7 @@
     "SOUND_CHANGEVOLUMEBY": "change volume by %1",
     "SOUND_SETVOLUMETO": "set volume to %1%",
     "SOUND_VOLUME": "volume",
+    "SOUND_RECORD": "record...",
     "CATEGORY_MOTION": "Motion",
     "CATEGORY_LOOKS": "Looks",
     "CATEGORY_SOUND": "Sound",
