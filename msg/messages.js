@@ -276,6 +276,7 @@ Blockly.Msg.SOUND_EFFECTS_PAN = 'pan left/right';
 Blockly.Msg.SOUND_CHANGEVOLUMEBY = 'change volume by %1';
 Blockly.Msg.SOUND_SETVOLUMETO = 'set volume to %1%';
 Blockly.Msg.SOUND_VOLUME = 'volume';
+Blockly.Msg.SOUND_RECORD = 'record...';
 
 // Category labels
 Blockly.Msg.CATEGORY_MOTION = 'Motion';
