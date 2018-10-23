@@ -669,8 +669,10 @@ Blockly.BlockSvg.prototype.showContextMenu_ = function(e) {
   var block = this;
   var menuOptions = [];
 
+  var isMouseEvent = Blockly.Touch.getTouchIdentifierFromEvent(e) == 'mouse';
   if (this.isDeletable() && this.isMovable() && !block.isInFlyout) {
-    menuOptions.push(Blockly.ContextMenu.blockDuplicateOption(block));
+    menuOptions.push(
+        Blockly.ContextMenu.blockDuplicateOption(block, isMouseEvent));
     if (this.isEditable() && this.workspace.options.comments) {
       menuOptions.push(Blockly.ContextMenu.blockCommentOption(block));
     }

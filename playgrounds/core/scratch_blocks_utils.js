@@ -163,11 +163,14 @@ Blockly.scratchBlocksUtils.blockIsRecyclable = function(block) {
  * which acts as though it were pressed and mid-drag.  Clicking the mouse
  * releases the new dragging block.
  * @param {!Blockly.BlockSvg} oldBlock The block that will be duplicated.
+ * @param {boolean} isMouseEvent True if the event that caused the context
+ *     menu to open came from a mouse.  False if touch.
  * @return {Function} A callback function that duplicates the block and starts a
  *     drag.
  * @package
  */
-Blockly.scratchBlocksUtils.duplicateAndDragCallback = function(oldBlock) {
+Blockly.scratchBlocksUtils.duplicateAndDragCallback = function(oldBlock,
+    isMouseEvent) {
   return function(e) {
     // Give the context menu a chance to close.
     setTimeout(function() {
@@ -207,6 +210,11 @@ Blockly.scratchBlocksUtils.duplicateAndDragCallback = function(oldBlock) {
         // TODO: Offset by the difference between the mouse position and the upper
         // left corner of the block.
         newBlock.moveBy(oldBlockPosWs.x, oldBlockPosWs.y);
+        if (!isMouseEvent) {
+          var offsetX = ws.RTL ? -100 : 100;
+          var offsetY = 100;
+          newBlock.moveBy(offsetX, offsetY); // Just offset the block for touch.
+        }
       } finally {
         Blockly.Events.enable();
       }
@@ -214,41 +222,43 @@ Blockly.scratchBlocksUtils.duplicateAndDragCallback = function(oldBlock) {
         Blockly.Events.fire(new Blockly.Events.BlockCreate(newBlock));
       }
 
-      // The position of the old block in pixels relative to the main
-      // workspace's origin.
-      var oldBlockPosPixels = oldBlockPosWs.scale(ws.scale);
+      if (isMouseEvent) {
+        // The position of the old block in pixels relative to the main
+        // workspace's origin.
+        var oldBlockPosPixels = oldBlockPosWs.scale(ws.scale);
 
-      // The offset in pixels between the main workspace's origin and the upper left
-      // corner of the injection div.
-      var mainOffsetPixels = ws.getOriginOffsetInPixels();
+        // The offset in pixels between the main workspace's origin and the upper left
+        // corner of the injection div.
+        var mainOffsetPixels = ws.getOriginOffsetInPixels();
 
-      // The position of the old block in pixels relative to the upper left corner
-      // of the injection div.
-      var finalOffsetPixels = goog.math.Coordinate.sum(mainOffsetPixels,
-          oldBlockPosPixels);
+        // The position of the old block in pixels relative to the upper left corner
+        // of the injection div.
+        var finalOffsetPixels = goog.math.Coordinate.sum(mainOffsetPixels,
+            oldBlockPosPixels);
 
-      var injectionDiv = ws.getInjectionDiv();
-      // Bounding rect coordinates are in client coordinates, meaning that they
-      // are in pixels relative to the upper left corner of the visible browser
-      // window.  These coordinates change when you scroll the browser window.
-      var boundingRect = injectionDiv.getBoundingClientRect();
+        var injectionDiv = ws.getInjectionDiv();
+        // Bounding rect coordinates are in client coordinates, meaning that they
+        // are in pixels relative to the upper left corner of the visible browser
+        // window.  These coordinates change when you scroll the browser window.
+        var boundingRect = injectionDiv.getBoundingClientRect();
 
-      // e is not a real mouseEvent/touchEvent/pointerEvent.  It's an event
-      // created by the context menu and doesn't have the correct coordinates.
-      // But it does have some information that we need.
-      var fakeEvent = {
-        clientX: finalOffsetPixels.x + boundingRect.left,
-        clientY: finalOffsetPixels.y + boundingRect.top,
-        type: 'mousedown',
-        preventDefault: function() {
-          e.preventDefault();
-        },
-        stopPropagation: function() {
-          e.stopPropagation();
-        },
-        target: e.target
-      };
-      ws.startDragWithFakeEvent(fakeEvent, newBlock);
+        // e is not a real mouseEvent/touchEvent/pointerEvent.  It's an event
+        // created by the context menu and doesn't have the correct coordinates.
+        // But it does have some information that we need.
+        var fakeEvent = {
+          clientX: finalOffsetPixels.x + boundingRect.left,
+          clientY: finalOffsetPixels.y + boundingRect.top,
+          type: 'mousedown',
+          preventDefault: function() {
+            e.preventDefault();
+          },
+          stopPropagation: function() {
+            e.stopPropagation();
+          },
+          target: e.target
+        };
+        ws.startDragWithFakeEvent(fakeEvent, newBlock);
+      }
     }, 0);
   };
 };
