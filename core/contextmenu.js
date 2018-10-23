@@ -257,14 +257,17 @@ Blockly.ContextMenu.blockHelpOption = function(block) {
 /**
  * Make a context menu option for duplicating the current block.
  * @param {!Blockly.BlockSvg} block The block where the right-click originated.
+ * @param {boolean} isMouseEvent True if the event that caused the context
+ *     menu to open came from a mouse.  False if touch.
  * @return {!Object} A menu option, containing text, enabled, and a callback.
  * @package
  */
-Blockly.ContextMenu.blockDuplicateOption = function(block) {
+Blockly.ContextMenu.blockDuplicateOption = function(block, isMouseEvent) {
   var duplicateOption = {
     text: Blockly.Msg.DUPLICATE,
     enabled: true,
-    callback: Blockly.scratchBlocksUtils.duplicateAndDragCallback(block)
+    callback:
+        Blockly.scratchBlocksUtils.duplicateAndDragCallback(block, isMouseEvent)
   };
   return duplicateOption;
 };
