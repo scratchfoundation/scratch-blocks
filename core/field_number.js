@@ -190,8 +190,8 @@ Blockly.FieldNumber.prototype.showNumPad_ = function() {
   this.addButtons_(contentDiv);
 
   // Set colour and size of drop-down
-  Blockly.DropDownDiv.setColour(Blockly.Colours.numPadBackground,
-      Blockly.Colours.numPadBorder);
+  Blockly.DropDownDiv.setColour(this.sourceBlock_.parentBlock_.getColour(),
+      this.sourceBlock_.getColourTertiary());
   contentDiv.style.width = Blockly.FieldNumber.DROPDOWN_WIDTH + 'px';
 
   this.position_();
@@ -229,12 +229,18 @@ Blockly.FieldNumber.prototype.position_ = function() {
  * @private
  */
 Blockly.FieldNumber.prototype.addButtons_ = function(contentDiv) {
+  var buttonColour = this.sourceBlock_.parentBlock_.getColour();
+  var buttonBorderColour = this.sourceBlock_.parentBlock_.getColourTertiary();
+
   // Add numeric keypad buttons
   var buttons = Blockly.FieldNumber.NUMPAD_BUTTONS;
   for (var i = 0, buttonText; buttonText = buttons[i]; i++) {
     var button = document.createElement('button');
     button.setAttribute('role', 'menuitem');
     button.setAttribute('class', 'blocklyNumPadButton');
+    button.setAttribute('style',
+        'background:' + buttonColour + ';' +
+        'border: 1px solid ' + buttonBorderColour + ';');
     button.title = buttonText;
     button.innerHTML = buttonText;
     Blockly.bindEvent_(button, 'mousedown', button,
@@ -255,6 +261,9 @@ Blockly.FieldNumber.prototype.addButtons_ = function(contentDiv) {
   var eraseButton = document.createElement('button');
   eraseButton.setAttribute('role', 'menuitem');
   eraseButton.setAttribute('class', 'blocklyNumPadButton');
+  eraseButton.setAttribute('style',
+      'background:' + buttonColour + ';' +
+      'border: 1px solid ' + buttonBorderColour + ';');
   eraseButton.title = 'Delete';
 
   var eraseImage = document.createElement('img');
