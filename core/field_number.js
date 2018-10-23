@@ -82,13 +82,6 @@ Blockly.FieldNumber.fromJson = function(options) {
 Blockly.FieldNumber.DROPDOWN_WIDTH = 168;
 
 /**
- * Extra padding to add between the block and the num-pad drop-down, in px.
- * @type {number}
- * @const
- */
-Blockly.FieldNumber.DROPDOWN_Y_PADDING = 8;
-
-/**
  * Buttons for the num-pad, in order from the top left.
  * Values are strings of the number or symbol will be added to the field text
  * when the button is pressed.
@@ -218,12 +211,10 @@ Blockly.FieldNumber.prototype.position_ = function() {
   var position = this.getAbsoluteXY_();
   // If we can fit it, render below the shadow block
   var primaryX = position.x + bBox.width / 2;
-  var primaryY = position.y + bBox.height +
-      Blockly.FieldNumber.DROPDOWN_Y_PADDING;
+  var primaryY = position.y + bBox.height;
   // If we can't fit it, render above the entire parent block
   var secondaryX = primaryX;
-  var secondaryY = position.y - (Blockly.BlockSvg.MIN_BLOCK_Y * scale) -
-      (Blockly.BlockSvg.FIELD_Y_OFFSET * scale);
+  var secondaryY = position.y;
 
   Blockly.DropDownDiv.setBoundsElement(
       this.sourceBlock_.workspace.getParentSvg().parentNode);
