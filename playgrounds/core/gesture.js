@@ -515,6 +515,7 @@ Blockly.Gesture.prototype.doStart = function(e) {
   }
 
   this.mouseDownXY_ = new goog.math.Coordinate(e.clientX, e.clientY);
+  this.currentDragDeltaXY_ = new goog.math.Coordinate(0, 0);
 
   this.bindMouseEvents(e);
 };
