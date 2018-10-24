@@ -315,8 +315,29 @@ Blockly.onContextMenu_ = function(e) {
  * @param {boolean=} opt_allowToolbox If true, don't close the toolbox.
  */
 Blockly.hideChaff = function(opt_allowToolbox) {
-  Blockly.Tooltip.hide();
+  Blockly.hideChaffInternal_(opt_allowToolbox);
   Blockly.WidgetDiv.hide(true);
+};
+
+/**
+ * Close tooltips, context menus, dropdown selections, etc.
+ * For some elements (e.g. field text inputs), rather than hiding, it will
+ * move them.
+ * @param {boolean=} opt_allowToolbox If true, don't close the toolbox.
+ */
+Blockly.hideChaffOnResize = function(opt_allowToolbox) {
+  Blockly.hideChaffInternal_(opt_allowToolbox);
+  Blockly.WidgetDiv.repositionForWindowResize();
+};
+
+/**
+ * Does a majority of the work for hideChaff including tooltips, dropdowns,
+ * toolbox, etc. It does not deal with the WidgetDiv.
+ * @param {boolean=} opt_allowToolbox If true, don't close the toolbox.
+ * @private
+ */
+Blockly.hideChaffInternal_ = function(opt_allowToolbox) {
+  Blockly.Tooltip.hide();
   Blockly.DropDownDiv.hideWithoutAnimation();
   if (!opt_allowToolbox) {
     var workspace = Blockly.getMainWorkspace();

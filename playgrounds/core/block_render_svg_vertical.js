@@ -523,7 +523,12 @@ Blockly.BlockSvg.prototype.updateColour = function() {
 
   // Render block fill
   if (this.isGlowingBlock_ || renderShadowed) {
-    var fillColour = this.getColourSecondary();
+    // Use the block's shadow colour if possible.
+    if (this.getShadowColour()) {
+      var fillColour = this.getShadowColour();
+    } else {
+      var fillColour = this.getColourSecondary();
+    }
   } else {
     var fillColour = this.getColour();
   }

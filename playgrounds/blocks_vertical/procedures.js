@@ -624,7 +624,7 @@ Blockly.ScratchBlocks.ProcedureUtils.addBooleanExternal = function() {
   this.procCode_ = this.procCode_ + ' %b';
   this.displayNames_.push('boolean');
   this.argumentIds_.push(Blockly.utils.genUid());
-  this.argumentDefaults_.push('todo');
+  this.argumentDefaults_.push('false');
   this.updateDisplay_();
   this.focusLastEditor_();
 };
@@ -639,7 +639,7 @@ Blockly.ScratchBlocks.ProcedureUtils.addStringNumberExternal = function() {
   this.procCode_ = this.procCode_ + ' %s';
   this.displayNames_.push('number or text');
   this.argumentIds_.push(Blockly.utils.genUid());
-  this.argumentDefaults_.push('todo');
+  this.argumentDefaults_.push('');
   this.updateDisplay_();
   this.focusLastEditor_();
 };
