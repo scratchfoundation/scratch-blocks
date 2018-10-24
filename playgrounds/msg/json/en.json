@@ -274,6 +274,8 @@
     "RENAME_LIST_TITLE": "Rename all \"%1\" lists to:",
     "RENAME_LIST_MODAL_TITLE": "Rename List",
     "DEFAULT_LIST_ITEM": "thing",
+    "DELETE_LIST": "Delete the \"%1\" list",
+    "RENAME_LIST": "Rename list",
     "NEW_BROADCAST_MESSAGE": "New message",
     "NEW_BROADCAST_MESSAGE_TITLE": "New message name:",
     "BROADCAST_MODAL_TITLE": "New Message",
