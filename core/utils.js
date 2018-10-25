@@ -935,3 +935,26 @@ Blockly.utils.getViewportBBox = function() {
     left: scrollOffset.x
   };
 };
+
+/**
+ * Fast prefix-checker.
+ * Copied from Closure's goog.string.startsWith.
+ * @param {string} str The string to check.
+ * @param {string} prefix A string to look for at the start of `str`.
+ * @return {boolean} True if `str` begins with `prefix`.
+ * @package
+ */
+Blockly.utils.startsWith = function(str, prefix) {
+  return str.lastIndexOf(prefix, 0) == 0;
+};
+
+/**
+ * Converts degrees to radians.
+ * Copied from Closure's goog.math.toRadians.
+ * @param {number} angleDegrees Angle in degrees.
+ * @return {number} Angle in radians.
+ * @package
+ */
+Blockly.utils.toRadians = function(angleDegrees) {
+  return angleDegrees * Math.PI / 180;
+};
