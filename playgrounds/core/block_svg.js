@@ -83,6 +83,11 @@ Blockly.BlockSvg = function(workspace, prototypeName, opt_id) {
   Blockly.Tooltip.bindMouseEvents(this.svgPath_);
   Blockly.BlockSvg.superClass_.constructor.call(this,
       workspace, prototypeName, opt_id);
+
+  // Expose this block's ID on its top-level SVG group.
+  if (this.svgGroup_.dataset) {
+    this.svgGroup_.dataset.id = this.id;
+  }
 };
 goog.inherits(Blockly.BlockSvg, Blockly.Block);
 
