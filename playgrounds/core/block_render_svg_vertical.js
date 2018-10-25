@@ -797,10 +797,16 @@ Blockly.BlockSvg.prototype.renderCompute_ = function(iconWidth) {
     if (!input.isVisible()) {
       continue;
     }
+    var isSecondInputOnProcedure = this.type == 'procedures_definition' &&
+        lastType && lastType == Blockly.NEXT_STATEMENT;
     var row;
-    if (!lastType ||
-        lastType == Blockly.NEXT_STATEMENT ||
-        input.type == Blockly.NEXT_STATEMENT) {
+    // Don't create a new row for the second dummy input on a procedure block.
+    // See github.com/LLK/scratch-blocks/issues/1658
+    // In all other cases, statement and value inputs catch all preceding dummy
+    // inputs, and cause a line break before following inputs.
+    if (!isSecondInputOnProcedure &&
+        (!lastType || lastType == Blockly.NEXT_STATEMENT ||
+        input.type == Blockly.NEXT_STATEMENT)) {
       lastType = input.type;
       row = this.createRowForInput_(input);
       inputRows.push(row);
@@ -865,7 +871,10 @@ Blockly.BlockSvg.prototype.renderCompute_ = function(iconWidth) {
       field.renderWidth = fieldSize.width;
       field.renderSep = (previousFieldEditable && field.EDITABLE) ?
           Blockly.BlockSvg.SEP_SPACE_X : 0;
-      input.fieldWidth += field.renderWidth + field.renderSep;
+      // See github.com/LLK/scratch-blocks/issues/1658
+      if (!isSecondInputOnProcedure) {
+        input.fieldWidth += field.renderWidth + field.renderSep;
+      }
       row.height = Math.max(row.height, fieldSize.height);
       previousFieldEditable = field.EDITABLE;
     }
@@ -1337,7 +1346,7 @@ Blockly.BlockSvg.prototype.renderDrawRight_ = function(steps,
       cursorX = inputRows.statementEdge + Blockly.BlockSvg.NOTCH_WIDTH;
 
       if (this.type == Blockly.PROCEDURES_DEFINITION_BLOCK_TYPE) {
-        this.renderDefineBlock_(steps, inputRows, input, row);
+        this.renderDefineBlock_(steps, inputRows, input, row, cursorY);
       } else {
         Blockly.BlockSvg.drawStatementInputFromTopRight_(steps, cursorX,
             inputRows.rightEdge, row);
@@ -1579,10 +1588,17 @@ Blockly.BlockSvg.drawStatementInputBottom_ = function(steps, rightEdge, row) {
  * @param {!Array.<!Object>} row An object containing information about the
  *     current row, including its height and whether it should have a notch at
  *     the bottom.
+ * @param {number} cursorY The y position of the start of this row.  Used to
+ *     position the following dummy input's fields.
  * @private
  */
 Blockly.BlockSvg.prototype.renderDefineBlock_ = function(steps, inputRows,
-    input, row) {
+    input, row, cursorY) {
+  // Following text shows up as a dummy input after the statement input, which
+  // we are forcing to stay inline with the statement input instead of letting
+  // it drop to a new line.
+  var hasFollowingText = row.length == 2;
+
   // Figure out where the right side of the block is.
   var rightSide = inputRows.rightEdge;
   if (input.connection && input.connection.targetBlock()) {
@@ -1594,6 +1610,20 @@ Blockly.BlockSvg.prototype.renderDefineBlock_ = function(steps, inputRows,
   }
   rightSide -= Blockly.BlockSvg.DEFINE_HAT_CORNER_RADIUS;
 
+  if (hasFollowingText) {
+    var followingTextInput = row[1];
+    var fieldStart = rightSide + 3 * Blockly.BlockSvg.SEP_SPACE_X;
+    rightSide += followingTextInput.fieldRow[0].getSize().width;
+    rightSide += 2 * Blockly.BlockSvg.SEP_SPACE_X;
+
+    // Align fields vertically within the row.
+    // In renderFields_, the field is further centered by its own height.
+    // The dummy input's fields did not get laid out normally because we're
+    // forcing them to stay inline with a statement input.
+    var fieldY = cursorY;
+    fieldY += Blockly.BlockSvg.MIN_STATEMENT_INPUT_HEIGHT;
+    this.renderFields_(followingTextInput.fieldRow, fieldStart, fieldY);
+  }
   // Draw the top and the right corner of the hat.
   steps.push('H', rightSide);
   steps.push(Blockly.BlockSvg.TOP_RIGHT_CORNER_DEFINE_HAT);
