@@ -15,10 +15,14 @@ const enKeys = Object.keys(en);
 // File paths
 const PATH_INPUT = path.resolve(__dirname, '../msg/scratch_msgs.js');
 
-// Match function
+// Match lines of the scratch_msgs file
+// Blockly.ScratchMsgs.locales indicates the start of a new locale
+// ": " marks a "key": "value" pair
+// Also match the end of the generated file so the last set of keys can be checked
 const match = function (str) {
     if (str.indexOf('Blockly.ScratchMsgs.locales') !== 0) return true;
     if (str.indexOf('": "') !== 0) return true;
+    if (str.indexOf('End of combined translations') !== 0) return true;
     return false;
 }
 
@@ -36,6 +40,9 @@ const extract = function (str) {
         value: m[2]
       }
     }
+    // return a string for the end of the file so that validate will check the last set of keys
+    m = str.match(/^\/\/ End of combined translations$/);
+    if (m) return 'last';
     return null;
 };
 
@@ -56,12 +63,12 @@ stream
         const result = extract(str);
         if (!result) return;
         if (typeof result === 'string') {
-          // locale changed, validate the current collection of keys
+          // locale changed or end of file, validate the current collection of keys
           try {
               validateKeys();
           }
           catch (err) {
-            console.log('Key validation FAILED:', err.message);
+            console.error('Key validation FAILED: %O', err);
             process.exit(1);
           }
           // change locale, and reset keys array
@@ -72,6 +79,9 @@ stream
         }
     }))
     .pipe(es.wait(function (err) {
-        if (err) throw new Error(err);
+        if (err) {
+          console.err(err);
+          process.exit(1);
+        }
         process.exit(0)
     }));

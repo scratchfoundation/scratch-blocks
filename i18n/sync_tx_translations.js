@@ -1,12 +1,28 @@
+/**
+ * @fileoverview
+ * Script to pull translations for blocks from transifex and generate the scratch_msgs file.
+ * Expects that the project and resource have already been defined in Transifex, and that
+ * the person running the script has the the TX_TOKEN environment variable set to an api
+ * token that has developer access.
+ */
+
+// Fail immediately if the TX_TOKEN is not defined
+if (!process.env.TX_TOKEN) {
+  console.error(new Error('You must be a Scratch Team member and set your TX_TOKEN to sync with Transifex'));
+  process.exit(1);
+};
+
 const fs = require('fs');
 const path = require('path');
 const assert = require('assert');
 const transifex = require('transifex');
+const locales = require('scratch-l10n').default;
 
 // Globals
 const PATH_OUTPUT = path.resolve(__dirname, '../msg');
 const PROJECT = 'scratch-editor'
 const RESOURCE = 'blocks';
+// TODO: convert mode to 'reviewed' before January
 const MODE = {mode: 'default'};
 
 const TX = new transifex({
@@ -57,66 +73,6 @@ goog.require('Blockly.ScratchMsgs');
 
 `;
 
-// add English strings
-file += '\n';
-file += `Blockly.ScratchMsgs.locales["en"] =\n`;
-file += JSON.stringify(en, null, 4);
-file += ';\n';
-
-if (!process.env.TX_TOKEN) {
-  assert.fail('ERROR: You must be a Scratch Team member and set your TX_TOKEN to sync with Transifex');
-};
-
-let locales = [
-    'ab',
-    'am',
-    'ar',
-    'az',
-    'ca',
-    'cs',
-    'cy',
-    'da',
-    'de',
-    'el',
-    'es-419',
-    'es',
-    'et',
-    'eu',
-    'fi',
-    'fr',
-    'ga',
-    'gd',
-    'gl',
-    'he',
-    'hu',
-    'id',
-    'is',
-    'it',
-    'ja-Hira',
-    'ja',
-    'ko',
-    'lt',
-    'lv',
-    'mi',
-    'nb',
-    'nl',
-    'nn',
-    'pl',
-    'pt-br',
-    'pt',
-    'ro',
-    'ru',
-    'sk',
-    'sl',
-    'sr',
-    'sv',
-    'th',
-    'tr',
-    'uk',
-    'vi',
-    'zh-cn',
-    'zh-tw'
-];
 let localeMap = {
   'aa-dj': 'aa_DJ',
   'es-419': 'es_419',
@@ -141,7 +97,7 @@ function getLocaleData (locale) {
   })
 };
 
-Promise.all(locales.map(getLocaleData)).then(function (values) {
+Promise.all(Object.keys(locales).map(getLocaleData)).then(function (values) {
   values.forEach(function (translation) {
     validate(translation.translations, translation.locale);
     file += '\n';
@@ -149,9 +105,10 @@ Promise.all(locales.map(getLocaleData)).then(function (values) {
     file += JSON.stringify(translation.translations, null, 4);
     file += ';\n';
   });
+  file += '// End of combined translations\n';
   // write combined file
   fs.writeFileSync(`${PATH_OUTPUT}/scratch_msgs.js`, file);
 }).catch((err) => {
-  console.log('Someing went wrong:', err);
+  console.error(err);
   process.exit(1);
 });
