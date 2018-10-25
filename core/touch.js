@@ -180,7 +180,7 @@ Blockly.Touch.checkTouchIdentifier = function(e) {
  * @param {!Event} e A touch event.
  */
 Blockly.Touch.setClientFromTouch = function(e) {
-  if (goog.string.startsWith(e.type, 'touch')) {
+  if (Blockly.utils.startsWith(e.type, 'touch')) {
     // Map the touch event's properties to the event.
     var touchPoint = e.changedTouches[0];
     e.clientX = touchPoint.clientX;
@@ -194,8 +194,8 @@ Blockly.Touch.setClientFromTouch = function(e) {
  * @return {boolean} true if it is a mouse or touch event; false otherwise.
  */
 Blockly.Touch.isMouseOrTouchEvent = function(e) {
-  return goog.string.startsWith(e.type, 'touch') ||
-      goog.string.startsWith(e.type, 'mouse');
+  return Blockly.utils.startsWith(e.type, 'touch') ||
+      Blockly.utils.startsWith(e.type, 'mouse');
 };
 
 /**
