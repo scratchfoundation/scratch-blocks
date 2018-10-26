@@ -210,21 +210,6 @@ Blockly.FieldDropdown.prototype.showEditor_ = function() {
   }
   // Listen for mouse/keyboard events.
   goog.events.listen(menu, goog.ui.Component.EventType.ACTION, callback);
-  // Listen for touch events (why doesn't Closure handle this already?).
-  function callbackTouchStart(e) {
-    var control = this.getOwnerControl(/** @type {Node} */ (e.target));
-    // Highlight the menu item.
-    control.handleMouseDown(e);
-  }
-  function callbackTouchEnd(e) {
-    var control = this.getOwnerControl(/** @type {Node} */ (e.target));
-    // Activate the menu item.
-    control.performActionInternal(e);
-  }
-  menu.getHandler().listen(
-      menu.getElement(), goog.events.EventType.TOUCHSTART, callbackTouchStart);
-  menu.getHandler().listen(
-      menu.getElement(), goog.events.EventType.TOUCHEND, callbackTouchEnd);
 
   // Record windowSize and scrollOffset before adding menu.
   menu.render(contentDiv);
