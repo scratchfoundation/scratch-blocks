@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 /**
  * @fileoverview
  * Script to upload a source en.json file to a particular transifex project resource.
@@ -6,26 +8,25 @@
  * token that has developer access.
  */
 
-// Fail immediately if the TX_TOKEN is not defined
-if (!process.env.TX_TOKEN) {
-  console.error(new Error('You must be a Scratch Team member and set your TX_TOKEN to sync with Transifex'));
-  process.exit(1);
-};
-
 const fs = require('fs');
 const path = require('path');
 const transifex = require('transifex');
 
 const args = process.argv.slice(2);
 
-if (args.length < 3) {
-    process.stdout.write('Usage:\n');
-    process.stdout.write(
-      '    node sync_tx_src.js tx-project tx-resource english-json-file\n' +
-      '      tx-project: the project slug on transifex\n' +
-      '      tx-resource: the resource slug on transifex\n' +
-      '      english-json-file: path to the en.json source\n'
-    );
+const usage = `
+Sync English source strings with Transifex. Usage:
+  node sync_tx_src.js tx-project tx-resource english-json-file
+      tx-project:        the project slug on transifex
+      tx-resource:       the resource slug on transifex
+      english-json-file: path to the en.json source
+  NOTE: TX_TOKEN environment variable needs to be set with a Transifex API token. See
+  the Localization page on the GUI wiki for information about setting up Transifex.
+`;
+
+// Exit if missing arguments or TX_TOKEN
+if (args.length < 3 || !process.env.TX_TOKEN) {
+    process.stdout.write(usage);
     process.exit(1);
 }
 

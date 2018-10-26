@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 /**
  * @fileoverview
  * Script to pull translations for blocks from transifex and generate the scratch_msgs file.
@@ -6,9 +8,15 @@
  * token that has developer access.
  */
 
+ const usage = `
+ Pull supported language translations from Transifex. Usage:
+   node sync_tx_translations.js
+   NOTE: TX_TOKEN environment variable needs to be set with a Transifex API token. See
+   the Localization page on the GUI wiki for information about setting up Transifex.
+ `;
 // Fail immediately if the TX_TOKEN is not defined
-if (!process.env.TX_TOKEN) {
-  console.error(new Error('You must be a Scratch Team member and set your TX_TOKEN to sync with Transifex'));
+if (!process.env.TX_TOKEN || process.argv.length !== 2) {
+  process.stdout.write(usage);
   process.exit(1);
 };
 
