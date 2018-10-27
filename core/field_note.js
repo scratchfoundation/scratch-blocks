@@ -51,17 +51,38 @@ Blockly.FieldNote = function(opt_value, opt_validator) {
 };
 goog.inherits(Blockly.FieldNote, Blockly.FieldTextInput);
 
-Blockly.FieldNote.TOP_MENU_HEIGHT = 32;
+Blockly.FieldNote.TOP_MENU_HEIGHT = 28;
+Blockly.FieldNote.WHITE_KEY_COLOR = '#FFFFFF';
+Blockly.FieldNote.WHITE_KEY_SELECTED_COLOR = '#b0d6ff';
+Blockly.FieldNote.BLACK_KEY_COLOR = '#323133';
 Blockly.FieldNote.WHITE_KEY_HEIGHT = 72;
 Blockly.FieldNote.WHITE_KEY_WIDTH = 40;
 Blockly.FieldNote.BLACK_KEY_HEIGHT = 40;
 Blockly.FieldNote.BLACK_KEY_WIDTH = 32;
-Blockly.FieldNote.BOTTOM_PADDING = 8;
+Blockly.FieldNote.BOTTOM_PADDING = 4;
 Blockly.FieldNote.EDGE_KEY_WIDTH = 16;
 Blockly.FieldNote.KEY_RADIUS = 6;
 Blockly.FieldNote.KEY_GAP = 1;
 Blockly.FieldNote.OCTAVE_BUTTON_WIDTH = 32;
 
+Blockly.FieldNote.KEY_INFO = [
+  {name: 'B'},
+  {name: 'C'},
+  {name: 'C#', isBlack: true},
+  {name: 'D'},
+  {name: 'Eb', isBlack: true},
+  {name: 'E'},
+  {name: 'F'},
+  {name: 'F#', isBlack: true},
+  {name: 'G'},
+  {name: 'G#', isBlack: true},
+  {name: 'A'},
+  {name: 'Bb', isBlack: true},
+  {name: 'B'},
+  {name: 'C'},
+  {name: 'C#', isBlack: true},
+  {name: 'D'}
+];
 
 /**
  * Construct a FieldNote from a JSON arg object.
@@ -101,7 +122,7 @@ Blockly.FieldNote.prototype.dispose_ = function() {
 };
 
 /**
- * Show the inline free-text editor on top of the text.
+ * Show a field with piano keys.
  * @private
  */
 Blockly.FieldNote.prototype.showEditor_ = function() {
@@ -116,13 +137,13 @@ Blockly.FieldNote.prototype.showEditor_ = function() {
   Blockly.DropDownDiv.clearContent();
   var div = Blockly.DropDownDiv.getContentDiv();
 
+  // Build the SVG DOM.
   var fieldWidth = 8 * Blockly.FieldNote.WHITE_KEY_WIDTH +
     2 * Blockly.FieldNote.EDGE_KEY_WIDTH;
   var fieldHeight = Blockly.FieldNote.TOP_MENU_HEIGHT +
     Blockly.FieldNote.WHITE_KEY_HEIGHT +
     Blockly.FieldNote.BOTTOM_PADDING;
 
-  // Build the SVG DOM.
   var svg = Blockly.utils.createSvgElement('svg', {
     'xmlns': 'http://www.w3.org/2000/svg',
     'xmlns:html': 'http://www.w3.org/1999/xhtml',
@@ -132,61 +153,40 @@ Blockly.FieldNote.prototype.showEditor_ = function() {
     'width': fieldWidth + 'px'
   }, div);
 
-  // White keys
-  for (var i = 0; i < 8; i++) {
-    var x = Blockly.FieldNote.EDGE_KEY_WIDTH +
-      i * Blockly.FieldNote.WHITE_KEY_WIDTH;
-    var y = Blockly.FieldNote.TOP_MENU_HEIGHT;
+  // Add the white and black keys
 
-    var width = Blockly.FieldNote.WHITE_KEY_WIDTH - Blockly.FieldNote.KEY_GAP;
-    var height = Blockly.FieldNote.WHITE_KEY_HEIGHT;
+  // Since we are adding the keys from left to right in order, they need
+  // to be in two groups in order to layer correctly.
+  var whiteKeyGroup = Blockly.utils.createSvgElement('g', {}, svg);
+  var blackKeyGroup = Blockly.utils.createSvgElement('g', {}, svg);
 
+  var xIncrement, width, height, fill, group;
+  // Start drawing the keys off the left edge (relying on the field's clipping)
+  var x = Blockly.FieldNote.EDGE_KEY_WIDTH - Blockly.FieldNote.WHITE_KEY_WIDTH;
+  var y = Blockly.FieldNote.TOP_MENU_HEIGHT;
+  for (var i = 0; i < Blockly.FieldNote.KEY_INFO.length; i++) {
+    // Draw a black or white key
+    if (Blockly.FieldNote.KEY_INFO[i].isBlack) {
+      // Black keys are shifted back half a key
+      x -= Blockly.FieldNote.BLACK_KEY_WIDTH / 2;
+      xIncrement = Blockly.FieldNote.BLACK_KEY_WIDTH / 2;
+      width = Blockly.FieldNote.BLACK_KEY_WIDTH;
+      height = Blockly.FieldNote.BLACK_KEY_HEIGHT;
+      fill = Blockly.FieldNote.BLACK_KEY_COLOR;
+      group = blackKeyGroup;
+    } else {
+      xIncrement = Blockly.FieldNote.WHITE_KEY_WIDTH;
+      width = Blockly.FieldNote.WHITE_KEY_WIDTH - Blockly.FieldNote.KEY_GAP;
+      height = Blockly.FieldNote.WHITE_KEY_HEIGHT;
+      fill = Blockly.FieldNote.WHITE_KEY_COLOR;
+      group = whiteKeyGroup;
+    }
     var attr = {
       'd': this.getPianoKeyPath(x, y, width, height),
-      'fill': '#FFFFFF'
+      'fill': fill
     };
-    Blockly.utils.createSvgElement('path', attr, svg);
-  }
-
-  // Edge keys
-  var x = Blockly.FieldNote.EDGE_KEY_WIDTH -
-    Blockly.FieldNote.WHITE_KEY_WIDTH;
-  var y = Blockly.FieldNote.TOP_MENU_HEIGHT;
-  var width = Blockly.FieldNote.WHITE_KEY_WIDTH - Blockly.FieldNote.KEY_GAP;
-  var height = Blockly.FieldNote.WHITE_KEY_HEIGHT;
-  var attr = {
-    'd': this.getPianoKeyPath(x, y, width, height),
-    'fill': '#FFFFFF'
-  };
-  Blockly.utils.createSvgElement('path', attr, svg);
-
-  var x = Blockly.FieldNote.EDGE_KEY_WIDTH +
-    8 * Blockly.FieldNote.WHITE_KEY_WIDTH;
-  var y = Blockly.FieldNote.TOP_MENU_HEIGHT;
-  var width = Blockly.FieldNote.WHITE_KEY_WIDTH;
-  var height = Blockly.FieldNote.WHITE_KEY_HEIGHT;
-  var attr = {
-    'd': this.getPianoKeyPath(x, y, width, height),
-    'fill': '#FFFFFF'
-  };
-  Blockly.utils.createSvgElement('path', attr, svg);
-
-  // Black keys
-  var blackKeyPositions = [1, 2, 4, 5, 6, 8];
-  for (var i = 0; i < blackKeyPositions.length; i++) {
-    var x = Blockly.FieldNote.EDGE_KEY_WIDTH +
-      blackKeyPositions[i] * Blockly.FieldNote.WHITE_KEY_WIDTH -
-      Blockly.FieldNote.BLACK_KEY_WIDTH / 2;
-    var y = Blockly.FieldNote.TOP_MENU_HEIGHT;
-
-    var width = Blockly.FieldNote.BLACK_KEY_WIDTH - Blockly.FieldNote.KEY_GAP;
-    var height = Blockly.FieldNote.BLACK_KEY_HEIGHT;
-
-    var attr = {
-      'd': this.getPianoKeyPath(x, y, width, height),
-      'fill': '#444444'
-    };
-    Blockly.utils.createSvgElement('path', attr, svg);
+    Blockly.utils.createSvgElement('path', attr, group);
+    x += xIncrement;
   }
 
   Blockly.DropDownDiv.setColour(this.sourceBlock_.parentBlock_.getColour(),
@@ -198,6 +198,15 @@ Blockly.FieldNote.prototype.showEditor_ = function() {
   //     Blockly.bindEvent_(this.handle_, 'mousedown', this, this.onMouseDown);
 };
 
+/**
+ * Construct the SVG path string for a piano key shape: a rectangle with rounded
+ * corners at the bottom.
+ * @param {number} x the x position for the key.
+ * @param {number} y the y position for the key.
+ * @param {number} width the width of the key.
+ * @param {number} height the height of the key.
+ * @returns {string} the SVG path as a string.
+ */
 Blockly.FieldNote.prototype.getPianoKeyPath = function(x, y, width, height) {
   return  'M' + x + ' ' + y + ' ' +
     'L' + x + ' ' + (y + height -  Blockly.FieldNote.KEY_RADIUS) + ' ' +
