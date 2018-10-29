@@ -72,8 +72,6 @@ Blockly.FieldNote.EDGE_KEY_WIDTH = 16;
 Blockly.FieldNote.KEY_RADIUS = 6;
 Blockly.FieldNote.OCTAVE_BUTTON_WIDTH = 32;
 
-Blockly.FieldNote.ROOT_NOTE = 60;
-
 Blockly.FieldNote.KEY_INFO = [
   {name: 'B', pitch: -1},
   {name: 'C', pitch: 0},
@@ -107,7 +105,7 @@ Blockly.FieldNote.fromJson = function(options) {
 /**
  * Path to the arrow svg icon.
  */
-Blockly.FieldNote.ARROW_SVG_PATH = 'icons/arrow.svg';
+Blockly.FieldNote.ARROW_SVG_PATH = 'icons/arrow_button.svg';
 
 /**
  * Clean up this FieldNote, as well as the inherited FieldTextInput.
@@ -233,12 +231,23 @@ Blockly.FieldNote.prototype.showEditor_ = function() {
         'fill': Blockly.FieldNote.SHADOW_COLOR
       }, svg);
 
+  // Octave buttons
+  this.octaveDownButton = this.addOctaveButton(0, svg);
+  this.octaveDownButton.setAttribute('transform', 'scale(-1, 1) ' +
+    'translate(-' + Blockly.FieldNote.TOP_MENU_HEIGHT + ', 1)');
+  this.octaveUpButton = this.addOctaveButton(fieldWidth - Blockly.FieldNote.TOP_MENU_HEIGHT, svg);
+
+  this.octaveDownMouseDownWrapper =
+    Blockly.bindEvent_(this.octaveDownButton, 'mousedown', this, this.octaveDown);
+  this.octaveUpMouseDownWrapper =
+      Blockly.bindEvent_(this.octaveUpButton, 'mousedown', this, this.octaveUp);
+
   Blockly.DropDownDiv.setColour(this.sourceBlock_.parentBlock_.getColour(),
       this.sourceBlock_.getColourTertiary());
   Blockly.DropDownDiv.setCategory(this.sourceBlock_.parentBlock_.getCategory());
   Blockly.DropDownDiv.showPositionedByBlock(this, this.sourceBlock_);
 
-  this.updateKeySelection();
+  this.updateSelection();
 };
 
 /**
@@ -262,10 +271,39 @@ Blockly.FieldNote.prototype.getPianoKeyPath = function(x, y, width, height) {
     'L' + x +  ' ' + y;
 };
 
+Blockly.FieldNote.prototype.addOctaveButton = function(x, svg) {
+  var group = Blockly.utils.createSvgElement('g', {}, svg);
+  var arrow = Blockly.utils.createSvgElement('image',
+      {
+        'width': Blockly.FieldNote.TOP_MENU_HEIGHT,
+        'height': Blockly.FieldNote.TOP_MENU_HEIGHT,
+        'x': x,
+        'y': 0
+      }, group);
+  arrow.setAttributeNS(
+      'http://www.w3.org/1999/xlink',
+      'xlink:href',
+      Blockly.mainWorkspace.options.pathToMedia + Blockly.FieldNote.ARROW_SVG_PATH
+  );
+  Blockly.utils.createSvgElement('line',
+      {
+        'stroke': this.sourceBlock_.getColourTertiary(),
+        'x1': x - 2,
+        'y1': 4,
+        'x2': x - 2,
+        'y2': Blockly.FieldNote.TOP_MENU_HEIGHT - 4
+      }, group);
+  return group;
+};
+
 Blockly.FieldNote.prototype.onMouseDown = function(e) {
-  var newPitch = Number(e.target.getAttribute('data-pitch')) + Blockly.FieldNote.ROOT_NOTE;
-  this.setValue(newPitch);
-  Blockly.FieldTextInput.htmlInput_.value = newPitch;
+  var octaveNum = Math.floor(this.getText() / 12);
+  var newNoteNum = Number(e.target.getAttribute('data-pitch')) + octaveNum * 12;
+  this.setNoteNum(newNoteNum);
+  this.playNoteInternal_();
+};
+
+Blockly.FieldNote.prototype.playNoteInternal_ = function() {
   if (Blockly.FieldNote.playNote_) {
     Blockly.FieldNote.playNote_(
         this.getValue(),
@@ -275,10 +313,17 @@ Blockly.FieldNote.prototype.onMouseDown = function(e) {
 };
 
 Blockly.FieldNote.prototype.noteNumToKeyIndex = function(noteNum) {
-  return (noteNum % 12) + 1;
+  return (Math.floor(noteNum) % 12) + 1;
 };
 
-Blockly.FieldNote.prototype.updateKeySelection = function() {
+Blockly.FieldNote.prototype.setNoteNum = function(noteNum) {
+  this.setValue(noteNum);
+  Blockly.FieldTextInput.htmlInput_.value = noteNum;
+};
+
+Blockly.FieldNote.prototype.updateSelection = function() {
+  var noteNum = Number(this.getText());
+
   // Clear the highlight on all keys
   this.keySVGs.forEach(function(svg) {
     var isBlack = svg.getAttribute('data-isBlack');
@@ -288,7 +333,6 @@ Blockly.FieldNote.prototype.updateKeySelection = function() {
       svg.setAttribute('fill', Blockly.FieldNote.WHITE_KEY_COLOR);
     }
   });
-  var noteNum = Number(this.getText());
   var index = this.noteNumToKeyIndex(noteNum);
   // Set the highlight on the selected key
   if (this.keySVGs[index]) {
@@ -297,8 +341,23 @@ Blockly.FieldNote.prototype.updateKeySelection = function() {
   // Update the note name text
   if (this.noteNameText) {
     var noteName =  Blockly.FieldNote.KEY_INFO[index].name;
-    this.noteNameText.textContent = noteName + ' (' + noteNum + ')';
+    this.noteNameText.textContent = noteName + ' (' + Math.floor(noteNum) + ')';
   }
+};
+
+Blockly.FieldNote.prototype.octaveDown = function() {
+  this.changeNoteBy(-12);
+};
+
+Blockly.FieldNote.prototype.octaveUp = function() {
+  this.changeNoteBy(12);
+};
+
+Blockly.FieldNote.prototype.changeNoteBy = function(interval) {
+  var newNote = Number(this.getText()) + interval;
+  if (newNote < 0) return;
+  this.setNoteNum(newNote);
+  this.playNoteInternal_();
 };
 
 Blockly.FieldNote.prototype.setText = function(text) {
@@ -307,7 +366,7 @@ Blockly.FieldNote.prototype.setText = function(text) {
     // Not rendered yet.
     return;
   }
-  this.updateKeySelection();
+  this.updateSelection();
   // Cached width is obsolete.  Clear it.
   this.size_.width = 0;
 };
