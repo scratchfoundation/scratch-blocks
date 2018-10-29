@@ -49,6 +49,7 @@ Blockly.FieldNote = function(opt_value, opt_validator) {
   this.addArgType('note');
 
   this.keySVGs = [];
+  this.noteNameText = null;
 
 };
 goog.inherits(Blockly.FieldNote, Blockly.FieldTextInput);
@@ -58,6 +59,7 @@ Blockly.FieldNote.SHADOW_HEIGHT = 4;
 Blockly.FieldNote.SHADOW_COLOR = '#33333333';
 Blockly.FieldNote.WHITE_KEY_COLOR = '#FFFFFF';
 Blockly.FieldNote.BLACK_KEY_COLOR = '#323133';
+Blockly.FieldNote.BLACK_KEY_STROKE = '#555555';
 Blockly.FieldNote.KEY_SELECTED_COLOR = '#b0d6ff';
 Blockly.FieldNote.WHITE_KEY_HEIGHT = 72;
 Blockly.FieldNote.WHITE_KEY_WIDTH = 40;
@@ -173,7 +175,7 @@ Blockly.FieldNote.prototype.showEditor_ = function() {
       width = Blockly.FieldNote.BLACK_KEY_WIDTH;
       height = Blockly.FieldNote.BLACK_KEY_HEIGHT;
       fill = Blockly.FieldNote.BLACK_KEY_COLOR;
-      stroke = Blockly.FieldNote.BLACK_KEY_COLOR;
+      stroke = Blockly.FieldNote.BLACK_KEY_STROKE;
       group = blackKeyGroup;
     } else {
       xIncrement = Blockly.FieldNote.WHITE_KEY_WIDTH;
@@ -194,10 +196,20 @@ Blockly.FieldNote.prototype.showEditor_ = function() {
     this.keySVGs[i].setAttribute('data-pitch', Blockly.FieldNote.KEY_INFO[i].pitch);
     this.keySVGs[i].setAttribute('data-name', Blockly.FieldNote.KEY_INFO[i].name);
     this.keySVGs[i].setAttribute('data-isBlack', Blockly.FieldNote.KEY_INFO[i].isBlack);
-    // var keyInfo = Blockly.FieldNote.KEY_INFO[i]; // not the right way to do it!
+
     this.mouseDownWrappers_[i] =
         Blockly.bindEvent_(this.keySVGs[i], 'mousedown', this, this.onMouseDown);
   }
+
+  // Note name indicator at the top of the field
+  this.noteNameText = Blockly.utils.createSvgElement('text',
+      {
+        'x': fieldWidth / 2,
+        'y': Blockly.FieldNote.TOP_MENU_HEIGHT / 2,
+        'class': 'blocklyText',
+        'text-anchor': 'middle',
+        'dominant-baseline': 'middle',
+      }, svg);
 
   // Horizontal line at the top of the keys
   Blockly.utils.createSvgElement('line',
@@ -224,7 +236,7 @@ Blockly.FieldNote.prototype.showEditor_ = function() {
   Blockly.DropDownDiv.setCategory(this.sourceBlock_.parentBlock_.getCategory());
   Blockly.DropDownDiv.showPositionedByBlock(this, this.sourceBlock_);
 
-  this.updateKeyHighlight();
+  this.updateKeySelection();
 };
 
 /**
@@ -258,7 +270,8 @@ Blockly.FieldNote.prototype.noteNumToKeyIndex = function(noteNum) {
   return (noteNum % 12) + 1;
 };
 
-Blockly.FieldNote.prototype.updateKeyHighlight = function() {
+Blockly.FieldNote.prototype.updateKeySelection = function() {
+  // Clear the highlight on all keys
   this.keySVGs.forEach(function(svg) {
     var isBlack = svg.getAttribute('data-isBlack');
     if (isBlack === 'true') {
@@ -267,9 +280,16 @@ Blockly.FieldNote.prototype.updateKeyHighlight = function() {
       svg.setAttribute('fill', Blockly.FieldNote.WHITE_KEY_COLOR);
     }
   });
-  var index = this.noteNumToKeyIndex(Number(this.getText()));
+  var noteNum = Number(this.getText());
+  var index = this.noteNumToKeyIndex(noteNum);
+  // Set the highlight on the selected key
   if (this.keySVGs[index]) {
     this.keySVGs[index].setAttribute('fill', Blockly.FieldNote.KEY_SELECTED_COLOR);
+  }
+  // Update the note name text
+  if (this.noteNameText) {
+    var noteName =  Blockly.FieldNote.KEY_INFO[index].name;
+    this.noteNameText.textContent = noteName + ' (' + noteNum + ')';
   }
 };
 
@@ -279,7 +299,7 @@ Blockly.FieldNote.prototype.setText = function(text) {
     // Not rendered yet.
     return;
   }
-  this.updateKeyHighlight();
+  this.updateKeySelection();
   // Cached width is obsolete.  Clear it.
   this.size_.width = 0;
 };
