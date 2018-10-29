@@ -43,18 +43,22 @@ goog.require('goog.userAgent');
  * @constructor
  */
 Blockly.FieldNote = function(opt_value, opt_validator) {
-
   opt_value = (opt_value && !isNaN(opt_value)) ? String(opt_value) : '0';
   Blockly.FieldNote.superClass_.constructor.call(
       this, opt_value, opt_validator);
   this.addArgType('note');
+
+  this.keySVGs = [];
+
 };
 goog.inherits(Blockly.FieldNote, Blockly.FieldTextInput);
 
 Blockly.FieldNote.TOP_MENU_HEIGHT = 28;
+Blockly.FieldNote.SHADOW_HEIGHT = 4;
+Blockly.FieldNote.SHADOW_COLOR = '#33333333';
 Blockly.FieldNote.WHITE_KEY_COLOR = '#FFFFFF';
-Blockly.FieldNote.WHITE_KEY_SELECTED_COLOR = '#b0d6ff';
 Blockly.FieldNote.BLACK_KEY_COLOR = '#323133';
+Blockly.FieldNote.KEY_SELECTED_COLOR = '#b0d6ff';
 Blockly.FieldNote.WHITE_KEY_HEIGHT = 72;
 Blockly.FieldNote.WHITE_KEY_WIDTH = 40;
 Blockly.FieldNote.BLACK_KEY_HEIGHT = 40;
@@ -62,26 +66,27 @@ Blockly.FieldNote.BLACK_KEY_WIDTH = 32;
 Blockly.FieldNote.BOTTOM_PADDING = 4;
 Blockly.FieldNote.EDGE_KEY_WIDTH = 16;
 Blockly.FieldNote.KEY_RADIUS = 6;
-Blockly.FieldNote.KEY_GAP = 1;
 Blockly.FieldNote.OCTAVE_BUTTON_WIDTH = 32;
 
+Blockly.FieldNote.ROOT_NOTE = 60;
+
 Blockly.FieldNote.KEY_INFO = [
-  {name: 'B'},
-  {name: 'C'},
-  {name: 'C#', isBlack: true},
-  {name: 'D'},
-  {name: 'Eb', isBlack: true},
-  {name: 'E'},
-  {name: 'F'},
-  {name: 'F#', isBlack: true},
-  {name: 'G'},
-  {name: 'G#', isBlack: true},
-  {name: 'A'},
-  {name: 'Bb', isBlack: true},
-  {name: 'B'},
-  {name: 'C'},
-  {name: 'C#', isBlack: true},
-  {name: 'D'}
+  {name: 'B', pitch: -1},
+  {name: 'C', pitch: 0},
+  {name: 'C#', pitch: 1, isBlack: true},
+  {name: 'D', pitch: 2},
+  {name: 'Eb', pitch: 3, isBlack: true},
+  {name: 'E', pitch: 4},
+  {name: 'F', pitch: 5},
+  {name: 'F#', pitch: 6, isBlack: true},
+  {name: 'G', pitch: 7},
+  {name: 'G#', pitch: 8, isBlack: true},
+  {name: 'A', pitch: 9},
+  {name: 'Bb', pitch: 10, isBlack: true},
+  {name: 'B', pitch: 11},
+  {name: 'C', pitch: 12},
+  {name: 'C#', pitch: 13, isBlack: true},
+  {name: 'D', pitch: 14}
 ];
 
 /**
@@ -112,12 +117,6 @@ Blockly.FieldNote.prototype.dispose_ = function() {
     if (thisField.mouseDownWrapper_) {
       Blockly.unbindEvent_(thisField.mouseDownWrapper_);
     }
-    if (thisField.mouseUpWrapper_) {
-      Blockly.unbindEvent_(thisField.mouseUpWrapper_);
-    }
-    if (thisField.mouseMoveWrapper_) {
-      Blockly.unbindEvent_(thisField.mouseMoveWrapper_);
-    }
   };
 };
 
@@ -126,11 +125,10 @@ Blockly.FieldNote.prototype.dispose_ = function() {
  * @private
  */
 Blockly.FieldNote.prototype.showEditor_ = function() {
-  // @todo what does this do?
-  // var noFocus =
-  //     goog.userAgent.MOBILE || goog.userAgent.ANDROID || goog.userAgent.IPAD;
-  // // Mobile browsers have issues with in-line textareas (focus & keyboards).
-  // Blockly.FieldNote.superClass_.showEditor_.call(this, noFocus);
+  var noFocus =
+      goog.userAgent.MOBILE || goog.userAgent.ANDROID || goog.userAgent.IPAD;
+  // Mobile browsers have issues with in-line textareas (focus & keyboards).
+  Blockly.FieldNote.superClass_.showEditor_.call(this, noFocus);
 
   // If there is an existing drop-down someone else owns, hide it immediately and clear it.
   Blockly.DropDownDiv.hideWithoutAnimation();
@@ -154,13 +152,15 @@ Blockly.FieldNote.prototype.showEditor_ = function() {
   }, div);
 
   // Add the white and black keys
+  this.keySVGs = [];
+  this.mouseDownWrappers_ = [];
 
   // Since we are adding the keys from left to right in order, they need
   // to be in two groups in order to layer correctly.
   var whiteKeyGroup = Blockly.utils.createSvgElement('g', {}, svg);
   var blackKeyGroup = Blockly.utils.createSvgElement('g', {}, svg);
 
-  var xIncrement, width, height, fill, group;
+  var xIncrement, width, height, fill, stroke, group;
   // Start drawing the keys off the left edge (relying on the field's clipping)
   var x = Blockly.FieldNote.EDGE_KEY_WIDTH - Blockly.FieldNote.WHITE_KEY_WIDTH;
   var y = Blockly.FieldNote.TOP_MENU_HEIGHT;
@@ -173,29 +173,58 @@ Blockly.FieldNote.prototype.showEditor_ = function() {
       width = Blockly.FieldNote.BLACK_KEY_WIDTH;
       height = Blockly.FieldNote.BLACK_KEY_HEIGHT;
       fill = Blockly.FieldNote.BLACK_KEY_COLOR;
+      stroke = Blockly.FieldNote.BLACK_KEY_COLOR;
       group = blackKeyGroup;
     } else {
       xIncrement = Blockly.FieldNote.WHITE_KEY_WIDTH;
-      width = Blockly.FieldNote.WHITE_KEY_WIDTH - Blockly.FieldNote.KEY_GAP;
+      width = Blockly.FieldNote.WHITE_KEY_WIDTH;
       height = Blockly.FieldNote.WHITE_KEY_HEIGHT;
       fill = Blockly.FieldNote.WHITE_KEY_COLOR;
+      stroke = this.sourceBlock_.getColourTertiary();
       group = whiteKeyGroup;
     }
     var attr = {
       'd': this.getPianoKeyPath(x, y, width, height),
-      'fill': fill
+      'fill': fill,
+      'stroke': stroke
     };
-    Blockly.utils.createSvgElement('path', attr, group);
     x += xIncrement;
+
+    this.keySVGs[i] = Blockly.utils.createSvgElement('path', attr, group);
+    this.keySVGs[i].setAttribute('data-pitch', Blockly.FieldNote.KEY_INFO[i].pitch);
+    this.keySVGs[i].setAttribute('data-name', Blockly.FieldNote.KEY_INFO[i].name);
+    this.keySVGs[i].setAttribute('data-isBlack', Blockly.FieldNote.KEY_INFO[i].isBlack);
+    // var keyInfo = Blockly.FieldNote.KEY_INFO[i]; // not the right way to do it!
+    this.mouseDownWrappers_[i] =
+        Blockly.bindEvent_(this.keySVGs[i], 'mousedown', this, this.onMouseDown);
   }
+
+  // Horizontal line at the top of the keys
+  Blockly.utils.createSvgElement('line',
+      {
+        'stroke': this.sourceBlock_.getColourTertiary(),
+        'x1': 0,
+        'y1': Blockly.FieldNote.TOP_MENU_HEIGHT,
+        'x2': fieldWidth,
+        'y2': Blockly.FieldNote.TOP_MENU_HEIGHT
+      }, svg);
+
+  // Drop shadow at the top of the keys
+  Blockly.utils.createSvgElement('rect',
+      {
+        'x': 0,
+        'y': Blockly.FieldNote.TOP_MENU_HEIGHT,
+        'width': fieldWidth,
+        'height': Blockly.FieldNote.SHADOW_HEIGHT,
+        'fill': Blockly.FieldNote.SHADOW_COLOR
+      }, svg);
 
   Blockly.DropDownDiv.setColour(this.sourceBlock_.parentBlock_.getColour(),
       this.sourceBlock_.getColourTertiary());
   Blockly.DropDownDiv.setCategory(this.sourceBlock_.parentBlock_.getCategory());
   Blockly.DropDownDiv.showPositionedByBlock(this, this.sourceBlock_);
 
-  // this.mouseDownWrapper_ =
-  //     Blockly.bindEvent_(this.handle_, 'mousedown', this, this.onMouseDown);
+  this.updateKeyHighlight();
 };
 
 /**
@@ -219,36 +248,40 @@ Blockly.FieldNote.prototype.getPianoKeyPath = function(x, y, width, height) {
     'L' + x +  ' ' + y;
 };
 
-/**
- * Set the angle to match the mouse's position.
- * @param {!Event} e Mouse move event.
- */
-Blockly.FieldNote.prototype.onMouseDown = function() {
-  this.mouseUpWrapper_ = Blockly.bindEvent_(document.body, 'mouseup', this, this.onMouseUp);
+Blockly.FieldNote.prototype.onMouseDown = function(e) {
+  var newPitch = Number(e.target.getAttribute('data-pitch')) + Blockly.FieldNote.ROOT_NOTE;
+  this.setValue(newPitch);
+  Blockly.FieldTextInput.htmlInput_.value = newPitch;
 };
 
-/**
- * Set the angle to match the mouse's position.
- * @param {!Event} e Mouse move event.
- */
-Blockly.FieldNote.prototype.onMouseUp = function() {
-  Blockly.unbindEvent_(this.mouseUpWrapper_);
+Blockly.FieldNote.prototype.noteNumToKeyIndex = function(noteNum) {
+  return (noteNum % 12) + 1;
 };
 
-/**
- * Ensure that only an angle may be entered.
- * @param {string} text The user's text.
- * @return {?string} A string representing a valid angle, or null if invalid.
- */
-Blockly.FieldNote.prototype.classValidator = function(text) {
-  if (text === null) {
-    return null;
+Blockly.FieldNote.prototype.updateKeyHighlight = function() {
+  this.keySVGs.forEach(function(svg) {
+    var isBlack = svg.getAttribute('data-isBlack');
+    if (isBlack === 'true') {
+      svg.setAttribute('fill', Blockly.FieldNote.BLACK_KEY_COLOR);
+    } else {
+      svg.setAttribute('fill', Blockly.FieldNote.WHITE_KEY_COLOR);
+    }
+  });
+  var index = this.noteNumToKeyIndex(Number(this.getText()));
+  if (this.keySVGs[index]) {
+    this.keySVGs[index].setAttribute('fill', Blockly.FieldNote.KEY_SELECTED_COLOR);
   }
-  var n = parseFloat(text || 0);
-  if (isNaN(n)) {
-    return null;
+};
+
+Blockly.FieldNote.prototype.setText = function(text) {
+  Blockly.FieldNote.superClass_.setText.call(this, text);
+  if (!this.textElement_) {
+    // Not rendered yet.
+    return;
   }
-  return String(n);
+  this.updateKeyHighlight();
+  // Cached width is obsolete.  Clear it.
+  this.size_.width = 0;
 };
 
 Blockly.Field.register('field_note', Blockly.FieldNote);
