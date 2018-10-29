@@ -54,6 +54,8 @@ Blockly.FieldNote = function(opt_value, opt_validator) {
 };
 goog.inherits(Blockly.FieldNote, Blockly.FieldTextInput);
 
+Blockly.FieldNote.playNote_ = null;
+
 Blockly.FieldNote.TOP_MENU_HEIGHT = 28;
 Blockly.FieldNote.SHADOW_HEIGHT = 4;
 Blockly.FieldNote.SHADOW_COLOR = '#33333333';
@@ -264,6 +266,12 @@ Blockly.FieldNote.prototype.onMouseDown = function(e) {
   var newPitch = Number(e.target.getAttribute('data-pitch')) + Blockly.FieldNote.ROOT_NOTE;
   this.setValue(newPitch);
   Blockly.FieldTextInput.htmlInput_.value = newPitch;
+  if (Blockly.FieldNote.playNote_) {
+    Blockly.FieldNote.playNote_(
+        this.getValue(),
+        this.sourceBlock_.parentBlock_.getCategory()
+    );
+  }
 };
 
 Blockly.FieldNote.prototype.noteNumToKeyIndex = function(noteNum) {
