@@ -50,6 +50,8 @@ Blockly.FieldNote = function(opt_value, opt_validator) {
 
   this.keySVGs = [];
   this.noteNameText = null;
+  this.lowCText = null;
+  this.highCText = null;
 
 };
 goog.inherits(Blockly.FieldNote, Blockly.FieldTextInput);
@@ -211,6 +213,24 @@ Blockly.FieldNote.prototype.showEditor_ = function() {
         'dominant-baseline': 'middle',
       }, svg);
 
+  // Note names on the low and high C keys
+  var lowCX = Blockly.FieldNote.EDGE_KEY_WIDTH + (Blockly.FieldNote.WHITE_KEY_WIDTH / 2);
+  this.lowCText = Blockly.utils.createSvgElement('text',
+      {
+        'x': lowCX,
+        'y': Blockly.FieldNote.TOP_MENU_HEIGHT + Blockly.FieldNote.WHITE_KEY_HEIGHT - 8,
+        'class': 'scratchNotePickerKeyLabel',
+        'text-anchor': 'middle',
+      }, svg);
+  var highCX = lowCX + (Blockly.FieldNote.WHITE_KEY_WIDTH * 7);
+  this.highCText = Blockly.utils.createSvgElement('text',
+      {
+        'x': highCX,
+        'y': Blockly.FieldNote.TOP_MENU_HEIGHT + Blockly.FieldNote.WHITE_KEY_HEIGHT - 8,
+        'class': 'scratchNotePickerKeyLabel',
+        'text-anchor': 'middle',
+      }, svg);
+
   // Horizontal line at the top of the keys
   Blockly.utils.createSvgElement('line',
       {
@@ -337,11 +357,13 @@ Blockly.FieldNote.prototype.updateSelection = function() {
   // Set the highlight on the selected key
   if (this.keySVGs[index]) {
     this.keySVGs[index].setAttribute('fill', Blockly.FieldNote.KEY_SELECTED_COLOR);
-  }
-  // Update the note name text
-  if (this.noteNameText) {
+    // Update the note name text
     var noteName =  Blockly.FieldNote.KEY_INFO[index].name;
     this.noteNameText.textContent = noteName + ' (' + Math.floor(noteNum) + ')';
+    // Update the low and high C note names
+    var lowCNum = Math.floor(this.getText() / 12) * 12;
+    this.lowCText.textContent = 'C(' + lowCNum + ')';
+    this.highCText.textContent = 'C(' + (lowCNum + 12) + ')';
   }
 };
 
