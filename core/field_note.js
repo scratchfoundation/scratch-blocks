@@ -69,7 +69,6 @@ Blockly.FieldNote.WHITE_KEY_HEIGHT = 72;
 Blockly.FieldNote.WHITE_KEY_WIDTH = 40;
 Blockly.FieldNote.BLACK_KEY_HEIGHT = 40;
 Blockly.FieldNote.BLACK_KEY_WIDTH = 32;
-Blockly.FieldNote.BOTTOM_PADDING = 4;
 Blockly.FieldNote.KEY_RADIUS = 6;
 Blockly.FieldNote.OCTAVE_BUTTON_WIDTH = 32;
 
@@ -138,8 +137,7 @@ Blockly.FieldNote.prototype.showEditor_ = function() {
   // Build the SVG DOM.
   var fieldWidth = 8 * Blockly.FieldNote.WHITE_KEY_WIDTH;
   var fieldHeight = Blockly.FieldNote.TOP_MENU_HEIGHT +
-    Blockly.FieldNote.WHITE_KEY_HEIGHT +
-    Blockly.FieldNote.BOTTOM_PADDING;
+    Blockly.FieldNote.WHITE_KEY_HEIGHT;
 
   var svg = Blockly.utils.createSvgElement('svg', {
     'xmlns': 'http://www.w3.org/2000/svg',
