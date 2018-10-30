@@ -215,21 +215,9 @@ Blockly.FieldNote.prototype.showEditor_ = function() {
 
   // Note names on the low and high C keys
   var lowCX = Blockly.FieldNote.EDGE_KEY_WIDTH + (Blockly.FieldNote.WHITE_KEY_WIDTH / 2);
-  this.lowCText = Blockly.utils.createSvgElement('text',
-      {
-        'x': lowCX,
-        'y': Blockly.FieldNote.TOP_MENU_HEIGHT + Blockly.FieldNote.WHITE_KEY_HEIGHT - 8,
-        'class': 'scratchNotePickerKeyLabel',
-        'text-anchor': 'middle',
-      }, svg);
+  this.lowCText = this.addCKeyLabel(lowCX, svg);
   var highCX = lowCX + (Blockly.FieldNote.WHITE_KEY_WIDTH * 7);
-  this.highCText = Blockly.utils.createSvgElement('text',
-      {
-        'x': highCX,
-        'y': Blockly.FieldNote.TOP_MENU_HEIGHT + Blockly.FieldNote.WHITE_KEY_HEIGHT - 8,
-        'class': 'scratchNotePickerKeyLabel',
-        'text-anchor': 'middle',
-      }, svg);
+  this.highCText = this.addCKeyLabel(highCX, svg);
 
   // Horizontal line at the top of the keys
   Blockly.utils.createSvgElement('line',
@@ -314,6 +302,16 @@ Blockly.FieldNote.prototype.addOctaveButton = function(x, svg) {
         'y2': Blockly.FieldNote.TOP_MENU_HEIGHT - 4
       }, group);
   return group;
+};
+
+Blockly.FieldNote.prototype.addCKeyLabel = function(x, svg) {
+  return Blockly.utils.createSvgElement('text',
+      {
+        'x': x,
+        'y': Blockly.FieldNote.TOP_MENU_HEIGHT + Blockly.FieldNote.WHITE_KEY_HEIGHT - 8,
+        'class': 'scratchNotePickerKeyLabel',
+        'text-anchor': 'middle',
+      }, svg);
 };
 
 Blockly.FieldNote.prototype.onMouseDown = function(e) {
