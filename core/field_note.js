@@ -52,7 +52,7 @@ Blockly.FieldNote = function(opt_value, opt_validator) {
   this.noteNameText = null;
   this.lowCText = null;
   this.highCText = null;
-
+  this.displayedOctave = null;
 };
 goog.inherits(Blockly.FieldNote, Blockly.FieldTextInput);
 
@@ -160,7 +160,6 @@ Blockly.FieldNote.prototype.showEditor_ = function() {
   var blackKeyGroup = Blockly.utils.createSvgElement('g', {}, svg);
 
   var xIncrement, width, height, fill, stroke, group;
-  // Start drawing the keys off the left edge (relying on the field's clipping)
   var x = 0;
   var y = Blockly.FieldNote.TOP_MENU_HEIGHT;
   for (var i = 0; i < Blockly.FieldNote.KEY_INFO.length; i++) {
@@ -241,9 +240,9 @@ Blockly.FieldNote.prototype.showEditor_ = function() {
   this.octaveUpButton = this.addOctaveButton(fieldWidth - Blockly.FieldNote.TOP_MENU_HEIGHT, svg);
 
   this.octaveDownMouseDownWrapper =
-    Blockly.bindEvent_(this.octaveDownButton, 'mousedown', this, this.octaveDown);
+    Blockly.bindEvent_(this.octaveDownButton, 'mousedown', this, this.onOctaveDown);
   this.octaveUpMouseDownWrapper =
-      Blockly.bindEvent_(this.octaveUpButton, 'mousedown', this, this.octaveUp);
+      Blockly.bindEvent_(this.octaveUpButton, 'mousedown', this, this.onOctaveUp);
 
   Blockly.DropDownDiv.setColour(this.sourceBlock_.parentBlock_.getColour(),
       this.sourceBlock_.getColourTertiary());
@@ -310,8 +309,7 @@ Blockly.FieldNote.prototype.addCKeyLabel = function(x, svg) {
 };
 
 Blockly.FieldNote.prototype.onMouseDown = function(e) {
-  var octaveNum = Math.floor(this.getText() / 12);
-  var newNoteNum = Number(e.target.getAttribute('data-pitch')) + octaveNum * 12;
+  var newNoteNum = Number(e.target.getAttribute('data-pitch')) + this.displayedOctave * 12;
   this.setNoteNum(newNoteNum);
   this.playNoteInternal_();
 };
@@ -325,46 +323,11 @@ Blockly.FieldNote.prototype.playNoteInternal_ = function() {
   }
 };
 
-Blockly.FieldNote.prototype.noteNumToKeyIndex = function(noteNum) {
-  return (Math.floor(noteNum) % 12);
-};
-
-Blockly.FieldNote.prototype.setNoteNum = function(noteNum) {
-  this.setValue(noteNum);
-  Blockly.FieldTextInput.htmlInput_.value = noteNum;
-};
-
-Blockly.FieldNote.prototype.updateSelection = function() {
-  var noteNum = Number(this.getText());
-
-  // Clear the highlight on all keys
-  this.keySVGs.forEach(function(svg) {
-    var isBlack = svg.getAttribute('data-isBlack');
-    if (isBlack === 'true') {
-      svg.setAttribute('fill', Blockly.FieldNote.BLACK_KEY_COLOR);
-    } else {
-      svg.setAttribute('fill', Blockly.FieldNote.WHITE_KEY_COLOR);
-    }
-  });
-  var index = this.noteNumToKeyIndex(noteNum);
-  // Set the highlight on the selected key
-  if (this.keySVGs[index]) {
-    this.keySVGs[index].setAttribute('fill', Blockly.FieldNote.KEY_SELECTED_COLOR);
-    // Update the note name text
-    var noteName =  Blockly.FieldNote.KEY_INFO[index].name;
-    this.noteNameText.textContent = noteName + ' (' + Math.floor(noteNum) + ')';
-    // Update the low and high C note names
-    var lowCNum = Math.floor(this.getText() / 12) * 12;
-    this.lowCText.textContent = 'C(' + lowCNum + ')';
-    this.highCText.textContent = 'C(' + (lowCNum + 12) + ')';
-  }
-};
-
-Blockly.FieldNote.prototype.octaveDown = function() {
+Blockly.FieldNote.prototype.onOctaveDown = function() {
   this.changeNoteBy(-12);
 };
 
-Blockly.FieldNote.prototype.octaveUp = function() {
+Blockly.FieldNote.prototype.onOctaveUp = function() {
   this.changeNoteBy(12);
 };
 
@@ -373,6 +336,11 @@ Blockly.FieldNote.prototype.changeNoteBy = function(interval) {
   if (newNote < 0) return;
   this.setNoteNum(newNote);
   this.playNoteInternal_();
+};
+
+Blockly.FieldNote.prototype.setNoteNum = function(noteNum) {
+  this.setValue(noteNum);
+  Blockly.FieldTextInput.htmlInput_.value = noteNum;
 };
 
 Blockly.FieldNote.prototype.setText = function(text) {
@@ -384,6 +352,41 @@ Blockly.FieldNote.prototype.setText = function(text) {
   this.updateSelection();
   // Cached width is obsolete.  Clear it.
   this.size_.width = 0;
+};
+
+Blockly.FieldNote.prototype.noteNumToKeyIndex = function(noteNum) {
+  return noteNum - (this.displayedOctave * 12);
+};
+
+Blockly.FieldNote.prototype.updateSelection = function() {
+  var noteNum = Number(this.getText());
+  if (this.displayedOctave == null ||
+      noteNum > ((this.displayedOctave * 12) + 12) ||
+      noteNum < (this.displayedOctave * 12)) {
+    this.displayedOctave = Math.floor(noteNum / 12);
+  }
+  var index = this.noteNumToKeyIndex(noteNum);
+
+  // Clear the highlight on all keys
+  this.keySVGs.forEach(function(svg) {
+    var isBlack = svg.getAttribute('data-isBlack');
+    if (isBlack === 'true') {
+      svg.setAttribute('fill', Blockly.FieldNote.BLACK_KEY_COLOR);
+    } else {
+      svg.setAttribute('fill', Blockly.FieldNote.WHITE_KEY_COLOR);
+    }
+  });
+  // Set the highlight on the selected key
+  if (this.keySVGs[index]) {
+    this.keySVGs[index].setAttribute('fill', Blockly.FieldNote.KEY_SELECTED_COLOR);
+    // Update the note name text
+    var noteName =  Blockly.FieldNote.KEY_INFO[index].name;
+    this.noteNameText.textContent = noteName + ' (' + Math.floor(noteNum) + ')';
+    // Update the low and high C note names
+    var lowCNum = this.displayedOctave * 12;
+    this.lowCText.textContent = 'C(' + lowCNum + ')';
+    this.highCText.textContent = 'C(' + (lowCNum + 12) + ')';
+  }
 };
 
 Blockly.Field.register('field_note', Blockly.FieldNote);
