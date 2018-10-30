@@ -70,12 +70,10 @@ Blockly.FieldNote.WHITE_KEY_WIDTH = 40;
 Blockly.FieldNote.BLACK_KEY_HEIGHT = 40;
 Blockly.FieldNote.BLACK_KEY_WIDTH = 32;
 Blockly.FieldNote.BOTTOM_PADDING = 4;
-Blockly.FieldNote.EDGE_KEY_WIDTH = 16;
 Blockly.FieldNote.KEY_RADIUS = 6;
 Blockly.FieldNote.OCTAVE_BUTTON_WIDTH = 32;
 
 Blockly.FieldNote.KEY_INFO = [
-  {name: 'B', pitch: -1},
   {name: 'C', pitch: 0},
   {name: 'C#', pitch: 1, isBlack: true},
   {name: 'D', pitch: 2},
@@ -88,9 +86,7 @@ Blockly.FieldNote.KEY_INFO = [
   {name: 'A', pitch: 9},
   {name: 'Bb', pitch: 10, isBlack: true},
   {name: 'B', pitch: 11},
-  {name: 'C', pitch: 12},
-  {name: 'C#', pitch: 13, isBlack: true},
-  {name: 'D', pitch: 14}
+  {name: 'C', pitch: 12}
 ];
 
 /**
@@ -140,8 +136,7 @@ Blockly.FieldNote.prototype.showEditor_ = function() {
   var div = Blockly.DropDownDiv.getContentDiv();
 
   // Build the SVG DOM.
-  var fieldWidth = 8 * Blockly.FieldNote.WHITE_KEY_WIDTH +
-    2 * Blockly.FieldNote.EDGE_KEY_WIDTH;
+  var fieldWidth = 8 * Blockly.FieldNote.WHITE_KEY_WIDTH;
   var fieldHeight = Blockly.FieldNote.TOP_MENU_HEIGHT +
     Blockly.FieldNote.WHITE_KEY_HEIGHT +
     Blockly.FieldNote.BOTTOM_PADDING;
@@ -166,7 +161,7 @@ Blockly.FieldNote.prototype.showEditor_ = function() {
 
   var xIncrement, width, height, fill, stroke, group;
   // Start drawing the keys off the left edge (relying on the field's clipping)
-  var x = Blockly.FieldNote.EDGE_KEY_WIDTH - Blockly.FieldNote.WHITE_KEY_WIDTH;
+  var x = 0;
   var y = Blockly.FieldNote.TOP_MENU_HEIGHT;
   for (var i = 0; i < Blockly.FieldNote.KEY_INFO.length; i++) {
     // Draw a black or white key
@@ -214,7 +209,7 @@ Blockly.FieldNote.prototype.showEditor_ = function() {
       }, svg);
 
   // Note names on the low and high C keys
-  var lowCX = Blockly.FieldNote.EDGE_KEY_WIDTH + (Blockly.FieldNote.WHITE_KEY_WIDTH / 2);
+  var lowCX = Blockly.FieldNote.WHITE_KEY_WIDTH / 2;
   this.lowCText = this.addCKeyLabel(lowCX, svg);
   var highCX = lowCX + (Blockly.FieldNote.WHITE_KEY_WIDTH * 7);
   this.highCText = this.addCKeyLabel(highCX, svg);
@@ -331,7 +326,7 @@ Blockly.FieldNote.prototype.playNoteInternal_ = function() {
 };
 
 Blockly.FieldNote.prototype.noteNumToKeyIndex = function(noteNum) {
-  return (Math.floor(noteNum) % 12) + 1;
+  return (Math.floor(noteNum) % 12);
 };
 
 Blockly.FieldNote.prototype.setNoteNum = function(noteNum) {
