@@ -999,7 +999,7 @@ Blockly.Css.CONTENT = [
   '.scratchNotePickerKeyLabel {',
     'font-family: "Helvetica Neue", Helvetica, sans-serif;',
     'font-size: 0.75rem;',
-    'color: $colour_toolboxText;',
+    'fill: $colour_text;',
     'pointer-events: none;',
   '}',
 
