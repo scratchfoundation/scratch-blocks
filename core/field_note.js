@@ -382,6 +382,7 @@ Blockly.FieldNote.prototype.stepOctaveAnimation = function() {
 };
 
 Blockly.FieldNote.prototype.setNoteNum = function(noteNum) {
+  noteNum = this.callValidator(noteNum);
   this.setValue(noteNum);
   Blockly.FieldTextInput.htmlInput_.value = noteNum;
 };
@@ -430,6 +431,23 @@ Blockly.FieldNote.prototype.updateSelection = function() {
     this.lowCText.textContent = 'C(' + lowCNum + ')';
     this.highCText.textContent = 'C(' + (lowCNum + 12) + ')';
   }
+};
+
+Blockly.FieldNote.prototype.classValidator = function(text) {
+  if (text === null) {
+    return null;
+  }
+  var n = parseFloat(text || 0);
+  if (isNaN(n)) {
+    return null;
+  }
+  if (n < 0) {
+    n = 0;
+  }
+  if (n > 130) {
+    n = 130;
+  }
+  return String(n);
 };
 
 Blockly.Field.register('field_note', Blockly.FieldNote);
