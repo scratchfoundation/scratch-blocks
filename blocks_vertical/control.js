@@ -177,7 +177,7 @@ Blockly.Blocks['control_stop'] = {
   init: function() {
     var ALL_SCRIPTS = 'all';
     var THIS_SCRIPT = 'this script';
-    var OTHER_SCRIPTS = 'other scripts in sprite';
+    var OTHER_SCRIPTS = 'other scripts in stage';
     var stopDropdown = new Blockly.FieldDropdown(function() {
       if (this.sourceBlock_ &&
           this.sourceBlock_.nextConnection &&
