@@ -341,17 +341,22 @@ Blockly.FieldNote.prototype.playNoteInternal_ = function() {
 };
 
 Blockly.FieldNote.prototype.onOctaveDown = function() {
-  this.animationTarget = this.fieldWidth;
   this.displayedOctave -= 1;
   if (this.displayedOctave < 0) {
     this.displayedOctave = 0;
+    return;
   }
+  this.animationTarget = this.fieldWidth;
   this.changeNoteBy(-12);
 };
 
 Blockly.FieldNote.prototype.onOctaveUp = function() {
-  this.animationTarget = -this.fieldWidth;
   this.displayedOctave += 1;
+  if (this.displayedOctave > 10) {
+    this.displayedOctave = 10;
+    return;
+  }
+  this.animationTarget = -this.fieldWidth;
   this.changeNoteBy(12);
 };
 
