@@ -165,6 +165,13 @@ goog.inherits(Blockly.FieldNote, Blockly.FieldTextInput);
 Blockly.FieldNote.TOP_MENU_HEIGHT = 28;
 
 /**
+ * Padding on the top and sides of the field, in px.
+ * @type {number}
+ * @const
+ */
+Blockly.FieldNote.EDGE_PADDING = 1;
+
+/**
  * Height of the drop shadow on the piano, in px.
  * @type {number}
  * @const
@@ -339,9 +346,11 @@ Blockly.FieldNote.prototype.showEditor_ = function() {
   // Build the SVG DOM.
   var div = Blockly.DropDownDiv.getContentDiv();
 
-  this.fieldWidth_ = 8 * Blockly.FieldNote.WHITE_KEY_WIDTH;
+  this.fieldWidth_ = 8 * Blockly.FieldNote.WHITE_KEY_WIDTH +
+    Blockly.FieldNote.EDGE_PADDING;
   this.fieldHeight_ = Blockly.FieldNote.TOP_MENU_HEIGHT +
-    Blockly.FieldNote.WHITE_KEY_HEIGHT;
+    Blockly.FieldNote.WHITE_KEY_HEIGHT +
+    Blockly.FieldNote.EDGE_PADDING;
 
   var svg = Blockly.utils.createSvgElement('svg', {
     'xmlns': 'http://www.w3.org/2000/svg',
@@ -432,6 +441,7 @@ Blockly.FieldNote.prototype.showEditor_ = function() {
  */
 Blockly.FieldNote.prototype.addPianoOctave_ = function(x, whiteKeyGroup, blackKeyGroup, keySVGarray) {
   var xIncrement, width, height, fill, stroke, group;
+  x += Blockly.FieldNote.EDGE_PADDING / 2;
   var y = Blockly.FieldNote.TOP_MENU_HEIGHT;
   for (var i = 0; i < Blockly.FieldNote.KEY_INFO.length; i++) {
     // Draw a black or white key
