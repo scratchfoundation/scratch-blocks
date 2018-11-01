@@ -385,9 +385,11 @@ Blockly.FieldNote.prototype.showEditor_ = function() {
   // Add three piano octaves, so we can animate moving up or down an octave.
   // Only the middle octave gets bound to events.
   this.keySVGs_ = [];
-  this.addPianoOctave_(-this.fieldWidth_, whiteKeyGroup, blackKeyGroup, null);
+  this.addPianoOctave_(-this.fieldWidth_ + Blockly.FieldNote.EDGE_PADDING,
+      whiteKeyGroup, blackKeyGroup, null);
   this.addPianoOctave_(0, whiteKeyGroup, blackKeyGroup, this.keySVGs_);
-  this.addPianoOctave_(this.fieldWidth_, whiteKeyGroup, blackKeyGroup, null);
+  this.addPianoOctave_(this.fieldWidth_ - Blockly.FieldNote.EDGE_PADDING,
+      whiteKeyGroup, blackKeyGroup, null);
 
   // Note name indicator at the top of the field
   this.noteNameText_ = Blockly.utils.createSvgElement('text',
