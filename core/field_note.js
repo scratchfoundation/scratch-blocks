@@ -158,11 +158,18 @@ Blockly.FieldNote = function(opt_value, opt_validator) {
 goog.inherits(Blockly.FieldNote, Blockly.FieldTextInput);
 
 /**
+ * Inset in pixels of content displayed in the field, caused by parent properties.
+ * The inset is actually determined by the CSS property blocklyDropDownDiv- it is
+ * the sum of the padding and border thickness.
+ */
+Blockly.FieldNote.INSET = 5;
+
+/**
  * Height of the top area of the field, in px.
  * @type {number}
  * @const
  */
-Blockly.FieldNote.TOP_MENU_HEIGHT = 28;
+Blockly.FieldNote.TOP_MENU_HEIGHT = 32 - Blockly.FieldNote.INSET;
 
 /**
  * Padding on the top and sides of the field, in px.
@@ -292,6 +299,13 @@ Blockly.FieldNote.ANIMATION_FRACTION = 0.2;
 Blockly.FieldNote.ARROW_SVG_PATH = 'icons/arrow_button.svg';
 
 /**
+ * The size of the square octave buttons.
+ * @type {number}
+ * @const
+ */
+Blockly.FieldNote.OCTAVE_BUTTON_SIZE = 32;
+
+/**
  * Construct a FieldNote from a JSON arg object.
  * @param {!Object} options A JSON object with options.
  * @returns {!Blockly.FieldNote} The new field instance.
@@ -412,11 +426,11 @@ Blockly.FieldNote.prototype.showEditor_ = function() {
       }, svg);
 
   // Octave buttons
-  this.octaveDownButton = this.addOctaveButton_(0, svg);
-  this.octaveDownButton.setAttribute('transform', 'scale(-1, 1) ' +
-    'translate(-' + Blockly.FieldNote.TOP_MENU_HEIGHT + ', 1)');
-  this.octaveUpButton = this.addOctaveButton_(this.fieldWidth_ -
-    Blockly.FieldNote.TOP_MENU_HEIGHT, svg);
+  this.octaveDownButton = this.addOctaveButton_(0, true, svg);
+  console.log(this.fieldWidth_);
+  this.octaveUpButton = this.addOctaveButton_(
+      (this.fieldWidth_ + Blockly.FieldNote.INSET * 2) -
+      Blockly.FieldNote.OCTAVE_BUTTON_SIZE, false, svg);
 
   this.octaveDownMouseDownWrapper_ =
     Blockly.bindEvent_(this.octaveDownButton, 'mousedown', this, this.onOctaveDown_);
@@ -510,18 +524,20 @@ Blockly.FieldNote.prototype.getPianoKeyPath_ = function(x, y, width, height) {
 /**
  * Add a button for switching the displayed octave of the piano up or down.
  * @param {number} x The x position of the button.
+ * @param {boolean} flipped If true, the icon should be flipped.
  * @param {SvgElement} svg The svg element to add the buttons to.
  * @returns {SvgElement} A group containing the button SVG elements.
  * @private
  */
-Blockly.FieldNote.prototype.addOctaveButton_ = function(x, svg) {
+Blockly.FieldNote.prototype.addOctaveButton_ = function(x, flipped, svg) {
   var group = Blockly.utils.createSvgElement('g', {}, svg);
+  var imageSize = Blockly.FieldNote.OCTAVE_BUTTON_SIZE;
   var arrow = Blockly.utils.createSvgElement('image',
       {
-        'width': Blockly.FieldNote.TOP_MENU_HEIGHT,
-        'height': Blockly.FieldNote.TOP_MENU_HEIGHT,
-        'x': x,
-        'y': 0
+        'width': imageSize,
+        'height': imageSize,
+        'x': x - Blockly.FieldNote.INSET,
+        'y': -1 * Blockly.FieldNote.INSET
       }, group);
   arrow.setAttributeNS(
       'http://www.w3.org/1999/xlink',
@@ -531,11 +547,16 @@ Blockly.FieldNote.prototype.addOctaveButton_ = function(x, svg) {
   Blockly.utils.createSvgElement('line',
       {
         'stroke': this.sourceBlock_.getColourTertiary(),
-        'x1': x - 2,
-        'y1': 4,
-        'x2': x - 2,
-        'y2': Blockly.FieldNote.TOP_MENU_HEIGHT - 4
+        'x1': x - Blockly.FieldNote.INSET,
+        'y1': 0,
+        'x2': x - Blockly.FieldNote.INSET,
+        'y2': Blockly.FieldNote.TOP_MENU_HEIGHT - Blockly.FieldNote.INSET
       }, group);
+  if (flipped) {
+    var translateX = -1 * Blockly.FieldNote.OCTAVE_BUTTON_SIZE + (Blockly.FieldNote.INSET * 2);
+    group.setAttribute('transform', 'scale(-1, 1) ' +
+      'translate(' + translateX + ', 0)');
+  }
   return group;
 };
 
@@ -756,7 +777,7 @@ Blockly.FieldNote.prototype.updateSelection_ = function() {
 };
 
 /**
- * Ensure that only valid MIDI note number may be entered.
+ * Ensure that only a valid MIDI note number may be entered.
  * @param {string} text The user's text.
  * @return {?string} A string representing a valid note number, or null if invalid.
  */
