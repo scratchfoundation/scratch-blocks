@@ -578,13 +578,29 @@ Blockly.FieldNote.prototype.addCKeyLabel_ = function(x, svg) {
       }, svg);
 };
 
-Blockly.FieldNote.prototype.setCKeyLabelVisibile_ = function(visible) {
-  var visibilityAttr = 'hidden';
+/**
+ * Set the visibility of the C key labels.
+ * @param {boolean} visible If true, set labels to be visible.
+ * @private
+ */
+Blockly.FieldNote.prototype.setCKeyLabelsVisibile_ = function(visible) {
   if (visible) {
-    visibilityAttr = 'visible';
+    this.fadeSvgToOpacity_(this.lowCText_, 1);
+    this.fadeSvgToOpacity_(this.highCText_, 1);
+  } else {
+    this.fadeSvgToOpacity_(this.lowCText_, 0);
+    this.fadeSvgToOpacity_(this.highCText_, 0);
   }
-  this.lowCText_.setAttribute('visibility', visibilityAttr);
-  this.highCText_.setAttribute('visibility', visibilityAttr);
+};
+
+/**
+ * Animate an SVG to fade it in or out to a target opacity.
+ * @param {SvgElement} svg The SVG element to apply the fade to.
+ * @param {number} opacity The target opacity.
+ * @private
+ */
+Blockly.FieldNote.prototype.fadeSvgToOpacity_ = function(svg, opacity) {
+  svg.setAttribute('style', 'opacity: ' + opacity + '; transition: opacity 0.1s;');
 };
 
 /**
