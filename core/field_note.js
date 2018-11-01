@@ -429,7 +429,6 @@ Blockly.FieldNote.prototype.showEditor_ = function() {
 
   // Octave buttons
   this.octaveDownButton = this.addOctaveButton_(0, true, svg);
-  console.log(this.fieldWidth_);
   this.octaveUpButton = this.addOctaveButton_(
       (this.fieldWidth_ + Blockly.FieldNote.INSET * 2) -
       Blockly.FieldNote.OCTAVE_BUTTON_SIZE, false, svg);
