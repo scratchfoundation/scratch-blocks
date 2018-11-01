@@ -578,6 +578,15 @@ Blockly.FieldNote.prototype.addCKeyLabel_ = function(x, svg) {
       }, svg);
 };
 
+Blockly.FieldNote.prototype.setCKeyLabelVisibile_ = function(visible) {
+  var visibilityAttr = 'hidden';
+  if (visible) {
+    visibilityAttr = 'visible';
+  }
+  this.lowCText_.setAttribute('visibility', visibilityAttr);
+  this.highCText_.setAttribute('visibility', visibilityAttr);
+};
+
 /**
  * Handle the mouse down event on a piano key.
  * @param {!Event} e Mouse down event.
@@ -683,6 +692,7 @@ Blockly.FieldNote.prototype.changeOctaveBy_ = function(octaves) {
   this.animationTarget_ = this.fieldWidth_ * octaves * -1;
   this.animationPos_ = 0;
   this.stepOctaveAnimation_();
+  this.setCKeyLabelVisibile_(false);
 };
 
 /**
@@ -693,6 +703,7 @@ Blockly.FieldNote.prototype.stepOctaveAnimation_ = function() {
   var absDiff = Math.abs(this.animationPos_ - this.animationTarget_);
   if (absDiff < 1) {
     this.pianoSVG.setAttribute('transform', 'translate(0, 0)');
+    this.setCKeyLabelVisibile_(true);
     this.playNoteInternal_();
     return;
   }
