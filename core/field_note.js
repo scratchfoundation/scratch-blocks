@@ -283,16 +283,16 @@ Blockly.FieldNote.KEY_LABEL_PADDING = 8;
  */
 Blockly.FieldNote.KEY_INFO = [
   {name: 'C', pitch: 0},
-  {name: 'C#', pitch: 1, isBlack: true},
+  {name: 'C♯', pitch: 1, isBlack: true},
   {name: 'D', pitch: 2},
-  {name: 'Eb', pitch: 3, isBlack: true},
+  {name: 'E♭', pitch: 3, isBlack: true},
   {name: 'E', pitch: 4},
   {name: 'F', pitch: 5},
-  {name: 'F#', pitch: 6, isBlack: true},
+  {name: 'F♯', pitch: 6, isBlack: true},
   {name: 'G', pitch: 7},
-  {name: 'G#', pitch: 8, isBlack: true},
+  {name: 'G♯', pitch: 8, isBlack: true},
   {name: 'A', pitch: 9},
-  {name: 'Bb', pitch: 10, isBlack: true},
+  {name: 'B♭', pitch: 10, isBlack: true},
   {name: 'B', pitch: 11},
   {name: 'C', pitch: 12}
 ];
