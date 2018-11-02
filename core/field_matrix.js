@@ -213,6 +213,10 @@ Blockly.FieldMatrix.prototype.init = function() {
 
   this.sourceBlock_.getSvgRoot().appendChild(this.fieldGroup_);
 
+  // Make sure that the output shape gets the correct color
+  this.sourceBlock_.setShadowColour(this.getColourTertiary_());
+
+
   var thumbX = Blockly.BlockSvg.DROPDOWN_ARROW_PADDING / 2;
   var thumbY = (this.size_.height - Blockly.FieldMatrix.THUMBNAIL_SIZE) / 2;
   var thumbnail = Blockly.utils.createSvgElement('g', {
@@ -255,6 +259,8 @@ Blockly.FieldMatrix.prototype.init = function() {
 
   this.mouseDownWrapper_ = Blockly.bindEventWithChecks_(
       this.getClickTarget_(), 'mousedown', this, this.onMouseDown_);
+      console.log("matrix");
+      console.log(this);
 };
 
 /**
@@ -328,7 +334,7 @@ Blockly.FieldMatrix.prototype.showEditor_ = function() {
   // Button to clear matrix
   var clearButtonDiv = document.createElement('div');
   clearButtonDiv.className = 'scratchMatrixButtonDiv';
-  var clearButton = this.createButton_(this.sourceBlock_.colourSecondary_);
+  var clearButton = this.createButton_(this.getColourSecondary_());
   clearButtonDiv.appendChild(clearButton);
   // Button to fill matrix
   var fillButtonDiv = document.createElement('div');
@@ -340,9 +346,9 @@ Blockly.FieldMatrix.prototype.showEditor_ = function() {
   buttonDiv.appendChild(fillButtonDiv);
   div.appendChild(buttonDiv);
 
-  Blockly.DropDownDiv.setColour(this.sourceBlock_.getColour(),
-      this.sourceBlock_.getColourTertiary());
-  Blockly.DropDownDiv.setCategory(this.sourceBlock_.getCategory());
+  Blockly.DropDownDiv.setColour(this.getColour_(),
+      this.getColourTertiary_());
+  Blockly.DropDownDiv.setCategory(this.sourceBlock_.parentBlock_.getCategory());
   Blockly.DropDownDiv.showPositionedByBlock(this, this.sourceBlock_);
 
   this.matrixTouchWrapper_ =
@@ -396,15 +402,34 @@ Blockly.FieldMatrix.prototype.createButton_ = function(fill) {
  * @private
  */
 Blockly.FieldMatrix.prototype.updateMatrix_ = function() {
+  if(!this.sourceBlock_.parentBlock_) {
+    return;
+  }
+
   for (var i = 0; i < this.matrix_.length; i++) {
     if (this.matrix_[i] === '0') {
-      this.fillMatrixNode_(this.ledButtons_, i, this.sourceBlock_.colourSecondary_);
-      this.fillMatrixNode_(this.ledThumbNodes_, i, this.sourceBlock_.colour_);
+      this.fillMatrixNode_(this.ledButtons_, i, this.getColourSecondary_());
+      this.fillMatrixNode_(this.ledThumbNodes_, i, this.getColour_());
     } else {
       this.fillMatrixNode_(this.ledButtons_, i, '#FFFFFF');
       this.fillMatrixNode_(this.ledThumbNodes_, i, '#FFFFFF');
     }
   }
+};
+
+
+Blockly.Field.prototype.getColour_ = function() {
+  return this.sourceBlock_.parentBlock_ ? this.sourceBlock_.parentBlock_.colour_ : this.sourceBlock_.colour_;
+};
+
+Blockly.Field.prototype.getColourSecondary_ = function() {
+  return this.sourceBlock_.parentBlock_ ?
+  this.sourceBlock_.parentBlock_.colourSecondary_ : this.sourceBlock_.colourSecondary_;
+};
+
+Blockly.Field.prototype.getColourTertiary_ = function() {
+  return this.sourceBlock_.parentBlock_ ?
+  this.sourceBlock_.parentBlock_.colourTertiary_ : this.sourceBlock_.colourTertiary_;
 };
 
 /**
