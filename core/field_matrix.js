@@ -259,8 +259,6 @@ Blockly.FieldMatrix.prototype.init = function() {
 
   this.mouseDownWrapper_ = Blockly.bindEventWithChecks_(
       this.getClickTarget_(), 'mousedown', this, this.onMouseDown_);
-      console.log("matrix");
-      console.log(this);
 };
 
 /**
