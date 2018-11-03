@@ -117,10 +117,17 @@ Blockly.FieldAngle.HANDLE_RADIUS = 10;
 Blockly.FieldAngle.ARROW_WIDTH = Blockly.FieldAngle.HANDLE_RADIUS;
 
 /**
+ * Half the stroke-width used for the "glow" around the drag handle, rounded up to nearest whole pixel
+ */
+
+Blockly.FieldAngle.HANDLE_GLOW_WIDTH = 3;
+
+/**
  * Radius of protractor circle.  Slightly smaller than protractor size since
  * otherwise SVG crops off half the border at the edges.
  */
-Blockly.FieldAngle.RADIUS = Blockly.FieldAngle.HALF - Blockly.FieldAngle.HANDLE_RADIUS - 1;
+Blockly.FieldAngle.RADIUS = Blockly.FieldAngle.HALF
+    - Blockly.FieldAngle.HANDLE_RADIUS - Blockly.FieldAngle.HANDLE_GLOW_WIDTH;
 
 /**
  * Radius of central dot circle.
