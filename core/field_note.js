@@ -461,10 +461,13 @@ Blockly.FieldNote.prototype.showEditor_ = function() {
       Blockly.FieldNote.OCTAVE_BUTTON_SIZE, false, svg);
 
   this.octaveDownMouseDownWrapper_ =
-    Blockly.bindEvent_(this.octaveDownButton, 'mousedown', this, this.onOctaveDown_);
+    Blockly.bindEvent_(this.octaveDownButton, 'mousedown', this, function() {
+      this.changeOctaveBy_(-1);
+    });
   this.octaveUpMouseDownWrapper_ =
-      Blockly.bindEvent_(this.octaveUpButton, 'mousedown', this, this.onOctaveUp_);
-
+      Blockly.bindEvent_(this.octaveUpButton, 'mousedown', this,function() {
+        this.changeOctaveBy_(1);
+      });
   Blockly.DropDownDiv.setColour(this.sourceBlock_.parentBlock_.getColour(),
       this.sourceBlock_.getColourTertiary());
   Blockly.DropDownDiv.setCategory(this.sourceBlock_.parentBlock_.getCategory());
@@ -695,22 +698,6 @@ Blockly.FieldNote.prototype.playNoteInternal_ = function() {
  */
 Blockly.FieldNote.playNote_ = function(/* noteNum, id*/) {
   return;
-};
-
-/**
- * Handle the event when the octave down button is pressed.
- * @private
- */
-Blockly.FieldNote.prototype.onOctaveDown_ = function() {
-  this.changeOctaveBy_(-1);
-};
-
-/**
- * Handle the event when the octave up button is pressed.
- * @private
- */
-Blockly.FieldNote.prototype.onOctaveUp_ = function() {
-  this.changeOctaveBy_(1);
 };
 
 /**
