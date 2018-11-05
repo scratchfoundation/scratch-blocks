@@ -229,7 +229,8 @@ Blockly.FieldAngle.prototype.showEditor_ = function() {
         'width': Blockly.FieldAngle.ARROW_WIDTH,
         'height': Blockly.FieldAngle.ARROW_WIDTH,
         'x': -Blockly.FieldAngle.ARROW_WIDTH / 2,
-        'y': -Blockly.FieldAngle.ARROW_WIDTH / 2
+        'y': -Blockly.FieldAngle.ARROW_WIDTH / 2,
+        'class': 'blocklyAngleDragArrow'
       },
       this.handle_);
   this.arrowSvg_.setAttributeNS(
