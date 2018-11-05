@@ -665,6 +665,11 @@ Blockly.VerticalFlyout.prototype.isDragTowardWorkspace = function(currentDragDel
 
 /**
  * Return the deletion rectangle for this flyout in viewport coordinates.
+ * Deletion area is the height of the flyout, but extends to the left (in LTR)
+ * by a lot in order to allow for deleting blocks when dragged beyond the left
+ * window edge. In RTL, the delete area extends off to the right.
+ * The top/bottom do not extend to allow dragging blocks outside of the workspace
+ * to be dropped (e.g. to the backpack).
  * @return {goog.math.Rect} Rectangle in which to delete.
  */
 Blockly.VerticalFlyout.prototype.getClientRect = function() {
@@ -678,13 +683,14 @@ Blockly.VerticalFlyout.prototype.getClientRect = function() {
   // but be smaller than half Number.MAX_SAFE_INTEGER (not available on IE).
   var BIG_NUM = 1000000000;
   var x = flyoutRect.left;
+  var y = flyoutRect.top;
   var width = flyoutRect.width;
+  var height = flyoutRect.height;
 
   if (this.toolboxPosition_ == Blockly.TOOLBOX_AT_LEFT) {
-    return new goog.math.Rect(x - BIG_NUM, -BIG_NUM, BIG_NUM + width,
-        BIG_NUM * 2);
+    return new goog.math.Rect(x - BIG_NUM, y, BIG_NUM + width, height);
   } else {  // Right
-    return new goog.math.Rect(x, -BIG_NUM, BIG_NUM + width, BIG_NUM * 2);
+    return new goog.math.Rect(x, y, BIG_NUM + width, height);
   }
 };
 
