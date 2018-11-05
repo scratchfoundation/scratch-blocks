@@ -34,7 +34,7 @@ goog.require('Blockly.constants');
 
 Blockly.Blocks['note'] = {
   /**
-   * Block for matrix value.
+   * Block for musical note value.
    * @this Blockly.Block
    */
   init: function() {
