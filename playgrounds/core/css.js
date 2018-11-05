@@ -794,6 +794,9 @@ Blockly.Css.CONTENT = [
     'cursor: pointer;',
   '}',
 
+  '.blocklyAngleDragArrow {',
+    'pointer-events: none',
+  '}',
 
   '.blocklyAngleMarks {',
     'stroke: #fff;',
