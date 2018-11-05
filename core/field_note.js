@@ -361,6 +361,11 @@ Blockly.FieldNote.prototype.dispose_ = function() {
     if (thisField.octaveUpMouseDownWrapper_) {
       Blockly.unbindEvent_(thisField.octaveUpMouseDownWrapper_);
     }
+    this.pianoSVG_ = null;
+    this.keySVGs_ = null;
+    this.noteNameText_ = null;
+    this.lowCText_ = null;
+    this.highCText_ = null;
   };
 };
 
