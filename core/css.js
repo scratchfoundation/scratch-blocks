@@ -999,6 +999,13 @@ Blockly.Css.CONTENT = [
     'float: left;',
   '}',
 
+  '.scratchNotePickerKeyLabel {',
+    'font-family: "Helvetica Neue", Helvetica, sans-serif;',
+    'font-size: 0.75rem;',
+    'fill: $colour_text;',
+    'pointer-events: none;',
+  '}',
+
   /* Copied from: goog/css/menu.css */
   /*
    * Copyright 2009 The Closure Library Authors. All Rights Reserved.
