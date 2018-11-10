@@ -30,6 +30,7 @@ goog.require('Blockly.constants');
 
 
 // TODO: Create a namespace properly.
+Blockly.ScratchBlocks = Blockly.ScratchBlocks || {};
 Blockly.ScratchBlocks.ProcedureUtils = {};
 
 // Serialization and deserialization.
