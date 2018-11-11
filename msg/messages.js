@@ -147,6 +147,7 @@ Blockly.Msg.MOTION_TURNRIGHT = 'turn %1 %2 degrees';
 Blockly.Msg.MOTION_POINTINDIRECTION = 'point in direction %1';
 Blockly.Msg.MOTION_POINTTOWARDS = 'point towards %1';
 Blockly.Msg.MOTION_POINTTOWARDS_POINTER = 'mouse-pointer';
+Blockly.Msg.MOTION_POINTTOWARDS_RANDOM = 'random direction';
 Blockly.Msg.MOTION_GOTO = 'go to %1';
 Blockly.Msg.MOTION_GOTO_POINTER = 'mouse-pointer';
 Blockly.Msg.MOTION_GOTO_RANDOM = 'random position';
