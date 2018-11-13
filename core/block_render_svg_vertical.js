@@ -1606,7 +1606,9 @@ Blockly.BlockSvg.prototype.renderDefineBlock_ = function(steps, inputRows,
         input.connection.targetBlock().getHeightWidth().width +
         Blockly.BlockSvg.DEFINE_BLOCK_PADDING_RIGHT;
   } else {
-    rightSide = Blockly.BlockSvg.MIN_BLOCK_X_WITH_STATEMENT;
+    // Handles the case where block is being rendered as an insertion marker
+    rightSide = Math.max(Blockly.BlockSvg.MIN_BLOCK_X_WITH_STATEMENT, rightSide)
+    + Blockly.BlockSvg.DEFINE_BLOCK_PADDING_RIGHT;
   }
   rightSide -= Blockly.BlockSvg.DEFINE_HAT_CORNER_RADIUS;
 
