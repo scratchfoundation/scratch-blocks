@@ -136,7 +136,7 @@ Blockly.FieldNumber.prototype.getNumRestrictor = function(opt_min, opt_max,
     pattern += "|[-]";
   }
   if (this.exponentialAllowed_) {
-    pattern += "|e";
+    pattern += "|[eE]";
   }
   return new RegExp(pattern);
 };
