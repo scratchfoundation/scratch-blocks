@@ -135,6 +135,9 @@ Blockly.FieldNumber.prototype.getNumRestrictor = function(opt_min, opt_max,
   if (this.negativeAllowed_) {
     pattern += "|[-]";
   }
+  if (this.exponentialAllowed_) {
+    pattern += "|[eE]";
+  }
   return new RegExp(pattern);
 };
 
@@ -151,6 +154,7 @@ Blockly.FieldNumber.prototype.setConstraints_ = function(opt_min, opt_max,
       (Math.floor(opt_precision) != opt_precision);
   this.negativeAllowed_ = (typeof opt_min == 'undefined') || isNaN(opt_min) ||
       opt_min < 0;
+  this.exponentialAllowed_ = this.decimalAllowed_;
 };
 
 /**
