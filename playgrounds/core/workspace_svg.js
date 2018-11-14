@@ -1161,14 +1161,15 @@ Blockly.WorkspaceSvg.prototype.deleteVariableById = function(id) {
  * @param {string=} opt_id The unique ID of the variable. This will default to
  *     a UUID.
  * @param {boolean=} opt_isLocal Whether the variable is locally scoped.
+ * @param {boolean=} opt_isCloud Whether the variable is a cloud variable.
  * @return {?Blockly.VariableModel} The newly created variable.
  * @package
  */
 Blockly.WorkspaceSvg.prototype.createVariable = function(name, opt_type, opt_id,
-    opt_isLocal) {
+    opt_isLocal, opt_isCloud) {
   var variableInMap = (this.getVariable(name, opt_type) != null);
   var newVar = Blockly.WorkspaceSvg.superClass_.createVariable.call(
-      this, name, opt_type, opt_id, opt_isLocal);
+      this, name, opt_type, opt_id, opt_isLocal, opt_isCloud);
   // For performance reasons, only refresh the the toolbox for new variables.
   // Variables that already exist should already be there.
   if (!variableInMap && (opt_type != Blockly.BROADCAST_MESSAGE_VARIABLE_TYPE)) {
