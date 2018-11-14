@@ -375,9 +375,26 @@ function test_varCreate_toJson() {
     var event = new Blockly.Events.VarCreate(variable);
     var json = event.toJson();
     var expectedJson = ({type: "var_create", varId: "id1", varType: "type1",
-      varName: "name1", isLocal: false});
+      varName: "name1", isLocal: false, isCloud: false});
 
     assertEquals(JSON.stringify(expectedJson), JSON.stringify(json));
+
+    var localVariable = workspace.createVariable('name2', 'type2', 'id2', true);
+    var event2 = new Blockly.Events.VarCreate(localVariable);
+    var json2 = event2.toJson();
+    var expectedJson2 = ({type: "var_create", varId: "id2", varType: "type2",
+      varName: "name2", isLocal: true, isCloud: false});
+
+    assertEquals(JSON.stringify(expectedJson2), JSON.stringify(json2));
+
+    var cloudVariable = workspace.createVariable('name3', 'type3', 'id3', false, true);
+    var event3 = new Blockly.Events.VarCreate(cloudVariable);
+    var json3 = event3.toJson();
+    var expectedJson3 = ({type: "var_create", varId: "id3", varType: "type3",
+      varName: "name3", isLocal: false, isCloud: true});
+
+    assertEquals(JSON.stringify(expectedJson3), JSON.stringify(json3));
+
   } finally {
     eventTest_tearDown();
   }
@@ -434,9 +451,25 @@ function test_varDelete_toJson() {
   var event = new Blockly.Events.VarDelete(variable);
   var json = event.toJson();
   var expectedJson = ({type: "var_delete", varId: "id1", varType: "type1",
-    varName: "name1", isLocal: false});
+    varName: "name1", isLocal: false, isCloud: false});
 
   assertEquals(JSON.stringify(expectedJson), JSON.stringify(json));
+
+  var localVariable = workspace.createVariable('name2', 'type2', 'id2', true);
+  var event2 = new Blockly.Events.VarDelete(localVariable);
+  var json2 = event2.toJson();
+  var expectedJson2 = ({type: "var_delete", varId: "id2", varType: "type2",
+    varName: "name2", isLocal: true, isCloud: false});
+
+  assertEquals(JSON.stringify(expectedJson2), JSON.stringify(json2));
+
+  var cloudVariable = workspace.createVariable('name3', 'type3', 'id3', false, true);
+  var event3 = new Blockly.Events.VarDelete(cloudVariable);
+  var json3 = event3.toJson();
+  var expectedJson3 = ({type: "var_delete", varId: "id3", varType: "type3",
+    varName: "name3", isLocal: false, isCloud: true});
+
+  assertEquals(JSON.stringify(expectedJson2), JSON.stringify(json2));
   eventTest_tearDown();
 }
 
