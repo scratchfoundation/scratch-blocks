@@ -104,6 +104,7 @@
     "MOTION_POINTINDIRECTION": "point in direction %1",
     "MOTION_POINTTOWARDS": "point towards %1",
     "MOTION_POINTTOWARDS_POINTER": "mouse-pointer",
+    "MOTION_POINTTOWARDS_RANDOM": "random direction",
     "MOTION_GOTO": "go to %1",
     "MOTION_GOTO_POINTER": "mouse-pointer",
     "MOTION_GOTO_RANDOM": "random position",
