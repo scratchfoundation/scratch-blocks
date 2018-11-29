@@ -419,6 +419,7 @@ Blockly.Blocks['sensing_of_object_menu'] = {
           ]
         }
       ],
+      "category": Blockly.Categories.sensing,
       "extensions": ["colours_sensing", "output_string"]
     });
   }
