@@ -639,7 +639,7 @@ Blockly.Xml.domToVariables = function(xmlVariables, workspace) {
     var type = xmlChild.getAttribute('type');
     var id = xmlChild.getAttribute('id');
     var isLocal = xmlChild.getAttribute('islocal') == 'true';
-    var isCloud = xmlChild.getAttribute('isCloud') == 'true';
+    var isCloud = xmlChild.getAttribute('iscloud') == 'true';
     var name = xmlChild.textContent;
 
     if (typeof(type) === undefined || type === null) {
