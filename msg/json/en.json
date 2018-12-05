@@ -99,6 +99,7 @@
     "LOOKS_PREVIOUSBACKDROP": "previous backdrop",
     "LOOKS_RANDOMBACKDROP": "random backdrop",
     "MOTION_MOVESTEPS": "move %1 steps",
+    "MOTION_MOVEGRIDS": "move %1 grids",
     "MOTION_TURNLEFT": "turn %1 %2 degrees",
     "MOTION_TURNRIGHT": "turn %1 %2 degrees",
     "MOTION_POINTINDIRECTION": "point in direction %1",

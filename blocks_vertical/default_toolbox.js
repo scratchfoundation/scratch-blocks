@@ -37,6 +37,13 @@ Blockly.Blocks.defaultToolbox = '<xml id="toolbox-categories" style="display: no
         '</shadow>' +
       '</value>' +
     '</block>' +
+    '<block type="motion_movegrids" id="motion_movegrids">' +
+      '<value name="GRIDS">' +
+        '<shadow type="math_number">' +
+          '<field name="NUM">1</field>' +
+        '</shadow>' +
+      '</value>' +
+    '</block>' +
     '<block type="motion_turnright" id="motion_turnright">' +
       '<value name="DEGREES">' +
         '<shadow type="math_number">' +
