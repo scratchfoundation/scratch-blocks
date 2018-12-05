@@ -29,13 +29,6 @@ python_compressed.js
 !/msg/js/en.js
 /msg/json/*
 !/msg/json/en.json
-/blockly_compressed_horizontal.js
-/blockly_compressed_vertical.js
-/blockly_uncompressed_horizontal.js
-/blockly_uncompressed_vertical.js
-/blocks_compressed_horizontal.js
-/blocks_compressed_vertical.js
-/blocks_compressed.js
 /gh-pages/main.js
 /gh-pages/playgrounds
 /gh-pages/Gemfile.lock
