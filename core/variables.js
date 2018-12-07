@@ -488,7 +488,7 @@ Blockly.Variables.renameVariable = function(workspace, variable,
   var validate = Blockly.Variables.nameValidator_.bind(null, varType);
 
   var promptText = promptMsg.replace('%1', variable.name);
-  Blockly.prompt(promptText, '',
+  Blockly.prompt(promptText, variable.name,
       function(newName, additionalVars) {
         if (variable.isCloud &&
             newName.length > 0 && newName.indexOf(Blockly.Variables.CLOUD_PREFIX) == 0 ) {
