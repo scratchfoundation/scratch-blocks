@@ -412,7 +412,9 @@ Blockly.FieldMatrix.prototype.updateMatrix_ = function() {
  * @param {!Event} e Mouse event.
  */
 Blockly.FieldMatrix.prototype.clearMatrix_ = function(e) {
-  if (e.button != 0) return;
+  if (e.button != 0) {
+    return;
+  }
   this.setValue(Blockly.FieldMatrix.ZEROS);
 };
 
@@ -421,7 +423,9 @@ Blockly.FieldMatrix.prototype.clearMatrix_ = function(e) {
  * @param {!Event} e Mouse event.
  */
 Blockly.FieldMatrix.prototype.fillMatrix_ = function(e) {
-  if (e.button != 0) return;
+  if (e.button != 0) {
+    return;
+  }
   this.setValue(Blockly.FieldMatrix.ONES);
 };
 
@@ -432,28 +436,38 @@ Blockly.FieldMatrix.prototype.fillMatrix_ = function(e) {
  * @param {!string} fill The fill colour in '#rrggbb' format.
  */
 Blockly.FieldMatrix.prototype.fillMatrixNode_ = function(node, index, fill) {
-  if (!node || !node[index] || !fill) return;
+  if (!node || !node[index] || !fill) {
+    return;
+  }
   node[index].setAttribute('fill', fill);
 };
 
 Blockly.FieldMatrix.prototype.setLEDNode_ = function(led, state) {
-  if (led < 0 || led > 24) return;
+  if (led < 0 || led > 24) {
+    return;
+  }
   var matrix = this.matrix_.substr(0, led) + state + this.matrix_.substr(led + 1);
   this.setValue(matrix);
 };
 
 Blockly.FieldMatrix.prototype.fillLEDNode_ = function(led) {
-  if (led < 0 || led > 24) return;
+  if (led < 0 || led > 24) {
+    return;
+  }
   this.setLEDNode_(led, '1');
 };
 
 Blockly.FieldMatrix.prototype.clearLEDNode_ = function(led) {
-  if (led < 0 || led > 24) return;
+  if (led < 0 || led > 24) {
+    return;
+  }
   this.setLEDNode_(led, '0');
 };
 
 Blockly.FieldMatrix.prototype.toggleLEDNode_ = function(led) {
-  if (led < 0 || led > 24) return;
+  if (led < 0 || led > 24) {
+    return;
+  }
   if (this.matrix_.charAt(led) === '0') {
     this.setLEDNode_(led, '1');
   } else {
@@ -502,7 +516,9 @@ Blockly.FieldMatrix.prototype.onMouseMove = function(e) {
   e.preventDefault();
   if (this.paintStyle_) {
     var led = this.checkForLED_(e);
-    if (led < 0) return;
+    if (led < 0) {
+      return;
+    }
     if (this.paintStyle_ === 'clear') {
       this.clearLEDNode_(led);
     } else if (this.paintStyle_ === 'fill') {

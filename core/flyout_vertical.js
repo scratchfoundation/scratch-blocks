@@ -613,7 +613,9 @@ Blockly.VerticalFlyout.prototype.setCheckboxState = function(blockId, value) {
   for (var i = 0; i < this.checkboxes_.length; i++) {
     var checkboxObj = this.checkboxes_[i];
     if (checkboxObj.block.id === blockId) {
-      if (checkboxObj.clicked === value) return;
+      if (checkboxObj.clicked === value) {
+        return;
+      }
 
       var oldValue = checkboxObj.clicked;
       checkboxObj.clicked = value;

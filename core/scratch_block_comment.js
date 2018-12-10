@@ -294,7 +294,9 @@ Blockly.ScratchBlockComment.prototype.updateColour = function() {
  * @private
  */
 Blockly.ScratchBlockComment.prototype.autoPosition_ = function() {
-  if (!this.needsAutoPositioning_) return;
+  if (!this.needsAutoPositioning_) {
+    return;
+  }
   if (this.isMinimized_) {
     var minimizedOffset = 4 * Blockly.BlockSvg.GRID_UNIT;
     this.x_ = this.block_.RTL ?

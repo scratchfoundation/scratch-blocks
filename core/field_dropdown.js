@@ -164,7 +164,9 @@ Blockly.FieldDropdown.prototype.init = function() {
  */
 Blockly.FieldDropdown.prototype.showEditor_ = function() {
   var options = this.getOptions();
-  if (options.length == 0) return;
+  if (options.length == 0) {
+    return;
+  }
 
   this.dropDownOpen_ = true;
   // If there is an existing drop-down someone else owns, hide it immediately and clear it.

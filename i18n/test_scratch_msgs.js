@@ -20,9 +20,15 @@ const PATH_INPUT = path.resolve(__dirname, '../msg/scratch_msgs.js');
 // ": " marks a "key": "value" pair
 // Also match the end of the generated file so the last set of keys can be checked
 const match = function (str) {
-    if (str.indexOf('Blockly.ScratchMsgs.locales') !== 0) return true;
-    if (str.indexOf('": "') !== 0) return true;
-    if (str.indexOf('End of combined translations') !== 0) return true;
+    if (str.indexOf('Blockly.ScratchMsgs.locales') !== 0) {
+      return true;
+    }
+    if (str.indexOf('": "') !== 0) {
+      return true;
+    }
+    if (str.indexOf('End of combined translations') !== 0) {
+      return true;
+    }
     return false;
 }
 
@@ -42,13 +48,17 @@ const extract = function (str) {
     }
     // return a string for the end of the file so that validate will check the last set of keys
     m = str.match(/^\/\/ End of combined translations$/);
-    if (m) return 'last';
+    if (m) {
+      return 'last';
+    }
     return null;
 };
 
 const validateKeys = function () {
     // ignore empty keys first time through
-    if (keys.length === 0) return;
+    if (keys.length === 0) {
+      return;
+    }
     assert.strictEqual(keys.length, Object.keys(en).length, `scratch_msgs-${locale}: number of keys doesn't match`);
     keys.map(item => assert(enKeys.includes(item), `scratch_msgs-${locale}: has key ${item} not in en`));
     enKeys.map(item => assert(keys.includes(item), `scratch_msgs-${locale}: is missing key ${item}`));
@@ -59,9 +69,13 @@ const stream = fs.createReadStream(PATH_INPUT);
 stream
     .pipe(es.split('\n'))
     .pipe(es.mapSync(function (str) {
-        if (!match(str)) return;
+        if (!match(str)) {
+          return;
+        }
         const result = extract(str);
-        if (!result) return;
+        if (!result) {
+          return;
+        }
         if (typeof result === 'string') {
           // locale changed or end of file, validate the current collection of keys
           try {

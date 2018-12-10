@@ -515,7 +515,9 @@ Blockly.Toolbox.prototype.scrollToCategoryById = function(id) {
  * @package
  */
 Blockly.Toolbox.prototype.getCategoryByIndex = function(index) {
-  if (!this.categoryMenu_.categories_) return null;
+  if (!this.categoryMenu_.categories_) {
+    return null;
+  }
   return this.categoryMenu_.categories_[index];
 };
 
