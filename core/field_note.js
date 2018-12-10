@@ -204,7 +204,7 @@ Blockly.FieldNote.SHADOW_COLOR = '#000';
  * @type {string}
  * @const
  */
-Blockly.FieldNote.SHADOW_OPACITY = '.2';
+Blockly.FieldNote.SHADOW_OPACITY = .2;
 
 /**
  * A color for the white piano keys.
