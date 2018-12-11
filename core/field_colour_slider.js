@@ -324,20 +324,6 @@ Blockly.FieldColourSlider.prototype.showEditor_ = function() {
   this.brightnessSlider_.setMoveToPointEnabled(true);
   this.brightnessSlider_.render(div);
 
-  // Set value updates the slider positions
-  // Do this before attaching callbacks to avoid extra events from initial set
-  this.setValue(this.getValue());
-
-  Blockly.FieldColourSlider.hueChangeEventKey_ = goog.events.listen(this.hueSlider_,
-      goog.ui.Component.EventType.CHANGE,
-      this.sliderCallbackFactory_('hue'));
-  Blockly.FieldColourSlider.saturationChangeEventKey_ = goog.events.listen(this.saturationSlider_,
-      goog.ui.Component.EventType.CHANGE,
-      this.sliderCallbackFactory_('saturation'));
-  Blockly.FieldColourSlider.brightnessChangeEventKey_ = goog.events.listen(this.brightnessSlider_,
-      goog.ui.Component.EventType.CHANGE,
-      this.sliderCallbackFactory_('brightness'));
-
   if (Blockly.FieldColourSlider.activateEyedropper_) {
     var button = document.createElement('button');
     button.setAttribute('class', 'scratchEyedropper');
@@ -353,6 +339,20 @@ Blockly.FieldColourSlider.prototype.showEditor_ = function() {
   Blockly.DropDownDiv.setColour('#ffffff', '#dddddd');
   Blockly.DropDownDiv.setCategory(this.sourceBlock_.parentBlock_.getCategory());
   Blockly.DropDownDiv.showPositionedByBlock(this, this.sourceBlock_);
+
+  // Set value updates the slider positions
+  // Do this before attaching callbacks to avoid extra events from initial set
+  this.setValue(this.getValue());
+
+  Blockly.FieldColourSlider.hueChangeEventKey_ = goog.events.listen(this.hueSlider_,
+      goog.ui.Component.EventType.CHANGE,
+      this.sliderCallbackFactory_('hue'));
+  Blockly.FieldColourSlider.saturationChangeEventKey_ = goog.events.listen(this.saturationSlider_,
+      goog.ui.Component.EventType.CHANGE,
+      this.sliderCallbackFactory_('saturation'));
+  Blockly.FieldColourSlider.brightnessChangeEventKey_ = goog.events.listen(this.brightnessSlider_,
+      goog.ui.Component.EventType.CHANGE,
+      this.sliderCallbackFactory_('brightness'));
 };
 
 Blockly.FieldColourSlider.prototype.dispose = function() {
