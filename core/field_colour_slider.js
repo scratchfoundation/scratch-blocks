@@ -48,6 +48,9 @@ goog.require('goog.ui.Slider');
 Blockly.FieldColourSlider = function(colour, opt_validator) {
   Blockly.FieldColourSlider.superClass_.constructor.call(this, colour, opt_validator);
   this.addArgType('colour');
+
+  // Flag to track whether or not the slider callbacks should execute
+  this.sliderCallbacksEnabled_ = false;
 };
 goog.inherits(Blockly.FieldColourSlider, Blockly.Field);
 
@@ -187,9 +190,14 @@ Blockly.FieldColourSlider.prototype.updateDom_ = function() {
  */
 Blockly.FieldColourSlider.prototype.updateSliderHandles_ = function() {
   if (this.hueSlider_) {
+    // Don't let the following calls to setValue for each of the sliders
+    // trigger the slider callbacks (which then call setValue on this field again
+    // unnecessarily)
+    this.sliderCallbacksEnabled_ = false;
     this.hueSlider_.setValue(this.hue_);
     this.saturationSlider_.setValue(this.saturation_);
     this.brightnessSlider_.setValue(this.brightness_);
+    this.sliderCallbacksEnabled_ = true;
   }
 };
 
@@ -235,6 +243,7 @@ Blockly.FieldColourSlider.prototype.createLabelDom_ = function(labelText) {
 Blockly.FieldColourSlider.prototype.sliderCallbackFactory_ = function(channel) {
   var thisField = this;
   return function(event) {
+    if (!thisField.sliderCallbacksEnabled_) return;
     var channelValue = event.target.getValue();
     var hsv = goog.color.hexToHsv(thisField.getValue());
     switch (channel) {
@@ -343,6 +352,9 @@ Blockly.FieldColourSlider.prototype.showEditor_ = function() {
   // Set value updates the slider positions
   // Do this before attaching callbacks to avoid extra events from initial set
   this.setValue(this.getValue());
+
+  // Enable callbacks for the sliders
+  this.sliderCallbacksEnabled_ = true;
 
   Blockly.FieldColourSlider.hueChangeEventKey_ = goog.events.listen(this.hueSlider_,
       goog.ui.Component.EventType.CHANGE,
