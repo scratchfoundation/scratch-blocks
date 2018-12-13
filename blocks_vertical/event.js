@@ -277,10 +277,10 @@ Blockly.Blocks['event_whenkeypressed'] = {
           "name": "KEY_OPTION",
           "options": [
             [Blockly.Msg.EVENT_WHENKEYPRESSED_SPACE, 'space'],
-            [Blockly.Msg.EVENT_WHENKEYPRESSED_LEFT, 'left arrow'],
-            [Blockly.Msg.EVENT_WHENKEYPRESSED_RIGHT, 'right arrow'],
-            [Blockly.Msg.EVENT_WHENKEYPRESSED_DOWN, 'down arrow'],
             [Blockly.Msg.EVENT_WHENKEYPRESSED_UP, 'up arrow'],
+            [Blockly.Msg.EVENT_WHENKEYPRESSED_DOWN, 'down arrow'],
+            [Blockly.Msg.EVENT_WHENKEYPRESSED_RIGHT, 'right arrow'],
+            [Blockly.Msg.EVENT_WHENKEYPRESSED_LEFT, 'left arrow'],
             [Blockly.Msg.EVENT_WHENKEYPRESSED_ANY, 'any'],
             ['a', 'a'],
             ['b', 'b'],
