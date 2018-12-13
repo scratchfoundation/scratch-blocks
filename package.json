@@ -41,7 +41,7 @@
     "graceful-fs": "4.1.11",
     "json": "9.0.4",
     "rimraf": "2.6.2",
-    "scratch-l10n": "3.1.20181206185857",
+    "scratch-l10n": "3.1.20181213173343",
     "transifex": "1.5.0",
     "travis-after-all": "1.4.4",
     "uglifyjs-webpack-plugin": "^1.2.5",
