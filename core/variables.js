@@ -497,7 +497,8 @@ Blockly.Variables.renameVariable = function(workspace, variable,
       function(newName, additionalVars) {
         if (variable.isCloud &&
             newName.length > 0 && newName.indexOf(Blockly.Variables.CLOUD_PREFIX) == 0) {
-          newName = newName.substring(Blockly.Variables.CLOUD_PREFIX.length); // The name validator will add the prefix back
+          newName = newName.substring(Blockly.Variables.CLOUD_PREFIX.length);
+          // The name validator will add the prefix back
         }
         additionalVars = additionalVars || [];
         var additionalVarNames = variable.isLocal ? [] : additionalVars;
