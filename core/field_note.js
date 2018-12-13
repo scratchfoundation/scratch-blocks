@@ -193,11 +193,18 @@ Blockly.FieldNote.EDGE_PADDING = 1;
 Blockly.FieldNote.SHADOW_HEIGHT = 4;
 
 /**
- * A translucent gray color, for the shadow on the piano.
+ * Color for the shadow on the piano.
  * @type {string}
  * @const
  */
-Blockly.FieldNote.SHADOW_COLOR = 'rgba(.2, .2, .2, .2)';
+Blockly.FieldNote.SHADOW_COLOR = '#000';
+
+/**
+ * Opacity for the shadow on the piano.
+ * @type {string}
+ * @const
+ */
+Blockly.FieldNote.SHADOW_OPACITY = .2;
 
 /**
  * A color for the white piano keys.
@@ -451,7 +458,8 @@ Blockly.FieldNote.prototype.showEditor_ = function() {
         'y': Blockly.FieldNote.TOP_MENU_HEIGHT,
         'width': this.fieldEditorWidth_,
         'height': Blockly.FieldNote.SHADOW_HEIGHT,
-        'fill': Blockly.FieldNote.SHADOW_COLOR
+        'fill': Blockly.FieldNote.SHADOW_COLOR,
+        'fill-opacity': Blockly.FieldNote.SHADOW_OPACITY
       }, svg);
 
   // Octave buttons
