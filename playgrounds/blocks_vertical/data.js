@@ -518,11 +518,14 @@ Blockly.Constants.Data.CUSTOM_CONTEXT_MENU_GET_VARIABLE_MIXIN = {
     if (this.isCollapsed()) {
       return;
     }
+    var currentVarName = this.getField(fieldName).text_;
     if (!this.isInFlyout) {
       var variablesList = this.workspace.getVariablesOfType('');
       for (var i = 0; i < variablesList.length; i++) {
+        var varName = variablesList[i].name;
+        if (varName == currentVarName) continue;
         var option = {enabled: true};
-        option.text = variablesList[i].name;
+        option.text = varName;
 
         option.callback =
             Blockly.Constants.Data.VARIABLE_OPTION_CALLBACK_FACTORY(this,
@@ -536,9 +539,8 @@ Blockly.Constants.Data.CUSTOM_CONTEXT_MENU_GET_VARIABLE_MIXIN = {
         callback: Blockly.Constants.Data.RENAME_OPTION_CALLBACK_FACTORY(this,
             fieldName)
       };
-      var name = this.getField(fieldName).text_;
       var deleteOption = {
-        text: Blockly.Msg.DELETE_VARIABLE.replace('%1', name),
+        text: Blockly.Msg.DELETE_VARIABLE.replace('%1', currentVarName),
         enabled: true,
         callback: Blockly.Constants.Data.DELETE_OPTION_CALLBACK_FACTORY(this,
             fieldName)
@@ -571,11 +573,15 @@ Blockly.Constants.Data.CUSTOM_CONTEXT_MENU_GET_LIST_MIXIN = {
     if (this.isCollapsed()) {
       return;
     }
+    var currentVarName = this.getField(fieldName).text_;
     if (!this.isInFlyout) {
       var variablesList = this.workspace.getVariablesOfType('list');
       for (var i = 0; i < variablesList.length; i++) {
+        var varName = variablesList[i].name;
+        if (varName == currentVarName) continue;
+
         var option = {enabled: true};
-        option.text = variablesList[i].name;
+        option.text = varName;
 
         option.callback =
             Blockly.Constants.Data.VARIABLE_OPTION_CALLBACK_FACTORY(this,
@@ -589,9 +595,8 @@ Blockly.Constants.Data.CUSTOM_CONTEXT_MENU_GET_LIST_MIXIN = {
         callback: Blockly.Constants.Data.RENAME_OPTION_CALLBACK_FACTORY(this,
             fieldName)
       };
-      var name = this.getField(fieldName).text_;
       var deleteOption = {
-        text: Blockly.Msg.DELETE_LIST.replace('%1', name),
+        text: Blockly.Msg.DELETE_LIST.replace('%1', currentVarName),
         enabled: true,
         callback: Blockly.Constants.Data.DELETE_OPTION_CALLBACK_FACTORY(this,
             fieldName)
