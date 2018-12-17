@@ -270,7 +270,6 @@ Blockly.ContextMenu.blockDuplicateOption = function(block, event) {
   };
   return duplicateOption;
 };
-//
 
 /**
  * Make a context menu option for adding or removing comments on the current
@@ -444,7 +443,6 @@ Blockly.ContextMenu.commentDuplicateOption = function(comment) {
       Blockly.duplicate_(comment);
     }
   };
-  //
   return duplicateOption;
 };
 
