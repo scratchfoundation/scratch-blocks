@@ -223,7 +223,7 @@ Blockly.scratchBlocksUtils.duplicateAndDragCallback = function(oldBlock, event) 
 
       if (isMouseEvent) {
         // e is not a real mouseEvent/touchEvent/pointerEvent.  It's an event
-        // created by the context menu that has the coordinates of the mouse
+        // created by the context menu and has the coordinates of the mouse
         // click that opened the context menu.
         var fakeEvent = {
           clientX: event.clientX,
