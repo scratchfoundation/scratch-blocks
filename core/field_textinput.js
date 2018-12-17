@@ -233,6 +233,10 @@ Blockly.FieldTextInput.prototype.showEditor_ = function(
   if (readOnly) {
     htmlInput.setAttribute('readonly', 'true');
   }
+  if (this.sourceBlock_.type === 'math_number') {
+    // All number fields are LTR.
+    htmlInput.setAttribute('dir', 'ltr');
+  }
   /** @type {!HTMLInputElement} */
   Blockly.FieldTextInput.htmlInput_ = htmlInput;
   div.appendChild(htmlInput);
