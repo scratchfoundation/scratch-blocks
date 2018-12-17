@@ -432,16 +432,15 @@ Blockly.ContextMenu.commentDeleteOption = function(comment) {
  * Make a context menu option for duplicating the current workspace comment.
  * @param {!Blockly.WorkspaceCommentSvg} comment The workspace comment where the
  *     right-click originated.
+ * @param {!Event} event Event that caused the context menu to open.
  * @return {!Object} A menu option, containing text, enabled, and a callback.
  * @package
  */
-Blockly.ContextMenu.commentDuplicateOption = function(comment) {
+Blockly.ContextMenu.commentDuplicateOption = function(comment, event) {
   var duplicateOption = {
     text: Blockly.Msg.DUPLICATE,
     enabled: true,
-    callback: function() {
-      Blockly.duplicate_(comment);
-    }
+    callback: Blockly.scratchBlocksUtils.duplicateAndDragCallback(comment, event)
   };
   return duplicateOption;
 };

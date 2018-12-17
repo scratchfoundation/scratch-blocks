@@ -2234,15 +2234,20 @@ Blockly.WorkspaceSvg.prototype.cancelCurrentGesture = function() {
  * to attach duplicated blocks to the mouse pointer.
  * @param {!Object} fakeEvent An object with the properties needed to start a
  *     drag, including clientX and clientY.
- * @param {!Blockly.BlockSvg} block The block to start dragging.
+ * @param {!Blockly.BlockSvg|Blockly.WorkspaceCommentSvg} item The block/comment to start dragging.
  * @package
  */
 Blockly.WorkspaceSvg.prototype.startDragWithFakeEvent = function(fakeEvent,
-    block) {
+    item) {
   Blockly.Touch.clearTouchIdentifier();
   Blockly.Touch.checkTouchIdentifier(fakeEvent);
-  var gesture = block.workspace.getGesture(fakeEvent);
-  gesture.forceStartBlockDrag(fakeEvent, block);
+  var gesture = item.workspace.getGesture(fakeEvent);
+  if (item.isComment) {
+    gesture.forceStartBubbleDrag(fakeEvent, item);
+  }
+  else {
+    gesture.forceStartBlockDrag(fakeEvent, item);
+  }
 };
 
 /**
