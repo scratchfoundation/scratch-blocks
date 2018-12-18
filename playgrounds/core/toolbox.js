@@ -559,8 +559,10 @@ Blockly.Toolbox.prototype.selectCategoryById = function(id) {
 Blockly.Toolbox.prototype.setSelectedItemFactory = function(item) {
   var selectedItem = item;
   return function() {
-    this.setSelectedItem(selectedItem);
-    Blockly.Touch.clearTouchIdentifier();
+    if (!this.workspace_.isDragging()) {
+      this.setSelectedItem(selectedItem);
+      Blockly.Touch.clearTouchIdentifier();
+    }
   };
 };
 
