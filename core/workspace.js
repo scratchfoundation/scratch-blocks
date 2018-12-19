@@ -134,13 +134,12 @@ Blockly.Workspace.prototype.isClearing = false;
  */
 Blockly.Workspace.prototype.MAX_UNDO = 1024;
 
-// TODO (#1354) Update this function when it is fixed upstream
 /**
  * Refresh the toolbox. This is a no-op in a non-rendered workspace,
  * but may be overriden by subclasses.
- * @private
+ * @package
  */
-Blockly.Workspace.prototype.refreshToolboxSelection_ = function() {
+Blockly.Workspace.prototype.refreshToolboxSelection = function() {
   // No-op. Overriden by subclass.
 };
 

@@ -289,7 +289,7 @@ Blockly.BlockDragger.prototype.endBlockDrag = function(e, currentDragDeltaXY) {
         }
       }
       // The proc deletion was valid, update the toolbox.
-      ws.refreshToolboxSelection_();
+      ws.refreshToolboxSelection();
     });
   }
 };

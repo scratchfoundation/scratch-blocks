@@ -1109,9 +1109,9 @@ Blockly.WorkspaceSvg.prototype.pasteWorkspaceComment_ = function(xmlComment) {
 
 /**
  * Refresh the toolbox unless there's a drag in progress.
- * @private
+ * @package
  */
-Blockly.WorkspaceSvg.prototype.refreshToolboxSelection_ = function() {
+Blockly.WorkspaceSvg.prototype.refreshToolboxSelection = function() {
   // Updating the toolbox can be expensive. Don't do it when when it is
   // disabled.
   if (this.toolbox_) {
@@ -1137,7 +1137,7 @@ Blockly.WorkspaceSvg.prototype.refreshToolboxSelection_ = function() {
  */
 Blockly.WorkspaceSvg.prototype.renameVariableById = function(id, newName) {
   Blockly.WorkspaceSvg.superClass_.renameVariableById.call(this, id, newName);
-  this.refreshToolboxSelection_();
+  this.refreshToolboxSelection();
 };
 
 /**
@@ -1148,7 +1148,7 @@ Blockly.WorkspaceSvg.prototype.renameVariableById = function(id, newName) {
  */
 Blockly.WorkspaceSvg.prototype.deleteVariableById = function(id) {
   Blockly.WorkspaceSvg.superClass_.deleteVariableById.call(this, id);
-  this.refreshToolboxSelection_();
+  this.refreshToolboxSelection();
 };
 
 /**
@@ -1173,7 +1173,7 @@ Blockly.WorkspaceSvg.prototype.createVariable = function(name, opt_type, opt_id,
   // For performance reasons, only refresh the the toolbox for new variables.
   // Variables that already exist should already be there.
   if (!variableInMap && (opt_type != Blockly.BROADCAST_MESSAGE_VARIABLE_TYPE)) {
-    this.refreshToolboxSelection_();
+    this.refreshToolboxSelection();
   }
   return newVar;
 };
@@ -2090,7 +2090,7 @@ Blockly.WorkspaceSvg.prototype.setToolboxRefreshEnabled = function(enabled) {
   this.toolboxRefreshEnabled_ = enabled;
   if (reenabled) {
     // Newly enabled.  Trigger a refresh.
-    this.refreshToolboxSelection_();
+    this.refreshToolboxSelection();
   }
 };
 

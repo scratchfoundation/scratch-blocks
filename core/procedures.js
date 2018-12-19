@@ -568,10 +568,8 @@ Blockly.Procedures.deleteProcedureDefCallback = function(procCode,
   Blockly.Events.setGroup(true);
   definitionRoot.dispose();
   Blockly.Events.setGroup(false);
-
-  // TODO (#1354) Update this function when '_' is removed
   // Refresh toolbox, so caller doesn't appear there anymore
-  workspace.refreshToolboxSelection_();
+  workspace.refreshToolboxSelection();
 
   return true;
 };

@@ -102,7 +102,7 @@ function test_addNewVariableRefreshToolbox() {
 
   var mockControl = new goog.testing.MockControl();
   var mockMethod = mockControl.createMethodMock(Blockly.WorkspaceSvg.prototype,
-    'refreshToolboxSelection_');
+    'refreshToolboxSelection');
   try {
     mockMethod().$once();
     mockControl.$replayAll();
@@ -119,7 +119,7 @@ function test_addDuplicateVariableDoNotRefreshToolbox() {
   
   var mockControl = new goog.testing.MockControl();
   var mockMethod = mockControl.createMethodMock(Blockly.WorkspaceSvg.prototype,
-    'refreshToolboxSelection_');
+    'refreshToolboxSelection');
   try {
     mockMethod().$once();
     mockControl.$replayAll();
