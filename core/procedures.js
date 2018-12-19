@@ -519,13 +519,15 @@ Blockly.Procedures.makeEditOption = function(block) {
 /**
  * Callback to show the procedure definition corresponding to a custom command
  * block.
- * TODO(#1136): Implement.
  * @param {!Blockly.Block} block The block that was right-clicked.
  * @private
  */
 Blockly.Procedures.showProcedureDefCallback_ = function(block) {
-  alert('TODO(#1136): implement showing procedure definition (procCode was "' +
-      block.procCode_ + '")');
+  var def = Blockly.Procedures.getDefineBlock(block.getProcCode(), block.workspace);
+  if (def) {
+    block.workspace.centerOnBlock(def.id);
+    def.select();
+  }
 };
 
 /**
