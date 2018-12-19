@@ -242,8 +242,8 @@ Blockly.WorkspaceCommentSvg.prototype.createCommentTopBar_ = function() {
   this.svgHandleTarget_ = Blockly.utils.createSvgElement('rect',
       {
         'class': 'blocklyDraggable scratchCommentTopBar',
-        'x': Blockly.WorkspaceCommentSvg.BORDER_WIDTH,
-        'y': Blockly.WorkspaceCommentSvg.BORDER_WIDTH,
+        'rx': Blockly.WorkspaceCommentSvg.BORDER_WIDTH,
+        'ry': Blockly.WorkspaceCommentSvg.BORDER_WIDTH,
         'height': Blockly.WorkspaceCommentSvg.TOP_BAR_HEIGHT
       }, this.svgGroup_);
 
@@ -565,7 +565,7 @@ Blockly.WorkspaceCommentSvg.prototype.setSize = function(width, height) {
   this.svgRect_.setAttribute('height', height);
   this.svgRectTarget_.setAttribute('width', width);
   this.svgRectTarget_.setAttribute('height', height);
-  this.svgHandleTarget_.setAttribute('width', width - doubleBorderWidth);
+  this.svgHandleTarget_.setAttribute('width', width);
   this.svgHandleTarget_.setAttribute('height', Blockly.WorkspaceCommentSvg.TOP_BAR_HEIGHT);
   if (this.RTL) {
     this.minimizeArrow_.setAttribute('x', width -
