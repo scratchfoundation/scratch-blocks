@@ -650,6 +650,7 @@ Blockly.Css.CONTENT = [
 
   '.scratchCommentBody {',
     'background-color: #fef49c;',
+    'border-radius: 4px;',
   '}',
 
   '.scratchCommentRect {',
