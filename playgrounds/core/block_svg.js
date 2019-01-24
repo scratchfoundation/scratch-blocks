@@ -673,11 +673,9 @@ Blockly.BlockSvg.prototype.showContextMenu_ = function(e) {
   // Save the current block in a variable for use in closures.
   var block = this;
   var menuOptions = [];
-
-  var isMouseEvent = Blockly.Touch.getTouchIdentifierFromEvent(e) == 'mouse';
   if (this.isDeletable() && this.isMovable() && !block.isInFlyout) {
     menuOptions.push(
-        Blockly.ContextMenu.blockDuplicateOption(block, isMouseEvent));
+        Blockly.ContextMenu.blockDuplicateOption(block, e));
     if (this.isEditable() && this.workspace.options.comments) {
       menuOptions.push(Blockly.ContextMenu.blockCommentOption(block));
     }

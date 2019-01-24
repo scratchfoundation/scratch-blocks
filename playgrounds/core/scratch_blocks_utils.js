@@ -163,14 +163,13 @@ Blockly.scratchBlocksUtils.blockIsRecyclable = function(block) {
  * which acts as though it were pressed and mid-drag.  Clicking the mouse
  * releases the new dragging block.
  * @param {!Blockly.BlockSvg} oldBlock The block that will be duplicated.
- * @param {boolean} isMouseEvent True if the event that caused the context
- *     menu to open came from a mouse.  False if touch.
+ * @param {!Event} event Event that caused the context menu to open.
  * @return {Function} A callback function that duplicates the block and starts a
  *     drag.
  * @package
  */
-Blockly.scratchBlocksUtils.duplicateAndDragCallback = function(oldBlock,
-    isMouseEvent) {
+Blockly.scratchBlocksUtils.duplicateAndDragCallback = function(oldBlock, event) {
+  var isMouseEvent = Blockly.Touch.getTouchIdentifierFromEvent(event) === 'mouse';
   return function(e) {
     // Give the context menu a chance to close.
     setTimeout(function() {
@@ -223,31 +222,12 @@ Blockly.scratchBlocksUtils.duplicateAndDragCallback = function(oldBlock,
       }
 
       if (isMouseEvent) {
-        // The position of the old block in pixels relative to the main
-        // workspace's origin.
-        var oldBlockPosPixels = oldBlockPosWs.scale(ws.scale);
-
-        // The offset in pixels between the main workspace's origin and the upper left
-        // corner of the injection div.
-        var mainOffsetPixels = ws.getOriginOffsetInPixels();
-
-        // The position of the old block in pixels relative to the upper left corner
-        // of the injection div.
-        var finalOffsetPixels = goog.math.Coordinate.sum(mainOffsetPixels,
-            oldBlockPosPixels);
-
-        var injectionDiv = ws.getInjectionDiv();
-        // Bounding rect coordinates are in client coordinates, meaning that they
-        // are in pixels relative to the upper left corner of the visible browser
-        // window.  These coordinates change when you scroll the browser window.
-        var boundingRect = injectionDiv.getBoundingClientRect();
-
         // e is not a real mouseEvent/touchEvent/pointerEvent.  It's an event
-        // created by the context menu and doesn't have the correct coordinates.
-        // But it does have some information that we need.
+        // created by the context menu and has the coordinates of the mouse
+        // click that opened the context menu.
         var fakeEvent = {
-          clientX: finalOffsetPixels.x + boundingRect.left,
-          clientY: finalOffsetPixels.y + boundingRect.top,
+          clientX: event.clientX,
+          clientY: event.clientY,
           type: 'mousedown',
           preventDefault: function() {
             e.preventDefault();
