@@ -339,13 +339,15 @@ Blockly.Block.prototype.unplug = function(opt_healStack) {
       // Disconnect from any superior block.
       this.outputConnection.disconnect();
     }
-  } else if (this.previousConnection) {
-    var previousTarget = null;
-    if (this.previousConnection.isConnected()) {
-      // Remember the connection that any next statements need to connect to.
-      previousTarget = this.previousConnection.targetConnection;
-      // Detach this block from the parent's tree.
-      this.previousConnection.disconnect();
+  } else {
+    if (this.previousConnection) {
+      var previousTarget = null;
+      if (this.previousConnection.isConnected()) {
+        // Remember the connection that any next statements need to connect to.
+        previousTarget = this.previousConnection.targetConnection;
+        // Detach this block from the parent's tree.
+        this.previousConnection.disconnect();
+      }
     }
     var nextBlock = this.getNextBlock();
     if (opt_healStack && nextBlock) {
