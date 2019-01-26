@@ -523,9 +523,12 @@ Blockly.Procedures.makeEditOption = function(block) {
  * @private
  */
 Blockly.Procedures.showProcedureDefCallback_ = function(block) {
-  var def = Blockly.Procedures.getDefineBlock(block.getProcCode(), block.workspace);
+  // If block clicked is in the toolbox, its definition will be in
+  // block.workspace.targetWorkspace. Otherwise, it will be in block.workspace.
+  var workspace = block.workspace.targetWorkspace || block.workspace;
+  var def = Blockly.Procedures.getDefineBlock(block.getProcCode(), workspace);
   if (def) {
-    block.workspace.centerOnBlock(def.id);
+    workspace.centerOnBlock(def.id);
     def.select();
   }
 };
