@@ -170,6 +170,50 @@ Blockly.VerticalFlyout.prototype.createDom = function(tagName) {
 };
 
 /**
+ * Calculate the bounding box of the flyout.
+ *
+ * @return {Object} Contains the position and size of the bounding
+ * box containing the elements (blocks, buttons, labels) in the flyout.
+ */
+Blockly.VerticalFlyout.prototype.getContentBoundingBox_ = function() {
+  var contentBounds = this.workspace_.getBlocksBoundingBox();
+  var bounds = {
+    xMin: contentBounds.x,
+    yMin: contentBounds.y,
+    xMax: contentBounds.x + contentBounds.width,
+    yMax: contentBounds.y + contentBounds.height
+  };
+
+  // Check if any of the buttons/labels are outside the blocks bounding box.
+  for (var i = 0; i < this.buttons_.length; i ++) {
+    var button = this.buttons_[i];
+    var buttonPosition = button.getPosition();
+    if (buttonPosition.x  < bounds.xMin) {
+      bounds.xMin = buttonPosition.x;
+    }
+    if (buttonPosition.y < bounds.yMin) {
+      bounds.yMin = buttonPosition.y;
+    }
+    // Button extends past the bounding box to the right.
+    if (buttonPosition.x + button.width > bounds.xMax) {
+      bounds.xMax = buttonPosition.x  + button.width;
+    }
+
+    // Button extends past the bounding box on the bottom
+    if (buttonPosition.y + button.height > bounds.yMax) {
+      bounds.yMax = buttonPosition.y + button.height;
+    }
+  }
+
+  return {
+    x: bounds.xMin,
+    y: bounds.yMin,
+    width: bounds.xMax - bounds.xMin,
+    height: bounds.yMax - bounds.yMin,
+  };
+};
+
+/**
  * Return an object with all the metrics required to size scrollbars for the
  * flyout.  The following properties are computed:
  * .viewHeight: Height of the visible rectangle,
@@ -191,12 +235,7 @@ Blockly.VerticalFlyout.prototype.getMetrics_ = function() {
     return null;
   }
 
-  try {
-    var optionBox = this.workspace_.getCanvas().getBBox();
-  } catch (e) {
-    // Firefox has trouble with hidden elements (Bug 528969).
-    var optionBox = {height: 0, y: 0, width: 0, x: 0};
-  }
+  var optionBox = this.getContentBoundingBox_();
 
   // Padding for the end of the scrollbar.
   var absoluteTop = this.SCROLLBAR_PADDING;
