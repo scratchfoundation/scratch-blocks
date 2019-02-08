@@ -521,6 +521,9 @@ Blockly.Constants.Data.CUSTOM_CONTEXT_MENU_GET_VARIABLE_MIXIN = {
     var currentVarName = this.getField(fieldName).text_;
     if (!this.isInFlyout) {
       var variablesList = this.workspace.getVariablesOfType('');
+      variablesList.sort(function(a, b) {
+        return Blockly.scratchBlocksUtils.compareStrings(a.name, b.name);
+      });
       for (var i = 0; i < variablesList.length; i++) {
         var varName = variablesList[i].name;
         if (varName == currentVarName) continue;
