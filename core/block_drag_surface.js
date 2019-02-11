@@ -131,9 +131,9 @@ Blockly.BlockDragSurfaceSvg.prototype.createDom = function() {
 };
 
 /**
- * Set the distance to offset the dragged SVG.
- * @param {number} left
- * @param {number} top
+ * Set the distance to offset the dragged SVG (in pixels).
+ * @param {number} left - Left offset.
+ * @param {number} top - Y offset.
  */
 Blockly.BlockDragSurfaceSvg.prototype.setOffset = function(left, top) {
   this.SVG_.style.marginLeft = left + 'px';
