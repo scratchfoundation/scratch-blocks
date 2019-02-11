@@ -212,6 +212,7 @@ Blockly.Css.CONTENT = [
 
   '.blocklyDragSurfaceWrapper {',
     'display: none;',
+    'pointer-events: none;',
     'position: fixed;',
     'top: 0;',
     'left: 0;',
