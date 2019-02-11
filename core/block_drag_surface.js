@@ -113,7 +113,7 @@ Blockly.BlockDragSurfaceSvg.prototype.createDom = function() {
     return;  // Already created.
   }
   this.wrapper_ = goog.dom.createDom('div', 'blocklyDragSurfaceWrapper');
-  document.body.appendChild(this.wrapper_);
+  this.container_.appendChild(this.wrapper_);
   this.SVG_ = Blockly.utils.createSvgElement('svg',
       {
         'xmlns': Blockly.SVG_NS,
