@@ -162,6 +162,9 @@ Blockly.BlockDragger.prototype.startBlockDrag = function(currentDragDeltaXY) {
     Blockly.Events.setGroup(true);
   }
 
+  var svgRect = this.workspace_.getParentSvg().getBoundingClientRect();
+  this.workspace_.getBlockDragSurface().setOffset(svgRect.x, svgRect.y);
+
   this.workspace_.setResizesEnabled(false);
   Blockly.BlockAnimations.disconnectUiStop();
 

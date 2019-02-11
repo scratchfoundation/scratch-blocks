@@ -210,15 +210,25 @@ Blockly.Css.CONTENT = [
     'overflow: visible;',
   '}',
 
-  '.blocklyBlockDragSurface {',
+  '.blocklyDragSurfaceWrapper {',
     'display: none;',
+    'position: fixed;',
+    'top: 0;',
+    'left: 0;',
+    'width: 100%;',
+    'height: 100%;',
+    'overflow: hidden !important;',
+    'z-index: 50;', /* Display above the toolbox */
+  '}',
+
+  '.blocklyBlockDragSurface {',
+    'display: block;',
     'position: absolute;',
     'top: 0;',
     'left: 0;',
     'right: 0;',
     'bottom: 0;',
     'overflow: visible !important;',
-    'z-index: 50;', /* Display above the toolbox */
   '}',
 
   '.blocklyTooltipDiv {',

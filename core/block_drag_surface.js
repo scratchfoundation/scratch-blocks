@@ -112,6 +112,8 @@ Blockly.BlockDragSurfaceSvg.prototype.createDom = function() {
   if (this.SVG_) {
     return;  // Already created.
   }
+  this.wrapper_ = goog.dom.createDom('div', 'blocklyDragSurfaceWrapper');
+  document.body.appendChild(this.wrapper_);
   this.SVG_ = Blockly.utils.createSvgElement('svg',
       {
         'xmlns': Blockly.SVG_NS,
@@ -119,13 +121,23 @@ Blockly.BlockDragSurfaceSvg.prototype.createDom = function() {
         'xmlns:xlink': 'http://www.w3.org/1999/xlink',
         'version': '1.1',
         'class': 'blocklyBlockDragSurface'
-      }, this.container_);
+      }, this.wrapper_);
   this.dragGroup_ = Blockly.utils.createSvgElement('g', {}, this.SVG_);
   // Belongs in Scratch Blocks, but not Blockly.
   var defs = Blockly.utils.createSvgElement('defs', {}, this.SVG_);
   this.dragShadowFilterId_ = this.createDropShadowDom_(defs);
   this.dragGroup_.setAttribute(
       'filter', 'url(#' + this.dragShadowFilterId_ + ')');
+};
+
+/**
+ * Set the distance to offset the dragged SVG.
+ * @param {number} left
+ * @param {number} top
+ */
+Blockly.BlockDragSurfaceSvg.prototype.setOffset = function(left, top) {
+  this.SVG_.style.marginLeft = left + 'px';
+  this.SVG_.style.marginTop = top + 'px';
 };
 
 /**
@@ -183,7 +195,7 @@ Blockly.BlockDragSurfaceSvg.prototype.setBlocksAndShow = function(blocks) {
       this.dragGroup_.childNodes.length == 0, 'Already dragging a block.');
   // appendChild removes the blocks from the previous parent
   this.dragGroup_.appendChild(blocks);
-  this.SVG_.style.display = 'block';
+  this.wrapper_.style.display = 'block';
   this.surfaceXY_ = new goog.math.Coordinate(0, 0);
   // This allows blocks to be dragged outside of the blockly svg space.
   // This should be reset to hidden at the end of the block drag.
@@ -221,7 +233,7 @@ Blockly.BlockDragSurfaceSvg.prototype.translateSurfaceInternal_ = function() {
   // fuzzy while they are being dragged on the drag surface.
   x = x.toFixed(0);
   y = y.toFixed(0);
-  this.SVG_.style.display = 'block';
+  this.wrapper_.style.display = 'block';
 
   Blockly.utils.setCssTransform(this.SVG_,
       'translate3d(' + x + 'px, ' + y + 'px, 0px)');
@@ -285,7 +297,7 @@ Blockly.BlockDragSurfaceSvg.prototype.clearAndHide = function(opt_newSurface) {
   } else {
     this.dragGroup_.removeChild(this.getCurrentBlock());
   }
-  this.SVG_.style.display = 'none';
+  this.wrapper_.style.display = 'none';
   goog.asserts.assert(
       this.dragGroup_.childNodes.length == 0, 'Drag group was not cleared.');
   this.surfaceXY_ = null;
