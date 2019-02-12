@@ -28,10 +28,7 @@ goog.provide('Blockly.ScratchBlocks.ProcedureUtils');
 goog.require('Blockly.Blocks');
 goog.require('Blockly.Colours');
 goog.require('Blockly.constants');
-goog.require('Blockly.Msg');
 goog.require('Blockly.ScratchBlocks.VerticalExtensions');
-goog.require('Blockly.utils');
-goog.require('Blockly.WidgetDiv');
 
 // Serialization and deserialization.
 
