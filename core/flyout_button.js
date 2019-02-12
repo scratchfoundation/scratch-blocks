@@ -307,6 +307,11 @@ Blockly.FlyoutButton.prototype.dispose = function() {
 Blockly.FlyoutButton.prototype.onMouseUp_ = function(e) {
   var gesture = this.targetWorkspace_.getGesture(e);
   if (gesture) {
+    // If we're in the middle of dragging something (blocks, workspace, etc.) ignore the button.
+    // Otherwise, cancel the gesture.
+    if (gesture.isDragging()) {
+      return;
+    }
     gesture.cancel();
   }
 
