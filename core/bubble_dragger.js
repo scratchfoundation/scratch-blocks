@@ -112,6 +112,9 @@ Blockly.BubbleDragger.prototype.startBubbleDrag = function() {
     Blockly.Events.setGroup(true);
   }
 
+  var svgRect = this.workspace_.getParentSvg().getBoundingClientRect();
+  this.workspace_.getBlockDragSurface().setOffset(svgRect.x, svgRect.y);
+
   this.workspace_.setResizesEnabled(false);
   this.draggingBubble_.setAutoLayout(false);
   if (this.dragSurface_) {
