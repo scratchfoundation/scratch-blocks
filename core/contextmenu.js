@@ -302,14 +302,15 @@ Blockly.ContextMenu.blockCommentOption = function(block) {
  * Make a context menu option for relabelling the current block.
  * @param {!Blockly.BlockSvg} block The block where the right-click originated.
  * @param {!string} text Message to use as the option's label.
+ * @param {!string} type New type to give to the block.
  * @return {!Object} A menu option, containing text, enabled, and a callback.
  * @package
  */
-Blockly.ContextMenu.blockRelabelOption = function(block, text, opcode) {
+Blockly.ContextMenu.blockRelabelOption = function(block, text, type) {
   var relabelOption = {
     text: text,
     enabled: true,
-    callback: Blockly.scratchBlocksUtils.relabelCallback(block, opcode)
+    callback: Blockly.scratchBlocksUtils.relabelCallback(block, type)
   };
   return relabelOption;
 };
