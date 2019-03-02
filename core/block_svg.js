@@ -680,6 +680,17 @@ Blockly.BlockSvg.prototype.showContextMenu_ = function(e) {
       menuOptions.push(Blockly.ContextMenu.blockCommentOption(block));
     }
     menuOptions.push(Blockly.ContextMenu.blockDeleteOption(block));
+
+    var relabelOptions = block.getRelabelOptions();
+    if (relabelOptions) {
+      for (var i = 0, relabelOption; relabelOption = relabelOptions[i]; i++) {
+        var type = relabelOption.type;
+        if (type !== block.type) {
+          var label = relabelOption.label;
+          menuOptions.push(Blockly.ContextMenu.blockRelabelOption(block, label, type));
+        }
+      }
+    }
   } else if (this.parentBlock_ && this.isShadow_) {
     this.parentBlock_.showContextMenu_(e);
     return;

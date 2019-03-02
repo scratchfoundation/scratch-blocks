@@ -149,6 +149,12 @@ Blockly.Block = function(workspace, prototypeName, opt_id) {
   this.category_ = null;
 
   /**
+   * @type {Array.<Object>}
+   * @private
+   */
+  this.relabelOptions = [];
+
+  /**
    * The block's position in workspace units.  (0, 0) is at the workspace's
    * origin; scale does not change this value.
    * @type {!goog.math.Coordinate}
@@ -1326,6 +1332,9 @@ Blockly.Block.prototype.jsonInit = function(json) {
   if (json['category'] !== undefined) {
     this.setCategory(json['category']);
   }
+  if (json['relabelOptions'] !== undefined) {
+    this.setRelabelOptions(json['relabelOptions']);
+  }
 };
 
 /**
@@ -1689,6 +1698,22 @@ Blockly.Block.prototype.setCategory = function(category) {
  */
 Blockly.Block.prototype.getCategory = function() {
   return this.category_;
+};
+
+/**
+ * Set this block's relabel options.
+ * @param {Array.<Object>} relabelOptions The block's relabel options.
+ */
+Blockly.Block.prototype.setRelabelOptions = function(relabelOptions) {
+  this.relabelOptions_ = relabelOptions;
+};
+
+/**
+ * Get this block's relabel options.
+ * @return {Array.<Object>} The block's relabel options.
+ */
+Blockly.Block.prototype.getRelabelOptions = function() {
+  return this.relabelOptions_;
 };
 
 /**

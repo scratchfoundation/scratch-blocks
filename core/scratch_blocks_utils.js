@@ -242,3 +242,32 @@ Blockly.scratchBlocksUtils.duplicateAndDragCallback = function(oldBlock, event) 
     }, 0);
   };
 };
+
+/**
+ * Creates a callback function for a click on a "relabel" context menu option
+ * in Scratch Blocks.  The block is duplicated but with a new opcode and
+ * inserted where the original block was.  This is typically used for changing
+ * the operator in a reporter block.  Note: Only reporter blocks are currently
+ * supported.
+ * @param {!Blockly.BlockSvg} oldBlock The block that will be relabeled.
+ * @param {!String} newOpcode The opcode of the new block.  All input and
+ *     field names should correspond to those of the original block's opcode.
+ * @return {Function} A callback function that replaces the block with a
+ *     duplicate whose opcode is different.
+ */
+Blockly.scratchBlocksUtils.relabelCallback = function(oldBlock, newOpcode) {
+  return function() {
+    var ws = oldBlock.workspace;
+    var xml = Blockly.Xml.blockToDom(oldBlock);
+    xml.setAttribute('type', newOpcode);
+    var newBlock = Blockly.Xml.domToBlock(xml, ws);
+
+    if (oldBlock.outputConnection.targetConnection) {
+      newBlock.outputConnection.connect(oldBlock.outputConnection.targetConnection);
+    } else {
+      var xy = oldBlock.getRelativeToSurfaceXY();
+      newBlock.moveBy(xy.x, xy.y);
+    }
+    oldBlock.dispose();
+  };
+};
