@@ -146,6 +146,8 @@
     "OPERATORS_EQUALS": "%1 = %2",
     "OPERATORS_AND": "%1 and %2",
     "OPERATORS_OR": "%1 or %2",
+    "OPERATORS_RELABEL_AND": "And",
+    "OPERATORS_RELABEL_OR": "Or",
     "OPERATORS_NOT": "not %1",
     "OPERATORS_JOIN": "join %1 %2",
     "OPERATORS_JOIN_APPLE": "apple",

@@ -152,6 +152,8 @@ Blockly.Msg["OPERATORS_LT"] = "%1 < %2";
 Blockly.Msg["OPERATORS_EQUALS"] = "%1 = %2";
 Blockly.Msg["OPERATORS_AND"] = "%1 and %2";
 Blockly.Msg["OPERATORS_OR"] = "%1 or %2";
+Blockly.Msg["OPERATORS_RELABEL_AND"] = "And";
+Blockly.Msg["OPERATORS_RELABEL_OR"] = "Or";
 Blockly.Msg["OPERATORS_NOT"] = "not %1";
 Blockly.Msg["OPERATORS_JOIN"] = "join %1 %2";
 Blockly.Msg["OPERATORS_JOIN_APPLE"] = "apple";
