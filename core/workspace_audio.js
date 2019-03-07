@@ -151,6 +151,7 @@ Blockly.WorkspaceAudio.prototype.play = function(name, opt_volume) {
     }
     mySound.volume = (opt_volume === undefined ? 1 : opt_volume);
     mySound.play();
+    mySound.playbackRate = 0.1; // this is funny
   } else if (this.parentWorkspace_) {
     // Maybe a workspace on a lower level knows about this sound.
     this.parentWorkspace_.getAudioManager().play(name, opt_volume);
