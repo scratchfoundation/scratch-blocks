@@ -97,11 +97,17 @@ Blockly.ScratchBlocks.ProcedureUtils.definitionDomToMutation = function(xmlEleme
   this.procCode_ = xmlElement.getAttribute('proccode');
   this.warp_ = JSON.parse(xmlElement.getAttribute('warp'));
 
+  var prevArgIds = this.argumentIds_;
+  var prevDisplayNames = this.displayNames_;
+
   this.argumentIds_ = JSON.parse(xmlElement.getAttribute('argumentids'));
   this.displayNames_ = JSON.parse(xmlElement.getAttribute('argumentnames'));
   this.argumentDefaults_ = JSON.parse(
       xmlElement.getAttribute('argumentdefaults'));
   this.updateDisplay_();
+  if (this.updateArgumentReporterNames_) {
+    this.updateArgumentReporterNames_(prevArgIds, prevDisplayNames);
+  }
 };
 
 // End of serialization and deserialization.
@@ -708,6 +714,62 @@ Blockly.ScratchBlocks.ProcedureUtils.removeArgumentCallback_ = function(
   }
 };
 
+/**
+ * Update argument reporter field values after an edit to the prototype mutation
+ * using previous argument ids and names.
+ * Because the argument reporters only store names and not which argument ids they
+ * are linked to, it would not be safe to update all argument reporters on the workspace
+ * since they may be argument reporters with the same name from a different procedure.
+ * Until there is a more explicit way of identifying argument reporter blocks using ids,
+ * be conservative and only update argument reporters that are used in the
+ * stack below the prototype, ie the definition.
+ * @param {!Array<string>} prevArgIds The previous ordering of argument ids.
+ * @param {!Array<string>} prevDisplayNames The previous argument names.
+ * @this Blockly.Block
+ */
+Blockly.ScratchBlocks.ProcedureUtils.updateArgumentReporterNames_ = function(prevArgIds, prevDisplayNames) {
+  var nameChanges = [];
+  var argReporters = [];
+  var definitionBlock = this.getParent();
+  if (!definitionBlock) return;
+
+  // Create a list of argument reporters that are descendants of the definition stack (see above comment)
+  var allBlocks = definitionBlock.getDescendants(false);
+  for (var i = 0; i < allBlocks.length; i++) {
+    var block = allBlocks[i];
+    if ((block.type === 'argument_reporter_string_number' ||
+        block.type === 'argument_reporter_boolean') &&
+        !block.isShadow()) { // Exclude arg reporters in the prototype block, which are shadows.
+      argReporters.push(block);
+    }
+  }
+
+  // Create a list of "name changes", including the new name and blocks matching the old name
+  // Only search over the current set of argument ids, ignore args that have been removed
+  for (var i = 0, id; id = this.argumentIds_[i]; i++) {
+    // Find the previous index of this argument id. Could be -1 if it is newly added.
+    var prevIndex = prevArgIds.indexOf(id);
+    if (prevIndex == -1) continue; // Newly added argument, no corresponding previous argument to update.
+    var prevName = prevDisplayNames[prevIndex];
+    if (prevName != this.displayNames_[i]) {
+      nameChanges.push({
+        newName: this.displayNames_[i],
+        blocks: argReporters.filter(function(block) {
+          return block.getFieldValue('VALUE') == prevName;
+        })
+      });
+    }
+  }
+
+  // Finally update the blocks for each name change.
+  // Do this after creating the lists to avoid cycles of renaming.
+  for (var j = 0, nameChange; nameChange = nameChanges[j]; j++) {
+    for (var k = 0, block; block = nameChange.blocks[k]; k++) {
+      block.setFieldValue(nameChange.newName, 'VALUE');
+    }
+  }
+};
+
 Blockly.Blocks['procedures_definition'] = {
   /**
    * Block for defining a procedure with no return value.
@@ -792,7 +854,8 @@ Blockly.Blocks['procedures_prototype'] = {
   addProcedureLabel_: Blockly.ScratchBlocks.ProcedureUtils.addLabelField_,
 
   // Only exists on procedures_prototype.
-  createArgumentReporter_: Blockly.ScratchBlocks.ProcedureUtils.createArgumentReporter_
+  createArgumentReporter_: Blockly.ScratchBlocks.ProcedureUtils.createArgumentReporter_,
+  updateArgumentReporterNames_: Blockly.ScratchBlocks.ProcedureUtils.updateArgumentReporterNames_
 };
 
 Blockly.Blocks['procedures_declaration'] = {
