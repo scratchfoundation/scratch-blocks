@@ -23,14 +23,12 @@
  */
 'use strict';
 
-goog.provide('Blockly.Blocks.procedures');
+goog.provide('Blockly.ScratchBlocks.ProcedureUtils');
 
 goog.require('Blockly.Blocks');
+goog.require('Blockly.Colours');
 goog.require('Blockly.constants');
-
-
-// TODO: Create a namespace properly.
-Blockly.ScratchBlocks.ProcedureUtils = {};
+goog.require('Blockly.ScratchBlocks.VerticalExtensions');
 
 // Serialization and deserialization.
 
