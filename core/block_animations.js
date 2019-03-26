@@ -84,7 +84,11 @@ Blockly.BlockAnimations.disposeUiStep_ = function(clone, rtl, start,
  * @package
  */
 Blockly.BlockAnimations.connectionUiEffect = function(block) {
-  block.workspace.getAudioManager().play('click');
+  var randomSoundNum = Math.floor(Math.random() * 20) + 1;
+  if (Math.floor(Math.random() * 10000) === 9999) {
+    randomSoundNum = '';
+  }
+  block.workspace.getAudioManager().play('click' + randomSoundNum);
 };
 
 /**

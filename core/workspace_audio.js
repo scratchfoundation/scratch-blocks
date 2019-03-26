@@ -109,17 +109,17 @@ Blockly.WorkspaceAudio.prototype.load = function(filenames, name) {
  * @package
  */
 Blockly.WorkspaceAudio.prototype.preload = function() {
-  for (var name in this.SOUNDS_) {
-    var sound = this.SOUNDS_[name];
-    sound.volume = 0.01;
-    sound.play();
-    sound.pause();
-    // iOS can only process one sound at a time.  Trying to load more than one
-    // corrupts the earlier ones.  Just load one and leave the others uncached.
-    if (goog.userAgent.IPAD || goog.userAgent.IPHONE) {
-      break;
-    }
-  }
+  // for (var name in this.SOUNDS_) {
+  //   var sound = this.SOUNDS_[name];
+  //   sound.volume = 0.01;
+  //   sound.play();
+  //   sound.pause();
+  //   // iOS can only process one sound at a time.  Trying to load more than one
+  //   // corrupts the earlier ones.  Just load one and leave the others uncached.
+  //   if (goog.userAgent.IPAD || goog.userAgent.IPHONE) {
+  //     break;
+  //   }
+  // }
 };
 
 /**
