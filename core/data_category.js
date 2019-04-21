@@ -427,7 +427,7 @@ Blockly.DataCategory.addBlock = function(xmlList, variable, blockType,
     }
     if (opt_secondValue) {
       secondValueField = Blockly.DataCategory.createValue(opt_secondValue[0],
-          opt_secondValue[1], opt_value[2]);
+          opt_secondValue[1], opt_secondValue[2]);
     }
 
     var gap = 8;
