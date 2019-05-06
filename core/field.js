@@ -117,6 +117,13 @@ Blockly.Field.fromJson = function(options) {
 Blockly.Field.cacheWidths_ = null;
 
 /**
+ * Temporary cache of text width measuring tools.
+ * @type {Object}
+ * @private
+ */
+Blockly.Field.cacheTextTools_ = null;
+
+/**
  * Number of current references to cache.
  * @type {number}
  * @private
@@ -493,41 +500,171 @@ Blockly.Field.prototype.updateWidth = function() {
 };
 
 /**
+ * Default font returned from CanvasRendering2DContext.font.
+ */
+Blockly.Field.CANVAS_CONTEXT_SPEC_DEFAULT_FONT = '10px sans-serif';
+
+/**
+ * Default tool for measuring the width of some text. Used if a
+ * CanvasRendering2DContext cannot be configured to measure text for the font
+ * of a dom class.
+ */
+Blockly.Field.defaultTextTool = {
+  measureText: function(textElement) {
+    var width;
+
+    // Attempt to compute fetch the width of the SVG text element.
+    try {
+      if (goog.userAgent.IE || goog.userAgent.EDGE) {
+        width = textElement.getBBox().width;
+      } else {
+        width = textElement.getComputedTextLength();
+      }
+    } catch (e) {
+      // In other cases where we fail to geth the computed text.
+      // Instead, use an approximation and do not cache the result. At
+      // some later point in time when the block is inserted into the
+      // visible DOM, this method will be called again and, at that
+      // point in time, will not throw an exception.
+      width = textElement.textContent.length * 8;
+    }
+
+    return {
+      width: width
+    };
+  }
+};
+
+/**
+ * Initialize some objects for measuring text widths.
+ * @param {Array} classNames names of classes to initialize
+ * @param {Element} element relative element to get font values from
+ * @private
+ */
+Blockly.Field.initTextTools = function(classNames, element) {
+  if (!Blockly.Field.cacheTextTools_) {
+    return;
+  }
+
+  if (classNames.length === 1 && (
+    classNames[0] === 'blocklyFlyoutLabelText' ||
+    classNames[0] === 'blocklyText' ||
+    classNames[0] === 'blocklyText blocklyDropdownText'
+  )) {
+    // These three are commonly used so lets initialize them together. This will
+    // reduce the cost of DOM style and layout while determining the font.
+    classNames = [
+      'blocklyFlyoutLabelText',
+      'blocklyText',
+      'blocklyText blocklyDropdownText'
+    ];
+  }
+
+  var root = document.body;
+  if (element.getRootNode().tagName === 'document') {
+    root = element.parentElement;
+  }
+
+  var parent = document.createElementNS(Blockly.SVG_NS, 'g');
+  var clones = [];
+  for (var i = 0; i < classNames.length; i++) {
+    var className = classNames[i];
+    var elementClone = element.cloneNode();
+    elementClone.className.baseVal = className;
+    clones.push(elementClone);
+    parent.appendChild(elementClone);
+  }
+
+  root.appendChild(parent);
+
+  for (var i = 0; i < classNames.length; i++) {
+    var className = classNames[i];
+    try {
+      var canvas = document.createElement('canvas');
+      var textTool = canvas.getContext('2d');
+      Blockly.Field.cacheTextTools_[className] = textTool;
+
+      // Using CanvasRendering2DContext.measureText does not have the DOM style
+      // and layout cost that getComputedTextLength has. getComputedStyle does
+      // have that cost though. So calling initTextTools with all the classes to
+      // initialize reduces the times we'll incure the style and layout cost for
+      // getComputedStyle.
+      var computedStyle = window.getComputedStyle(clones[i]);
+
+      textTool.font = computedStyle.font;
+      if (textTool.font === Blockly.Field.CANVAS_CONTEXT_SPEC_DEFAULT_FONT) {
+        // Some browsers do not produce a computedStyle['font'] value or accept
+        // that a similarly constructed value on CanvasRendering2DContext.font
+        // member. They might accept the font reduced to weight, size and
+        // family.
+        textTool.font = (
+          computedStyle['font-weight'] + ' ' +
+          computedStyle['font-size'] + ' ' +
+          computedStyle['font-family']
+        );
+      }
+      if (textTool.font === Blockly.Field.CANVAS_CONTEXT_SPEC_DEFAULT_FONT) {
+        throw new Error('Could not initialiaze text measuring canvas.');
+      }
+    } catch (e) {
+      // Replace the canvas context with a mock object that always returns a
+      // width of 0.
+      Blockly.Field.cacheTextTools_[className] = Blockly.Field.defaultTextTool;
+    }
+  }
+
+  root.removeChild(parent);
+};
+
+/**
+ * Get a tool to measure the width of text for a given className.
+ * @param {string} className name of dom class whose font will be measured
+ * @param {Element} textElement relative element to detect font from
+ * @returns {Object} tool to measure text width
+ * @private
+ */
+Blockly.Field.getTextTool = function(className, textElement) {
+  if (Blockly.Field.cacheTextTools_) {
+    if (!Blockly.Field.cacheTextTools_[className]) {
+      Blockly.Field.initTextTools([className], textElement);
+    }
+
+    return Blockly.Field.cacheTextTools_[className];
+  }
+
+  return Blockly.Field.defaultTextTool;
+};
+
+/**
  * Gets the width of a text element, caching it in the process.
  * @param {!Element} textElement An SVG 'text' element.
  * @return {number} Width of element.
  */
 Blockly.Field.getCachedWidth = function(textElement) {
-  var key = textElement.textContent + '\n' + textElement.className.baseVal;
+  var className = textElement.className.baseVal;
+  var textContent = textElement.textContent;
   var width;
 
   // Return the cached width if it exists.
   if (Blockly.Field.cacheWidths_) {
-    width = Blockly.Field.cacheWidths_[key];
-    if (width) {
-      return width;
+    if (!Blockly.Field.cacheWidths_[className]) {
+      Blockly.Field.cacheWidths_[className] = {};
+    } else {
+      width = Blockly.Field.cacheWidths_[className][textContent];
+      if (width) {
+        return width;
+      }
     }
   }
 
-  // Attempt to compute fetch the width of the SVG text element.
-  try {
-    if (goog.userAgent.IE || goog.userAgent.EDGE) {
-      width = textElement.getBBox().width;
-    } else {
-      width = textElement.getComputedTextLength();
-    }
-  } catch (e) {
-    // In other cases where we fail to geth the computed text. Instead, use an
-    // approximation and do not cache the result. At some later point in time
-    // when the block is inserted into the visible DOM, this method will be
-    // called again and, at that point in time, will not throw an exception.
-    return textElement.textContent.length * 8;
-  }
+  var textTool = Blockly.Field.getTextTool(className, textElement);
+  width = textTool.measureText(textContent).width;
 
   // Cache the computed width and return.
   if (Blockly.Field.cacheWidths_) {
-    Blockly.Field.cacheWidths_[key] = width;
+    Blockly.Field.cacheWidths_[className][textContent] = width;
   }
+
   return width;
 };
 
@@ -539,6 +676,7 @@ Blockly.Field.startCache = function() {
   Blockly.Field.cacheReference_++;
   if (!Blockly.Field.cacheWidths_) {
     Blockly.Field.cacheWidths_ = {};
+    Blockly.Field.cacheTextTools_ = {};
   }
 };
 
@@ -550,6 +688,7 @@ Blockly.Field.stopCache = function() {
   Blockly.Field.cacheReference_--;
   if (!Blockly.Field.cacheReference_) {
     Blockly.Field.cacheWidths_ = null;
+    Blockly.Field.cacheTextTools_ = null;
   }
 };
 
