@@ -527,6 +527,7 @@ Blockly.Constants.Data.CUSTOM_CONTEXT_MENU_GET_VARIABLE_MIXIN = {
       for (var i = 0; i < variablesList.length; i++) {
         var varName = variablesList[i].name;
         if (varName == currentVarName) continue;
+
         var option = {enabled: true};
         option.text = varName;
 
@@ -579,6 +580,9 @@ Blockly.Constants.Data.CUSTOM_CONTEXT_MENU_GET_LIST_MIXIN = {
     var currentVarName = this.getField(fieldName).text_;
     if (!this.isInFlyout) {
       var variablesList = this.workspace.getVariablesOfType('list');
+      variablesList.sort(function(a, b) {
+        return Blockly.scratchBlocksUtils.compareStrings(a.name, b.name);
+      });
       for (var i = 0; i < variablesList.length; i++) {
         var varName = variablesList[i].name;
         if (varName == currentVarName) continue;
