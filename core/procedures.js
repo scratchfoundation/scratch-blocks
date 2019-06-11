@@ -526,10 +526,10 @@ Blockly.Procedures.showProcedureDefCallback_ = function(block) {
   // If block clicked is in the toolbox, its definition will be in
   // block.workspace.targetWorkspace. Otherwise, it will be in block.workspace.
   var workspace = block.workspace.targetWorkspace || block.workspace;
-  var def = Blockly.Procedures.getDefineBlock(block.getProcCode(), workspace);
-  if (def) {
-    workspace.centerOnBlock(def.id);
-    def.select();
+  var proto = Blockly.Procedures.getPrototypeBlock(block.getProcCode(), workspace);
+  if (proto) {
+    workspace.centerOnBlock(proto.id);
+    proto.select();
   }
 };
 
