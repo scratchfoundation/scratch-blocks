@@ -309,7 +309,7 @@ Blockly.FieldNote.KEY_INFO = [
  * @type {number}
  * @const
  */
-Blockly.FieldNote.MAX_NOTE = 130;
+Blockly.FieldNote.MAX_NOTE = 132;
 
 /**
  * The fraction of the distance to the target location to move the piano at each
