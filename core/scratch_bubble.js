@@ -212,8 +212,8 @@ Blockly.ScratchBubble.prototype.createCommentTopBar_ = function() {
   this.commentTopBar_ = Blockly.utils.createSvgElement('rect',
       {
         'class': 'blocklyDraggable scratchCommentTopBar',
-        'x': Blockly.ScratchBubble.BORDER_WIDTH,
-        'y': Blockly.ScratchBubble.BORDER_WIDTH,
+        'rx': Blockly.ScratchBubble.BORDER_WIDTH,
+        'ry': Blockly.ScratchBubble.BORDER_WIDTH,
         'height': Blockly.ScratchBubble.TOP_BAR_HEIGHT
       }, this.bubbleGroup_);
 
@@ -530,12 +530,12 @@ Blockly.ScratchBubble.prototype.setBubbleSize = function(width, height) {
   var doubleBorderWidth = 2 * Blockly.ScratchBubble.BORDER_WIDTH;
   // Minimum size of a bubble.
   width = Math.max(width, doubleBorderWidth + 50);
-  height = Math.max(height, doubleBorderWidth + Blockly.ScratchBubble.TOP_BAR_HEIGHT);
+  height = Math.max(height, Blockly.ScratchBubble.TOP_BAR_HEIGHT);
   this.width_ = width;
   this.height_ = height;
   this.bubbleBack_.setAttribute('width', width);
   this.bubbleBack_.setAttribute('height', height);
-  this.commentTopBar_.setAttribute('width', width - doubleBorderWidth);
+  this.commentTopBar_.setAttribute('width', width);
   this.commentTopBar_.setAttribute('height', Blockly.ScratchBubble.TOP_BAR_HEIGHT);
   if (this.workspace_.RTL) {
     this.minimizeArrow_.setAttribute('x', width -

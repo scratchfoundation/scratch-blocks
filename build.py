@@ -272,6 +272,10 @@ class Gen_compressed(threading.Thread):
     elif block_type == "common":
       target_filename = "blocks_compressed.js"
       filenames = glob.glob(os.path.join("blocks_common", "*.js"))
+
+    # glob.glob ordering is platform-dependent and not necessary deterministic
+    filenames.sort()  # Deterministic build.
+
     # Define the parameters for the POST request.
     params = [
       ("compilation_level", "SIMPLE"),
@@ -283,6 +287,7 @@ class Gen_compressed(threading.Thread):
     # Add Blockly.Colours for use of centralized colour bank
     filenames.append(os.path.join("core", "colours.js"))
     filenames.append(os.path.join("core", "constants.js"))
+    
     for filename in filenames:
       # Append filenames as false arguments the step before compiling will
       # either transform them into arguments for local or remote compilation

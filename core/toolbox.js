@@ -687,12 +687,30 @@ Blockly.Toolbox.Category.prototype.dispose = function() {
 };
 
 /**
+ * Used to determine the css classes for the menu item for this category
+ * based on its current state.
+ * @private
+ * @param {boolean=} selected Indication whether the category is currently selected.
+ * @return {string} The css class names to be applied, space-separated.
+ */
+Blockly.Toolbox.Category.prototype.getMenuItemClassName_ = function(selected) {
+  var classNames = [
+    'scratchCategoryMenuItem',
+    'scratchCategoryId-' + this.id_,
+  ];
+  if (selected) {
+    classNames.push('categorySelected');
+  }
+  return classNames.join(' ');
+};
+
+/**
  * Create the DOM for a category in the toolbox.
  */
 Blockly.Toolbox.Category.prototype.createDom = function() {
   var toolbox = this.parent_.parent_;
   this.item_ = goog.dom.createDom('div',
-      {'class': 'scratchCategoryMenuItem'});
+      {'class': this.getMenuItemClassName_()});
   this.label_ = goog.dom.createDom('div',
       {'class': 'scratchCategoryMenuItemLabel'},
       Blockly.utils.replaceMessageReferences(this.name_));
@@ -718,11 +736,7 @@ Blockly.Toolbox.Category.prototype.createDom = function() {
  * @param {boolean} selected Whether this category is selected.
  */
 Blockly.Toolbox.Category.prototype.setSelected = function(selected) {
-  if (selected) {
-    this.item_.className = 'scratchCategoryMenuItem categorySelected';
-  } else {
-    this.item_.className = 'scratchCategoryMenuItem';
-  }
+  this.item_.className = this.getMenuItemClassName_(selected);
 };
 
 /**

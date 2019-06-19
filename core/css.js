@@ -650,6 +650,7 @@ Blockly.Css.CONTENT = [
 
   '.scratchCommentBody {',
     'background-color: #fef49c;',
+    'border-radius: 4px;',
   '}',
 
   '.scratchCommentRect {',
@@ -818,6 +819,7 @@ Blockly.Css.CONTENT = [
 
   '.blocklyContextMenu {',
     'border-radius: 4px;',
+    'max-height: 100%;',
   '}',
 
   '.blocklyDropdownMenu {',
