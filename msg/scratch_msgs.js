@@ -576,7 +576,7 @@ Blockly.ScratchMsgs.locales["ar"] =
     "NEW_BROADCAST_MESSAGE": "رسالة جديدة",
     "NEW_BROADCAST_MESSAGE_TITLE": "اسم الرسالة الجديدة:",
     "BROADCAST_MODAL_TITLE": "رسالة جديدة",
-    "DEFAULT_BROADCAST_MESSAGE_NAME": "الرسالة ١"
+    "DEFAULT_BROADCAST_MESSAGE_NAME": "الرسالة 1"
 };
 
 Blockly.ScratchMsgs.locales["am"] =
@@ -14177,7 +14177,7 @@ Blockly.ScratchMsgs.locales["sl"] =
     "OPERATORS_LETTEROF": "%1 črka v %2",
     "OPERATORS_LETTEROF_APPLE": "b",
     "OPERATORS_LENGTH": "dolžina %1",
-    "OPERATORS_CONTAINS": "ali %1 vsebuje %2?",
+    "OPERATORS_CONTAINS": "%1 vsebuje %2?",
     "OPERATORS_MOD": "%1 mod %2",
     "OPERATORS_ROUND": "zaokroži %1",
     "OPERATORS_MATHOP": "%1 od %2",
