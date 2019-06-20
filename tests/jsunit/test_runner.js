@@ -1,9 +1,8 @@
-var webdriverio = require('webdriverio');
-var options = {
-    desiredCapabilities: {
-        browserName: 'chrome'
-    }
-};
+require('chromedriver');
+var webdriver = require('selenium-webdriver');
+var browser = new webdriver.Builder()
+  .forBrowser('chrome')
+  .build();
 
 // Parse jsunit html report, exit(1) if there are any failures.
 var testHtml = function (htmlString) {
@@ -24,19 +23,15 @@ var testHtml = function (htmlString) {
 };
 
 var path = process.cwd();
-var browser = webdriverio
-    .remote(options)
-    .init();
 
 browser
-  .url("file://" + path + "/tests/jsunit/vertical_tests.html").pause(5000)
-  .getHTML("#closureTestRunnerLog")
+  .get("file://" + path + "/tests/jsunit/vertical_tests.html")
+  .then(function () { return browser.sleep(5000) })
+  .then(function () { return browser.findElement({id: "closureTestRunnerLog"}) })
+  .then(function (e) { return e.getText() })
   .then(testHtml)
-  .url("file://" + path + "/tests/jsunit/horizontal_tests.html").pause(5000)
-  .getHTML("#closureTestRunnerLog")
-  .then(testHtml)
-  .catch(function(err) {
-    console.log(err);
-    browser.end();
-    process.exit(1);
-  });
+  .then(function () { return browser.get("file://" + path + "/tests/jsunit/horizontal_tests.html")})
+  .then(function () { return browser.sleep(5000) })
+  .then(function () { return browser.findElement({id: "closureTestRunnerLog"}) })
+  .then(function (e) { return e.getText() })
+  .then(testHtml);
