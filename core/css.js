@@ -522,6 +522,11 @@ Blockly.Css.CONTENT = [
     'opacity: 0;',
   '}',
 
+  '.blocklyTouchTargetBackground {',
+    'fill: transparent;',
+    'cursor: pointer;',
+  '}',
+
   '.blocklyFlyoutLabelText {',
     'font-family: "Helvetica Neue", Helvetica, sans-serif;',
     'font-size: 14pt;',
@@ -1260,12 +1265,13 @@ Blockly.Css.CONTENT = [
     'stroke: #c8c8c8;',
   '}',
 
-  '.blocklyFlyoutCheckbox.checked {',
+  '.checked > .blocklyFlyoutCheckbox {',
     'fill: ' + Blockly.Colours.motion.primary + ';',
     'stroke: ' + Blockly.Colours.motion.tertiary + ';',
   '}',
 
   '.blocklyFlyoutCheckboxPath {',
+    'fill: transparent;',
     'stroke: white;',
     'stroke-width: 3;',
     'stroke-linecap: round;',

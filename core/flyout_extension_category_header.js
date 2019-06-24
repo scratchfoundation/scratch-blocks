@@ -77,9 +77,10 @@ Blockly.FlyoutExtensionCategoryHeader.prototype.createDom = function() {
 
   this.refreshStatus();
 
-  var statusButtonWidth = 25;
-  var marginX = 15;
-  var marginY = 10;
+  var statusButtonWidth = 30;
+  var marginX = 20;
+  var marginY = 5;
+  var touchPadding = 16;
 
   var statusButtonX = this.workspace_.RTL ? (marginX - this.flyoutWidth_ + statusButtonWidth) :
       (this.flyoutWidth_ - statusButtonWidth - marginX) / this.workspace_.scale;
@@ -96,12 +97,22 @@ Blockly.FlyoutExtensionCategoryHeader.prototype.createDom = function() {
           'y': marginY + 'px'
         },
         this.svgGroup_);
+    this.imageElementBackground_ = Blockly.utils.createSvgElement(
+        'rect',
+        {
+          'class': 'blocklyTouchTargetBackground',
+          'height': statusButtonWidth + 2 * touchPadding + 'px',
+          'width': statusButtonWidth + 2 * touchPadding + 'px',
+          'x': (statusButtonX - touchPadding) + 'px',
+          'y': (marginY - touchPadding) + 'px'
+        },
+        this.svgGroup_);
     this.setImageSrc(this.imageSrc_);
   }
 
   this.callback_ = Blockly.statusButtonCallback.bind(this, this.extensionId);
 
-  this.mouseUpWrapper_ = Blockly.bindEventWithChecks_(this.imageElement_, 'mouseup',
+  this.mouseUpWrapper_ = Blockly.bindEventWithChecks_(this.imageElementBackground_, 'mouseup',
       this, this.onMouseUp_);
   return this.svgGroup_;
 };
