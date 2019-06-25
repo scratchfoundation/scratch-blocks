@@ -108,7 +108,7 @@ Blockly.Colours = {
   "numPadBackground": "#547AB2",
   "numPadBorder": "#435F91",
   "numPadActiveBackground": "#435F91",
-  "numPadText": "#FFFFFF",
+  "numPadText": "white", // Do not use hex here, it cannot be inlined with data-uri SVG
   "valueReportBackground": "#FFFFFF",
   "valueReportBorder": "#AAAAAA"
 };
