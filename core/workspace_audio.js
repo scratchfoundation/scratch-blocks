@@ -112,7 +112,6 @@ Blockly.WorkspaceAudio.prototype.preload = function() {
   for (var name in this.SOUNDS_) {
     var sound = this.SOUNDS_[name];
     sound.volume = 0.01;
-
     var playPromise = sound.play();
 
     // Edge does not return a promise, so we need to check.
