@@ -119,7 +119,7 @@ Blockly.WorkspaceAudio.prototype.preload = function() {
       // If we don't wait for the play request to complete before calling pause() we will get an exception:
       // Uncaught (in promise) DOMException: The play() request was interrupted by a call to pause().
       // See more: https://developers.google.com/web/updates/2017/06/play-request-was-interrupted
-        playPromise.then(sound.pause).catch(function() {
+      playPromise.then(sound.pause).catch(function() {
         // Play without user interaction was prevented.
       });
     } else {
