@@ -337,6 +337,7 @@ Blockly.WorkspaceCommentSvg.prototype.minimizeArrowMouseUp_ = function(e) {
     this.toggleMinimize_();
   }
   e.stopPropagation();
+  Blockly.Touch.clearTouchIdentifier();
 };
 
 /**
@@ -374,6 +375,7 @@ Blockly.WorkspaceCommentSvg.prototype.deleteMouseUp_ = function(e) {
     this.dispose();
   }
   e.stopPropagation();
+  Blockly.Touch.clearTouchIdentifier();
 };
 
 /**

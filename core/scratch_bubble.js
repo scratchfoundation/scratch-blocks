@@ -354,6 +354,7 @@ Blockly.ScratchBubble.prototype.minimizeArrowMouseUp_ = function(e) {
     }
   }
   e.stopPropagation();
+  Blockly.Touch.clearTouchIdentifier();
 };
 
 /**
@@ -393,6 +394,7 @@ Blockly.ScratchBubble.prototype.deleteMouseUp_ = function(e) {
     }
   }
   e.stopPropagation();
+  Blockly.Touch.clearTouchIdentifier();
 };
 
 /**
