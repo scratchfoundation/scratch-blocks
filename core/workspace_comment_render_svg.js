@@ -187,6 +187,9 @@ Blockly.WorkspaceCommentSvg.prototype.createEditor_ = function() {
   this.textarea_ = textarea;
   this.textarea_.style.margin = (Blockly.WorkspaceCommentSvg.TEXTAREA_OFFSET) + 'px';
   this.foreignObject_.appendChild(body);
+  Blockly.bindEventWithChecks_(textarea, 'mousedown', this, function(e) {
+    textarea.focus();
+  });
   // Don't zoom with mousewheel.
   Blockly.bindEventWithChecks_(textarea, 'wheel', this, function(e) {
     e.stopPropagation();
