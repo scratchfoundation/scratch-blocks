@@ -39,7 +39,7 @@ if sys.version_info[0] != 2:
   raise Exception("Blockly build only compatible with Python 2.x.\n"
                   "You are using: " + sys.version)
 
-import errno, glob, httplib, json, os, re, subprocess, threading, urllib
+import errno, glob, httplib, json, os, re, subprocess, threading, urllib, platform
 
 REMOTE_COMPILER = "remote"
 
@@ -229,6 +229,13 @@ class Gen_compressed(threading.Thread):
     self.gen_blocks("horizontal")
     self.gen_blocks("vertical")
     self.gen_blocks("common")
+    self.gen_generator("arduino")
+    self.gen_generator("dart")
+    self.gen_generator("php")
+    self.gen_generator("python")
+    self.gen_generator("javascript")
+    self.gen_generator("lua")
+
 
   def gen_core(self, vertical):
     if vertical:
@@ -287,7 +294,6 @@ class Gen_compressed(threading.Thread):
     # Add Blockly.Colours for use of centralized colour bank
     filenames.append(os.path.join("core", "colours.js"))
     filenames.append(os.path.join("core", "constants.js"))
-    
     for filename in filenames:
       # Append filenames as false arguments the step before compiling will
       # either transform them into arguments for local or remote compilation
@@ -295,6 +301,28 @@ class Gen_compressed(threading.Thread):
 
     # Remove Blockly.Blocks to be compatible with Blockly.
     remove = "var Blockly={Blocks:{}};"
+    self.do_compile(params, target_filename, filenames, remove)
+
+  def gen_generator(self, language):
+    target_filename = language + "_compressed.js"
+    # Define the parameters for the POST request.
+    params = [
+        ("compilation_level", "SIMPLE_OPTIMIZATIONS"),
+      ]
+
+    # Read in all the source files.
+    # Add Blockly.Generator to be compatible with the compiler.
+    params.append(("js_file", os.path.join("build", "gen_language.js")))
+
+    filenames = glob.glob(
+        os.path.join("generators", language, "*.js"))
+    filenames.insert(0, os.path.join("generators", language + ".js"))
+    for filename in filenames:
+      params.append(("js_file", filename))
+    filenames.insert(0, "[goog.provide]")
+
+    # Remove Blockly.Generator to be compatible with Blockly.
+    remove = "var Blockly={Generator:{}};"
     self.do_compile(params, target_filename, filenames, remove)
 
   def do_compile(self, params, target_filename, filenames, remove):
@@ -309,37 +337,50 @@ class Gen_compressed(threading.Thread):
       self.report_stats(target_filename, json_data)
 
   def do_compile_local(self, params, target_filename):
-      filter_keys = ["use_closure_library"]
+    filter_keys = ["use_closure_library"]
 
-      # Drop arg if arg is js_file else add dashes
-      dash_params = []
-      for (arg, value) in params:
-        dash_params.append((value,) if arg == "js_file" else ("--" + arg, value))
+    # Drop arg if arg is js_file else add dashes
+    dash_params = []
+    for (arg, value) in params:
+      dash_params.append((value,) if arg == "js_file" else ("--" + arg, value))
 
-      # Flatten dash_params into dash_args if their keys are not in filter_keys
-      dash_args = []
-      for pair in dash_params:
-        if pair[0][2:] not in filter_keys:
-          dash_args.extend(pair)
+    # Flatten dash_params into dash_args if their keys are not in filter_keys
+    dash_args = []
+    for pair in dash_params:
+      if pair[0][2:] not in filter_keys:
+        dash_args.extend(pair)
 
-      # Build the final args array by prepending google-closure-compiler to
-      # dash_args and dropping any falsy members
-      args = []
-      for group in [["google-closure-compiler"], dash_args]:
-        args.extend(filter(lambda item: item, group))
+    # Build the final args array by prepending google-closure-compiler to
+    # dash_args and dropping any falsy members
+    # Use a flagfile into the closure compiler.To fix the compilation problems due to commands exceeding 8191 characters in Windows Environment.
+    tmp_data = " ".join(dash_args)
+    tmp_data_list = list(tmp_data)
+    n_pos = [i for i, x in enumerate(tmp_data_list) if x == "\\"]
+    for x in range(len(n_pos)):
+      tmp_data_list.insert(n_pos[len(n_pos) - x - 1], "\\")
+    tmp_data="".join(tmp_data_list)
 
+    f_name = target_filename + ".config"
+    temp_f = open(f_name, "w")
+    temp_f.write(tmp_data)
+    temp_f.close()
+
+    args=[closure_compiler, "--flagfile", f_name]
+    if(platform.system() == "Windows"):
+      proc = subprocess.Popen(args, stdin=subprocess.PIPE, stdout=subprocess.PIPE, shell=True)
+    else:
       proc = subprocess.Popen(args, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
-      (stdout, stderr) = proc.communicate()
+    (stdout, stderr) = proc.communicate()
 
-      # Build the JSON response.
-      filesizes = [os.path.getsize(value) for (arg, value) in params if arg == "js_file"]
-      return dict(
-        compiledCode=stdout,
-        statistics=dict(
-          originalSize=reduce(lambda v, size: v + size, filesizes, 0),
-          compressedSize=len(stdout),
-        )
+    # Build the JSON response.
+    filesizes = [os.path.getsize(value) for (arg, value) in params if arg == "js_file"]
+    return dict(
+      compiledCode=stdout,
+      statistics=dict(
+        originalSize=reduce(lambda v, size: v + size, filesizes, 0),
+        compressedSize=len(stdout),
       )
+    )
 
   def do_compile_remote(self, params, target_filename):
       filter_keys = [
@@ -471,6 +512,7 @@ class Gen_compressed(threading.Thread):
         print("SUCCESS: " + target_filename)
         print("Size changed from %d KB to %d KB (%d%%)." % (
             original_kb, compressed_kb, ratio))
+        os.remove(target_filename + ".config")
       else:
         print("UNKNOWN ERROR")
 
@@ -571,7 +613,10 @@ if __name__ == "__main__":
 
     # Sanity check the local compiler
     test_args = [closure_compiler, os.path.join("build", "test_input.js")]
-    test_proc = subprocess.Popen(test_args, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
+    if(platform.system() == "Windows"):
+      test_proc = subprocess.Popen(test_args, stdin=subprocess.PIPE, stdout=subprocess.PIPE, shell=True)
+    else:
+      test_proc = subprocess.Popen(test_args, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
     (stdout, _) = test_proc.communicate()
     assert stdout == read(os.path.join("build", "test_expect.js"))
 
