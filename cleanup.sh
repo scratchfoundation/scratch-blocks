@@ -64,6 +64,7 @@ blockly_uncompressed.js \
 blockly_accessible_compressed.js \
 blockly_accessible_uncompressed.js \
 blocks_compressed.js \
+arduino_compressed.js\
 dart_compressed.js \
 php_compressed.js \
 python_compressed.js \
