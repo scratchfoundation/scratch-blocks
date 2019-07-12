@@ -36,7 +36,7 @@
 
 import sys
 
-import errno, glob, json, os, re, subprocess, threading, codecs
+import errno, glob, json, os, re, subprocess, threading, codecs, functools
 
 if sys.version_info[0] == 2:
   import httplib
@@ -199,7 +199,7 @@ if (isNodeJS) {
 
     key_whitelist = self.closure_env.keys()
 
-    keys_pipe_separated = reduce(lambda accum, key: accum + "|" + key, key_whitelist)
+    keys_pipe_separated = functools.reduce(lambda accum, key: accum + "|" + key, key_whitelist)
     begin_brace = re.compile(r"\{(?!%s)" % (keys_pipe_separated,))
 
     end_brace = re.compile(r"\}")
@@ -341,7 +341,7 @@ class Gen_compressed(threading.Thread):
       return dict(
         compiledCode=stdout,
         statistics=dict(
-          originalSize=reduce(lambda v, size: v + size, filesizes, 0),
+          originalSize=functools.reduce(lambda v, size: v + size, filesizes, 0),
           compressedSize=len(stdout),
         )
       )
@@ -428,7 +428,7 @@ class Gen_compressed(threading.Thread):
     return False
 
   def write_output(self, target_filename, remove, json_data):
-      if not json_data.has_key("compiledCode"):
+      if "compiledCode" not in json_data:
         print("FATAL ERROR: Compiler did not return compiledCode.")
         sys.exit(1)
 
@@ -608,11 +608,11 @@ if __name__ == "__main__":
   developers.google.com/blockly/guides/modify/web/closure""")
       sys.exit(1)
 
-  search_paths = calcdeps.ExpandDirectories(
-      ["core", os.path.join(closure_root, closure_library)])
+  search_paths = list(calcdeps.ExpandDirectories(
+      ["core", os.path.join(closure_root, closure_library)]))
 
-  search_paths_horizontal = filter(exclude_vertical, search_paths)
-  search_paths_vertical = filter(exclude_horizontal, search_paths)
+  search_paths_horizontal = list(filter(exclude_vertical, search_paths))
+  search_paths_vertical = list(filter(exclude_horizontal, search_paths))
 
   closure_env = {
     "closure_dir": closure_dir,
