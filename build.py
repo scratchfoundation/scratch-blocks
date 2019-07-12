@@ -432,7 +432,7 @@ class Gen_compressed(threading.Thread):
         print("FATAL ERROR: Compiler did not return compiledCode.")
         sys.exit(1)
 
-      code = HEADER + "\n" + json_data["compiledCode"]
+      code = HEADER + "\n" + json_data["compiledCode"].decode("utf-8")
       code = code.replace(remove, "")
 
       # Trim down Google's (and only Google's) Apache licences.
@@ -579,7 +579,7 @@ if __name__ == "__main__":
     test_args = [closure_compiler, os.path.join("build", "test_input.js")]
     test_proc = subprocess.Popen(test_args, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
     (stdout, _) = test_proc.communicate()
-    assert stdout == read(os.path.join("build", "test_expect.js"))
+    assert stdout.decode("utf-8") == read(os.path.join("build", "test_expect.js"))
 
     print("Using local compiler: google-closure-compiler ...\n")
   except (ImportError, AssertionError):
