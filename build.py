@@ -35,11 +35,16 @@
 #   msg/js/<LANG>.js for every language <LANG> defined in msg/js/<LANG>.json.
 
 import sys
-if sys.version_info[0] != 2:
-  raise Exception("Blockly build only compatible with Python 2.x.\n"
-                  "You are using: " + sys.version)
 
-import errno, glob, httplib, json, os, re, subprocess, threading, urllib
+import errno, glob, json, os, re, subprocess, threading, codecs
+
+if sys.version_info[0] == 2:
+  import httplib
+  from urllib import urlencode
+else:
+  import http.client as httplib
+  from urllib.parse import urlencode
+  from importlib import reload
 
 REMOTE_COMPILER = "remote"
 
@@ -373,7 +378,7 @@ class Gen_compressed(threading.Thread):
 
       headers = {"Content-type": "application/x-www-form-urlencoded"}
       conn = httplib.HTTPSConnection("closure-compiler.appspot.com")
-      conn.request("POST", "/compile", urllib.urlencode(remoteParams), headers)
+      conn.request("POST", "/compile", urlencode(remoteParams), headers)
       response = conn.getresponse()
       json_str = response.read()
       conn.close()
@@ -388,12 +393,12 @@ class Gen_compressed(threading.Thread):
       n = int(name[6:]) - 1
       return filenames[n]
 
-    if json_data.has_key("serverErrors"):
+    if "serverErrors" in json_data:
       errors = json_data["serverErrors"]
       for error in errors:
         print("SERVER ERROR: %s" % target_filename)
         print(error["error"])
-    elif json_data.has_key("errors"):
+    elif "errors" in json_data:
       errors = json_data["errors"]
       for error in errors:
         print("FATAL ERROR")
@@ -405,7 +410,7 @@ class Gen_compressed(threading.Thread):
           print((" " * error["charno"]) + "^")
         sys.exit(1)
     else:
-      if json_data.has_key("warnings"):
+      if "warnings" in json_data:
         warnings = json_data["warnings"]
         for warning in warnings:
           print("WARNING")
