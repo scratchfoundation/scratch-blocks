@@ -282,8 +282,9 @@ Blockly.FieldNumber.prototype.addButtons_ = function(contentDiv) {
 /**
  * Call for when a num-pad number or punctuation button is touched.
  * Determine what the user is inputting and update the text field appropriately.
+ * @param {Event} e DOM event triggering the touch.
  */
-Blockly.FieldNumber.numPadButtonTouch = function() {
+Blockly.FieldNumber.numPadButtonTouch = function(e) {
   // String of the button (e.g., '7')
   var spliceValue = this.innerHTML;
   // Old value of the text field
@@ -296,51 +297,61 @@ Blockly.FieldNumber.numPadButtonTouch = function() {
   var newValue = oldValue.slice(0, selectionStart) + spliceValue +
       oldValue.slice(selectionEnd);
 
-  Blockly.FieldNumber.updateDisplay_(newValue);
+  // Set new value and advance the cursor
+  Blockly.FieldNumber.updateDisplay_(newValue, selectionStart + spliceValue.length);
 
   // This is just a click.
   Blockly.Touch.clearTouchIdentifier();
+
+  // Prevent default to not lose input focus
+  e.preventDefault();
 };
 
 /**
  * Call for when the num-pad erase button is touched.
  * Determine what the user is asking to erase, and erase it.
+ * @param {Event} e DOM event triggering the touch.
  */
-Blockly.FieldNumber.numPadEraseButtonTouch = function() {
+Blockly.FieldNumber.numPadEraseButtonTouch = function(e) {
   // Old value of the text field
   var oldValue = Blockly.FieldTextInput.htmlInput_.value;
   // Determine what is selected to erase (if anything)
   var selectionStart = Blockly.FieldTextInput.htmlInput_.selectionStart;
   var selectionEnd = Blockly.FieldTextInput.htmlInput_.selectionEnd;
-  // Cut out anything that was previously selected
+
+  // If selection is zero-length, shift start to the left 1 character
+  if (selectionStart == selectionEnd) {
+    selectionStart = Math.max(0, selectionStart - 1);
+  }
+
+  // Cut out selected range
   var newValue = oldValue.slice(0, selectionStart) +
       oldValue.slice(selectionEnd);
-  if (selectionEnd - selectionStart == 0) { // Length of selection == 0
-    // Delete the last character if nothing was selected
-    newValue = oldValue.slice(0, selectionStart - 1) +
-        oldValue.slice(selectionStart);
-  }
-  Blockly.FieldNumber.updateDisplay_(newValue);
+
+  Blockly.FieldNumber.updateDisplay_(newValue, selectionStart);
 
   // This is just a click.
   Blockly.Touch.clearTouchIdentifier();
+
+  // Prevent default to not lose input focus which resets cursors in Chrome
+  e.preventDefault();
 };
 
 /**
  * Update the displayed value and resize/scroll the text field as needed.
  * @param {string} newValue The new text to display.
+ * @param {string} newSelection The new index to put the cursor
  * @private.
  */
-Blockly.FieldNumber.updateDisplay_ = function(newValue) {
+Blockly.FieldNumber.updateDisplay_ = function(newValue, newSelection) {
+  var htmlInput = Blockly.FieldTextInput.htmlInput_;
   // Updates the display. The actual setValue occurs when editing ends.
-  Blockly.FieldTextInput.htmlInput_.value = newValue;
+  htmlInput.value = newValue;
   // Resize and scroll the text field appropriately
   Blockly.FieldNumber.superClass_.resizeEditor_.call(
       Blockly.FieldNumber.activeField_);
-  Blockly.FieldTextInput.htmlInput_.setSelectionRange(newValue.length,
-      newValue.length);
-  Blockly.FieldTextInput.htmlInput_.scrollLeft =
-      Blockly.FieldTextInput.htmlInput_.scrollWidth;
+  htmlInput.setSelectionRange(newSelection, newSelection);
+  htmlInput.scrollLeft = htmlInput.scrollWidth;
   Blockly.FieldNumber.activeField_.validate_();
 };
 
