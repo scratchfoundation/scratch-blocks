@@ -278,7 +278,7 @@ Blockly.FieldTextInput.prototype.showEditor_ = function(
     htmlInput.setSelectionRange(0, 99999);
   }
 
-  this.bindEvents_(htmlInput);
+  this.bindEvents_(htmlInput, quietInput || readOnly);
 
   // Add animation transition properties
   var transitionProperties = 'box-shadow ' + Blockly.FieldTextInput.ANIMATION_TIME + 's';
@@ -299,9 +299,12 @@ Blockly.FieldTextInput.prototype.showEditor_ = function(
  * Bind handlers for user input on this field and size changes on the workspace.
  * @param {!HTMLInputElement} htmlInput The htmlInput created in showEditor, to
  *     which event handlers will be bound.
+ * @param {boolean} bindGlobalKeypress Whether to bind a keypress listener to enable
+ *     keyboard editing without focusing the field.
  * @private
  */
-Blockly.FieldTextInput.prototype.bindEvents_ = function(htmlInput) {
+Blockly.FieldTextInput.prototype.bindEvents_ = function(
+    htmlInput, bindGlobalKeypress) {
   // Bind to keydown -- trap Enter without IME and Esc to hide.
   htmlInput.onKeyDownWrapper_ =
       Blockly.bindEventWithChecks_(htmlInput, 'keydown', this,
@@ -322,6 +325,12 @@ Blockly.FieldTextInput.prototype.bindEvents_ = function(htmlInput) {
       Blockly.bindEvent_(htmlInput, 'input', this, this.onHtmlInputChange_);
   htmlInput.onWorkspaceChangeWrapper_ = this.resizeEditor_.bind(this);
   this.workspace_.addChangeListener(htmlInput.onWorkspaceChangeWrapper_);
+
+  if (bindGlobalKeypress) {
+    htmlInput.onDocumentKeyDownWrapper_ =
+      Blockly.bindEventWithChecks_(document, 'keydown', this,
+          this.onDocumentKeyDown_);
+  }
 };
 
 /**
@@ -336,6 +345,11 @@ Blockly.FieldTextInput.prototype.unbindEvents_ = function(htmlInput) {
   Blockly.unbindEvent_(htmlInput.onInputWrapper_);
   this.workspace_.removeChangeListener(
       htmlInput.onWorkspaceChangeWrapper_);
+
+  // Remove document handler only if it was added (e.g. in quiet mode)
+  if (htmlInput.onDocumentKeyDownWrapper_) {
+    Blockly.unbindEvent_(htmlInput.onDocumentKeyDownWrapper_);
+  }
 };
 
 /**
@@ -358,6 +372,19 @@ Blockly.FieldTextInput.prototype.onHtmlInputKeyDown_ = function(e) {
     Blockly.DropDownDiv.hideWithoutAnimation();
     this.sourceBlock_.tab(this, !e.shiftKey);
     e.preventDefault();
+  }
+};
+
+Blockly.FieldTextInput.prototype.onDocumentKeyDown_ = function(e) {
+  var htmlInput = Blockly.FieldTextInput.htmlInput_;
+  var targetMatches = e.target === htmlInput;
+  var targetIsInput = e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA';
+  if (targetMatches || !targetIsInput) { // Ignore keys into other inputs
+    htmlInput.removeAttribute('readonly');
+    htmlInput.value = ''; // Reset the input, new value is picked up by input keypress
+    htmlInput.focus();
+    Blockly.unbindEvent_(htmlInput.onDocumentKeyDownWrapper_);
+    htmlInput.onDocumentKeyDownWrapper_ = null;
   }
 };
 
