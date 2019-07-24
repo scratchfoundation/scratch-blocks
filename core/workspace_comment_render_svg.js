@@ -685,7 +685,6 @@ Blockly.WorkspaceCommentSvg.prototype.blurFocus = function() {
   // TODO (github.com/google/blockly/issues/1848): Fix warnings when the comment
   // has already been deleted.
   setTimeout(function() {
-
     comment.removeFocus();
     Blockly.utils.removeClass(
         comment.svgRectTarget_, 'scratchCommentTargetFocused');
