@@ -149,17 +149,17 @@ Blockly.WorkspaceCommentSvg.prototype.render = function() {
   }
 
   Blockly.bindEventWithChecks_(
-      this.minimizeArrow_, 'mousedown', this, this.minimizeArrowMouseDown_);
+      this.minimizeArrow_, 'mousedown', this, this.minimizeArrowMouseDown_, true);
   Blockly.bindEventWithChecks_(
-      this.minimizeArrow_, 'mouseout', this, this.minimizeArrowMouseOut_);
+      this.minimizeArrow_, 'mouseout', this, this.minimizeArrowMouseOut_, true);
   Blockly.bindEventWithChecks_(
-      this.minimizeArrow_, 'mouseup', this, this.minimizeArrowMouseUp_);
+      this.minimizeArrow_, 'mouseup', this, this.minimizeArrowMouseUp_, true);
   Blockly.bindEventWithChecks_(
-      this.deleteIcon_, 'mousedown', this, this.deleteMouseDown_);
+      this.deleteIcon_, 'mousedown', this, this.deleteMouseDown_, true);
   Blockly.bindEventWithChecks_(
-      this.deleteIcon_, 'mouseout', this, this.deleteMouseOut_);
+      this.deleteIcon_, 'mouseout', this, this.deleteMouseOut_, true);
   Blockly.bindEventWithChecks_(
-      this.deleteIcon_, 'mouseup', this, this.deleteMouseUp_);
+      this.deleteIcon_, 'mouseup', this, this.deleteMouseUp_, true);
 };
 
 /**
