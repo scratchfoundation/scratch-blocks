@@ -685,13 +685,13 @@ Blockly.WorkspaceCommentSvg.prototype.blurFocus = function() {
   this.focused_ = false;
   comment.textarea_.blur();
   // Defer CSS changes.
-  // TODO (github.com/google/blockly/issues/1848): Fix warnings when the comment
-  // has already been deleted.
   setTimeout(function() {
-    comment.removeFocus();
-    Blockly.utils.removeClass(
-        comment.svgRectTarget_, 'scratchCommentTargetFocused');
-    Blockly.utils.removeClass(
-        comment.svgHandleTarget_, 'scratchCommentHandleTargetFocused');
+    if (comment.svgGroup_) { // Could have been deleted in the meantime
+      comment.removeFocus();
+      Blockly.utils.removeClass(
+          comment.svgRectTarget_, 'scratchCommentTargetFocused');
+      Blockly.utils.removeClass(
+          comment.svgHandleTarget_, 'scratchCommentHandleTargetFocused');
+    }
   }, 0);
 };
