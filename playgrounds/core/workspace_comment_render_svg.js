@@ -662,9 +662,9 @@ Blockly.WorkspaceCommentSvg.prototype.disposeInternal_ = function() {
 Blockly.WorkspaceCommentSvg.prototype.setFocus = function() {
   var comment = this;
   this.focused_ = true;
+  comment.textarea_.focus();
   // Defer CSS changes.
   setTimeout(function() {
-    comment.textarea_.focus();
     comment.addFocus();
     Blockly.utils.addClass(
         comment.svgRectTarget_, 'scratchCommentTargetFocused');
@@ -680,11 +680,11 @@ Blockly.WorkspaceCommentSvg.prototype.setFocus = function() {
 Blockly.WorkspaceCommentSvg.prototype.blurFocus = function() {
   var comment = this;
   this.focused_ = false;
+  comment.textarea_.blur();
   // Defer CSS changes.
   // TODO (github.com/google/blockly/issues/1848): Fix warnings when the comment
   // has already been deleted.
   setTimeout(function() {
-    comment.textarea_.blur();
     comment.removeFocus();
     Blockly.utils.removeClass(
         comment.svgRectTarget_, 'scratchCommentTargetFocused');
