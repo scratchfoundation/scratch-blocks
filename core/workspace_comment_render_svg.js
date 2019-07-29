@@ -113,7 +113,7 @@ Blockly.WorkspaceCommentSvg.prototype.render = function() {
       {
         'class': 'blocklyDraggable scratchCommentTarget',
         'x': 0,
-        'y': 0,
+        'y': Blockly.WorkspaceCommentSvg.TOP_BAR_HEIGHT,
         'rx': 4 * Blockly.WorkspaceCommentSvg.BORDER_WIDTH,
         'ry': 4 * Blockly.WorkspaceCommentSvg.BORDER_WIDTH
       });
@@ -564,7 +564,7 @@ Blockly.WorkspaceCommentSvg.prototype.setSize = function(width, height) {
   this.svgRect_.setAttribute('width', width);
   this.svgRect_.setAttribute('height', height);
   this.svgRectTarget_.setAttribute('width', width);
-  this.svgRectTarget_.setAttribute('height', height);
+  this.svgRectTarget_.setAttribute('height', height - Blockly.WorkspaceCommentSvg.TOP_BAR_HEIGHT);
   this.svgHandleTarget_.setAttribute('width', width);
   this.svgHandleTarget_.setAttribute('height', Blockly.WorkspaceCommentSvg.TOP_BAR_HEIGHT);
   if (this.RTL) {
