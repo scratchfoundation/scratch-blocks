@@ -231,7 +231,8 @@ Blockly.ScratchBlockComment.prototype.createEditor_ = function() {
   this.textarea_ = textarea;
   this.textarea_.style.margin = (Blockly.ScratchBlockComment.TEXTAREA_OFFSET) + 'px';
   this.foreignObject_.appendChild(body);
-  Blockly.bindEventWithChecks_(textarea, 'mousedown', this, this.textareaFocus_);
+  Blockly.bindEventWithChecks_(textarea, 'mousedown', this,
+      this.textareaFocus_, true, true); // noCapture and do not prevent default
   // Don't zoom with mousewheel.
   Blockly.bindEventWithChecks_(textarea, 'wheel', this, function(e) {
     e.stopPropagation();
@@ -255,6 +256,18 @@ Blockly.ScratchBlockComment.prototype.createEditor_ = function() {
     labelText: this.label_
   };
 };
+
+/**
+ * Handle text area click, make sure to stop propagation to allow default selection behavior.
+ * @param {!Event} e Mouse up event.
+ * @private
+ */
+Blockly.ScratchBlockComment.prototype.textareaFocus_ = function(e) {
+  Blockly.ScratchBlockComment.superClass_.textareaFocus_.call(this, e);
+  // Stop event from propagating to the workspace to make sure preventDefault _is not called_.
+  e.stopPropagation();
+};
+
 
 /**
  * Callback function triggered when the bubble has resized.
