@@ -244,9 +244,6 @@ Blockly.ScratchBlockComment.prototype.createEditor_ = function() {
       this.text_ = textarea.value;
     }
   });
-  setTimeout(function() {
-    textarea.focus();
-  }, 0);
 
   // Label for comment top bar when comment is minimized
   this.label_ = this.getLabelText();
@@ -636,4 +633,11 @@ Blockly.ScratchBlockComment.prototype.dispose = function() {
   this.block_.comment = null;
   this.workspace.removeTopComment(this);
   Blockly.Icon.prototype.dispose.call(this);
+};
+
+/**
+ * Focus this comments textarea.
+ */
+Blockly.ScratchBlockComment.prototype.focus = function() {
+  this.textarea_.focus();
 };

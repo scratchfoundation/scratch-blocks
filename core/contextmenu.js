@@ -293,6 +293,7 @@ Blockly.ContextMenu.blockCommentOption = function(block) {
     commentOption.text = Blockly.Msg.ADD_COMMENT;
     commentOption.callback = function() {
       block.setCommentText('');
+      block.comment.focus();
     };
   }
   return commentOption;
