@@ -227,6 +227,7 @@ Blockly.ScratchBlockComment.prototype.createEditor_ = function() {
   textarea.className = 'scratchCommentTextarea scratchCommentText';
   textarea.setAttribute('dir', this.block_.RTL ? 'RTL' : 'LTR');
   textarea.setAttribute('maxlength', Blockly.ScratchBlockComment.COMMENT_TEXT_LIMIT);
+  textarea.setAttribute('placeholder', Blockly.Msg.WORKSPACE_COMMENT_DEFAULT_TEXT);
   body.appendChild(textarea);
   this.textarea_ = textarea;
   this.textarea_.style.margin = (Blockly.ScratchBlockComment.TEXTAREA_OFFSET) + 'px';

@@ -292,7 +292,7 @@ Blockly.ContextMenu.blockCommentOption = function(block) {
     // If there's no comment, add an option to create a comment.
     commentOption.text = Blockly.Msg.ADD_COMMENT;
     commentOption.callback = function() {
-      block.setCommentText(Blockly.Msg.WORKSPACE_COMMENT_DEFAULT_TEXT);
+      block.setCommentText('');
     };
   }
   return commentOption;
@@ -468,8 +468,7 @@ Blockly.ContextMenu.workspaceCommentOption = function(ws, e) {
       disabled = true;
     }
     var comment = new Blockly.WorkspaceCommentSvg(
-        ws, Blockly.Msg.WORKSPACE_COMMENT_DEFAULT_TEXT,
-        Blockly.WorkspaceCommentSvg.DEFAULT_SIZE,
+        ws, '', Blockly.WorkspaceCommentSvg.DEFAULT_SIZE,
         Blockly.WorkspaceCommentSvg.DEFAULT_SIZE, false);
 
     var injectionDiv = ws.getInjectionDiv();
