@@ -257,8 +257,7 @@ Blockly.ScratchBubble.prototype.createTopBarIcons_ = function() {
         'x': xInset,
         'y': topBarMiddleY - Blockly.ScratchBubble.MINIMIZE_ICON_SIZE / 2,
         'width': Blockly.ScratchBubble.MINIMIZE_ICON_SIZE,
-        'height': Blockly.ScratchBubble.MINIMIZE_ICON_SIZE,
-        'style' : 'cursor: pointer;'
+        'height': Blockly.ScratchBubble.MINIMIZE_ICON_SIZE
       }, this.bubbleGroup_);
 
   // Delete Icon in Comment Top Bar
@@ -267,8 +266,7 @@ Blockly.ScratchBubble.prototype.createTopBarIcons_ = function() {
         'x': xInset,
         'y': topBarMiddleY - Blockly.ScratchBubble.DELETE_ICON_SIZE / 2,
         'width': Blockly.ScratchBubble.DELETE_ICON_SIZE,
-        'height': Blockly.ScratchBubble.DELETE_ICON_SIZE,
-        'style' : 'cursor: pointer;'
+        'height': Blockly.ScratchBubble.DELETE_ICON_SIZE
       }, this.bubbleGroup_);
   this.deleteIcon_.setAttributeNS('http://www.w3.org/1999/xlink',
       'xlink:href', Blockly.mainWorkspace.options.pathToMedia + 'delete-x.svg');
