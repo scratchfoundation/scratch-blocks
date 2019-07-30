@@ -42,7 +42,7 @@ Blockly.WorkspaceCommentSvg.BORDER_WIDTH = 1;
  * @const
  * @private
  */
-Blockly.WorkspaceCommentSvg.RESIZE_SIZE = 12 * Blockly.WorkspaceCommentSvg.BORDER_WIDTH;
+Blockly.WorkspaceCommentSvg.RESIZE_SIZE = 16;
 
 /**
  * Offset from the foreignobject edge to the textarea edge.
@@ -75,6 +75,20 @@ Blockly.WorkspaceCommentSvg.DELETE_ICON_SIZE = 32;
  * @private
  */
 Blockly.WorkspaceCommentSvg.TOP_BAR_ICON_INSET = 0;
+
+/**
+ * The bottom corner padding of the resize handle touch target.
+ * Extends slightly outside the comment box.
+ * @private
+ */
+Blockly.WorkspaceCommentSvg.RESIZE_CORNER_PAD = 4;
+
+/**
+ * The top/side padding around resize handle touch target.
+ * Extends about one extra "diagonal" above resize handle.
+ * @private
+ */
+Blockly.WorkspaceCommentSvg.RESIZE_OUTER_PAD = 8;
 
 /**
  * Width that a minimized comment should have.
@@ -214,9 +228,18 @@ Blockly.WorkspaceCommentSvg.prototype.addResizeDom_ = function() {
       },
       this.svgGroup_);
   var resizeSize = Blockly.WorkspaceCommentSvg.RESIZE_SIZE;
-  Blockly.utils.createSvgElement(
-      'polygon',
-      {'points': '0,x x,x x,0'.replace(/x/g, resizeSize.toString())},
+  var outerPad = Blockly.ScratchBubble.RESIZE_OUTER_PAD;
+  var cornerPad = Blockly.ScratchBubble.RESIZE_CORNER_PAD;
+  // Build an (invisible) triangle that will catch resizes. It is padded on the
+  // top/left by outerPad, and padded down/right by cornerPad.
+  Blockly.utils.createSvgElement('polygon',
+      {
+        'points': [
+          -outerPad, resizeSize + cornerPad,
+          resizeSize + cornerPad, resizeSize + cornerPad,
+          resizeSize + cornerPad, -outerPad
+        ].join(' ')
+      },
       this.resizeGroup_);
   Blockly.utils.createSvgElement(
       'line',

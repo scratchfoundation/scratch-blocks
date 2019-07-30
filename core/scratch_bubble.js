@@ -152,6 +152,27 @@ Blockly.ScratchBubble.DELETE_ICON_SIZE = 32;
  */
 Blockly.ScratchBubble.TOP_BAR_ICON_INSET = 0;
 
+
+/**
+ * The inset for the top bar icons.
+ * @private
+ */
+Blockly.ScratchBubble.RESIZE_SIZE = 16;
+
+/**
+ * The bottom corner padding of the resize handle touch target.
+ * Extends slightly outside the comment box.
+ * @private
+ */
+Blockly.ScratchBubble.RESIZE_CORNER_PAD = 4;
+
+/**
+ * The top/side padding around resize handle touch target.
+ * Extends about one extra "diagonal" above resize handle.
+ * @private
+ */
+Blockly.ScratchBubble.RESIZE_OUTER_PAD = 8;
+
 /**
  * Create the bubble's DOM.
  * @param {!Element} content SVG content for the bubble.
@@ -236,7 +257,8 @@ Blockly.ScratchBubble.prototype.createTopBarIcons_ = function() {
         'x': xInset,
         'y': topBarMiddleY - Blockly.ScratchBubble.MINIMIZE_ICON_SIZE / 2,
         'width': Blockly.ScratchBubble.MINIMIZE_ICON_SIZE,
-        'height': Blockly.ScratchBubble.MINIMIZE_ICON_SIZE
+        'height': Blockly.ScratchBubble.MINIMIZE_ICON_SIZE,
+        'style' : 'cursor: pointer;'
       }, this.bubbleGroup_);
 
   // Delete Icon in Comment Top Bar
@@ -245,7 +267,8 @@ Blockly.ScratchBubble.prototype.createTopBarIcons_ = function() {
         'x': xInset,
         'y': topBarMiddleY - Blockly.ScratchBubble.DELETE_ICON_SIZE / 2,
         'width': Blockly.ScratchBubble.DELETE_ICON_SIZE,
-        'height': Blockly.ScratchBubble.DELETE_ICON_SIZE
+        'height': Blockly.ScratchBubble.DELETE_ICON_SIZE,
+        'style' : 'cursor: pointer;'
       }, this.bubbleGroup_);
   this.deleteIcon_.setAttributeNS('http://www.w3.org/1999/xlink',
       'xlink:href', Blockly.mainWorkspace.options.pathToMedia + 'delete-x.svg');
@@ -279,9 +302,19 @@ Blockly.ScratchBubble.prototype.createResizeHandle_ = function() {
       {'class': this.workspace_.RTL ?
                 'scratchCommentResizeSW' : 'scratchCommentResizeSE'},
       this.bubbleGroup_);
-  var resizeSize = 12 * Blockly.ScratchBubble.BORDER_WIDTH;
+  var resizeSize = Blockly.ScratchBubble.RESIZE_SIZE;
+  var outerPad = Blockly.ScratchBubble.RESIZE_OUTER_PAD;
+  var cornerPad = Blockly.ScratchBubble.RESIZE_CORNER_PAD;
+  // Build an (invisible) triangle that will catch resizes. It is padded on the
+  // top/left by outerPad, and padded down/right by cornerPad.
   Blockly.utils.createSvgElement('polygon',
-      {'points': '0,x x,x x,0'.replace(/x/g, resizeSize.toString())},
+      {
+        'points': [
+          -outerPad, resizeSize + cornerPad,
+          resizeSize + cornerPad, resizeSize + cornerPad,
+          resizeSize + cornerPad, -outerPad
+        ].join(' ')
+      },
       this.resizeGroup_);
   Blockly.utils.createSvgElement('line',
       {
@@ -547,7 +580,7 @@ Blockly.ScratchBubble.prototype.setBubbleSize = function(width, height) {
         Blockly.ScratchBubble.TOP_BAR_ICON_INSET);
   }
   if (this.resizeGroup_) {
-    var resizeSize = 12 * Blockly.ScratchBubble.BORDER_WIDTH;
+    var resizeSize = Blockly.ScratchBubble.RESIZE_SIZE;
     if (this.workspace_.RTL) {
       // Mirror the resize group.
       this.resizeGroup_.setAttribute('transform', 'translate(' +
