@@ -601,6 +601,8 @@ Blockly.WorkspaceCommentSvg.prototype.setSize = function(width, height) {
     this.svgHandleTarget_.setAttribute('transform', 'translate(' + -width + ', 1)');
     this.minimizeArrow_.setAttribute('transform', 'translate(' + -width + ', 1)');
     this.deleteIcon_.setAttribute('tranform', 'translate(' + -width + ', 1)');
+    this.svgRectTarget_.setAttribute('transform', 'translate(' + -width + ', 1)');
+    this.topBarLabel_.setAttribute('transform', 'translate(' + -width + ', 1)');
   } else {
     this.deleteIcon_.setAttribute('x', width -
         Blockly.WorkspaceCommentSvg.DELETE_ICON_SIZE -
