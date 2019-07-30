@@ -589,7 +589,8 @@ Blockly.WorkspaceCommentSvg.prototype.setSize = function(width, height) {
     if (this.RTL) {
       // Mirror the resize group.
       this.resizeGroup_.setAttribute('transform', 'translate(' +
-        (-width + resizeSize) + ',' + (height - resizeSize) + ') scale(-1 1)');
+        (-width + doubleBorderWidth + resizeSize) + ',' +
+        (height - doubleBorderWidth - resizeSize) + ') scale(-1 1)');
     } else {
       this.resizeGroup_.setAttribute('transform', 'translate(' +
         (width - doubleBorderWidth - resizeSize) + ',' +
