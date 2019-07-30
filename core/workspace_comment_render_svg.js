@@ -62,19 +62,19 @@ Blockly.WorkspaceCommentSvg.TOP_BAR_HEIGHT = 32;
  * The size of the minimize arrow icon in the comment top bar.
  * @private
  */
-Blockly.WorkspaceCommentSvg.MINIMIZE_ICON_SIZE = 16;
+Blockly.WorkspaceCommentSvg.MINIMIZE_ICON_SIZE = 32;
 
 /**
  * The size of the delete icon in the comment top bar.
  * @private
  */
-Blockly.WorkspaceCommentSvg.DELETE_ICON_SIZE = 12;
+Blockly.WorkspaceCommentSvg.DELETE_ICON_SIZE = 32;
 
 /**
  * The inset for the top bar icons.
  * @private
  */
-Blockly.WorkspaceCommentSvg.TOP_BAR_ICON_INSET = 6;
+Blockly.WorkspaceCommentSvg.TOP_BAR_ICON_INSET = 0;
 
 /**
  * Width that a minimized comment should have.

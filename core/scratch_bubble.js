@@ -138,19 +138,19 @@ Blockly.ScratchBubble.TOP_BAR_HEIGHT = 32;
  * The size of the minimize arrow icon in the comment top bar.
  * @private
  */
-Blockly.ScratchBubble.MINIMIZE_ICON_SIZE = 16;
+Blockly.ScratchBubble.MINIMIZE_ICON_SIZE = 32;
 
 /**
  * The size of the delete icon in the comment top bar.
  * @private
  */
-Blockly.ScratchBubble.DELETE_ICON_SIZE = 12;
+Blockly.ScratchBubble.DELETE_ICON_SIZE = 32;
 
 /**
  * The inset for the top bar icons.
  * @private
  */
-Blockly.ScratchBubble.TOP_BAR_ICON_INSET = 6;
+Blockly.ScratchBubble.TOP_BAR_ICON_INSET = 0;
 
 /**
  * Create the bubble's DOM.
