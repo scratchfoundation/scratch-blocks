@@ -113,7 +113,7 @@ Blockly.WorkspaceCommentSvg.prototype.render = function() {
       {
         'class': 'blocklyDraggable scratchCommentTarget',
         'x': 0,
-        'y': 0,
+        'y': Blockly.WorkspaceCommentSvg.TOP_BAR_HEIGHT,
         'rx': 4 * Blockly.WorkspaceCommentSvg.BORDER_WIDTH,
         'ry': 4 * Blockly.WorkspaceCommentSvg.BORDER_WIDTH
       });
@@ -149,17 +149,17 @@ Blockly.WorkspaceCommentSvg.prototype.render = function() {
   }
 
   Blockly.bindEventWithChecks_(
-      this.minimizeArrow_, 'mousedown', this, this.minimizeArrowMouseDown_);
+      this.minimizeArrow_, 'mousedown', this, this.minimizeArrowMouseDown_, true);
   Blockly.bindEventWithChecks_(
-      this.minimizeArrow_, 'mouseout', this, this.minimizeArrowMouseOut_);
+      this.minimizeArrow_, 'mouseout', this, this.minimizeArrowMouseOut_, true);
   Blockly.bindEventWithChecks_(
-      this.minimizeArrow_, 'mouseup', this, this.minimizeArrowMouseUp_);
+      this.minimizeArrow_, 'mouseup', this, this.minimizeArrowMouseUp_, true);
   Blockly.bindEventWithChecks_(
-      this.deleteIcon_, 'mousedown', this, this.deleteMouseDown_);
+      this.deleteIcon_, 'mousedown', this, this.deleteMouseDown_, true);
   Blockly.bindEventWithChecks_(
-      this.deleteIcon_, 'mouseout', this, this.deleteMouseOut_);
+      this.deleteIcon_, 'mouseout', this, this.deleteMouseOut_, true);
   Blockly.bindEventWithChecks_(
-      this.deleteIcon_, 'mouseup', this, this.deleteMouseUp_);
+      this.deleteIcon_, 'mouseup', this, this.deleteMouseUp_, true);
 };
 
 /**
@@ -187,6 +187,9 @@ Blockly.WorkspaceCommentSvg.prototype.createEditor_ = function() {
   this.textarea_ = textarea;
   this.textarea_.style.margin = (Blockly.WorkspaceCommentSvg.TEXTAREA_OFFSET) + 'px';
   this.foreignObject_.appendChild(body);
+  Blockly.bindEventWithChecks_(textarea, 'mousedown', this, function(e) {
+    e.stopPropagation(); // Propagation causes preventDefault from workspace handler
+  }, true, true);
   // Don't zoom with mousewheel.
   Blockly.bindEventWithChecks_(textarea, 'wheel', this, function(e) {
     e.stopPropagation();
@@ -564,7 +567,7 @@ Blockly.WorkspaceCommentSvg.prototype.setSize = function(width, height) {
   this.svgRect_.setAttribute('width', width);
   this.svgRect_.setAttribute('height', height);
   this.svgRectTarget_.setAttribute('width', width);
-  this.svgRectTarget_.setAttribute('height', height);
+  this.svgRectTarget_.setAttribute('height', height - Blockly.WorkspaceCommentSvg.TOP_BAR_HEIGHT);
   this.svgHandleTarget_.setAttribute('width', width);
   this.svgHandleTarget_.setAttribute('height', Blockly.WorkspaceCommentSvg.TOP_BAR_HEIGHT);
   if (this.RTL) {
@@ -682,13 +685,13 @@ Blockly.WorkspaceCommentSvg.prototype.blurFocus = function() {
   this.focused_ = false;
   comment.textarea_.blur();
   // Defer CSS changes.
-  // TODO (github.com/google/blockly/issues/1848): Fix warnings when the comment
-  // has already been deleted.
   setTimeout(function() {
-    comment.removeFocus();
-    Blockly.utils.removeClass(
-        comment.svgRectTarget_, 'scratchCommentTargetFocused');
-    Blockly.utils.removeClass(
-        comment.svgHandleTarget_, 'scratchCommentHandleTargetFocused');
+    if (comment.svgGroup_) { // Could have been deleted in the meantime
+      comment.removeFocus();
+      Blockly.utils.removeClass(
+          comment.svgRectTarget_, 'scratchCommentTargetFocused');
+      Blockly.utils.removeClass(
+          comment.svgHandleTarget_, 'scratchCommentHandleTargetFocused');
+    }
   }, 0);
 };
