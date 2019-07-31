@@ -42,7 +42,7 @@ Blockly.WorkspaceCommentSvg.BORDER_WIDTH = 1;
  * @const
  * @private
  */
-Blockly.WorkspaceCommentSvg.RESIZE_SIZE = 12 * Blockly.WorkspaceCommentSvg.BORDER_WIDTH;
+Blockly.WorkspaceCommentSvg.RESIZE_SIZE = 16;
 
 /**
  * Offset from the foreignobject edge to the textarea edge.
@@ -62,19 +62,33 @@ Blockly.WorkspaceCommentSvg.TOP_BAR_HEIGHT = 32;
  * The size of the minimize arrow icon in the comment top bar.
  * @private
  */
-Blockly.WorkspaceCommentSvg.MINIMIZE_ICON_SIZE = 16;
+Blockly.WorkspaceCommentSvg.MINIMIZE_ICON_SIZE = 32;
 
 /**
  * The size of the delete icon in the comment top bar.
  * @private
  */
-Blockly.WorkspaceCommentSvg.DELETE_ICON_SIZE = 12;
+Blockly.WorkspaceCommentSvg.DELETE_ICON_SIZE = 32;
 
 /**
  * The inset for the top bar icons.
  * @private
  */
-Blockly.WorkspaceCommentSvg.TOP_BAR_ICON_INSET = 6;
+Blockly.WorkspaceCommentSvg.TOP_BAR_ICON_INSET = 0;
+
+/**
+ * The bottom corner padding of the resize handle touch target.
+ * Extends slightly outside the comment box.
+ * @private
+ */
+Blockly.WorkspaceCommentSvg.RESIZE_CORNER_PAD = 4;
+
+/**
+ * The top/side padding around resize handle touch target.
+ * Extends about one extra "diagonal" above resize handle.
+ * @private
+ */
+Blockly.WorkspaceCommentSvg.RESIZE_OUTER_PAD = 8;
 
 /**
  * Width that a minimized comment should have.
@@ -218,9 +232,18 @@ Blockly.WorkspaceCommentSvg.prototype.addResizeDom_ = function() {
       },
       this.svgGroup_);
   var resizeSize = Blockly.WorkspaceCommentSvg.RESIZE_SIZE;
-  Blockly.utils.createSvgElement(
-      'polygon',
-      {'points': '0,x x,x x,0'.replace(/x/g, resizeSize.toString())},
+  var outerPad = Blockly.ScratchBubble.RESIZE_OUTER_PAD;
+  var cornerPad = Blockly.ScratchBubble.RESIZE_CORNER_PAD;
+  // Build an (invisible) triangle that will catch resizes. It is padded on the
+  // top/left by outerPad, and padded down/right by cornerPad.
+  Blockly.utils.createSvgElement('polygon',
+      {
+        'points': [
+          -outerPad, resizeSize + cornerPad,
+          resizeSize + cornerPad, resizeSize + cornerPad,
+          resizeSize + cornerPad, -outerPad
+        ].join(' ')
+      },
       this.resizeGroup_);
   Blockly.utils.createSvgElement(
       'line',
@@ -576,13 +599,14 @@ Blockly.WorkspaceCommentSvg.prototype.setSize = function(width, height) {
         (Blockly.WorkspaceCommentSvg.MINIMIZE_ICON_SIZE) -
         Blockly.WorkspaceCommentSvg.TOP_BAR_ICON_INSET);
     this.deleteIcon_.setAttribute('x', (-width +
-        Blockly.WorkspaceCommentSvg.DELETE_ICON_SIZE -
         Blockly.WorkspaceCommentSvg.TOP_BAR_ICON_INSET));
     this.svgRect_.setAttribute('transform', 'scale(-1 1)');
     this.svgHandleTarget_.setAttribute('transform', 'scale(-1 1)');
     this.svgHandleTarget_.setAttribute('transform', 'translate(' + -width + ', 1)');
     this.minimizeArrow_.setAttribute('transform', 'translate(' + -width + ', 1)');
     this.deleteIcon_.setAttribute('tranform', 'translate(' + -width + ', 1)');
+    this.svgRectTarget_.setAttribute('transform', 'translate(' + -width + ', 1)');
+    this.topBarLabel_.setAttribute('transform', 'translate(' + -width + ', 1)');
   } else {
     this.deleteIcon_.setAttribute('x', width -
         Blockly.WorkspaceCommentSvg.DELETE_ICON_SIZE -
@@ -594,7 +618,8 @@ Blockly.WorkspaceCommentSvg.prototype.setSize = function(width, height) {
     if (this.RTL) {
       // Mirror the resize group.
       this.resizeGroup_.setAttribute('transform', 'translate(' +
-        (-width + resizeSize) + ',' + (height - resizeSize) + ') scale(-1 1)');
+        (-width + doubleBorderWidth + resizeSize) + ',' +
+        (height - doubleBorderWidth - resizeSize) + ') scale(-1 1)');
     } else {
       this.resizeGroup_.setAttribute('transform', 'translate(' +
         (width - doubleBorderWidth - resizeSize) + ',' +
