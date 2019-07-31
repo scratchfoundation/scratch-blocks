@@ -227,6 +227,7 @@ Blockly.ScratchBlockComment.prototype.createEditor_ = function() {
   textarea.className = 'scratchCommentTextarea scratchCommentText';
   textarea.setAttribute('dir', this.block_.RTL ? 'RTL' : 'LTR');
   textarea.setAttribute('maxlength', Blockly.ScratchBlockComment.COMMENT_TEXT_LIMIT);
+  textarea.setAttribute('placeholder', Blockly.Msg.WORKSPACE_COMMENT_DEFAULT_TEXT);
   body.appendChild(textarea);
   this.textarea_ = textarea;
   this.textarea_.style.margin = (Blockly.ScratchBlockComment.TEXTAREA_OFFSET) + 'px';
@@ -244,9 +245,6 @@ Blockly.ScratchBlockComment.prototype.createEditor_ = function() {
       this.text_ = textarea.value;
     }
   });
-  setTimeout(function() {
-    textarea.focus();
-  }, 0);
 
   // Label for comment top bar when comment is minimized
   this.label_ = this.getLabelText();
@@ -648,4 +646,11 @@ Blockly.ScratchBlockComment.prototype.dispose = function() {
   this.block_.comment = null;
   this.workspace.removeTopComment(this);
   Blockly.Icon.prototype.dispose.call(this);
+};
+
+/**
+ * Focus this comments textarea.
+ */
+Blockly.ScratchBlockComment.prototype.focus = function() {
+  this.textarea_.focus();
 };
