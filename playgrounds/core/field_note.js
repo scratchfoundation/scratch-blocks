@@ -381,10 +381,8 @@ Blockly.FieldNote.prototype.dispose_ = function() {
  * @private
  */
 Blockly.FieldNote.prototype.showEditor_ = function() {
-  var noFocus =
-      goog.userAgent.MOBILE || goog.userAgent.ANDROID || goog.userAgent.IPAD;
   // Mobile browsers have issues with in-line textareas (focus & keyboards).
-  Blockly.FieldNote.superClass_.showEditor_.call(this, noFocus);
+  Blockly.FieldNote.superClass_.showEditor_.call(this, this.useTouchInteraction_);
 
   // If there is an existing drop-down someone else owns, hide it immediately and clear it.
   Blockly.DropDownDiv.hideWithoutAnimation();
