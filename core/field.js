@@ -174,6 +174,14 @@ Blockly.Field.prototype.argType_ = null;
 Blockly.Field.prototype.validator_ = null;
 
 /**
+ * Whether to assume user is using a touch device for interactions.
+ * Used to show different UI for touch interactions, e.g.
+ * @type {boolean}
+ * @private
+ */
+Blockly.Field.prototype.useTouchInteraction_ = false;
+
+/**
  * Non-breaking space.
  * @const
  */
@@ -740,6 +748,7 @@ Blockly.Field.prototype.onMouseDown_ = function(e) {
   if (gesture) {
     gesture.setStartField(this);
   }
+  this.useTouchInteraction_ = Blockly.Touch.getTouchIdentifierFromEvent(event) !== 'mouse';
 };
 
 /**
