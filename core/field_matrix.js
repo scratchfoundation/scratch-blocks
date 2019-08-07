@@ -348,9 +348,9 @@ Blockly.FieldMatrix.prototype.showEditor_ = function() {
   this.matrixTouchWrapper_ =
       Blockly.bindEvent_(this.matrixStage_, 'mousedown', this, this.onMouseDown);
   this.clearButtonWrapper_ =
-      Blockly.bindEvent_(clearButton, 'mousedown', this, this.clearMatrix_);
+      Blockly.bindEvent_(clearButton, 'click', this, this.clearMatrix_);
   this.fillButtonWrapper_ =
-    Blockly.bindEvent_(fillButton, 'mousedown', this, this.fillMatrix_);
+    Blockly.bindEvent_(fillButton, 'click', this, this.fillMatrix_);
 
   // Update the matrix for the current value
   this.updateMatrix_();

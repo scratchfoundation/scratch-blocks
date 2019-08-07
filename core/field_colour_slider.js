@@ -341,7 +341,7 @@ Blockly.FieldColourSlider.prototype.showEditor_ = function() {
     button.appendChild(image);
     div.appendChild(button);
     Blockly.FieldColourSlider.eyedropperEventData_ =
-        Blockly.bindEventWithChecks_(button, 'mousedown', this,
+        Blockly.bindEventWithChecks_(button, 'click', this,
             this.activateEyedropperInternal_);
   }
 
