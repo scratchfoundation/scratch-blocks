@@ -245,7 +245,8 @@ class Gen_compressed(threading.Thread):
       ("language_in", "ECMASCRIPT_2017"),
       ("language_out", "ECMASCRIPT5"),
       ("rewrite_polyfills", "false"),
-      ("define", "goog.DEBUG=false"),
+      ("define", "goog.DEBUG=true"),
+      ("debug", "true"),                  
 
       # local will filter this out
       ("use_closure_library", "true"),
@@ -279,6 +280,8 @@ class Gen_compressed(threading.Thread):
     # Define the parameters for the POST request.
     params = [
       ("compilation_level", "SIMPLE"),
+      ("debug", "true"),                  
+      ("define", "goog.DEBUG=true"),
     ]
 
     # Read in all the source files.
@@ -354,7 +357,9 @@ class Gen_compressed(threading.Thread):
         ("output_info", "compiled_code"),
         ("output_info", "warnings"),
         ("output_info", "errors"),
-        ("output_info", "statistics"),
+        ("output_info", "statistics"), 
+        ("debug", "true"),
+        ("formatting", "PRETTY_PRINT")
       ])
 
       # Send the request to Google.
