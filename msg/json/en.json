@@ -140,6 +140,7 @@
     "OPERATORS_SUBTRACT": "%1 - %2",
     "OPERATORS_MULTIPLY": "%1 * %2",
     "OPERATORS_DIVIDE": "%1 / %2",
+    "OPERATORS_POWER": "%1 ^ %2",
     "OPERATORS_RANDOM": "pick random %1 to %2",
     "OPERATORS_GT": "%1 > %2",
     "OPERATORS_LT": "%1 < %2",
