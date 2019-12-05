@@ -53,6 +53,10 @@ CLOSURE_ROOT_NPM = os.path.join("node_modules")
 CLOSURE_LIBRARY_NPM = "google-closure-library"
 CLOSURE_COMPILER_NPM = "google-closure-compiler"
 
+# Create powershell command prefix list that will be 
+# prepended to 'google-closure-library' args list
+POWERSHELL_COMMAND_PREFIX = ['powershell', '/c'] if platform.system() == "Windows" else []
+
 def import_path(fullpath):
   """Import a file with full path specification.
   Allows one to import from any directory, something __import__ does not do.
