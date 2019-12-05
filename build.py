@@ -328,7 +328,7 @@ class Gen_compressed(threading.Thread):
 
       # Build the final args array by prepending google-closure-compiler to
       # dash_args and dropping any falsy members
-      args = []
+      args = POWERSHELL_COMMAND_PREFIX[:]
       for group in [["google-closure-compiler"], dash_args]:
         args.extend(filter(lambda item: item, group))
 
@@ -574,7 +574,7 @@ if __name__ == "__main__":
         closure_root, closure_library, "closure", "bin", "calcdeps.py"))
 
     # Sanity check the local compiler
-    test_args = [closure_compiler, os.path.join("build", "test_input.js")]
+    test_args = POWERSHELL_COMMAND_PREFIX + [closure_compiler, os.path.join("build", "test_input.js")]
     test_proc = subprocess.Popen(test_args, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
     (stdout, _) = test_proc.communicate()
     assert stdout == read(os.path.join("build", "test_expect.js"))
