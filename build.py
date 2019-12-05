@@ -55,6 +55,7 @@ CLOSURE_COMPILER_NPM = "google-closure-compiler"
 
 # Create powershell command prefix list that will be 
 # prepended to 'google-closure-library' args list
+# Resolves issues #2001, #1981 and #1859 (maybe more)
 POWERSHELL_COMMAND_PREFIX = ['powershell', '/c'] if platform.system() == "Windows" else []
 
 def import_path(fullpath):
