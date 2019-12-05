@@ -53,7 +53,7 @@ CLOSURE_ROOT_NPM = os.path.join("node_modules")
 CLOSURE_LIBRARY_NPM = "google-closure-library"
 CLOSURE_COMPILER_NPM = "google-closure-compiler"
 
-# Set POWERSHELL_COMMEND_PREFIX command if powershell is available for windows 
+# Set POWERSHELL_COMMAND_PREFIX command if powershell is available for windows 
 if platform.system() == "Windows":
   try:
     # Check if powershell is installed for windows systems
