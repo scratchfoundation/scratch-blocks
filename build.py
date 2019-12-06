@@ -58,11 +58,12 @@ if platform.system() == "Windows":
   try:
     # Check if powershell is installed for windows systems
     proc = subprocess.Popen(['powershell', '/c', '$PsHome'], stdin=subprocess.PIPE, stdout=subprocess.PIPE)
-    (powershell_path, _) = proc.communicate()
 
-    # If the above command was successfully executed, 'powershell_path' will
+    # If the statement below successfully executes, 'powershell_path' will
     # contain the absolute path to the powershell executable; that path
-    # includes the folder 'WindoesPowershell" which we test for below.
+    # includes the text 'WindoesPowershell" which we test for in
+    # the statement that follows this one.
+    (powershell_path, _) = proc.communicate()
 
     # Create powershell command prefix list that will be
     # prepended to 'google-closure-library' args list
