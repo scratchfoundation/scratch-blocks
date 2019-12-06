@@ -56,7 +56,7 @@ CLOSURE_COMPILER_NPM = "google-closure-compiler"
 # Set POWERSHELL_COMMAND_PREFIX command if powershell is available for windows 
 if platform.system() == "Windows":
   try:
-    # Check if powershell is installed for windows systems
+    # Check if powershell is available for windows systems (should be installed by default)
     proc = subprocess.Popen(['powershell', '/c', '$PsHome'], stdin=subprocess.PIPE, stdout=subprocess.PIPE)
 
     # If the statement below successfully executes, 'powershell_path' will
@@ -65,13 +65,16 @@ if platform.system() == "Windows":
     # the statement that follows this one.
     (powershell_path, _) = proc.communicate()
 
-    # Create powershell command prefix list that will be
-    # prepended to 'google-closure-library' args list
-    # Resolves the following issues reported on github:
-    # #2001, #1981 and #1859 (maybe more)
-    POWERSHELL_COMMAND_PREFIX = ['powershell', '/c'] if "windowspowershell" in powershell_path.lower() else []
+    if "windowspowershell" in powershell_path.lower():
+      # Create powershell command prefix list that will be
+      # prepended to 'google-closure-library' args list
+      # Resolves the following issues reported on github:
+      # #2001, #1981 and #1859 (maybe more)
+      POWERSHELL_COMMAND_PREFIX = ['powershell', '/c']
+    else:
+      raise OSError()
   except OSError:
-    print("Error: Powershell is not installed on your system.")
+    print("Error: Powershell was not found on your system.")
     sys.exit(1)
 else:
   POWERSHELL_COMMAND_PREFIX = []
