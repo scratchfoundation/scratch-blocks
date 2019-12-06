@@ -62,7 +62,7 @@ if platform.system() == "Windows":
 
     # If the above command was successfully executed, 'powershell_path' will
     # contain the absolute path to the powershell executable; that path
-    # includes a the folder 'WindoesPowershell" which we test for below.
+    # includes the folder 'WindoesPowershell" which we test for below.
 
     # Create powershell command prefix list that will be
     # prepended to 'google-closure-library' args list
