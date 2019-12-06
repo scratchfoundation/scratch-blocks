@@ -61,7 +61,7 @@ if platform.system() == "Windows":
 
     # If the statement below successfully executes, 'powershell_path' will
     # contain the absolute path to the powershell executable; that path
-    # includes the text 'WindoesPowershell" which we test for in
+    # includes the text 'WindowsPowershell" which we test for in
     # the statement that follows this one.
     (powershell_path, _) = proc.communicate()
 
