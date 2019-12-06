@@ -72,6 +72,7 @@ if platform.system() == "Windows":
     POWERSHELL_COMMAND_PREFIX = ['powershell', '/c'] if "windowspowershell" in powershell_path.lower() else []
   except OSError:
     print("Error: Powershell is not installed on your system.")
+    sys.exit(1)
 else:
   POWERSHELL_COMMAND_PREFIX = []
 
