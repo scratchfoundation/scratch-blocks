@@ -789,6 +789,7 @@ Blockly.BlockSvg.prototype.setEditable = function(editable) {
 Blockly.BlockSvg.prototype.setShadow = function(shadow) {
   Blockly.BlockSvg.superClass_.setShadow.call(this, shadow);
   this.updateColour();
+  this.updateMovable();
 };
 
 /**
