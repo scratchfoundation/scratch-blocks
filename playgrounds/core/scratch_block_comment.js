@@ -313,20 +313,17 @@ Blockly.ScratchBlockComment.prototype.autoPosition_ = function() {
         this.iconXY_.x + minimizedOffset;
     this.y_ = this.iconXY_.y - (Blockly.ScratchBubble.TOP_BAR_HEIGHT / 2);
   } else {
-    // Check if the width of this block (and all it's children/descendents) is the
-    // same as the width of just this block
-    var fullStackWidth = Math.floor(this.block_.getHeightWidth().width);
+    // Position comment so that the expanded bubble does not overlap
+    // blocks below it in the stack that are wider than this block
+    // Overhang is the difference between this blocks trailing edge and
+    // the largest block below (zero if this block is the widest)
     var thisBlockWidth = Math.floor(this.block_.svgPath_.getBBox().width);
+    var fullStackWidth = Math.floor(this.block_.getHeightWidth().width);
+    var overhang = fullStackWidth - thisBlockWidth;
     var offset = 8 * Blockly.BlockSvg.GRID_UNIT;
-    if (fullStackWidth == thisBlockWidth && !this.block_.parentBlock_) {
-      this.x_ = this.block_.RTL ?
-          this.iconXY_.x - this.width_ - offset :
-          this.iconXY_.x + offset;
-    } else {
-      this.x_ = this.block_.RTL ?
-          this.iconXY_.x - this.width_ - fullStackWidth - offset :
-          this.iconXY_.x + fullStackWidth + offset;
-    }
+    this.x_ = this.block_.RTL ?
+        this.iconXY_.x - this.width_ - overhang - offset :
+        this.iconXY_.x + overhang + offset;
     this.y_ = this.iconXY_.y - (Blockly.ScratchBubble.TOP_BAR_HEIGHT / 2);
   }
 };
