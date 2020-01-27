@@ -111,7 +111,7 @@ Blockly.Input.prototype.insertFieldAt = function(index, field, opt_name) {
     return this;
   }
   // Generate a FieldLabel when given a plain text field.
-  if (goog.isString(field)) {
+  if (typeof field == 'string') {
     field = new Blockly.FieldLabel(/** @type {string} */ (field));
   }
   field.setSourceBlock(this.sourceBlock_);

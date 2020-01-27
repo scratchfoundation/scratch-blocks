@@ -837,7 +837,7 @@ Blockly.Block.prototype.makeColour_ = function(colour) {
   var hue = Number(colour);
   if (!isNaN(hue)) {
     return Blockly.hueToRgb(hue);
-  } else if (goog.isString(colour) && colour.match(/^#[0-9a-fA-F]{6}$/)) {
+  } else if ((typeof colour == 'string') && colour.match(/^#[0-9a-fA-F]{6}$/)) {
     return colour;
   } else {
     throw 'Invalid colour: ' + colour;
@@ -1299,7 +1299,7 @@ Blockly.Block.prototype.jsonInit = function(json) {
     var localizedValue = Blockly.utils.replaceMessageReferences(rawValue);
     this.setHelpUrl(localizedValue);
   }
-  if (goog.isString(json['extensions'])) {
+  if (typeof json['extensions'] == 'string') {
     console.warn('JSON attribute \'extensions\' should be an array of ' +
       'strings. Found raw string in JSON for \'' + json['type'] + '\' block.');
     json['extensions'] = [json['extensions']];  // Correct and continue.
@@ -1338,7 +1338,7 @@ Blockly.Block.prototype.jsonInit = function(json) {
  * @param {boolean=} opt_disableCheck Option flag to disable overwrite checks.
  */
 Blockly.Block.prototype.mixin = function(mixinObj, opt_disableCheck) {
-  if (goog.isDef(opt_disableCheck) && !goog.isBoolean(opt_disableCheck)) {
+  if ((opt_disableCheck !== undefined) && !(typeof opt_disableCheck == 'boolean')) {
     throw new Error("opt_disableCheck must be a boolean if provided");
   }
   if (!opt_disableCheck) {
@@ -1368,11 +1368,11 @@ Blockly.Block.prototype.mixin = function(mixinObj, opt_disableCheck) {
  */
 Blockly.Block.prototype.setColourFromRawValues_ = function(primary, secondary,
     tertiary) {
-  primary = goog.isString(primary) ?
+  primary = (typeof primary == 'string') ?
       Blockly.utils.replaceMessageReferences(primary) : primary;
-  secondary = goog.isString(secondary) ?
+  secondary = (typeof secondary == 'string') ?
       Blockly.utils.replaceMessageReferences(secondary) : secondary;
-  tertiary = goog.isString(tertiary) ?
+  tertiary = (typeof tertiary == 'string') ?
       Blockly.utils.replaceMessageReferences(tertiary) : tertiary;
 
   this.setColour(primary, secondary, tertiary);
