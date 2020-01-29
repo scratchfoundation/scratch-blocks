@@ -14,6 +14,7 @@ before_install:
 - ln -s $(npm root)/google-closure-library ../closure-library
 
 before_script:
+  - i18n/sync_translations.sh
   - export DISPLAY=:99.0
   - tests/scripts/setup_linux_env.sh
   - sleep 2
@@ -30,7 +31,9 @@ after_script:
     # Only release on release branches
     $RELEASE_BRANCHES =~ $TRAVIS_BRANCH &&
     # Don't release on PR builds
-    $TRAVIS_PULL_REQUEST = "false"
+    $TRAVIS_PULL_REQUEST = "false" &&
+    # Don't release on cron build - the cron job kicks off a build that will release
+    $TRAVIS_EVENT_TYPE != "cron"
   ]]; then
     # Authenticate NPM
     echo "//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" > .npmrc
