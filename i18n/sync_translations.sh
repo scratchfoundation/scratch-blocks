@@ -10,7 +10,7 @@ if [ "${TRAVIS_EVENT_TYPE}" == "cron" ]
     npm run test:messages
     # stage any changes in the msg directory
     git add ./msg
-    git commit -m 'update translations from transifex'
+    git commit -m '[skip ci] Update translations from transifex'
     # add remote, make sure that API token doesn't end up in the log
     git remote add origin-translation https://${GH_TOKEN}@github.com/LLK/scratch-blocks.git > /dev/null 2>&1
     git push --set-upstream origin-translation develop
