@@ -14,7 +14,7 @@ before_install:
 - ln -s $(npm root)/google-closure-library ../closure-library
 
 before_script:
-  - i18n/sync_translations.sh
+  - if [[ $TRAVIS_NODE_VERSION == 8 ]]; then i18n/sync_translations.sh; fi
   - export DISPLAY=:99.0
   - tests/scripts/setup_linux_env.sh
   - sleep 2
