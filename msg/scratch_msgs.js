@@ -196,7 +196,7 @@ Blockly.ScratchMsgs.locales["ab"] =
     "SENSING_MOUSEDOWN": "аҳәынаԥ иақәыӷәӷәома?",
     "SENSING_MOUSEX": "аҳәынаԥ x ала",
     "SENSING_MOUSEY": "аҳәынаԥ y ала",
-    "SENSING_SETDRAGMODE": "иқәыргылатәуп аиагара арежим  %1",
+    "SENSING_SETDRAGMODE": "иқәыргылатәуп аиагара арежим %1",
     "SENSING_SETDRAGMODE_DRAGGABLE": "иауеит",
     "SENSING_SETDRAGMODE_NOTDRAGGABLE": "иауам",
     "SENSING_LOUDNESS": "абжьы адура",
