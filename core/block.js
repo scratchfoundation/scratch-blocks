@@ -1338,7 +1338,7 @@ Blockly.Block.prototype.jsonInit = function(json) {
  * @param {boolean=} opt_disableCheck Option flag to disable overwrite checks.
  */
 Blockly.Block.prototype.mixin = function(mixinObj, opt_disableCheck) {
-  if ((opt_disableCheck !== undefined) && !(typeof opt_disableCheck == 'boolean')) {
+  if ((opt_disableCheck !== undefined) && (typeof opt_disableCheck != 'boolean')) {
     throw new Error("opt_disableCheck must be a boolean if provided");
   }
   if (!opt_disableCheck) {

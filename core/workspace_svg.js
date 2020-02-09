@@ -2048,10 +2048,10 @@ Blockly.WorkspaceSvg.setTopLevelWorkspaceMetrics_ = function(xyRatio) {
     throw 'Attempt to set top level workspace scroll without scrollbars.';
   }
   var metrics = this.getMetrics();
-  if (typeof xyRatio.x === 'number') {
+  if (typeof xyRatio.x == 'number') {
     this.scrollX = -metrics.contentWidth * xyRatio.x - metrics.contentLeft;
   }
-  if (typeof xyRatio.y === 'number') {
+  if (typeof xyRatio.y == 'number') {
     this.scrollY = -metrics.contentHeight * xyRatio.y - metrics.contentTop;
   }
   var x = this.scrollX + metrics.absoluteLeft;
