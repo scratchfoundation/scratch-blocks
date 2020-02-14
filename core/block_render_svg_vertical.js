@@ -480,11 +480,13 @@ Blockly.BlockSvg.DEFINE_HAT_CORNER_RADIUS = 5 * Blockly.BlockSvg.GRID_UNIT;
  * @const
  */
 Blockly.BlockSvg.TOP_LEFT_CORNER_DEFINE_HAT =
-    'a ' + Blockly.BlockSvg.DEFINE_HAT_CORNER_RADIUS + ',' +
-    Blockly.BlockSvg.DEFINE_HAT_CORNER_RADIUS + ' 0 0,1 ' +
-    Blockly.BlockSvg.DEFINE_HAT_CORNER_RADIUS + ',-' +
-    Blockly.BlockSvg.DEFINE_HAT_CORNER_RADIUS;
-
+//     'a ' + Blockly.BlockSvg.DEFINE_HAT_CORNER_RADIUS + ',' +
+//     Blockly.BlockSvg.DEFINE_HAT_CORNER_RADIUS + ' 0 0,1 ' +
+//     Blockly.BlockSvg.DEFINE_HAT_CORNER_RADIUS + ',-' +
+//     Blockly.BlockSvg.DEFINE_HAT_CORNER_RADIUS;
+    'c0,-7.1 3.7,-13.3 9.3,-16.9c1.7,-7.5 5.4,-13.2 7.6,-14.2' +
+    'c2.6,-1.3 10,6 14.6,11.1h33c4.6,-5.1 11.9,-12.4 14.6,-11.1' +
+    'c1.9,0.9 4.9,5.2 6.8,11.1';
 /**
  * SVG path for drawing the rounded top-left corner.
  * @const
@@ -1168,16 +1170,18 @@ Blockly.BlockSvg.prototype.renderDraw_ = function(iconWidth, inputRows) {
   this.svgPathBody_.setAttribute('d', pathString);
   if (this.startHat_) {
     this.eye = Blockly.utils.createSvgElement('circle', {}, this.svgPath_);
-    eye.setAttribute('cx','59.2');
-    eye.setAttribute('cy','-3.3');
-    eye.setAttribute('r','3.4');
-    eye.setAttribute('fill','#000000');
+    this.eye.setAttribute('cx','59.2');
+    this.eye.setAttribute('cy','-3.3');
+    this.eye.setAttribute('r','3.4');
+    this.eye.setAttribute('fill','#000000');
+    this.eye.setAttribute('fill-opacity','0.8');
 
     this.eye2 = Blockly.utils.createSvgElement('circle', {}, this.svgPath_);
-    eye2.setAttribute('cx','29.1');
-    eye2.setAttribute('cy','-3.3');
-    eye2.setAttribute('r','3.4');
-    eye2.setAttribute('fill','#000000');
+    this.eye2.setAttribute('cx','29.1');
+    this.eye2.setAttribute('cy','-3.3');
+    this.eye2.setAttribute('r','3.4');
+    this.eye2.setAttribute('fill','#000000');
+    this.eye2.setAttribute('fill-opacity','0.8');
 
     const mouth = Blockly.utils.createSvgElement('path', {}, this.svgPath_);
     mouth.setAttribute('d','M45.6,0.1c-0.9,0-1.7-0.3-2.3-0.9c-0.6,0.6-1.3,0.9-2.2,0.9c-0.9,0-1.8-0.3-2.3-0.9c-1-1.1-1.1-2.6-1.1-2.8' +
@@ -1185,6 +1189,7 @@ Blockly.BlockSvg.prototype.renderDraw_ = function(iconWidth, inputRows) {
       'c0-0.5,0.5-1,1-1l0,0c0.5,0,1,0.4,1,1c0,0,0,0.1,0,0.2c0,0.3,0.1,0.9,0.4,1.2C44.8-2.2,45-2,45.5-2s0.7-0.2,0.8-0.3' +
       'c0.3-0.4,0.4-1.1,0.3-1.3c0-0.5,0.4-1,0.9-1.1c0.5,0,1,0.4,1.1,0.9c0,0.2,0.1,1.8-0.8,2.8C47.5-0.4,46.8,0.1,45.6,0.1z');
     mouth.setAttribute('fill','#000000');
+    mouth.setAttribute('fill-opacity','0.8');
 
     const ear = Blockly.utils.createSvgElement('path', {}, this.svgPath_);
     ear.setAttribute('d','M73.1-15.6c1.7-4.2,4.5-9.1,5.8-8.5c1.6,0.8,5.4,7.9,5,15.4c0,0.6-0.7,0.7-1.1,0.5c-3-1.6-6.4-2.8-8.6-3.6' +

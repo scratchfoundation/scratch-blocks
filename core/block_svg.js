@@ -68,7 +68,6 @@ Blockly.BlockSvg = function(workspace, prototypeName, opt_id) {
       this.svgGroup_);
   this.svgPathBody_ = Blockly.utils.createSvgElement('path',
     {'class': 'blocklyPath blocklyBlockBackground'}, this.svgPath_);
-  this.svgPathBody_.setAttribute('stroke', '#08704e');
   this.svgPathBody_.tooltip = this;
 
   /** @type {boolean} */
@@ -162,6 +161,8 @@ Blockly.BlockSvg.prototype.initSvg = function() {
     for (i = 0; i < icons.length; i++) {
       icons[i].createIcon();
     }
+  } else if (this.svgPathBody_) {
+    this.svgPathBody_.setAttribute('stroke-opacity', '0');
   }
   this.updateColour();
   this.updateMovable();
