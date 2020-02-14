@@ -139,7 +139,7 @@ Blockly.BlockSvg.STATEMENT_INPUT_INNER_SPACE = 2 * Blockly.BlockSvg.GRID_UNIT;
  * Height of the top hat.
  * @const
  */
-Blockly.BlockSvg.START_HAT_HEIGHT = 16;
+Blockly.BlockSvg.START_HAT_HEIGHT = 31;
 
 /**
  * Height of the vertical separator line for icons that appear at the left edge
@@ -152,7 +152,10 @@ Blockly.BlockSvg.ICON_SEPARATOR_HEIGHT = 10 * Blockly.BlockSvg.GRID_UNIT;
  * Path of the top hat's curve.
  * @const
  */
-Blockly.BlockSvg.START_HAT_PATH = 'c 25,-22 71,-22 96,0';
+Blockly.BlockSvg.START_HAT_PATH = 'c2.6,-2.3 5.5,-4.3 8.5,-6.2' +
+    'c-1,-12.5 5.3,-23.3 8.4,-24.8c3.7,-1.8 16.5,13.1 18.4,15.4' +
+    'c8.4,-1.3 17,-1.3 25.4,0c1.9,-2.3 14.7,-17.2 18.4,-15.4' +
+    'c3.1,1.5 9.4,12.3 8.4,24.8c3,1.8 5.9,3.9 8.5,6.1';
 
 /**
  * SVG path for drawing next/previous notch from left to right.
@@ -519,7 +522,7 @@ Blockly.BlockSvg.prototype.updateColour = function() {
   }
 
   // Render block stroke
-  this.svgPath_.setAttribute('stroke', strokeColour);
+  this.svgPathBody_.setAttribute('stroke', strokeColour);
 
   // Render block fill
   if (this.isGlowingBlock_ || renderShadowed) {
@@ -532,10 +535,10 @@ Blockly.BlockSvg.prototype.updateColour = function() {
   } else {
     var fillColour = this.getColour();
   }
-  this.svgPath_.setAttribute('fill', fillColour);
+  this.svgPathBody_.setAttribute('fill', fillColour);
 
   // Render opacity
-  this.svgPath_.setAttribute('fill-opacity', this.getOpacity());
+  this.svgPathBody_.setAttribute('fill-opacity', this.getOpacity());
 
   // Update colours of input shapes.
   for (var i = 0, input; input = this.inputList[i]; i++) {
@@ -567,11 +570,11 @@ Blockly.BlockSvg.prototype.highlightForReplacement = function(add) {
   if (add) {
     var replacementGlowFilterId = this.workspace.options.replacementGlowFilterId
       || 'blocklyReplacementGlowFilter';
-    this.svgPath_.setAttribute('filter', 'url(#' + replacementGlowFilterId + ')');
+    this.svgPathBody_.setAttribute('filter', 'url(#' + replacementGlowFilterId + ')');
     Blockly.utils.addClass(/** @type {!Element} */ (this.svgGroup_),
         'blocklyReplaceable');
   } else {
-    this.svgPath_.removeAttribute('filter');
+    this.svgPathBody_.removeAttribute('filter');
     Blockly.utils.removeClass(/** @type {!Element} */ (this.svgGroup_),
         'blocklyReplaceable');
   }
@@ -1162,12 +1165,42 @@ Blockly.BlockSvg.prototype.renderDraw_ = function(iconWidth, inputRows) {
   this.renderDrawLeft_(steps);
 
   var pathString = steps.join(' ');
-  this.svgPath_.setAttribute('d', pathString);
+  this.svgPathBody_.setAttribute('d', pathString);
+  if (this.startHat_) {
+    this.eye = Blockly.utils.createSvgElement('circle', {}, this.svgPath_);
+    eye.setAttribute('cx','59.2');
+    eye.setAttribute('cy','-3.3');
+    eye.setAttribute('r','3.4');
+    eye.setAttribute('fill','#000000');
+
+    this.eye2 = Blockly.utils.createSvgElement('circle', {}, this.svgPath_);
+    eye2.setAttribute('cx','29.1');
+    eye2.setAttribute('cy','-3.3');
+    eye2.setAttribute('r','3.4');
+    eye2.setAttribute('fill','#000000');
+
+    const mouth = Blockly.utils.createSvgElement('path', {}, this.svgPath_);
+    mouth.setAttribute('d','M45.6,0.1c-0.9,0-1.7-0.3-2.3-0.9c-0.6,0.6-1.3,0.9-2.2,0.9c-0.9,0-1.8-0.3-2.3-0.9c-1-1.1-1.1-2.6-1.1-2.8' +
+      'c0-0.5,0.5-1,1-1l0,0c0.6,0,1,0.5,1,1c0,0.4,0.1,1.7,1.4,1.7c0.5,0,0.7-0.2,0.8-0.3c0.3-0.3,0.4-1,0.4-1.3c0-0.1,0-0.1,0-0.2' +
+      'c0-0.5,0.5-1,1-1l0,0c0.5,0,1,0.4,1,1c0,0,0,0.1,0,0.2c0,0.3,0.1,0.9,0.4,1.2C44.8-2.2,45-2,45.5-2s0.7-0.2,0.8-0.3' +
+      'c0.3-0.4,0.4-1.1,0.3-1.3c0-0.5,0.4-1,0.9-1.1c0.5,0,1,0.4,1.1,0.9c0,0.2,0.1,1.8-0.8,2.8C47.5-0.4,46.8,0.1,45.6,0.1z');
+    mouth.setAttribute('fill','#000000');
+
+    const ear = Blockly.utils.createSvgElement('path', {}, this.svgPath_);
+    ear.setAttribute('d','M73.1-15.6c1.7-4.2,4.5-9.1,5.8-8.5c1.6,0.8,5.4,7.9,5,15.4c0,0.6-0.7,0.7-1.1,0.5c-3-1.6-6.4-2.8-8.6-3.6' +
+      'C72.8-12.3,72.4-13.7,73.1-15.6z');
+    ear.setAttribute('fill','#FFD5E6');
+
+    const ear2 = Blockly.utils.createSvgElement('path', {}, this.svgPath_);
+    ear2.setAttribute('d','M22.4-15.6c-1.7-4.2-4.5-9.1-5.8-8.5c-1.6,0.8-5.4,7.9-5,15.4c0,0.6,0.7,0.7,1.1,0.5c3-1.6,6.4-2.8,8.6-3.6' +
+      'C22.8-12.3,23.2-13.7,22.4-15.6z');
+    ear2.setAttribute('fill','#FFD5E6');
+  }
 
   if (this.RTL) {
     // Mirror the block's path.
     // This is awesome.
-    this.svgPath_.setAttribute('transform', 'scale(-1 1)');
+    this.svgPathBody_.setAttribute('transform', 'scale(-1 1)');
   }
 };
 

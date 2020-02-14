@@ -64,10 +64,12 @@ Blockly.BlockSvg = function(workspace, prototypeName, opt_id) {
    */
   this.svgGroup_ = Blockly.utils.createSvgElement('g', {}, null);
   /** @type {SVGElement} */
-  this.svgPath_ = Blockly.utils.createSvgElement('path',
-      {'class': 'blocklyPath blocklyBlockBackground'},
+  this.svgPath_ = Blockly.utils.createSvgElement('g', {},
       this.svgGroup_);
-  this.svgPath_.tooltip = this;
+  this.svgPathBody_ = Blockly.utils.createSvgElement('path',
+    {'class': 'blocklyPath blocklyBlockBackground'}, this.svgPath_);
+  this.svgPathBody_.setAttribute('stroke', '#08704e');
+  this.svgPathBody_.tooltip = this;
 
   /** @type {boolean} */
   this.rendered = false;
@@ -80,7 +82,7 @@ Blockly.BlockSvg = function(workspace, prototypeName, opt_id) {
    */
   this.useDragSurface_ = Blockly.utils.is3dSupported() && !!workspace.blockDragSurface_;
 
-  Blockly.Tooltip.bindMouseEvents(this.svgPath_);
+  Blockly.Tooltip.bindMouseEvents(this.svgPathBody_);
   Blockly.BlockSvg.superClass_.constructor.call(this,
       workspace, prototypeName, opt_id);
 
@@ -860,6 +862,7 @@ Blockly.BlockSvg.prototype.dispose = function(healStack, animate) {
   // Sever JavaScript to DOM connections.
   this.svgGroup_ = null;
   this.svgPath_ = null;
+  this.svgPathBody_ = null;
   Blockly.Field.stopCache();
 };
 
