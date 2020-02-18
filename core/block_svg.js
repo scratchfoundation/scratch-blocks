@@ -68,6 +68,27 @@ Blockly.BlockSvg = function(workspace, prototypeName, opt_id) {
       this.svgGroup_);
   this.svgPathBody_ = Blockly.utils.createSvgElement('path',
     {'class': 'blocklyPath blocklyBlockBackground'}, this.svgPath_);
+  window.eventlist = event => {
+    // blink
+    window.t = event.target;
+    if (event.target.eye) {
+      event.target.eye.style.opacity = "0";
+    }
+    if (event.target.eye2) {
+      event.target.eye2.style.opacity = "0";
+    }
+
+    // reset after a short delay
+    setTimeout(function() {
+      if (event.target.eye) {
+        event.target.eye.style.opacity = "1";
+      }
+      if (event.target.eye2) {
+        event.target.eye2.style.opacity = "1";
+      }
+    }, 200);
+  };
+  this.svgPath_.addEventListener("mouseenter", window.eventlist);
   this.svgPathBody_.tooltip = this;
 
   /** @type {boolean} */
