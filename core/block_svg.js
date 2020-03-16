@@ -71,7 +71,9 @@ Blockly.BlockSvg = function(workspace, prototypeName, opt_id) {
   this.svgFace_ = Blockly.utils.createSvgElement('g', {},
       this.svgPath_);
   this.svgPath_.svgFace = this.svgFace_;
+  var that = this;
   this.svgPath_.addEventListener("mouseenter", function(event) {
+    clearTimeout(that.timedFn);
     // blink
     window.t = event.target;
     if (event.target.svgFace.eye) {
@@ -82,7 +84,7 @@ Blockly.BlockSvg = function(workspace, prototypeName, opt_id) {
     }
 
     // reset after a short delay
-    setTimeout(function() {
+    that.timedFn = setTimeout(function() {
       if (event.target.svgFace.eye) {
         event.target.svgFace.eye.style.opacity = "1";
       }
@@ -848,6 +850,7 @@ Blockly.BlockSvg.prototype.dispose = function(healStack, animate) {
     // The block has already been deleted.
     return;
   }
+  clearTimeout(this.timedFn);
   Blockly.Tooltip.hide();
   Blockly.Field.startCache();
   // Save the block's workspace temporarily so we can resize the
