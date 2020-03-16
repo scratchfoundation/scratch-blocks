@@ -77,19 +77,19 @@ Blockly.BlockSvg = function(workspace, prototypeName, opt_id) {
     // blink
     window.t = event.target;
     if (event.target.svgFace.eye) {
-      event.target.svgFace.eye.style.opacity = "0";
-    }
-    if (event.target.svgFace.eye2) {
-      event.target.svgFace.eye2.style.opacity = "0";
+      event.target.svgFace.eye.setAttribute('fill-opacity','0');
+      event.target.svgFace.eye2.setAttribute('fill-opacity','0');
+      event.target.svgFace.closedEye.setAttribute('fill-opacity','0.8');
+      event.target.svgFace.closedEye2.setAttribute('fill-opacity','0.8');
     }
 
     // reset after a short delay
     that.timedFn = setTimeout(function() {
       if (event.target.svgFace.eye) {
-        event.target.svgFace.eye.style.opacity = "1";
-      }
-      if (event.target.svgFace.eye2) {
-        event.target.svgFace.eye2.style.opacity = "1";
+        event.target.svgFace.eye.setAttribute('fill-opacity','0.8');
+        event.target.svgFace.eye2.setAttribute('fill-opacity','0.8');
+        event.target.svgFace.closedEye.setAttribute('fill-opacity','0');
+        event.target.svgFace.closedEye2.setAttribute('fill-opacity','0');
       }
     }, 200);
   });

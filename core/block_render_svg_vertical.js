@@ -1128,14 +1128,18 @@ Blockly.BlockSvg.prototype.renderCatFace_ = function() {
   this.svgPath_.svgFace.setAttribute('fill','#000000');
 
   var closedEye = Blockly.utils.createSvgElement('path', {}, this.svgFace_);
-  closedEye.setAttribute('d','M59.2-6.3c1.9,0,3.2,1.7,3.3,3.2c0.1,1.4-1.1-1.3-3.4-1.2' +
-    'c-2.4,0.1-3.3,2.9-3.2,1.2C56-4.6,57.3-6.3,59.2-6.3z');
-  closedEye.setAttribute('fill-opacity','0.8');
+  closedEye.setAttribute('d','M25.2-1.1c0.1,0,0.2,0,0.2,0l8.3-2.1l-7-4.8' +
+    'c-0.5-0.3-1.1-0.2-1.4,0.3s-0.2,1.1,0.3,1.4L29-4.1l-4,1' +
+    'c-0.5,0.1-0.9,0.7-0.7,1.2C24.3-1.4,24.7-1.1,25.2-1.1z');
+  closedEye.setAttribute('fill-opacity','0');
+  this.svgPath_.svgFace.closedEye = closedEye;
 
   var closedEye2 = Blockly.utils.createSvgElement('path', {}, this.svgFace_);
-  closedEye2.setAttribute('d','M29.1-6.3c1.9,0,3.2,1.7,3.3,3.2c0.1,1.4-1.1-1.3-3.4-1.2' +
-    'c-2.4,0.1-3.3,2.9-3.2,1.2C25.9-4.6,27.2-6.3,29.1-6.3z');
-  closedEye2.setAttribute('fill-opacity','0.8');
+  closedEye2.setAttribute('d','M62.4-1.1c-0.1,0-0.2,0-0.2,0l-8.3-2.1l7-4.8' +
+    'c0.5-0.3,1.1-0.2,1.4,0.3s0.2,1.1-0.3,1.4l-3.4,2.3l4,1' +
+    'c0.5,0.1,0.9,0.7,0.7,1.2C63.2-1.4,62.8-1.1,62.4-1.1z');
+  closedEye2.setAttribute('fill-opacity','0');
+  this.svgPath_.svgFace.closedEye2 = closedEye2;
 
   var eye = Blockly.utils.createSvgElement('circle', {}, this.svgFace_);
   eye.setAttribute('cx','59.2');
