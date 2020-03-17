@@ -9,7 +9,7 @@ goog.require('Blockly.ScratchMsgs');
 
 Blockly.ScratchMsgs.locales["ab"] =
 {
-    "CONTROL_FOREVER": "инагӡалатәуп",
+    "CONTROL_FOREVER": "инагӡалатәуп еснагь",
     "CONTROL_REPEAT": "инагӡалатәуп %1 - нтә",
     "CONTROL_IF": "%1 акәзар",
     "CONTROL_ELSE": "акәымзар",
