@@ -70,29 +70,60 @@ Blockly.BlockSvg = function(workspace, prototypeName, opt_id) {
       {'class': 'blocklyPath blocklyBlockBackground'}, this.svgPath_);
   this.svgFace_ = Blockly.utils.createSvgElement('g', {},
       this.svgPath_);
+  this.svgGroup_.svgPath = this.svgPath_;
   this.svgPath_.svgFace = this.svgFace_;
   var that = this;
   this.svgPath_.addEventListener("mouseenter", function(event) {
     clearTimeout(that.timedFn);
     // blink
-    window.t = event.target;
     if (event.target.svgFace.eye) {
       event.target.svgFace.eye.setAttribute('fill-opacity','0');
       event.target.svgFace.eye2.setAttribute('fill-opacity','0');
-      event.target.svgFace.closedEye.setAttribute('fill-opacity','0.8');
-      event.target.svgFace.closedEye2.setAttribute('fill-opacity','0.8');
+      event.target.svgFace.closedEye.setAttribute('fill-opacity','0.7');
+      event.target.svgFace.closedEye2.setAttribute('fill-opacity','0.7');
     }
 
     // reset after a short delay
     that.timedFn = setTimeout(function() {
       if (event.target.svgFace.eye) {
-        event.target.svgFace.eye.setAttribute('fill-opacity','0.8');
-        event.target.svgFace.eye2.setAttribute('fill-opacity','0.8');
+        event.target.svgFace.eye.setAttribute('fill-opacity','0.7');
+        event.target.svgFace.eye2.setAttribute('fill-opacity','0.7');
         event.target.svgFace.closedEye.setAttribute('fill-opacity','0');
         event.target.svgFace.closedEye2.setAttribute('fill-opacity','0');
       }
     }, 200);
   });
+  this.windowListener = function(event) {
+    // mouse watching
+    if (that.workspace) { // not disposed
+      var xy = that.getRelativeToSurfaceXY(that.svgGroup_);
+      var offset = that.workspace.getParentSvg().getBoundingClientRect();
+      offset.x += 60; // scratchCategoryMenu width
+      if (!that.isInFlyout) {
+        offset.x += that.workspace.getFlyout().getWidth();
+      }
+      offset.x += that.workspace.scrollX;
+      offset.y += that.workspace.scrollY;
+      // convert to workspace units
+      xy.x += offset.x / that.workspace.scale;
+      xy.y += offset.y / that.workspace.scale;
+      xy.x -= 43.5; // distance to center of face
+      xy.y -= 4;
+
+      var mouseLocation = {
+        x: event.x / that.workspace.scale,
+        y: event.y / that.workspace.scale
+      };
+
+      var dx = mouseLocation.x - xy.x;
+      var dy = mouseLocation.y - xy.y;
+      dx = Math.min(5, Math.max(-5, dx));
+      dy = Math.min(3, Math.max(-3, dy));
+
+      that.svgFace_.style.transform = 'translate(' + dx + 'px,' + dy + 'px)';
+    }
+  };
+  document.addEventListener('mousemove', this.windowListener);
   this.svgPathBody_.tooltip = this;
 
   /** @type {boolean} */
@@ -851,6 +882,7 @@ Blockly.BlockSvg.prototype.dispose = function(healStack, animate) {
     return;
   }
   clearTimeout(this.timedFn);
+  document.removeEventListener('mousemove', this.windowListener);
   Blockly.Tooltip.hide();
   Blockly.Field.startCache();
   // Save the block's workspace temporarily so we can resize the
