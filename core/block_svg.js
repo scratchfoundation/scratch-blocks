@@ -101,6 +101,7 @@ Blockly.BlockSvg = function(workspace, prototypeName, opt_id) {
       offset.x += 60; // scratchCategoryMenu width
       if (!that.isInFlyout) {
         offset.x += that.workspace.getFlyout().getWidth();
+        offset.x += 60;
       }
       offset.x += that.workspace.scrollX;
       offset.y += that.workspace.scrollY;
