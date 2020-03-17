@@ -72,9 +72,17 @@ Blockly.BlockSvg = function(workspace, prototypeName, opt_id) {
       this.svgPath_);
   this.svgGroup_.svgPath = this.svgPath_;
   this.svgPath_.svgFace = this.svgFace_;
+  this.svgPath_.svgBody = this.svgPathBody_;
+  this.svgPath_.ear = Blockly.utils.createSvgElement('path', {}, this.svgPath_);
+  this.svgPath_.ear2 = Blockly.utils.createSvgElement('path', {}, this.svgPath_);
+
   var that = this;
+  var LEFT_EAR_UP = 'c-1,-12.5 5.3,-23.3 8.4,-24.8c3.7,-1.8 16.5,13.1 18.4,15.4';
+  var LEFT_EAR_DOWN = 'c-5.8,-4.8 -8,-18 -4.9,-19.5c3.7,-1.8 24.5,11.1 31.7,10.1';
+  var RIGHT_EAR_UP = 'c1.9,-2.3 14.7,-17.2 18.4,-15.4c3.1,1.5 9.4,12.3 8.4,24.8';
+  var RIGHT_EAR_DOWN = 'c7.2,1 28,-11.9 31.7,-10.1c3.1,1.5 0.9,14.7 -4.9,19.5';
   this.svgPath_.addEventListener("mouseenter", function(event) {
-    clearTimeout(that.timedFn);
+    clearTimeout(that.blinkFn);
     // blink
     if (event.target.svgFace.eye) {
       event.target.svgFace.eye.setAttribute('fill-opacity','0');
@@ -84,7 +92,7 @@ Blockly.BlockSvg = function(workspace, prototypeName, opt_id) {
     }
 
     // reset after a short delay
-    that.timedFn = setTimeout(function() {
+    that.blinkFn = setTimeout(function() {
       if (event.target.svgFace.eye) {
         event.target.svgFace.eye.setAttribute('fill-opacity','0.6');
         event.target.svgFace.eye2.setAttribute('fill-opacity','0.6');
@@ -92,6 +100,41 @@ Blockly.BlockSvg = function(workspace, prototypeName, opt_id) {
         event.target.svgFace.closedEye2.setAttribute('fill-opacity','0');
       }
     }, 100);
+  });
+  this.svgPath_.ear.addEventListener("mouseenter", function() {
+    clearTimeout(that.earFn);
+    clearTimeout(that.ear2Fn);
+    // ear flick
+    that.svgPath_.ear.setAttribute('fill-opacity','0');
+    that.svgPath_.ear2.setAttribute('fill-opacity','');
+    var bodyPath = that.svgPath_.svgBody.getAttribute('d');
+    bodyPath = bodyPath.replace(RIGHT_EAR_UP, RIGHT_EAR_DOWN);
+    bodyPath = bodyPath.replace(LEFT_EAR_DOWN, LEFT_EAR_UP);
+    that.svgPath_.svgBody.setAttribute('d', bodyPath);
+
+    // reset after a short delay
+    that.earFn = setTimeout(function() {
+      that.svgPath_.ear.setAttribute('fill-opacity','');
+      that.svgPath_.svgBody.setAttribute('d', bodyPath.replace(RIGHT_EAR_DOWN, RIGHT_EAR_UP));
+    }, 50);
+  });
+  this.svgPath_.ear2.addEventListener("mouseenter", function() {
+    clearTimeout(that.earFn);
+    clearTimeout(that.ear2Fn);
+    // ear flick
+    that.svgPath_.ear2.setAttribute('fill-opacity','0');
+    that.svgPath_.ear.setAttribute('fill-opacity','');
+    var bodyPath = that.svgPath_.svgBody.getAttribute('d');
+    bodyPath = bodyPath.replace(LEFT_EAR_UP, LEFT_EAR_DOWN);
+    bodyPath = bodyPath.replace(RIGHT_EAR_DOWN, RIGHT_EAR_UP);
+    that.svgPath_.svgBody.setAttribute('d', bodyPath);
+
+    // reset after a short delay
+    that.ear2Fn = setTimeout(function() {
+      that.svgPath_.ear2.setAttribute('fill-opacity','');
+      var bodyPath = that.svgPath_.svgBody.getAttribute('d');
+      that.svgPath_.svgBody.setAttribute('d', bodyPath.replace(LEFT_EAR_DOWN, LEFT_EAR_UP));
+    }, 50);
   });
   this.windowListener = function(event) {
     // mouse watching
@@ -896,7 +939,9 @@ Blockly.BlockSvg.prototype.dispose = function(healStack, animate) {
     // The block has already been deleted.
     return;
   }
-  clearTimeout(this.timedFn);
+  clearTimeout(this.blinkFn);
+  clearTimeout(this.earFn);
+  clearTimeout(this.ear2Fn);
   document.removeEventListener('mousemove', this.windowListener);
   Blockly.Tooltip.hide();
   Blockly.Field.startCache();
