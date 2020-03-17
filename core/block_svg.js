@@ -79,19 +79,19 @@ Blockly.BlockSvg = function(workspace, prototypeName, opt_id) {
     if (event.target.svgFace.eye) {
       event.target.svgFace.eye.setAttribute('fill-opacity','0');
       event.target.svgFace.eye2.setAttribute('fill-opacity','0');
-      event.target.svgFace.closedEye.setAttribute('fill-opacity','0.7');
-      event.target.svgFace.closedEye2.setAttribute('fill-opacity','0.7');
+      event.target.svgFace.closedEye.setAttribute('fill-opacity','0.6');
+      event.target.svgFace.closedEye2.setAttribute('fill-opacity','0.6');
     }
 
     // reset after a short delay
     that.timedFn = setTimeout(function() {
       if (event.target.svgFace.eye) {
-        event.target.svgFace.eye.setAttribute('fill-opacity','0.7');
-        event.target.svgFace.eye2.setAttribute('fill-opacity','0.7');
+        event.target.svgFace.eye.setAttribute('fill-opacity','0.6');
+        event.target.svgFace.eye2.setAttribute('fill-opacity','0.6');
         event.target.svgFace.closedEye.setAttribute('fill-opacity','0');
         event.target.svgFace.closedEye2.setAttribute('fill-opacity','0');
       }
-    }, 200);
+    }, 100);
   });
   this.windowListener = function(event) {
     // mouse watching
@@ -117,8 +117,22 @@ Blockly.BlockSvg = function(workspace, prototypeName, opt_id) {
 
       var dx = mouseLocation.x - xy.x;
       var dy = mouseLocation.y - xy.y;
-      dx = Math.min(5, Math.max(-5, dx));
-      dy = Math.min(3, Math.max(-3, dy));
+      var theta = Math.atan2(dx, dy);
+
+      // Map the vector from the cat face to the mouse location to a much shorter
+      // vector in the same direction, which will be the translation vector for
+      // the cat face
+      var delta = Math.sqrt(dx * dx + dy * dy);
+      var scaleFactor = delta / (delta + 1);
+
+      // Equation for radius of ellipse at theta for axes with length a and b
+      var a = 2;
+      var b = 5;
+      var r = a * b / Math.sqrt(Math.pow(b * Math.cos(theta), 2) + Math.pow(a * Math.sin(theta), 2));
+
+      // Convert polar coordinate back to x, y coordinate
+      dx = (r * scaleFactor) * Math.sin(theta);
+      dy = (r * scaleFactor) * Math.cos(theta);
 
       that.svgFace_.style.transform = 'translate(' + dx + 'px,' + dy + 'px)';
     }

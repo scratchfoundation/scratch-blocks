@@ -1145,14 +1145,14 @@ Blockly.BlockSvg.prototype.renderCatFace_ = function() {
   eye.setAttribute('cx','59.2');
   eye.setAttribute('cy','-3.3');
   eye.setAttribute('r','3.4');
-  eye.setAttribute('fill-opacity','0.7');
+  eye.setAttribute('fill-opacity','0.6');
   this.svgPath_.svgFace.eye = eye;
 
   var eye2 = Blockly.utils.createSvgElement('circle', {}, this.svgFace_);
   eye2.setAttribute('cx','29.1');
   eye2.setAttribute('cy','-3.3');
   eye2.setAttribute('r','3.4');
-  eye2.setAttribute('fill-opacity','0.7');
+  eye2.setAttribute('fill-opacity','0.6');
   this.svgPath_.svgFace.eye2 = eye2;
 
   var mouth = Blockly.utils.createSvgElement('path', {}, this.svgFace_);
@@ -1164,7 +1164,7 @@ Blockly.BlockSvg.prototype.renderCatFace_ = function() {
     'c0,0.3,0.1,0.9,0.4,1.2C44.8-2.2,45-2,45.5-2s0.7-0.2,0.8-0.3' +
     'c0.3-0.4,0.4-1.1,0.3-1.3c0-0.5,0.4-1,0.9-1.1c0.5,0,1,0.4,1.1,0.9' +
     'c0,0.2,0.1,1.8-0.8,2.8C47.5-0.4,46.8,0.1,45.6,0.1z');
-  mouth.setAttribute('fill-opacity','0.7');
+  mouth.setAttribute('fill-opacity','0.6');
 
   var ear = Blockly.utils.createSvgElement('path', {}, this.svgPath_);
   ear.setAttribute('d','M73.1-15.6c1.7-4.2,4.5-9.1,5.8-8.5' +
