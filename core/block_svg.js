@@ -982,6 +982,7 @@ Blockly.BlockSvg.prototype.dispose = function(healStack, animate) {
   this.svgGroup_ = null;
   this.svgPath_ = null;
   this.svgPathBody_ = null;
+  this.svgFace_ = null;
   Blockly.Field.stopCache();
 };
 
