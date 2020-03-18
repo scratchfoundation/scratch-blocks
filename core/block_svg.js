@@ -75,6 +75,8 @@ Blockly.BlockSvg = function(workspace, prototypeName, opt_id) {
   this.svgPath_.svgBody = this.svgPathBody_;
   this.svgPath_.ear = Blockly.utils.createSvgElement('path', {}, this.svgPath_);
   this.svgPath_.ear2 = Blockly.utils.createSvgElement('path', {}, this.svgPath_);
+  this.lastCallTime = 0;
+  this.CALL_FREQUENCY_MS = 50;
 
   var that = this;
   // Ear part of the SVG path for hat blocks
@@ -155,6 +157,10 @@ Blockly.BlockSvg = function(workspace, prototypeName, opt_id) {
     }, 50);
   });
   this.windowListener = function(event) {
+    var time = Date.now();
+    if (time < that.lastCallTime + that.CALL_FREQUENCY_MS) return;
+    that.lastCallTime = time;
+
     // mouse watching
     if (that.workspace) { // not disposed
       var xy = that.getRelativeToSurfaceXY(that.svgGroup_);
