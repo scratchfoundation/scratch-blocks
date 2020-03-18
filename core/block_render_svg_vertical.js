@@ -486,7 +486,8 @@ Blockly.BlockSvg.TOP_LEFT_CORNER_DEFINE_HAT =
 //     Blockly.BlockSvg.DEFINE_HAT_CORNER_RADIUS;
     'c0,-7.1 3.7,-13.3 9.3,-16.9c1.7,-7.5 5.4,-13.2 7.6,-14.2' +
     'c2.6,-1.3 10,6 14.6,11.1h33c4.6,-5.1 11.9,-12.4 14.6,-11.1' +
-    'c1.9,0.9 4.9,5.2 6.8,11.1';
+    'c1.9,0.9 4.9,5.2 6.8,11.1c2.6,0,5.2,0,7.8,0';
+
 /**
  * SVG path for drawing the rounded top-left corner.
  * @const
