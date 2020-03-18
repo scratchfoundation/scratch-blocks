@@ -77,10 +77,18 @@ Blockly.BlockSvg = function(workspace, prototypeName, opt_id) {
   this.svgPath_.ear2 = Blockly.utils.createSvgElement('path', {}, this.svgPath_);
 
   var that = this;
+  // Ear part of the SVG path for hat blocks
   var LEFT_EAR_UP = 'c-1,-12.5 5.3,-23.3 8.4,-24.8c3.7,-1.8 16.5,13.1 18.4,15.4';
   var LEFT_EAR_DOWN = 'c-5.8,-4.8 -8,-18 -4.9,-19.5c3.7,-1.8 24.5,11.1 31.7,10.1';
   var RIGHT_EAR_UP = 'c1.9,-2.3 14.7,-17.2 18.4,-15.4c3.1,1.5 9.4,12.3 8.4,24.8';
   var RIGHT_EAR_DOWN = 'c7.2,1 28,-11.9 31.7,-10.1c3.1,1.5 0.9,14.7 -4.9,19.5';
+  // Ears look slightly different for define hat blocks
+  var DEFINE_HAT_LEFT_EAR_UP = 'c0,-7.1 3.7,-13.3 9.3,-16.9c1.7,-7.5 5.4,-13.2 7.6,-14.2c2.6,-1.3 10,6 14.6,11.1';
+  var DEFINE_HAT_RIGHT_EAR_UP = 'h33c4.6,-5.1 11.9,-12.4 14.6,-11.1c1.9,0.9 4.9,5.2 6.8,11.1c2.6,0,5.2,0,7.8,0';
+  var DEFINE_HAT_LEFT_EAR_DOWN = 'c0,-4.6 1.6,-8.9 4.3,-12.3c-2.4,-5.6 -2.9,-12.4 -0.7,-13.4c2.1,-1 9.6,2.6 17,5.8' +
+    'c2.6,0 6.2,0 10.9,0';
+  var DEFINE_HAT_RIGHT_EAR_DOWN = 'c0,0 25.6,0 44,0c7.4,-3.2 14.8,-6.8 16.9,-5.8c1.2,0.6 1.6,2.9 1.3,5.8';
+
   this.svgPath_.addEventListener("mouseenter", function(event) {
     clearTimeout(that.blinkFn);
     // blink
@@ -109,13 +117,18 @@ Blockly.BlockSvg = function(workspace, prototypeName, opt_id) {
     that.svgPath_.ear2.setAttribute('fill-opacity','');
     var bodyPath = that.svgPath_.svgBody.getAttribute('d');
     bodyPath = bodyPath.replace(RIGHT_EAR_UP, RIGHT_EAR_DOWN);
+    bodyPath = bodyPath.replace(DEFINE_HAT_RIGHT_EAR_UP, DEFINE_HAT_RIGHT_EAR_DOWN);
     bodyPath = bodyPath.replace(LEFT_EAR_DOWN, LEFT_EAR_UP);
+    bodyPath = bodyPath.replace(DEFINE_HAT_LEFT_EAR_DOWN, DEFINE_HAT_LEFT_EAR_UP);
     that.svgPath_.svgBody.setAttribute('d', bodyPath);
 
     // reset after a short delay
     that.earFn = setTimeout(function() {
       that.svgPath_.ear.setAttribute('fill-opacity','');
-      that.svgPath_.svgBody.setAttribute('d', bodyPath.replace(RIGHT_EAR_DOWN, RIGHT_EAR_UP));
+      var bodyPath = that.svgPath_.svgBody.getAttribute('d');
+      bodyPath = bodyPath.replace(RIGHT_EAR_DOWN, RIGHT_EAR_UP);
+      bodyPath = bodyPath.replace(DEFINE_HAT_RIGHT_EAR_DOWN, DEFINE_HAT_RIGHT_EAR_UP);
+      that.svgPath_.svgBody.setAttribute('d', bodyPath);
     }, 50);
   });
   this.svgPath_.ear2.addEventListener("mouseenter", function() {
@@ -126,14 +139,19 @@ Blockly.BlockSvg = function(workspace, prototypeName, opt_id) {
     that.svgPath_.ear.setAttribute('fill-opacity','');
     var bodyPath = that.svgPath_.svgBody.getAttribute('d');
     bodyPath = bodyPath.replace(LEFT_EAR_UP, LEFT_EAR_DOWN);
+    bodyPath = bodyPath.replace(DEFINE_HAT_LEFT_EAR_UP, DEFINE_HAT_LEFT_EAR_DOWN);
     bodyPath = bodyPath.replace(RIGHT_EAR_DOWN, RIGHT_EAR_UP);
+    bodyPath = bodyPath.replace(DEFINE_HAT_RIGHT_EAR_DOWN, DEFINE_HAT_RIGHT_EAR_UP);
     that.svgPath_.svgBody.setAttribute('d', bodyPath);
 
     // reset after a short delay
     that.ear2Fn = setTimeout(function() {
       that.svgPath_.ear2.setAttribute('fill-opacity','');
       var bodyPath = that.svgPath_.svgBody.getAttribute('d');
-      that.svgPath_.svgBody.setAttribute('d', bodyPath.replace(LEFT_EAR_DOWN, LEFT_EAR_UP));
+      var bodyPath = that.svgPath_.svgBody.getAttribute('d');
+      bodyPath = bodyPath.replace(LEFT_EAR_DOWN, LEFT_EAR_UP);
+      bodyPath = bodyPath.replace(DEFINE_HAT_LEFT_EAR_DOWN, DEFINE_HAT_LEFT_EAR_UP);
+      that.svgPath_.svgBody.setAttribute('d', bodyPath);
     }, 50);
   });
   this.windowListener = function(event) {
@@ -142,7 +160,7 @@ Blockly.BlockSvg = function(workspace, prototypeName, opt_id) {
       var xy = that.getRelativeToSurfaceXY(that.svgGroup_);
       var offset = that.workspace.getParentSvg().getBoundingClientRect();
       offset.x += 60; // scratchCategoryMenu width
-      if (!that.isInFlyout) {
+      if (!that.isInFlyout && that.workspace.getFlyout()) {
         offset.x += that.workspace.getFlyout().getWidth();
         offset.x += 60;
       }
