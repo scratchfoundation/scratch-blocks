@@ -164,7 +164,9 @@ Blockly.BlockSvg = function(workspace, prototypeName, opt_id) {
     // mouse watching
     if (that.workspace) { // not disposed
       var xy = that.getRelativeToSurfaceXY(that.svgGroup_);
-      var offset = that.workspace.getParentSvg().getBoundingClientRect();
+      // Not performant
+      //var offset = that.workspace.getParentSvg().getBoundingClientRect();
+      var offset = {x:0, y:92}
       offset.x += 60; // scratchCategoryMenu width
       if (!that.isInFlyout && that.workspace.getFlyout()) {
         offset.x += that.workspace.getFlyout().getWidth();
