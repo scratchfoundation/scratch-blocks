@@ -207,7 +207,9 @@ Blockly.BlockSvg = function(workspace, prototypeName, opt_id) {
       that.svgFace_.style.transform = 'translate(' + dx + 'px,' + dy + 'px)';
     }
   };
-  document.addEventListener('mousemove', this.windowListener);
+  if (!this.isGlowingStack_) {
+    document.addEventListener('mousemove', this.windowListener);
+  }
   this.svgPathBody_.tooltip = this;
 
   /** @type {boolean} */
@@ -366,6 +368,14 @@ Blockly.BlockSvg.prototype.unselect = function() {
  * @param {boolean} isGlowingBlock Whether the block should glow.
  */
 Blockly.BlockSvg.prototype.setGlowBlock = function(isGlowingBlock) {
+  if (isGlowingBlock) {
+    // For performance, don't follow the mouse when the stack is glowing
+    document.removeEventListener('mousemove', this.windowListener);
+    if (this.workspace && this.svgFace_.style) this.svgFace_.style.transform = ''; // reset face direction
+  } else {
+    document.addEventListener('mousemove', this.windowListener)
+  }
+
   this.isGlowingBlock_ = isGlowingBlock;
   this.updateColour();
 };
@@ -375,6 +385,14 @@ Blockly.BlockSvg.prototype.setGlowBlock = function(isGlowingBlock) {
  * @param {boolean} isGlowingStack Whether the stack starting with this block should glow.
  */
 Blockly.BlockSvg.prototype.setGlowStack = function(isGlowingStack) {
+  if (isGlowingStack) {
+    // For performance, don't follow the mouse when the stack is glowing
+    document.removeEventListener('mousemove', this.windowListener);
+    if (this.workspace && this.svgFace_.style) this.svgFace_.style.transform = ''; // reset face direction
+  } else {
+    document.addEventListener('mousemove', this.windowListener)
+  }
+
   this.isGlowingStack_ = isGlowingStack;
   // Update the applied SVG filter if the property has changed
   var svg = this.getSvgRoot();
