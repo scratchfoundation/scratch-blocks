@@ -1195,6 +1195,7 @@ Blockly.BlockSvg.prototype.renderDraw_ = function(iconWidth, inputRows) {
     // No output or previous connection.
     this.squareTopLeftCorner_ = true;
     this.startHat_ = true;
+    this.initCatStuff();
     inputRows.rightEdge = Math.max(inputRows.rightEdge, 100);
   }
 
