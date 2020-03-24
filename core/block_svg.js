@@ -75,7 +75,7 @@ Blockly.BlockSvg = function(workspace, prototypeName, opt_id) {
   this.svgPath_.svgFace = this.svgFace_;
   this.svgPath_.svgBody = this.svgPathBody_;
   this.lastCallTime = 0;
-  this.CALL_FREQUENCY_MS = 75;
+  this.CALL_FREQUENCY_MS = 60;
 
   this.svgPathBody_.tooltip = this;
 
@@ -365,10 +365,9 @@ Blockly.BlockSvg.prototype.getCatFacePosition = function() {
   // getBoundingClientRect is not performant
   //var offset = that.workspace.getParentSvg().getBoundingClientRect();
   var offset = {x:0, y:92};
-  offset.x += 60; // scratchCategoryMenu width
+  offset.x += 120; // scratchCategoryMenu width
   if (!this.isInFlyout && this.workspace.getFlyout()) {
     offset.x += this.workspace.getFlyout().getWidth();
-    offset.x += 60;
   }
   offset.x += this.workspace.scrollX;
   offset.y += this.workspace.scrollY;
