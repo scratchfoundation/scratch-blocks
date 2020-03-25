@@ -8,7 +8,8 @@ addons:
 cache:
   directories:
   - node_modules
-
+env:
+  - NPM_TAG=latest
 before_install:
 # Symlink closure library
 - ln -s $(npm root)/google-closure-library ../closure-library
@@ -37,7 +38,8 @@ after_script:
     echo "//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" > .npmrc
     # Set version to timestamp
     npm --no-git-tag-version version $($(npm bin)/json -f package.json version)-prerelease.$(date +%s)
-    npm publish
+    if [[ "$TRAVIS_BRANCH" == hotfix/* ]]; then export NPM_TAG=hotfix; fi # double brackets are important for matching the wildcard
+    npm publish --tag $NPM_TAG
     # Publish to gh-pages as most recent committer
     git config --global user.email $(git log --pretty=format:"%ae" -n1)
     git config --global user.name $(git log --pretty=format:"%an" -n1)
