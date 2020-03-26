@@ -139,7 +139,7 @@ Blockly.BlockSvg.STATEMENT_INPUT_INNER_SPACE = 2 * Blockly.BlockSvg.GRID_UNIT;
  * Height of the top hat.
  * @const
  */
-Blockly.BlockSvg.START_HAT_HEIGHT = 16;
+Blockly.BlockSvg.START_HAT_HEIGHT = 31;
 
 /**
  * Height of the vertical separator line for icons that appear at the left edge
@@ -152,7 +152,10 @@ Blockly.BlockSvg.ICON_SEPARATOR_HEIGHT = 10 * Blockly.BlockSvg.GRID_UNIT;
  * Path of the top hat's curve.
  * @const
  */
-Blockly.BlockSvg.START_HAT_PATH = 'c 25,-22 71,-22 96,0';
+Blockly.BlockSvg.START_HAT_PATH = 'c2.6,-2.3 5.5,-4.3 8.5,-6.2' +
+    'c-1,-12.5 5.3,-23.3 8.4,-24.8c3.7,-1.8 16.5,13.1 18.4,15.4' +
+    'c8.4,-1.3 17,-1.3 25.4,0c1.9,-2.3 14.7,-17.2 18.4,-15.4' +
+    'c3.1,1.5 9.4,12.3 8.4,24.8c3,1.8 5.9,3.9 8.5,6.1';
 
 /**
  * SVG path for drawing next/previous notch from left to right.
@@ -477,10 +480,13 @@ Blockly.BlockSvg.DEFINE_HAT_CORNER_RADIUS = 5 * Blockly.BlockSvg.GRID_UNIT;
  * @const
  */
 Blockly.BlockSvg.TOP_LEFT_CORNER_DEFINE_HAT =
-    'a ' + Blockly.BlockSvg.DEFINE_HAT_CORNER_RADIUS + ',' +
-    Blockly.BlockSvg.DEFINE_HAT_CORNER_RADIUS + ' 0 0,1 ' +
-    Blockly.BlockSvg.DEFINE_HAT_CORNER_RADIUS + ',-' +
-    Blockly.BlockSvg.DEFINE_HAT_CORNER_RADIUS;
+//     'a ' + Blockly.BlockSvg.DEFINE_HAT_CORNER_RADIUS + ',' +
+//     Blockly.BlockSvg.DEFINE_HAT_CORNER_RADIUS + ' 0 0,1 ' +
+//     Blockly.BlockSvg.DEFINE_HAT_CORNER_RADIUS + ',-' +
+//     Blockly.BlockSvg.DEFINE_HAT_CORNER_RADIUS;
+    'c0,-7.1 3.7,-13.3 9.3,-16.9c1.7,-7.5 5.4,-13.2 7.6,-14.2' +
+    'c2.6,-1.3 10,6 14.6,11.1h33c4.6,-5.1 11.9,-12.4 14.6,-11.1' +
+    'c1.9,0.9 4.9,5.2 6.8,11.1c2.6,0,5.2,0,7.8,0';
 
 /**
  * SVG path for drawing the rounded top-left corner.
@@ -519,7 +525,7 @@ Blockly.BlockSvg.prototype.updateColour = function() {
   }
 
   // Render block stroke
-  this.svgPath_.setAttribute('stroke', strokeColour);
+  this.svgPathBody_.setAttribute('stroke', strokeColour);
 
   // Render block fill
   if (this.isGlowingBlock_ || renderShadowed) {
@@ -532,10 +538,10 @@ Blockly.BlockSvg.prototype.updateColour = function() {
   } else {
     var fillColour = this.getColour();
   }
-  this.svgPath_.setAttribute('fill', fillColour);
+  this.svgPathBody_.setAttribute('fill', fillColour);
 
   // Render opacity
-  this.svgPath_.setAttribute('fill-opacity', this.getOpacity());
+  this.svgPathBody_.setAttribute('fill-opacity', this.getOpacity());
 
   // Update colours of input shapes.
   for (var i = 0, input; input = this.inputList[i]; i++) {
@@ -567,11 +573,11 @@ Blockly.BlockSvg.prototype.highlightForReplacement = function(add) {
   if (add) {
     var replacementGlowFilterId = this.workspace.options.replacementGlowFilterId
       || 'blocklyReplacementGlowFilter';
-    this.svgPath_.setAttribute('filter', 'url(#' + replacementGlowFilterId + ')');
+    this.svgPathBody_.setAttribute('filter', 'url(#' + replacementGlowFilterId + ')');
     Blockly.utils.addClass(/** @type {!Element} */ (this.svgGroup_),
         'blocklyReplaceable');
   } else {
-    this.svgPath_.removeAttribute('filter');
+    this.svgPathBody_.removeAttribute('filter');
     Blockly.utils.removeClass(/** @type {!Element} */ (this.svgGroup_),
         'blocklyReplaceable');
   }
@@ -1119,6 +1125,59 @@ Blockly.BlockSvg.prototype.computeOutputPadding_ = function(inputRows) {
   row.paddingEnd += Blockly.BlockSvg.SHAPE_IN_SHAPE_PADDING[shape][otherShape];
 };
 
+Blockly.BlockSvg.prototype.renderCatFace_ = function() {
+  this.svgPath_.svgFace.setAttribute('fill','#000000');
+
+  var closedEye = Blockly.utils.createSvgElement('path', {}, this.svgFace_);
+  closedEye.setAttribute('d','M25.2-1.1c0.1,0,0.2,0,0.2,0l8.3-2.1l-7-4.8' +
+    'c-0.5-0.3-1.1-0.2-1.4,0.3s-0.2,1.1,0.3,1.4L29-4.1l-4,1' +
+    'c-0.5,0.1-0.9,0.7-0.7,1.2C24.3-1.4,24.7-1.1,25.2-1.1z');
+  closedEye.setAttribute('fill-opacity','0');
+  this.svgPath_.svgFace.closedEye = closedEye;
+
+  var closedEye2 = Blockly.utils.createSvgElement('path', {}, this.svgFace_);
+  closedEye2.setAttribute('d','M62.4-1.1c-0.1,0-0.2,0-0.2,0l-8.3-2.1l7-4.8' +
+    'c0.5-0.3,1.1-0.2,1.4,0.3s0.2,1.1-0.3,1.4l-3.4,2.3l4,1' +
+    'c0.5,0.1,0.9,0.7,0.7,1.2C63.2-1.4,62.8-1.1,62.4-1.1z');
+  closedEye2.setAttribute('fill-opacity','0');
+  this.svgPath_.svgFace.closedEye2 = closedEye2;
+
+  var eye = Blockly.utils.createSvgElement('circle', {}, this.svgFace_);
+  eye.setAttribute('cx','59.2');
+  eye.setAttribute('cy','-3.3');
+  eye.setAttribute('r','3.4');
+  eye.setAttribute('fill-opacity','0.6');
+  this.svgPath_.svgFace.eye = eye;
+
+  var eye2 = Blockly.utils.createSvgElement('circle', {}, this.svgFace_);
+  eye2.setAttribute('cx','29.1');
+  eye2.setAttribute('cy','-3.3');
+  eye2.setAttribute('r','3.4');
+  eye2.setAttribute('fill-opacity','0.6');
+  this.svgPath_.svgFace.eye2 = eye2;
+
+  var mouth = Blockly.utils.createSvgElement('path', {}, this.svgFace_);
+  mouth.setAttribute('d','M45.6,0.1c-0.9,0-1.7-0.3-2.3-0.9' +
+    'c-0.6,0.6-1.3,0.9-2.2,0.9c-0.9,0-1.8-0.3-2.3-0.9c-1-1.1-1.1-2.6-1.1-2.8' +
+    'c0-0.5,0.5-1,1-1l0,0c0.6,0,1,0.5,1,1c0,0.4,0.1,1.7,1.4,1.7' +
+    'c0.5,0,0.7-0.2,0.8-0.3c0.3-0.3,0.4-1,0.4-1.3c0-0.1,0-0.1,0-0.2' +
+    'c0-0.5,0.5-1,1-1l0,0c0.5,0,1,0.4,1,1c0,0,0,0.1,0,0.2' +
+    'c0,0.3,0.1,0.9,0.4,1.2C44.8-2.2,45-2,45.5-2s0.7-0.2,0.8-0.3' +
+    'c0.3-0.4,0.4-1.1,0.3-1.3c0-0.5,0.4-1,0.9-1.1c0.5,0,1,0.4,1.1,0.9' +
+    'c0,0.2,0.1,1.8-0.8,2.8C47.5-0.4,46.8,0.1,45.6,0.1z');
+  mouth.setAttribute('fill-opacity','0.6');
+
+  this.svgPath_.ear.setAttribute('d','M73.1-15.6c1.7-4.2,4.5-9.1,5.8-8.5' +
+    'c1.6,0.8,5.4,7.9,5,15.4c0,0.6-0.7,0.7-1.1,0.5c-3-1.6-6.4-2.8-8.6-3.6' +
+    'C72.8-12.3,72.4-13.7,73.1-15.6z');
+  this.svgPath_.ear.setAttribute('fill','#FFD5E6');
+
+  this.svgPath_.ear2.setAttribute('d','M22.4-15.6c-1.7-4.2-4.5-9.1-5.8-8.5' +
+    'c-1.6,0.8-5.4,7.9-5,15.4c0,0.6,0.7,0.7,1.1,0.5c3-1.6,6.4-2.8,8.6-3.6' +
+    'C22.8-12.3,23.2-13.7,22.4-15.6z');
+  this.svgPath_.ear2.setAttribute('fill','#FFD5E6');
+};
+
 /**
  * Draw the path of the block.
  * Move the fields to the correct locations.
@@ -1136,6 +1195,7 @@ Blockly.BlockSvg.prototype.renderDraw_ = function(iconWidth, inputRows) {
     // No output or previous connection.
     this.squareTopLeftCorner_ = true;
     this.startHat_ = true;
+    this.initCatStuff();
     inputRows.rightEdge = Math.max(inputRows.rightEdge, 100);
   }
 
@@ -1162,12 +1222,15 @@ Blockly.BlockSvg.prototype.renderDraw_ = function(iconWidth, inputRows) {
   this.renderDrawLeft_(steps);
 
   var pathString = steps.join(' ');
-  this.svgPath_.setAttribute('d', pathString);
+  this.svgPathBody_.setAttribute('d', pathString);
+  if (this.startHat_ && !this.svgFace_.firstChild) {
+    this.renderCatFace_();
+  }
 
   if (this.RTL) {
     // Mirror the block's path.
     // This is awesome.
-    this.svgPath_.setAttribute('transform', 'scale(-1 1)');
+    this.svgPathBody_.setAttribute('transform', 'scale(-1 1)');
   }
 };
 
