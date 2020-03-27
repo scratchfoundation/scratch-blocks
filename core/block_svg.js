@@ -249,6 +249,11 @@ Blockly.BlockSvg.prototype.initCatStuff = function() {
   var that = this;
   this.svgPath_.ear = Blockly.utils.createSvgElement('path', {}, this.svgPath_);
   this.svgPath_.ear2 = Blockly.utils.createSvgElement('path', {}, this.svgPath_);
+  if (this.RTL) {
+    // Mirror the ears.
+    this.svgPath_.ear.setAttribute('transform', 'scale(-1 1)');
+    this.svgPath_.ear2.setAttribute('transform', 'scale(-1 1)');
+  }
   this.svgPath_.addEventListener("mouseenter", function(event) {
     clearTimeout(that.blinkFn);
     // blink
@@ -348,9 +353,14 @@ Blockly.BlockSvg.prototype.initCatStuff = function() {
       dx = (r * scaleFactor) * Math.sin(theta);
       dy = (r * scaleFactor) * Math.cos(theta);
 
-      that.svgFace_.style.transform = 'translate(' + dx + 'px,' + dy + 'px)';
+      if (that.RTL) dx -= 87; // Translate face over
+      that.svgFace_.style.transform = 'translate(' + dx + 'px, ' + dy + 'px)';
     }
   };
+  if (this.RTL) {
+    // Set to the correct initial position
+    this.svgFace_.style.transform = 'translate(-87px, 0px)';
+  }
   if (this.shouldWatchMouse()) {
     document.addEventListener('mousemove', this.windowListener);
   }
@@ -361,21 +371,38 @@ Blockly.BlockSvg.prototype.initCatStuff = function() {
  * @return {Object} coordinates of center of cat face
  */
 Blockly.BlockSvg.prototype.getCatFacePosition = function() {
-  var xy = this.getRelativeToSurfaceXY(this.svgGroup_);
   // getBoundingClientRect is not performant
   //var offset = that.workspace.getParentSvg().getBoundingClientRect();
   var offset = {x:0, y:92};
+  
   offset.x += 120; // scratchCategoryMenu width
+  
   if (!this.isInFlyout && this.workspace.getFlyout()) {
     offset.x += this.workspace.getFlyout().getWidth();
   }
+
   offset.x += this.workspace.scrollX;
   offset.y += this.workspace.scrollY;
+
+  var xy = this.getRelativeToSurfaceXY(this.svgGroup_);
+  if (this.RTL) {
+    xy.x = this.workspace.getWidth() - xy.x - this.width;
+    if (!this.isInFlyout) {
+      console.log(xy.x + " " + this.workspace.scrollX);
+      window.workspace = this.workspace;
+      window.block = this;
+    }
+  }
   // convert to workspace units
   xy.x += offset.x / this.workspace.scale;
   xy.y += offset.y / this.workspace.scale;
-  xy.x -= 43.5; // distance to center of face
+  // distance to center of face
+  xy.x -= 43.5;
   xy.y -= 4;
+  if (this.RTL) {
+    // We've been calculating from the right edge. Convert x to from left edge.
+    xy.x = screen.width - xy.x;
+  }
   return xy;
 };
 
