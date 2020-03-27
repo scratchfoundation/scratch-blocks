@@ -387,11 +387,6 @@ Blockly.BlockSvg.prototype.getCatFacePosition = function() {
   var xy = this.getRelativeToSurfaceXY(this.svgGroup_);
   if (this.RTL) {
     xy.x = this.workspace.getWidth() - xy.x - this.width;
-    if (!this.isInFlyout) {
-      console.log(xy.x + " " + this.workspace.scrollX);
-      window.workspace = this.workspace;
-      window.block = this;
-    }
   }
   // convert to workspace units
   xy.x += offset.x / this.workspace.scale;
