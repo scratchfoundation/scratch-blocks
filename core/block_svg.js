@@ -406,7 +406,7 @@ Blockly.BlockSvg.prototype.getCatFacePosition = function() {
  * @return {boolean} true if the block should be watching the mouse
  */
 Blockly.BlockSvg.prototype.shouldWatchMouse = function() {
-  if (window.vmLoadHigh) return false;
+  if (window.vmLoadHigh || !window.CAT_CHASE_MOUSE) return false;
   var xy = this.getCatFacePosition();
   var blockXOnScreen = xy.x > 0 && xy.x < screen.width / this.workspace.scale;
   var blockYOnScreen = xy.y > 0 && xy.y < screen.height / this.workspace.scale;
