@@ -1,6 +1,6 @@
 {
   "name": "scratch-blocks",
-  "version": "0.1.0-prerelease.1585323236",
+  "version": "0.1.0-prerelease.1585596124",
   "description": "Scratch Blocks is a library for building creative computing interfaces.",
   "author": "Massachusetts Institute of Technology",
   "license": "Apache-2.0",
@@ -8,7 +8,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/LLK/scratch-blocks.git",
-    "sha": "769fb6a35b8bb1bfe92d42d21969ef9d450b4e6d"
+    "sha": "b18a75d1ea1bad138154c18e8c2df3ca52469b7a"
   },
   "main": "./dist/vertical.js",
   "browser": "./shim/vertical.js",
