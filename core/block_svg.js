@@ -406,6 +406,7 @@ Blockly.BlockSvg.prototype.getCatFacePosition = function() {
  * @return {boolean} true if the block should be watching the mouse
  */
 Blockly.BlockSvg.prototype.shouldWatchMouse = function() {
+  if (window.vmLoadHigh) return false;
   var xy = this.getCatFacePosition();
   var blockXOnScreen = xy.x > 0 && xy.x < screen.width / this.workspace.scale;
   var blockYOnScreen = xy.y > 0 && xy.y < screen.height / this.workspace.scale;
@@ -429,7 +430,14 @@ Blockly.BlockSvg.prototype.setGlowStack = function(isGlowingStack) {
   if (isGlowingStack) {
     // For performance, don't follow the mouse when the stack is glowing
     document.removeEventListener('mousemove', this.windowListener);
-    if (this.workspace && this.svgFace_.style) this.svgFace_.style.transform = ''; // reset face direction
+    if (this.workspace && this.svgFace_.style) {
+      // reset face direction
+      if (this.RTL) {
+        this.svgFace_.style.transform = 'translate(-87px, 0px)';
+      } else {
+        this.svgFace_.style.transform = '';
+      }
+    }
   } else {
     document.addEventListener('mousemove', this.windowListener);
   }
