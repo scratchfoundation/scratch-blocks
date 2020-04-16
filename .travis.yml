@@ -1,7 +1,6 @@
 language: node_js
 node_js:
 - "8"
-- "stable"
 sudo: required
 addons:
   chrome: stable
@@ -23,11 +22,7 @@ after_script:
 - |
   # RELEASE_BRANCHES and NPM_TOKEN defined in Travis settings panel
   declare exitCode
-  $(npm bin)/travis-after-all
-  exitCode=$?
   if [[
-    # Execute after all jobs finish successfully
-    $exitCode = 0 &&
     # Only release on release branches
     $RELEASE_BRANCHES =~ $TRAVIS_BRANCH &&
     # Don't release on PR builds
