@@ -30,7 +30,7 @@
   },
   "devDependencies": {
     "async": "2.6.0",
-    "chromedriver": "^75.0",
+    "chromedriver": "80.0.1",
     "copy-webpack-plugin": "4.5.1",
     "eslint": "^4.16",
     "event-stream": "3.3.4",
@@ -42,7 +42,7 @@
     "json": "9.0.4",
     "rimraf": "2.6.2",
     "scratch-l10n": "^3.8.20200325112845",
-    "selenium-webdriver": "^4.0.0-alpha.1",
+    "selenium-webdriver": "^4.0.0-alpha.7",
     "transifex": "1.6.6",
     "travis-after-all": "1.4.4",
     "uglifyjs-webpack-plugin": "^1.2.5",
