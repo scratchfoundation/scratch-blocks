@@ -245,19 +245,18 @@ Blockly.FieldColourSlider.prototype.sliderCallbackFactory_ = function(channel) {
   return function(event) {
     if (!thisField.sliderCallbacksEnabled_) return;
     var channelValue = event.target.getValue();
-    var hsv = goog.color.hexToHsv(thisField.getValue());
     switch (channel) {
       case 'hue':
-        hsv[0] = thisField.hue_ = channelValue;
+        thisField.hue_ = channelValue;
         break;
       case 'saturation':
-        hsv[1] = thisField.saturation_ = channelValue;
+        thisField.saturation_ = channelValue;
         break;
       case 'brightness':
-        hsv[2] = thisField.brightness_ = channelValue;
+        thisField.brightness_ = channelValue;
         break;
     }
-    var colour = goog.color.hsvToHex(hsv[0], hsv[1], hsv[2]);
+    var colour = goog.color.hsvToHex(thisField.hue_, thisField.saturation_, thisField.brightness_);
     if (thisField.sourceBlock_) {
       // Call any validation function, and allow it to override.
       colour = thisField.callValidator(colour);
