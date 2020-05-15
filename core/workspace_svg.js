@@ -2097,11 +2097,14 @@ Blockly.WorkspaceSvg.prototype.setToolboxRefreshEnabled = function(enabled) {
 
 /**
  * Dispose of all blocks in workspace, with an optimization to prevent resizes.
+ * @param {boolean} [resizeAfterwards=true] Whether the workspace should be resized after clearing.
  */
-Blockly.WorkspaceSvg.prototype.clear = function() {
-  this.setResizesEnabled(false);
+Blockly.WorkspaceSvg.prototype.clear = function(resizeAfterwards) {
+  // Default resizeAfterwards to true if not explicitly passed
+  resizeAfterwards = resizeAfterwards !== false;
+  if (resizeAfterwards) this.setResizesEnabled(false);
   Blockly.WorkspaceSvg.superClass_.clear.call(this);
-  this.setResizesEnabled(true);
+  if (resizeAfterwards) this.setResizesEnabled(true);
 };
 
 /**

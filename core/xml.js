@@ -408,7 +408,9 @@ Blockly.Xml.textToDom = function(text) {
 Blockly.Xml.clearWorkspaceAndLoadFromXml = function(xml, workspace) {
   workspace.setResizesEnabled(false);
   workspace.setToolboxRefreshEnabled(false);
-  workspace.clear();
+  // If we clear the workspace and allow it to resize, the scroll position will be clamped around (0, 0)
+  // because the workspace will be empty when it is resized.
+  workspace.clear(false /* resizeAfterwards */);
   var blockIds = Blockly.Xml.domToWorkspace(xml, workspace);
   workspace.setResizesEnabled(true);
   workspace.setToolboxRefreshEnabled(true);
