@@ -7104,7 +7104,7 @@ Blockly.ScratchMsgs.locales["hy"] =
     "CATEGORY_MOTION": "Շարժ",
     "CATEGORY_LOOKS": "Տեսք",
     "CATEGORY_SOUND": "Ձայն",
-    "CATEGORY_EVENTS": "Իրադարձու թյուն",
+    "CATEGORY_EVENTS": "Իրադարձություն",
     "CATEGORY_CONTROL": "Կառավարում",
     "CATEGORY_SENSING": "Ընկալում",
     "CATEGORY_OPERATORS": "Հաշվարկ",
