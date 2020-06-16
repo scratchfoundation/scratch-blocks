@@ -51,7 +51,7 @@ CLOSURE_COMPILER = REMOTE_COMPILER
 CLOSURE_DIR_NPM = "node_modules"
 CLOSURE_ROOT_NPM = os.path.join("node_modules")
 CLOSURE_LIBRARY_NPM = "google-closure-library"
-CLOSURE_COMPILER_NPM = "google-closure-compiler"
+CLOSURE_COMPILER_NPM = ("google-closure-compiler.cmd" if os.name == "nt" else "google-closure-compiler")
 
 def import_path(fullpath):
   """Import a file with full path specification.
@@ -287,7 +287,7 @@ class Gen_compressed(threading.Thread):
     # Add Blockly.Colours for use of centralized colour bank
     filenames.append(os.path.join("core", "colours.js"))
     filenames.append(os.path.join("core", "constants.js"))
-    
+
     for filename in filenames:
       # Append filenames as false arguments the step before compiling will
       # either transform them into arguments for local or remote compilation
@@ -322,10 +322,10 @@ class Gen_compressed(threading.Thread):
         if pair[0][2:] not in filter_keys:
           dash_args.extend(pair)
 
-      # Build the final args array by prepending google-closure-compiler to
+      # Build the final args array by prepending CLOSURE_COMPILER_NPM to
       # dash_args and dropping any falsy members
       args = []
-      for group in [["google-closure-compiler"], dash_args]:
+      for group in [[CLOSURE_COMPILER_NPM], dash_args]:
         args.extend(filter(lambda item: item, group))
 
       proc = subprocess.Popen(args, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
@@ -575,7 +575,7 @@ if __name__ == "__main__":
     (stdout, _) = test_proc.communicate()
     assert stdout == read(os.path.join("build", "test_expect.js"))
 
-    print("Using local compiler: google-closure-compiler ...\n")
+    print("Using local compiler: %s ...\n" % CLOSURE_COMPILER_NPM)
   except (ImportError, AssertionError):
     print("Using remote compiler: closure-compiler.appspot.com ...\n")
 
