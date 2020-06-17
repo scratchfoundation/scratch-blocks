@@ -39,7 +39,7 @@ if sys.version_info[0] != 2:
   raise Exception("Blockly build only compatible with Python 2.x.\n"
                   "You are using: " + sys.version)
 
-import errno, glob, httplib, json, os, re, subprocess, threading, urllib
+import errno, glob, httplib, json, os, re, subprocess, threading, urllib, platform
 
 REMOTE_COMPILER = "remote"
 
@@ -52,6 +52,32 @@ CLOSURE_DIR_NPM = "node_modules"
 CLOSURE_ROOT_NPM = os.path.join("node_modules")
 CLOSURE_LIBRARY_NPM = "google-closure-library"
 CLOSURE_COMPILER_NPM = "google-closure-compiler"
+
+# Set POWERSHELL_COMMAND_PREFIX command if powershell is available for windows 
+if platform.system() == "Windows":
+  try:
+    # Check if powershell is available for windows systems (should be installed by default)
+    proc = subprocess.Popen(['powershell', '/c', '$PsHome'], stdin=subprocess.PIPE, stdout=subprocess.PIPE)
+
+    # If the statement below successfully executes, 'powershell_path' will
+    # contain the absolute path to the powershell executable; that path
+    # includes the text 'WindowsPowershell" which we test for in
+    # the statement that follows this one.
+    (powershell_path, _) = proc.communicate()
+
+    if "windowspowershell" in powershell_path.lower():
+      # Create powershell command prefix list that will be
+      # prepended to 'google-closure-library' args list
+      # Resolves the following issues reported on github:
+      # #2001, #1981 and #1859 (maybe more)
+      POWERSHELL_COMMAND_PREFIX = ['powershell', '/c']
+    else:
+      raise OSError()
+  except OSError:
+    print("Error: Powershell was not found on your system.")
+    sys.exit(1)
+else:
+  POWERSHELL_COMMAND_PREFIX = []
 
 def import_path(fullpath):
   """Import a file with full path specification.
@@ -324,7 +350,7 @@ class Gen_compressed(threading.Thread):
 
       # Build the final args array by prepending google-closure-compiler to
       # dash_args and dropping any falsy members
-      args = []
+      args = POWERSHELL_COMMAND_PREFIX[:]
       for group in [["google-closure-compiler"], dash_args]:
         args.extend(filter(lambda item: item, group))
 
@@ -570,7 +596,7 @@ if __name__ == "__main__":
         closure_root, closure_library, "closure", "bin", "calcdeps.py"))
 
     # Sanity check the local compiler
-    test_args = [closure_compiler, os.path.join("build", "test_input.js")]
+    test_args = POWERSHELL_COMMAND_PREFIX + [closure_compiler, os.path.join("build", "test_input.js")]
     test_proc = subprocess.Popen(test_args, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
     (stdout, _) = test_proc.communicate()
     assert stdout == read(os.path.join("build", "test_expect.js"))
