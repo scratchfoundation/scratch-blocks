@@ -268,6 +268,7 @@
     "NEW_PROCEDURE": "Make a Block",
     "PROCEDURE_ALREADY_EXISTS": "A procedure named \"%1\" already exists.",
     "PROCEDURE_DEFAULT_NAME": "block name",
+    "PROCEDURE_USED": "To delete a block definition, first remove all uses of the block",
     "NEW_LIST": "Make a List",
     "NEW_LIST_TITLE": "New list name:",
     "LIST_MODAL_TITLE": "New List",
