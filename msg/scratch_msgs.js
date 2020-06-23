@@ -8601,7 +8601,7 @@ Blockly.ScratchMsgs.locales["it"] =
     "NEW_PROCEDURE": "Crea un Blocco",
     "PROCEDURE_ALREADY_EXISTS": "Una procedura chiamata \"%1\" esiste già.",
     "PROCEDURE_DEFAULT_NAME": "nome del blocco",
-    "PROCEDURE_USED": "To delete a block definition, first remove all uses of the block",
+    "PROCEDURE_USED": "Per rimuovere la definizione di un blocco è prima necessario rimuovere tutti i punti in cui il blocco viene usato",
     "NEW_LIST": "Crea una Lista",
     "NEW_LIST_TITLE": "Nome della nuova lista:",
     "LIST_MODAL_TITLE": "Nuova Lista",
