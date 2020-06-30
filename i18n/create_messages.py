@@ -29,11 +29,8 @@ _NEWLINE_PATTERN = re.compile('[\n\r]')
 
 
 def string_is_ascii(s):
-  try:
-    # This approach is better for compatibility 
-    return all(ord(c) < 128 for c in s)
-  except UnicodeEncodeError:
-    return False
+  # This approach is better for compatibility
+  return all(ord(c) < 128 for c in s)
 
 def load_constants(filename):
   """Read in constants file, which must be output in every language."""
