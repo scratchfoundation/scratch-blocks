@@ -15,7 +15,9 @@ const CONCURRENCY_LIMIT = 4;
 const work = function (uri, callback) {
     fs.readFile(uri, function (err, body) {
       const name = path.parse(uri).name;
-      if (err) return callback(err);
+        if (err) {
+            return callback(err);
+        }
 
         // Convert file body into an object (let this throw if invalid JSON)
         body = JSON.parse(body);

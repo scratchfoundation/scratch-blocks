@@ -12,9 +12,13 @@ const PATH_OUTPUT = path.resolve(__dirname, '../msg/json/en.json');
 
 // Match function
 const match = function (str) {
-    if (str.indexOf('Blockly.Msg.') !== 0) return false;
+    if (str.indexOf('Blockly.Msg.') !== 0) {
+        return false;
+    }
     assert.notStrictEqual(str.indexOf('";'), str.length - 2, `[${str}] uses double quoted string, should use single quotes.`);
-    if (str.indexOf("';") !== str.length - 2) return false;
+    if (str.indexOf("';") !== str.length - 2) {
+        return false;
+    }
     return true;
 }
 
@@ -36,7 +40,9 @@ const stream = fs.createReadStream(PATH_INPUT);
 stream
     .pipe(es.split('\n'))
     .pipe(es.mapSync(function (str) {
-        if (!match(str)) return;
+        if (!match(str)) {
+            return;
+        }
         const result = extract(str);
         storage[result.key] = result.value;
     }))

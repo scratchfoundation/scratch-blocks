@@ -1,6 +1,6 @@
 {
     "rules": {
-        "curly": ["error", "multi-line"],
+        "curly": ["error"],
         "eol-last": ["error"],
         "indent": [
             "error", 2,  # Blockly/Google use 2-space indents
