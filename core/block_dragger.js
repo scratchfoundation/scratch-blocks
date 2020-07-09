@@ -245,9 +245,13 @@ Blockly.BlockDragger.prototype.endBlockDrag = function(e, currentDragDeltaXY) {
     // These are expensive and don't need to be done if we're deleting.
     this.draggingBlock_.moveConnections_(delta.x, delta.y);
     this.draggingBlock_.setDragging(false);
-    this.draggedConnectionManager_.applyConnections();
-    this.draggingBlock_.render();
     this.fireMoveEvent_();
+    if (this.draggedConnectionManager_.wouldConnectBlock()) {
+      // Applying connections also rerenders the relevant blocks.
+      this.draggedConnectionManager_.applyConnections();
+    } else {
+      this.draggingBlock_.render();
+    }
     this.draggingBlock_.scheduleSnapAndBump();
   }
   this.workspace_.setResizesEnabled(true);

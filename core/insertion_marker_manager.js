@@ -188,6 +188,17 @@ Blockly.InsertionMarkerManager.prototype.wouldDeleteBlock = function() {
 };
 
 /**
+ * Return whether the block would be connected if dropped immediately, based on
+ * information from the most recent move event.
+ * @return {boolean} True if the block would be connected if dropped
+ *   immediately.
+ * @package
+ */
+Blockly.InsertionMarkerManager.prototype.wouldConnectBlock = function() {
+  return !!this.closestConnection_;
+};
+
+/**
  * Connect to the closest connection and render the results.
  * This should be called at the end of a drag.
  * @package
