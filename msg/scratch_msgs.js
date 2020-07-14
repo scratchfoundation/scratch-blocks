@@ -7428,7 +7428,7 @@ Blockly.ScratchMsgs.locales["he"] =
     "DELETE_BLOCK": "מחק לבנה",
     "DELETE_X_BLOCKS": "מחק %1 לבנים ",
     "DELETE_ALL_BLOCKS": "למחוק את כל הלבנים של %1?",
-    "CLEAN_UP": "נקה לבנים",
+    "CLEAN_UP": "סדר לבנים",
     "HELP": "עזרה",
     "UNDO": "בטל",
     "REDO": "בצע שוב",
