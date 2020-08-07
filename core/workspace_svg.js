@@ -31,16 +31,17 @@ goog.provide('Blockly.WorkspaceSvg');
 goog.require('Blockly.Colours');
 goog.require('Blockly.ConnectionDB');
 goog.require('Blockly.constants');
-goog.require('Blockly.DataCategory');
 goog.require('Blockly.DropDownDiv');
 goog.require('Blockly.Events.BlockCreate');
 goog.require('Blockly.Gesture');
 goog.require('Blockly.Grid');
+goog.require('Blockly.ListCategory');
 goog.require('Blockly.Options');
 goog.require('Blockly.scratchBlocksUtils');
 goog.require('Blockly.ScrollbarPair');
 goog.require('Blockly.Touch');
 goog.require('Blockly.Trashcan');
+goog.require('Blockly.VariableCategory');
 //goog.require('Blockly.VerticalFlyout');
 goog.require('Blockly.Workspace');
 goog.require('Blockly.WorkspaceAudio');
@@ -112,7 +113,9 @@ Blockly.WorkspaceSvg = function(options, opt_blockDragSurface, opt_wsDragSurface
       new Blockly.Grid(options.gridPattern, options.gridOptions) : null;
 
   this.registerToolboxCategoryCallback(Blockly.VARIABLE_CATEGORY_NAME,
-      Blockly.DataCategory);
+      Blockly.VariableCategory);
+  this.registerToolboxCategoryCallback(Blockly.LIST_CATEGORY_NAME,
+      Blockly.ListCategory);
   this.registerToolboxCategoryCallback(Blockly.PROCEDURE_CATEGORY_NAME,
       Blockly.Procedures.flyoutCategory);
 };
