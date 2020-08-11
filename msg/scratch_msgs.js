@@ -10036,7 +10036,7 @@ Blockly.ScratchMsgs.locales["ckb"] =
     "NEW_PROCEDURE": "دروستکردنی بلۆکێک",
     "PROCEDURE_ALREADY_EXISTS": "کارایی ناونراو \"%1\" هەیە.",
     "PROCEDURE_DEFAULT_NAME": "ناوی بلۆک",
-    "PROCEDURE_USED": "To delete a block definition, first remove all uses of the block",
+    "PROCEDURE_USED": "بۆ سڕینەوەی پێناسەی بلۆکێک، سەرەتا هەموو بەکارهێنانەکانی ئەو بلۆکە لابە",
     "NEW_LIST": "دروستکردنی لیستێک",
     "NEW_LIST_TITLE": "ناوی نوێی لیست",
     "LIST_MODAL_TITLE": "لیستی نوێ",
