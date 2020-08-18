@@ -7166,7 +7166,7 @@ Blockly.ScratchMsgs.locales["hy"] =
     "NEW_PROCEDURE": "Ստեղծել մասնիկ",
     "PROCEDURE_ALREADY_EXISTS": "«%1» անունով գործողություն արդեն գոյություն ունի:",
     "PROCEDURE_DEFAULT_NAME": "մասնիկի անունը ",
-    "PROCEDURE_USED": "To delete a block definition, first remove all uses of the block",
+    "PROCEDURE_USED": "Մասնիկը ջնջելու համար, նախ պետք է ջնջել նրա բոլոր կիրառումները:",
     "NEW_LIST": "Ստեղծել ցուցակ",
     "NEW_LIST_TITLE": "Նոր ցուցակի անունը՝",
     "LIST_MODAL_TITLE": "Նոր ցուցակ",
