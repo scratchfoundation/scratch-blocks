@@ -17785,7 +17785,7 @@ Blockly.ScratchMsgs.locales["uk"] =
     "NEW_PROCEDURE": "Створити блок",
     "PROCEDURE_ALREADY_EXISTS": "Процедура з іменем '%1' вже існує",
     "PROCEDURE_DEFAULT_NAME": "назва блоку",
-    "PROCEDURE_USED": "To delete a block definition, first remove all uses of the block",
+    "PROCEDURE_USED": "Щоб видалити цей блок, спочатку видаліть усі його використання",
     "NEW_LIST": "Створити список",
     "NEW_LIST_TITLE": "Нове ім’я списку:",
     "LIST_MODAL_TITLE": "Новий список",
