@@ -17831,7 +17831,7 @@ Blockly.ScratchMsgs.locales["zh-cn"] =
     "DATA_ADDTOLIST": "将 %1 加入 %2",
     "DATA_DELETEOFLIST": "删除 %2 的第 %1 项",
     "DATA_DELETEALLOFLIST": "删除 %1 的全部项目",
-    "DATA_INSERTATLIST": "在 %3 的第 %2 项前插入 %1",
+    "DATA_INSERTATLIST": "在 %3 的第 %2 项插入 %1",
     "DATA_REPLACEITEMOFLIST": "将 %2 的第 %1 项替换为 %3",
     "DATA_ITEMOFLIST": "%2 的第 %1 项",
     "DATA_ITEMNUMOFLIST": "%2 中第一个 %1 的编号",
