@@ -67,7 +67,7 @@ goog.editor.plugins.UndoRedo = function(opt_manager) {
   this.initialFieldChange_ = null;
 
   /**
-   * A copy of {@code goog.editor.plugins.UndoRedo.restoreState} bound to this,
+   * A copy of `goog.editor.plugins.UndoRedo.restoreState` bound to this,
    * used by undo-redo state objects to restore the state of an editable field.
    * @type {Function}
    * @see goog.editor.plugins.UndoRedo#restoreState
@@ -89,7 +89,7 @@ goog.editor.plugins.UndoRedo.prototype.logger =
 
 
 /**
- * The {@code UndoState_} whose change is in progress, null if an undo or redo
+ * The `UndoState_` whose change is in progress, null if an undo or redo
  * is not in progress.
  *
  * @type {goog.editor.plugins.UndoRedo.UndoState_?}
@@ -672,7 +672,7 @@ goog.editor.plugins.UndoRedo.UndoState_ = function(
   this.fieldHashCode = fieldHashCode;
 
   /**
-   * The bound copy of {@code goog.editor.plugins.UndoRedo.restoreState} used by
+   * The bound copy of `goog.editor.plugins.UndoRedo.restoreState` used by
    * this state.
    * @type {Function}
    * @private
@@ -717,6 +717,24 @@ goog.editor.plugins.UndoRedo.UndoState_.prototype.redoContent_;
  * @private
  */
 goog.editor.plugins.UndoRedo.UndoState_.prototype.redoCursorPosition_;
+
+
+/**
+ * Get the content to restore on undo.
+ * @return {string}
+ */
+goog.editor.plugins.UndoRedo.UndoState_.prototype.getUndoContent = function() {
+  return this.undoContent_;
+};
+
+
+/**
+ * Get the content to restore on redo.
+ * @return {string|undefined}
+ */
+goog.editor.plugins.UndoRedo.UndoState_.prototype.getRedoContent = function() {
+  return this.redoContent_;
+};
 
 
 /**
@@ -769,7 +787,7 @@ goog.editor.plugins.UndoRedo.UndoState_.prototype.setRedoState = function(
 
 /**
  * Checks if the *contents* of two
- * {@code goog.editor.plugins.UndoRedo.UndoState_}s are the same.  We don't
+ * `goog.editor.plugins.UndoRedo.UndoState_`s are the same.  We don't
  * bother checking the cursor position (that's not something we'd want to save
  * anyway).
  * @param {goog.editor.plugins.UndoRedoState} rhs The state to compare.

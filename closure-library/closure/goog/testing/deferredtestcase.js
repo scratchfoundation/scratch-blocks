@@ -61,6 +61,7 @@
 goog.setTestOnly('goog.testing.DeferredTestCase');
 goog.provide('goog.testing.DeferredTestCase');
 
+goog.require('goog.async.Deferred');
 goog.require('goog.testing.AsyncTestCase');
 goog.require('goog.testing.TestCase');
 
@@ -152,6 +153,6 @@ goog.testing.DeferredTestCase.prototype.waitForDeferred = function(a, opt_b) {
   if (!waitMsg) {
     waitMsg = 'Waiting for deferred in ' + this.getCurrentStepName();
   }
-  this.waitForAsync(/** @type {!string} */ (waitMsg));
+  this.waitForAsync(/** @type {string} */ (waitMsg));
   deferred.callback(true);
 };

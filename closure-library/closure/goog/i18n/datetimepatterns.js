@@ -15,7 +15,7 @@
 /**
  * @fileoverview Extended date/time patterns.
  *
- * File generated from CLDR ver. 32
+ * File generated from CLDR ver. 34
  *
  * To reduce the file size (which may cause issues in some JS
  * developing environments), this file will only contain locales
@@ -47,6 +47,7 @@ goog.provide('goog.i18n.DateTimePatterns_af');
 goog.provide('goog.i18n.DateTimePatterns_am');
 goog.provide('goog.i18n.DateTimePatterns_ar');
 goog.provide('goog.i18n.DateTimePatterns_ar_DZ');
+goog.provide('goog.i18n.DateTimePatterns_ar_EG');
 goog.provide('goog.i18n.DateTimePatterns_az');
 goog.provide('goog.i18n.DateTimePatterns_be');
 goog.provide('goog.i18n.DateTimePatterns_bg');
@@ -157,31 +158,35 @@ goog.provide('goog.i18n.DateTimePatterns_zu');
 
 /**
  * Extended set of localized date/time patterns for locale af.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_af = {
   YEAR_FULL: 'y',
   YEAR_FULL_WITH_ERA: 'y G',
   YEAR_MONTH_ABBR: 'MMM y',
   YEAR_MONTH_FULL: 'MMMM y',
+  YEAR_MONTH_SHORT: 'MM-y',
   MONTH_DAY_ABBR: 'd MMM',
   MONTH_DAY_FULL: 'dd MMM',
   MONTH_DAY_SHORT: 'dd-MM',
   MONTH_DAY_MEDIUM: 'd MMM',
   MONTH_DAY_YEAR_MEDIUM: 'd MMM y',
   WEEKDAY_MONTH_DAY_MEDIUM: 'EEE d MMM',
-  WEEKDAY_MONTH_DAY_YEAR_MEDIUM: 'EEE, d MMM y',
+  WEEKDAY_MONTH_DAY_YEAR_MEDIUM: 'EEE d MMM y',
   DAY_ABBR: 'd'
 };
 
 
 /**
  * Extended set of localized date/time patterns for locale am.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_am = {
   YEAR_FULL: 'y',
   YEAR_FULL_WITH_ERA: 'y G',
   YEAR_MONTH_ABBR: 'MMM y',
   YEAR_MONTH_FULL: 'MMMM y',
+  YEAR_MONTH_SHORT: 'MM/y',
   MONTH_DAY_ABBR: 'MMM d',
   MONTH_DAY_FULL: 'MMMM dd',
   MONTH_DAY_SHORT: 'M/d',
@@ -195,12 +200,14 @@ goog.i18n.DateTimePatterns_am = {
 
 /**
  * Extended set of localized date/time patterns for locale ar.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_ar = {
   YEAR_FULL: 'y',
   YEAR_FULL_WITH_ERA: 'y G',
   YEAR_MONTH_ABBR: 'MMM y',
   YEAR_MONTH_FULL: 'MMMM y',
+  YEAR_MONTH_SHORT: 'MM‏/y',
   MONTH_DAY_ABBR: 'd MMM',
   MONTH_DAY_FULL: 'dd MMMM',
   MONTH_DAY_SHORT: 'd/‏M',
@@ -214,18 +221,28 @@ goog.i18n.DateTimePatterns_ar = {
 
 /**
  * Extended set of localized date/time patterns for locale ar_DZ.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_ar_DZ = goog.i18n.DateTimePatterns_ar;
 
 
 /**
+ * Extended set of localized date/time patterns for locale ar_EG.
+ * @type {!goog.i18n.DateTimePatternsType}
+ */
+goog.i18n.DateTimePatterns_ar_EG = goog.i18n.DateTimePatterns_ar;
+
+
+/**
  * Extended set of localized date/time patterns for locale az.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_az = {
   YEAR_FULL: 'y',
   YEAR_FULL_WITH_ERA: 'G y',
   YEAR_MONTH_ABBR: 'MMM y',
   YEAR_MONTH_FULL: 'MMMM y',
+  YEAR_MONTH_SHORT: 'MM.y',
   MONTH_DAY_ABBR: 'd MMM',
   MONTH_DAY_FULL: 'dd MMMM',
   MONTH_DAY_SHORT: 'dd.MM',
@@ -239,12 +256,14 @@ goog.i18n.DateTimePatterns_az = {
 
 /**
  * Extended set of localized date/time patterns for locale be.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_be = {
   YEAR_FULL: 'y',
   YEAR_FULL_WITH_ERA: 'y \'г\'. G',
   YEAR_MONTH_ABBR: 'LLL y',
   YEAR_MONTH_FULL: 'LLLL y',
+  YEAR_MONTH_SHORT: 'MM.y',
   MONTH_DAY_ABBR: 'd MMM',
   MONTH_DAY_FULL: 'dd MMMM',
   MONTH_DAY_SHORT: 'd.M',
@@ -258,12 +277,14 @@ goog.i18n.DateTimePatterns_be = {
 
 /**
  * Extended set of localized date/time patterns for locale bg.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_bg = {
   YEAR_FULL: 'y \'г\'.',
   YEAR_FULL_WITH_ERA: 'y \'г\'. G',
   YEAR_MONTH_ABBR: 'MM.y \'г\'.',
   YEAR_MONTH_FULL: 'MMMM y \'г\'.',
+  YEAR_MONTH_SHORT: 'MM.y \'г\'.',
   MONTH_DAY_ABBR: 'd.MM',
   MONTH_DAY_FULL: 'd MMMM',
   MONTH_DAY_SHORT: 'd.MM',
@@ -277,12 +298,14 @@ goog.i18n.DateTimePatterns_bg = {
 
 /**
  * Extended set of localized date/time patterns for locale bn.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_bn = {
   YEAR_FULL: 'y',
   YEAR_FULL_WITH_ERA: 'y G',
   YEAR_MONTH_ABBR: 'MMM y',
   YEAR_MONTH_FULL: 'MMMM y',
+  YEAR_MONTH_SHORT: 'MM-y',
   MONTH_DAY_ABBR: 'd MMM',
   MONTH_DAY_FULL: 'dd MMMM',
   MONTH_DAY_SHORT: 'd/M',
@@ -296,16 +319,18 @@ goog.i18n.DateTimePatterns_bn = {
 
 /**
  * Extended set of localized date/time patterns for locale br.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_br = {
   YEAR_FULL: 'y',
-  YEAR_FULL_WITH_ERA: 'G y',
+  YEAR_FULL_WITH_ERA: 'y G',
   YEAR_MONTH_ABBR: 'MMM y',
-  YEAR_MONTH_FULL: 'y MMMM',
+  YEAR_MONTH_FULL: 'MMMM y',
+  YEAR_MONTH_SHORT: 'MM/y',
   MONTH_DAY_ABBR: 'd MMM',
-  MONTH_DAY_FULL: 'MMMM dd',
+  MONTH_DAY_FULL: 'dd MMMM',
   MONTH_DAY_SHORT: 'dd/MM',
-  MONTH_DAY_MEDIUM: 'MMMM d',
+  MONTH_DAY_MEDIUM: 'd MMMM',
   MONTH_DAY_YEAR_MEDIUM: 'd MMM y',
   WEEKDAY_MONTH_DAY_MEDIUM: 'EEE d MMM',
   WEEKDAY_MONTH_DAY_YEAR_MEDIUM: 'EEE d MMM y',
@@ -315,12 +340,14 @@ goog.i18n.DateTimePatterns_br = {
 
 /**
  * Extended set of localized date/time patterns for locale bs.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_bs = {
   YEAR_FULL: 'y.',
   YEAR_FULL_WITH_ERA: 'y. G',
   YEAR_MONTH_ABBR: 'MMM y.',
   YEAR_MONTH_FULL: 'LLLL y.',
+  YEAR_MONTH_SHORT: 'M/y',
   MONTH_DAY_ABBR: 'd. MMM',
   MONTH_DAY_FULL: 'dd. MMMM',
   MONTH_DAY_SHORT: 'd.M.',
@@ -334,12 +361,14 @@ goog.i18n.DateTimePatterns_bs = {
 
 /**
  * Extended set of localized date/time patterns for locale ca.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_ca = {
   YEAR_FULL: 'y',
   YEAR_FULL_WITH_ERA: 'y G',
   YEAR_MONTH_ABBR: 'LLL \'de\' y',
   YEAR_MONTH_FULL: 'LLLL \'de\' y',
+  YEAR_MONTH_SHORT: 'MM/y',
   MONTH_DAY_ABBR: 'd MMM',
   MONTH_DAY_FULL: 'dd MMMM',
   MONTH_DAY_SHORT: 'd/M',
@@ -353,12 +382,14 @@ goog.i18n.DateTimePatterns_ca = {
 
 /**
  * Extended set of localized date/time patterns for locale chr.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_chr = {
   YEAR_FULL: 'y',
   YEAR_FULL_WITH_ERA: 'y G',
   YEAR_MONTH_ABBR: 'MMM y',
   YEAR_MONTH_FULL: 'MMMM y',
+  YEAR_MONTH_SHORT: 'MM/y',
   MONTH_DAY_ABBR: 'MMM d',
   MONTH_DAY_FULL: 'MMMM dd',
   MONTH_DAY_SHORT: 'M/d',
@@ -372,12 +403,14 @@ goog.i18n.DateTimePatterns_chr = {
 
 /**
  * Extended set of localized date/time patterns for locale cs.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_cs = {
   YEAR_FULL: 'y',
   YEAR_FULL_WITH_ERA: 'y G',
   YEAR_MONTH_ABBR: 'LLLL y',
   YEAR_MONTH_FULL: 'LLLL y',
+  YEAR_MONTH_SHORT: 'MM/y',
   MONTH_DAY_ABBR: 'd. M.',
   MONTH_DAY_FULL: 'dd. MMMM',
   MONTH_DAY_SHORT: 'd. M.',
@@ -391,12 +424,14 @@ goog.i18n.DateTimePatterns_cs = {
 
 /**
  * Extended set of localized date/time patterns for locale cy.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_cy = {
   YEAR_FULL: 'y',
   YEAR_FULL_WITH_ERA: 'y G',
   YEAR_MONTH_ABBR: 'MMM y',
   YEAR_MONTH_FULL: 'MMMM y',
+  YEAR_MONTH_SHORT: 'MM/y',
   MONTH_DAY_ABBR: 'd MMM',
   MONTH_DAY_FULL: 'MMMM dd',
   MONTH_DAY_SHORT: 'd/M',
@@ -410,15 +445,17 @@ goog.i18n.DateTimePatterns_cy = {
 
 /**
  * Extended set of localized date/time patterns for locale da.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_da = {
   YEAR_FULL: 'y',
   YEAR_FULL_WITH_ERA: 'y G',
   YEAR_MONTH_ABBR: 'MMM y',
   YEAR_MONTH_FULL: 'MMMM y',
+  YEAR_MONTH_SHORT: 'MM.y',
   MONTH_DAY_ABBR: 'd. MMM',
   MONTH_DAY_FULL: 'dd. MMMM',
-  MONTH_DAY_SHORT: 'd/M',
+  MONTH_DAY_SHORT: 'd.M',
   MONTH_DAY_MEDIUM: 'd. MMMM',
   MONTH_DAY_YEAR_MEDIUM: 'd. MMM y',
   WEEKDAY_MONTH_DAY_MEDIUM: 'EEE d. MMM',
@@ -429,12 +466,14 @@ goog.i18n.DateTimePatterns_da = {
 
 /**
  * Extended set of localized date/time patterns for locale de.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_de = {
   YEAR_FULL: 'y',
   YEAR_FULL_WITH_ERA: 'y G',
   YEAR_MONTH_ABBR: 'MMM y',
   YEAR_MONTH_FULL: 'MMMM y',
+  YEAR_MONTH_SHORT: 'MM.y',
   MONTH_DAY_ABBR: 'd. MMM',
   MONTH_DAY_FULL: 'dd. MMMM',
   MONTH_DAY_SHORT: 'd.M.',
@@ -448,24 +487,28 @@ goog.i18n.DateTimePatterns_de = {
 
 /**
  * Extended set of localized date/time patterns for locale de_AT.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_de_AT = goog.i18n.DateTimePatterns_de;
 
 
 /**
  * Extended set of localized date/time patterns for locale de_CH.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_de_CH = goog.i18n.DateTimePatterns_de;
 
 
 /**
  * Extended set of localized date/time patterns for locale el.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_el = {
   YEAR_FULL: 'y',
   YEAR_FULL_WITH_ERA: 'y G',
   YEAR_MONTH_ABBR: 'MMM y',
   YEAR_MONTH_FULL: 'LLLL y',
+  YEAR_MONTH_SHORT: 'MM/y',
   MONTH_DAY_ABBR: 'd MMM',
   MONTH_DAY_FULL: 'dd MMMM',
   MONTH_DAY_SHORT: 'd/M',
@@ -479,12 +522,14 @@ goog.i18n.DateTimePatterns_el = {
 
 /**
  * Extended set of localized date/time patterns for locale en.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_en = {
   YEAR_FULL: 'y',
   YEAR_FULL_WITH_ERA: 'y G',
   YEAR_MONTH_ABBR: 'MMM y',
   YEAR_MONTH_FULL: 'MMMM y',
+  YEAR_MONTH_SHORT: 'MM/y',
   MONTH_DAY_ABBR: 'MMM d',
   MONTH_DAY_FULL: 'MMMM dd',
   MONTH_DAY_SHORT: 'M/d',
@@ -498,12 +543,14 @@ goog.i18n.DateTimePatterns_en = {
 
 /**
  * Extended set of localized date/time patterns for locale en_AU.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_en_AU = {
   YEAR_FULL: 'y',
   YEAR_FULL_WITH_ERA: 'y G',
   YEAR_MONTH_ABBR: 'MMM y',
   YEAR_MONTH_FULL: 'MMMM y',
+  YEAR_MONTH_SHORT: 'MM/y',
   MONTH_DAY_ABBR: 'd MMM',
   MONTH_DAY_FULL: 'dd MMMM',
   MONTH_DAY_SHORT: 'd/M',
@@ -517,12 +564,14 @@ goog.i18n.DateTimePatterns_en_AU = {
 
 /**
  * Extended set of localized date/time patterns for locale en_CA.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_en_CA = {
   YEAR_FULL: 'y',
   YEAR_FULL_WITH_ERA: 'y G',
   YEAR_MONTH_ABBR: 'MMM y',
   YEAR_MONTH_FULL: 'MMMM y',
+  YEAR_MONTH_SHORT: 'y-MM',
   MONTH_DAY_ABBR: 'MMM d',
   MONTH_DAY_FULL: 'MMMM dd',
   MONTH_DAY_SHORT: 'MM-dd',
@@ -536,18 +585,20 @@ goog.i18n.DateTimePatterns_en_CA = {
 
 /**
  * Extended set of localized date/time patterns for locale en_GB.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_en_GB = {
   YEAR_FULL: 'y',
   YEAR_FULL_WITH_ERA: 'y G',
   YEAR_MONTH_ABBR: 'MMM y',
   YEAR_MONTH_FULL: 'MMMM y',
+  YEAR_MONTH_SHORT: 'MM/y',
   MONTH_DAY_ABBR: 'd MMM',
   MONTH_DAY_FULL: 'dd MMMM',
   MONTH_DAY_SHORT: 'dd/MM',
   MONTH_DAY_MEDIUM: 'd MMMM',
   MONTH_DAY_YEAR_MEDIUM: 'd MMM y',
-  WEEKDAY_MONTH_DAY_MEDIUM: 'EEE d MMM',
+  WEEKDAY_MONTH_DAY_MEDIUM: 'EEE, d MMM',
   WEEKDAY_MONTH_DAY_YEAR_MEDIUM: 'EEE, d MMM y',
   DAY_ABBR: 'd'
 };
@@ -555,12 +606,14 @@ goog.i18n.DateTimePatterns_en_GB = {
 
 /**
  * Extended set of localized date/time patterns for locale en_IE.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_en_IE = {
   YEAR_FULL: 'y',
   YEAR_FULL_WITH_ERA: 'y G',
   YEAR_MONTH_ABBR: 'MMM y',
   YEAR_MONTH_FULL: 'MMMM y',
+  YEAR_MONTH_SHORT: 'MM/y',
   MONTH_DAY_ABBR: 'd MMM',
   MONTH_DAY_FULL: 'dd MMMM',
   MONTH_DAY_SHORT: 'd/M',
@@ -574,12 +627,14 @@ goog.i18n.DateTimePatterns_en_IE = {
 
 /**
  * Extended set of localized date/time patterns for locale en_IN.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_en_IN = {
   YEAR_FULL: 'y',
   YEAR_FULL_WITH_ERA: 'y G',
   YEAR_MONTH_ABBR: 'MMM y',
   YEAR_MONTH_FULL: 'MMMM y',
+  YEAR_MONTH_SHORT: 'MM/y',
   MONTH_DAY_ABBR: 'd MMM',
   MONTH_DAY_FULL: 'dd MMMM',
   MONTH_DAY_SHORT: 'dd/MM',
@@ -593,12 +648,14 @@ goog.i18n.DateTimePatterns_en_IN = {
 
 /**
  * Extended set of localized date/time patterns for locale en_SG.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_en_SG = {
   YEAR_FULL: 'y',
   YEAR_FULL_WITH_ERA: 'y G',
   YEAR_MONTH_ABBR: 'MMM y',
   YEAR_MONTH_FULL: 'MMMM y',
+  YEAR_MONTH_SHORT: 'MM/y',
   MONTH_DAY_ABBR: 'd MMM',
   MONTH_DAY_FULL: 'dd MMMM',
   MONTH_DAY_SHORT: 'dd/MM',
@@ -612,18 +669,21 @@ goog.i18n.DateTimePatterns_en_SG = {
 
 /**
  * Extended set of localized date/time patterns for locale en_US.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_en_US = goog.i18n.DateTimePatterns_en;
 
 
 /**
  * Extended set of localized date/time patterns for locale en_ZA.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_en_ZA = {
   YEAR_FULL: 'y',
   YEAR_FULL_WITH_ERA: 'y G',
   YEAR_MONTH_ABBR: 'MMM y',
   YEAR_MONTH_FULL: 'MMMM y',
+  YEAR_MONTH_SHORT: 'MM/y',
   MONTH_DAY_ABBR: 'dd MMM',
   MONTH_DAY_FULL: 'dd MMMM',
   MONTH_DAY_SHORT: 'MM/dd',
@@ -637,12 +697,14 @@ goog.i18n.DateTimePatterns_en_ZA = {
 
 /**
  * Extended set of localized date/time patterns for locale es.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_es = {
   YEAR_FULL: 'y',
   YEAR_FULL_WITH_ERA: 'y G',
   YEAR_MONTH_ABBR: 'MMM y',
   YEAR_MONTH_FULL: 'MMMM \'de\' y',
+  YEAR_MONTH_SHORT: 'M/y',
   MONTH_DAY_ABBR: 'd MMM',
   MONTH_DAY_FULL: 'dd \'de\' MMMM',
   MONTH_DAY_SHORT: 'd/M',
@@ -656,12 +718,14 @@ goog.i18n.DateTimePatterns_es = {
 
 /**
  * Extended set of localized date/time patterns for locale es_419.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_es_419 = {
   YEAR_FULL: 'y',
   YEAR_FULL_WITH_ERA: 'y G',
   YEAR_MONTH_ABBR: 'MMMM \'de\' y',
   YEAR_MONTH_FULL: 'MMMM \'de\' y',
+  YEAR_MONTH_SHORT: 'M/y',
   MONTH_DAY_ABBR: 'd MMM',
   MONTH_DAY_FULL: 'dd \'de\' MMMM',
   MONTH_DAY_SHORT: 'd/M',
@@ -675,18 +739,21 @@ goog.i18n.DateTimePatterns_es_419 = {
 
 /**
  * Extended set of localized date/time patterns for locale es_ES.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_es_ES = goog.i18n.DateTimePatterns_es;
 
 
 /**
  * Extended set of localized date/time patterns for locale es_MX.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_es_MX = {
   YEAR_FULL: 'y',
   YEAR_FULL_WITH_ERA: 'y G',
   YEAR_MONTH_ABBR: 'MMMM \'de\' y',
   YEAR_MONTH_FULL: 'MMMM \'de\' y',
+  YEAR_MONTH_SHORT: 'MM/y',
   MONTH_DAY_ABBR: 'd MMM',
   MONTH_DAY_FULL: 'dd \'de\' MMMM',
   MONTH_DAY_SHORT: 'd/M',
@@ -700,12 +767,14 @@ goog.i18n.DateTimePatterns_es_MX = {
 
 /**
  * Extended set of localized date/time patterns for locale es_US.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_es_US = {
   YEAR_FULL: 'y',
   YEAR_FULL_WITH_ERA: 'y G',
   YEAR_MONTH_ABBR: 'MMMM \'de\' y',
   YEAR_MONTH_FULL: 'MMMM \'de\' y',
+  YEAR_MONTH_SHORT: 'MM/y',
   MONTH_DAY_ABBR: 'd MMM',
   MONTH_DAY_FULL: 'dd \'de\' MMMM',
   MONTH_DAY_SHORT: 'd/M',
@@ -719,12 +788,14 @@ goog.i18n.DateTimePatterns_es_US = {
 
 /**
  * Extended set of localized date/time patterns for locale et.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_et = {
   YEAR_FULL: 'y',
   YEAR_FULL_WITH_ERA: 'y G',
   YEAR_MONTH_ABBR: 'MMM y',
   YEAR_MONTH_FULL: 'MMMM y',
+  YEAR_MONTH_SHORT: 'MM.y',
   MONTH_DAY_ABBR: 'd. MMM',
   MONTH_DAY_FULL: 'dd. MMMM',
   MONTH_DAY_SHORT: 'd.M',
@@ -738,12 +809,14 @@ goog.i18n.DateTimePatterns_et = {
 
 /**
  * Extended set of localized date/time patterns for locale eu.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_eu = {
   YEAR_FULL: 'y',
   YEAR_FULL_WITH_ERA: 'G y',
   YEAR_MONTH_ABBR: 'y MMM',
   YEAR_MONTH_FULL: 'y(\'e\')\'ko\' MMMM',
+  YEAR_MONTH_SHORT: 'y/MM',
   MONTH_DAY_ABBR: 'MMM d',
   MONTH_DAY_FULL: 'MMMM dd',
   MONTH_DAY_SHORT: 'M/d',
@@ -757,12 +830,14 @@ goog.i18n.DateTimePatterns_eu = {
 
 /**
  * Extended set of localized date/time patterns for locale fa.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_fa = {
   YEAR_FULL: 'y',
   YEAR_FULL_WITH_ERA: 'y G',
   YEAR_MONTH_ABBR: 'MMM y',
   YEAR_MONTH_FULL: 'MMMM y',
+  YEAR_MONTH_SHORT: 'y/MM',
   MONTH_DAY_ABBR: 'd LLL',
   MONTH_DAY_FULL: 'dd LLLL',
   MONTH_DAY_SHORT: 'M/d',
@@ -776,12 +851,14 @@ goog.i18n.DateTimePatterns_fa = {
 
 /**
  * Extended set of localized date/time patterns for locale fi.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_fi = {
   YEAR_FULL: 'y',
   YEAR_FULL_WITH_ERA: 'y G',
   YEAR_MONTH_ABBR: 'LLL y',
   YEAR_MONTH_FULL: 'LLLL y',
+  YEAR_MONTH_SHORT: 'M.y',
   MONTH_DAY_ABBR: 'd. MMM',
   MONTH_DAY_FULL: 'dd. MMMM',
   MONTH_DAY_SHORT: 'd.M.',
@@ -795,12 +872,14 @@ goog.i18n.DateTimePatterns_fi = {
 
 /**
  * Extended set of localized date/time patterns for locale fil.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_fil = {
   YEAR_FULL: 'y',
   YEAR_FULL_WITH_ERA: 'G y',
   YEAR_MONTH_ABBR: 'MMM y',
   YEAR_MONTH_FULL: 'MMMM y',
+  YEAR_MONTH_SHORT: 'MM/y',
   MONTH_DAY_ABBR: 'MMM d',
   MONTH_DAY_FULL: 'MMMM dd',
   MONTH_DAY_SHORT: 'M/d',
@@ -814,12 +893,14 @@ goog.i18n.DateTimePatterns_fil = {
 
 /**
  * Extended set of localized date/time patterns for locale fr.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_fr = {
   YEAR_FULL: 'y',
   YEAR_FULL_WITH_ERA: 'y G',
   YEAR_MONTH_ABBR: 'MMM y',
   YEAR_MONTH_FULL: 'MMMM y',
+  YEAR_MONTH_SHORT: 'MM/y',
   MONTH_DAY_ABBR: 'd MMM',
   MONTH_DAY_FULL: 'dd MMMM',
   MONTH_DAY_SHORT: 'dd/MM',
@@ -833,12 +914,14 @@ goog.i18n.DateTimePatterns_fr = {
 
 /**
  * Extended set of localized date/time patterns for locale fr_CA.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_fr_CA = {
   YEAR_FULL: 'y',
   YEAR_FULL_WITH_ERA: 'y G',
   YEAR_MONTH_ABBR: 'MMM y',
   YEAR_MONTH_FULL: 'MMMM y',
+  YEAR_MONTH_SHORT: 'y-MM',
   MONTH_DAY_ABBR: 'd MMM',
   MONTH_DAY_FULL: 'dd MMMM',
   MONTH_DAY_SHORT: 'M-d',
@@ -852,12 +935,14 @@ goog.i18n.DateTimePatterns_fr_CA = {
 
 /**
  * Extended set of localized date/time patterns for locale ga.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_ga = {
   YEAR_FULL: 'y',
   YEAR_FULL_WITH_ERA: 'y G',
   YEAR_MONTH_ABBR: 'MMM y',
   YEAR_MONTH_FULL: 'MMMM y',
+  YEAR_MONTH_SHORT: 'MM/y',
   MONTH_DAY_ABBR: 'd MMM',
   MONTH_DAY_FULL: 'dd MMMM',
   MONTH_DAY_SHORT: 'dd/MM',
@@ -871,12 +956,14 @@ goog.i18n.DateTimePatterns_ga = {
 
 /**
  * Extended set of localized date/time patterns for locale gl.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_gl = {
   YEAR_FULL: 'y',
   YEAR_FULL_WITH_ERA: 'y G',
   YEAR_MONTH_ABBR: 'MMM \'de\' y',
   YEAR_MONTH_FULL: 'MMMM \'de\' y',
+  YEAR_MONTH_SHORT: 'MM/y',
   MONTH_DAY_ABBR: 'd \'de\' MMM',
   MONTH_DAY_FULL: 'dd \'de\' MMMM',
   MONTH_DAY_SHORT: 'd/M',
@@ -890,12 +977,14 @@ goog.i18n.DateTimePatterns_gl = {
 
 /**
  * Extended set of localized date/time patterns for locale gsw.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_gsw = {
   YEAR_FULL: 'y',
   YEAR_FULL_WITH_ERA: 'G y',
   YEAR_MONTH_ABBR: 'MMM y',
   YEAR_MONTH_FULL: 'MMMM y',
+  YEAR_MONTH_SHORT: 'MM.y',
   MONTH_DAY_ABBR: 'd. MMM',
   MONTH_DAY_FULL: 'dd. MMMM',
   MONTH_DAY_SHORT: 'd.M.',
@@ -909,12 +998,14 @@ goog.i18n.DateTimePatterns_gsw = {
 
 /**
  * Extended set of localized date/time patterns for locale gu.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_gu = {
   YEAR_FULL: 'y',
   YEAR_FULL_WITH_ERA: 'G y',
   YEAR_MONTH_ABBR: 'MMM y',
   YEAR_MONTH_FULL: 'MMMM y',
+  YEAR_MONTH_SHORT: 'MM-y',
   MONTH_DAY_ABBR: 'd MMM',
   MONTH_DAY_FULL: 'dd MMMM',
   MONTH_DAY_SHORT: 'd/M',
@@ -928,12 +1019,14 @@ goog.i18n.DateTimePatterns_gu = {
 
 /**
  * Extended set of localized date/time patterns for locale haw.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_haw = {
   YEAR_FULL: 'y',
   YEAR_FULL_WITH_ERA: 'y G',
   YEAR_MONTH_ABBR: 'MMM y',
   YEAR_MONTH_FULL: 'y MMMM',
+  YEAR_MONTH_SHORT: 'MM/y',
   MONTH_DAY_ABBR: 'd MMM',
   MONTH_DAY_FULL: 'MMMM dd',
   MONTH_DAY_SHORT: 'd/M',
@@ -947,12 +1040,14 @@ goog.i18n.DateTimePatterns_haw = {
 
 /**
  * Extended set of localized date/time patterns for locale he.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_he = {
   YEAR_FULL: 'y',
   YEAR_FULL_WITH_ERA: 'y G',
   YEAR_MONTH_ABBR: 'MMM y',
   YEAR_MONTH_FULL: 'MMMM y',
+  YEAR_MONTH_SHORT: 'M.y',
   MONTH_DAY_ABBR: 'd בMMM',
   MONTH_DAY_FULL: 'dd בMMMM',
   MONTH_DAY_SHORT: 'd.M',
@@ -966,12 +1061,14 @@ goog.i18n.DateTimePatterns_he = {
 
 /**
  * Extended set of localized date/time patterns for locale hi.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_hi = {
   YEAR_FULL: 'y',
   YEAR_FULL_WITH_ERA: 'y G',
   YEAR_MONTH_ABBR: 'MMM y',
   YEAR_MONTH_FULL: 'MMMM y',
+  YEAR_MONTH_SHORT: 'MM/y',
   MONTH_DAY_ABBR: 'd MMM',
   MONTH_DAY_FULL: 'dd MMMM',
   MONTH_DAY_SHORT: 'd/M',
@@ -985,12 +1082,14 @@ goog.i18n.DateTimePatterns_hi = {
 
 /**
  * Extended set of localized date/time patterns for locale hr.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_hr = {
   YEAR_FULL: 'y.',
   YEAR_FULL_WITH_ERA: 'y. G',
   YEAR_MONTH_ABBR: 'LLL y.',
   YEAR_MONTH_FULL: 'LLLL y.',
+  YEAR_MONTH_SHORT: 'MM. y.',
   MONTH_DAY_ABBR: 'd. MMM',
   MONTH_DAY_FULL: 'dd. MMMM',
   MONTH_DAY_SHORT: 'dd. MM.',
@@ -1004,12 +1103,14 @@ goog.i18n.DateTimePatterns_hr = {
 
 /**
  * Extended set of localized date/time patterns for locale hu.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_hu = {
   YEAR_FULL: 'y.',
   YEAR_FULL_WITH_ERA: 'G y.',
   YEAR_MONTH_ABBR: 'y. MMM',
   YEAR_MONTH_FULL: 'y. MMMM',
+  YEAR_MONTH_SHORT: 'y. MM.',
   MONTH_DAY_ABBR: 'MMM d.',
   MONTH_DAY_FULL: 'MMMM dd.',
   MONTH_DAY_SHORT: 'M. d.',
@@ -1023,12 +1124,14 @@ goog.i18n.DateTimePatterns_hu = {
 
 /**
  * Extended set of localized date/time patterns for locale hy.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_hy = {
   YEAR_FULL: 'y',
   YEAR_FULL_WITH_ERA: 'G y թ.',
   YEAR_MONTH_ABBR: 'y թ. LLL',
   YEAR_MONTH_FULL: 'y թ․ LLLL',
+  YEAR_MONTH_SHORT: 'MM.y',
   MONTH_DAY_ABBR: 'd MMM',
   MONTH_DAY_FULL: 'MMMM dd',
   MONTH_DAY_SHORT: 'dd.MM',
@@ -1042,12 +1145,14 @@ goog.i18n.DateTimePatterns_hy = {
 
 /**
  * Extended set of localized date/time patterns for locale id.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_id = {
   YEAR_FULL: 'y',
   YEAR_FULL_WITH_ERA: 'y G',
   YEAR_MONTH_ABBR: 'MMM y',
   YEAR_MONTH_FULL: 'MMMM y',
+  YEAR_MONTH_SHORT: 'MM/y',
   MONTH_DAY_ABBR: 'd MMM',
   MONTH_DAY_FULL: 'dd MMMM',
   MONTH_DAY_SHORT: 'd/M',
@@ -1061,12 +1166,14 @@ goog.i18n.DateTimePatterns_id = {
 
 /**
  * Extended set of localized date/time patterns for locale in.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_in = {
   YEAR_FULL: 'y',
   YEAR_FULL_WITH_ERA: 'y G',
   YEAR_MONTH_ABBR: 'MMM y',
   YEAR_MONTH_FULL: 'MMMM y',
+  YEAR_MONTH_SHORT: 'MM/y',
   MONTH_DAY_ABBR: 'd MMM',
   MONTH_DAY_FULL: 'dd MMMM',
   MONTH_DAY_SHORT: 'd/M',
@@ -1080,12 +1187,14 @@ goog.i18n.DateTimePatterns_in = {
 
 /**
  * Extended set of localized date/time patterns for locale is.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_is = {
   YEAR_FULL: 'y',
   YEAR_FULL_WITH_ERA: 'y G',
   YEAR_MONTH_ABBR: 'MMM y',
   YEAR_MONTH_FULL: 'MMMM y',
+  YEAR_MONTH_SHORT: 'MM. y',
   MONTH_DAY_ABBR: 'd. MMM',
   MONTH_DAY_FULL: 'dd. MMMM',
   MONTH_DAY_SHORT: 'd.M.',
@@ -1099,12 +1208,14 @@ goog.i18n.DateTimePatterns_is = {
 
 /**
  * Extended set of localized date/time patterns for locale it.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_it = {
   YEAR_FULL: 'y',
   YEAR_FULL_WITH_ERA: 'y G',
   YEAR_MONTH_ABBR: 'MMM y',
   YEAR_MONTH_FULL: 'MMMM y',
+  YEAR_MONTH_SHORT: 'MM/y',
   MONTH_DAY_ABBR: 'd MMM',
   MONTH_DAY_FULL: 'dd MMMM',
   MONTH_DAY_SHORT: 'd/M',
@@ -1118,12 +1229,14 @@ goog.i18n.DateTimePatterns_it = {
 
 /**
  * Extended set of localized date/time patterns for locale iw.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_iw = {
   YEAR_FULL: 'y',
   YEAR_FULL_WITH_ERA: 'y G',
   YEAR_MONTH_ABBR: 'MMM y',
   YEAR_MONTH_FULL: 'MMMM y',
+  YEAR_MONTH_SHORT: 'M.y',
   MONTH_DAY_ABBR: 'd בMMM',
   MONTH_DAY_FULL: 'dd בMMMM',
   MONTH_DAY_SHORT: 'd.M',
@@ -1137,12 +1250,14 @@ goog.i18n.DateTimePatterns_iw = {
 
 /**
  * Extended set of localized date/time patterns for locale ja.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_ja = {
   YEAR_FULL: 'y年',
   YEAR_FULL_WITH_ERA: 'Gy年',
   YEAR_MONTH_ABBR: 'y年M月',
   YEAR_MONTH_FULL: 'y年M月',
+  YEAR_MONTH_SHORT: 'y/MM',
   MONTH_DAY_ABBR: 'M月d日',
   MONTH_DAY_FULL: 'M月dd日',
   MONTH_DAY_SHORT: 'M/d',
@@ -1156,12 +1271,14 @@ goog.i18n.DateTimePatterns_ja = {
 
 /**
  * Extended set of localized date/time patterns for locale ka.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_ka = {
   YEAR_FULL: 'y',
   YEAR_FULL_WITH_ERA: 'y G',
   YEAR_MONTH_ABBR: 'MMM. y',
   YEAR_MONTH_FULL: 'MMMM, y',
+  YEAR_MONTH_SHORT: 'MM.y',
   MONTH_DAY_ABBR: 'd MMM',
   MONTH_DAY_FULL: 'dd MMMM',
   MONTH_DAY_SHORT: 'd.M',
@@ -1175,12 +1292,14 @@ goog.i18n.DateTimePatterns_ka = {
 
 /**
  * Extended set of localized date/time patterns for locale kk.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_kk = {
   YEAR_FULL: 'y',
   YEAR_FULL_WITH_ERA: 'G y \'ж\'.',
   YEAR_MONTH_ABBR: 'y \'ж\'. MMM',
   YEAR_MONTH_FULL: 'y \'ж\'. MMMM',
+  YEAR_MONTH_SHORT: 'MM.y',
   MONTH_DAY_ABBR: 'd MMM',
   MONTH_DAY_FULL: 'dd MMMM',
   MONTH_DAY_SHORT: 'dd.MM',
@@ -1194,12 +1313,14 @@ goog.i18n.DateTimePatterns_kk = {
 
 /**
  * Extended set of localized date/time patterns for locale km.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_km = {
   YEAR_FULL: 'y',
-  YEAR_FULL_WITH_ERA: 'y នៃ G',
+  YEAR_FULL_WITH_ERA: 'y G',
   YEAR_MONTH_ABBR: 'MMM y',
   YEAR_MONTH_FULL: 'MMMM y',
+  YEAR_MONTH_SHORT: 'MM/y',
   MONTH_DAY_ABBR: 'd MMM',
   MONTH_DAY_FULL: 'MMMM dd',
   MONTH_DAY_SHORT: 'd/M',
@@ -1213,12 +1334,14 @@ goog.i18n.DateTimePatterns_km = {
 
 /**
  * Extended set of localized date/time patterns for locale kn.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_kn = {
   YEAR_FULL: 'y',
   YEAR_FULL_WITH_ERA: 'G y',
   YEAR_MONTH_ABBR: 'MMM y',
   YEAR_MONTH_FULL: 'MMMM y',
+  YEAR_MONTH_SHORT: 'MM-y',
   MONTH_DAY_ABBR: 'MMM d',
   MONTH_DAY_FULL: 'dd MMMM',
   MONTH_DAY_SHORT: 'd/M',
@@ -1232,12 +1355,14 @@ goog.i18n.DateTimePatterns_kn = {
 
 /**
  * Extended set of localized date/time patterns for locale ko.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_ko = {
   YEAR_FULL: 'y년',
   YEAR_FULL_WITH_ERA: 'G y년',
   YEAR_MONTH_ABBR: 'y년 MMM',
   YEAR_MONTH_FULL: 'y년 MMMM',
+  YEAR_MONTH_SHORT: 'y. M.',
   MONTH_DAY_ABBR: 'MMM d일',
   MONTH_DAY_FULL: 'MMMM dd일',
   MONTH_DAY_SHORT: 'M. d.',
@@ -1251,12 +1376,14 @@ goog.i18n.DateTimePatterns_ko = {
 
 /**
  * Extended set of localized date/time patterns for locale ky.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_ky = {
   YEAR_FULL: 'y',
   YEAR_FULL_WITH_ERA: 'G y-\'ж\'.',
   YEAR_MONTH_ABBR: 'y-\'ж\'. MMM',
   YEAR_MONTH_FULL: 'y-\'ж\'., MMMM',
+  YEAR_MONTH_SHORT: 'y-MM',
   MONTH_DAY_ABBR: 'd-MMM',
   MONTH_DAY_FULL: 'dd-MMMM',
   MONTH_DAY_SHORT: 'dd-MM',
@@ -1270,12 +1397,14 @@ goog.i18n.DateTimePatterns_ky = {
 
 /**
  * Extended set of localized date/time patterns for locale ln.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_ln = {
   YEAR_FULL: 'y',
   YEAR_FULL_WITH_ERA: 'G y',
   YEAR_MONTH_ABBR: 'MMM y',
   YEAR_MONTH_FULL: 'y MMMM',
+  YEAR_MONTH_SHORT: 'MM/y',
   MONTH_DAY_ABBR: 'd MMM',
   MONTH_DAY_FULL: 'MMMM dd',
   MONTH_DAY_SHORT: 'd/M',
@@ -1289,12 +1418,14 @@ goog.i18n.DateTimePatterns_ln = {
 
 /**
  * Extended set of localized date/time patterns for locale lo.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_lo = {
   YEAR_FULL: 'y',
   YEAR_FULL_WITH_ERA: 'G y',
   YEAR_MONTH_ABBR: 'MMM y',
   YEAR_MONTH_FULL: 'MMMM y',
+  YEAR_MONTH_SHORT: 'MM/y',
   MONTH_DAY_ABBR: 'd MMM',
   MONTH_DAY_FULL: 'MMMM dd',
   MONTH_DAY_SHORT: 'd/M',
@@ -1308,12 +1439,14 @@ goog.i18n.DateTimePatterns_lo = {
 
 /**
  * Extended set of localized date/time patterns for locale lt.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_lt = {
   YEAR_FULL: 'y',
   YEAR_FULL_WITH_ERA: 'y \'m\'. G',
   YEAR_MONTH_ABBR: 'y-MM',
   YEAR_MONTH_FULL: 'y \'m\'. LLLL',
+  YEAR_MONTH_SHORT: 'y-MM',
   MONTH_DAY_ABBR: 'MM-dd',
   MONTH_DAY_FULL: 'MMMM dd \'d\'.',
   MONTH_DAY_SHORT: 'MM-d',
@@ -1327,12 +1460,14 @@ goog.i18n.DateTimePatterns_lt = {
 
 /**
  * Extended set of localized date/time patterns for locale lv.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_lv = {
   YEAR_FULL: 'y. \'g\'.',
   YEAR_FULL_WITH_ERA: 'G y. \'g\'.',
   YEAR_MONTH_ABBR: 'y. \'g\'. MMM',
   YEAR_MONTH_FULL: 'y. \'g\'. MMMM',
+  YEAR_MONTH_SHORT: 'MM.y.',
   MONTH_DAY_ABBR: 'd. MMM',
   MONTH_DAY_FULL: 'dd. MMMM',
   MONTH_DAY_SHORT: 'dd.MM.',
@@ -1346,12 +1481,14 @@ goog.i18n.DateTimePatterns_lv = {
 
 /**
  * Extended set of localized date/time patterns for locale mk.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_mk = {
   YEAR_FULL: 'y',
   YEAR_FULL_WITH_ERA: 'y G',
   YEAR_MONTH_ABBR: 'MMM y \'г\'.',
   YEAR_MONTH_FULL: 'MMMM y \'г\'.',
+  YEAR_MONTH_SHORT: 'MM.y',
   MONTH_DAY_ABBR: 'd MMM',
   MONTH_DAY_FULL: 'dd MMMM',
   MONTH_DAY_SHORT: 'd.M',
@@ -1365,12 +1502,14 @@ goog.i18n.DateTimePatterns_mk = {
 
 /**
  * Extended set of localized date/time patterns for locale ml.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_ml = {
   YEAR_FULL: 'y',
   YEAR_FULL_WITH_ERA: 'G y',
   YEAR_MONTH_ABBR: 'y MMM',
   YEAR_MONTH_FULL: 'y MMMM',
+  YEAR_MONTH_SHORT: 'y-MM',
   MONTH_DAY_ABBR: 'MMM d',
   MONTH_DAY_FULL: 'MMMM dd',
   MONTH_DAY_SHORT: 'd/M',
@@ -1384,31 +1523,35 @@ goog.i18n.DateTimePatterns_ml = {
 
 /**
  * Extended set of localized date/time patterns for locale mn.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_mn = {
   YEAR_FULL: 'y',
   YEAR_FULL_WITH_ERA: 'G y',
   YEAR_MONTH_ABBR: 'y \'оны\' MMM',
   YEAR_MONTH_FULL: 'y \'оны\' MMM',
+  YEAR_MONTH_SHORT: 'y MMMMM',
   MONTH_DAY_ABBR: 'MMM\'ын\' d',
-  MONTH_DAY_FULL: 'MMM\'ын\' dd',
-  MONTH_DAY_SHORT: 'MM/dd',
-  MONTH_DAY_MEDIUM: 'MMM\'ын\' d',
-  MONTH_DAY_YEAR_MEDIUM: 'y.MM.dd',
-  WEEKDAY_MONTH_DAY_MEDIUM: 'MMM\'ын\' d, EEE',
-  WEEKDAY_MONTH_DAY_YEAR_MEDIUM: 'y.MM.dd, EEE',
+  MONTH_DAY_FULL: 'MMMM\'ын\' dd',
+  MONTH_DAY_SHORT: 'MMMMM/dd',
+  MONTH_DAY_MEDIUM: 'MMMM\'ын\' d',
+  MONTH_DAY_YEAR_MEDIUM: 'y \'оны\' MMM\'ын\' d',
+  WEEKDAY_MONTH_DAY_MEDIUM: 'MMM\'ын\' d. EEE',
+  WEEKDAY_MONTH_DAY_YEAR_MEDIUM: 'y \'оны\' MMM\'ын\' d. EEE',
   DAY_ABBR: 'd'
 };
 
 
 /**
  * Extended set of localized date/time patterns for locale mo.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_mo = {
   YEAR_FULL: 'y',
   YEAR_FULL_WITH_ERA: 'y G',
   YEAR_MONTH_ABBR: 'MMM y',
   YEAR_MONTH_FULL: 'MMMM y',
+  YEAR_MONTH_SHORT: 'MM.y',
   MONTH_DAY_ABBR: 'd MMM',
   MONTH_DAY_FULL: 'dd MMMM',
   MONTH_DAY_SHORT: 'dd.MM',
@@ -1422,12 +1565,14 @@ goog.i18n.DateTimePatterns_mo = {
 
 /**
  * Extended set of localized date/time patterns for locale mr.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_mr = {
   YEAR_FULL: 'y',
   YEAR_FULL_WITH_ERA: 'G y',
   YEAR_MONTH_ABBR: 'MMM y',
   YEAR_MONTH_FULL: 'MMMM y',
+  YEAR_MONTH_SHORT: 'MM-y',
   MONTH_DAY_ABBR: 'd MMM',
   MONTH_DAY_FULL: 'dd MMMM',
   MONTH_DAY_SHORT: 'd/M',
@@ -1441,12 +1586,14 @@ goog.i18n.DateTimePatterns_mr = {
 
 /**
  * Extended set of localized date/time patterns for locale ms.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_ms = {
   YEAR_FULL: 'y',
   YEAR_FULL_WITH_ERA: 'y G',
   YEAR_MONTH_ABBR: 'MMM y',
   YEAR_MONTH_FULL: 'MMMM y',
+  YEAR_MONTH_SHORT: 'MM-y',
   MONTH_DAY_ABBR: 'd MMM',
   MONTH_DAY_FULL: 'dd MMMM',
   MONTH_DAY_SHORT: 'd-M',
@@ -1460,12 +1607,14 @@ goog.i18n.DateTimePatterns_ms = {
 
 /**
  * Extended set of localized date/time patterns for locale mt.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_mt = {
   YEAR_FULL: 'y',
   YEAR_FULL_WITH_ERA: 'G y',
   YEAR_MONTH_ABBR: 'MMM y',
   YEAR_MONTH_FULL: 'MMMM y',
+  YEAR_MONTH_SHORT: 'y-MM',
   MONTH_DAY_ABBR: 'MMM d',
   MONTH_DAY_FULL: 'dd \'ta\'’ MMMM',
   MONTH_DAY_SHORT: 'MM-dd',
@@ -1479,12 +1628,14 @@ goog.i18n.DateTimePatterns_mt = {
 
 /**
  * Extended set of localized date/time patterns for locale my.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_my = {
   YEAR_FULL: 'y',
   YEAR_FULL_WITH_ERA: 'G y',
   YEAR_MONTH_ABBR: 'MMM y',
   YEAR_MONTH_FULL: 'y MMMM',
+  YEAR_MONTH_SHORT: 'MM/y',
   MONTH_DAY_ABBR: 'd MMM',
   MONTH_DAY_FULL: 'MMMM dd',
   MONTH_DAY_SHORT: 'd/M',
@@ -1498,12 +1649,14 @@ goog.i18n.DateTimePatterns_my = {
 
 /**
  * Extended set of localized date/time patterns for locale nb.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_nb = {
   YEAR_FULL: 'y',
   YEAR_FULL_WITH_ERA: 'y G',
   YEAR_MONTH_ABBR: 'MMM y',
   YEAR_MONTH_FULL: 'MMMM y',
+  YEAR_MONTH_SHORT: 'MM.y',
   MONTH_DAY_ABBR: 'd. MMM',
   MONTH_DAY_FULL: 'dd. MMMM',
   MONTH_DAY_SHORT: 'd.M.',
@@ -1517,12 +1670,14 @@ goog.i18n.DateTimePatterns_nb = {
 
 /**
  * Extended set of localized date/time patterns for locale ne.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_ne = {
   YEAR_FULL: 'y',
   YEAR_FULL_WITH_ERA: 'G y',
   YEAR_MONTH_ABBR: 'y MMM',
   YEAR_MONTH_FULL: 'y MMMM',
+  YEAR_MONTH_SHORT: 'y-MM',
   MONTH_DAY_ABBR: 'MMM d',
   MONTH_DAY_FULL: 'MMMM dd',
   MONTH_DAY_SHORT: 'MM-dd',
@@ -1536,12 +1691,14 @@ goog.i18n.DateTimePatterns_ne = {
 
 /**
  * Extended set of localized date/time patterns for locale nl.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_nl = {
   YEAR_FULL: 'y',
   YEAR_FULL_WITH_ERA: 'y G',
   YEAR_MONTH_ABBR: 'MMM y',
   YEAR_MONTH_FULL: 'MMMM y',
+  YEAR_MONTH_SHORT: 'MM-y',
   MONTH_DAY_ABBR: 'd MMM',
   MONTH_DAY_FULL: 'dd MMMM',
   MONTH_DAY_SHORT: 'd-M',
@@ -1555,12 +1712,14 @@ goog.i18n.DateTimePatterns_nl = {
 
 /**
  * Extended set of localized date/time patterns for locale no.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_no = {
   YEAR_FULL: 'y',
   YEAR_FULL_WITH_ERA: 'y G',
   YEAR_MONTH_ABBR: 'MMM y',
   YEAR_MONTH_FULL: 'MMMM y',
+  YEAR_MONTH_SHORT: 'MM.y',
   MONTH_DAY_ABBR: 'd. MMM',
   MONTH_DAY_FULL: 'dd. MMMM',
   MONTH_DAY_SHORT: 'd.M.',
@@ -1574,18 +1733,21 @@ goog.i18n.DateTimePatterns_no = {
 
 /**
  * Extended set of localized date/time patterns for locale no_NO.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_no_NO = goog.i18n.DateTimePatterns_no;
 
 
 /**
  * Extended set of localized date/time patterns for locale or.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_or = {
   YEAR_FULL: 'y',
   YEAR_FULL_WITH_ERA: 'y G',
   YEAR_MONTH_ABBR: 'MMM y',
   YEAR_MONTH_FULL: 'MMMM y',
+  YEAR_MONTH_SHORT: 'MM-y',
   MONTH_DAY_ABBR: 'MMM d',
   MONTH_DAY_FULL: 'MMMM dd',
   MONTH_DAY_SHORT: 'M/d',
@@ -1599,12 +1761,14 @@ goog.i18n.DateTimePatterns_or = {
 
 /**
  * Extended set of localized date/time patterns for locale pa.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_pa = {
   YEAR_FULL: 'y',
   YEAR_FULL_WITH_ERA: 'G y',
   YEAR_MONTH_ABBR: 'MMM y',
   YEAR_MONTH_FULL: 'MMMM y',
+  YEAR_MONTH_SHORT: 'MM/y',
   MONTH_DAY_ABBR: 'd MMM',
   MONTH_DAY_FULL: 'MMMM dd',
   MONTH_DAY_SHORT: 'd/M',
@@ -1618,12 +1782,14 @@ goog.i18n.DateTimePatterns_pa = {
 
 /**
  * Extended set of localized date/time patterns for locale pl.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_pl = {
   YEAR_FULL: 'y',
   YEAR_FULL_WITH_ERA: 'y G',
   YEAR_MONTH_ABBR: 'LLL y',
   YEAR_MONTH_FULL: 'LLLL y',
+  YEAR_MONTH_SHORT: 'MM.y',
   MONTH_DAY_ABBR: 'd MMM',
   MONTH_DAY_FULL: 'dd MMMM',
   MONTH_DAY_SHORT: 'd.MM',
@@ -1637,12 +1803,14 @@ goog.i18n.DateTimePatterns_pl = {
 
 /**
  * Extended set of localized date/time patterns for locale pt.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_pt = {
   YEAR_FULL: 'y',
   YEAR_FULL_WITH_ERA: 'y G',
   YEAR_MONTH_ABBR: 'MMM \'de\' y',
   YEAR_MONTH_FULL: 'MMMM \'de\' y',
+  YEAR_MONTH_SHORT: 'MM/y',
   MONTH_DAY_ABBR: 'd \'de\' MMM',
   MONTH_DAY_FULL: 'dd \'de\' MMMM',
   MONTH_DAY_SHORT: 'd/M',
@@ -1656,18 +1824,21 @@ goog.i18n.DateTimePatterns_pt = {
 
 /**
  * Extended set of localized date/time patterns for locale pt_BR.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_pt_BR = goog.i18n.DateTimePatterns_pt;
 
 
 /**
  * Extended set of localized date/time patterns for locale pt_PT.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_pt_PT = {
   YEAR_FULL: 'y',
   YEAR_FULL_WITH_ERA: 'y G',
   YEAR_MONTH_ABBR: 'MM/y',
   YEAR_MONTH_FULL: 'MMMM \'de\' y',
+  YEAR_MONTH_SHORT: 'MM/y',
   MONTH_DAY_ABBR: 'd/MM',
   MONTH_DAY_FULL: 'dd \'de\' MMMM',
   MONTH_DAY_SHORT: 'dd/MM',
@@ -1681,12 +1852,14 @@ goog.i18n.DateTimePatterns_pt_PT = {
 
 /**
  * Extended set of localized date/time patterns for locale ro.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_ro = {
   YEAR_FULL: 'y',
   YEAR_FULL_WITH_ERA: 'y G',
   YEAR_MONTH_ABBR: 'MMM y',
   YEAR_MONTH_FULL: 'MMMM y',
+  YEAR_MONTH_SHORT: 'MM.y',
   MONTH_DAY_ABBR: 'd MMM',
   MONTH_DAY_FULL: 'dd MMMM',
   MONTH_DAY_SHORT: 'dd.MM',
@@ -1700,12 +1873,14 @@ goog.i18n.DateTimePatterns_ro = {
 
 /**
  * Extended set of localized date/time patterns for locale ru.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_ru = {
   YEAR_FULL: 'y',
   YEAR_FULL_WITH_ERA: 'y \'г\'. G',
   YEAR_MONTH_ABBR: 'LLL y \'г\'.',
   YEAR_MONTH_FULL: 'LLLL y \'г\'.',
+  YEAR_MONTH_SHORT: 'MM.y',
   MONTH_DAY_ABBR: 'd MMM',
   MONTH_DAY_FULL: 'dd MMMM',
   MONTH_DAY_SHORT: 'dd.MM',
@@ -1719,12 +1894,14 @@ goog.i18n.DateTimePatterns_ru = {
 
 /**
  * Extended set of localized date/time patterns for locale sh.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_sh = {
   YEAR_FULL: 'y.',
   YEAR_FULL_WITH_ERA: 'y. G',
   YEAR_MONTH_ABBR: 'MMM y.',
   YEAR_MONTH_FULL: 'MMMM y.',
+  YEAR_MONTH_SHORT: 'MM.y.',
   MONTH_DAY_ABBR: 'd. MMM',
   MONTH_DAY_FULL: 'dd. MMMM',
   MONTH_DAY_SHORT: 'd.M.',
@@ -1738,12 +1915,14 @@ goog.i18n.DateTimePatterns_sh = {
 
 /**
  * Extended set of localized date/time patterns for locale si.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_si = {
   YEAR_FULL: 'y',
   YEAR_FULL_WITH_ERA: 'G y',
   YEAR_MONTH_ABBR: 'y MMM',
   YEAR_MONTH_FULL: 'y MMMM',
+  YEAR_MONTH_SHORT: 'y-MM',
   MONTH_DAY_ABBR: 'MMM d',
   MONTH_DAY_FULL: 'MMMM dd',
   MONTH_DAY_SHORT: 'M-d',
@@ -1757,12 +1936,14 @@ goog.i18n.DateTimePatterns_si = {
 
 /**
  * Extended set of localized date/time patterns for locale sk.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_sk = {
   YEAR_FULL: 'y',
   YEAR_FULL_WITH_ERA: 'y G',
   YEAR_MONTH_ABBR: 'M/y',
   YEAR_MONTH_FULL: 'LLLL y',
+  YEAR_MONTH_SHORT: 'MM/y',
   MONTH_DAY_ABBR: 'd. M.',
   MONTH_DAY_FULL: 'dd. MMMM',
   MONTH_DAY_SHORT: 'd. M.',
@@ -1776,12 +1957,14 @@ goog.i18n.DateTimePatterns_sk = {
 
 /**
  * Extended set of localized date/time patterns for locale sl.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_sl = {
   YEAR_FULL: 'y',
   YEAR_FULL_WITH_ERA: 'y G',
   YEAR_MONTH_ABBR: 'MMM y',
   YEAR_MONTH_FULL: 'MMMM y',
+  YEAR_MONTH_SHORT: 'MM/y',
   MONTH_DAY_ABBR: 'd. MMM',
   MONTH_DAY_FULL: 'dd. MMMM',
   MONTH_DAY_SHORT: 'd. M.',
@@ -1795,12 +1978,14 @@ goog.i18n.DateTimePatterns_sl = {
 
 /**
  * Extended set of localized date/time patterns for locale sq.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_sq = {
   YEAR_FULL: 'y',
   YEAR_FULL_WITH_ERA: 'y G',
   YEAR_MONTH_ABBR: 'MMM y',
   YEAR_MONTH_FULL: 'MMMM y',
+  YEAR_MONTH_SHORT: 'MM.y',
   MONTH_DAY_ABBR: 'd MMM',
   MONTH_DAY_FULL: 'dd MMMM',
   MONTH_DAY_SHORT: 'd.M',
@@ -1814,12 +1999,14 @@ goog.i18n.DateTimePatterns_sq = {
 
 /**
  * Extended set of localized date/time patterns for locale sr.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_sr = {
   YEAR_FULL: 'y.',
   YEAR_FULL_WITH_ERA: 'y. G',
   YEAR_MONTH_ABBR: 'MMM y.',
   YEAR_MONTH_FULL: 'MMMM y.',
+  YEAR_MONTH_SHORT: 'MM.y.',
   MONTH_DAY_ABBR: 'd. MMM',
   MONTH_DAY_FULL: 'dd. MMMM',
   MONTH_DAY_SHORT: 'd.M.',
@@ -1833,18 +2020,21 @@ goog.i18n.DateTimePatterns_sr = {
 
 /**
  * Extended set of localized date/time patterns for locale sr_Latn.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_sr_Latn = goog.i18n.DateTimePatterns_sr;
 
 
 /**
  * Extended set of localized date/time patterns for locale sv.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_sv = {
   YEAR_FULL: 'y',
   YEAR_FULL_WITH_ERA: 'y G',
   YEAR_MONTH_ABBR: 'MMM y',
   YEAR_MONTH_FULL: 'MMMM y',
+  YEAR_MONTH_SHORT: 'y-MM',
   MONTH_DAY_ABBR: 'd MMM',
   MONTH_DAY_FULL: 'dd MMMM',
   MONTH_DAY_SHORT: 'd/M',
@@ -1858,12 +2048,14 @@ goog.i18n.DateTimePatterns_sv = {
 
 /**
  * Extended set of localized date/time patterns for locale sw.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_sw = {
   YEAR_FULL: 'y',
   YEAR_FULL_WITH_ERA: 'y G',
   YEAR_MONTH_ABBR: 'MMM y',
   YEAR_MONTH_FULL: 'MMMM y',
+  YEAR_MONTH_SHORT: 'MM/y',
   MONTH_DAY_ABBR: 'd MMM',
   MONTH_DAY_FULL: 'dd MMMM',
   MONTH_DAY_SHORT: 'd/M',
@@ -1877,12 +2069,14 @@ goog.i18n.DateTimePatterns_sw = {
 
 /**
  * Extended set of localized date/time patterns for locale ta.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_ta = {
   YEAR_FULL: 'y',
   YEAR_FULL_WITH_ERA: 'G y',
   YEAR_MONTH_ABBR: 'MMM y',
   YEAR_MONTH_FULL: 'MMMM y',
+  YEAR_MONTH_SHORT: 'MM-y',
   MONTH_DAY_ABBR: 'MMM d',
   MONTH_DAY_FULL: 'dd MMMM',
   MONTH_DAY_SHORT: 'd/M',
@@ -1896,12 +2090,14 @@ goog.i18n.DateTimePatterns_ta = {
 
 /**
  * Extended set of localized date/time patterns for locale te.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_te = {
   YEAR_FULL: 'y',
   YEAR_FULL_WITH_ERA: 'G y',
   YEAR_MONTH_ABBR: 'MMM y',
   YEAR_MONTH_FULL: 'MMMM y',
+  YEAR_MONTH_SHORT: 'MM-y',
   MONTH_DAY_ABBR: 'd MMM',
   MONTH_DAY_FULL: 'dd MMMM',
   MONTH_DAY_SHORT: 'd/M',
@@ -1915,12 +2111,14 @@ goog.i18n.DateTimePatterns_te = {
 
 /**
  * Extended set of localized date/time patterns for locale th.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_th = {
   YEAR_FULL: 'y',
   YEAR_FULL_WITH_ERA: 'G y',
   YEAR_MONTH_ABBR: 'MMM y',
   YEAR_MONTH_FULL: 'MMMM G y',
+  YEAR_MONTH_SHORT: 'MM/y',
   MONTH_DAY_ABBR: 'd MMM',
   MONTH_DAY_FULL: 'dd MMMM',
   MONTH_DAY_SHORT: 'd/M',
@@ -1934,12 +2132,14 @@ goog.i18n.DateTimePatterns_th = {
 
 /**
  * Extended set of localized date/time patterns for locale tl.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_tl = {
   YEAR_FULL: 'y',
   YEAR_FULL_WITH_ERA: 'G y',
   YEAR_MONTH_ABBR: 'MMM y',
   YEAR_MONTH_FULL: 'MMMM y',
+  YEAR_MONTH_SHORT: 'MM/y',
   MONTH_DAY_ABBR: 'MMM d',
   MONTH_DAY_FULL: 'MMMM dd',
   MONTH_DAY_SHORT: 'M/d',
@@ -1953,12 +2153,14 @@ goog.i18n.DateTimePatterns_tl = {
 
 /**
  * Extended set of localized date/time patterns for locale tr.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_tr = {
   YEAR_FULL: 'y',
   YEAR_FULL_WITH_ERA: 'G y',
   YEAR_MONTH_ABBR: 'MMM y',
   YEAR_MONTH_FULL: 'MMMM y',
+  YEAR_MONTH_SHORT: 'MM.y',
   MONTH_DAY_ABBR: 'd MMM',
   MONTH_DAY_FULL: 'dd MMMM',
   MONTH_DAY_SHORT: 'd/M',
@@ -1972,12 +2174,14 @@ goog.i18n.DateTimePatterns_tr = {
 
 /**
  * Extended set of localized date/time patterns for locale uk.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_uk = {
   YEAR_FULL: 'y',
   YEAR_FULL_WITH_ERA: 'y G',
   YEAR_MONTH_ABBR: 'LLL y',
   YEAR_MONTH_FULL: 'LLLL y',
+  YEAR_MONTH_SHORT: 'MM.y',
   MONTH_DAY_ABBR: 'd MMM',
   MONTH_DAY_FULL: 'dd MMMM',
   MONTH_DAY_SHORT: 'dd.MM',
@@ -1991,16 +2195,18 @@ goog.i18n.DateTimePatterns_uk = {
 
 /**
  * Extended set of localized date/time patterns for locale ur.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_ur = {
   YEAR_FULL: 'y',
   YEAR_FULL_WITH_ERA: 'y G',
   YEAR_MONTH_ABBR: 'MMM y',
   YEAR_MONTH_FULL: 'MMMM y',
+  YEAR_MONTH_SHORT: 'MM/y',
   MONTH_DAY_ABBR: 'd MMM',
-  MONTH_DAY_FULL: 'MMMM dd',
+  MONTH_DAY_FULL: 'dd MMMM',
   MONTH_DAY_SHORT: 'd/M',
-  MONTH_DAY_MEDIUM: 'MMMM d',
+  MONTH_DAY_MEDIUM: 'd MMMM',
   MONTH_DAY_YEAR_MEDIUM: 'd MMM، y',
   WEEKDAY_MONTH_DAY_MEDIUM: 'EEE، d MMM',
   WEEKDAY_MONTH_DAY_YEAR_MEDIUM: 'EEE، d MMM، y',
@@ -2010,12 +2216,14 @@ goog.i18n.DateTimePatterns_ur = {
 
 /**
  * Extended set of localized date/time patterns for locale uz.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_uz = {
   YEAR_FULL: 'y',
   YEAR_FULL_WITH_ERA: 'G y',
   YEAR_MONTH_ABBR: 'MMM, y',
   YEAR_MONTH_FULL: 'MMMM, y',
+  YEAR_MONTH_SHORT: 'MM.y',
   MONTH_DAY_ABBR: 'd-MMM',
   MONTH_DAY_FULL: 'dd-MMMM',
   MONTH_DAY_SHORT: 'dd/MM',
@@ -2029,12 +2237,14 @@ goog.i18n.DateTimePatterns_uz = {
 
 /**
  * Extended set of localized date/time patterns for locale vi.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_vi = {
   YEAR_FULL: 'y',
   YEAR_FULL_WITH_ERA: 'y G',
   YEAR_MONTH_ABBR: 'MMM y',
   YEAR_MONTH_FULL: 'MMMM \'năm\' y',
+  YEAR_MONTH_SHORT: '\'tháng\' MM, y',
   MONTH_DAY_ABBR: 'd MMM',
   MONTH_DAY_FULL: 'dd MMMM',
   MONTH_DAY_SHORT: 'dd/M',
@@ -2048,12 +2258,14 @@ goog.i18n.DateTimePatterns_vi = {
 
 /**
  * Extended set of localized date/time patterns for locale zh.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_zh = {
   YEAR_FULL: 'y年',
   YEAR_FULL_WITH_ERA: 'Gy年',
   YEAR_MONTH_ABBR: 'y年M月',
   YEAR_MONTH_FULL: 'y年M月',
+  YEAR_MONTH_SHORT: 'y年M月',
   MONTH_DAY_ABBR: 'M月d日',
   MONTH_DAY_FULL: 'M月dd日',
   MONTH_DAY_SHORT: 'M/d',
@@ -2067,18 +2279,21 @@ goog.i18n.DateTimePatterns_zh = {
 
 /**
  * Extended set of localized date/time patterns for locale zh_CN.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_zh_CN = goog.i18n.DateTimePatterns_zh;
 
 
 /**
  * Extended set of localized date/time patterns for locale zh_HK.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_zh_HK = {
   YEAR_FULL: 'y年',
   YEAR_FULL_WITH_ERA: 'Gy年',
   YEAR_MONTH_ABBR: 'y年M月',
   YEAR_MONTH_FULL: 'y年M月',
+  YEAR_MONTH_SHORT: 'MM/y',
   MONTH_DAY_ABBR: 'M月d日',
   MONTH_DAY_FULL: 'M月dd日',
   MONTH_DAY_SHORT: 'd/M',
@@ -2092,12 +2307,14 @@ goog.i18n.DateTimePatterns_zh_HK = {
 
 /**
  * Extended set of localized date/time patterns for locale zh_TW.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_zh_TW = {
   YEAR_FULL: 'y年',
   YEAR_FULL_WITH_ERA: 'Gy年',
   YEAR_MONTH_ABBR: 'y年M月',
   YEAR_MONTH_FULL: 'y年M月',
+  YEAR_MONTH_SHORT: 'y/MM',
   MONTH_DAY_ABBR: 'M月d日',
   MONTH_DAY_FULL: 'M月dd日',
   MONTH_DAY_SHORT: 'M/d',
@@ -2111,12 +2328,14 @@ goog.i18n.DateTimePatterns_zh_TW = {
 
 /**
  * Extended set of localized date/time patterns for locale zu.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns_zu = {
   YEAR_FULL: 'y',
   YEAR_FULL_WITH_ERA: 'G y',
   YEAR_MONTH_ABBR: 'MMM y',
   YEAR_MONTH_FULL: 'MMMM y',
+  YEAR_MONTH_SHORT: 'y-MM',
   MONTH_DAY_ABBR: 'MMM d',
   MONTH_DAY_FULL: 'MMMM dd',
   MONTH_DAY_SHORT: 'MM-dd',
@@ -2129,7 +2348,54 @@ goog.i18n.DateTimePatterns_zu = {
 
 
 /**
+ * @record
+ * @struct
+ */
+goog.i18n.DateTimePatternsType = function() {};
+
+/** @type {string} */
+goog.i18n.DateTimePatternsType.prototype.YEAR_FULL;
+
+/** @type {string} */
+goog.i18n.DateTimePatternsType.prototype.YEAR_FULL_WITH_ERA;
+
+/** @type {string} */
+goog.i18n.DateTimePatternsType.prototype.YEAR_MONTH_ABBR;
+
+/** @type {string} */
+goog.i18n.DateTimePatternsType.prototype.YEAR_MONTH_FULL;
+
+/** @type {string} */
+goog.i18n.DateTimePatternsType.prototype.YEAR_MONTH_SHORT;
+
+/** @type {string} */
+goog.i18n.DateTimePatternsType.prototype.MONTH_DAY_ABBR;
+
+/** @type {string} */
+goog.i18n.DateTimePatternsType.prototype.MONTH_DAY_FULL;
+
+/** @type {string} */
+goog.i18n.DateTimePatternsType.prototype.MONTH_DAY_SHORT;
+
+/** @type {string} */
+goog.i18n.DateTimePatternsType.prototype.MONTH_DAY_MEDIUM;
+
+/** @type {string} */
+goog.i18n.DateTimePatternsType.prototype.MONTH_DAY_YEAR_MEDIUM;
+
+/** @type {string} */
+goog.i18n.DateTimePatternsType.prototype.WEEKDAY_MONTH_DAY_MEDIUM;
+
+/** @type {string} */
+goog.i18n.DateTimePatternsType.prototype.WEEKDAY_MONTH_DAY_YEAR_MEDIUM;
+
+/** @type {string} */
+goog.i18n.DateTimePatternsType.prototype.DAY_ABBR;
+
+
+/**
  * Select date/time pattern by locale.
+ * @type {!goog.i18n.DateTimePatternsType}
  */
 goog.i18n.DateTimePatterns = goog.i18n.DateTimePatterns_en;
 
@@ -2146,6 +2412,10 @@ switch (goog.LOCALE) {
   case 'ar_DZ':
   case 'ar-DZ':
     goog.i18n.DateTimePatterns = goog.i18n.DateTimePatterns_ar_DZ;
+    break;
+  case 'ar_EG':
+  case 'ar-EG':
+    goog.i18n.DateTimePatterns = goog.i18n.DateTimePatterns_ar_EG;
     break;
   case 'az':
     goog.i18n.DateTimePatterns = goog.i18n.DateTimePatterns_az;
@@ -2488,4 +2758,3 @@ switch (goog.LOCALE) {
     goog.i18n.DateTimePatterns = goog.i18n.DateTimePatterns_zu;
     break;
 }
-

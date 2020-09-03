@@ -21,15 +21,16 @@
 goog.module('goog.testing.parallelClosureTestSuite');
 goog.setTestOnly('goog.testing.parallelClosureTestSuite');
 
-var Promise = goog.require('goog.Promise');
-var events = goog.require('goog.events');
 var MultiTestRunner = goog.require('goog.testing.MultiTestRunner');
+var Promise = goog.require('goog.Promise');
 var TestCase = goog.require('goog.testing.TestCase');
-var jsunit = goog.require('goog.testing.jsunit');
-var testSuite = goog.require('goog.testing.testSuite');
+var asserts = goog.require('goog.asserts');
+var events = goog.require('goog.events');
 var json = goog.require('goog.json');
+var testSuite = goog.require('goog.testing.testSuite');
 
-var testRunner;
+/** @type {?MultiTestRunner} */
+var testRunner = null;
 
 
 /**
@@ -108,6 +109,8 @@ var testObj = {
   },
 
   testRunAllTests: function() {
+    asserts.assert(testRunner, 'Was "setUpPage" called?');
+
     var failurePromise = new Promise(function(resolve, reject) {
       events.listen(testRunner, 'testsFinished', resolve);
     });

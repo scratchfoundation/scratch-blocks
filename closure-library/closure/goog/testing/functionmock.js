@@ -66,6 +66,8 @@ goog.testing.FunctionMock = function(opt_functionName, opt_strictness) {
  * @param {number=} opt_strictness One of goog.testing.Mock.LOOSE or
  *     goog.testing.Mock.STRICT. The default is STRICT.
  * @return {!goog.testing.MockInterface} The mocked method.
+ * @suppress {strictMissingProperties} $propertyReplacer_ and $tearDown are
+ *     not defined on goog.testing.MockInterface
  */
 goog.testing.MethodMock = function(scope, functionName, opt_strictness) {
   if (!(functionName in scope)) {
@@ -79,23 +81,6 @@ goog.testing.MethodMock = function(scope, functionName, opt_strictness) {
   fn.$tearDown = goog.testing.MethodMock.$tearDown;
 
   return fn;
-};
-
-
-/**
- * Mocks an existing function. Creates a goog.testing.FunctionMock
- * and registers it according to scopeFunctionName.
- * @param {!goog.testing.ObjectPropertyString} scopeFunctionName Scope and
- *     function name.
- * @param {number=} opt_strictness One of goog.testing.Mock.LOOSE or
- *     goog.testing.Mock.STRICT. The default is STRICT.
- * @return {!goog.testing.MockInterface} The mocked method.
- */
-goog.testing.MethodMock.fromObjectPropertyString = function(
-    scopeFunctionName, opt_strictness) {
-  return goog.testing.MethodMock(
-      scopeFunctionName.getObject(), scopeFunctionName.getPropertyString(),
-      opt_strictness);
 };
 
 

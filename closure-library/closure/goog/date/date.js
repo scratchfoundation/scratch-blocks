@@ -14,6 +14,7 @@
 
 /**
  * @fileoverview Functions and objects for date representation and manipulation.
+ * @suppress {checkPrototypalTypes}
  *
  * @author eae@google.com (Emil A Eklund)
  */
@@ -228,7 +229,8 @@ goog.date.isSameYear = function(date, opt_now) {
 
 
 /**
- * Static function for week number calculation. ISO 8601 implementation.
+ * Static function for the day of the same week that determines the week number
+ * and year of week.
  *
  * @param {number} year Year part of date.
  * @param {number} month Month part of date (0-11).
@@ -237,9 +239,10 @@ goog.date.isSameYear = function(date, opt_now) {
  * @param {number=} opt_firstDayOfWeek First day of the week, defaults to
  *     Monday.
  *     Monday=0, Sunday=6.
- * @return {number} The week number (1-53).
+ * @return {number} the cutoff day of the same week in millis since epoch.
+ * @private
  */
-goog.date.getWeekNumber = function(
+goog.date.getCutOffSameWeek_ = function(
     year, month, date, opt_weekDay, opt_firstDayOfWeek) {
   var d = new Date(year, month, date);
 
@@ -261,16 +264,55 @@ goog.date.getWeekNumber = function(
   // Unix timestamp of the midnight of the cutoff day in the week of 'd'.
   // There might be +-1 hour shift in the result due to the daylight saving,
   // but it doesn't affect the year.
-  var cutoffSameWeek =
-      d.valueOf() + (cutoffpos - daypos) * goog.date.MS_PER_DAY;
+  return d.valueOf() + (cutoffpos - daypos) * goog.date.MS_PER_DAY;
+};
 
-  // Unix timestamp of January 1 in the year of 'cutoffSameWeek'.
+
+/**
+ * Static function for week number calculation. ISO 8601 implementation.
+ *
+ * @param {number} year Year part of date.
+ * @param {number} month Month part of date (0-11).
+ * @param {number} date Day part of date (1-31).
+ * @param {number=} opt_weekDay Cut off weekday, defaults to Thursday.
+ * @param {number=} opt_firstDayOfWeek First day of the week, defaults to
+ *     Monday.
+ *     Monday=0, Sunday=6.
+ * @return {number} The week number (1-53).
+ */
+goog.date.getWeekNumber = function(
+    year, month, date, opt_weekDay, opt_firstDayOfWeek) {
+  var cutoffSameWeek = goog.date.getCutOffSameWeek_(
+      year, month, date, opt_weekDay, opt_firstDayOfWeek);
+
+  // Unix timestamp of January 1 in the year of the week.
   var jan1 = new Date(new Date(cutoffSameWeek).getFullYear(), 0, 1).valueOf();
 
   // Number of week. The round() eliminates the effect of daylight saving.
   return Math.floor(
              Math.round((cutoffSameWeek - jan1) / goog.date.MS_PER_DAY) / 7) +
       1;
+};
+
+
+/**
+ * Static function for year of the week. ISO 8601 implementation.
+ *
+ * @param {number} year Year part of date.
+ * @param {number} month Month part of date (0-11).
+ * @param {number} date Day part of date (1-31).
+ * @param {number=} opt_weekDay Cut off weekday, defaults to Thursday.
+ * @param {number=} opt_firstDayOfWeek First day of the week, defaults to
+ *     Monday.
+ *     Monday=0, Sunday=6.
+ * @return {number} The four digit year of date.
+ */
+goog.date.getYearOfWeek = function(
+    year, month, date, opt_weekDay, opt_firstDayOfWeek) {
+  var cutoffSameWeek = goog.date.getCutOffSameWeek_(
+      year, month, date, opt_weekDay, opt_firstDayOfWeek);
+
+  return new Date(cutoffSameWeek).getFullYear();
 };
 
 
@@ -986,6 +1028,18 @@ goog.date.Date.prototype.getWeekNumber = function() {
 
 
 /**
+ * Returns year in “Week of Year” based calendars in which the year transition
+ * occurs on a week boundary.
+ * @return {number} The four digit year in "Week of Year"
+ */
+goog.date.Date.prototype.getYearOfWeek = function() {
+  return goog.date.getYearOfWeek(
+      this.getFullYear(), this.getMonth(), this.getDate(),
+      this.firstWeekCutOffDay_, this.firstDayOfWeek_);
+};
+
+
+/**
  * @return {number} The day of year.
  */
 goog.date.Date.prototype.getDayOfYear = function() {
@@ -1298,7 +1352,7 @@ goog.date.Date.compare = function(date1, date2) {
 
 
 /**
- * Parses an ISO 8601 string as a {@code goog.date.Date}.
+ * Parses an ISO 8601 string as a `goog.date.Date`.
  * @param {string} formatted ISO 8601 string to parse.
  * @return {?goog.date.Date} Parsed date or null if parse fails.
  */
@@ -1316,9 +1370,9 @@ goog.date.Date.fromIsoString = function(formatted) {
  * Implements most methods of the native js Date object and can be used
  * interchangeably with it just as if goog.date.DateTime was a subclass of Date.
  *
- * @param {number|Object=} opt_year Four digit year or a date-like object. If
- *     not set, the created object will contain the date determined by
- *     goog.now().
+ * @param {(number|{getTime:?}|null)=} opt_year Four digit year or a date-like
+ *     object. If not set, the created object will contain the date determined
+ *     by goog.now().
  * @param {number=} opt_month Month, 0 = Jan, 11 = Dec.
  * @param {number=} opt_date Date of month, 1 - 31.
  * @param {number=} opt_hours Hours, 0 - 23.
@@ -1760,7 +1814,7 @@ goog.date.DateTime.prototype.clone = function() {
 
 
 /**
- * Parses an ISO 8601 string as a {@code goog.date.DateTime}.
+ * Parses an ISO 8601 string as a `goog.date.DateTime`.
  * @param {string} formatted ISO 8601 string to parse.
  * @return {?goog.date.DateTime} Parsed date or null if parse fails.
  * @override

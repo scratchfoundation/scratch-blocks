@@ -45,17 +45,22 @@ goog.labs.testing.Environment = goog.defineClass(null, {
     // but while testing this case it is reset.
     goog.labs.testing.Environment.activeTestCase_ = testcase;
 
-    /** @type {goog.testing.MockControl} */
+    /**
+     * Mocks are not type-checkable. To reduce burden on tests that are type
+     * checked, this is typed as "?" to turn off JSCompiler checking.
+     * TODO(b/69851971): Enable a type-checked mocking library.
+     * @type {?}
+     */
     this.mockControl = null;
 
-    /** @type {goog.testing.MockClock} */
+    /** @type {?goog.testing.MockClock} */
     this.mockClock = null;
 
     /** @private {boolean} */
     this.shouldMakeMockControl_ = false;
 
-    /** @private {boolean} */
-    this.shouldMakeMockClock_ = false;
+    /** @protected {boolean} */
+    this.mockClockOn = false;
 
     /** @const {!goog.debug.Console} */
     this.console = goog.labs.testing.Environment.console_;
@@ -67,11 +72,11 @@ goog.labs.testing.Environment = goog.defineClass(null, {
 
   /**
    * Runs immediately before the setUpPage phase of JsUnit tests.
-   * @return {!goog.Promise<?>|undefined} An optional Promise which must be
+   * @return {!IThenable<*>|undefined} An optional Promise which must be
    *     resolved before the test is executed.
    */
   setUpPage: function() {
-    if (this.mockClock && this.mockClock.isDisposed()) {
+    if (this.mockClockOn && !this.hasMockClock()) {
       this.mockClock = new goog.testing.MockClock(true);
     }
   },
@@ -80,14 +85,14 @@ goog.labs.testing.Environment = goog.defineClass(null, {
   /** Runs immediately after the tearDownPage phase of JsUnit tests. */
   tearDownPage: function() {
     // If we created the mockClock, we'll also dispose it.
-    if (this.shouldMakeMockClock_) {
+    if (this.hasMockClock()) {
       this.mockClock.dispose();
     }
   },
 
   /**
    * Runs immediately before the setUp phase of JsUnit tests.
-   * @return {!goog.Promise<?>|undefined} An optional Promise which must be
+   * @return {!IThenable<*>|undefined} An optional Promise which must be
    *     resolved before the test case is executed.
    */
   setUp: goog.nullFunction,
@@ -101,7 +106,7 @@ goog.labs.testing.Environment = goog.defineClass(null, {
         this.mockClock.tick(1000);
       }
       // If we created the mockClock, we'll also reset it.
-      if (this.shouldMakeMockClock_) {
+      if (this.hasMockClock()) {
         this.mockClock.reset();
       }
     }
@@ -135,7 +140,7 @@ goog.labs.testing.Environment = goog.defineClass(null, {
 
   /**
    * Create a new {@see goog.testing.MockControl} accessible via
-   * {@code env.mockControl} for each test. If your test has more than one
+   * `env.mockControl` for each test. If your test has more than one
    * testing environment, don't call this on more than one of them.
    * @return {!goog.labs.testing.Environment} For chaining.
    */
@@ -151,24 +156,31 @@ goog.labs.testing.Environment = goog.defineClass(null, {
   /**
    * Create a {@see goog.testing.MockClock} for each test. The clock will be
    * installed (override i.e. setTimeout) by default. It can be accessed
-   * using {@code env.mockClock}. If your test has more than one testing
+   * using `env.mockClock`. If your test has more than one testing
    * environment, don't call this on more than one of them.
    * @return {!goog.labs.testing.Environment} For chaining.
    */
   withMockClock: function() {
-    if (!this.shouldMakeMockClock_) {
-      this.shouldMakeMockClock_ = true;
+    if (!this.hasMockClock()) {
+      this.mockClockOn = true;
       this.mockClock = new goog.testing.MockClock(true);
     }
     return this;
   },
 
+  /**
+   * @return {boolean}
+   * @protected
+   */
+  hasMockClock: function() {
+    return this.mockClockOn && !!this.mockClock && !this.mockClock.isDisposed();
+  },
 
   /**
-   * Creates a basic strict mock of a {@code toMock}. For more advanced mocking,
+   * Creates a basic strict mock of a `toMock`. For more advanced mocking,
    * please use the MockControl directly.
-   * @param {Function} toMock
-   * @return {!goog.testing.StrictMock}
+   * @param {?Function} toMock
+   * @return {?}
    */
   mock: function(toMock) {
     if (!this.shouldMakeMockControl_) {
@@ -177,7 +189,11 @@ goog.labs.testing.Environment = goog.defineClass(null, {
           'Call withMockControl if this environment is expected ' +
           'to contain a MockControl.');
     }
-    return this.mockControl.createStrictMock(toMock);
+    var mock = this.mockControl.createStrictMock(toMock);
+    // Mocks are not type-checkable. To reduce burden on tests that are type
+    // checked, this is typed as "?" to turn off JSCompiler checking.
+    // TODO(b/69851971): Enable a type-checked mocking library.
+    return /** @type {?} */ (mock);
   }
 });
 
@@ -213,7 +229,8 @@ goog.labs.testing.Environment.console_.setCapturing(true);
  * @extends {goog.testing.TestCase}
  */
 goog.labs.testing.EnvironmentTestCase_ = function() {
-  goog.labs.testing.EnvironmentTestCase_.base(this, 'constructor');
+  goog.labs.testing.EnvironmentTestCase_.base(
+      this, 'constructor', document.title);
 
   /** @private {!Array<!goog.labs.testing.Environment>}> */
   this.environments_ = [];
@@ -229,26 +246,21 @@ goog.addSingletonGetter(goog.labs.testing.EnvironmentTestCase_);
 
 
 /**
- * @param {!Object} obj An object providing the test and life cycle methods.
+ * Override setLifecycleObj to allow incoming test object to provide only
+ * runTests and shouldRunTests. The other lifecycle methods are controlled by
+ * this environment.
  * @override
  */
-goog.labs.testing.EnvironmentTestCase_.prototype.setTestObj = function(obj) {
+goog.labs.testing.EnvironmentTestCase_.prototype.setLifecycleObj = function(
+    obj) {
   goog.asserts.assert(
       this.testobj_ == goog.global,
       'A test method object has already been provided ' +
           'and only one is supported.');
+
+  // Store the test object so we can call lifecyle methods when needed.
   this.testobj_ = obj;
-  goog.labs.testing.EnvironmentTestCase_.base(this, 'setTestObj', obj);
-};
 
-
-/**
- * Override the default global scope discovery of lifecycle functions to prevent
- * overriding the custom environment setUp(Page)/tearDown(Page) logic.
- * @override
- */
-goog.labs.testing.EnvironmentTestCase_.prototype.autoDiscoverLifecycle =
-    function() {
   if (this.testobj_['runTests']) {
     this.runTests = goog.bind(this.testobj_['runTests'], this.testobj_);
   }
@@ -321,13 +333,15 @@ goog.labs.testing.EnvironmentTestCase_.prototype.setUp = function() {
  * Calls a chain of methods and makes sure to properly chain them if any of the
  * methods returns a thenable.
  * @param {!Array<function()>} fns
- * @return {!goog.Thenable|undefined}
+ * @return {!IThenable<*>|undefined}
  * @private
  */
 goog.labs.testing.EnvironmentTestCase_.prototype.callAndChainPromises_ =
     function(fns) {
   return goog.array.reduce(fns, function(previousResult, fn) {
-    if (goog.Thenable.isImplementedBy(previousResult)) {
+    if (goog.Thenable.isImplementedBy(previousResult) ||
+        (typeof goog.global['Promise'] === 'function' &&
+         previousResult instanceof goog.global['Promise'])) {
       return previousResult.then(function() {
         return fn();
       });

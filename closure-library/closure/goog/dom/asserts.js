@@ -172,6 +172,20 @@ goog.dom.asserts.assertIsHTMLImageElement = function(o) {
 };
 
 /**
+ * Asserts that a given object is a HTMLAudioElement.
+ *
+ * To permit this assertion to pass in the context of tests where elements might
+ * be mocked, also accepts objects that are not a subtype of Element.
+ *
+ * @param {?Object} o The object whose type to assert.
+ * @return {!HTMLAudioElement}
+ */
+goog.dom.asserts.assertIsHTMLAudioElement = function(o) {
+  return /** @type {!HTMLAudioElement} */ (
+      goog.dom.asserts.assertIsElementType_(o, 'HTMLAudioElement'));
+};
+
+/**
  * Asserts that a given object is a HTMLVideoElement.
  *
  * To permit this assertion to pass in the context of tests where elements might
@@ -197,6 +211,34 @@ goog.dom.asserts.assertIsHTMLVideoElement = function(o) {
 goog.dom.asserts.assertIsHTMLInputElement = function(o) {
   return /** @type {!HTMLInputElement} */ (
       goog.dom.asserts.assertIsElementType_(o, 'HTMLInputElement'));
+};
+
+/**
+ * Asserts that a given object is a HTMLTextAreaElement.
+ *
+ * To permit this assertion to pass in the context of tests where elements might
+ * be mocked, also accepts objects that are not a subtype of Element.
+ *
+ * @param {?Object} o The object whose type to assert.
+ * @return {!HTMLTextAreaElement}
+ */
+goog.dom.asserts.assertIsHTMLTextAreaElement = function(o) {
+  return /** @type {!HTMLTextAreaElement} */ (
+      goog.dom.asserts.assertIsElementType_(o, 'HTMLTextAreaElement'));
+};
+
+/**
+ * Asserts that a given object is a HTMLCanvasElement.
+ *
+ * To permit this assertion to pass in the context of tests where elements might
+ * be mocked, also accepts objects that are not a subtype of Element.
+ *
+ * @param {?Object} o The object whose type to assert.
+ * @return {!HTMLCanvasElement}
+ */
+goog.dom.asserts.assertIsHTMLCanvasElement = function(o) {
+  return /** @type {!HTMLCanvasElement} */ (
+      goog.dom.asserts.assertIsElementType_(o, 'HTMLCanvasElement'));
 };
 
 /**
@@ -305,6 +347,7 @@ goog.dom.asserts.debugStringForType_ = function(value) {
  * @param {?Object} o
  * @return {!Window}
  * @private
+ * @suppress {strictMissingProperties} ownerDocument not defined on Object
  */
 goog.dom.asserts.getWindow_ = function(o) {
   var doc = o && o.ownerDocument;

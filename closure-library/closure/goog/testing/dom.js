@@ -24,6 +24,7 @@ goog.provide('goog.testing.dom');
 goog.require('goog.array');
 goog.require('goog.asserts');
 goog.require('goog.dom');
+goog.require('goog.dom.AbstractRange');
 goog.require('goog.dom.InputType');
 goog.require('goog.dom.NodeIterator');
 goog.require('goog.dom.NodeType');
@@ -37,12 +38,10 @@ goog.require('goog.style');
 goog.require('goog.testing.asserts');
 goog.require('goog.userAgent');
 
-goog.forwardDeclare('goog.dom.AbstractRange');
-
 
 /**
  * @return {!Node} A DIV node with a unique ID identifying the
- *     {@code END_TAG_MARKER_}.
+ *     `END_TAG_MARKER_`.
  * @private
  */
 goog.testing.dom.createEndTagMarker_ = function() {
@@ -116,8 +115,13 @@ goog.testing.dom.assertNodesMatch = function(it, array) {
  * @return {string} A string representation of the node.
  */
 goog.testing.dom.exposeNode = function(node) {
-  return (node.tagName || node.nodeValue) + (node.id ? '#' + node.id : '') +
-      ':"' + (node.innerHTML || '') + '"';
+  node = /** @type {!Element} */ (node);
+  var result = node.nodeName || node.nodeValue;
+  if (node.id) {
+    result += '#' + node.id;
+  }
+  result += ':"' + (node.innerHTML || '') + '"';
+  return result;
 };
 
 
@@ -184,14 +188,19 @@ goog.testing.dom.checkUserAgents_ = function(userAgents) {
  * @private
  */
 goog.testing.dom.endTagMap_ = function(node, ignore, iterator) {
+  goog.asserts.assertInstanceof(iterator, goog.dom.TagIterator);
   return iterator.isEndTag() ? goog.testing.dom.END_TAG_MARKER_ : node;
 };
 
 
 /**
- * Check if the given node is important.  A node is important if it is a
- * non-empty text node, a non-annotated element, or an element annotated to
- * match on this user agent.
+ * Check if the given node is important.
+ *
+ * A node is important if it is
+ *   - a non-empty text node; or,
+ *   - or an element annotated to match on this user agent; or,
+ *   - a non-annotated element
+ *
  * @param {Node} node The node to test.
  * @return {boolean} Whether this node should be included for iteration.
  * @private
@@ -212,9 +221,17 @@ goog.testing.dom.nodeFilter_ = function(node) {
     if (match) {
       return goog.testing.dom.checkUserAgents_(match[1]);
     }
-  } else if (node.className && goog.isString(node.className)) {
-    return goog.testing.dom.checkUserAgents_(node.className);
+
+    return true;
   }
+
+  // This cast exists to preserve existing behaviour. It's risky, but fine as
+  // long as we only access direct properties of `node`.
+  var maybeElement = /** @type {!Element} */ (node);
+  if (maybeElement.className && goog.isString(maybeElement.className)) {
+    return goog.testing.dom.checkUserAgents_(maybeElement.className);
+  }
+
   return true;
 };
 
@@ -242,13 +259,16 @@ goog.testing.dom.describeNode_ = function(node) {
   if (node.nodeType == goog.dom.NodeType.TEXT) {
     return '[Text: ' + node.nodeValue + ']';
   } else {
+    // We can't actually be sure this is an Element, but other code depends on
+    // us pretending it is.
+    node = /** @type {!Element} */ (node);
     return '<' + node.tagName + (node.id ? ' #' + node.id : '') + ' .../>';
   }
 };
 
 
 /**
- * Assert that the html in {@code actual} is substantially similar to
+ * Assert that the html in `actual` is substantially similar to
  * htmlPattern.  This method tests for the same set of styles, for the same
  * order of nodes, and the presence of attributes.  Breaking whitespace nodes
  * are ignored.  Elements can be
@@ -256,7 +276,7 @@ goog.testing.dom.describeNode_ = function(node) {
  * expected to show up in that user agent and expected not to show up in
  * others.
  * @param {string} htmlPattern The pattern to match.
- * @param {!Node} actual The element to check: its contents are matched
+ * @param {!Element} actual The element to check: its contents are matched
  *     against the HTML pattern.
  * @param {boolean=} opt_strictAttributes If false, attributes that appear in
  *     htmlPattern must be in actual, but actual can have attributes not
@@ -333,6 +353,9 @@ goog.testing.dom.assertHtmlContentsMatch = function(
       assertEquals(
           'Tag names should match' + errorSuffix, expectedElem.tagName,
           actualElem.tagName);
+      assertEquals(
+          'Namespaces should match' + errorSuffix, expectedElem.namespaceURI,
+          actualElem.namespaceURI);
       assertObjectEquals(
           'Should have same styles' + errorSuffix,
           goog.style.parseStyleAttribute(expectedElem.style.cssText),
@@ -350,10 +373,14 @@ goog.testing.dom.assertHtmlContentsMatch = function(
       // iterated on by the current iterator, unless the browser is too old to
       // treat template tags differently. We recursively assert equality of the
       // two template document fragments.
-      if (actualElem.tagName.toLowerCase() == 'template' &&
-          actualElem.content) {
-        goog.testing.dom.assertHtmlMatches(
-            expectedElem.innerHTML, actualElem.innerHTML, opt_strictAttributes);
+      if (actualElem.tagName == goog.dom.TagName.TEMPLATE) {
+        // IE throws if HTMLTemplateElement is referenced at runtime.
+        actualElem = /** @type {HTMLTemplateElement} */ (actualElem);
+        if (actualElem.content) {
+          goog.testing.dom.assertHtmlMatches(
+              expectedElem.innerHTML, actualElem.innerHTML,
+              opt_strictAttributes);
+        }
       }
     } else {
       // Concatenate text nodes until we reach a non text node.
@@ -398,7 +425,7 @@ goog.testing.dom.assertHtmlContentsMatch = function(
 
 
 /**
- * Assert that the html in {@code actual} is substantially similar to
+ * Assert that the html in `actual` is substantially similar to
  * htmlPattern.  This method tests for the same set of styles, and for the same
  * order of nodes.  Breaking whitespace nodes are ignored.  Elements can be
  * annotated with classnames corresponding to keys in goog.userAgent and will be
@@ -472,7 +499,7 @@ goog.testing.dom.assertRangeEquals = function(
 
 /**
  * Gets the value of a DOM attribute in deterministic way.
- * @param {!Node} node A node.
+ * @param {!Element} node A node.
  * @param {string} name Attribute name.
  * @return {*} Attribute value.
  * @private
@@ -626,7 +653,7 @@ goog.testing.dom.BAD_IE_ATTRIBUTES_ = goog.object.createSet(
  * @private
  */
 goog.testing.dom.ignoreAttribute_ = function(name) {
-  if (name == 'style' || name == 'class') {
+  if (name == 'style' || name == 'class' || name == 'xmlns') {
     return true;
   }
   return goog.userAgent.IE && goog.testing.dom.BAD_IE_ATTRIBUTES_[name];

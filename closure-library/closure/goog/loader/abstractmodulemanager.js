@@ -21,7 +21,6 @@ goog.provide('goog.loader.AbstractModuleManager');
 goog.provide('goog.loader.AbstractModuleManager.CallbackType');
 goog.provide('goog.loader.AbstractModuleManager.FailureType');
 
-goog.require('goog.Disposable');
 goog.require('goog.module.AbstractModuleLoader');
 goog.require('goog.module.ModuleInfo');
 goog.require('goog.module.ModuleLoadCallback');
@@ -34,11 +33,8 @@ goog.require('goog.module.ModuleLoadCallback');
  * @abstract
  * @constructor
  * @struct
- * @extends {goog.Disposable}
  */
 goog.loader.AbstractModuleManager = function() {
-  goog.loader.AbstractModuleManager.base(this, 'constructor');
-
   /**
    * The module context needed for module initialization.
    * @private {?Object}
@@ -52,7 +48,6 @@ goog.loader.AbstractModuleManager = function() {
    */
   this.loader_ = null;
 };
-goog.inherits(goog.loader.AbstractModuleManager, goog.Disposable);
 
 
 /**
@@ -269,14 +264,14 @@ goog.loader.AbstractModuleManager.prototype.prefetchModule = function(id) {
 
 
 /**
- * Records that a module was loaded. Also initiates loading the next module if
- * any module requests are queued. This method is called by code that is
- * generated and appended to each dynamic module's code at compilation time.
+ * Records that the currently loading module was loaded. Also initiates loading
+ * the next module if any module requests are queued. This method is called by
+ * code that is generated and appended to each dynamic module's code at
+ * compilation time.
  *
- * @param {string} id A module id.
  * @abstract
  */
-goog.loader.AbstractModuleManager.prototype.setLoaded = function(id) {};
+goog.loader.AbstractModuleManager.prototype.setLoaded = function() {};
 
 
 /**
@@ -347,15 +342,6 @@ goog.loader.AbstractModuleManager.prototype.loadMultiple = function(
  * @abstract
  */
 goog.loader.AbstractModuleManager.prototype.beforeLoadModuleCode = function(
-    id) {};
-
-
-/**
- * Method called just after module code is loaded
- * @param {string} id Identifier of the module.
- * @abstract
- */
-goog.loader.AbstractModuleManager.prototype.afterLoadModuleCode = function(
     id) {};
 
 

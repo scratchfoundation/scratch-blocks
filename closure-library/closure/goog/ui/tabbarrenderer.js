@@ -14,7 +14,7 @@
 
 /**
  * @fileoverview Default renderer for {@link goog.ui.TabBar}s.  Based on the
- * original {@code TabPane} code.
+ * original `TabPane` code.
  *
  * @author attila@google.com (Attila Bodis)
  * @author eae@google.com (Emil A. Eklund)
@@ -26,10 +26,12 @@ goog.require('goog.a11y.aria.Role');
 goog.require('goog.object');
 goog.require('goog.ui.ContainerRenderer');
 
+goog.forwardDeclare('goog.ui.Container');
+
 
 
 /**
- * Default renderer for {@link goog.ui.TabBar}s, based on the {@code TabPane}
+ * Default renderer for {@link goog.ui.TabBar}s, based on the `TabPane`
  * code.  The tab bar's DOM structure is determined by its orientation and
  * location relative to tab contents.  For example, a horizontal tab bar
  * located above tab contents looks like this:

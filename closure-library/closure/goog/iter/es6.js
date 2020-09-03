@@ -70,7 +70,10 @@ class ShimIterable {
     } else if (typeof iter[Symbol.iterator] == 'function') {
       return new ShimIterableImpl(() => iter[Symbol.iterator]());
     } else if (typeof iter.__iterator__ == 'function') {
-      return new ShimIterableImpl(() => wrapGoog(iter.__iterator__()));
+      return new ShimIterableImpl(
+          () => wrapGoog(
+              /** @type {{__iterator__:function(this:?, boolean=)}} */ (iter)
+                  .__iterator__()));
     }
     throw new Error('Not an iterator or iterable.');
   }
@@ -154,7 +157,7 @@ class ShimGoogIterator extends GoogIterator {
 
   /** @override */
   __iterator__() {
-    // TODO(user): this seems ridiculous, but the compiler complains
+    // TODO(sdh): this seems ridiculous, but the compiler complains
     // that it's not implemented if we don't have it.
     return super.__iterator__();
   }

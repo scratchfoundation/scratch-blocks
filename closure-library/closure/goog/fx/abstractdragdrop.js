@@ -864,7 +864,7 @@ goog.fx.AbstractDragDrop.prototype.getDragger = function() {
  * Creates copy of node being dragged.
  *
  * @param {Element} sourceEl Element to copy.
- * @return {!Element} The clone of {@code sourceEl}.
+ * @return {!Element} The clone of `sourceEl`.
  * @deprecated Use goog.fx.Dragger.cloneNode().
  * @private
  */
@@ -877,7 +877,7 @@ goog.fx.AbstractDragDrop.prototype.cloneNode_ = function(sourceEl) {
  * Generates an element to follow the cursor during dragging, given a drag
  * source element.  The default behavior is simply to clone the source element,
  * but this may be overridden in subclasses.  This method is called by
- * {@code createDragElement()} before the drag class is added.
+ * `createDragElement()` before the drag class is added.
  *
  * @param {Element} sourceEl Drag source element.
  * @return {!Element} The new drag element.
@@ -1138,7 +1138,7 @@ goog.fx.AbstractDragDrop.prototype.getTargetFromPosition_ = function(position) {
  * @param {number} x Cursor position on the x-axis.
  * @param {number} y Cursor position on the y-axis.
  * @param {goog.math.Box} box Box to check position against.
- * @return {boolean} Whether the given point is inside {@code box}.
+ * @return {boolean} Whether the given point is inside `box`.
  * @protected
  * @deprecated Use goog.math.Box.contains.
  */
@@ -1171,7 +1171,10 @@ goog.fx.AbstractDragDrop.prototype.getEventPosition = function(event) {
 };
 
 
-/** @override */
+/**
+ * @override
+ * @protected
+ */
 goog.fx.AbstractDragDrop.prototype.disposeInternal = function() {
   goog.fx.AbstractDragDrop.base(this, 'disposeInternal');
   this.removeItems();

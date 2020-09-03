@@ -39,6 +39,7 @@ goog.require('goog.labs.net.webChannel.requestStats');
 goog.require('goog.log');
 goog.require('goog.net.WebChannel');
 goog.require('goog.net.XhrIo');
+goog.require('goog.net.XmlHttpFactory');
 goog.require('goog.net.rpc.HttpCors');
 goog.require('goog.object');
 goog.require('goog.string');
@@ -202,7 +203,8 @@ goog.labs.net.webChannel.WebChannelBase = function(
    * Whether to fail forward-channel requests after one try or a few tries.
    * @private {boolean}
    */
-  this.failFast_ = (opt_options && opt_options.failFast) || false;
+  this.failFast_ =
+      !!goog.getObjectByName('internalChannelParams.failFast', opt_options);
 
   /**
    * The handler that receive callbacks for state changes and data.
@@ -212,7 +214,9 @@ goog.labs.net.webChannel.WebChannelBase = function(
 
   /**
    * Timer identifier for asynchronously making a forward channel request.
-   * @private {?number}
+   * This is set to true if the func is scheduled with async.run, which
+   * is equivalent to setTimeout(0).
+   * @private {?number|?boolean}
    */
   this.forwardChannelTimerId_ = null;
 
@@ -296,28 +300,48 @@ goog.labs.net.webChannel.WebChannelBase = function(
    * retries.
    * @private {number}
    */
-  this.baseRetryDelayMs_ = 5 * 1000;
+  this.baseRetryDelayMs_ =
+      goog.getObjectByName(
+          'internalChannelParams.baseRetryDelayMs', opt_options) ||
+      5 * 1000;
 
   /**
    * A random time between 0 and this number of MS is added to the
    * {@link baseRetryDelayMs_}. Default is 10 seconds.
    * @private {number}
    */
-  this.retryDelaySeedMs_ = 10 * 1000;
+  this.retryDelaySeedMs_ =
+      goog.getObjectByName(
+          'internalChannelParams.retryDelaySeedMs', opt_options) ||
+      10 * 1000;
 
   /**
    * Maximum number of attempts to connect to the server for forward channel
    * requests. Defaults to 2.
    * @private {number}
    */
-  this.forwardChannelMaxRetries_ = 2;
+  this.forwardChannelMaxRetries_ =
+      goog.getObjectByName(
+          'internalChannelParams.forwardChannelMaxRetries', opt_options) ||
+      2;
 
   /**
    * The timeout in milliseconds for a forward channel request. Defaults to 20
    * seconds. Note that part of this timeout can be randomized.
    * @private {number}
    */
-  this.forwardChannelRequestTimeoutMs_ = 20 * 1000;
+  this.forwardChannelRequestTimeoutMs_ =
+      goog.getObjectByName(
+          'internalChannelParams.forwardChannelRequestTimeoutMs',
+          opt_options) ||
+      20 * 1000;
+
+  /**
+   * The custom factory used to create XMLHttpRequest objects.
+   * @private {!goog.net.XmlHttpFactory | undefined}
+   */
+  this.xmlHttpFactory_ =
+      (opt_options && opt_options.xmlHttpFactory) || undefined;
 
   /**
    * The timeout in milliseconds for a back channel request. Defaults to using
@@ -390,8 +414,18 @@ goog.labs.net.webChannel.WebChannelBase = function(
    */
   this.fastHandshake_ = (opt_options && opt_options.fastHandshake) || false;
 
+  if (this.fastHandshake_ && !this.backgroundChannelTest_) {
+    this.channelDebug_.warning(
+        'Force backgroundChannelTest when fastHandshake is enabled.');
+    this.backgroundChannelTest_ = true;
+  }
+
   if (opt_options && opt_options.disableRedact) {
     this.channelDebug_.disableRedact();
+  }
+
+  if (opt_options && opt_options.forceLongPolling) {
+    this.allowChunkedMode_ = false;
   }
 };
 
@@ -708,9 +742,21 @@ WebChannelBase.prototype.cancelRequests_ = function() {
   this.forwardChannelRequestPool_.cancel();
 
   if (this.forwardChannelTimerId_) {
-    goog.global.clearTimeout(this.forwardChannelTimerId_);
-    this.forwardChannelTimerId_ = null;
+    this.clearForwardChannelTimer_();
   }
+};
+
+
+/**
+ * Clears the forward channel timer.
+ * @private
+ */
+WebChannelBase.prototype.clearForwardChannelTimer_ = function() {
+  if (goog.isNumber(this.forwardChannelTimerId_)) {
+    goog.global.clearTimeout(this.forwardChannelTimerId_);
+  }
+
+  this.forwardChannelTimerId_ = null;
 };
 
 
@@ -967,8 +1013,7 @@ WebChannelBase.prototype.setFailFast = function(failFast) {
     if (!this.forwardChannelRequestPool_.forceComplete(
             goog.bind(this.onRequestComplete, this))) {
       // i.e., this.forwardChannelTimerId_
-      goog.global.clearTimeout(this.forwardChannelTimerId_);
-      this.forwardChannelTimerId_ = null;
+      this.clearForwardChannelTimer_();
       // The error code from the last failed request is gone, so just use a
       // generic one.
       this.signalError_(WebChannelBase.Error.REQUEST_FAILED);
@@ -1087,8 +1132,11 @@ WebChannelBase.prototype.ensureForwardChannel_ = function() {
     return;
   }
 
-  this.forwardChannelTimerId_ = requestStats.setTimeout(
-      goog.bind(this.onStartForwardChannelTimer_, this), 0);
+  // Use async.run instead of setTimeout(0) to avoid the 1s message delay
+  // from chrome/firefox background tabs
+  this.forwardChannelTimerId_ = true;
+  goog.async.run(this.onStartForwardChannelTimer_, this);
+
   this.forwardChannelRetryCount_ = 0;
 };
 
@@ -1142,8 +1190,11 @@ WebChannelBase.prototype.maybeRetryForwardChannel_ = function(request) {
  */
 WebChannelBase.prototype.onStartForwardChannelTimer_ = function(
     opt_retryRequest) {
-  this.forwardChannelTimerId_ = null;
-  this.startForwardChannel_(opt_retryRequest);
+  // null is possible if scheduled with async.run
+  if (this.forwardChannelTimerId_) {
+    this.forwardChannelTimerId_ = null;
+    this.startForwardChannel_(opt_retryRequest);
+  }
 };
 
 
@@ -1245,6 +1296,11 @@ WebChannelBase.prototype.open_ = function() {
   // Check the option and use GET to enable QUIC 0-RTT
   if (this.fastHandshake_) {
     uri.setParameterValue('$req', requestText);
+
+    // enable handshake upgrade
+    uri.setParameterValue('SID', 'null');
+    request.setDecodeInitialResponse();
+
     request.xmlHttpPost(uri, null, true);  // Send as a GET
   } else {
     request.xmlHttpPost(uri, requestText, true);
@@ -1528,7 +1584,9 @@ WebChannelBase.prototype.onRequestData = function(request, responseText) {
   }
   this.lastStatusCode_ = request.getLastStatusCode();
 
-  if (this.forwardChannelRequestPool_.hasRequest(request) &&
+  // first to check if request has been upgraded to backchannel
+  if (!request.isInitialResponseDecoded() &&
+      this.forwardChannelRequestPool_.hasRequest(request) &&
       this.state_ == WebChannelBase.State.OPENED) {
     var response;
     try {
@@ -1543,7 +1601,8 @@ WebChannelBase.prototype.onRequestData = function(request, responseText) {
       this.signalError_(WebChannelBase.Error.BAD_RESPONSE);
     }
   } else {
-    if (this.backChannelRequest_ == request) {
+    if (request.isInitialResponseDecoded() ||
+        this.backChannelRequest_ == request) {
       this.clearDeadBackchannelTimer_();
     }
     if (!goog.string.isEmptyOrWhitespace(responseText)) {
@@ -1908,10 +1967,8 @@ WebChannelBase.prototype.onInput_ = function(respArray, request) {
         if (this.handler_) {
           this.handler_.channelOpened(this);
         }
-        this.backChannelUri_ = this.getBackChannelUri(
-            this.hostPrefix_, /** @type {string} */ (this.path_));
-        // Open connection to receive data
-        this.ensureBackChannel_();
+
+        this.startBackchannelAfterHandshake_(request);
       } else if (nextArray[0] == 'stop' || nextArray[0] == 'close') {
         // treat close also as an abort
         this.signalError_(WebChannelBase.Error.STOP);
@@ -1947,6 +2004,28 @@ WebChannelBase.prototype.onInput_ = function(respArray, request) {
   }
   if (batch && !goog.array.isEmpty(batch)) {
     this.handler_.channelHandleMultipleArrays(this, batch);
+  }
+};
+
+
+/**
+ * Starts the backchannel after the handshake.
+ *
+ * @param {!ChannelRequest} request The underlying request object
+ * @private
+ */
+WebChannelBase.prototype.startBackchannelAfterHandshake_ = function(request) {
+  this.backChannelUri_ = this.getBackChannelUri(
+      this.hostPrefix_, /** @type {string} */ (this.path_));
+
+  if (request.isInitialResponseDecoded()) {
+    this.channelDebug_.debug('Upgrade the handshake request to a backchannel.');
+    this.forwardChannelRequestPool_.removeRequest(request);
+    request.resetTimeout(this.backChannelRequestTimeoutMs_);
+    this.backChannelRequest_ = request;
+  } else {
+    // Open connection to receive data
+    this.ensureBackChannel_();
   }
 };
 
@@ -2115,7 +2194,7 @@ WebChannelBase.prototype.createDataUri = function(
       hostName = locationPage.hostname;
     }
 
-    var port = opt_overridePort || locationPage.port;
+    var port = opt_overridePort || +locationPage.port;
 
     uri = goog.Uri.create(locationPage.protocol, null, hostName, port, path);
   }
@@ -2149,7 +2228,7 @@ WebChannelBase.prototype.createXhrIo = function(hostPrefix) {
   if (hostPrefix && !this.supportsCrossDomainXhrs_) {
     throw new Error('Can\'t create secondary domain capable XhrIo object.');
   }
-  var xhr = new goog.net.XhrIo();
+  var xhr = new goog.net.XhrIo(this.xmlHttpFactory_);
   xhr.setWithCredentials(this.supportsCrossDomainXhrs_);
   return xhr;
 };
@@ -2303,8 +2382,8 @@ WebChannelBase.Handler.prototype.channelOpened = function(channel) {};
  * @param {WebChannelBase} channel The channel.
  * @param {Array<?>} array The data array.
  */
-WebChannelBase.Handler.prototype.channelHandleArray = function(channel, array) {
-};
+WebChannelBase.Handler.prototype.channelHandleArray = function(
+    channel, array) {};
 
 
 /**

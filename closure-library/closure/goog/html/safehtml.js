@@ -34,9 +34,9 @@ goog.require('goog.i18n.bidi.Dir');
 goog.require('goog.i18n.bidi.DirectionalString');
 goog.require('goog.labs.userAgent.browser');
 goog.require('goog.object');
-goog.require('goog.string');
 goog.require('goog.string.Const');
 goog.require('goog.string.TypedString');
+goog.require('goog.string.internal');
 
 
 
@@ -53,13 +53,26 @@ goog.require('goog.string.TypedString');
  * result in a Cross-Site-Scripting vulnerability.
  *
  * Instances of this type must be created via the factory methods
- * ({@code goog.html.SafeHtml.create}, {@code goog.html.SafeHtml.htmlEscape}),
+ * (`goog.html.SafeHtml.create`, `goog.html.SafeHtml.htmlEscape`),
  * etc and not by invoking its constructor.  The constructor intentionally
  * takes no parameters and the type is immutable; hence only a default instance
  * corresponding to the empty string can be obtained via constructor invocation.
  *
- * @see goog.html.SafeHtml#create
- * @see goog.html.SafeHtml#htmlEscape
+ * Note that there is no `goog.html.SafeHtml.fromConstant`. The reason is that
+ * the following code would create an unsafe HTML:
+ *
+ * ```
+ * goog.html.SafeHtml.concat(
+ *     goog.html.SafeHtml.fromConstant(goog.string.Const.from('<script>')),
+ *     goog.html.SafeHtml.htmlEscape(userInput),
+ *     goog.html.SafeHtml.fromConstant(goog.string.Const.from('<\/script>')));
+ * ```
+ *
+ * There's `goog.dom.constHtmlToNode` to create a node from constant strings
+ * only.
+ *
+ * @see goog.html.SafeHtml.create
+ * @see goog.html.SafeHtml.htmlEscape
  * @constructor
  * @final
  * @struct
@@ -77,7 +90,7 @@ goog.html.SafeHtml = function() {
 
   /**
    * A type marker used to implement additional run-time type checking.
-   * @see goog.html.SafeHtml#unwrap
+   * @see goog.html.SafeHtml.unwrap
    * @const {!Object}
    * @private
    */
@@ -116,7 +129,7 @@ goog.html.SafeHtml.prototype.implementsGoogStringTypedString = true;
  * Returns this SafeHtml's value as string.
  *
  * IMPORTANT: In code where it is security relevant that an object's type is
- * indeed {@code SafeHtml}, use {@code goog.html.SafeHtml.unwrap} instead of
+ * indeed `SafeHtml`, use `goog.html.SafeHtml.unwrap` instead of
  * this method. If in doubt, assume that it's security relevant. In particular,
  * note that goog.html functions which return a goog.html type do not guarantee
  * that the returned instance is of the right type. For example:
@@ -130,7 +143,7 @@ goog.html.SafeHtml.prototype.implementsGoogStringTypedString = true;
  * // instanceof goog.html.SafeHtml.
  * </pre>
  *
- * @see goog.html.SafeHtml#unwrap
+ * @see goog.html.SafeHtml.unwrap
  * @override
  */
 goog.html.SafeHtml.prototype.getTypedStringValue = function() {
@@ -143,9 +156,9 @@ if (goog.DEBUG) {
    * Returns a debug string-representation of this value.
    *
    * To obtain the actual string value wrapped in a SafeHtml, use
-   * {@code goog.html.SafeHtml.unwrap}.
+   * `goog.html.SafeHtml.unwrap`.
    *
-   * @see goog.html.SafeHtml#unwrap
+   * @see goog.html.SafeHtml.unwrap
    * @override
    */
   goog.html.SafeHtml.prototype.toString = function() {
@@ -160,9 +173,9 @@ if (goog.DEBUG) {
  * object, and returns its value.
  * @param {!goog.html.SafeHtml} safeHtml The object to extract from.
  * @return {string} The SafeHtml object's contained string, unless the run-time
- *     type check fails. In that case, {@code unwrap} returns an innocuous
+ *     type check fails. In that case, `unwrap` returns an innocuous
  *     string, or, if assertions are enabled, throws
- *     {@code goog.asserts.AssertionError}.
+ *     `goog.asserts.AssertionError`.
  */
 goog.html.SafeHtml.unwrap = function(safeHtml) {
   // Perform additional run-time type-checking to ensure that safeHtml is indeed
@@ -201,10 +214,10 @@ goog.html.SafeHtml.TextOrHtml_;
  * Returns HTML-escaped text as a SafeHtml object.
  *
  * If text is of a type that implements
- * {@code goog.i18n.bidi.DirectionalString}, the directionality of the new
- * {@code SafeHtml} object is set to {@code text}'s directionality, if known.
+ * `goog.i18n.bidi.DirectionalString`, the directionality of the new
+ * `SafeHtml` object is set to `text`'s directionality, if known.
  * Otherwise, the directionality of the resulting SafeHtml is unknown (i.e.,
- * {@code null}).
+ * `null`).
  *
  * @param {!goog.html.SafeHtml.TextOrHtml_} textOrHtml The text to escape. If
  *     the parameter is of type SafeHtml it is returned directly (no escaping
@@ -215,18 +228,21 @@ goog.html.SafeHtml.htmlEscape = function(textOrHtml) {
   if (textOrHtml instanceof goog.html.SafeHtml) {
     return textOrHtml;
   }
+  var textIsObject = typeof textOrHtml == 'object';
   var dir = null;
-  if (textOrHtml.implementsGoogI18nBidiDirectionalString) {
-    dir = textOrHtml.getDirection();
+  if (textIsObject && textOrHtml.implementsGoogI18nBidiDirectionalString) {
+    dir = /** @type {!goog.i18n.bidi.DirectionalString} */ (textOrHtml)
+              .getDirection();
   }
   var textAsString;
-  if (textOrHtml.implementsGoogStringTypedString) {
-    textAsString = textOrHtml.getTypedStringValue();
+  if (textIsObject && textOrHtml.implementsGoogStringTypedString) {
+    textAsString = /** @type {!goog.string.TypedString} */ (textOrHtml)
+                       .getTypedStringValue();
   } else {
     textAsString = String(textOrHtml);
   }
   return goog.html.SafeHtml.createSafeHtmlSecurityPrivateDoNotAccessOrElse(
-      goog.string.htmlEscape(textAsString), dir);
+      goog.string.internal.htmlEscape(textAsString), dir);
 };
 
 
@@ -244,7 +260,7 @@ goog.html.SafeHtml.htmlEscapePreservingNewlines = function(textOrHtml) {
   }
   var html = goog.html.SafeHtml.htmlEscape(textOrHtml);
   return goog.html.SafeHtml.createSafeHtmlSecurityPrivateDoNotAccessOrElse(
-      goog.string.newLineToBr(goog.html.SafeHtml.unwrap(html)),
+      goog.string.internal.newLineToBr(goog.html.SafeHtml.unwrap(html)),
       html.getDirection());
 };
 
@@ -265,7 +281,7 @@ goog.html.SafeHtml.htmlEscapePreservingNewlinesAndSpaces = function(
   }
   var html = goog.html.SafeHtml.htmlEscape(textOrHtml);
   return goog.html.SafeHtml.createSafeHtmlSecurityPrivateDoNotAccessOrElse(
-      goog.string.whitespaceEscape(goog.html.SafeHtml.unwrap(html)),
+      goog.string.internal.whitespaceEscape(goog.html.SafeHtml.unwrap(html)),
       html.getDirection());
 };
 
@@ -273,10 +289,10 @@ goog.html.SafeHtml.htmlEscapePreservingNewlinesAndSpaces = function(
 /**
  * Coerces an arbitrary object into a SafeHtml object.
  *
- * If {@code textOrHtml} is already of type {@code goog.html.SafeHtml}, the same
- * object is returned. Otherwise, {@code textOrHtml} is coerced to string, and
- * HTML-escaped. If {@code textOrHtml} is of a type that implements
- * {@code goog.i18n.bidi.DirectionalString}, its directionality, if known, is
+ * If `textOrHtml` is already of type `goog.html.SafeHtml`, the same
+ * object is returned. Otherwise, `textOrHtml` is coerced to string, and
+ * HTML-escaped. If `textOrHtml` is of a type that implements
+ * `goog.i18n.bidi.DirectionalString`, its directionality, if known, is
  * preserved.
  *
  * @param {!goog.html.SafeHtml.TextOrHtml_} textOrHtml The text or SafeHtml to
@@ -648,7 +664,7 @@ goog.html.SafeHtml.createMetaRefresh = function(url, opt_secs) {
     // This is imperfect. Notice that both ' and ; are reserved characters in
     // URIs, so this could do the wrong thing, but at least it will do the wrong
     // thing in only rare cases.
-    if (goog.string.contains(unwrappedUrl, ';')) {
+    if (goog.string.internal.contains(unwrappedUrl, ';')) {
       unwrappedUrl = "'" + unwrappedUrl.replace(/'/g, '%27') + "'";
     }
   }
@@ -703,14 +719,15 @@ goog.html.SafeHtml.getAttrNameAndValue_ = function(tagName, name, value) {
   if (value.implementsGoogStringTypedString) {
     // Ok to call getTypedStringValue() since there's no reliance on the type
     // contract for security here.
-    value = value.getTypedStringValue();
+    value =
+        /** @type {!goog.string.TypedString} */ (value).getTypedStringValue();
   }
 
   goog.asserts.assert(
       goog.isString(value) || goog.isNumber(value),
       'String or number value expected, got ' + (typeof value) +
           ' with value: ' + value);
-  return name + '="' + goog.string.htmlEscape(String(value)) + '"';
+  return name + '="' + goog.string.internal.htmlEscape(String(value)) + '"';
 };
 
 

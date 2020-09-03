@@ -36,6 +36,7 @@ goog.setTestOnly('goog.testing.events.EventObserver');
 goog.provide('goog.testing.events.EventObserver');
 
 goog.require('goog.array');
+goog.require('goog.events.Event');
 
 
 

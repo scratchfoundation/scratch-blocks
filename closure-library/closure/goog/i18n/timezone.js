@@ -20,7 +20,8 @@
 goog.provide('goog.i18n.TimeZone');
 
 goog.require('goog.array');
-/** @suppress {extraRequire} goog.date.DateLike represents a Date or a
+/**
+ * @suppress {extraRequire} goog.date.DateLike represents a Date or a
  * goog.Date object. It is a parameter in the following methods:
  * - getDaylightAdjustment
  * - getGMTString
@@ -28,12 +29,14 @@ goog.require('goog.array');
  * - getOffset
  * - getRFCTimeZoneString
  * - getShortName
+ * - getUTCString
  * - isDaylightTime
  * - getLongNameGMT
  * - getGenericLocation
  * Lint warns that this require is unnecessary but the closure compiler needs
  * it in order to accept a Date or a goog.Date object as a goog.date.DateLike
- * parameter in any of these methods. */
+ * parameter in any of these methods.
+ */
 goog.require('goog.date.DateLike');
 goog.require('goog.object');
 goog.require('goog.string');
@@ -92,10 +95,12 @@ goog.i18n.TimeZone = function() {
    * <li>DST_LONG_NAME_GMT: long GMT for daylight saving time</li>
    * <li>DST_GENERIC_LOCATION: generic location for daylight saving time</li>
    * </ul>
-   * @type { { STD_LONG_NAME_GMT:string, STD_GENERIC_LOCATION:string } |
-   *         { STD_LONG_NAME_GMT:string, STD_GENERIC_LOCATION:string,
-   *           DST_LONG_NAME_GMT:string, DST_GENERIC_LOCATION:string }
-   *       }
+   * @type {{
+   *   STD_LONG_NAME_GMT: string,
+   *   STD_GENERIC_LOCATION: string,
+   *   DST_LONG_NAME_GMT: (string|undefined),
+   *   DST_GENERIC_LOCATION: (string|undefined)
+   * }}
    * @private
    */
   this.tzNamesExt_;
@@ -305,6 +310,16 @@ goog.i18n.TimeZone.prototype.getDaylightAdjustment = function(date) {
  */
 goog.i18n.TimeZone.prototype.getGMTString = function(date) {
   return goog.i18n.TimeZone.composeGMTString_(this.getOffset(date));
+};
+
+/**
+ * Return the UTC representation of this time zone object.
+ * @param {!goog.date.DateLike} date The date for which time to retrieve
+ *     UTC string.
+ * @return {string} UTC representation string.
+ */
+goog.i18n.TimeZone.prototype.getUTCString = function(date) {
+  return goog.i18n.TimeZone.composeUTCString_(this.getOffset(date));
 };
 
 

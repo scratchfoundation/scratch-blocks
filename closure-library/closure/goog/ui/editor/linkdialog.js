@@ -95,6 +95,14 @@ goog.ui.editor.LinkDialog = function(domHelper, link) {
   this.showOpenLinkInNewWindow_ = false;
 
   /**
+   * Whether to focus the text to display input instead of the url input if the
+   * text to display input is empty when the dialog opens.
+   * @type {boolean}
+   * @private
+   */
+  this.focusTextToDisplayOnOpenIfEmpty_ = false;
+
+  /**
    * Whether the "open link in new window" checkbox should be checked when the
    * dialog is shown, and also whether it was checked last time the dialog was
    * closed.
@@ -306,6 +314,16 @@ goog.ui.editor.LinkDialog.prototype.showOpenLinkInNewWindow = function(
 
 
 /**
+ * Tells the dialog to focus the text to display input instead of the url field
+ * if the text to display input is empty when the dialog is opened.
+ */
+goog.ui.editor.LinkDialog.prototype.focusTextToDisplayOnOpenIfEmpty =
+    function() {
+  this.focusTextToDisplayOnOpenIfEmpty_ = true;
+};
+
+
+/**
  * Tells the dialog to show a checkbox where the user can choose to add
  * 'rel=nofollow' attribute to the link.
  */
@@ -321,6 +339,12 @@ goog.ui.editor.LinkDialog.prototype.show = function() {
 
   this.selectAppropriateTab_(
       this.textToDisplayInput_.value, this.getTargetUrl_());
+
+  if (this.focusTextToDisplayOnOpenIfEmpty_ &&
+      !this.targetLink_.getCurrentText()) {
+    goog.editor.focus.focusInputField(this.textToDisplayInput_);
+  }
+
   this.syncOkButton_();
 
   if (this.showOpenLinkInNewWindow_) {
@@ -383,10 +407,10 @@ goog.ui.editor.LinkDialog.prototype.setAutogenFeatureEnabled = function(
 
 
 /**
- * Checks if {@code str} contains {@code "nofollow"} as a separate word.
- * @param {string} str String to be tested.  This is usually {@code rel}
- *     attribute of an {@code HTMLAnchorElement} object.
- * @return {boolean} {@code true} if {@code str} contains {@code nofollow}.
+ * Checks if `str` contains {@code "nofollow"} as a separate word.
+ * @param {string} str String to be tested.  This is usually `rel`
+ *     attribute of an `HTMLAnchorElement` object.
+ * @return {boolean} `true` if `str` contains `nofollow`.
  */
 goog.ui.editor.LinkDialog.hasNoFollow = function(str) {
   return goog.ui.editor.LinkDialog.NO_FOLLOW_REGEX_.test(str);
@@ -394,11 +418,11 @@ goog.ui.editor.LinkDialog.hasNoFollow = function(str) {
 
 
 /**
- * Removes {@code "nofollow"} from {@code rel} if it's present as a separate
+ * Removes {@code "nofollow"} from `rel` if it's present as a separate
  * word.
- * @param {string} rel Input string.  This is usually {@code rel} attribute of
- *     an {@code HTMLAnchorElement} object.
- * @return {string} {@code rel} with any {@code "nofollow"} removed.
+ * @param {string} rel Input string.  This is usually `rel` attribute of
+ *     an `HTMLAnchorElement` object.
+ * @return {string} `rel` with any {@code "nofollow"} removed.
  */
 goog.ui.editor.LinkDialog.removeNoFollow = function(rel) {
   return rel.replace(goog.ui.editor.LinkDialog.NO_FOLLOW_REGEX_, '');
@@ -440,8 +464,8 @@ goog.ui.editor.LinkDialog.prototype.createOkEvent = function() {
 
 
 /**
- * Regular expression that matches {@code nofollow} value in an
- * {@code * HTMLAnchorElement}'s {@code rel} element.
+ * Regular expression that matches `nofollow` value in an
+ * {@code * HTMLAnchorElement}'s `rel` element.
  * @type {RegExp}
  * @private
  */
@@ -492,6 +516,7 @@ goog.ui.editor.LinkDialog.prototype.createDialogContent_ = function() {
  * Builds and returns the text to display section of the edit link dialog.
  * @return {!Element} A div element to be appended into the dialog div.
  * @private
+ * @suppress {strictMissingProperties} Part of the go/strict_warnings_migration
  */
 goog.ui.editor.LinkDialog.prototype.buildTextToDisplayDiv_ = function() {
   var table = this.dom.createTable(1, 2);
@@ -721,6 +746,7 @@ goog.ui.editor.LinkDialog.prototype.getTargetUrl_ = function() {
  * @param {string} text The inner text of the link.
  * @param {string} url The href for the link.
  * @private
+ * @suppress {strictMissingProperties} Part of the go/strict_warnings_migration
  */
 goog.ui.editor.LinkDialog.prototype.selectAppropriateTab_ = function(
     text, url) {
@@ -749,6 +775,7 @@ goog.ui.editor.LinkDialog.prototype.selectAppropriateTab_ = function(
  * the isNewLink_() == true case of selectAppropriateTab_().
  * @param {string} text The inner text of the link.
  * @private
+ * @suppress {strictMissingProperties} Part of the go/strict_warnings_migration
  */
 goog.ui.editor.LinkDialog.prototype.guessUrlAndSelectTab_ = function(text) {
   if (goog.editor.Link.isLikelyEmailAddress(text)) {
@@ -782,6 +809,7 @@ goog.ui.editor.LinkDialog.prototype.guessUrlAndSelectTab_ = function(text) {
  * Called on a change to the url or email input. If either one of those tabs
  * is active, sets the OK button to enabled/disabled accordingly.
  * @private
+ * @suppress {strictMissingProperties} Part of the go/strict_warnings_migration
  */
 goog.ui.editor.LinkDialog.prototype.syncOkButton_ = function() {
   var inputValue;
@@ -860,6 +888,7 @@ goog.ui.editor.LinkDialog.prototype.createOkEventFromWebTab_ = function() {
  * @return {!goog.ui.editor.LinkDialog.OkEvent} The event object to be used when
  *     dispatching the OK event to listeners.
  * @private
+ * @suppress {strictMissingProperties} Part of the go/strict_warnings_migration
  */
 goog.ui.editor.LinkDialog.prototype.createOkEventFromEmailTab_ = function(
     opt_inputId) {
@@ -1009,6 +1038,7 @@ goog.ui.editor.LinkDialog.prototype.createOkEventFromUrl_ = function(url) {
  * If an email or url is being edited, set autogenerate to on if the text to
  * display matches the url.
  * @private
+ * @suppress {strictMissingProperties} Part of the go/strict_warnings_migration
  */
 goog.ui.editor.LinkDialog.prototype.setAutogenFlagFromCurInput_ = function() {
   var autogen = false;

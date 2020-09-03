@@ -173,7 +173,6 @@ goog.ui.DatePicker = function(
 
   /** @private {Element} */
   this.menu_;
-
   /** @private {Element} */
   this.menuSelected_;
 
@@ -182,6 +181,12 @@ goog.ui.DatePicker = function(
 
   /** @private {function(Element)} */
   this.menuCallback_;
+
+  /**
+   * Number of rows in the picker table. Used for detecting size changes.
+   * @private {number}
+   */
+  this.lastNumberOfRowsInGrid_ = 0;
 };
 goog.inherits(goog.ui.DatePicker, goog.ui.Component);
 goog.tagUnsealableClass(goog.ui.DatePicker);
@@ -269,7 +274,7 @@ goog.ui.DatePicker.prototype.simpleNavigation_ = false;
 /**
  * Custom decorator function. Takes a goog.date.Date object, returns a String
  * representing a CSS class or null if no special styling applies
- * @type {Function}
+ * @type {?Function}
  * @private
  */
 goog.ui.DatePicker.prototype.decoratorFunction_ = null;
@@ -285,7 +290,7 @@ goog.ui.DatePicker.prototype.longDateFormat_ = false;
 
 /**
  * Element for navigation row on a datepicker.
- * @type {Element}
+ * @type {?Element}
  * @private
  */
 goog.ui.DatePicker.prototype.elNavRow_ = null;
@@ -293,7 +298,7 @@ goog.ui.DatePicker.prototype.elNavRow_ = null;
 
 /**
  * Element for the month/year in the navigation row.
- * @type {Element}
+ * @type {?Element}
  * @private
  */
 goog.ui.DatePicker.prototype.elMonthYear_ = null;
@@ -301,7 +306,7 @@ goog.ui.DatePicker.prototype.elMonthYear_ = null;
 
 /**
  * Element for footer row on a datepicker.
- * @type {Element}
+ * @type {?Element}
  * @private
  */
 goog.ui.DatePicker.prototype.elFootRow_ = null;
@@ -335,6 +340,14 @@ goog.ui.DatePicker.YEAR_MENU_RANGE_ = 5;
 
 
 /**
+ * The maximum number of rendered weeks a month can have.
+ * @const {number}
+ * @private
+ */
+goog.ui.DatePicker.MAX_NUM_WEEKS_ = 6;
+
+
+/**
  * Constants for event names
  *
  * @enum {string}
@@ -342,6 +355,7 @@ goog.ui.DatePicker.YEAR_MENU_RANGE_ = 5;
 goog.ui.DatePicker.Events = {
   CHANGE: 'change',
   CHANGE_ACTIVE_MONTH: 'changeActiveMonth',
+  GRID_SIZE_INCREASE: 'gridSizeIncrease',
   SELECT: 'select'
 };
 
@@ -829,6 +843,7 @@ goog.ui.DatePicker.prototype.setDate_ = function(date, fireSelection) {
  * Updates the navigation row (navigating months and maybe years) in the navRow_
  * element of a created picker.
  * @private
+ * @suppress {strictMissingProperties} Part of the go/strict_warnings_migration
  */
 goog.ui.DatePicker.prototype.updateNavigationRow_ = function() {
   if (!this.elNavRow_) {
@@ -957,7 +972,10 @@ goog.ui.DatePicker.prototype.updateFooterRow_ = function() {
 };
 
 
-/** @override */
+/**
+ * @override
+ * @suppress {strictMissingProperties} Part of the go/strict_warnings_migration
+ */
 goog.ui.DatePicker.prototype.decorateInternal = function(el) {
   goog.ui.DatePicker.superClass_.decorateInternal.call(this, el);
   goog.asserts.assert(el);
@@ -1083,9 +1101,9 @@ goog.ui.DatePicker.prototype.disposeInternal = function() {
 
 /**
  * Click handler for date grid.
- *
  * @param {goog.events.BrowserEvent} event Click event.
  * @private
+ * @suppress {strictMissingProperties} Part of the go/strict_warnings_migration
  */
 goog.ui.DatePicker.prototype.handleGridClick_ = function(event) {
   if (event.target.tagName == goog.dom.TagName.TD) {
@@ -1139,6 +1157,7 @@ goog.ui.DatePicker.prototype.handleGridKeyPress_ = function(event) {
     case 36:  // Home
       event.preventDefault();
       this.selectToday();
+      break;
     case 46:  // Delete
       event.preventDefault();
       this.selectNone();
@@ -1249,12 +1268,12 @@ goog.ui.DatePicker.prototype.handleYearMenuClick_ = function(target) {
 
 /**
  * Support function for menu creation.
- *
  * @param {Element} srcEl Button to create menu for.
  * @param {Array<string>} items List of items to populate menu with.
  * @param {function(Element)} method Call back method.
  * @param {string} selected Item to mark as selected in menu.
  * @private
+ * @suppress {strictMissingProperties} Part of the go/strict_warnings_migration
  */
 goog.ui.DatePicker.prototype.createMenu_ = function(
     srcEl, items, method, selected) {
@@ -1319,9 +1338,9 @@ goog.ui.DatePicker.prototype.handleMenuClick_ = function(event) {
 
 /**
  * Keypress handler for menu.
- *
  * @param {goog.events.BrowserEvent} event Keypress event.
  * @private
+ * @suppress {strictMissingProperties} Part of the go/strict_warnings_migration
  */
 goog.ui.DatePicker.prototype.handleMenuKeyPress_ = function(event) {
   // Prevent the grid keypress handler from catching the keypress event.
@@ -1461,9 +1480,12 @@ goog.ui.DatePicker.prototype.redrawCalendarGrid_ = function() {
   var todayYear = today.getFullYear();
   var todayMonth = today.getMonth();
   var todayDate = today.getDate();
+  // The maximum number of weeks a month can have is 6. This is decreased below
+  // if weeks are hidden.
+  var numberOfWeeksInThisMonth = goog.ui.DatePicker.MAX_NUM_WEEKS_;
 
   // Draw calendar week by week, a worst case month has six weeks.
-  for (var y = 0; y < 6; y++) {
+  for (var y = 0; y < goog.ui.DatePicker.MAX_NUM_WEEKS_; y++) {
     // Draw week number, if enabled
     if (this.showWeekNum_) {
       goog.dom.setTextContent(
@@ -1546,17 +1568,33 @@ goog.ui.DatePicker.prototype.redrawCalendarGrid_ = function() {
       goog.dom.classlist.set(el, classes.join(' '));
     }
 
-    // Hide the either the last one or last two weeks if they contain no days
-    // from the active month and the showFixedNumWeeks is false. The first four
-    // weeks are always shown as no month has less than 28 days).
+    // Hide either the last one or last two weeks if they contain no days from
+    // the active month and the showFixedNumWeeks is false. The first four weeks
+    // are always shown as no month has less than 28 days).
     if (y >= 4) {
       var parentEl = /** @type {Element} */ (
           this.elTable_[y + 1][0].parentElement ||
           this.elTable_[y + 1][0].parentNode);
+      var doesMonthHaveThisWeek = this.grid_[y][0].getMonth() == month;
       goog.style.setElementShown(
-          parentEl,
-          this.grid_[y][0].getMonth() == month || this.showFixedNumWeeks_);
+          parentEl, doesMonthHaveThisWeek || this.showFixedNumWeeks_);
+
+      if (!doesMonthHaveThisWeek) {
+        numberOfWeeksInThisMonth = Math.min(numberOfWeeksInThisMonth, y);
+      }
     }
+  }
+
+  var numberOfRowsInGrid =
+      (this.showFixedNumWeeks_ ? goog.ui.DatePicker.MAX_NUM_WEEKS_ :
+                                 numberOfWeeksInThisMonth) +
+      (this.showWeekdays_ ? 1 : 0);
+
+  if (this.lastNumberOfRowsInGrid_ != numberOfRowsInGrid) {
+    if (this.lastNumberOfRowsInGrid_ < numberOfRowsInGrid) {
+      this.dispatchEvent(goog.ui.DatePicker.Events.GRID_SIZE_INCREASE);
+    }
+    this.lastNumberOfRowsInGrid_ = numberOfRowsInGrid;
   }
 };
 

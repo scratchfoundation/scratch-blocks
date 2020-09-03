@@ -28,6 +28,8 @@ goog.require('goog.events.EventTarget');
 goog.require('goog.object');
 goog.require('goog.ui.ac.RenderOptions');
 
+goog.forwardDeclare('goog.ui.ac.InputHandler');
+
 
 /**
  * This is the central manager class for an AutoComplete instance. The matcher
@@ -137,7 +139,7 @@ goog.ui.ac.AutoComplete = function(matcher, renderer, selectionHandler) {
 
   /**
    * The target HTML node for displaying.
-   * @type {Element}
+   * @type {?Element}
    * @protected
    * @suppress {underscore|visibility}
    */

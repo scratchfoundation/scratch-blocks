@@ -1,7 +1,7 @@
 {
   "name": "google-closure-library",
   "description": "Google's common JavaScript library",
-  "version": "v20180204.0.0",
+  "version": "v20190301.0.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/google/closure-library.git"
@@ -24,7 +24,7 @@
     "protractor": "^2.1.0"
   }
 
-,"_resolved": "https://registry.npmjs.org/google-closure-library/-/google-closure-library-20180204.0.0.tgz"
-,"_integrity": "sha1-rTxaGN/XMcYUnFIg0pkcDJEpcYo="
-,"_from": "google-closure-library@20180204.0.0"
+,"_resolved": "https://registry.npmjs.org/google-closure-library/-/google-closure-library-20190301.0.0.tgz"
+,"_integrity": "sha512-mpeszbnXpRhXZ0sPqUxBgUmk0RtmzrJRy3KFygp0Ih9JuRUjQTCLhwYQeIlK2vB2lShhY/KUo9E1Z1gvxDFxOQ=="
+,"_from": "google-closure-library@20190301.0.0"
 }

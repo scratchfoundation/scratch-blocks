@@ -69,9 +69,7 @@ goog.testing.MockClock = function(opt_autoInstall) {
    * right.  For example, the expiration times for each element of the queue
    * might be in the order 300, 200, 200.
    *
-   * @type {Array<{
-   *    timeoutKey: number, millis: number,
-   *    runAtMillis: number, funcToCall: Function, recurring: boolean}>}
+   * @type {?Array<!goog.testing.MockClock.QueueObjType_>}
    * @private
    */
   this.queue_ = [];
@@ -94,6 +92,13 @@ goog.testing.MockClock = function(opt_autoInstall) {
 };
 goog.inherits(goog.testing.MockClock, goog.Disposable);
 
+
+/**
+ * @typedef {{
+ *    timeoutKey: number, millis: number,
+ *    runAtMillis: number, funcToCall: Function, recurring: boolean}}
+ */
+goog.testing.MockClock.QueueObjType_;
 
 /**
  * Default wait timeout for mocking requestAnimationFrame (in milliseconds).
@@ -164,6 +169,9 @@ goog.testing.MockClock.prototype.timeoutDelay_ = 0;
  */
 goog.testing.MockClock.REAL_SETTIMEOUT_ = goog.global.setTimeout;
 
+
+/** @type {function():number} */
+goog.testing.MockClock.prototype.oldGoogNow_;
 
 /**
  * Installs the MockClock by overriding the global object's implementation of
@@ -344,6 +352,12 @@ goog.testing.MockClock.prototype.tick = function(opt_millis) {
  *     If not specified, clock ticks 1 millisecond.
  * @return {T}
  * @template T
+ *
+ * @deprecated Treating Promises as synchronous values is incompatible with
+ *     native promises and async functions. More generally, this code relies on
+ *     promises "pumped" by setTimeout which is not done in production code,
+ *     even for goog.Promise and results unnatural timing between resolved
+ *     promises callback and setTimeout/setInterval callbacks in tests.
  */
 goog.testing.MockClock.prototype.tickPromise = function(promise, opt_millis) {
   var value;
@@ -459,7 +473,7 @@ goog.testing.MockClock.prototype.scheduleFunction_ = function(
         'The provided callback must be a function, not a ' + typeof funcToCall);
   }
 
-  var timeout = {
+  var /** !goog.testing.MockClock.QueueObjType_ */ timeout = {
     runAtMillis: this.nowMillis_ + millis,
     funcToCall: funcToCall,
     recurring: recurring,
@@ -477,10 +491,10 @@ goog.testing.MockClock.prototype.scheduleFunction_ = function(
  * Later-inserted duplicates appear at lower indices.  For example, the
  * asterisk in (5,4,*,3,2,1) would be the insertion point for 3.
  *
- * @param {Object} timeout The timeout to insert, with numerical runAtMillis
- *     property.
- * @param {Array<Object>} queue The queue to insert into, with each element
- *     having a numerical runAtMillis property.
+ * @param {goog.testing.MockClock.QueueObjType_} timeout The timeout to insert,
+ *     with numerical runAtMillis property.
+ * @param {Array<!goog.testing.MockClock.QueueObjType_>} queue The queue to
+ *     insert into, with each element having a numerical runAtMillis property.
  * @private
  */
 goog.testing.MockClock.insert_ = function(timeout, queue) {
@@ -518,7 +532,7 @@ goog.testing.MockClock.MAX_INT_ = 2147483647;
 
 
 /**
- * Schedules a function to be called after {@code millis} milliseconds.
+ * Schedules a function to be called after `millis` milliseconds.
  * Mock implementation for setTimeout.
  * @param {Function} funcToCall The function to call.
  * @param {number=} opt_millis The number of milliseconds to call it after.
@@ -542,7 +556,7 @@ goog.testing.MockClock.prototype.setTimeout_ = function(
 
 
 /**
- * Schedules a function to be called every {@code millis} milliseconds.
+ * Schedules a function to be called every `millis` milliseconds.
  * Mock implementation for setInterval.
  * @param {Function} funcToCall The function to call.
  * @param {number=} opt_millis The number of milliseconds between calls.

@@ -59,11 +59,11 @@ goog.require('goog.style.transition');
  *
  * @param {Element} element The element to be transitioned.
  * @param {number} duration The duration of the transition in seconds.
- *     This should be the longest of all transitions.
+ *     This should be the longest of all transitions, including any delay.
  * @param {Object} initialStyle Initial style properties of the element before
- *     animating. Set using {@code goog.style.setStyle}.
+ *     animating. Set using `goog.style.setStyle`.
  * @param {Object} finalStyle Final style properties of the element after
- *     animating. Set using {@code goog.style.setStyle}.
+ *     animating. Set using `goog.style.setStyle`.
  * @param {goog.style.transition.Css3Property|
  *     Array<goog.style.transition.Css3Property>} transitions A single CSS3
  *     transition property or an array of it.

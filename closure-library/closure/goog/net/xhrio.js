@@ -57,6 +57,7 @@ goog.require('goog.net.ErrorCode');
 goog.require('goog.net.EventType');
 goog.require('goog.net.HttpStatus');
 goog.require('goog.net.XmlHttp');
+goog.require('goog.object');
 goog.require('goog.string');
 goog.require('goog.structs');
 goog.require('goog.structs.Map');
@@ -65,7 +66,7 @@ goog.require('goog.userAgent');
 
 goog.forwardDeclare('goog.Uri');
 
-
+goog.scope(function() {
 
 /**
  * Basic class for handling XMLHttpRequests.
@@ -75,7 +76,7 @@ goog.forwardDeclare('goog.Uri');
  * @extends {goog.events.EventTarget}
  */
 goog.net.XhrIo = function(opt_xmlHttpFactory) {
-  goog.net.XhrIo.base(this, 'constructor');
+  XhrIo.base(this, 'constructor');
 
   /**
    * Map of default headers to add to every request, use:
@@ -106,7 +107,7 @@ goog.net.XhrIo = function(opt_xmlHttpFactory) {
 
   /**
    * The options to use with the current XMLHttpRequest object.
-   * @private {Object}
+   * @private {?Object}
    */
   this.xhrOptions_ = null;
 
@@ -182,7 +183,7 @@ goog.net.XhrIo = function(opt_xmlHttpFactory) {
    * XHR behavior.
    * @private {goog.net.XhrIo.ResponseType}
    */
-  this.responseType_ = goog.net.XhrIo.ResponseType.DEFAULT;
+  this.responseType_ = ResponseType.DEFAULT;
 
   /**
    * Whether a "credentialed" request is to be sent (one that is aware of
@@ -225,6 +226,7 @@ goog.net.XhrIo = function(opt_xmlHttpFactory) {
 };
 goog.inherits(goog.net.XhrIo, goog.events.EventTarget);
 
+var XhrIo = goog.net.XhrIo;
 
 /**
  * Response types that may be requested for XMLHttpRequests.
@@ -239,6 +241,8 @@ goog.net.XhrIo.ResponseType = {
   BLOB: 'blob',
   ARRAY_BUFFER: 'arraybuffer'
 };
+
+var ResponseType = goog.net.XhrIo.ResponseType;
 
 
 /**
@@ -776,7 +780,7 @@ goog.net.XhrIo.prototype.disposeInternal = function() {
     this.cleanUpXhr_(true);
   }
 
-  goog.net.XhrIo.base(this, 'disposeInternal');
+  XhrIo.base(this, 'disposeInternal');
 };
 
 
@@ -1113,7 +1117,7 @@ goog.net.XhrIo.prototype.getResponseText = function() {
  *
  * One option is to construct a VBArray from the returned object and convert
  * it to a JavaScript array using the toArray method:
- * {@code (new window['VBArray'](xhrIo.getResponseBody())).toArray()}
+ * `(new window['VBArray'](xhrIo.getResponseBody())).toArray()`
  * This will result in an array of numbers in the range of [0..255]
  *
  * Another option is to use the VBScript CStr method to convert it into a
@@ -1122,7 +1126,6 @@ goog.net.XhrIo.prototype.getResponseText = function() {
  * @return {Object} Binary result from the server or null if not available.
  */
 goog.net.XhrIo.prototype.getResponseBody = function() {
-
   try {
     if (this.xhr_ && 'responseBody' in this.xhr_) {
       return this.xhr_['responseBody'];
@@ -1143,7 +1146,6 @@ goog.net.XhrIo.prototype.getResponseBody = function() {
  * if no result available.
  */
 goog.net.XhrIo.prototype.getResponseXml = function() {
-
   try {
     return this.xhr_ ? this.xhr_.responseXML : null;
   } catch (e) {
@@ -1201,7 +1203,6 @@ goog.net.XhrIo.prototype.getResponseJson = function(opt_xssiPrefix) {
  * @return {*} The response.
  */
 goog.net.XhrIo.prototype.getResponse = function() {
-
   try {
     if (!this.xhr_) {
       return null;
@@ -1210,15 +1211,15 @@ goog.net.XhrIo.prototype.getResponse = function() {
       return this.xhr_.response;
     }
     switch (this.responseType_) {
-      case goog.net.XhrIo.ResponseType.DEFAULT:
-      case goog.net.XhrIo.ResponseType.TEXT:
+      case ResponseType.DEFAULT:
+      case ResponseType.TEXT:
         return this.xhr_.responseText;
       // DOCUMENT and BLOB don't need to be handled here because they are
       // introduced in the same spec that adds the .response field, and would
       // have been caught above.
       // ARRAY_BUFFER needs an implementation for Firefox 4, where it was
       // implemented using a draft spec rather than the final spec.
-      case goog.net.XhrIo.ResponseType.ARRAY_BUFFER:
+      case ResponseType.ARRAY_BUFFER:
         if ('mozResponseArrayBuffer' in this.xhr_) {
           return this.xhr_.mozResponseArrayBuffer;
         }
@@ -1280,20 +1281,37 @@ goog.net.XhrIo.prototype.getAllResponseHeaders = function() {
  *     and header values as values.
  */
 goog.net.XhrIo.prototype.getResponseHeaders = function() {
+  // TODO(b/120371595): Make this function parse headers as per the spec
+  // (https://tools.ietf.org/html/rfc2616#section-4.2).
+
   var headersObject = {};
   var headersArray = this.getAllResponseHeaders().split('\r\n');
   for (var i = 0; i < headersArray.length; i++) {
     if (goog.string.isEmptyOrWhitespace(headersArray[i])) {
       continue;
     }
-    var keyValue = goog.string.splitLimit(headersArray[i], ': ', 2);
-    if (headersObject[keyValue[0]]) {
-      headersObject[keyValue[0]] += ', ' + keyValue[1];
-    } else {
-      headersObject[keyValue[0]] = keyValue[1];
+    var keyValue =
+        goog.string.splitLimit(headersArray[i], ':', /* maxSplitCount= */ 1);
+    var key = keyValue[0];
+    var value = keyValue[1];
+
+    if (!goog.isString(value)) {
+      // There must be a value but it can be the empty string.
+      continue;
     }
+
+    // Whitespace at the start and end of the value is meaningless.
+    value = value.trim();
+    // The key should not contain whitespace but we currently ignore that.
+
+    var values = headersObject[key] || [];
+    headersObject[key] = values;
+    values.push(value);
   }
-  return headersObject;
+
+  return goog.object.map(headersObject, function(values) {
+    return values.join(', ');
+  });
 };
 
 
@@ -1364,3 +1382,4 @@ goog.debug.entryPointRegistry.register(
       goog.net.XhrIo.prototype.onReadyStateChangeEntryPoint_ =
           transformer(goog.net.XhrIo.prototype.onReadyStateChangeEntryPoint_);
     });
+});  // goog.scope

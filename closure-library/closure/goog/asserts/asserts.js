@@ -16,13 +16,17 @@
  * @fileoverview Utilities to check the preconditions, postconditions and
  * invariants runtime.
  *
- * Methods in this package should be given special treatment by the compiler
+ * Methods in this package are given special treatment by the compiler
  * for type-inference. For example, <code>goog.asserts.assert(foo)</code>
- * will restrict <code>foo</code> to a truthy value.
+ * will make the compiler treat <code>foo</code> as non-nullable. Similarly,
+ * <code>goog.asserts.assertNumber(foo)</code> informs the compiler about the
+ * type of <code>foo</code>. Where applicable, such assertions are preferable to
+ * casts by jsdoc with <code>@type</code>.
  *
  * The compiler has an option to disable asserts. So code like:
  * <code>
- * var x = goog.asserts.assert(foo()); goog.asserts.assert(bar());
+ * var x = goog.asserts.assert(foo());
+ * goog.asserts.assert(bar());
  * </code>
  * will be transformed into:
  * <code>
@@ -30,6 +34,14 @@
  * </code>
  * The compiler will leave in foo() (because its return value is used),
  * but it will remove bar() because it assumes it does not have side-effects.
+ *
+ * Additionally, note the compiler will consider the type to be "tightened" for
+ * all statements <em>after</em> the assertion. For example:
+ * <code>
+ * const /** ?Object &#ast;/ value = foo();
+ * goog.asserts.assert(value);
+ * // "value" is of type {!Object} at this point.
+ * </code>
  *
  * @author agrieve@google.com (Andrew Grieve)
  */
@@ -94,8 +106,8 @@ goog.asserts.errorHandler_ = goog.asserts.DEFAULT_ERROR_HANDLER;
  * subs("foo%s hot%s", "bar", "dog") becomes "foobar hotdog".
  * @param {string} pattern The string containing the pattern.
  * @param {!Array<*>} subs The items to substitute into the pattern.
- * @return {string} A copy of {@code str} in which each occurrence of
- *     {@code %s} has been replaced an argument from {@code var_args}.
+ * @return {string} A copy of `str` in which each occurrence of
+ *     {@code %s} has been replaced an argument from `var_args`.
  * @private
  */
 goog.asserts.subs_ = function(pattern, subs) {

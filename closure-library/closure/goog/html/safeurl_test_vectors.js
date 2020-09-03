@@ -70,6 +70,7 @@ goog.html.safeUrlTestVectors.BASE_VECTORS = [
       {input: 'geo:37.7,42.0', expected: 'about:invalid#zClosurez', safe: false},
       {input: 'skype:chat?jid=foo', expected: 'about:invalid#zClosurez', safe: false},
       {input: 'whatsapp://send?text=Hello', expected: 'about:invalid#zClosurez', safe: false},
+      {input: 'ssh://cloud.google.com', expected: 'about:invalid#zClosurez', safe: false},
       {input: ':', expected: 'about:invalid#zClosurez', safe: false},
       {input: '\\:', expected: 'about:invalid#zClosurez', safe: false},
       {input: ':/:', expected: 'about:invalid#zClosurez', safe: false},
@@ -80,6 +81,7 @@ goog.html.safeUrlTestVectors.BASE_VECTORS = [
       {input: 'dATa:iMage/pNg;bASe64,abc===', expected: 'dATa:iMage/pNg;bASe64,abc===', safe: true},
       {input: 'data:image/webp;base64,abc===', expected: 'data:image/webp;base64,abc===', safe: true},
       {input: 'data:audio/ogg;base64,abc', expected: 'data:audio/ogg;base64,abc', safe: true},
+      {input: 'data:audio/L16;base64,abc', expected: 'data:audio/L16;base64,abc', safe: true},
       {input: 'data:video/mpeg;base64,abc', expected: 'data:video/mpeg;base64,abc', safe: true},
       {input: 'data:video/ogg;base64,z=', expected: 'data:video/ogg;base64,z=', safe: true},
       {input: 'data:video/mp4;base64,z=', expected: 'data:video/mp4;base64,z=', safe: true},
@@ -95,4 +97,20 @@ goog.html.safeUrlTestVectors.TEL_VECTORS = [
     {input: ' tel:+1', expected: 'about:invalid#zClosurez', safe: false},
     {input: 'javascript:evil()', expected: 'about:invalid#zClosurez', safe: false},
     {input: 'tel:+1234567890', expected: 'tel:+1234567890', safe: true}
+];
+
+goog.html.safeUrlTestVectors.SMS_VECTORS = [
+    {input: 'sms:+1234567890', expected: 'sms:+1234567890', safe: true},
+    {input: 'sms:?body=message', expected: 'sms:?body=message', safe: true},
+    {input: 'sms:?body=Hello, World!', expected: 'about:invalid#zClosurez', safe: false},
+    {input: 'sms:?body=a&body=b', expected: 'about:invalid#zClosurez', safe: false}
+];
+
+goog.html.safeUrlTestVectors.SSH_VECTORS = [
+    {input: 'ssh://cloud.google.com', expected: 'ssh://cloud.google.com', safe: true},
+    {input: '', expected: 'about:invalid#zClosurez', safe: false},
+    {input: ':', expected: 'about:invalid#zClosurez', safe: false},
+    {input: 'ssh:cloud.google.com', expected: 'about:invalid#zClosurez', safe: false},
+    {input: ' ssh://cloud.google.com', expected: 'about:invalid#zClosurez', safe: false},
+    {input: 'javascript:evil()', expected: 'about:invalid#zClosurez', safe: false}
 ];

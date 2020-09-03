@@ -188,6 +188,11 @@ testAgents.FIREFOX_WINDOWS =
     'Mozilla/5.0 (Windows NT 6.1; rv:12.0) Gecko/20120403211507' +
     ' Firefox/14.0.1';
 
+/** @const {string} */
+testAgents.FIREFOX_IPHONE =
+    'Mozilla/5.0 (iPhone; CPU iPhone OS 5_1_1 like Mac OS X; en-us) ' +
+    'AppleWebKit/600.1.4 (KHTML, like Gecko)' +
+    'FxiOS/1.0 Mobile/12F69 Safari/600.1.4';
 
 /** @const {string} */
 testAgents.SAFARI_6 = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_1) ' +
@@ -397,5 +402,16 @@ testAgents.KINDLE_FIRE =
 /** @const {string} */
 testAgents.FIREFOX_ANDROID_TABLET =
     'Mozilla/5.0 (Android; Tablet; rv:28.0) Gecko/28.0 Firefox/28.0';
+
+/** @const {string} */
+testAgents.KAIOS =
+    'Mozilla/5.0 (Mobile; LYF/LF-2403N/LYF-LF2403N-000-01-18-270717; rv:48.0)' +
+    ' Gecko/48.0 Firefox/48.0 KaiOS/2.0';
+
+/** @const {string} */
+testAgents.GO2PHONE =
+    'Mozilla/5.0 (Linux; Android 8.1.0; GAFP sp9820e_1h10_go_native)' +
+    ' AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3605.0 Mobile' +
+    ' Safari/537.36';
 
 });  // goog.scope

@@ -87,7 +87,7 @@ goog.ui.SliderBase = function(opt_domHelper, opt_labelFn) {
   /**
    * The factory to use to generate additional animations when animating to a
    * new value.
-   * @type {goog.ui.SliderBase.AnimationFactory}
+   * @type {?goog.ui.SliderBase.AnimationFactory}
    * @private
    */
   this.additionalAnimations_ = null;
@@ -103,6 +103,13 @@ goog.ui.SliderBase = function(opt_domHelper, opt_labelFn) {
    * @private {function(number):?string}
    */
   this.labelFn_ = opt_labelFn || goog.functions.NULL;
+
+  /**
+   * Whether to move the focus to the top level element when dragging the
+   * slider, default true.
+   * @private {boolean}
+   */
+  this.focusElementOnSliderDrag_ = true;
 
   // Don't use getHandler because it gets cleared in exitDocument.
   goog.events.listen(
@@ -422,6 +429,7 @@ goog.ui.SliderBase.prototype.decorateInternal = function(element) {
  * Called when the DOM for the component is for sure in the document.
  * Subclasses should override this method to set this element's role.
  * @override
+ * @suppress {strictMissingProperties} Part of the go/strict_warnings_migration
  */
 goog.ui.SliderBase.prototype.enterDocument = function() {
   goog.ui.SliderBase.superClass_.enterDocument.call(this);
@@ -535,16 +543,7 @@ goog.ui.SliderBase.prototype.handleBeforeDrag_ = function(e) {
         this.getMinimum();
   } else {
     var availWidth = this.getElement().clientWidth - thumbToDrag.offsetWidth;
-
-    // In LTR mode, the space to the left of the thumb makes up the value. In
-    // RTL, we need to flip this given that the space to the right of the thumb
-    // is what makes up the value.
-    var percentageUsed = e.left / availWidth;
-    if (this.flipForRtl_ && this.isRightToLeft()) {
-      percentageUsed = 1 - percentageUsed;
-    }
-
-    value = percentageUsed * (this.getMaximum() - this.getMinimum()) +
+    value = (e.left / availWidth) * (this.getMaximum() - this.getMinimum()) +
         this.getMinimum();
   }
   // Bind the value within valid range before calling setThumbPosition_.
@@ -566,6 +565,7 @@ goog.ui.SliderBase.prototype.handleBeforeDrag_ = function(e) {
  * the "-dragging" CSS classes on the slider and thumb.
  * @param {goog.fx.DragEvent} e The drag event used to drag the thumb.
  * @private
+ * @suppress {strictMissingProperties} Part of the go/strict_warnings_migration
  */
 goog.ui.SliderBase.prototype.handleThumbDragStartEnd_ = function(e) {
   var isDragStart = e.type == goog.fx.Dragger.EventType.START;
@@ -648,7 +648,7 @@ goog.ui.SliderBase.prototype.handleKeyDown_ = function(e) {
  * @private
  */
 goog.ui.SliderBase.prototype.handleMouseDownAndClick_ = function(e) {
-  if (this.getElement().focus) {
+  if (this.focusElementOnSliderDrag_ && this.getElement().focus) {
     this.getElement().focus();
   }
 
@@ -883,6 +883,7 @@ goog.ui.SliderBase.prototype.isDragging = function() {
  * If the specified delta is smaller than the step size, it will be rounded
  * to the step size.
  * @param {number} delta The delta by which to move the selected range.
+ * @suppress {strictPrimitiveOperators} Part of the go/strict_warnings_migration
  */
 goog.ui.SliderBase.prototype.moveThumbs = function(delta) {
   // Assume that a small delta is supposed to be at least a step.
@@ -1130,6 +1131,7 @@ goog.ui.SliderBase.prototype.getThumbCoordinateForValue = function(val) {
 /**
  * Sets the value and starts animating the handle towards that position.
  * @param {number} v Value to set and animate to.
+ * @suppress {strictPrimitiveOperators} Part of the go/strict_warnings_migration
  */
 goog.ui.SliderBase.prototype.animatedSetValue = function(v) {
   // the value might be out of bounds
@@ -1648,6 +1650,7 @@ goog.ui.SliderBase.prototype.isEnabled = function() {
  * @return {number} Returns the element's offsetLeft, accounting for RTL if
  *     flipForRtl_ is true.
  * @private
+ * @suppress {strictMissingProperties} Part of the go/strict_warnings_migration
  */
 goog.ui.SliderBase.prototype.getOffsetStart_ = function(element) {
   return this.flipForRtl_ ? goog.style.bidi.getOffsetStart(element) :
@@ -1663,6 +1666,16 @@ goog.ui.SliderBase.prototype.getTextValue = function() {
   return this.labelFn_(this.getValue());
 };
 
+
+/**
+ * Sets whether focus will be moved to the top-level element when the slider is
+ * dragged.
+ * @param {boolean} focusElementOnSliderDrag
+ */
+goog.ui.SliderBase.prototype.setFocusElementOnSliderDrag = function(
+    focusElementOnSliderDrag) {
+  this.focusElementOnSliderDrag_ = focusElementOnSliderDrag;
+};
 
 
 /**

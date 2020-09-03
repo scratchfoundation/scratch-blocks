@@ -47,19 +47,19 @@ goog.require('goog.userAgent');
 goog.dom.ControlRange = function() {
   /**
    * The IE control range obejct.
-   * @private {Object}
+   * @private {?Object}
    */
   this.range_ = null;
 
   /**
    * Cached list of elements.
-   * @private {Array<Element>}
+   * @private {?Array<?Element>}
    */
   this.elements_ = null;
 
   /**
    * Cached sorted list of elements.
-   * @private {Array<Element>}
+   * @private {?Array<?Element>}
    */
   this.sortedElements_ = null;
 };
@@ -393,19 +393,19 @@ goog.dom.DomSavedControlRange_.prototype.disposeInternal = function() {
 goog.dom.ControlRangeIterator = function(range) {
   /**
    * The first node in the selection.
-   * @private {Node}
+   * @private {?Node}
    */
   this.startNode_ = null;
 
   /**
    * The last node in the selection.
-   * @private {Node}
+   * @private {?Node}
    */
   this.endNode_ = null;
 
   /**
    * The list of elements left to traverse.
-   * @private {Array<Element>?}
+   * @private {Array<?Element>?}
    */
   this.elements_ = null;
 
@@ -454,7 +454,7 @@ goog.dom.ControlRangeIterator.prototype.isLast = function() {
 
 /**
  * Move to the next position in the selection.
- * Throws {@code goog.iter.StopIteration} when it passes the end of the range.
+ * Throws `goog.iter.StopIteration` when it passes the end of the range.
  * @return {Node} The node at the next position.
  * @override
  */

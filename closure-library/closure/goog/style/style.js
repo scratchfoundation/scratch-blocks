@@ -73,7 +73,7 @@ goog.style.setStyle = function(element, style, opt_value) {
 
 /**
  * Sets a style value on an element, with parameters swapped to work with
- * {@code goog.object.forEach()}. Prepends a vendor-specific prefix when
+ * `goog.object.forEach()`. Prepends a vendor-specific prefix when
  * necessary.
  * @param {Element} element The element to change.
  * @param {string|number|boolean|undefined} value Style value.
@@ -581,8 +581,8 @@ goog.style.getVisibleRectForElement = function(element) {
 
 
 /**
- * Calculate the scroll position of {@code container} with the minimum amount so
- * that the content and the borders of the given {@code element} become visible.
+ * Calculate the scroll position of `container` with the minimum amount so
+ * that the content and the borders of the given `element` become visible.
  * If the element is bigger than the container, its top left corner will be
  * aligned as close to the container's top left corner as possible.
  *
@@ -648,8 +648,8 @@ goog.style.getContainerOffsetToScrollInto = function(
 
 
 /**
- * Changes the scroll position of {@code container} with the minimum amount so
- * that the content and the borders of the given {@code element} become visible.
+ * Changes the scroll position of `container` with the minimum amount so
+ * that the content and the borders of the given `element` become visible.
  * If the element is bigger than the container, its top left corner will be
  * aligned as close to the container's top left corner as possible.
  *
@@ -976,7 +976,7 @@ goog.style.setWidth = function(element, width) {
  * irrespective of the box model in effect.
  *
  * Note that this function does not take CSS transforms into account. Please see
- * {@code goog.style.getTransformedSize}.
+ * `goog.style.getTransformedSize`.
  * @param {Element} element Element to get size of.
  * @return {!goog.math.Size} Object with width/height properties.
  */
@@ -987,14 +987,14 @@ goog.style.getSize = function(element) {
 
 
 /**
- * Call {@code fn} on {@code element} such that {@code element}'s dimensions are
- * accurate when it's passed to {@code fn}.
- * @param {function(!Element): T} fn Function to call with {@code element} as
- *     an argument after temporarily changing {@code element}'s display such
+ * Call `fn` on `element` such that `element`'s dimensions are
+ * accurate when it's passed to `fn`.
+ * @param {function(!Element): T} fn Function to call with `element` as
+ *     an argument after temporarily changing `element`'s display such
  *     that its dimensions are accurate.
  * @param {!Element} element Element (which may have display none) to use as
- *     argument to {@code fn}.
- * @return {T} Value returned by calling {@code fn} with {@code element}.
+ *     argument to `fn`.
+ * @return {T} Value returned by calling `fn` with `element`.
  * @template T
  * @private
  */
@@ -1052,11 +1052,11 @@ goog.style.getSizeWithDisplay_ = function(element) {
  * Gets the height and width of an element, post transform, even if its display
  * is none.
  *
- * This is like {@code goog.style.getSize}, except:
+ * This is like `goog.style.getSize`, except:
  * <ol>
  * <li>Takes webkitTransforms such as rotate and scale into account.
- * <li>Will return null if {@code element} doesn't respond to
- *     {@code getBoundingClientRect}.
+ * <li>Will return null if `element` doesn't respond to
+ *     `getBoundingClientRect`.
  * <li>Currently doesn't make sense on non-WebKit browsers which don't support
  *    webkitTransforms.
  * </ol>
@@ -1282,11 +1282,11 @@ goog.style.isElementShown = function(el) {
  * @param {?Node=} opt_node Node whose parent document should have the
  *     styles installed.
  * @return {!HTMLStyleElement|!StyleSheet} In IE<11, a StyleSheet object with no
- *     owning <style> tag (this is how IE creates style sheets).  In every other
- *     browser, a <style> element with an attached style.  This doesn't return a
- *     StyleSheet object so that setSafeStyleSheet can replace it (otherwise, if
- *     you pass a StyleSheet to setSafeStyleSheet, it will make a new StyleSheet
- *     and leave the original StyleSheet orphaned).
+ *     owning &lt;style&gt; tag (this is how IE creates style sheets).  In every
+ *     other browser, a &lt;style&gt; element with an attached style.  This
+ *     doesn't return a StyleSheet object so that setSafeStyleSheet can replace
+ *     it (otherwise, if you pass a StyleSheet to setSafeStyleSheet, it will
+ *     make a new StyleSheet and leave the original StyleSheet orphaned).
  */
 goog.style.installSafeStyleSheet = function(safeStyleSheet, opt_node) {
   var dh = goog.dom.getDomHelper(opt_node);

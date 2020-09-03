@@ -13,8 +13,16 @@
 // limitations under the License.
 
 /**
- * @fileoverview Utilities for creating functions. Loosely inspired by the
- * java classes: http://goo.gl/GM0Hmu and http://goo.gl/6k7nI8.
+ * @fileoverview Utilities for creating functions. Loosely inspired by these
+ * java classes from the Guava library:
+ * com.google.common.base.Functions
+ * https://google.github.io/guava/releases/snapshot-jre/api/docs/index.html?com/google/common/base/Functions.html
+ *
+ * com.google.common.base.Predicates
+ * https://google.github.io/guava/releases/snapshot-jre/api/docs/index.html?com/google/common/base/Predicates.html
+ *
+ * More about these can be found at
+ * https://github.com/google/guava/wiki/FunctionalExplained
  *
  * @author nicksantos@google.com (Nick Santos)
  */
@@ -38,21 +46,27 @@ goog.functions.constant = function(retValue) {
  * Always returns false.
  * @type {function(...): boolean}
  */
-goog.functions.FALSE = goog.functions.constant(false);
+goog.functions.FALSE = function() {
+  return false;
+};
 
 
 /**
  * Always returns true.
  * @type {function(...): boolean}
  */
-goog.functions.TRUE = goog.functions.constant(true);
+goog.functions.TRUE = function() {
+  return true;
+};
 
 
 /**
  * Always returns NULL.
  * @type {function(...): null}
  */
-goog.functions.NULL = goog.functions.constant(null);
+goog.functions.NULL = function() {
+  return null;
+};
 
 
 /**
@@ -294,7 +308,7 @@ goog.functions.not = function(f) {
  *
  * @param {function(new:T, ...)} constructor The constructor for the Object.
  * @param {...*} var_args The arguments to be passed to the constructor.
- * @return {T} A new instance of the class given in {@code constructor}.
+ * @return {T} A new instance of the class given in `constructor`.
  * @template T
  */
 goog.functions.create = function(constructor, var_args) {
@@ -392,8 +406,8 @@ goog.functions.once = function(f) {
  * autocomplete pop-up every so often rather than updating with every keystroke,
  * since the final text typed by the user is the one that should produce the
  * final autocomplete results. For more stateful debouncing with support for
- * pausing, resuming, and canceling debounced actions, use {@code
- * goog.async.Debouncer}.
+ * pausing, resuming, and canceling debounced actions, use
+ * `goog.async.Debouncer`.
  *
  * @param {function(this:SCOPE, ...?)} f Function to call.
  * @param {number} interval Interval over which to debounce. The function will

@@ -51,7 +51,7 @@ goog.events.BrowserFeature = {
       goog.userAgent.IE && !goog.userAgent.isVersionOrHigher('9'),
 
   /**
-   * Whether the {@code navigator.onLine} property is supported.
+   * Whether the `navigator.onLine` property is supported.
    */
   HAS_NAVIGATOR_ONLINE_PROPERTY:
       !goog.userAgent.WEBKIT || goog.userAgent.isVersionOrHigher('528'),
@@ -117,8 +117,11 @@ goog.events.BrowserFeature = {
         passive = true;
       }
     });
-    goog.global.addEventListener('test', goog.nullFunction, options);
-    goog.global.removeEventListener('test', goog.nullFunction, options);
+    try {
+      goog.global.addEventListener('test', goog.nullFunction, options);
+      goog.global.removeEventListener('test', goog.nullFunction, options);
+    } catch (e) {
+    }
 
     return passive;
   })

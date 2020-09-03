@@ -270,7 +270,9 @@ goog.object.getKeys = function(obj) {
  */
 goog.object.getValueByKeys = function(obj, var_args) {
   var isArrayLike = goog.isArrayLike(var_args);
-  var keys = isArrayLike ? var_args : arguments;
+  var keys = isArrayLike ?
+      /** @type {!IArrayLike<number|string>} */ (var_args) :
+      arguments;
 
   // Start with the 2nd parameter for the variable parameters syntax.
   for (var i = isArrayLike ? 0 : 1; i < keys.length; i++) {
@@ -462,7 +464,8 @@ goog.object.setIfUndefined = function(obj, key, value) {
  * object will not be changed and the function will not be called (the function
  * will be lazily evaluated -- only called if necessary).
  *
- * This function is particularly useful for use with a map used a as a cache.
+ * This function is particularly useful when used with an `Object` which is
+ * acting as a cache.
  *
  * @param {!Object<K,V>} obj The object to which to add the key-value pair.
  * @param {string} key The key to add.
@@ -597,8 +600,9 @@ goog.object.PROTOTYPE_FIELDS_ = [
  *
  * @param {Object} target The object to modify. Existing properties will be
  *     overwritten if they are also present in one of the objects in
- *     {@code var_args}.
- * @param {...Object} var_args The objects from which values will be copied.
+ *     `var_args`.
+ * @param {...(Object|null|undefined)} var_args The objects from which values
+ *     will be copied.
  */
 goog.object.extend = function(target, var_args) {
   var key, source;
@@ -707,15 +711,15 @@ goog.object.isImmutableView = function(obj) {
 /**
  * Get all properties names on a given Object regardless of enumerability.
  *
- * <p> If the browser does not support {@code Object.getOwnPropertyNames} nor
- * {@code Object.getPrototypeOf} then this is equivalent to using {@code
- * goog.object.getKeys}
+ * <p> If the browser does not support `Object.getOwnPropertyNames` nor
+ * `Object.getPrototypeOf` then this is equivalent to using
+ * `goog.object.getKeys`
  *
  * @param {?Object} obj The object to get the properties of.
  * @param {boolean=} opt_includeObjectPrototype Whether properties defined on
- *     {@code Object.prototype} should be included in the result.
+ *     `Object.prototype` should be included in the result.
  * @param {boolean=} opt_includeFunctionPrototype Whether properties defined on
- *     {@code Function.prototype} should be included in the result.
+ *     `Function.prototype` should be included in the result.
  * @return {!Array<string>}
  * @public
  */

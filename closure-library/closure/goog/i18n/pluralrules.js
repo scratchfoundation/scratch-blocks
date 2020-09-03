@@ -16,7 +16,7 @@
  * @fileoverview Plural rules.
  *
  *
- * File generated from CLDR ver. 32
+ * File generated from CLDR ver. 34
  *
  * Before check in, this file could have been manually edited. This is to
  * incorporate changes before we could fix CLDR. All manual modification must be
@@ -81,7 +81,7 @@ goog.i18n.pluralRules.decimals_ = function(n) {
  *     (https://unicode.org/reports/tr35/tr35-numbers.html#Plural_rules_syntax)
  * @param {number} n The count of items.
  * @param {number=} opt_precision optional, precision.
- * @return {!{v:number, f:number}} The v and f.
+ * @return {{v:number, f:number}} The v and f.
  * @private
  */
 goog.i18n.pluralRules.get_vf_ = function(n, opt_precision) {
@@ -105,7 +105,7 @@ goog.i18n.pluralRules.get_vf_ = function(n, opt_precision) {
  *     (https://unicode.org/reports/tr35/tr35-numbers.html#Plural_rules_syntax)
  * @param {number} v Calculated previously.
  * @param {number} f Calculated previously.
- * @return {!{w:number, t:number}} The w and t.
+ * @return {{w:number, t:number}} The w and t.
  * @private
  */
 goog.i18n.pluralRules.get_wt_ = function(v, f) {
@@ -529,23 +529,6 @@ goog.i18n.pluralRules.beSelect_ = function(n, opt_precision) {
 };
 
 /**
- * Plural select rules for mk locale
- *
- * @param {number} n  The count of items.
- * @param {number=} opt_precision Precision for number formatting, if not default.
- * @return {goog.i18n.pluralRules.Keyword} Locale-specific plural value.
- * @private
- */
-goog.i18n.pluralRules.mkSelect_ = function(n, opt_precision) {
-  var i = n | 0;
-  var vf = goog.i18n.pluralRules.get_vf_(n, opt_precision);
-  if (vf.v == 0 && i % 10 == 1 || vf.f % 10 == 1) {
-    return goog.i18n.pluralRules.Keyword.ONE;
-  }
-  return goog.i18n.pluralRules.Keyword.OTHER;
-};
-
-/**
  * Plural select rules for ga locale
  *
  * @param {number} n  The count of items.
@@ -621,6 +604,23 @@ goog.i18n.pluralRules.lagSelect_ = function(n, opt_precision) {
     return goog.i18n.pluralRules.Keyword.ZERO;
   }
   if ((i == 0 || i == 1) && n != 0) {
+    return goog.i18n.pluralRules.Keyword.ONE;
+  }
+  return goog.i18n.pluralRules.Keyword.OTHER;
+};
+
+/**
+ * Plural select rules for mk locale
+ *
+ * @param {number} n  The count of items.
+ * @param {number=} opt_precision Precision for number formatting, if not default.
+ * @return {goog.i18n.pluralRules.Keyword} Locale-specific plural value.
+ * @private
+ */
+goog.i18n.pluralRules.mkSelect_ = function(n, opt_precision) {
+  var i = n | 0;
+  var vf = goog.i18n.pluralRules.get_vf_(n, opt_precision);
+  if (vf.v == 0 && i % 10 == 1 && i % 100 != 11 || vf.f % 10 == 1 && vf.f % 100 != 11) {
     return goog.i18n.pluralRules.Keyword.ONE;
   }
   return goog.i18n.pluralRules.Keyword.OTHER;
@@ -816,6 +816,9 @@ if (goog.LOCALE == 'ar') {
   goog.i18n.pluralRules.select = goog.i18n.pluralRules.arSelect_;
 }
 if (goog.LOCALE == 'ar_DZ' || goog.LOCALE == 'ar-DZ') {
+  goog.i18n.pluralRules.select = goog.i18n.pluralRules.arSelect_;
+}
+if (goog.LOCALE == 'ar_EG' || goog.LOCALE == 'ar-EG') {
   goog.i18n.pluralRules.select = goog.i18n.pluralRules.arSelect_;
 }
 if (goog.LOCALE == 'az') {

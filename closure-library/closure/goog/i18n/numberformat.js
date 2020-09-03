@@ -40,18 +40,27 @@ goog.require('goog.string');
  *     number format pattern.
  * @param {string=} opt_currency Optional international currency
  *     code. This determines the currency code/symbol used in format/parse. If
- *     not given, the currency code for current locale will be used.
+ *     not given, the currency code for the current locale will be used.
  * @param {number=} opt_currencyStyle currency style, value defined in
- *        goog.i18n.NumberFormat.CurrencyStyle.
+ *     goog.i18n.NumberFormat.CurrencyStyle. If not given, the currency style
+ *     for the current locale will be used.
+ * @param {!Object<string, string>=} opt_symbols Optional number format symbols
+ *     map, analogous to goog.i18n.NumberFormatSymbols. If present, this
+ *     overrides the symbols from the current locale, such as the percent sign
+ *     and minus sign.
  * @constructor
  */
-goog.i18n.NumberFormat = function(pattern, opt_currency, opt_currencyStyle) {
-  /** @private {string|undefined} */
-  this.intlCurrencyCode_ = opt_currency;
+goog.i18n.NumberFormat = function(
+    pattern, opt_currency, opt_currencyStyle, opt_symbols) {
+  /** @const @private {?string} */
+  this.intlCurrencyCode_ = opt_currency || null;
 
-  /** @private {number} */
+  /** @const @private {number} */
   this.currencyStyle_ =
       opt_currencyStyle || goog.i18n.NumberFormat.CurrencyStyle.LOCAL;
+
+  /** @const @private {?Object<string, string>} */
+  this.overrideNumberFormatSymbols_ = opt_symbols || null;
 
   /** @private {number} */
   this.maximumIntegerDigits_ = 40;
@@ -80,8 +89,7 @@ goog.i18n.NumberFormat = function(pattern, opt_currency, opt_currencyStyle) {
   /** @private {string} */
   this.positiveSuffix_ = '';
   /** @private {string} */
-  this.negativePrefix_ =
-      goog.i18n.NumberFormat.getNumberFormatSymbols_().MINUS_SIGN;
+  this.negativePrefix_ = this.getNumberFormatSymbols_().MINUS_SIGN;
   /** @private {string} */
   this.negativeSuffix_ = '';
 
@@ -91,7 +99,7 @@ goog.i18n.NumberFormat = function(pattern, opt_currency, opt_currencyStyle) {
 
   /**
    * True if the percent/permill sign of the negative pattern is expected.
-   * @private {!boolean}
+   * @private {boolean}
    */
   this.negativePercentSignExpected_ = false;
 
@@ -200,10 +208,11 @@ goog.i18n.NumberFormat.isEnforceAsciiDigits = function() {
  * @return {!Object}
  * @private
  */
-goog.i18n.NumberFormat.getNumberFormatSymbols_ = function() {
-  return goog.i18n.NumberFormat.enforceAsciiDigits_ ?
-      goog.i18n.NumberFormatSymbols_u_nu_latn :
-      goog.i18n.NumberFormatSymbols;
+goog.i18n.NumberFormat.prototype.getNumberFormatSymbols_ = function() {
+  return this.overrideNumberFormatSymbols_ ||
+      (goog.i18n.NumberFormat.enforceAsciiDigits_ ?
+           goog.i18n.NumberFormatSymbols_u_nu_latn :
+           goog.i18n.NumberFormatSymbols);
 };
 
 
@@ -214,7 +223,7 @@ goog.i18n.NumberFormat.getNumberFormatSymbols_ = function() {
  */
 goog.i18n.NumberFormat.prototype.getCurrencyCode_ = function() {
   return this.intlCurrencyCode_ ||
-      goog.i18n.NumberFormat.getNumberFormatSymbols_().DEF_CURRENCY_CODE;
+      this.getNumberFormatSymbols_().DEF_CURRENCY_CODE;
 };
 
 
@@ -234,6 +243,15 @@ goog.i18n.NumberFormat.prototype.setMinimumFractionDigits = function(min) {
 
 
 /**
+ * Gets minimum number of fraction digits.
+ * @return {number} The number of minimum fraction digits.
+ */
+goog.i18n.NumberFormat.prototype.getMinimumFractionDigits = function() {
+  return this.minimumFractionDigits_;
+};
+
+
+/**
  * Sets maximum number of fraction digits.
  * @param {number} max the maximum.
  * @return {!goog.i18n.NumberFormat} Reference to this NumberFormat object.
@@ -247,6 +265,14 @@ goog.i18n.NumberFormat.prototype.setMaximumFractionDigits = function(max) {
   return this;
 };
 
+
+/**
+ * Gets maximum number of fraction digits.
+ * @return {number} The number of maximum fraction digits.
+ */
+goog.i18n.NumberFormat.prototype.getMaximumFractionDigits = function() {
+  return this.maximumFractionDigits_;
+};
 
 /**
  * Sets number of significant digits to show. Only fractions will be rounded.
@@ -366,20 +392,17 @@ goog.i18n.NumberFormat.prototype.applyPattern_ = function(pattern) {
 goog.i18n.NumberFormat.prototype.applyStandardPattern_ = function(patternType) {
   switch (patternType) {
     case goog.i18n.NumberFormat.Format.DECIMAL:
-      this.applyPattern_(
-          goog.i18n.NumberFormat.getNumberFormatSymbols_().DECIMAL_PATTERN);
+      this.applyPattern_(this.getNumberFormatSymbols_().DECIMAL_PATTERN);
       break;
     case goog.i18n.NumberFormat.Format.SCIENTIFIC:
-      this.applyPattern_(
-          goog.i18n.NumberFormat.getNumberFormatSymbols_().SCIENTIFIC_PATTERN);
+      this.applyPattern_(this.getNumberFormatSymbols_().SCIENTIFIC_PATTERN);
       break;
     case goog.i18n.NumberFormat.Format.PERCENT:
-      this.applyPattern_(
-          goog.i18n.NumberFormat.getNumberFormatSymbols_().PERCENT_PATTERN);
+      this.applyPattern_(this.getNumberFormatSymbols_().PERCENT_PATTERN);
       break;
     case goog.i18n.NumberFormat.Format.CURRENCY:
       this.applyPattern_(goog.i18n.currency.adjustPrecision(
-          goog.i18n.NumberFormat.getNumberFormatSymbols_().CURRENCY_PATTERN,
+          this.getNumberFormatSymbols_().CURRENCY_PATTERN,
           this.getCurrencyCode_()));
       break;
     case goog.i18n.NumberFormat.Format.COMPACT_SHORT:
@@ -402,8 +425,7 @@ goog.i18n.NumberFormat.prototype.applyStandardPattern_ = function(patternType) {
  */
 goog.i18n.NumberFormat.prototype.applyCompactStyle_ = function(style) {
   this.compactStyle_ = style;
-  this.applyPattern_(
-      goog.i18n.NumberFormat.getNumberFormatSymbols_().DECIMAL_PATTERN);
+  this.applyPattern_(this.getNumberFormatSymbols_().DECIMAL_PATTERN);
   this.setMinimumFractionDigits(0);
   this.setMaximumFractionDigits(2);
   this.setSignificantDigits(2);
@@ -432,8 +454,9 @@ goog.i18n.NumberFormat.prototype.parse = function(text, opt_pos) {
 
   var ret = NaN;
 
-  // we don't want to handle 2 kind of space in parsing, normalize it to nbsp
-  text = text.replace(/ /g, '\u00a0');
+  // We don't want to handle multiple kinds of space in parsing, normalize the
+  // regular and narrow nbsp to nbsp.
+  text = text.replace(/ |\u202f/g, '\u00a0');
 
   var gotPositive = text.indexOf(this.positivePrefix_, pos[0]) == pos[0];
   var gotNegative = text.indexOf(this.negativePrefix_, pos[0]) == pos[0];
@@ -454,10 +477,8 @@ goog.i18n.NumberFormat.prototype.parse = function(text, opt_pos) {
   }
 
   // process digits or Inf, find decimal position
-  if (text.indexOf(
-          goog.i18n.NumberFormat.getNumberFormatSymbols_().INFINITY, pos[0]) ==
-      pos[0]) {
-    pos[0] += goog.i18n.NumberFormat.getNumberFormatSymbols_().INFINITY.length;
+  if (text.indexOf(this.getNumberFormatSymbols_().INFINITY, pos[0]) == pos[0]) {
+    pos[0] += this.getNumberFormatSymbols_().INFINITY.length;
     ret = Infinity;
   } else {
     ret = this.parseNumber_(text, pos);
@@ -496,14 +517,17 @@ goog.i18n.NumberFormat.prototype.parseNumber_ = function(text, pos) {
   var sawDigit = false;
   var exponentPos = -1;
   var scale = 1;
-  var decimal = goog.i18n.NumberFormat.getNumberFormatSymbols_().DECIMAL_SEP;
-  var grouping = goog.i18n.NumberFormat.getNumberFormatSymbols_().GROUP_SEP;
-  var exponentChar =
-      goog.i18n.NumberFormat.getNumberFormatSymbols_().EXP_SYMBOL;
+  var decimal = this.getNumberFormatSymbols_().DECIMAL_SEP;
+  var grouping = this.getNumberFormatSymbols_().GROUP_SEP;
+  var exponentChar = this.getNumberFormatSymbols_().EXP_SYMBOL;
 
   if (this.compactStyle_ != goog.i18n.NumberFormat.CompactStyle.NONE) {
     throw new Error('Parsing of compact style numbers is not implemented');
   }
+
+  // We don't want to handle multiple kinds of space in parsing, normalize the
+  // narrow nbsp to nbsp.
+  grouping = grouping.replace(/\u202f/g, '\u00a0');
 
   var normalizedText = '';
   for (; pos[0] < text.length; pos[0]++) {
@@ -545,9 +569,7 @@ goog.i18n.NumberFormat.prototype.parseNumber_ = function(text, pos) {
       normalizedText += ch;
     } else if (
         this.multiplier_ == 1 &&
-        ch ==
-            goog.i18n.NumberFormat.getNumberFormatSymbols_().PERCENT.charAt(
-                0)) {
+        ch == this.getNumberFormatSymbols_().PERCENT.charAt(0)) {
       // Parse the percent character as part of the number only when it's
       // not already included in the pattern.
       if (scale != 1) {
@@ -560,9 +582,7 @@ goog.i18n.NumberFormat.prototype.parseNumber_ = function(text, pos) {
       }
     } else if (
         this.multiplier_ == 1 &&
-        ch ==
-            goog.i18n.NumberFormat.getNumberFormatSymbols_().PERMILL.charAt(
-                0)) {
+        ch == this.getNumberFormatSymbols_().PERMILL.charAt(0)) {
       // Parse the permill character as part of the number only when it's
       // not already included in the pattern.
       if (scale != 1) {
@@ -596,7 +616,7 @@ goog.i18n.NumberFormat.prototype.parseNumber_ = function(text, pos) {
  */
 goog.i18n.NumberFormat.prototype.format = function(number) {
   if (isNaN(number)) {
-    return goog.i18n.NumberFormat.getNumberFormatSymbols_().NAN;
+    return this.getNumberFormatSymbols_().NAN;
   }
 
   var parts = [];
@@ -604,7 +624,7 @@ goog.i18n.NumberFormat.prototype.format = function(number) {
       number :
       this.baseFormattingNumber_;
   var unit = this.getUnitAfterRounding_(baseFormattingNumber, number);
-  number /= Math.pow(10, unit.divisorBase);
+  number = goog.i18n.NumberFormat.decimalShift_(number, -unit.divisorBase);
 
   parts.push(unit.prefix);
 
@@ -615,7 +635,7 @@ goog.i18n.NumberFormat.prototype.format = function(number) {
   parts.push(isNegative ? this.negativePrefix_ : this.positivePrefix_);
 
   if (!isFinite(number)) {
-    parts.push(goog.i18n.NumberFormat.getNumberFormatSymbols_().INFINITY);
+    parts.push(this.getNumberFormatSymbols_().INFINITY);
   } else {
     // convert number to non-negative value
     number *= isNegative ? -1 : 1;
@@ -642,18 +662,20 @@ goog.i18n.NumberFormat.prototype.format = function(number) {
  * @private
  */
 goog.i18n.NumberFormat.prototype.roundNumber_ = function(number) {
-  var power = Math.pow(10, this.maximumFractionDigits_);
-  var shiftedNumber = this.significantDigits_ <= 0 ?
-      Math.round(number * power) :
-      Math.round(
-          this.roundToSignificantDigits_(
-              number * power, this.significantDigits_,
-              this.maximumFractionDigits_));
+  var shift = goog.i18n.NumberFormat.decimalShift_;
+
+  var shiftedNumber = shift(number, this.maximumFractionDigits_);
+  if (this.significantDigits_ > 0) {
+    shiftedNumber = this.roundToSignificantDigits_(
+        shiftedNumber, this.significantDigits_, this.maximumFractionDigits_);
+  }
+  shiftedNumber = Math.round(shiftedNumber);
 
   var intValue, fracValue;
   if (isFinite(shiftedNumber)) {
-    intValue = Math.floor(shiftedNumber / power);
-    fracValue = Math.floor(shiftedNumber - intValue * power);
+    intValue = Math.floor(shift(shiftedNumber, -this.maximumFractionDigits_));
+    fracValue = Math.floor(
+        shiftedNumber - shift(intValue, this.maximumFractionDigits_));
   } else {
     intValue = number;
     fracValue = 0;
@@ -696,14 +718,14 @@ goog.i18n.NumberFormat.prototype.roundNumber_ = function(number) {
  *  how numbers are to be grouped and appear.
  * @private
  */
-goog.i18n.NumberFormat.formatNumberGroupingRepeatingDigitsParts_ = function(
-    parts, zeroCode, intPart, groupingArray, repeatedDigitLen) {
+goog.i18n.NumberFormat.prototype.formatNumberGroupingRepeatingDigitsParts_ =
+    function(parts, zeroCode, intPart, groupingArray, repeatedDigitLen) {
   // Keep track of how much has been completed on the non repeated groups
   var nonRepeatedGroupCompleteCount = 0;
   var currentGroupSizeIndex = 0;
   var currentGroupSize = 0;
 
-  var grouping = goog.i18n.NumberFormat.getNumberFormatSymbols_().GROUP_SEP;
+  var grouping = this.getNumberFormatSymbols_().GROUP_SEP;
   var digitLen = intPart.length;
 
   // There are repeating digits and non-repeating digits
@@ -776,10 +798,10 @@ goog.i18n.NumberFormat.formatNumberGroupingRepeatingDigitsParts_ = function(
  *  how numbers are to be grouped and appear.
  * @private
  */
-goog.i18n.NumberFormat.formatNumberGroupingNonRepeatingDigitsParts_ = function(
-    parts, zeroCode, intPart, groupingArray) {
+goog.i18n.NumberFormat.prototype.formatNumberGroupingNonRepeatingDigitsParts_ =
+    function(parts, zeroCode, intPart, groupingArray) {
   // Keep track of how much has been completed on the non repeated groups
-  var grouping = goog.i18n.NumberFormat.getNumberFormatSymbols_().GROUP_SEP;
+  var grouping = this.getNumberFormatSymbols_().GROUP_SEP;
   var currentGroupSizeIndex;
   var currentGroupSize = 0;
   var digitLenLeft = intPart.length;
@@ -794,10 +816,9 @@ goog.i18n.NumberFormat.formatNumberGroupingNonRepeatingDigitsParts_ = function(
     for (var rightDigitIndex = 0; rightDigitIndex < currentGroupSize &&
          ((digitLenLeft - rightDigitIndex - 1) >= 0);
          rightDigitIndex++) {
-      rightToLeftParts.push(
-          String.fromCharCode(
-              zeroCode +
-              Number(intPart.charAt(digitLenLeft - rightDigitIndex - 1)) * 1));
+      rightToLeftParts.push(String.fromCharCode(
+          zeroCode +
+          Number(intPart.charAt(digitLenLeft - rightDigitIndex - 1)) * 1));
     }
     // Update the number of digits left
     digitLenLeft -= currentGroupSize;
@@ -853,13 +874,13 @@ goog.i18n.NumberFormat.prototype.subformatFixed_ = function(
   while (translatableInt > 1E20) {
     // here it goes beyond double precision, add '0' make it look better
     intPart = '0' + intPart;
-    translatableInt = Math.round(translatableInt / 10);
+    translatableInt =
+        Math.round(goog.i18n.NumberFormat.decimalShift_(translatableInt, -1));
   }
   intPart = translatableInt + intPart;
 
-  var decimal = goog.i18n.NumberFormat.getNumberFormatSymbols_().DECIMAL_SEP;
-  var zeroCode =
-      goog.i18n.NumberFormat.getNumberFormatSymbols_().ZERO_DIGIT.charCodeAt(0);
+  var decimal = this.getNumberFormatSymbols_().DECIMAL_SEP;
+  var zeroCode = this.getNumberFormatSymbols_().ZERO_DIGIT.charCodeAt(0);
   var digitLen = intPart.length;
   var nonRepeatedGroupCount = 0;
 
@@ -881,13 +902,12 @@ goog.i18n.NumberFormat.prototype.subformatFixed_ = function(
     var repeatedDigitLen = digitLen - nonRepeatedGroupCount;
     if (repeatedDigitLen > 0) {
       // There are repeating digits and non-repeating digits
-      parts = goog.i18n.NumberFormat.formatNumberGroupingRepeatingDigitsParts_(
+      parts = this.formatNumberGroupingRepeatingDigitsParts_(
           parts, zeroCode, intPart, this.groupingArray_, repeatedDigitLen);
     } else {
       // There are no repeating digits and only non-repeating digits
-      parts =
-          goog.i18n.NumberFormat.formatNumberGroupingNonRepeatingDigitsParts_(
-              parts, zeroCode, intPart, this.groupingArray_);
+      parts = this.formatNumberGroupingNonRepeatingDigitsParts_(
+          parts, zeroCode, intPart, this.groupingArray_);
     }
   } else if (!fractionPresent) {
     // If there is no fraction present, and we haven't printed any
@@ -942,17 +962,17 @@ goog.i18n.NumberFormat.prototype.subformatFixed_ = function(
  * @private
  */
 goog.i18n.NumberFormat.prototype.addExponentPart_ = function(exponent, parts) {
-  parts.push(goog.i18n.NumberFormat.getNumberFormatSymbols_().EXP_SYMBOL);
+  parts.push(this.getNumberFormatSymbols_().EXP_SYMBOL);
 
   if (exponent < 0) {
     exponent = -exponent;
-    parts.push(goog.i18n.NumberFormat.getNumberFormatSymbols_().MINUS_SIGN);
+    parts.push(this.getNumberFormatSymbols_().MINUS_SIGN);
   } else if (this.useSignForPositiveExponent_) {
-    parts.push(goog.i18n.NumberFormat.getNumberFormatSymbols_().PLUS_SIGN);
+    parts.push(this.getNumberFormatSymbols_().PLUS_SIGN);
   }
 
   var exponentDigits = '' + exponent;
-  var zeroChar = goog.i18n.NumberFormat.getNumberFormatSymbols_().ZERO_DIGIT;
+  var zeroChar = this.getNumberFormatSymbols_().ZERO_DIGIT;
   for (var i = exponentDigits.length; i < this.minExponentDigits_; i++) {
     parts.push(zeroChar);
   }
@@ -968,23 +988,7 @@ goog.i18n.NumberFormat.prototype.addExponentPart_ = function(exponent, parts) {
  * @private
  */
 goog.i18n.NumberFormat.prototype.getMantissa_ = function(value, exponent) {
-  var divisor = Math.pow(10, exponent);
-  if (isFinite(divisor) && divisor !== 0) {
-    return value / divisor;
-  } else {
-    // If the exponent is too big pow returns 0. In such a case we calculate
-    // half of the divisor and apply it twice.
-    divisor = Math.pow(10, Math.floor(exponent / 2));
-    var result = value / divisor / divisor;
-    if (exponent % 2 == 1) {  // Correcting for odd exponents.
-      if (exponent > 0) {
-        result /= 10;
-      } else {
-        result *= 10;
-      }
-    }
-    return result;
-  }
+  return goog.i18n.NumberFormat.decimalShift_(value, -exponent);
 };
 
 /**
@@ -1014,19 +1018,24 @@ goog.i18n.NumberFormat.prototype.subformatExponential_ = function(
     // -3,-4,-5=>-6, etc. This takes into account that the
     // exponent we have here is off by one from what we expect;
     // it is for the format 0.MMMMMx10^n.
-    while ((exponent % this.maximumIntegerDigits_) != 0) {
-      number *= 10;
-      exponent--;
+    var remainder = exponent % this.maximumIntegerDigits_;
+    if (remainder < 0) {
+      remainder = this.maximumIntegerDigits_ + remainder;
     }
+
+    number = goog.i18n.NumberFormat.decimalShift_(number, remainder);
+    exponent -= remainder;
+
     minIntDigits = 1;
   } else {
     // No repeating range is defined; use minimum integer digits.
     if (this.minimumIntegerDigits_ < 1) {
       exponent++;
-      number /= 10;
+      number = goog.i18n.NumberFormat.decimalShift_(number, -1);
     } else {
       exponent -= this.minimumIntegerDigits_ - 1;
-      number *= Math.pow(10, this.minimumIntegerDigits_ - 1);
+      number = goog.i18n.NumberFormat.decimalShift_(
+          number, this.minimumIntegerDigits_ - 1);
     }
   }
   this.subformatFixed_(number, minIntDigits, parts);
@@ -1048,9 +1057,7 @@ goog.i18n.NumberFormat.prototype.getDigit_ = function(ch) {
   if (48 <= code && code < 58) {
     return code - 48;
   } else {
-    var zeroCode =
-        goog.i18n.NumberFormat.getNumberFormatSymbols_().ZERO_DIGIT.charCodeAt(
-            0);
+    var zeroCode = this.getNumberFormatSymbols_().ZERO_DIGIT.charCodeAt(0);
     return zeroCode <= code && code < zeroCode + 10 ? code - zeroCode : -1;
   }
 };
@@ -1220,7 +1227,7 @@ goog.i18n.NumberFormat.prototype.parseAffix_ = function(pattern, pos) {
           }
           this.multiplier_ = 100;
           this.negativePercentSignExpected_ = false;
-          affix += goog.i18n.NumberFormat.getNumberFormatSymbols_().PERCENT;
+          affix += this.getNumberFormatSymbols_().PERCENT;
           break;
         case goog.i18n.NumberFormat.PATTERN_PER_MILLE_:
           if (!this.negativePercentSignExpected_ && this.multiplier_ != 1) {
@@ -1231,7 +1238,7 @@ goog.i18n.NumberFormat.prototype.parseAffix_ = function(pattern, pos) {
           }
           this.multiplier_ = 1000;
           this.negativePercentSignExpected_ = false;
-          affix += goog.i18n.NumberFormat.getNumberFormatSymbols_().PERMILL;
+          affix += this.getNumberFormatSymbols_().PERMILL;
           break;
         default:
           affix += ch;
@@ -1422,11 +1429,13 @@ goog.i18n.NumberFormat.prototype.getUnitFor_ = function(base, plurality) {
   if (base < 3) {
     return goog.i18n.NumberFormat.NULL_UNIT_;
   } else {
+    var shift = goog.i18n.NumberFormat.decimalShift_;
+
     base = Math.min(14, base);
-    var patterns = table[Math.pow(10, base)];
+    var patterns = table[shift(1, base)];
     var previousNonNullBase = base - 1;
     while (!patterns && previousNonNullBase >= 3) {
-      patterns = table[Math.pow(10, previousNonNullBase)];
+      patterns = table[shift(1, previousNonNullBase)];
       previousNonNullBase--;
     }
     if (!patterns) {
@@ -1476,9 +1485,11 @@ goog.i18n.NumberFormat.prototype.getUnitAfterRounding_ = function(
   var base = formattingNumber <= 1 ? 0 : this.intLog10_(formattingNumber);
   var initialDivisor = this.getUnitFor_(base, initialPlurality).divisorBase;
   // Round both numbers based on the unit used.
-  var pluralityAttempt = pluralityNumber / Math.pow(10, initialDivisor);
+  var pluralityAttempt =
+      goog.i18n.NumberFormat.decimalShift_(pluralityNumber, -initialDivisor);
   var pluralityRounded = this.roundNumber_(pluralityAttempt);
-  var formattingAttempt = formattingNumber / Math.pow(10, initialDivisor);
+  var formattingAttempt =
+      goog.i18n.NumberFormat.decimalShift_(formattingNumber, -initialDivisor);
   var formattingRounded = this.roundNumber_(formattingAttempt);
   // Compute the plurality of the pluralityNumber when formatted using the name
   // units as the formattingNumber.
@@ -1505,9 +1516,76 @@ goog.i18n.NumberFormat.prototype.intLog10_ = function(number) {
     return number > 0 ? number : 0;
   }
   // Turns out Math.log(1000000)/Math.LN10 is strictly less than 6.
+  // TODO(nickreid): Make this use `decimalShift_` or use another more effecient
+  // string-based method.
   var i = 0;
   while ((number /= 10) >= 1) i++;
   return i;
+};
+
+/**
+ * Shifts `number` by `digitCount` decimal digits.
+ *
+ * This function corrects for rounding error that may occur when naively
+ * multiplying or dividing by a power of 10. See:
+ * https://en.wikipedia.org/wiki/Floating-point_arithmetic#Accuracy_problems
+ * Example: `1.1e27 / Math.pow(10, 12)  != 1.1e15`.
+ *
+ * This function does not correct for inherent limitations in the precision of
+ * JavaScript numbers.
+ *
+ * @param {number} number The number to shift.
+ * @param {number} digitCount The number of places by which to shift number.
+ *     Must be an integer. May be positive or negative.
+ * @return {number}
+ * @private
+ */
+goog.i18n.NumberFormat.decimalShift_ = function(number, digitCount) {
+  goog.asserts.assert(
+      digitCount % 1 == 0, 'Cannot shift by fractional digits "%s".',
+      digitCount);
+
+  // Make sure to cover all numbers that stringify to something that doesn't
+  // look like a number.
+  if (!number || !isFinite(number) || digitCount == 0) {
+    return number;
+  }
+
+  // This method isn't efficient, but it has the exact behaviour we want without
+  // worrying about floating-point math edge cases.
+  var numParts = String(number).split('e');
+  var magnitude = parseInt(numParts[1] || 0, 10) + digitCount;
+  return parseFloat(numParts[0] + 'e' + magnitude);
+};
+
+/**
+ * Rounds `number` to `decimalCount` decimal places.
+ *
+ * Negative values of `decimalCount` will eliminate integeral digits.
+ *
+ * This function corrects for rounding error that may occur when naively
+ * multiplying by a power of 10.
+ *
+ * This function does not correct for inherent limitations in the precision of
+ * JavaScript numbers.
+ *
+ * @param {number} number The number to round.
+ * @param {number} decimalCount The number of decimal places to retain.
+ *     Must be an integer. May be positive or negative.
+ * @return {number}
+ * @private
+ */
+goog.i18n.NumberFormat.decimalRound_ = function(number, decimalCount) {
+  goog.asserts.assert(
+      decimalCount % 1 == 0, 'Cannot round to fractional digits "%s".',
+      decimalCount);
+
+  if (!number || !isFinite(number)) {
+    return number;
+  }
+
+  var shift = goog.i18n.NumberFormat.decimalShift_;
+  return shift(Math.round(shift(number, decimalCount)), -decimalCount);
 };
 
 
@@ -1530,13 +1608,10 @@ goog.i18n.NumberFormat.prototype.roundToSignificantDigits_ = function(
 
   // Only round fraction, not (potentially shifted) integers.
   if (magnitude < -scale) {
-    var point = Math.pow(10, scale);
-    return Math.round(number / point) * point;
+    return goog.i18n.NumberFormat.decimalRound_(number, -scale);
+  } else {
+    return goog.i18n.NumberFormat.decimalRound_(number, magnitude);
   }
-
-  var power = Math.pow(10, magnitude);
-  var shifted = Math.round(number * power);
-  return shifted / power;
 };
 
 

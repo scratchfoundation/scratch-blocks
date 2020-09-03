@@ -48,7 +48,7 @@ goog.net.Cookies = function(context) {
  * to the size of a cookie. To make sure users can't break this limit, we
  * should truncate long cookies at 3950 bytes, to be extra careful with dumb
  * browsers/proxies that interpret 4K as 4000 rather than 4096.
- * @type {number}
+ * @const {number}
  */
 goog.net.Cookies.MAX_COOKIE_LENGTH = 3950;
 
@@ -108,12 +108,12 @@ goog.net.Cookies.prototype.isValidValue = function(value) {
  * Sets a cookie.  The max_age can be -1 to set a session cookie. To remove and
  * expire cookies, use remove() instead.
  *
- * Neither the {@code name} nor the {@code value} are encoded in any way. It is
- * up to the callers of {@code get} and {@code set} (as well as all the other
+ * Neither the `name` nor the `value` are encoded in any way. It is
+ * up to the callers of `get` and `set` (as well as all the other
  * methods) to handle any possible encoding and decoding.
  *
- * @throws {!Error} If the {@code name} fails #goog.net.cookies.isValidName.
- * @throws {!Error} If the {@code value} fails #goog.net.cookies.isValidValue.
+ * @throws {!Error} If the `name` fails #goog.net.cookies.isValidName.
+ * @throws {!Error} If the `value` fails #goog.net.cookies.isValidValue.
  *
  * @param {string} name  The cookie name.
  * @param {string} value  The cookie value.
@@ -200,10 +200,10 @@ goog.net.Cookies.prototype.get = function(name, opt_default) {
 /**
  * Removes and expires a cookie.
  * @param {string} name  The cookie name.
- * @param {string=} opt_path  The path of the cookie, or null to expire a cookie
+ * @param {?string=} opt_path  The path of the cookie, or null to expire a cookie
  *     set at the full request path. If not provided, the default is '/'
  *     (i.e. path=/).
- * @param {string=} opt_domain  The domain of the cookie, or null to expire a
+ * @param {?string=} opt_domain  The domain of the cookie, or null to expire a
  *     cookie set at the full request host name. If not provided, the default is
  *     null (i.e. cookie at full request host name).
  * @return {boolean} Whether the cookie existed before it was removed.
@@ -310,7 +310,7 @@ goog.net.Cookies.prototype.setCookie_ = function(s) {
 /**
  * Private helper function to allow testing cookies without depending on the
  * browser. IE6 can return null here.
- * @return {string} Returns the {@code document.cookie}.
+ * @return {string} Returns the `document.cookie`.
  * @private
  */
 goog.net.Cookies.prototype.getCookie_ = function() {
@@ -329,7 +329,7 @@ goog.net.Cookies.prototype.getParts_ = function() {
 
 /**
  * Gets the names and values for all the cookies.
- * @return {!{keys:!Array<string>, values:!Array<string>}} An object with keys
+ * @return {{keys:!Array<string>, values:!Array<string>}} An object with keys
  *     and values.
  * @private
  */
@@ -369,12 +369,3 @@ goog.net.cookies =
 goog.net.Cookies.getInstance = function() {
   return goog.net.cookies;
 };
-
-
-/**
- * Define the constant on the instance in order not to break many references to
- * it.
- * @type {number}
- * @deprecated Use goog.net.Cookies.MAX_COOKIE_LENGTH instead.
- */
-goog.net.cookies.MAX_COOKIE_LENGTH = goog.net.Cookies.MAX_COOKIE_LENGTH;

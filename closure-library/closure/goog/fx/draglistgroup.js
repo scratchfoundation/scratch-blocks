@@ -24,6 +24,7 @@ goog.provide('goog.fx.DragListDirection');
 goog.provide('goog.fx.DragListGroup');
 goog.provide('goog.fx.DragListGroup.EventType');
 goog.provide('goog.fx.DragListGroupEvent');
+goog.provide('goog.fx.DragListPermission');
 
 goog.require('goog.array');
 goog.require('goog.asserts');
@@ -97,7 +98,7 @@ goog.fx.DragListGroup = function() {
   this.currDragItem_;
 
   /**
-   * The drag list that {@code this.currDragItem_} is currently hovering over,
+   * The drag list that `this.currDragItem_` is currently hovering over,
    * or null if it is not hovering over a list.
    * @private {Element}
    */
@@ -124,7 +125,7 @@ goog.fx.DragListGroup = function() {
   /**
    * The current item in the list we are hovering over. We need to remember
    * this in case we do not update the position of the current drag item while
-   * dragging (see {@code updateWhileDragging_}). In this case the current drag
+   * dragging (see `updateWhileDragging_`). In this case the current drag
    * item will be inserted into the list before this element when the drag ends.
    * @private {Element}
    */
@@ -213,6 +214,20 @@ goog.fx.DragListDirection = {
   LEFT: 3,      // uncommon (except perhaps for right-to-left interfaces)
   RIGHT_2D: 4,  // common + handles multiple lines if items are wrapped
   LEFT_2D: 5    // for rtl languages
+};
+
+
+/**
+ * Enum to indicate the drag and drop permissions for a drag list. Default is
+ * DRAG_OUT_AND_DROP.
+ * @enum {number}
+ */
+goog.fx.DragListPermission = {
+  DRAG_OUT_AND_DROP: 0,  // default
+  ONLY_DRAG_OUT: 1,      // Prevents an item from being dropped into this drag
+                         // list.
+  ONLY_DROP: 2           // Prevents an item from being removed from this drag
+                         // list, but items can be dropped here.
 };
 
 
@@ -307,13 +322,19 @@ goog.fx.DragListGroup.prototype.isDragging = function() {
  * @param {string=} opt_dragHoverClass CSS class to apply to this drag list when
  *     the draggerEl hovers over it during a drag action.  If present, must be a
  *     single, valid classname (not a string of space-separated classnames).
+ * @param {!goog.fx.DragListPermission=} opt_dragListPermission Defaults
+ *     to DRAG_OUT_AND_DROP but can be passed in to modify to prevent users from
+ *     dragging an item out of a list or dropping an item into a list.
  */
 goog.fx.DragListGroup.prototype.addDragList = function(
-    dragListElement, growthDirection, opt_unused, opt_dragHoverClass) {
+    dragListElement, growthDirection, opt_unused, opt_dragHoverClass,
+    opt_dragListPermission) {
   goog.asserts.assert(!this.isInitialized_);
 
   dragListElement.dlgGrowthDirection_ = growthDirection;
   dragListElement.dlgDragHoverClass_ = opt_dragHoverClass;
+  dragListElement.dlgDragPermission =
+      opt_dragListPermission || goog.fx.DragListPermission.DRAG_OUT_AND_DROP;
   this.dragLists_.push(dragListElement);
 };
 
@@ -519,6 +540,7 @@ goog.fx.DragListGroup.prototype.listenForDragEvents = function(dragItem) {
   }
 
   this.dragItems_.push(dragItem);
+
   this.eventHandler_.listen(
       dragItemHandle,
       [goog.events.EventType.MOUSEDOWN, goog.events.EventType.TOUCHSTART],
@@ -533,7 +555,15 @@ goog.fx.DragListGroup.prototype.listenForDragEvents = function(dragItem) {
  */
 goog.fx.DragListGroup.prototype.handlePotentialDragStart_ = function(e) {
   var uid = goog.getUid(/** @type {Node} */ (e.currentTarget));
-  this.currDragItem_ = /** @type {Element} */ (this.dragItemForHandle_[uid]);
+  var potentialDragItem =
+      /** @type {!Element} */ (this.dragItemForHandle_[uid]);
+
+  if (potentialDragItem.parentElement.dlgDragPermission ==
+      goog.fx.DragListPermission.ONLY_DROP) {
+    return;
+  }
+
+  this.currDragItem_ = potentialDragItem;
 
   this.draggerEl_ = /** @type {!HTMLElement} */ (
       this.createDragElementInternal(this.currDragItem_));
@@ -588,7 +618,7 @@ goog.fx.DragListGroup.prototype.handlePotentialDragStart_ = function(e) {
  * Creates copy of node being dragged.
  *
  * @param {Element} sourceEl Element to copy.
- * @return {!Element} The clone of {@code sourceEl}.
+ * @return {!Element} The clone of `sourceEl`.
  * @deprecated Use goog.fx.Dragger.cloneNode().
  * @private
  */
@@ -601,7 +631,7 @@ goog.fx.DragListGroup.prototype.cloneNode_ = function(sourceEl) {
  * Generates an element to follow the cursor during dragging, given a drag
  * source element.  The default behavior is simply to clone the source element,
  * but this may be overridden in subclasses.  This method is called by
- * {@code createDragElement()} before the drag class is added.
+ * `createDragElement()` before the drag class is added.
  *
  * @param {Element} sourceEl Drag source element.
  * @return {!Element} The new drag element.
@@ -706,7 +736,8 @@ goog.fx.DragListGroup.prototype.handleDragMove_ = function(dragEvent) {
     return false;
   }
 
-  if (hoverList) {
+  if (hoverList &&
+      hoverList.dlgDragPermission != goog.fx.DragListPermission.ONLY_DRAG_OUT) {
     if (this.updateWhileDragging_) {
       this.insertCurrDragItem_(hoverList, hoverNextItem);
     } else {
@@ -1095,7 +1126,7 @@ goog.fx.DragListGroup.prototype.getHoverNextItem_ = function(
     // LEFT_2D and RIGHT_2D) it is no longer enough to only look at the
     // x-coordinate alone in order to find the {@earliestAfterItem} in the
     // hoverlist. Make sure it is chosen from the row closest to the
-    // {@code draggerElCenter}.
+    // `draggerElCenter`.
     if (pickClosestRow) {
       var distanceToRow = goog.fx.DragListGroup.verticalDistanceFromItem_(
           item, draggerElCenter);

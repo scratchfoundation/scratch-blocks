@@ -35,6 +35,7 @@ requirement: {
   error_message: 'Only Error or Error subclass objects may be thrown. See https://google.github.io/closure-library/develop/conformance_rules.html#throwOfNonErrorTypes'
 
   whitelist_regexp: '.+/closure/goog/storage/'  # throws numbers as part of its api
+  whitelist_regexp: '.+/closure/goog/testing/mock.js'  # throws Object in $recordAndThrow
 }
 
 requirement: {
@@ -90,6 +91,10 @@ requirement: {
   whitelist_regexp: '.+/closure/goog/net/xpc/nativemessagingtransport.js'
   # TODO(user): make sure this gets security reviewed (b/29333525).
   whitelist_regexp: '.+/closure/goog/messaging/portchannel.js'
+  # Internal-only code: go/g3doc-widgets#screenshots-widget-html.
+  whitelist: 'java/com/google/frameworks/testing/infrastructure/screenshot/ui/carousel/carouselcontroller.js'
+  # security reviewed (b/118451926)
+  whitelist: 'java/com/google/gaia/frontend/closure/common/service/nativebridge/kaios/kaiosbridgeservice.js'
 }
 
 ### Security: forbid DOM properties and functions which can cause XSS ###
@@ -111,11 +116,13 @@ requirement: {
   value: 'goog.globalEval'
 
   whitelist_regexp: '.+/closure/goog/base.js' # goog.module loading in uncompiled code.
+  whitelist_regexp: '.+/closure/goog/goog.js' # Forwards goog.globalEval
   whitelist_regexp: '.+/closure/goog/debug/errorhandler.js' # wraps setTimeout and similar functions
-  whitelist_regexp: '.+/closure/goog/json/evaljsonprocessor.js'
   whitelist_regexp: '.+/closure/goog/json/json.js' # used in goog.json.parse
   whitelist_regexp: '.+/closure/goog/module/loader.js'
   whitelist_regexp: '.+/closure/goog/module/moduleloader.js'
+  whitelist: 'javascript/security/safe_eval.js'
+
 }
 
 requirement: {
@@ -205,6 +212,8 @@ requirement: {
   # TODO(jakubvrana): These need to be refactored.
   whitelist_regexp: '.+/closure/goog/editor/icontent.js'
   whitelist_regexp: '.+/closure/goog/testing/'
+  # TODO(jakubvrana): Elemental internals.
+  whitelist: 'third_party/java_src/elemental2/java/elemental2/dom/dom-j2cl.js.zip'
 }
 
 requirement: {
@@ -268,6 +277,7 @@ requirement: {
   value: 'HTMLScriptElement.prototype.text'
   value: 'HTMLScriptElement.prototype.textContent'
 
+  whitelist_regexp: '.+/closure/goog/base.js'
   whitelist_regexp: '.+/closure/goog/dom/safe.js'
 }
 
@@ -409,8 +419,6 @@ requirement: {
 
   whitelist_regexp: '.+/closure/goog/tweak/tweakui.js' # False positive - missing type on containerNodeName.
   # TODO(jakubvrana): Ban this.
-  whitelist_regexp: '.+/closure/goog/datasource/jsondatasource.js'
-  whitelist_regexp: '.+/closure/goog/module/loader.js'
   whitelist_regexp: '.+/closure/goog/ui/abstractspellchecker.js'
 }
 
@@ -486,17 +494,6 @@ requirement: {
 #
 # These rules allow projects to have compile-time errors for legacyconversions
 # functions and to progressively move away from them by using the whitelist.
-
-requirement: {
-  rule_id: 'closure:legacyHtml'
-  type: BANNED_NAME
-  error_message: 'goog.html.legacyconversions are not allowed. See https://google.github.io/closure-library/develop/conformance_rules.html#legacyApis for details.'
-
-  value: 'goog.html.legacyconversions'
-
-  whitelist_regexp: '.+/closure/goog/html/legacyconversions.js'
-  whitelist_regexp: '.+/closure/goog/soy/soy.js'
-}
 
 requirement: {
   rule_id: 'closure:soyDeprecatedAutoescaping'

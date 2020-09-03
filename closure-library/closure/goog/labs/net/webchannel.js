@@ -50,6 +50,8 @@ goog.provide('goog.net.WebChannel');
 
 goog.require('goog.events');
 goog.require('goog.events.Event');
+goog.require('goog.events.Listenable');
+goog.require('goog.net.XmlHttpFactory');
 
 
 
@@ -63,6 +65,7 @@ goog.require('goog.events.Event');
  *
  * @interface
  * @extends {EventTarget}
+ * @extends {goog.events.Listenable}
  */
 goog.net.WebChannel = function() {};
 
@@ -147,14 +150,20 @@ goog.net.WebChannel.FailureRecovery = function() {};
  * backgroundChannelTest: whether to run the channel test (detecting networking
  * conditions) as a background process so the OPEN event will be fired sooner
  * to reduce the initial handshake delay. This option defaults to true.
+ * The actual background channel test is not fully implemented.
  *
- * fastHandshake: experimental feature to speed up the initial handshake, e.g.
- * leveraging QUIC 0-RTT, in-band version negotiation. This option defaults
- * to false. To set this option to true, backgroundChannelTest needs be set
- * to true too. Note it is allowed to send messages before the Open event is
- * received after a channel has been connected. In order to enable 0-RTT,
- * messages may be encoded as part of URL and therefore there will be a size
- * limit for those immediate messages (e.g. 4KB).
+ * forceLongPolling: whether to force long-polling from client to server.
+ * This defaults to false. Long-polling may be necessary when a (MITM) proxy
+ * is buffering data sent by the server.
+ *
+ * fastHandshake: experimental feature to enable true 0-RTT message delivery,
+ * e.g. by leveraging QUIC 0-RTT (which requires GET to be used). This option
+ * defaults to false. When this option is enabled, backgroundChannelTest will
+ * be forced to true. Note it is allowed to send messages before Open event is
+ * received, after a channel has been connected. In order to enable 0-RTT,
+ * messages need be encoded as part of URL and therefore there needs be a size
+ * limit (e.g. 16KB) for messages that need be sent immediately
+ * as part of the handshake.
  *
  * disableRedact: whether to disable logging redact. By default, redact is
  * enabled to remove any message payload or user-provided info
@@ -164,9 +173,22 @@ goog.net.WebChannel.FailureRecovery = function() {};
  * customized configs that are optimized for certain clients or environments.
  * Currently this information is sent via X-WebChannel-Client-Profile header.
  *
- * failFast: enable the fail-fast behavior which will immediately abort the
- * channel when an HTTP request fails, without attempting any recovery logic.
- * Default is set to false.
+ * internalChannelParams: the internal channel parameter name to allow
+ * experimental channel configurations. Supported options include fastfail,
+ * baseRetryDelayMs, retryDelaySeedMs, forwardChannelMaxRetries and
+ * forwardChannelRequestTimeoutMs. Note that these options are subject to
+ * change.
+ *
+ * xmlHttpFactory: allows the caller to override the factory used to create
+ * XMLHttpRequest objects. This is introduced to disable CORS on firefox OS.
+ *
+ * requestRefreshThresholds: client-side thresholds that decide when to refresh
+ * an underlying HTTP request, to limit memory consumption due to XHR buffering
+ * or compression context. The client-side thresholds should be signficantly
+ * smaller than the server-side thresholds. This allows the client to eliminate
+ * any latency introduced by request refreshing, i.e. an RTT window during which
+ * messages may be buffered on the server-side. Supported params include
+ * totalBytesReceived, totalDurationMs.
  *
  * @typedef {{
  *   messageHeaders: (!Object<string, string>|undefined),
@@ -181,10 +203,13 @@ goog.net.WebChannel.FailureRecovery = function() {};
  *   httpSessionIdParam: (string|undefined),
  *   httpHeadersOverwriteParam: (string|undefined),
  *   backgroundChannelTest: (boolean|undefined),
+ *   forceLongPolling: (boolean|undefined),
  *   fastHandshake: (boolean|undefined),
  *   disableRedact: (boolean|undefined),
  *   clientProfile: (string|undefined),
- *   failFast: (boolean|undefined),
+ *   internalChannelParams: (!Object<string, boolean|number>|undefined),
+ *   xmlHttpFactory: (!goog.net.XmlHttpFactory|undefined),
+ *   requestRefreshThresholds: (!Object<string, number>|undefined),
  * }}
  */
 goog.net.WebChannel.Options;
@@ -238,6 +263,8 @@ goog.net.WebChannel.prototype.close = goog.abstractMethod;
  * 5. Full close is always a forced one. See the close() method.
  *
  * New messages sent after halfClose() will be dropped.
+ *
+ * NOTE: This is not yet implemented, and will throw an exception if called.
  */
 goog.net.WebChannel.prototype.halfClose = goog.abstractMethod;
 
@@ -499,7 +526,7 @@ goog.net.WebChannel.RuntimeProperties.prototype.getNonAckedMessageCount =
  *
  * @param {number} count The low water-mark count. It is an error to pass
  * a non-positive value.
- * @param {!function()} callback The call back to notify the application
+ * @param {function()} callback The call back to notify the application
  * when NonAckedMessageCount is below the specified low water-mark count.
  * Any previously registered callback is cleared. This new callback will
  * be cleared once it has been fired, or when the channel is closed or aborted.

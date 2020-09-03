@@ -48,8 +48,8 @@ var userAgentProduct = goog.require('goog.userAgent.product');
  */
 
 /**
- * Shorthand for {@code Object.getOwnPropertyDescriptor(...).get} to improve
- * readability during initialization of {@code Methods}.
+ * Shorthand for `Object.getOwnPropertyDescriptor(...).get` to improve
+ * readability during initialization of `Methods`.
  * @param {string} className
  * @param {string} property
  * @return {?Function}
@@ -64,8 +64,8 @@ function getterOrNull(className, property) {
 }
 
 /**
- * Shorthand for {@code DOMInterface.prototype.method} to improve readability
- * during initialization of {@code Methods}.
+ * Shorthand for `DOMInterface.prototype.method` to improve readability
+ * during initialization of `Methods`.
  * @param {string} className
  * @param {string} method
  * @return {?Function}
@@ -160,8 +160,8 @@ function genericMethodCall(fn, object, fallbackMethodName, args) {
 
 /**
  * Returns an element's attributes without falling prey to things like
- * <form><input name="attributes"></form>. Equivalent to {@code
- * node.attributes}.
+ * <form><input name="attributes"></form>. Equivalent to
+ * `node.attributes`.
  * @param {!Element} element
  * @return {!NamedNodeMap}
  */
@@ -237,8 +237,8 @@ function removeElementAttribute(element, attrName) {
 
 /**
  * Returns a node's innerHTML property value without falling prey to things like
- * <form><input name="innerHTML"></form>. Equivalent to {@code
- * element.innerHTML}.
+ * <form><input name="innerHTML"></form>. Equivalent to
+ * `element.innerHTML`.
  * @param {!Element} element
  * @return {string}
  */
@@ -381,9 +381,8 @@ function getParentNode(node) {
         // "parentNode" - this could happen legitimately but on IE we have no
         // better means of avoiding the pitfall.
         return !(
-            parentNode && parentNode.name &&
-            typeof parentNode.name == 'string' &&
-            parentNode.name.toLowerCase() == 'parentnode');
+            parentNode && typeof parentNode.name == 'string' &&
+            parentNode.name && parentNode.name.toLowerCase() == 'parentnode');
       });
 }
 

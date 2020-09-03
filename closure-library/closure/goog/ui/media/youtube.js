@@ -18,14 +18,14 @@
  *
  * goog.ui.media.Youtube is actually a {@link goog.ui.ControlRenderer}, a
  * stateless class - that could/should be used as a Singleton with the static
- * method {@code goog.ui.media.Youtube.getInstance} -, that knows how to render
+ * method `goog.ui.media.Youtube.getInstance` -, that knows how to render
  * youtube videos. It is designed to be used with a {@link goog.ui.Control},
  * which will actually control the media renderer and provide the
  * {@link goog.ui.Component} base. This design guarantees that all different
  * types of medias will behave alike but will look different.
  *
- * goog.ui.media.Youtube expects {@code goog.ui.media.YoutubeModel} on
- * {@code goog.ui.Control.getModel} as data models, and render a flash object
+ * goog.ui.media.Youtube expects `goog.ui.media.YoutubeModel` on
+ * `goog.ui.Control.getModel` as data models, and render a flash object
  * that will play that URL.
  *
  * Example of usage:
@@ -85,8 +85,8 @@ goog.require('goog.ui.media.MediaRenderer');
  *
  * This class knows how to parse youtube urls, and render the DOM structure
  * of youtube video players and previews. This class is meant to be used as a
- * singleton static stateless class, that takes {@code goog.ui.media.Media}
- * instances and renders it. It expects {@code goog.ui.media.Media.getModel} to
+ * singleton static stateless class, that takes `goog.ui.media.Media`
+ * instances and renders it. It expects `goog.ui.media.Media.getModel` to
  * return a well formed, previously constructed, youtube video id, which is the
  * data model this renderer will use to construct the DOM structure.
  * {@see goog.ui.media.Youtube.newControl} for a example of constructing a
@@ -143,7 +143,7 @@ goog.ui.media.Youtube.CSS_CLASS = goog.getCssName('goog-ui-media-youtube');
 
 
 /**
- * Changes the state of a {@code control}. Currently only changes the DOM
+ * Changes the state of a `control`. Currently only changes the DOM
  * structure when the youtube movie is SELECTED (by default fired by a MOUSEUP
  * on the thumbnail), which means we have to embed the youtube flash video and
  * play it.
@@ -195,8 +195,8 @@ goog.ui.media.Youtube.prototype.getCssClass = function() {
 
 
 /**
- * The {@code goog.ui.media.Youtube} media data model. It stores a required
- * {@code videoId} field, sets the youtube URL, and allows a few optional
+ * The `goog.ui.media.Youtube` media data model. It stores a required
+ * `videoId` field, sets the youtube URL, and allows a few optional
  * parameters.
  *
  * @param {string} videoId The youtube video id.
@@ -243,13 +243,17 @@ goog.inherits(goog.ui.media.YoutubeModel, goog.ui.media.MediaModel);
 goog.ui.media.YoutubeModel.MATCHER_ = new RegExp(
     // Lead in.
     'https?://(?:[a-zA-Z]{1,3}\\.)?' +
-        // Watch short URL prefix. This should handle URLs of the form:
+        // Watch short URL prefix and /embed/ URLs. This should handle URLs
+        // like:
         // https://youtu.be/jqxENMKaeCU?cgiparam=value
-        '(?:(?:youtu\\.be/([\\w-]+)(?:\\?[\\w=&-]+)?)|' +
+        // https://youtube.com/embed/jqxENMKaeCU?cgiparam=value
+        // https://youtube-nocookie.com/jqxENMKaeCU?cgiparam=value
+        '(?:(?:(?:youtu\\.be|youtube(?:-nocookie)?\\.com/embed)/([\\w-]+)(?:\\?[\\w=&-]+)?)|' +
         // Watch URL prefix.  This should handle new URLs of the form:
         // https://www.youtube.com/watch#!v=jqxENMKaeCU&feature=related
+        // https://www.youtube-nocookie.com/watch#!v=jqxENMKaeCU&feature=related
         // where the parameters appear after "#!" instead of "?".
-        '(?:youtube\\.com/watch)' +
+        '(?:youtube(?:-nocookie)?\\.com/watch)' +
         // Get the video id:
         // The video ID is a parameter v=[videoid] either right after the "?"
         // or after some other parameters.
@@ -299,7 +303,7 @@ goog.ui.media.YoutubeModel.newInstance = function(
 
 
 /**
- * The opposite of {@code goog.ui.media.Youtube.newInstance}: it takes a videoId
+ * The opposite of `goog.ui.media.Youtube.newInstance`: it takes a videoId
  * and returns a youtube URL.
  *
  * @param {string} videoId The youtube video ID.

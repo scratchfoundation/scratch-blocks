@@ -191,10 +191,10 @@ goog.dom.getElementsByTagName = function(tagName, opt_parent) {
 
 /**
  * Looks up elements by both tag and class name, using browser native functions
- * ({@code querySelectorAll}, {@code getElementsByTagName} or
- * {@code getElementsByClassName}) where possible. This function
+ * (`querySelectorAll`, `getElementsByTagName` or
+ * `getElementsByClassName`) where possible. This function
  * is a useful, if limited, way of collecting a list of DOM elements
- * with certain characteristics.  {@code goog.dom.query} offers a
+ * with certain characteristics.  `goog.dom.query` offers a
  * more powerful and general solution which allows matching on CSS3
  * selector expressions, but at increased cost in code size. If all you
  * need is particular tags belonging to a single class, this function
@@ -311,7 +311,7 @@ goog.dom.canUseQuerySelector_ = function(parent) {
 
 
 /**
- * Helper for {@code getElementsByTagNameAndClass}.
+ * Helper for `getElementsByTagNameAndClass`.
  * @param {!Document} doc The document to get the elements in.
  * @param {(string|?goog.dom.TagName<T>)=} opt_tag Element tag name.
  * @param {?string=} opt_class Optional class name.
@@ -410,7 +410,7 @@ goog.dom.getElementByTagNameAndClass_ = function(
 
 
 /**
- * Alias for {@code getElementsByTagNameAndClass}.
+ * Alias for `getElementsByTagNameAndClass`.
  * @param {(string|?goog.dom.TagName<T>)=} opt_tag Element tag name.
  * @param {?string=} opt_class Optional class name.
  * @param {Element=} opt_el Optional element to look in.
@@ -453,7 +453,7 @@ goog.dom.$$ = goog.dom.getElementsByTagNameAndClass;
  */
 goog.dom.setProperties = function(element, properties) {
   goog.object.forEach(properties, function(val, key) {
-    if (val && val.implementsGoogStringTypedString) {
+    if (val && typeof val == 'object' && val.implementsGoogStringTypedString) {
       val = val.getTypedStringValue();
     }
     if (key == 'style') {
@@ -572,7 +572,7 @@ goog.dom.getViewportSize = function(opt_window) {
 
 
 /**
- * Helper for {@code getViewportSize}.
+ * Helper for `getViewportSize`.
  * @param {Window} win The window to get the view port size for.
  * @return {!goog.math.Size} Object with values 'width' and 'height'.
  * @private
@@ -704,7 +704,7 @@ goog.dom.getDocumentScroll = function() {
 
 
 /**
- * Helper for {@code getDocumentScroll}.
+ * Helper for `getDocumentScroll`.
  *
  * @param {!Document} doc The document to get the scroll for.
  * @return {!goog.math.Coordinate} Object with values 'x' and 'y'.
@@ -735,7 +735,7 @@ goog.dom.getDocumentScrollElement = function() {
 
 
 /**
- * Helper for {@code getDocumentScrollElement}.
+ * Helper for `getDocumentScrollElement`.
  * @param {!Document} doc The document to get the scroll element for.
  * @return {!Element} Scrolling element.
  * @private
@@ -769,7 +769,7 @@ goog.dom.getWindow = function(opt_doc) {
 
 
 /**
- * Helper for {@code getWindow}.
+ * Helper for `getWindow`.
  *
  * @param {!Document} doc  Document object to get window for.
  * @return {!Window} The window associated with the given document.
@@ -798,9 +798,9 @@ goog.dom.getWindow_ = function(doc) {
  *     of name-value pairs for attributes. If a string, then this is the
  *     className of the new element. If an array, the elements will be joined
  *     together as the className of the new element.
- * @param {...(Object|string|Array|NodeList)} var_args Further DOM nodes or
- *     strings for text nodes. If one of the var_args is an array or NodeList,
- *     its elements will be added as childNodes instead.
+ * @param {...(Object|string|Array|NodeList|null|undefined)} var_args Further
+ *     DOM nodes or strings for text nodes. If one of the var_args is an array
+ *     or NodeList, its elements will be added as childNodes instead.
  * @return {R} Reference to a DOM node. The return type is {!Element} if tagName
  *     is a string or a more specific type if it is a member of
  *     goog.dom.TagName (e.g. {!HTMLAnchorElement} for goog.dom.TagName.A).
@@ -813,10 +813,10 @@ goog.dom.createDom = function(tagName, opt_attributes, var_args) {
 
 
 /**
- * Helper for {@code createDom}.
+ * Helper for `createDom`.
  * @param {!Document} doc The document to create the DOM in.
  * @param {!Arguments} args Argument object passed from the callers. See
- *     {@code goog.dom.createDom} for details.
+ *     `goog.dom.createDom` for details.
  * @return {!Element} Reference to a DOM node.
  * @private
  */
@@ -876,7 +876,7 @@ goog.dom.createDom_ = function(doc, args) {
  * Appends a node with text or other nodes.
  * @param {!Document} doc The document to create new nodes in.
  * @param {!Node} parent The node to append nodes to.
- * @param {!Arguments} args The values to add. See {@code goog.dom.append}.
+ * @param {!Arguments} args The values to add. See `goog.dom.append`.
  * @param {number} startIndex The index of the array to start from.
  * @private
  */
@@ -906,15 +906,15 @@ goog.dom.append_ = function(doc, parent, args, startIndex) {
 
 
 /**
- * Alias for {@code createDom}.
+ * Alias for `createDom`.
  * @param {string|!goog.dom.TagName<T>} tagName Tag to create.
  * @param {?Object|?Array<string>|string=} opt_attributes If object, then a map
  *     of name-value pairs for attributes. If a string, then this is the
  *     className of the new element. If an array, the elements will be joined
  *     together as the className of the new element.
- * @param {...(Object|string|Array|NodeList)} var_args Further DOM nodes or
- *     strings for text nodes. If one of the var_args is an array, its
- *     children will be added as childNodes instead.
+ * @param {...(Object|string|Array|NodeList|null|undefined)} var_args Further
+ *     DOM nodes or strings for text nodes. If one of the var_args is an array,
+ *     its children will be added as childNodes instead.
  * @return {R} Reference to a DOM node. The return type is {!Element} if tagName
  *     is a string or a more specific type if it is a member of
  *     goog.dom.TagName (e.g. {!HTMLAnchorElement} for goog.dom.TagName.A).
@@ -970,7 +970,7 @@ goog.dom.createTextNode = function(content) {
  * @param {number} rows The number of rows in the table.  Must be >= 1.
  * @param {number} columns The number of columns in the table.  Must be >= 1.
  * @param {boolean=} opt_fillWithNbsp If true, fills table entries with
- *     {@code goog.string.Unicode.NBSP} characters.
+ *     `goog.string.Unicode.NBSP` characters.
  * @return {!Element} The created table.
  */
 goog.dom.createTable = function(rows, columns, opt_fillWithNbsp) {
@@ -986,7 +986,7 @@ goog.dom.createTable = function(rows, columns, opt_fillWithNbsp) {
  * @param {number} rows The number of rows in the table.  Must be >= 1.
  * @param {number} columns The number of columns in the table.  Must be >= 1.
  * @param {boolean} fillWithNbsp If true, fills table entries with
- *     {@code goog.string.Unicode.NBSP} characters.
+ *     `goog.string.Unicode.NBSP` characters.
  * @return {!HTMLTableElement} The created table.
  * @private
  */
@@ -1034,7 +1034,7 @@ goog.dom.constHtmlToNode = function(var_args) {
 
 /**
  * Converts HTML markup into a node. This is a safe version of
- * {@code goog.dom.htmlToDocumentFragment} which is now deleted.
+ * `goog.dom.htmlToDocumentFragment` which is now deleted.
  * @param {!goog.html.SafeHtml} html The HTML markup to convert.
  * @return {!Node} The resulting node.
  */
@@ -1044,7 +1044,7 @@ goog.dom.safeHtmlToNode = function(html) {
 
 
 /**
- * Helper for {@code safeHtmlToNode}.
+ * Helper for `safeHtmlToNode`.
  * @param {!Document} doc The document.
  * @param {!goog.html.SafeHtml} html The HTML markup to convert.
  * @return {!Node} The resulting node.
@@ -1055,7 +1055,7 @@ goog.dom.safeHtmlToNode_ = function(doc, html) {
   if (goog.dom.BrowserFeature.INNER_HTML_NEEDS_SCOPED_ELEMENT) {
     goog.dom.safe.setInnerHtml(
         tempDiv, goog.html.SafeHtml.concat(goog.html.SafeHtml.BR, html));
-    tempDiv.removeChild(tempDiv.firstChild);
+    tempDiv.removeChild(goog.asserts.assert(tempDiv.firstChild));
   } else {
     goog.dom.safe.setInnerHtml(tempDiv, html);
   }
@@ -1064,7 +1064,7 @@ goog.dom.safeHtmlToNode_ = function(doc, html) {
 
 
 /**
- * Helper for {@code safeHtmlToNode_}.
+ * Helper for `safeHtmlToNode_`.
  * @param {!Document} doc The document.
  * @param {!Node} tempDiv The input node.
  * @return {!Node} The resulting node.
@@ -1072,7 +1072,7 @@ goog.dom.safeHtmlToNode_ = function(doc, html) {
  */
 goog.dom.childrenToNode_ = function(doc, tempDiv) {
   if (tempDiv.childNodes.length == 1) {
-    return tempDiv.removeChild(tempDiv.firstChild);
+    return tempDiv.removeChild(goog.asserts.assert(tempDiv.firstChild));
   } else {
     var fragment = doc.createDocumentFragment();
     while (tempDiv.firstChild) {
@@ -1178,6 +1178,9 @@ goog.dom.canHaveChildren = function(node) {
  * @param {Node} child Child.
  */
 goog.dom.appendChild = function(parent, child) {
+  goog.asserts.assert(
+      parent != null && child != null,
+      'goog.dom.appendChild expects non-null arguments');
   parent.appendChild(child);
 };
 
@@ -1217,6 +1220,9 @@ goog.dom.removeChildren = function(node) {
  * @param {Node} refNode Reference node to insert before.
  */
 goog.dom.insertSiblingBefore = function(newNode, refNode) {
+  goog.asserts.assert(
+      newNode != null && refNode != null,
+      'goog.dom.insertSiblingBefore expects non-null arguments');
   if (refNode.parentNode) {
     refNode.parentNode.insertBefore(newNode, refNode);
   }
@@ -1230,6 +1236,9 @@ goog.dom.insertSiblingBefore = function(newNode, refNode) {
  * @param {Node} refNode Reference node to insert after.
  */
 goog.dom.insertSiblingAfter = function(newNode, refNode) {
+  goog.asserts.assert(
+      newNode != null && refNode != null,
+      'goog.dom.insertSiblingAfter expects non-null arguments');
   if (refNode.parentNode) {
     refNode.parentNode.insertBefore(newNode, refNode.nextSibling);
   }
@@ -1248,6 +1257,8 @@ goog.dom.insertSiblingAfter = function(newNode, refNode) {
 goog.dom.insertChildAt = function(parent, child, index) {
   // Note that if the second argument is null, insertBefore
   // will append the child at the end of the list of children.
+  goog.asserts.assert(
+      parent != null, 'goog.dom.insertChildAt expects a non-null parent');
   parent.insertBefore(child, parent.childNodes[index] || null);
 };
 
@@ -1263,12 +1274,15 @@ goog.dom.removeNode = function(node) {
 
 
 /**
- * Replaces a node in the DOM tree. Will do nothing if {@code oldNode} has no
+ * Replaces a node in the DOM tree. Will do nothing if `oldNode` has no
  * parent.
  * @param {Node} newNode Node to insert.
  * @param {Node} oldNode Node to replace.
  */
 goog.dom.replaceNode = function(newNode, oldNode) {
+  goog.asserts.assert(
+      newNode != null && oldNode != null,
+      'goog.dom.replaceNode expects non-null arguments');
   var parent = oldNode.parentNode;
   if (parent) {
     parent.replaceChild(newNode, oldNode);
@@ -1326,7 +1340,7 @@ goog.dom.getChildren = function(element) {
 /**
  * Returns the first child node that is an element.
  * @param {Node} node The node to get the first child element of.
- * @return {Element} The first child node of {@code node} that is an element.
+ * @return {Element} The first child node of `node` that is an element.
  */
 goog.dom.getFirstElementChild = function(node) {
   if (goog.isDef(node.firstElementChild)) {
@@ -1339,7 +1353,7 @@ goog.dom.getFirstElementChild = function(node) {
 /**
  * Returns the last child node that is an element.
  * @param {Node} node The node to get the last child element of.
- * @return {Element} The last child node of {@code node} that is an element.
+ * @return {Element} The last child node of `node` that is an element.
  */
 goog.dom.getLastElementChild = function(node) {
   if (goog.isDef(node.lastElementChild)) {
@@ -1352,7 +1366,7 @@ goog.dom.getLastElementChild = function(node) {
 /**
  * Returns the first next sibling that is an element.
  * @param {Node} node The node to get the next sibling element of.
- * @return {Element} The next sibling of {@code node} that is an element.
+ * @return {Element} The next sibling of `node` that is an element.
  */
 goog.dom.getNextElementSibling = function(node) {
   if (goog.isDef(node.nextElementSibling)) {
@@ -1365,7 +1379,7 @@ goog.dom.getNextElementSibling = function(node) {
 /**
  * Returns the first previous sibling that is an element.
  * @param {Node} node The node to get the previous sibling element of.
- * @return {Element} The first previous sibling of {@code node} that is
+ * @return {Element} The first previous sibling of `node` that is
  *     an element.
  */
 goog.dom.getPreviousElementSibling = function(node) {
@@ -1378,7 +1392,7 @@ goog.dom.getPreviousElementSibling = function(node) {
 
 /**
  * Returns the first node that is an element in the specified direction,
- * starting with {@code node}.
+ * starting with `node`.
  * @param {Node} node The node to get the next element from.
  * @param {boolean} forward Whether to look forwards or backwards.
  * @return {Element} The first element.
@@ -1500,7 +1514,7 @@ goog.dom.getParentElement = function(element) {
  * Whether a node contains another node.
  * @param {?Node|undefined} parent The node that should contain the other node.
  * @param {?Node|undefined} descendant The node to test presence of.
- * @return {boolean} Whether the parent node contains the descendent node.
+ * @return {boolean} Whether the parent node contains the descendant node.
  */
 goog.dom.contains = function(parent, descendant) {
   if (!parent || !descendant) {
@@ -1612,7 +1626,7 @@ goog.dom.compareNodeOrder = function(node1, node2) {
 
 /**
  * Utility function to compare the position of two nodes, when
- * {@code textNode}'s parent is an ancestor of {@code node}.  If this entry
+ * `textNode`'s parent is an ancestor of `node`.  If this entry
  * condition is not met, this function will attempt to reference a null object.
  * @param {!Node} textNode The textNode to compare.
  * @param {Node} node The node to compare.
@@ -1764,7 +1778,7 @@ goog.dom.setTextContent = function(node, text) {
     // If the first child is a text node we just change its data and remove the
     // rest of the children.
     while (node.lastChild != node.firstChild) {
-      node.removeChild(node.lastChild);
+      node.removeChild(goog.asserts.assert(node.lastChild));
     }
     /** @type {!Text} */ (node.firstChild).data = String(text);
   } else {
@@ -1801,7 +1815,7 @@ goog.dom.getOuterHtml = function(element) {
  * Finds the first descendant node that matches the filter function, using
  * a depth first search. This function offers the most general purpose way
  * of finding a matching element. You may also wish to consider
- * {@code goog.dom.query} which can express many matching criteria using
+ * `goog.dom.query` which can express many matching criteria using
  * CSS selector expressions. These expressions often result in a more
  * compact representation of the desired result.
  * @see goog.dom.query
@@ -1821,7 +1835,7 @@ goog.dom.findNode = function(root, p) {
  * Finds all the descendant nodes that match the filter function, using a
  * a depth first search. This function offers the most general-purpose way
  * of finding a set of matching elements. You may also wish to consider
- * {@code goog.dom.query} which can express many matching criteria using
+ * `goog.dom.query` which can express many matching criteria using
  * CSS selector expressions. These expressions often result in a more
  * compact representation of the desired result.
 
@@ -1994,11 +2008,12 @@ goog.dom.isTabIndexFocusable_ = function(element) {
  * @private
  */
 goog.dom.nativelySupportsFocus_ = function(element) {
-  return element.tagName == goog.dom.TagName.A ||
+  return (
+      element.tagName == goog.dom.TagName.A && element.hasAttribute('href') ||
       element.tagName == goog.dom.TagName.INPUT ||
       element.tagName == goog.dom.TagName.TEXTAREA ||
       element.tagName == goog.dom.TagName.SELECT ||
-      element.tagName == goog.dom.TagName.BUTTON;
+      element.tagName == goog.dom.TagName.BUTTON);
 };
 
 
@@ -2070,7 +2085,7 @@ goog.dom.getTextContent = function(node) {
 /**
  * Returns the text content of the current node, without markup.
  *
- * Unlike {@code getTextContent} this method does not collapse whitespaces
+ * Unlike `getTextContent` this method does not collapse whitespaces
  * or normalize lines breaks.
  *
  * @param {Node} node The node from which we are getting content.
@@ -2120,7 +2135,7 @@ goog.dom.getTextContent_ = function(node, buf, normalizeWhitespace) {
  * lines are ignored.
  *
  * @param {Node} node The node whose text content length is being calculated.
- * @return {number} The length of {@code node}'s text content.
+ * @return {number} The length of `node`'s text content.
  */
 goog.dom.getNodeTextLength = function(node) {
   return goog.dom.getTextContent(node).length;
@@ -2190,7 +2205,7 @@ goog.dom.getNodeAtOffset = function(parent, offset, opt_result) {
 
 
 /**
- * Returns true if the object is a {@code NodeList}.  To qualify as a NodeList,
+ * Returns true if the object is a `NodeList`.  To qualify as a NodeList,
  * the object must have a numeric length property and an item function (which
  * has type 'string' on IE for some reason).
  * @param {Object} val Object to test.
@@ -2308,19 +2323,16 @@ goog.dom.getAncestor = function(
  * @return {Element} The active element.
  */
 goog.dom.getActiveElement = function(doc) {
+  // While in an iframe, IE9 will throw "Unspecified error" when accessing
+  // activeElement.
   try {
-    return doc && doc.activeElement;
+    var activeElement = doc && doc.activeElement;
+    // While not in an iframe, IE9-11 sometimes gives null.
+    // While in an iframe, IE11 sometimes returns an empty object.
+    return activeElement && activeElement.nodeName ? activeElement : null;
   } catch (e) {
-    // NOTE(nicksantos): Sometimes, evaluating document.activeElement in IE
-    // throws an exception. I'm not 100% sure why, but I suspect it chokes
-    // on document.activeElement if the activeElement has been recently
-    // removed from the DOM by a JS operation.
-    //
-    // We assume that an exception here simply means
-    // "there is no active element."
+    return null;
   }
-
-  return null;
 };
 
 
@@ -2435,7 +2447,7 @@ goog.dom.DomHelper.prototype.getDocument = function() {
 
 
 /**
- * Alias for {@code getElementById}. If a DOM node is passed in then we just
+ * Alias for `getElementById`. If a DOM node is passed in then we just
  * return that.
  * @param {string|Element} element Element ID or a DOM node.
  * @return {Element} The element with the given ID, or the node passed in.
@@ -2460,7 +2472,7 @@ goog.dom.DomHelper.prototype.getRequiredElement = function(id) {
 
 
 /**
- * Alias for {@code getElement}.
+ * Alias for `getElement`.
  * @param {string|Element} element Element ID or a DOM node.
  * @return {Element} The element with the given ID, or the node passed in.
  * @deprecated Use {@link goog.dom.DomHelper.prototype.getElement} instead.
@@ -2489,8 +2501,8 @@ goog.dom.DomHelper.prototype.getElementsByTagName =
 
 /**
  * Looks up elements by both tag and class name, using browser native functions
- * ({@code querySelectorAll}, {@code getElementsByTagName} or
- * {@code getElementsByClassName}) where possible. The returned array is a live
+ * (`querySelectorAll`, `getElementsByTagName` or
+ * `getElementsByClassName`) where possible. The returned array is a live
  * NodeList or a static list depending on the code path taken.
  *
  * @see goog.dom.query
@@ -2577,7 +2589,7 @@ goog.dom.DomHelper.prototype.getRequiredElementByClass = function(
 
 
 /**
- * Alias for {@code getElementsByTagNameAndClass}.
+ * Alias for `getElementsByTagNameAndClass`.
  * @deprecated Use DomHelper getElementsByTagNameAndClass.
  * @see goog.dom.query
  *
@@ -2655,7 +2667,7 @@ goog.dom.Appendable;
  *     of name-value pairs for attributes. If a string, then this is the
  *     className of the new element. If an array, the elements will be joined
  *     together as the className of the new element.
- * @param {...goog.dom.Appendable} var_args Further DOM nodes or
+ * @param {...(goog.dom.Appendable|undefined)} var_args Further DOM nodes or
  *     strings for text nodes. If one of the var_args is an array or
  *     NodeList, its elements will be added as childNodes instead.
  * @return {R} Reference to a DOM node. The return type is {!Element} if tagName
@@ -2671,15 +2683,15 @@ goog.dom.DomHelper.prototype.createDom = function(
 
 
 /**
- * Alias for {@code createDom}.
+ * Alias for `createDom`.
  * @param {string|!goog.dom.TagName<T>} tagName Tag to create.
  * @param {?Object|?Array<string>|string=} opt_attributes If object, then a map
  *     of name-value pairs for attributes. If a string, then this is the
  *     className of the new element. If an array, the elements will be joined
  *     together as the className of the new element.
- * @param {...goog.dom.Appendable} var_args Further DOM nodes or strings for
- *     text nodes.  If one of the var_args is an array, its children will be
- *     added as childNodes instead.
+ * @param {...(goog.dom.Appendable|undefined)} var_args Further DOM nodes or
+ *     strings for text nodes.  If one of the var_args is an array, its children
+ *     will be added as childNodes instead.
  * @return {R} Reference to a DOM node. The return type is {!Element} if tagName
  *     is a string or a more specific type if it is a member of
  *     goog.dom.TagName (e.g. {!HTMLAnchorElement} for goog.dom.TagName.A).
@@ -2719,7 +2731,7 @@ goog.dom.DomHelper.prototype.createTextNode = function(content) {
  * @param {number} rows The number of rows in the table.  Must be >= 1.
  * @param {number} columns The number of columns in the table.  Must be >= 1.
  * @param {boolean=} opt_fillWithNbsp If true, fills table entries with
- *     {@code goog.string.Unicode.NBSP} characters.
+ *     `goog.string.Unicode.NBSP` characters.
  * @return {!HTMLElement} The created table.
  */
 goog.dom.DomHelper.prototype.createTable = function(
@@ -2731,9 +2743,9 @@ goog.dom.DomHelper.prototype.createTable = function(
 
 /**
  * Converts an HTML into a node or a document fragment. A single Node is used if
- * {@code html} only generates a single node. If {@code html} generates multiple
- * nodes then these are put inside a {@code DocumentFragment}. This is a safe
- * version of {@code goog.dom.DomHelper#htmlToDocumentFragment} which is now
+ * `html` only generates a single node. If `html` generates multiple
+ * nodes then these are put inside a `DocumentFragment`. This is a safe
+ * version of `goog.dom.DomHelper#htmlToDocumentFragment` which is now
  * deleted.
  * @param {!goog.html.SafeHtml} html The HTML markup to convert.
  * @return {!Node} The resulting node.
@@ -2865,7 +2877,7 @@ goog.dom.DomHelper.prototype.removeNode = goog.dom.removeNode;
 
 
 /**
- * Replaces a node in the DOM tree. Will do nothing if {@code oldNode} has no
+ * Replaces a node in the DOM tree. Will do nothing if `oldNode` has no
  * parent.
  * @param {Node} newNode Node to insert.
  * @param {Node} oldNode Node to replace.
@@ -2895,7 +2907,7 @@ goog.dom.DomHelper.prototype.getChildren = goog.dom.getChildren;
 /**
  * Returns the first child node that is an element.
  * @param {Node} node The node to get the first child element of.
- * @return {Element} The first child node of {@code node} that is an element.
+ * @return {Element} The first child node of `node` that is an element.
  */
 goog.dom.DomHelper.prototype.getFirstElementChild =
     goog.dom.getFirstElementChild;
@@ -2904,7 +2916,7 @@ goog.dom.DomHelper.prototype.getFirstElementChild =
 /**
  * Returns the last child node that is an element.
  * @param {Node} node The node to get the last child element of.
- * @return {Element} The last child node of {@code node} that is an element.
+ * @return {Element} The last child node of `node` that is an element.
  */
 goog.dom.DomHelper.prototype.getLastElementChild = goog.dom.getLastElementChild;
 
@@ -2912,7 +2924,7 @@ goog.dom.DomHelper.prototype.getLastElementChild = goog.dom.getLastElementChild;
 /**
  * Returns the first next sibling that is an element.
  * @param {Node} node The node to get the next sibling element of.
- * @return {Element} The next sibling of {@code node} that is an element.
+ * @return {Element} The next sibling of `node` that is an element.
  */
 goog.dom.DomHelper.prototype.getNextElementSibling =
     goog.dom.getNextElementSibling;
@@ -2921,7 +2933,7 @@ goog.dom.DomHelper.prototype.getNextElementSibling =
 /**
  * Returns the first previous sibling that is an element.
  * @param {Node} node The node to get the previous sibling element of.
- * @return {Element} The first previous sibling of {@code node} that is
+ * @return {Element} The first previous sibling of `node` that is
  *     an element.
  */
 goog.dom.DomHelper.prototype.getPreviousElementSibling =
@@ -2983,7 +2995,7 @@ goog.dom.DomHelper.prototype.getParentElement = goog.dom.getParentElement;
  * Whether a node contains another node.
  * @param {Node} parent The node that should contain the other node.
  * @param {Node} descendant The node to test presence of.
- * @return {boolean} Whether the parent node contains the descendent node.
+ * @return {boolean} Whether the parent node contains the descendant node.
  */
 goog.dom.DomHelper.prototype.contains = goog.dom.contains;
 
@@ -3131,7 +3143,7 @@ goog.dom.DomHelper.prototype.getTextContent = goog.dom.getTextContent;
  * lines are ignored.
  *
  * @param {Node} node The node whose text content length is being calculated.
- * @return {number} The length of {@code node}'s text content.
+ * @return {number} The length of `node`'s text content.
  */
 goog.dom.DomHelper.prototype.getNodeTextLength = goog.dom.getNodeTextLength;
 
@@ -3139,7 +3151,7 @@ goog.dom.DomHelper.prototype.getNodeTextLength = goog.dom.getNodeTextLength;
 /**
  * Returns the text offset of a node relative to one of its ancestors. The text
  * length is the same as the length calculated by
- * {@code goog.dom.getNodeTextLength}.
+ * `goog.dom.getNodeTextLength`.
  *
  * @param {Node} node The node whose offset is being calculated.
  * @param {Node=} opt_offsetParent Defaults to the node's owner document's body.
@@ -3163,7 +3175,7 @@ goog.dom.DomHelper.prototype.getNodeAtOffset = goog.dom.getNodeAtOffset;
 
 
 /**
- * Returns true if the object is a {@code NodeList}.  To qualify as a NodeList,
+ * Returns true if the object is a `NodeList`.  To qualify as a NodeList,
  * the object must have a numeric length property and an item function (which
  * has type 'string' on IE for some reason).
  * @param {Object} val Object to test.

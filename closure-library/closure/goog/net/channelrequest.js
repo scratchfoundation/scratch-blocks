@@ -42,6 +42,12 @@ goog.require('goog.string');
 goog.require('goog.string.Const');
 goog.require('goog.userAgent');
 
+goog.forwardDeclare('goog.Uri');
+goog.forwardDeclare('goog.net.BrowserChannel');
+goog.forwardDeclare('goog.net.BrowserTestChannel');
+goog.forwardDeclare('goog.net.ChannelDebug');
+goog.forwardDeclare('goog.net.XhrIo');
+
 // TODO(nnaze): This file depends on goog.net.BrowserChannel and vice versa (a
 // circular dependency).  Usages of BrowserChannel are marked as
 // "missingRequire" below for now.  This should be fixed through refactoring.
@@ -128,7 +134,7 @@ goog.net.ChannelRequest = function(
 
 /**
  * Extra HTTP headers to add to all the requests sent to the server.
- * @type {Object}
+ * @type {?Object}
  * @private
  */
 goog.net.ChannelRequest.prototype.extraHeaders_ = null;
@@ -202,7 +208,7 @@ goog.net.ChannelRequest.prototype.postData_ = null;
 
 /**
  * The XhrLte request if the request is using XMLHTTP
- * @type {goog.net.XhrIo}
+ * @type {?goog.net.XhrIo}
  * @private
  */
 goog.net.ChannelRequest.prototype.xmlHttp_ = null;
@@ -219,7 +225,7 @@ goog.net.ChannelRequest.prototype.xmlHttpChunkStart_ = 0;
 
 /**
  * The Trident instance if the request is using Trident.
- * @type {Object}
+ * @type {?Object}
  * @private
  */
 goog.net.ChannelRequest.prototype.trident_ = null;
@@ -281,7 +287,7 @@ goog.net.ChannelRequest.prototype.readyStateChangeThrottleMs_ = 0;
 /**
  * The throttle for readystatechange events for the current request, or null
  * if there is none.
- * @type {goog.async.Throttle}
+ * @type {?goog.async.Throttle}
  * @private
  */
 goog.net.ChannelRequest.prototype.readyStateChangeThrottle_ = null;

@@ -50,13 +50,13 @@ goog.dom.TextRangeIterator = function(
     startNode, startOffset, endNode, endOffset, opt_reverse) {
   /**
    * The first node in the selection.
-   * @private {Node}
+   * @private {?Node}
    */
   this.startNode_ = null;
 
   /**
    * The last node in the selection.
-   * @private {Node}
+   * @private {?Node}
    */
   this.endNode_ = null;
 
@@ -215,7 +215,7 @@ goog.dom.TextRangeIterator.prototype.isLastTag_ = function() {
 
 /**
  * Move to the next position in the selection.
- * Throws {@code goog.iter.StopIteration} when it passes the end of the range.
+ * Throws `goog.iter.StopIteration` when it passes the end of the range.
  * @return {Node} The node at the next position.
  * @override
  */
@@ -249,7 +249,10 @@ goog.dom.TextRangeIterator.prototype.skipTag = function() {
 };
 
 
-/** @override */
+/**
+ * @override
+ * @suppress {strictMissingProperties} Part of the go/strict_warnings_migration
+ */
 goog.dom.TextRangeIterator.prototype.copyFrom = function(other) {
   this.startNode_ = other.startNode_;
   this.endNode_ = other.endNode_;
