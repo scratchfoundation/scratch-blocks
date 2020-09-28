@@ -102,7 +102,7 @@ Blockly.ScratchBlockComment = function(block, text, id, x, y, minimized) {
    * @type {string}
    * @package
    */
-  this.id = goog.isString(id) && !this.workspace.getCommentById(id) ?
+  this.id = typeof id === 'string' && !this.workspace.getCommentById(id) ?
       id : Blockly.utils.genUid();
   this.workspace.addTopComment(this);
 

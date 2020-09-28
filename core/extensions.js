@@ -56,7 +56,7 @@ Blockly.Extensions.ALL_ = {};
  *     registered, or extensionFn is not a function.
  */
 Blockly.Extensions.register = function(name, initFn) {
-  if (!goog.isString(name) || goog.string.isEmptyOrWhitespace(name)) {
+  if (typeof name !== 'string' || goog.string.isEmptyOrWhitespace(name)) {
     throw new Error('Error: Invalid extension name "' + name + '"');
   }
   if (Blockly.Extensions.ALL_[name]) {

@@ -302,7 +302,7 @@ Blockly.FieldDropdown.prototype.trimOptions_ = function() {
   this.prefixField = null;
   this.suffixField = null;
   var options = this.menuGenerator_;
-  if (!goog.isArray(options)) {
+  if (!goog.isArrayLike(options)) {
     return;
   }
   var hasImages = false;

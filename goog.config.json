@@ -1,0 +1,34 @@
+{
+  "googEntries": [{
+      "name": "vertical",
+      "moduleMapPath": "shim/vertical.js",
+      "exportModule": "Blockly",
+      "sources": [
+        "shim/vertical.js",
+        "core",
+        "blocks_vertical",
+        "blocks_common",
+        "msg/messages.js",
+        "msg/scratch_msgs.js"
+      ],
+      "excludes": [
+        "core/block_render_svg_horizontal.js"
+      ]
+    }, {
+      "name": "horizontal",
+      "moduleMapPath": "shim/horizontal.js",
+      "exportModule": "Blockly",
+      "sources": [
+        "shim/horizontal.js",
+        "core",
+        "blocks_horizontal",
+        "blocks_common",
+        "msg/messages.js",
+        "msg/scratch_msgs.js"
+      ],
+      "excludes": [
+        "core/block_render_svg_vertical.js"
+      ]
+    }
+  ]
+}

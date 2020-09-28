@@ -433,7 +433,7 @@ Blockly.utils.tokenizeInterpolation = function(message) {
  * @return {!string} String with message references replaced.
  */
 Blockly.utils.replaceMessageReferences = function(message) {
-  if (!goog.isString(message)) {
+  if (typeof message !== 'string') {
     return message;
   }
   var interpolatedResult = Blockly.utils.tokenizeInterpolation_(message, false);
@@ -552,7 +552,7 @@ Blockly.utils.tokenizeInterpolation_ = function(message,
               keyUpper.substring(4) : null;
           if (bklyKey && bklyKey in Blockly.Msg) {
             var rawValue = Blockly.Msg[bklyKey];
-            if (goog.isString(rawValue)) {
+            if (typeof rawValue == 'string') {
               // Attempt to dereference substrings, too, appending to the end.
               Array.prototype.push.apply(tokens,
                   Blockly.utils.tokenizeInterpolation(rawValue));

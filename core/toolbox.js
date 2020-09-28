@@ -782,7 +782,7 @@ Blockly.Toolbox.Category.prototype.getContents = function() {
 Blockly.Toolbox.Category.prototype.setColour = function(node) {
   var colour = node.getAttribute('colour');
   var secondaryColour = node.getAttribute('secondaryColour');
-  if (goog.isString(colour)) {
+  if (typeof colour === 'string') {
     if (colour.match(/^#[0-9a-fA-F]{6}$/)) {
       this.colour_ = colour;
     } else {

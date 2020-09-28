@@ -167,7 +167,7 @@ Blockly.Tooltip.onMouseOver_ = function(e) {
   // If the tooltip is an object, treat it as a pointer to the next object in
   // the chain to look at.  Terminate when a string or function is found.
   var element = e.target;
-  while (!goog.isString(element.tooltip) && !goog.isFunction(element.tooltip)) {
+  while (typeof element.tooltip !== 'string' && !goog.isFunction(element.tooltip)) {
     element = element.tooltip;
   }
   if (Blockly.Tooltip.element_ != element) {
