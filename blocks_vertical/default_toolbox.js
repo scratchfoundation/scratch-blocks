@@ -518,6 +518,127 @@ Blockly.Blocks.defaultToolbox = '<xml id="toolbox-categories" style="display: no
       '</value>' +
     '</block>' +
   '</category>' +
+
+  '<category name="Arduino" colour="#00979C" secondaryColour="#008184">' +
+  '<block type="event_arduinobegin"></block>' +
+  '<block type="arduino_pin_mode">' +
+  '<value name="PINNUM">' +
+  '<shadow type="text">' +
+  '<field name="TEXT">3</field>' +
+  '</shadow>' +
+  '</value>' +
+  '<value name="ARDUINO_PIN_MODE_OPTION">' +
+  '<shadow type="arduino_pin_mode_option"></shadow>' +
+  '</value>' +
+  '</block>' +
+  '<block type="arduino_digital_write">' +
+  '<value name="PINNUM">' +
+  '<shadow type="text">' +
+  '<field name="TEXT">3</field>' +
+  '</shadow>' +
+  '</value>' +
+  '<value name="ARDUINO_LEVEL_OPTION">' +
+  '<shadow type="arduino_level_option"></shadow>' +
+  '</value>' +
+  '</block>' +
+  '<block type="arduino_pwm_write">' +
+  '<value name="ARDUINO_PWM_OPTION">' +
+  '<shadow type="arduino_pwm_option">' +
+  '<field name="ARDUINO_PWM_OPTION">3</field>' +
+  '</shadow>' +
+  '</value>' +
+  '<value name="PWM">' +
+  '<shadow type="math_number">' +
+  '<field name="NUM">100</field>' +
+  '</shadow>' +
+  '</value>' +
+  '</block>' +
+  '<block type="arduino_digital_read">' +
+  '<value name="PINNUM">' +
+  '<shadow type="text">' +
+  '<field name="TEXT">3</field>' +
+  '</shadow>' +
+  '</value>' +
+  '</block>' +
+  '<block type="arduino_analog_read">' +
+  '<value name="PINNUM">' +
+  '<shadow type="text">' +
+  '<field name="TEXT">A3</field>' +
+  '</shadow>' +
+  '</value>' +
+  '</block>' +
+  '<block type="arduino_tone">' +
+  '<value name="PINNUM">' +
+  '<shadow type="text">' +
+  '<field name="TEXT">3</field>' +
+  '</shadow>' +
+  '</value>' +
+  '<value name="FREQUENCY">' +
+  '<shadow type="math_number">' +
+  '<field name="NUM">200</field>' +
+  '</shadow>' +
+  '</value>' +
+  '<value name="DURATION">' +
+  '<shadow type="math_number">' +
+  '<field name="NUM">500</field>' +
+  '</shadow>' +
+  '</value>' +
+  '</block>' +
+  '<block type="arduino_servo">' +
+  '<value name="PINNUM">' +
+  '<shadow type="text">' +
+  '<field name="TEXT">3</field>' +
+  '</shadow>' +
+  '</value>' +
+  '<value name="ANGLE">' +
+  '<shadow type="math_angle">' +
+  '<field name="NUM">90</field>' +
+  '</shadow>' +
+  '</value>' +
+  '</block>' +
+  '<block type="arduino_map">' +
+  '<value name="VAL">' +
+  '<shadow type="math_number">' +
+  '<field name="NUM">512</field>' +
+  '</shadow>' +
+  '</value>' +
+  '<value name="FROMLOW">' +
+  '<shadow type="math_number">' +
+  '<field name="NUM">0</field>' +
+  '</shadow>' +
+  '</value>' +
+  '<value name="FROMHIGH">' +
+  '<shadow type="math_number">' +
+  '<field name="NUM">1024</field>' +
+  '</shadow>' +
+  '</value>' +
+  '<value name="TOLOW">' +
+  '<shadow type="math_number">' +
+  '<field name="NUM">0</field>' +
+  '</shadow>' +
+  '</value>' +
+  '<value name="TOHIGH">' +
+  '<shadow type="math_number">' +
+  '<field name="NUM">255</field>' +
+  '</shadow>' +
+  '</value>' +
+  '</block>' +
+  '<block type="arduino_pulsein">' +
+  '<value name="PINNUM">' +
+  '<shadow type="text">' +
+  '<field name="TEXT">8</field>' +
+  '</shadow>' +
+  '</value>' +
+  '</block>' +
+  '<block type="arduino_println">' +
+  '<value name="TEXT">' +
+  '<shadow type="text">' +
+  '<field name="TEXT">Hello world!</field>' +
+  '</shadow>' +
+  '</value>' +
+  '</block>' +
+  '</category>' +
+
   '<category name="%{BKY_CATEGORY_VARIABLES}" id="data" colour="#FF8C1A" secondaryColour="#DB6E00" custom="VARIABLE">' +
   '</category>' +
   '<category name="%{BKY_CATEGORY_MYBLOCKS}" id="more" colour="#FF6680" secondaryColour="#FF4D6A" custom="PROCEDURE">' +

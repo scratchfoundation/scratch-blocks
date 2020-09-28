@@ -4,6 +4,7 @@
 # NPM
 /node_modules
 npm-*
+/package-lock.json
 
 # Localization / I18N
 common.pyc

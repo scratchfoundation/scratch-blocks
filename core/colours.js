@@ -82,6 +82,11 @@ Blockly.Colours = {
     "secondary": "#FF4D6A",
     "tertiary": "#FF3355"
   },
+  "arduino": {
+    "primary": "#00979C",
+    "secondary": "#008184",
+    "tertiary": "#0CA1A6"
+  },
   "text": "#575E75",
   "workspace": "#F9F9F9",
   "toolboxHover": "#4C97FF",
