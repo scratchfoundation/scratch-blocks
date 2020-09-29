@@ -42,7 +42,7 @@ Blockly.WorkspaceCommentSvg.BORDER_WIDTH = 1;
  * @const
  * @private
  */
-Blockly.WorkspaceCommentSvg.RESIZE_SIZE = 12 * Blockly.WorkspaceCommentSvg.BORDER_WIDTH;
+Blockly.WorkspaceCommentSvg.RESIZE_SIZE = 16;
 
 /**
  * Offset from the foreignobject edge to the textarea edge.
@@ -62,19 +62,33 @@ Blockly.WorkspaceCommentSvg.TOP_BAR_HEIGHT = 32;
  * The size of the minimize arrow icon in the comment top bar.
  * @private
  */
-Blockly.WorkspaceCommentSvg.MINIMIZE_ICON_SIZE = 16;
+Blockly.WorkspaceCommentSvg.MINIMIZE_ICON_SIZE = 32;
 
 /**
  * The size of the delete icon in the comment top bar.
  * @private
  */
-Blockly.WorkspaceCommentSvg.DELETE_ICON_SIZE = 12;
+Blockly.WorkspaceCommentSvg.DELETE_ICON_SIZE = 32;
 
 /**
  * The inset for the top bar icons.
  * @private
  */
-Blockly.WorkspaceCommentSvg.TOP_BAR_ICON_INSET = 6;
+Blockly.WorkspaceCommentSvg.TOP_BAR_ICON_INSET = 0;
+
+/**
+ * The bottom corner padding of the resize handle touch target.
+ * Extends slightly outside the comment box.
+ * @private
+ */
+Blockly.WorkspaceCommentSvg.RESIZE_CORNER_PAD = 4;
+
+/**
+ * The top/side padding around resize handle touch target.
+ * Extends about one extra "diagonal" above resize handle.
+ * @private
+ */
+Blockly.WorkspaceCommentSvg.RESIZE_OUTER_PAD = 8;
 
 /**
  * Width that a minimized comment should have.
@@ -113,7 +127,7 @@ Blockly.WorkspaceCommentSvg.prototype.render = function() {
       {
         'class': 'blocklyDraggable scratchCommentTarget',
         'x': 0,
-        'y': 0,
+        'y': Blockly.WorkspaceCommentSvg.TOP_BAR_HEIGHT,
         'rx': 4 * Blockly.WorkspaceCommentSvg.BORDER_WIDTH,
         'ry': 4 * Blockly.WorkspaceCommentSvg.BORDER_WIDTH
       });
@@ -149,17 +163,17 @@ Blockly.WorkspaceCommentSvg.prototype.render = function() {
   }
 
   Blockly.bindEventWithChecks_(
-      this.minimizeArrow_, 'mousedown', this, this.minimizeArrowMouseDown_);
+      this.minimizeArrow_, 'mousedown', this, this.minimizeArrowMouseDown_, true);
   Blockly.bindEventWithChecks_(
-      this.minimizeArrow_, 'mouseout', this, this.minimizeArrowMouseOut_);
+      this.minimizeArrow_, 'mouseout', this, this.minimizeArrowMouseOut_, true);
   Blockly.bindEventWithChecks_(
-      this.minimizeArrow_, 'mouseup', this, this.minimizeArrowMouseUp_);
+      this.minimizeArrow_, 'mouseup', this, this.minimizeArrowMouseUp_, true);
   Blockly.bindEventWithChecks_(
-      this.deleteIcon_, 'mousedown', this, this.deleteMouseDown_);
+      this.deleteIcon_, 'mousedown', this, this.deleteMouseDown_, true);
   Blockly.bindEventWithChecks_(
-      this.deleteIcon_, 'mouseout', this, this.deleteMouseOut_);
+      this.deleteIcon_, 'mouseout', this, this.deleteMouseOut_, true);
   Blockly.bindEventWithChecks_(
-      this.deleteIcon_, 'mouseup', this, this.deleteMouseUp_);
+      this.deleteIcon_, 'mouseup', this, this.deleteMouseUp_, true);
 };
 
 /**
@@ -183,10 +197,14 @@ Blockly.WorkspaceCommentSvg.prototype.createEditor_ = function() {
   textarea.className = 'scratchCommentTextarea scratchCommentText';
   textarea.setAttribute('dir', this.RTL ? 'RTL' : 'LTR');
   textarea.setAttribute('maxlength', Blockly.WorkspaceComment.COMMENT_TEXT_LIMIT);
+  textarea.setAttribute('placeholder', Blockly.Msg.WORKSPACE_COMMENT_DEFAULT_TEXT);
   body.appendChild(textarea);
   this.textarea_ = textarea;
   this.textarea_.style.margin = (Blockly.WorkspaceCommentSvg.TEXTAREA_OFFSET) + 'px';
   this.foreignObject_.appendChild(body);
+  Blockly.bindEventWithChecks_(textarea, 'mousedown', this, function(e) {
+    e.stopPropagation(); // Propagation causes preventDefault from workspace handler
+  }, true, true);
   // Don't zoom with mousewheel.
   Blockly.bindEventWithChecks_(textarea, 'wheel', this, function(e) {
     e.stopPropagation();
@@ -214,9 +232,18 @@ Blockly.WorkspaceCommentSvg.prototype.addResizeDom_ = function() {
       },
       this.svgGroup_);
   var resizeSize = Blockly.WorkspaceCommentSvg.RESIZE_SIZE;
-  Blockly.utils.createSvgElement(
-      'polygon',
-      {'points': '0,x x,x x,0'.replace(/x/g, resizeSize.toString())},
+  var outerPad = Blockly.ScratchBubble.RESIZE_OUTER_PAD;
+  var cornerPad = Blockly.ScratchBubble.RESIZE_CORNER_PAD;
+  // Build an (invisible) triangle that will catch resizes. It is padded on the
+  // top/left by outerPad, and padded down/right by cornerPad.
+  Blockly.utils.createSvgElement('polygon',
+      {
+        'points': [
+          -outerPad, resizeSize + cornerPad,
+          resizeSize + cornerPad, resizeSize + cornerPad,
+          resizeSize + cornerPad, -outerPad
+        ].join(' ')
+      },
       this.resizeGroup_);
   Blockly.utils.createSvgElement(
       'line',
@@ -564,7 +591,7 @@ Blockly.WorkspaceCommentSvg.prototype.setSize = function(width, height) {
   this.svgRect_.setAttribute('width', width);
   this.svgRect_.setAttribute('height', height);
   this.svgRectTarget_.setAttribute('width', width);
-  this.svgRectTarget_.setAttribute('height', height);
+  this.svgRectTarget_.setAttribute('height', height - Blockly.WorkspaceCommentSvg.TOP_BAR_HEIGHT);
   this.svgHandleTarget_.setAttribute('width', width);
   this.svgHandleTarget_.setAttribute('height', Blockly.WorkspaceCommentSvg.TOP_BAR_HEIGHT);
   if (this.RTL) {
@@ -572,13 +599,14 @@ Blockly.WorkspaceCommentSvg.prototype.setSize = function(width, height) {
         (Blockly.WorkspaceCommentSvg.MINIMIZE_ICON_SIZE) -
         Blockly.WorkspaceCommentSvg.TOP_BAR_ICON_INSET);
     this.deleteIcon_.setAttribute('x', (-width +
-        Blockly.WorkspaceCommentSvg.DELETE_ICON_SIZE -
         Blockly.WorkspaceCommentSvg.TOP_BAR_ICON_INSET));
     this.svgRect_.setAttribute('transform', 'scale(-1 1)');
     this.svgHandleTarget_.setAttribute('transform', 'scale(-1 1)');
     this.svgHandleTarget_.setAttribute('transform', 'translate(' + -width + ', 1)');
     this.minimizeArrow_.setAttribute('transform', 'translate(' + -width + ', 1)');
     this.deleteIcon_.setAttribute('tranform', 'translate(' + -width + ', 1)');
+    this.svgRectTarget_.setAttribute('transform', 'translate(' + -width + ', 1)');
+    this.topBarLabel_.setAttribute('transform', 'translate(' + -width + ', 1)');
   } else {
     this.deleteIcon_.setAttribute('x', width -
         Blockly.WorkspaceCommentSvg.DELETE_ICON_SIZE -
@@ -590,7 +618,8 @@ Blockly.WorkspaceCommentSvg.prototype.setSize = function(width, height) {
     if (this.RTL) {
       // Mirror the resize group.
       this.resizeGroup_.setAttribute('transform', 'translate(' +
-        (-width + resizeSize) + ',' + (height - resizeSize) + ') scale(-1 1)');
+        (-width + doubleBorderWidth + resizeSize) + ',' +
+        (height - doubleBorderWidth - resizeSize) + ') scale(-1 1)');
     } else {
       this.resizeGroup_.setAttribute('transform', 'translate(' +
         (width - doubleBorderWidth - resizeSize) + ',' +
@@ -662,9 +691,9 @@ Blockly.WorkspaceCommentSvg.prototype.disposeInternal_ = function() {
 Blockly.WorkspaceCommentSvg.prototype.setFocus = function() {
   var comment = this;
   this.focused_ = true;
+  comment.textarea_.focus();
   // Defer CSS changes.
   setTimeout(function() {
-    comment.textarea_.focus();
     comment.addFocus();
     Blockly.utils.addClass(
         comment.svgRectTarget_, 'scratchCommentTargetFocused');
@@ -680,15 +709,15 @@ Blockly.WorkspaceCommentSvg.prototype.setFocus = function() {
 Blockly.WorkspaceCommentSvg.prototype.blurFocus = function() {
   var comment = this;
   this.focused_ = false;
+  comment.textarea_.blur();
   // Defer CSS changes.
-  // TODO (github.com/google/blockly/issues/1848): Fix warnings when the comment
-  // has already been deleted.
   setTimeout(function() {
-    comment.textarea_.blur();
-    comment.removeFocus();
-    Blockly.utils.removeClass(
-        comment.svgRectTarget_, 'scratchCommentTargetFocused');
-    Blockly.utils.removeClass(
-        comment.svgHandleTarget_, 'scratchCommentHandleTargetFocused');
+    if (comment.svgGroup_) { // Could have been deleted in the meantime
+      comment.removeFocus();
+      Blockly.utils.removeClass(
+          comment.svgRectTarget_, 'scratchCommentTargetFocused');
+      Blockly.utils.removeClass(
+          comment.svgHandleTarget_, 'scratchCommentHandleTargetFocused');
+    }
   }, 0);
 };

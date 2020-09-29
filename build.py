@@ -51,7 +51,7 @@ CLOSURE_COMPILER = REMOTE_COMPILER
 CLOSURE_DIR_NPM = "node_modules"
 CLOSURE_ROOT_NPM = os.path.join("node_modules")
 CLOSURE_LIBRARY_NPM = "google-closure-library"
-CLOSURE_COMPILER_NPM = "google-closure-compiler"
+CLOSURE_COMPILER_NPM = ("google-closure-compiler.cmd" if os.name == "nt" else "google-closure-compiler")
 
 def import_path(fullpath):
   """Import a file with full path specification.
@@ -294,6 +294,7 @@ class Gen_compressed(threading.Thread):
     # Add Blockly.Colours for use of centralized colour bank
     filenames.append(os.path.join("core", "colours.js"))
     filenames.append(os.path.join("core", "constants.js"))
+
     for filename in filenames:
       # Append filenames as false arguments the step before compiling will
       # either transform them into arguments for local or remote compilation
@@ -353,23 +354,28 @@ class Gen_compressed(threading.Thread):
     # Build the final args array by prepending google-closure-compiler to
     # dash_args and dropping any falsy members
     # Use a flagfile into the closure compiler.To fix the compilation problems due to commands exceeding 8191 characters in Windows Environment.
-    tmp_data = " ".join(dash_args)
-    tmp_data_list = list(tmp_data)
-    n_pos = [i for i, x in enumerate(tmp_data_list) if x == "\\"]
-    for x in range(len(n_pos)):
-      tmp_data_list.insert(n_pos[len(n_pos) - x - 1], "\\")
-    tmp_data="".join(tmp_data_list)
-
-    f_name = target_filename + ".config"
-    temp_f = open(f_name, "w")
-    temp_f.write(tmp_data)
-    temp_f.close()
-
-    args=[closure_compiler, "--flagfile", f_name]
     if(platform.system() == "Windows"):
-      proc = subprocess.Popen(args, stdin=subprocess.PIPE, stdout=subprocess.PIPE, shell=True)
+        tmp_data = " ".join(dash_args)
+        tmp_data_list = list(tmp_data)
+        n_pos = [i for i, x in enumerate(tmp_data_list) if x == "\\"]
+        for x in range(len(n_pos)):
+          tmp_data_list.insert(n_pos[len(n_pos) - x - 1], "\\")
+          tmp_data = "".join(tmp_data_list)
+
+          f_name = target_filename + ".config"
+          temp_f = open(f_name, "w")
+          temp_f.write(tmp_data)
+          temp_f.close()
+
+          args = [closure_compiler, "--flagfile", f_name]
+          proc = subprocess.Popen(args, stdin=subprocess.PIPE, stdout=subprocess.PIPE, shell=True)
     else:
-      proc = subprocess.Popen(args, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
+      args = []
+      for group in [[CLOSURE_COMPILER_NPM], dash_args]:
+        args.extend(filter(lambda item: item, group))
+
+      proc = subprocess.Popen(
+          args, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
     (stdout, stderr) = proc.communicate()
 
     # Build the JSON response.
@@ -620,7 +626,7 @@ if __name__ == "__main__":
     (stdout, _) = test_proc.communicate()
     assert stdout == read(os.path.join("build", "test_expect.js"))
 
-    print("Using local compiler: google-closure-compiler ...\n")
+    print("Using local compiler: %s ...\n" % CLOSURE_COMPILER_NPM)
   except (ImportError, AssertionError):
     print("Using remote compiler: closure-compiler.appspot.com ...\n")
 

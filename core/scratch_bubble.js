@@ -87,17 +87,17 @@ Blockly.ScratchBubble = function(comment, workspace, content, anchorXY,
 
   if (!workspace.options.readOnly) {
     Blockly.bindEventWithChecks_(
-        this.minimizeArrow_, 'mousedown', this, this.minimizeArrowMouseDown_);
+        this.minimizeArrow_, 'mousedown', this, this.minimizeArrowMouseDown_, true);
     Blockly.bindEventWithChecks_(
-        this.minimizeArrow_, 'mouseout', this, this.minimizeArrowMouseOut_);
+        this.minimizeArrow_, 'mouseout', this, this.minimizeArrowMouseOut_, true);
     Blockly.bindEventWithChecks_(
-        this.minimizeArrow_, 'mouseup', this, this.minimizeArrowMouseUp_);
+        this.minimizeArrow_, 'mouseup', this, this.minimizeArrowMouseUp_, true);
     Blockly.bindEventWithChecks_(
-        this.deleteIcon_, 'mousedown', this, this.deleteMouseDown_);
+        this.deleteIcon_, 'mousedown', this, this.deleteMouseDown_, true);
     Blockly.bindEventWithChecks_(
-        this.deleteIcon_, 'mouseout', this, this.deleteMouseOut_);
+        this.deleteIcon_, 'mouseout', this, this.deleteMouseOut_, true);
     Blockly.bindEventWithChecks_(
-        this.deleteIcon_, 'mouseup', this, this.deleteMouseUp_);
+        this.deleteIcon_, 'mouseup', this, this.deleteMouseUp_, true);
     Blockly.bindEventWithChecks_(
         this.commentTopBar_, 'mousedown', this, this.bubbleMouseDown_);
     Blockly.bindEventWithChecks_(
@@ -138,19 +138,40 @@ Blockly.ScratchBubble.TOP_BAR_HEIGHT = 32;
  * The size of the minimize arrow icon in the comment top bar.
  * @private
  */
-Blockly.ScratchBubble.MINIMIZE_ICON_SIZE = 16;
+Blockly.ScratchBubble.MINIMIZE_ICON_SIZE = 32;
 
 /**
  * The size of the delete icon in the comment top bar.
  * @private
  */
-Blockly.ScratchBubble.DELETE_ICON_SIZE = 12;
+Blockly.ScratchBubble.DELETE_ICON_SIZE = 32;
 
 /**
  * The inset for the top bar icons.
  * @private
  */
-Blockly.ScratchBubble.TOP_BAR_ICON_INSET = 6;
+Blockly.ScratchBubble.TOP_BAR_ICON_INSET = 0;
+
+
+/**
+ * The inset for the top bar icons.
+ * @private
+ */
+Blockly.ScratchBubble.RESIZE_SIZE = 16;
+
+/**
+ * The bottom corner padding of the resize handle touch target.
+ * Extends slightly outside the comment box.
+ * @private
+ */
+Blockly.ScratchBubble.RESIZE_CORNER_PAD = 4;
+
+/**
+ * The top/side padding around resize handle touch target.
+ * Extends about one extra "diagonal" above resize handle.
+ * @private
+ */
+Blockly.ScratchBubble.RESIZE_OUTER_PAD = 8;
 
 /**
  * Create the bubble's DOM.
@@ -279,9 +300,19 @@ Blockly.ScratchBubble.prototype.createResizeHandle_ = function() {
       {'class': this.workspace_.RTL ?
                 'scratchCommentResizeSW' : 'scratchCommentResizeSE'},
       this.bubbleGroup_);
-  var resizeSize = 12 * Blockly.ScratchBubble.BORDER_WIDTH;
+  var resizeSize = Blockly.ScratchBubble.RESIZE_SIZE;
+  var outerPad = Blockly.ScratchBubble.RESIZE_OUTER_PAD;
+  var cornerPad = Blockly.ScratchBubble.RESIZE_CORNER_PAD;
+  // Build an (invisible) triangle that will catch resizes. It is padded on the
+  // top/left by outerPad, and padded down/right by cornerPad.
   Blockly.utils.createSvgElement('polygon',
-      {'points': '0,x x,x x,0'.replace(/x/g, resizeSize.toString())},
+      {
+        'points': [
+          -outerPad, resizeSize + cornerPad,
+          resizeSize + cornerPad, resizeSize + cornerPad,
+          resizeSize + cornerPad, -outerPad
+        ].join(' ')
+      },
       this.resizeGroup_);
   Blockly.utils.createSvgElement('line',
       {
@@ -547,7 +578,7 @@ Blockly.ScratchBubble.prototype.setBubbleSize = function(width, height) {
         Blockly.ScratchBubble.TOP_BAR_ICON_INSET);
   }
   if (this.resizeGroup_) {
-    var resizeSize = 12 * Blockly.ScratchBubble.BORDER_WIDTH;
+    var resizeSize = Blockly.ScratchBubble.RESIZE_SIZE;
     if (this.workspace_.RTL) {
       // Mirror the resize group.
       this.resizeGroup_.setAttribute('transform', 'translate(' +

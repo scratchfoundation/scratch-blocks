@@ -695,6 +695,11 @@ Blockly.Css.CONTENT = [
     'overflow: hidden;',
   '}',
 
+  '.scratchCommentTextarea::placeholder {',
+    'color: rgba(0,0,0,0.5);',
+    'font-style: italic;',
+  '}',
+
   '.scratchCommentResizeSE {',
     'cursor: se-resize;',
     'fill: transparent;',

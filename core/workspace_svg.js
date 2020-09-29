@@ -1500,7 +1500,7 @@ Blockly.WorkspaceSvg.prototype.showContextMenu_ = function(e) {
       if (ws.currentGesture_) {
         ws.currentGesture_.cancel();
       }
-      if (deleteList.length < 2 ) {
+      if (deleteCount < 2 ) {
         deleteNext();
       } else {
         Blockly.confirm(
