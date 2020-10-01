@@ -39,7 +39,7 @@ if sys.version_info[0] != 2:
   raise Exception("Blockly build only compatible with Python 2.x.\n"
                   "You are using: " + sys.version)
 
-import errno, glob, httplib, json, os, re, subprocess, threading, urllib
+import errno, glob, httplib, json, os, re, subprocess, threading, urllib, platform
 
 REMOTE_COMPILER = "remote"
 
@@ -324,11 +324,26 @@ class Gen_compressed(threading.Thread):
 
       # Build the final args array by prepending CLOSURE_COMPILER_NPM to
       # dash_args and dropping any falsy members
-      args = []
-      for group in [[CLOSURE_COMPILER_NPM], dash_args]:
-        args.extend(filter(lambda item: item, group))
+      if(platform.system() == "Windows"):
+        arg_data = " ".join(dash_args)
+        arg_data_list = list(arg_data)
+        n_pos = [i for i, x in enumerate(arg_data_list) if x == "\\"]
+        for x in range(len(n_pos)):
+          arg_data_list.insert(n_pos[len(n_pos) - x - 1], "\\")
+        arg_data = "".join(arg_data_list)
 
-      proc = subprocess.Popen(args, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
+        arg_file_name = target_filename + ".config"
+        arg_file = open(arg_file_name, "w")
+        arg_file.write(arg_data)
+        arg_file.close()
+
+        args = [closure_compiler, "--flagfile", arg_file_name]
+        proc = subprocess.Popen(args, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
+      else:
+        args = []
+        for group in [[CLOSURE_COMPILER_NPM], dash_args]:
+          args.extend(filter(lambda item: item, group))
+        proc = subprocess.Popen(args, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
       (stdout, stderr) = proc.communicate()
 
       # Build the JSON response.
