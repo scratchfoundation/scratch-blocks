@@ -4009,7 +4009,7 @@ Blockly.ScratchMsgs.locales["el"] =
     "NEW_PROCEDURE": "Δημιουργία Εντολής",
     "PROCEDURE_ALREADY_EXISTS": "Υπάρχει ήδη μια διαδικασία με όνομα \"%1\".",
     "PROCEDURE_DEFAULT_NAME": "όνομα εντολής",
-    "PROCEDURE_USED": "To delete a block definition, first remove all uses of the block",
+    "PROCEDURE_USED": "Για να διαγράψετε τον ορισμό μιας εντολής, πρώτα αφαιρέστε όλες τις χρήσεις της εντολής",
     "NEW_LIST": "Δημιουργία Λίστας",
     "NEW_LIST_TITLE": "Όνομα νέας λίστας:",
     "LIST_MODAL_TITLE": "Νέα Λίστα",
