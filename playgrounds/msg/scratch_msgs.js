@@ -18072,7 +18072,7 @@ Blockly.ScratchMsgs.locales["zh-cn"] =
     "NEW_PROCEDURE": "制作新的积木",
     "PROCEDURE_ALREADY_EXISTS": "已经存在名为「%1」的程序。",
     "PROCEDURE_DEFAULT_NAME": "积木名称",
-    "PROCEDURE_USED": "To delete a block definition, first remove all uses of the block",
+    "PROCEDURE_USED": "在删除一个积木定义前，请先把该积木从所有使用的地方删除。",
     "NEW_LIST": "建立一个列表",
     "NEW_LIST_TITLE": "新的列表名：",
     "LIST_MODAL_TITLE": "新建列表",
