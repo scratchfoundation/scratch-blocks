@@ -39,7 +39,7 @@
     "google-closure-compiler": "20180402.0.0",
     "google-closure-library": "20190301.0.0",
     "graceful-fs": "4.1.11",
-    "json": "9.0.4",
+    "json": "10.0.0",
     "rimraf": "2.6.2",
     "scratch-l10n": "^3.11.20210127015526",
     "selenium-webdriver": "^4.0.0-alpha.1",
