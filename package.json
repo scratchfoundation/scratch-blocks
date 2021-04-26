@@ -44,7 +44,6 @@
     "scratch-l10n": "^3.11.20210127015526",
     "selenium-webdriver": "^4.0.0-alpha.1",
     "transifex": "1.6.6",
-    "travis-after-all": "1.4.4",
     "uglifyjs-webpack-plugin": "^1.2.5",
     "webpack": "^4.22.0",
     "webpack-cli": "^3.1.1"
