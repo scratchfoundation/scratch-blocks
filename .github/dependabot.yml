@@ -1,0 +1,54 @@
+version: 2
+updates:
+- package-ecosystem: npm
+  directory: "/"
+  schedule:
+    interval: daily
+    time: "10:00"
+  open-pull-requests-limit: 99
+  versioning-strategy: increase-if-necessary
+  ignore:
+  - dependency-name: scratch-l10n
+    versions:
+    - 3.11.20210219031454
+    - 3.11.20210327031512
+    - 3.11.20210419031630
+    - 3.11.20210420031536
+    - 3.11.20210428031542
+  - dependency-name: eslint
+    versions:
+    - 7.18.0
+    - 7.19.0
+    - 7.20.0
+    - 7.21.0
+    - 7.22.0
+    - 7.23.0
+    - 7.24.0
+  - dependency-name: json
+    versions:
+    - 10.0.0
+  - dependency-name: google-closure-library
+    versions:
+    - 20210106.0.0
+    - 20210202.0.0
+    - 20210302.0.0
+  - dependency-name: webpack-cli
+    versions:
+    - 4.4.0
+    - 4.5.0
+  - dependency-name: chromedriver
+    versions:
+    - 88.0.0
+    - 89.0.0
+  - dependency-name: google-closure-compiler
+    versions:
+    - 20210106.0.0
+    - 20210202.0.0
+    - 20210302.0.0
+  - dependency-name: graceful-fs
+    versions:
+    - 4.2.4
+    - 4.2.5
+  - dependency-name: travis-after-all
+    versions:
+    - 1.4.5
