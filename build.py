@@ -226,7 +226,7 @@ class Gen_compressed(threading.Thread):
   def run(self):
     self.gen_core(True)
     self.gen_core(False)
-    self.gen_blocks("horizontal")
+    # self.gen_blocks("horizontal")
     self.gen_blocks("vertical")
     self.gen_blocks("common")
 
@@ -605,7 +605,7 @@ if __name__ == "__main__":
   search_paths = calcdeps.ExpandDirectories(
       ["core", os.path.join(closure_root, closure_library)])
 
-  search_paths_horizontal = filter(exclude_vertical, search_paths)
+  # search_paths_horizontal = filter(exclude_vertical, search_paths)
   search_paths_vertical = filter(exclude_horizontal, search_paths)
 
   closure_env = {
@@ -621,10 +621,10 @@ if __name__ == "__main__":
   # Vertical:
   Gen_uncompressed(search_paths_vertical, True, closure_env).start()
   # Horizontal:
-  Gen_uncompressed(search_paths_horizontal, False, closure_env).start()
+  # Gen_uncompressed(search_paths_horizontal, False, closure_env).start()
 
   # Compressed forms of vertical and horizontal.
-  Gen_compressed(search_paths_vertical, search_paths_horizontal, closure_env).start()
+  # Gen_compressed(search_paths_vertical, search_paths_horizontal, closure_env).start()
 
   # This is run locally in a separate thread.
   # Gen_langfiles().start()
