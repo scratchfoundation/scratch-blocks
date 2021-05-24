@@ -34,7 +34,7 @@
     "copy-webpack-plugin": "4.5.1",
     "eslint": "^4.16",
     "event-stream": "3.3.4",
-    "gh-pages": "0.12.0",
+    "gh-pages": "3.2.0",
     "glob": "7.1.2",
     "google-closure-compiler": "20180402.0.0",
     "google-closure-library": "20190301.0.0",
