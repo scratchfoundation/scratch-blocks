@@ -32,7 +32,7 @@
     "async": "2.6.0",
     "chromedriver": "^81.0.0",
     "copy-webpack-plugin": "4.5.1",
-    "eslint": "^4.16",
+    "eslint": "^7.29",
     "event-stream": "3.3.4",
     "gh-pages": "0.12.0",
     "glob": "7.1.2",
