@@ -2574,7 +2574,7 @@ Blockly.ScratchMsgs.locales["ca"] =
     "NEW_PROCEDURE": "Crea un bloc",
     "PROCEDURE_ALREADY_EXISTS": "Ja existeix un procediment anomenat \"%1\".",
     "PROCEDURE_DEFAULT_NAME": "nom del bloc",
-    "PROCEDURE_USED": "To delete a block definition, first remove all uses of the block",
+    "PROCEDURE_USED": "Per esborrar la definició d'un bloc, primer cal esborrar-lo de tot arreu on es faci servir",
     "NEW_LIST": "Crea una llista",
     "NEW_LIST_TITLE": "Nou nom per a la llista:",
     "LIST_MODAL_TITLE": "Nova Llista",
