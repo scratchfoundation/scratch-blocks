@@ -24,14 +24,23 @@ var testHtml = function (htmlString) {
 
 var path = process.cwd();
 
-browser
-  .get("file://" + path + "/tests/jsunit/vertical_tests.html")
-  .then(function () { return browser.sleep(5000) })
-  .then(function () { return browser.findElement({id: "closureTestRunnerLog"}) })
-  .then(function (e) { return e.getText() })
-  .then(testHtml)
-  .then(function () { return browser.get("file://" + path + "/tests/jsunit/horizontal_tests.html")})
-  .then(function () { return browser.sleep(5000) })
-  .then(function () { return browser.findElement({id: "closureTestRunnerLog"}) })
-  .then(function (e) { return e.getText() })
-  .then(testHtml);
+var runTests = async function () {
+  var element, text;
+
+  await browser.get("file://" + path + "/tests/jsunit/vertical_tests.html");
+  await browser.sleep(5000);
+  element = await browser.findElement({id: "closureTestRunnerLog"});
+  text = await element.getText();
+  testHtml(text);
+
+  await browser.get("file://" + path + "/tests/jsunit/horizontal_tests.html");
+  await browser.sleep(5000);
+  element = await browser.findElement({id: "closureTestRunnerLog"});
+  text = await element.getText();
+  testHtml(text);
+};
+
+runTests().catch(e => {
+    console.error(e);
+    process.exit(1);
+});
