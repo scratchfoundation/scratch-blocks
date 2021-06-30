@@ -25,22 +25,27 @@ var testHtml = function (htmlString) {
 var path = process.cwd();
 
 var runTests = async function () {
-  var element, text;
+  try {
+    var element, text;
 
-  await browser.get("file://" + path + "/tests/jsunit/vertical_tests.html");
-  await browser.sleep(5000);
-  element = await browser.findElement({id: "closureTestRunnerLog"});
-  text = await element.getText();
-  testHtml(text);
+    await browser.get("file://" + path + "/tests/jsunit/vertical_tests.html");
+    await browser.sleep(5000);
+    element = await browser.findElement({id: "closureTestRunnerLog"});
+    text = await element.getText();
+    testHtml(text);
 
-  await browser.get("file://" + path + "/tests/jsunit/horizontal_tests.html");
-  await browser.sleep(5000);
-  element = await browser.findElement({id: "closureTestRunnerLog"});
-  text = await element.getText();
-  testHtml(text);
+    await browser.get("file://" + path + "/tests/jsunit/horizontal_tests.html");
+    await browser.sleep(5000);
+    element = await browser.findElement({id: "closureTestRunnerLog"});
+    text = await element.getText();
+    testHtml(text);
+  }
+  finally {
+    await browser.quit();
+  }
 };
 
 runTests().catch(e => {
-    console.error(e);
-    process.exit(1);
+  console.error(e);
+  process.exit(1);
 });
