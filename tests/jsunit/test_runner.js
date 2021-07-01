@@ -1,8 +1,17 @@
 require('chromedriver');
 var webdriver = require('selenium-webdriver');
-var browser = new webdriver.Builder()
-  .forBrowser('chrome')
-  .build();
+var chrome = require('selenium-webdriver/chrome');
+var builder = new webdriver.Builder().forBrowser('chrome');
+
+if (process.env.CI) {
+  const options = new chrome.Options().headless();
+  if (process.platform === 'linux') {
+    options.addArguments('no-sandbox');
+  }
+  builder.setChromeOptions(options);
+}
+
+var browser = builder.build();
 
 // Parse jsunit html report, exit(1) if there are any failures.
 var testHtml = function (htmlString) {
