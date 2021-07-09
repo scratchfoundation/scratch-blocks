@@ -1,0 +1,20 @@
+{
+  "extends": [
+    "config:base",
+    ":semanticCommits",
+    ":separateMultipleMajor"
+  ],
+  "timezone": "America/New_York",
+
+  // no limit on open Renovate PR count
+  "prConcurrentLimit": 0,
+
+  "packageRules": [
+    // automerge minor & patch updates for most dependencies
+    {
+      "matchCurrentVersion": "!/^0/", // SemVer spec says pre-1.0.0 can make breaking changes at any time
+      "matchUpdateTypes": ["minor", "patch"],
+      "automerge": true
+    }
+  ]
+}
