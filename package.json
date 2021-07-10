@@ -38,7 +38,7 @@
     "gh-pages": "0.12.0",
     "glob": "7.1.7",
     "google-closure-compiler": "20180402.0.0",
-    "graceful-fs": "4.1.11",
+    "graceful-fs": "4.2.6",
     "imports-loader": "0.6.5",
     "json": "9.0.4",
     "rimraf": "2.6.2",
