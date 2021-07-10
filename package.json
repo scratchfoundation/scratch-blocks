@@ -31,7 +31,7 @@
   "devDependencies": {
     "async": "2.6.3",
     "chromedriver": "91.0.1",
-    "copy-webpack-plugin": "4.5.1",
+    "copy-webpack-plugin": "4.6.0",
     "eslint": "4.19.1",
     "event-stream": "3.3.5",
     "exports-loader": "0.6.3",
