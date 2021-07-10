@@ -36,7 +36,7 @@
     "event-stream": "3.3.5",
     "exports-loader": "0.6.3",
     "gh-pages": "0.12.0",
-    "glob": "7.1.2",
+    "glob": "7.1.7",
     "google-closure-compiler": "20180402.0.0",
     "graceful-fs": "4.1.11",
     "imports-loader": "0.6.5",
