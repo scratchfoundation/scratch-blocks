@@ -15,6 +15,11 @@
       "matchCurrentVersion": "!/^0/", // SemVer spec says pre-1.0.0 can make breaking changes at any time
       "matchUpdateTypes": ["minor", "patch"],
       "automerge": true
+    },
+    // Closure compiler & library releases are always "major" so separating them leads to PR SPAM
+    {
+      "matchPackageNames": ["google-closure-compiler", "google-closure-library"],
+      "separateMultipleMajor": false
     }
   ]
 }
