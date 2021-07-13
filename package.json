@@ -25,7 +25,9 @@
     "translate:update": "npm run translate:sync:src && npm run translate:sync:translations"
   },
   "dependencies": {
+    "exports-loader": "0.6.3",
     "google-closure-library": "20190301.0.0",
+    "imports-loader": "0.6.5",
     "scratch-l10n": "3.13.20210713031546"
   },
   "devDependencies": {
@@ -34,12 +36,10 @@
     "copy-webpack-plugin": "4.6.0",
     "eslint": "4.19.1",
     "event-stream": "3.3.5",
-    "exports-loader": "0.6.3",
     "gh-pages": "0.12.0",
     "glob": "7.1.7",
     "google-closure-compiler": "20180402.0.0",
     "graceful-fs": "4.2.6",
-    "imports-loader": "0.6.5",
     "json": "9.0.4",
     "rimraf": "2.7.1",
     "selenium-webdriver": "4.0.0-beta.4",
