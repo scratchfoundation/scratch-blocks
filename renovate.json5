@@ -13,6 +13,14 @@
   // consider using merge confidence instead if/when that's supported: https://docs.renovatebot.com/merge-confidence/
   "stabilityDays": 3,
 
+  // all Renovate PRs should be labeled with "dependencies"
+  "labels": ["dependencies"],
+
+  // if the update corresponds to a GitHub Vulnerability Alert, also label it "security"
+  "vulnerabilityAlerts": {
+    "labels": ["security"]
+  },
+
   "packageRules": [
     // automerge minor & patch updates for most dependencies
     {
