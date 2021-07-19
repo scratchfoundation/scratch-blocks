@@ -7302,7 +7302,7 @@ Blockly.ScratchMsgs.locales["hy"] =
     "MOTION_SETX": "x -ը՝ %1 ",
     "MOTION_CHANGEYBY": "փոխել y -ը %1 -ով",
     "MOTION_SETY": "y -ը՝ %1 ",
-    "MOTION_IFONEDGEBOUNCE": "եթե եզին է, հրվել",
+    "MOTION_IFONEDGEBOUNCE": "եթե եզրին է, հրվել",
     "MOTION_SETROTATIONSTYLE": "պտույտի ձևը՝ %1",
     "MOTION_SETROTATIONSTYLE_LEFTRIGHT": "ձախ-աջ",
     "MOTION_SETROTATIONSTYLE_DONTROTATE": "չպտտել",
