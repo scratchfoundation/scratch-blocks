@@ -1,42 +1,15 @@
 {
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+
   "extends": [
-    "config:base",
-    ":semanticCommits",
-    ":separateMultipleMajorReleases"
+    "github>LLK/scratch-renovate-config"
   ],
-  "timezone": "America/New_York",
-
-  // no limit on open Renovate PR count
-  "prConcurrentLimit": 0,
-
-  // a package can be unpublished for up to 3 days, so wait 3 days before automerging from outside our org
-  // consider using merge confidence instead if/when that's supported: https://docs.renovatebot.com/merge-confidence/
-  "stabilityDays": 3,
-
-  // all Renovate PRs should be labeled with "dependencies"
-  "labels": ["dependencies"],
-
-  // if the update corresponds to a GitHub Vulnerability Alert, also label it "security"
-  "vulnerabilityAlerts": {
-    "labels": ["security"]
-  },
 
   "packageRules": [
-    // automerge minor & patch updates for most dependencies
-    {
-      "matchCurrentVersion": "!/^0/", // SemVer spec says pre-1.0.0 can make breaking changes at any time
-      "matchUpdateTypes": ["minor", "patch"],
-      "automerge": true
-    },
     // Closure compiler & library releases are always "major" so separating them leads to PR SPAM
     {
       "matchPackageNames": ["google-closure-compiler", "google-closure-library"],
       "separateMultipleMajor": false
-    },
-    // Don't enforce stability days on our own packages
-    {
-      "matchSourceUrlPrefixes": ["https://github.com/LLK/"],
-      "stabilityDays": 0
     }
   ]
 }
