@@ -31,7 +31,7 @@
     "scratch-l10n": "3.13.20210720031509"
   },
   "devDependencies": {
-    "async": "2.6.3",
+    "async": "3.2.0",
     "chromedriver": "91.0.1",
     "copy-webpack-plugin": "4.6.0",
     "eslint": "4.19.1",
