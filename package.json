@@ -33,7 +33,7 @@
   "devDependencies": {
     "async": "2.6.3",
     "chromedriver": "91.0.1",
-    "copy-webpack-plugin": "4.6.0",
+    "copy-webpack-plugin": "7.0.0",
     "eslint": "4.19.1",
     "event-stream": "3.3.5",
     "gh-pages": "0.12.0",
