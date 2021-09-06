@@ -19507,7 +19507,7 @@ Blockly.ScratchMsgs.locales["fi"] =
     "NEW_PROCEDURE": "Tee lohko",
     "PROCEDURE_ALREADY_EXISTS": "\"%1\"-niminen aliohjelma on jo käytössä.",
     "PROCEDURE_DEFAULT_NAME": "lohkon nimi",
-    "PROCEDURE_USED": "To delete a block definition, first remove all uses of the block",
+    "PROCEDURE_USED": "Poistaaksesi lohkon määrityksen, poista ensin kaikki missä tätä lohkoa käytetään",
     "NEW_LIST": "Tee lista",
     "NEW_LIST_TITLE": "Uuden listan nimi:",
     "LIST_MODAL_TITLE": "Uusi lista",
