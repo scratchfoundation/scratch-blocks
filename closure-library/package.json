@@ -1,143 +1,30 @@
 {
-  "_args": [
-    [
-      "google-closure-library@20190301.0.0",
-      "/Users/brycet/Documents/scratchRepos/scratch-blocks"
-    ]
-  ],
-  "_from": "google-closure-library@20190301.0.0",
-  "_id": "google-closure-library@20190301.0.0",
-  "_inBundle": false,
-  "_integrity": "sha512-mpeszbnXpRhXZ0sPqUxBgUmk0RtmzrJRy3KFygp0Ih9JuRUjQTCLhwYQeIlK2vB2lShhY/KUo9E1Z1gvxDFxOQ==",
-  "_location": "/google-closure-library",
-  "_phantomChildren": {},
-  "_requested": {
-    "type": "version",
-    "registry": true,
-    "raw": "google-closure-library@20190301.0.0",
-    "name": "google-closure-library",
-    "escapedName": "google-closure-library",
-    "rawSpec": "20190301.0.0",
-    "saveSpec": null,
-    "fetchSpec": "20190301.0.0"
-  },
-  "_requiredBy": [
-    "/"
-  ],
-  "_resolved": "https://registry.npmjs.org/google-closure-library/-/google-closure-library-20190301.0.0.tgz",
-  "_spec": "20190301.0.0",
-  "_where": "/Users/brycet/Documents/scratchRepos/scratch-blocks",
-  "author": {
-    "name": "The Closure Library Authors"
-  },
-  "bugs": {
-    "url": "https://github.com/google/closure-library/issues"
-  },
-  "contributors": [
-    {
-      "name": "Google Inc."
-    },
-    {
-      "name": "gigmade ltd."
-    },
-    {
-      "name": "Mohamed Mansour",
-      "email": "hello@mohamedmansour.com"
-    },
-    {
-      "name": "Bjorn Tipling",
-      "email": "bjorn.tipling@gmail.com"
-    },
-    {
-      "name": "SameGoal LLC",
-      "email": "help@samegoal.com"
-    },
-    {
-      "name": "Guido Tapia",
-      "email": "guido.tapia@gmail.com"
-    },
-    {
-      "name": "Andrew Mattie",
-      "email": "amattie@gmail.com"
-    },
-    {
-      "name": "Ilia Mirkin",
-      "email": "ibmirkin@gmail.com"
-    },
-    {
-      "name": "Ivan Kozik",
-      "email": "ivan.kozik@gmail.com"
-    },
-    {
-      "name": "Rich Dougherty",
-      "email": "rich@rd.gen.nz"
-    },
-    {
-      "name": "Chad Killingsworth",
-      "email": "chadkillingsworth@missouristate.edu"
-    },
-    {
-      "name": "Dan Pupius",
-      "email": "dan.pupius@gmail.com"
-    },
-    {
-      "name": "Mike Dunn",
-      "email": "dunn74@gmail.com"
-    },
-    {
-      "name": "Kengo Toda",
-      "email": "skypencil@gmail.com"
-    },
-    {
-      "name": "Remember The Milk Inc."
-    },
-    {
-      "name": "Anish Visaria",
-      "email": "anishvisaria98@gmail.com"
-    },
-    {
-      "name": "John Huân Vũ",
-      "email": "jvu.calpoly@gmail.com"
-    },
-    {
-      "name": "Peter Lu",
-      "email": "peterlu83+github@gmail.com"
-    },
-    {
-      "name": "Filipe Catraia",
-      "email": "filipe.catraia@deliveryhero.com"
-    },
-    {
-      "name": "Dan Rubalsky",
-      "email": "drubalsky@plentakill.com"
-    },
-    {
-      "name": "Michael Zhou",
-      "email": "zhoumotongxue008@gmail.com"
-    },
-    {
-      "name": "mash",
-      "email": "mashedcode@users.noreply.github.com"
-    }
-  ],
+  "name": "google-closure-library",
   "description": "Google's common JavaScript library",
-  "devDependencies": {
-    "promise": "^7.0.4",
-    "protractor": "^2.1.0"
+  "version": "v20190301.0.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/google/closure-library.git"
   },
-  "homepage": "https://developers.google.com/closure/library/",
+  "main": "closure/goog/bootstrap/nodejs.js",
   "keywords": [
     "javascript",
     "library",
     "goog",
     "closure"
   ],
+  "author": "The Closure Library Authors",
   "license": "Apache-2.0",
-  "main": "closure/goog/bootstrap/nodejs.js",
-  "name": "google-closure-library",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/google/closure-library.git"
+  "bugs": {
+    "url": "https://github.com/google/closure-library/issues"
   },
-  "version": "20190301.0.0"
+  "homepage": "https://developers.google.com/closure/library/",
+  "devDependencies": {
+    "promise": "^7.0.4",
+    "protractor": "^2.1.0"
+  }
+
+,"_resolved": "https://registry.npmjs.org/google-closure-library/-/google-closure-library-20190301.0.0.tgz"
+,"_integrity": "sha512-mpeszbnXpRhXZ0sPqUxBgUmk0RtmzrJRy3KFygp0Ih9JuRUjQTCLhwYQeIlK2vB2lShhY/KUo9E1Z1gvxDFxOQ=="
+,"_from": "google-closure-library@20190301.0.0"
 }

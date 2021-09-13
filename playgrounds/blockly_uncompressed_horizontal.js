@@ -6,7 +6,7 @@ var isNodeJS = !!(typeof module !== 'undefined' && module.exports &&
 
 if (isNodeJS) {
   var window = {};
-  require('closure-library');
+  require('google-closure-library');
 }
 
 window.BLOCKLY_DIR = (function() {
@@ -28,7 +28,7 @@ window.BLOCKLY_DIR = (function() {
 window.BLOCKLY_BOOT = function() {
   var dir = '';
   if (isNodeJS) {
-    require('closure-library');
+    require('google-closure-library');
     dir = 'blockly';
   } else {
     // Execute after Closure has loaded.
@@ -1205,6 +1205,6 @@ if (isNodeJS) {
   document.write('<script>var goog = undefined;</script>');
   // Load fresh Closure Library.
   document.write('<script src="' + window.BLOCKLY_DIR +
-      '/../closure-library/closure/goog/base.js"></script>');
+      '/node_modules/google-closure-library/closure/goog/base.js"></script>');
   document.write('<script>window.BLOCKLY_BOOT();</script>');
 }
