@@ -2300,7 +2300,7 @@ Blockly.ScratchMsgs.locales["bn"] =
     "NEW_BROADCAST_MESSAGE": "নতুন বার্তা",
     "NEW_BROADCAST_MESSAGE_TITLE": "নতুন বার্তার নাম:",
     "BROADCAST_MODAL_TITLE": "নতুন বার্তা",
-    "DEFAULT_BROADCAST_MESSAGE_NAME": "message1"
+    "DEFAULT_BROADCAST_MESSAGE_NAME": "বার্তা1"
 };
 
 Blockly.ScratchMsgs.locales["be"] =
