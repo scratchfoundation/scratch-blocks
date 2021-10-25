@@ -2454,7 +2454,7 @@ Blockly.ScratchMsgs.locales["be"] =
     "OPERATORS_OR": "%1 ці %2",
     "OPERATORS_NOT": "не %1",
     "OPERATORS_JOIN": "аб'яднаць %1 %2",
-    "OPERATORS_JOIN_APPLE": "яблык",
+    "OPERATORS_JOIN_APPLE": "ананас",
     "OPERATORS_JOIN_BANANA": "банан",
     "OPERATORS_LETTEROF": "літара %1 у %2",
     "OPERATORS_LETTEROF_APPLE": "а",
