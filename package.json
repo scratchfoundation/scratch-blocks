@@ -36,7 +36,7 @@
     "copy-webpack-plugin": "4.6.0",
     "eslint": "4.19.1",
     "event-stream": "3.3.5",
-    "gh-pages": "0.12.0",
+    "gh-pages": "3.2.3",
     "glob": "7.2.0",
     "google-closure-compiler": "20180402.0.0",
     "graceful-fs": "4.2.8",
