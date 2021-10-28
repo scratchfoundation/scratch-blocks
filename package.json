@@ -41,7 +41,7 @@
     "google-closure-compiler": "20180402.0.0",
     "graceful-fs": "4.2.8",
     "json": "9.0.4",
-    "rimraf": "2.7.1",
+    "rimraf": "3.0.2",
     "selenium-webdriver": "4.0.0",
     "transifex": "1.6.6",
     "uglifyjs-webpack-plugin": "1.3.0",
