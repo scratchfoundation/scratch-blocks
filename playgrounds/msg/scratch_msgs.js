@@ -18646,7 +18646,7 @@ Blockly.ScratchMsgs.locales["sk"] =
     "NEW_PROCEDURE": "Nový blok",
     "PROCEDURE_ALREADY_EXISTS": "Blok \"%1\" už existuje.",
     "PROCEDURE_DEFAULT_NAME": "meno bloku",
-    "PROCEDURE_USED": "To delete a block definition, first remove all uses of the block",
+    "PROCEDURE_USED": "Ak chceš zmazať defíníciu bloku, musíš najprv zmazať všetky jeho použitia",
     "NEW_LIST": "Nový zoznam",
     "NEW_LIST_TITLE": "Meno nového zoznamu:",
     "LIST_MODAL_TITLE": "Nový zoznam",
