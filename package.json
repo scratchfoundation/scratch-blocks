@@ -28,7 +28,7 @@
     "exports-loader": "0.6.3",
     "google-closure-library": "20190301.0.0",
     "imports-loader": "0.6.5",
-    "scratch-l10n": "3.14.20211110031601"
+    "scratch-l10n": "3.14.20220216031536"
   },
   "devDependencies": {
     "async": "2.6.3",
