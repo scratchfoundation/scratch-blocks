@@ -311,14 +311,14 @@ Blockly.BlockSvg.prototype.updateColour = function() {
   var strokeColour = this.getColourTertiary();
 
   // Render block stroke
-  this.svgPath_.setAttribute('stroke', strokeColour);
+  this.svgPathBody_.setAttribute('stroke', strokeColour);
 
   // Render block fill
   var fillColour = (this.isGlowingBlock_) ? this.getColourSecondary() : this.getColour();
-  this.svgPath_.setAttribute('fill', fillColour);
+  this.svgPathBody_.setAttribute('fill', fillColour);
 
   // Render opacity
-  this.svgPath_.setAttribute('fill-opacity', this.getOpacity());
+  this.svgPathBody_.setAttribute('fill-opacity', this.getOpacity());
 
   // Bump every dropdown to change its colour.
   for (var x = 0, input; input = this.inputList[x]; x++) {
@@ -337,11 +337,11 @@ Blockly.BlockSvg.prototype.highlightForReplacement = function(add) {
   if (add) {
     var replacementGlowFilterId = this.workspace.options.replacementGlowFilterId
       || 'blocklyReplacementGlowFilter';
-    this.svgPath_.setAttribute('filter', 'url(#' + replacementGlowFilterId + ')');
+    this.svgPathBody_.setAttribute('filter', 'url(#' + replacementGlowFilterId + ')');
     Blockly.utils.addClass(/** @type {!Element} */ (this.svgGroup_),
         'blocklyReplaceable');
   } else {
-    this.svgPath_.removeAttribute('filter');
+    this.svgPathBody_.removeAttribute('filter');
     Blockly.utils.removeClass(/** @type {!Element} */ (this.svgGroup_),
         'blocklyReplaceable');
   }
@@ -545,12 +545,12 @@ Blockly.BlockSvg.prototype.renderDraw_ = function(metrics) {
   this.renderDrawTop_(steps, connectionsXY, metrics);
 
   var pathString = steps.join(' ');
-  this.svgPath_.setAttribute('d', pathString);
+  this.svgPathBody_.setAttribute('d', pathString);
 
   if (this.RTL) {
     // Mirror the block's path.
     // This is awesome.
-    this.svgPath_.setAttribute('transform', 'scale(-1 1)');
+    this.svgPathBody_.setAttribute('transform', 'scale(-1 1)');
   }
 
   // Horizontal blocks have a single Image Field that is specially positioned
