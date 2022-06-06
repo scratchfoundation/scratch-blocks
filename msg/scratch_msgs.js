@@ -10046,9 +10046,9 @@ Blockly.ScratchMsgs.locales["it"] =
     "DEFAULT_LIST_ITEM": "cosa",
     "DELETE_LIST": "Cancella la lista \"%1\"",
     "RENAME_LIST": "Rinomina lista",
-    "NEW_BROADCAST_MESSAGE": "Nuovo messaggio",
+    "NEW_BROADCAST_MESSAGE": "Nuovo messaggio...",
     "NEW_BROADCAST_MESSAGE_TITLE": "Nome del nuovo messaggio:",
-    "BROADCAST_MODAL_TITLE": "Nuovo Messaggio",
+    "BROADCAST_MODAL_TITLE": "Nuovo Messaggio...",
     "DEFAULT_BROADCAST_MESSAGE_NAME": "messaggio1"
 };
 
