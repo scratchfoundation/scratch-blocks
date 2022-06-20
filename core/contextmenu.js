@@ -103,9 +103,20 @@ Blockly.ContextMenu.populate_ = function(options, rtl) {
     if (option.enabled) {
       goog.events.listen(
           menuItem, goog.ui.Component.EventType.ACTION, option.callback);
-      menuItem.handleContextMenu = function(/* e */) {
+      menuItem.handleContextMenu = function(e) {
         // Right-clicking on menu option should count as a click.
-        goog.events.dispatchEvent(this, goog.ui.Component.EventType.ACTION);
+        // Call handleMouseUp() so the intended code paths for handling a click
+        // are reached.
+        this.handleMouseUp(e);
+      };
+      menuItem.handleMouseDown = function(e) {
+        // Menu options only respond to left clicking (browser action button).
+        // Override the event to let right clicking work too.
+        e.isMouseActionButton = function() {
+          return this.isButton(goog.events.BrowserEvent.MouseButton.LEFT) ||
+            this.isButton(goog.events.BrowserEvent.MouseButton.RIGHT);
+        };
+        goog.ui.MenuItem.base(this, 'handleMouseDown', e);
       };
     }
   }
@@ -138,6 +149,20 @@ Blockly.ContextMenu.position_ = function(menu, e, rtl) {
   if (rtl) {
     Blockly.utils.uiMenu.adjustBBoxesForRTL(viewportBBox, anchorBBox, menuSize);
   }
+
+  // Closure Library menu code includes a fix for a bug where a menu option
+  // will respond to the event which was responsible for showing the menu in
+  // the first place.  This fix compares the coordinates of the first mouseup
+  // event with those of the event which created it (made the menu visible).
+  // We can only take advantage of the fix if we specifically provide the
+  // mouse event to the menu, even if we don't otherwise have any reason to
+  // call setVisible (as the menu defaults to visible anyway).
+  // See issue #2085.
+  menu.setVisible(
+    true, // this menu is visible (this is the default anyway)
+    true, // "force" the value and don't emit SHOW & AFTER_SHOW events (avoid side effects)
+    e // provide mouse event so menu.openingCoords gets set (used for the Closure Library fix)
+  );
 
   Blockly.WidgetDiv.positionWithAnchor(viewportBBox, anchorBBox, menuSize, rtl);
   // Calling menuDom.focus() has to wait until after the menu has been placed
