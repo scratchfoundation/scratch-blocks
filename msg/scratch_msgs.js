@@ -16757,7 +16757,7 @@ Blockly.ScratchMsgs.locales["pt-br"] =
     "MOTION_MOVESTEPS": "mova %1 passos",
     "MOTION_TURNLEFT": "gire %1 %2 graus",
     "MOTION_TURNRIGHT": "gire %1 %2 graus",
-    "MOTION_POINTINDIRECTION": "aponte  para a direção %1",
+    "MOTION_POINTINDIRECTION": "aponte para a direção %1",
     "MOTION_POINTTOWARDS": "aponte para %1",
     "MOTION_POINTTOWARDS_POINTER": "ponteiro do mouse",
     "MOTION_POINTTOWARDS_RANDOM": "direção aleatória",
