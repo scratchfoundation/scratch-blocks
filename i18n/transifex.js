@@ -28,7 +28,7 @@
   * @param {string} resourceSlug - resource slug (for example,  "blocks")
   * @param {string} localeCode - language code (for example,  "ko")
   * @param {string} mode - translation status of strings to include
-  * @returns {string} - id of the created download event
+  * @returns {Promise<string>} - id of the created download event
   */
  const downloadResource = async function (projectSlug, resourceSlug, localeCode, mode = 'default') {
      const resource = {
@@ -66,7 +66,7 @@
   * @param {string} resource - resource slug (for example,  "blocks")
   * @param {string} locale - language code (for example,  "ko")
   * @param {string} mode - translation status of strings to include
-  * @returns {object} - JSON object of translated resource strings (or, of the original resourse
+  * @returns {Promise<object>} - JSON object of translated resource strings (or, of the original resourse
   * strings, if the local is the source language)
   */
  const txPull = async function (project, resource, locale, mode = 'default') {
