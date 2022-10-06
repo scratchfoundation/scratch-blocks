@@ -3,7 +3,6 @@
 /**
  * @fileoverview
  * Utilities for interfacing with Transifex API 3.
- * TODO: add functions for pushing to Transifex
  */
 
  const transifexApi = require('@transifex/api').transifexApi;
