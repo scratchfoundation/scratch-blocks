@@ -31,11 +31,9 @@
     "scratch-l10n": "3.15.20221024032103"
   },
   "devDependencies": {
-    "@transifex/api": "4.2.5",
     "async": "2.6.4",
     "chromedriver": "105.0.1",
     "copy-webpack-plugin": "4.6.0",
-    "download": "^8.0.0",
     "eslint": "4.19.1",
     "event-stream": "3.3.5",
     "gh-pages": "0.12.0",
