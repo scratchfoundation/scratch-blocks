@@ -24,7 +24,7 @@ const fs = require('fs');
 const path = require('path');
 const assert = require('assert');
 const locales = require('scratch-l10n').default;
-const txPull = require('./transifex.js');
+const {txPull} = require('scratch-l10n/lib/transifex.js');
 
 // Globals
 const PATH_OUTPUT = path.resolve(__dirname, '../msg');
