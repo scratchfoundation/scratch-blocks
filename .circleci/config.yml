@@ -34,7 +34,7 @@ commands:
             - run:
                 name: Deploy to GH Pages
                 command: |
-                  npm run --silent deploy -- -x -r https://${GH_TOKEN}@github.com/${TRAVIS_REPO_SLUG}.git
+                  npm run deploy -- -x -r https://${GH_TOKEN}@github.com/${CIRCLE_PROJECT_REPONAME}.git
   deploy_npm:
     steps:
       - when:
