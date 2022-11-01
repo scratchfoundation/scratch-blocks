@@ -1,0 +1,108 @@
+version: 2.1
+orbs:
+  browser-tools: circleci/browser-tools@1
+  node: circleci/node@5
+aliases:
+  - &defaults
+    executor:
+      name: node/default
+      tag: '16.18-browsers'
+  - &release-branches
+    - master
+    - develop
+    - /^hotfix\//
+commands:
+  install_python2:
+    steps:
+      - run:
+          name: Install Python 2
+          command: |
+            sudo apt-get update
+            sudo apt-get install python2-minimal
+            sudo update-alternatives --install /usr/bin/python python /usr/bin/python2 10
+  test:
+    steps:
+      - run:
+          name: Test
+          # Note that CircleCI runs Xvfb on :99 by default, which doesn't seem to be documented.
+          # If this starts failing, that might no longer be true.
+          # In that case, try: xvfb-run -e /dev/stdout npm test
+          command: DISPLAY=:99 npm test
+  deploy_gh_pages:
+    steps:
+      - when:
+          condition:
+            not:
+              matches: { pattern: "^renovate/.*", value: <<pipeline.git.branch>> }
+          steps:
+            - run:
+                name: Deploy to GH Pages
+                command: |
+                  npm run --silent deploy -- -x -r https://${GH_TOKEN}@github.com/${TRAVIS_REPO_SLUG}.git
+  deploy_npm:
+    steps:
+      - run:
+          name: Deploy to NPM
+          command: |
+            export RELEASE_VERSION="0.1.0-prerelease.$(date +'%Y%m%d%H%M%S')"
+            if [[ "$TRAVIS_BRANCH" == hotfix/* ]]; then # double brackets are important for matching the wildcard
+              export NPM_TAG=hotfix
+            else
+              export NPM_TAG=latest
+            fi
+            echo "Deploying version $RELEASE_VERSION to $NPM_TAG"
+            npm --no-git-tag-version version $RELEASE_VERSION
+            git config --global user.email $(git log --pretty=format:"%ae" -n1)
+            git config --global user.name $(git log --pretty=format:"%an" -n1)
+            npm set //registry.npmjs.org/:_authToken=$NPM_TOKEN
+            npm publish --tag $NPM_TAG
+            if npm info | grep -q $RELEASE_VERSION; then git tag $RELEASE_VERSION && git push https://${GH_TOKEN}@github.com/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}.git $RELEASE_VERSION; fi
+
+jobs:
+  build_no_release:
+    <<: *defaults
+    environment:
+      DETECT_CHROMEDRIVER_VERSION: "true"
+    steps:
+      - checkout
+      - install_python2
+      - browser-tools/install-chrome
+      # - browser-tools/install-chromedriver
+      # - run:
+      #     name: Force system ChromeDriver
+      #     command: |
+      #       # WARNING: this must happen after installing chromedriver and before installing NPM packages
+      #       CHROMEDRIVER_FILEPATH=`which chromedriver`
+      #       echo "ChromeDriver path: $CHROMEDRIVER_FILEPATH"
+      #       echo "CHROMEDRIVER_FILEPATH=$CHROMEDRIVER_FILEPATH" >> $BASH_ENV
+      - node/install-packages
+      - test
+      - run: npm run build
+      - deploy_gh_pages
+  build_and_release:
+    <<: *defaults
+    steps:
+      - checkout
+      - browser-tools/install-chrome
+      - browser-tools/install-chromedriver
+      - install_python2
+      - node/install-packages
+      - test
+      - run: npm run build
+      - deploy_npm
+      - deploy_gh_pages
+workflows:
+  version: 2
+  workflow:
+    jobs:
+      - build_no_release:
+          filters:
+            branches:
+              ignore: *release-branches
+  build_and_release:
+    jobs:
+      - build_and_release:
+          filters:
+            branches:
+              only: *release-branches
+  # TODO: another job to replace i18n/sync_translations.sh
