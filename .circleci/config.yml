@@ -36,7 +36,10 @@ commands:
             - run:
                 name: Deploy to GH Pages
                 command: |
-                  npm run deploy -- -x -r https://${GH_TOKEN}@github.com/${CIRCLE_PROJECT_REPONAME}.git
+                  git config --global user.email $(git log --pretty=format:"%ae" -n1)
+                  git config --global user.name $(git log --pretty=format:"%an" -n1)
+                  npm run deploy -- \
+                    -r https://${GH_TOKEN}@github.com/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}.git
   deploy_npm:
     steps:
       - when:
@@ -48,6 +51,7 @@ commands:
               - matches: { pattern: "^release.*", value: <<pipeline.git.branch>> }
           steps:
             - run:
+                # This relies on deploy_gh_pages to set git user info first
                 name: Deploy to NPM
                 command: |
                   export RELEASE_VERSION="0.1.0-prerelease.$(date +'%Y%m%d%H%M%S')"
@@ -58,8 +62,6 @@ commands:
                   fi
                   echo "Deploying version $RELEASE_VERSION to $NPM_TAG"
                   npm --no-git-tag-version version $RELEASE_VERSION
-                  git config --global user.email $(git log --pretty=format:"%ae" -n1)
-                  git config --global user.name $(git log --pretty=format:"%an" -n1)
                   npm set //registry.npmjs.org/:_authToken=$NPM_TOKEN
                   npm publish --tag $NPM_TAG
                   if npm info | grep -q $RELEASE_VERSION; then
@@ -81,8 +83,8 @@ jobs:
       - browser-tools/install-chrome
       - node/install-packages
       - test
-      - deploy_npm
       - deploy_gh_pages
+      - deploy_npm
 workflows:
   version: 2
   default:
