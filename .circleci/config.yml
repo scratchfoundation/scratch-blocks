@@ -4,9 +4,11 @@ orbs:
   node: circleci/node@5
 aliases:
   - &defaults
-    executor:
-      name: node/default
-      tag: '16.18-browsers'
+      docker:
+        - image: cimg/node:16.18-browsers
+          auth:
+            username: $DOCKERHUB_USERNAME
+            password: $DOCKERHUB_PASSWORD
 commands:
   install_python2:
     steps:
@@ -20,7 +22,7 @@ commands:
     steps:
       - run:
           name: Test
-          # Note that CircleCI runs Xvfb on :99 by default, which doesn't seem to be documented.
+          # The "cimg/node:*-browsers" images run Xvfb on :99 at startup, but that doesn't seem to be documented.
           # If this starts failing, that might no longer be true.
           # In that case, try: xvfb-run -e /dev/stdout npm test
           command: DISPLAY=:99 npm test
@@ -85,5 +87,8 @@ workflows:
   version: 2
   default:
     jobs:
-      - default
+      - default:
+          context:
+            - dockerhub-credentials
+            - scratch-npm-creds
   # TODO: another job to replace i18n/sync_translations.sh
