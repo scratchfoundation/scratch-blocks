@@ -23,19 +23,16 @@ if (!process.env.TX_TOKEN || process.argv.length !== 2) {
 const fs = require('fs');
 const path = require('path');
 const assert = require('assert');
-const transifex = require('transifex');
 const locales = require('scratch-l10n').default;
+const {txPull} = require('scratch-l10n/lib/transifex.js');
 
 // Globals
 const PATH_OUTPUT = path.resolve(__dirname, '../msg');
 const PROJECT = 'scratch-editor'
 const RESOURCE = 'blocks';
-const MODE = {mode: 'reviewed'};
+const MODE = 'reviewed';
 
-const TX = new transifex({
-  project_slug: PROJECT,
-  credential: 'api:' + process.env.TX_TOKEN
-});
+
 
 let en = fs.readFileSync(path.resolve(__dirname, '../msg/json/en.json'));
 en = JSON.parse(en);
@@ -88,20 +85,13 @@ let localeMap = {
   'zh-tw': 'zh_TW'
 };
 
-function getLocaleData (locale) {
-  let txLocale = localeMap[locale] || locale;
-  return new Promise (function (resolve, reject) {
-    TX.translationInstanceMethod(PROJECT, RESOURCE, txLocale, MODE, function (err, data) {
-      if (err) {
-        reject(err);
-      } else {
-        resolve({
-          locale: locale,
-          translations: JSON.parse(data)
-        });
-      }
-    })
-  })
+const getLocaleData = async function (locale) {
+    let txLocale = localeMap[locale] || locale;
+    const data = await txPull(PROJECT, RESOURCE, txLocale, MODE);
+    return {
+        locale: locale,
+        translations: data
+    };
 };
 
 Promise.all(Object.keys(locales).map(getLocaleData)).then(function (values) {
