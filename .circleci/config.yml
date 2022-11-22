@@ -1,0 +1,133 @@
+version: 2.1
+orbs:
+  browser-tools: circleci/browser-tools@1
+  node: circleci/node@5
+aliases:
+  - &defaults
+      docker:
+        - image: cimg/node:16.18-browsers
+          auth:
+            username: $DOCKERHUB_USERNAME
+            password: $DOCKERHUB_PASSWORD
+commands:
+  install_python2:
+    steps:
+      - run:
+          name: Install Python 2
+          command: |
+            sudo apt-get update
+            sudo apt-get install python2-minimal
+            sudo update-alternatives --install /usr/bin/python python /usr/bin/python2 10
+  test:
+    steps:
+      - run:
+          name: Test
+          # The "cimg/node:*-browsers" images run Xvfb on :99 at startup, but that doesn't seem to be documented.
+          # If this starts failing, that might no longer be true.
+          # In that case, try: xvfb-run -e /dev/stdout npm test
+          command: DISPLAY=:99 npm test
+  deploy_gh_pages:
+    steps:
+      - when:
+          condition:
+            not:
+              matches: { pattern: "^renovate/.*", value: <<pipeline.git.branch>> }
+          steps:
+            - run:
+                name: Deploy to GH Pages
+                command: |
+                  git config --global user.email $(git log --pretty=format:"%ae" -n1)
+                  git config --global user.name $(git log --pretty=format:"%an" -n1)
+                  npm run deploy -- \
+                    -r https://${GH_TOKEN}@github.com/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}.git
+  deploy_npm:
+    steps:
+      - when:
+          condition:
+            or:
+              - equal: [ master, <<pipeline.git.branch>> ]
+              - equal: [ develop, <<pipeline.git.branch>> ]
+              - matches: { pattern: "^hotfix.*", value: <<pipeline.git.branch>> }
+              - matches: { pattern: "^release.*", value: <<pipeline.git.branch>> }
+          steps:
+            - run:
+                # This relies on deploy_gh_pages to set git user info first
+                name: Deploy to NPM
+                command: |
+                  export RELEASE_VERSION="0.1.0-prerelease.$(date +'%Y%m%d%H%M%S')"
+                  if [[ "$CIRCLE_BRANCH" == hotfix/* ]]; then
+                    export NPM_TAG=hotfix
+                  else
+                    export NPM_TAG=latest
+                  fi
+                  echo "Deploying version $RELEASE_VERSION to $NPM_TAG"
+                  npm --no-git-tag-version version $RELEASE_VERSION
+                  npm set //registry.npmjs.org/:_authToken=$NPM_TOKEN
+                  npm publish --tag $NPM_TAG
+                  if npm info | grep -q $RELEASE_VERSION; then
+                    git tag $RELEASE_VERSION
+                    git push \
+                      https://${GH_TOKEN}@github.com/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}.git \
+                      $RELEASE_VERSION
+                  fi
+
+jobs:
+  default:
+    <<: *defaults
+    environment:
+      # DETECT_CHROMEDRIVER_VERSION only works if Chrome is installed before installing NPM packages
+      DETECT_CHROMEDRIVER_VERSION: "true"
+    steps:
+      - checkout
+      - install_python2
+      - browser-tools/install-chrome
+      - node/install-packages
+      - test
+      - deploy_gh_pages
+      - deploy_npm
+  sync_translations:
+    <<: *defaults
+    steps:
+      - run:
+          name: Sync Translations
+          command: |
+            echo "Starting translation sync"
+            set -ev
+            git checkout develop
+            # update translations, and test any updated messages
+            npm run translate
+            npm run translate:update
+            npm run test:messages
+            # stage any changes in the msg directory
+            git add ./msg
+            if git diff --cached --exit-code --quiet; then
+              echo "Nothing to commit."
+            else
+              git commit -m 'Update translations from Transifex [skip ci]'
+              # add remote, make sure that API token doesn't end up in the log
+              git remote add origin-translation \
+                https://${GH_TOKEN}@github.com/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}.git \
+                > /dev/null 2>&1
+              git push --set-upstream origin-translation develop
+            fi
+workflows:
+  version: 2
+  default:
+    jobs:
+      - default:
+          context:
+            - dockerhub-credentials
+            - scratch-npm-creds
+  sync_translations:
+    triggers:
+      - schedule:
+          cron: 0 0 * * 1 # weekly on Monday
+          filters:
+            branches:
+              only:
+                - develop
+    jobs:
+      - sync_translations:
+          context:
+            - dockerhub-credentials
+            - scratch-npm-creds
