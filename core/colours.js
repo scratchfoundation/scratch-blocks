@@ -82,8 +82,7 @@ Blockly.Colours = {
     "secondary": "#FF4D6A",
     "tertiary": "#FF3355"
   },
-  "text": "#575E75",
-  "blockText": "#FFFFFF",
+  "text": "#FFFFFF",
   "workspace": "#F9F9F9",
   "toolboxHover": "#4C97FF",
   "toolboxSelected": "#e9eef2",
@@ -93,6 +92,7 @@ Blockly.Colours = {
   "scrollbar": "#CECDCE",
   "scrollbarHover": '#CECDCE',
   "textField": "#FFFFFF",
+  "textFieldText": "#575E75",
   "insertionMarker": "#000000",
   "insertionMarkerOpacity": 0.2,
   "dragShadowOpacity": 0.3,
