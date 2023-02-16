@@ -30,8 +30,9 @@ commands:
     steps:
       - when:
           condition:
-            not:
-              matches: { pattern: "^renovate/.*", value: <<pipeline.git.branch>> }
+            or:
+              - equal: [ master, <<pipeline.git.branch>> ]
+              - equal: [ develop, <<pipeline.git.branch>> ]
           steps:
             - run:
                 name: Deploy to GH Pages
