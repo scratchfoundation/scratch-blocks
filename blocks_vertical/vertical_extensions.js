@@ -35,25 +35,26 @@ goog.require('Blockly.constants');
 
 /**
  * Helper function that generates an extension based on a category name.
- * The generated function will set primary, secondary, and tertiary colours
- * based on the category name.
+ * The generated function will set primary, secondary, tertiary, and quaternary
+ * colours based on the category name.
  * @param {String} category The name of the category to set colours for.
  * @return {function} An extension function that sets colours based on the given
  *     category.
  */
 Blockly.ScratchBlocks.VerticalExtensions.colourHelper = function(category) {
   var colours = Blockly.Colours[category];
-  if (!(colours && colours.primary && colours.secondary && colours.tertiary)) {
+  if (!(colours && colours.primary && colours.secondary && colours.tertiary &&
+    colours.quaternary)) {
     throw new Error('Could not find colours for category "' + category + '"');
   }
   /**
-   * Set the primary, secondary, and tertiary colours on this block for the
-   * given category.
+   * Set the primary, secondary, tertiary, and quaternary colours on this block for
+   * the given category.
    * @this {Blockly.Block}
    */
   return function() {
     this.setColourFromRawValues_(colours.primary, colours.secondary,
-        colours.tertiary);
+        colours.tertiary, colours.quaternary);
   };
 };
 

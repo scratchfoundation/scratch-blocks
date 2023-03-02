@@ -239,6 +239,13 @@ Blockly.Block.prototype.colourSecondary_ = '#FF0000';
 Blockly.Block.prototype.colourTertiary_ = '#FF0000';
 
 /**
+ * Quaternary colour of the block in '#RRGGBB' format.
+ * @type {string}
+ * @private
+ */
+Blockly.Block.prototype.colourQuaternary = '#FF0000';
+
+/**
  * Fill colour used to override default shadow colour behaviour.
  * @type {string}
  * @private
@@ -799,6 +806,14 @@ Blockly.Block.prototype.getColourTertiary = function() {
 };
 
 /**
+ * Get the quaternary colour of a block.
+ * @return {string} #RRGGBB string.
+ */
+Blockly.Block.prototype.getColourQuaternary = function() {
+  return this.colourQuaternary_;
+};
+
+/**
  * Get the shadow colour of a block.
  * @return {string} #RRGGBB string.
  */
@@ -849,8 +864,10 @@ Blockly.Block.prototype.makeColour_ = function(colour) {
  * @param {number|string} colour HSV hue value, or #RRGGBB string.
  * @param {number|string} colourSecondary HSV hue value, or #RRGGBB string.
  * @param {number|string} colourTertiary HSV hue value, or #RRGGBB string.
+ * @param {number|string} colourQuaternary HSV hue value, or #RRGGBB string.
  */
-Blockly.Block.prototype.setColour = function(colour, colourSecondary, colourTertiary) {
+Blockly.Block.prototype.setColour = function(colour, colourSecondary, colourTertiary,
+    colourQuaternary) {
   this.colour_ = this.makeColour_(colour);
   if (colourSecondary !== undefined) {
     this.colourSecondary_ = this.makeColour_(colourSecondary);
@@ -863,6 +880,11 @@ Blockly.Block.prototype.setColour = function(colour, colourSecondary, colourTert
   } else {
     this.colourTertiary_ = goog.color.rgbArrayToHex(
         goog.color.darken(goog.color.hexToRgb(this.colour_), 0.2));
+  }
+  if (colourQuaternary !== undefined) {
+    this.colourQuaternary_ = this.makeColour_(colourQuaternary);
+  } else {
+    this.colourQuaternary_ = this.colourTertiary_;
   }
   if (this.rendered) {
     this.updateColour();
@@ -1364,18 +1386,22 @@ Blockly.Block.prototype.mixin = function(mixinObj, opt_disableCheck) {
  *     contains string table references.
  * @param {string|?} tertiary Tertiary colour, which may be a string that
  *     contains string table references.
+ * @param {string|?} quaternary Quaternary colour, which may be a string that
+ *     contains string table references.
  * @private
  */
 Blockly.Block.prototype.setColourFromRawValues_ = function(primary, secondary,
-    tertiary) {
+    tertiary, quaternary) {
   primary = goog.isString(primary) ?
       Blockly.utils.replaceMessageReferences(primary) : primary;
   secondary = goog.isString(secondary) ?
       Blockly.utils.replaceMessageReferences(secondary) : secondary;
   tertiary = goog.isString(tertiary) ?
       Blockly.utils.replaceMessageReferences(tertiary) : tertiary;
+  quaternary = goog.isString(quaternary) ?
+      Blockly.utils.replaceMessageReferences(quaternary) : quaternary;
 
-  this.setColour(primary, secondary, tertiary);
+  this.setColour(primary, secondary, tertiary, quaternary);
 };
 
 /**
@@ -1386,7 +1412,7 @@ Blockly.Block.prototype.setColourFromRawValues_ = function(primary, secondary,
  */
 Blockly.Block.prototype.setColourFromJson_ = function(json) {
   this.setColourFromRawValues_(json['colour'], json['colourSecondary'],
-      json['colourTertiary']);
+      json['colourTertiary'], json['colourQuaternary']);
 };
 
 /**

@@ -1169,7 +1169,7 @@ Blockly.Css.CONTENT = [
 
   '.blocklyDropDownDiv .goog-menuitem-highlight,',
   '.blocklyDropDownDiv .goog-menuitem-hover {',
-    'background-color: rgba(0, 0, 0, 0.2);',
+    'background-color: $colour_menuHover;',
   '}',
 
   /* State: selected/checked. */
