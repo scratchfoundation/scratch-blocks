@@ -61,7 +61,8 @@ Blockly.Blocks['dropdown_wedo_setcolor'] = {
     this.setOutput(true);
     this.setColour(Blockly.Colours.looks.primary,
         Blockly.Colours.looks.secondary,
-        Blockly.Colours.looks.tertiary
+        Blockly.Colours.looks.tertiary,
+        Blockly.Colours.looks.quaternary
     );
   }
 };
@@ -94,7 +95,8 @@ Blockly.Blocks['wedo_setcolor'] = {
       "category": Blockly.Categories.looks,
       "colour": Blockly.Colours.looks.primary,
       "colourSecondary": Blockly.Colours.looks.secondary,
-      "colourTertiary": Blockly.Colours.looks.tertiary
+      "colourTertiary": Blockly.Colours.looks.tertiary,
+      "colourQuaternary": Blockly.Colours.looks.quaternary
     });
   }
 };
@@ -128,7 +130,8 @@ Blockly.Blocks['wedo_motorclockwise'] = {
       "category": Blockly.Categories.motion,
       "colour": Blockly.Colours.motion.primary,
       "colourSecondary": Blockly.Colours.motion.secondary,
-      "colourTertiary": Blockly.Colours.motion.tertiary
+      "colourTertiary": Blockly.Colours.motion.tertiary,
+      "colourQuaternary": Blockly.Colours.motion.quaternary
     });
   }
 };
@@ -162,7 +165,8 @@ Blockly.Blocks['wedo_motorcounterclockwise'] = {
       "category": Blockly.Categories.motion,
       "colour": Blockly.Colours.motion.primary,
       "colourSecondary": Blockly.Colours.motion.secondary,
-      "colourTertiary": Blockly.Colours.motion.tertiary
+      "colourTertiary": Blockly.Colours.motion.tertiary,
+      "colourQuaternary": Blockly.Colours.motion.quaternary
     });
   }
 };
@@ -186,7 +190,8 @@ Blockly.Blocks['dropdown_wedo_motorspeed'] = {
     this.setOutput(true);
     this.setColour(Blockly.Colours.motion.primary,
         Blockly.Colours.motion.secondary,
-        Blockly.Colours.motion.tertiary
+        Blockly.Colours.motion.tertiary,
+        Blockly.Colours.motion.quaternary
     );
   }
 };
@@ -219,7 +224,8 @@ Blockly.Blocks['wedo_motorspeed'] = {
       "category": Blockly.Categories.motion,
       "colour": Blockly.Colours.motion.primary,
       "colourSecondary": Blockly.Colours.motion.secondary,
-      "colourTertiary": Blockly.Colours.motion.tertiary
+      "colourTertiary": Blockly.Colours.motion.tertiary,
+      "colourQuaternary": Blockly.Colours.motion.quaternary
     });
   }
 };
@@ -250,7 +256,8 @@ Blockly.Blocks['dropdown_wedo_whentilt'] = {
     this.setOutput(true);
     this.setColour(Blockly.Colours.event.primary,
         Blockly.Colours.event.secondary,
-        Blockly.Colours.event.tertiary
+        Blockly.Colours.event.tertiary,
+        Blockly.Colours.event.quaternary
     );
   }
 };
@@ -282,7 +289,8 @@ Blockly.Blocks['wedo_whentilt'] = {
       "category": Blockly.Categories.event,
       "colour": Blockly.Colours.event.primary,
       "colourSecondary": Blockly.Colours.event.secondary,
-      "colourTertiary": Blockly.Colours.event.tertiary
+      "colourTertiary": Blockly.Colours.event.tertiary,
+      "colourQuaternary": Blockly.Colours.event.quaternary
     });
   }
 };
@@ -310,7 +318,8 @@ Blockly.Blocks['wedo_whendistanceclose'] = {
       "category": Blockly.Categories.event,
       "colour": Blockly.Colours.event.primary,
       "colourSecondary": Blockly.Colours.event.secondary,
-      "colourTertiary": Blockly.Colours.event.tertiary
+      "colourTertiary": Blockly.Colours.event.tertiary,
+      "colourQuaternary": Blockly.Colours.event.quaternary
     });
   }
 };
