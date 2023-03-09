@@ -63,7 +63,8 @@ Blockly.ScratchBlocks.VerticalExtensions.colourHelper = function(category) {
  */
 Blockly.ScratchBlocks.VerticalExtensions.COLOUR_TEXTFIELD = function() {
   this.setColourFromRawValues_(Blockly.Colours.textField,
-      Blockly.Colours.textField, Blockly.Colours.textField);
+      Blockly.Colours.textField, Blockly.Colours.textField,
+      Blockly.Colours.textField);
 };
 
 /**
