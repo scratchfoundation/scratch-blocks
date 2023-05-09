@@ -76,9 +76,9 @@ Blockly.Css.mediaPath_ = '';
  * @param {string} pathToMedia Path from page to the Blockly media directory.
  */
 Blockly.Css.inject = function(hasCss, pathToMedia) {
-  // Only inject the CSS once.
+  // Clear the CSS if it has already been injected.
   if (Blockly.Css.styleSheet_) {
-    return;
+    document.head.removeChild(Blockly.Css.styleSheet_.ownerNode);
   }
   // Placeholder for cursor rule.  Must be first rule (index 0).
   var text = '.blocklyDraggable {}\n';
@@ -93,14 +93,15 @@ Blockly.Css.inject = function(hasCss, pathToMedia) {
   text = text.replace(/<<<PATH>>>/g, Blockly.Css.mediaPath_);
   // Dynamically replace colours in the CSS text, in case they have
   // been set at run-time injection.
-  for (var colourProperty in Blockly.Colours) {
-    if (Blockly.Colours.hasOwnProperty(colourProperty)) {
-      // Replace all
-      text = text.replace(
-        new RegExp('\\$colour\\_' + colourProperty, 'g'),
-        Blockly.Colours[colourProperty]
-      );
-    }
+  // Process longer colour properties first to handle common prefixes.
+  var compareByLength = function(a, b) { return b.length - a.length; };
+  var colourProperties = Object.keys(Blockly.Colours).sort(compareByLength);
+  for (var i = 0, colourProperty; colourProperty = colourProperties[i]; i++) {
+    // Replace all
+    text = text.replace(
+      new RegExp('\\$colour\\_' + colourProperty, 'g'),
+      Blockly.Colours[colourProperty]
+    );
   }
 
   // Inject CSS tag at start of head.
@@ -459,7 +460,7 @@ Blockly.Css.CONTENT = [
   '}',
 
   '.blocklyText {',
-    'fill: #fff;',
+    'fill: $colour_text;',
     'font-family: "Helvetica Neue", Helvetica, sans-serif;',
     'font-size: 12pt;',
     'font-weight: 500;',
@@ -474,7 +475,7 @@ Blockly.Css.CONTENT = [
   '}',
   '.blocklyNonEditableText>text,',
   '.blocklyEditableText>text {',
-    'fill: $colour_text;',
+    'fill: $colour_textFieldText;',
   '}',
 
   '.blocklyEditableText>.blocklyEditableLabel {',
@@ -482,11 +483,11 @@ Blockly.Css.CONTENT = [
   '}',
 
   '.blocklyDropdownText {',
-    'fill: #fff !important;',
+    'fill: $colour_text !important;',
   '}',
 
   '.blocklyBubbleText {',
-    'fill: $colour_text;',
+    'fill: $colour_textFieldText;',
   '}',
   '.blocklyFlyout {',
     'position: absolute;',
@@ -502,7 +503,7 @@ Blockly.Css.CONTENT = [
   '}',
 
   '.blocklyFlyoutButton .blocklyText {',
-    'fill: $colour_text;',
+    'fill: $colour_textFieldText;',
   '}',
 
   '.blocklyFlyoutButtonShadow {',
@@ -720,7 +721,7 @@ Blockly.Css.CONTENT = [
     'box-sizing: border-box;',
     'width: 100%;',
     'text-align: center;',
-    'color: $colour_text;',
+    'color: $colour_textFieldText;',
     'font-weight: 500;',
   '}',
 
@@ -1014,7 +1015,7 @@ Blockly.Css.CONTENT = [
   '.scratchNotePickerKeyLabel {',
     'font-family: "Helvetica Neue", Helvetica, sans-serif;',
     'font-size: 0.75rem;',
-    'fill: $colour_text;',
+    'fill: $colour_textFieldText;',
     'pointer-events: none;',
   '}',
 
@@ -1095,7 +1096,7 @@ Blockly.Css.CONTENT = [
   '}',
 
   '.blocklyDropDownDiv .goog-menuitem {',
-    'color: #fff;',
+    'color: $colour_text;',
     'font: normal 13px "Helvetica Neue", Helvetica, sans-serif;',
     'font-weight: bold;',
     'list-style: none;',
@@ -1168,7 +1169,7 @@ Blockly.Css.CONTENT = [
 
   '.blocklyDropDownDiv .goog-menuitem-highlight,',
   '.blocklyDropDownDiv .goog-menuitem-hover {',
-    'background-color: rgba(0, 0, 0, 0.2);',
+    'background-color: $colour_menuHover;',
   '}',
 
   /* State: selected/checked. */

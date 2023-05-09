@@ -250,9 +250,9 @@ Blockly.FieldDropdown.prototype.showEditor_ = function() {
   // Update colour to look selected.
   if (!this.disableColourChange_) {
     if (this.sourceBlock_.isShadow()) {
-      this.sourceBlock_.setShadowColour(this.sourceBlock_.getColourTertiary());
+      this.sourceBlock_.setShadowColour(this.sourceBlock_.getColourQuaternary());
     } else if (this.box_) {
-      this.box_.setAttribute('fill', this.sourceBlock_.getColourTertiary());
+      this.box_.setAttribute('fill', this.sourceBlock_.getColourQuaternary());
     }
   }
 };

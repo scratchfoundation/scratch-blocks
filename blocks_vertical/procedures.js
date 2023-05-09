@@ -943,6 +943,7 @@ Blockly.Blocks['argument_editor_boolean'] = {
       "colour": Blockly.Colours.textField,
       "colourSecondary": Blockly.Colours.textField,
       "colourTertiary": Blockly.Colours.textField,
+      "colourQuaternary": Blockly.Colours.textField,
       "extensions": ["output_boolean"]
     });
   },
@@ -963,6 +964,7 @@ Blockly.Blocks['argument_editor_string_number'] = {
       "colour": Blockly.Colours.textField,
       "colourSecondary": Blockly.Colours.textField,
       "colourTertiary": Blockly.Colours.textField,
+      "colourQuaternary": Blockly.Colours.textField,
       "extensions": ["output_number", "output_string"]
     });
   },
