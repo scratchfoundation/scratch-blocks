@@ -48,6 +48,7 @@ commands:
             or:
               - equal: [ master, <<pipeline.git.branch>> ]
               - equal: [ develop, <<pipeline.git.branch>> ]
+              - equal: [ beta, <<pipeline.git.branch>> ]
               - matches: { pattern: "^hotfix.*", value: <<pipeline.git.branch>> }
               - matches: { pattern: "^release.*", value: <<pipeline.git.branch>> }
           steps:
@@ -55,9 +56,11 @@ commands:
                 # This relies on deploy_gh_pages to set git user info first
                 name: Deploy to NPM
                 command: |
-                  export RELEASE_VERSION="0.1.0-prerelease.$(date +'%Y%m%d%H%M%S')"
+                  export RELEASE_VERSION="0.2.0-prerelease.$(date +'%Y%m%d%H%M%S')"
                   if [[ "$CIRCLE_BRANCH" == hotfix/* ]]; then
                     export NPM_TAG=hotfix
+                  elif [[ "$CIRCLE_BRANCH" == beta ]]; then
+                    export NPM_TAG=beta
                   else
                     export NPM_TAG=latest
                   fi
