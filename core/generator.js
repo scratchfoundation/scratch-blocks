@@ -186,7 +186,7 @@ Blockly.Generator.prototype.blockToCode = function(block) {
     goog.asserts.assert(block.outputConnection,
         'Expecting string from statement block "%s".', block.type);
     return [this.scrub_(block, code[0]), code[1]];
-  } else if (goog.isString(code)) {
+  } else if (typeof code == 'string') {
     var id = block.id.replace(/\$/g, '$$$$');  // Issue 251.
     if (this.STATEMENT_PREFIX) {
       code = this.STATEMENT_PREFIX.replace(/%1/g, '\'' + id + '\'') +
