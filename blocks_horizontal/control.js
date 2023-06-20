@@ -65,7 +65,8 @@ Blockly.Blocks['control_repeat'] = {
       "category": Blockly.Categories.control,
       "colour": Blockly.Colours.control.primary,
       "colourSecondary": Blockly.Colours.control.secondary,
-      "colourTertiary": Blockly.Colours.control.tertiary
+      "colourTertiary": Blockly.Colours.control.tertiary,
+      "colourQuaternary": Blockly.Colours.control.quaternary
     });
   }
 };
@@ -99,7 +100,8 @@ Blockly.Blocks['control_forever'] = {
       "category": Blockly.Categories.control,
       "colour": Blockly.Colours.control.primary,
       "colourSecondary": Blockly.Colours.control.secondary,
-      "colourTertiary": Blockly.Colours.control.tertiary
+      "colourTertiary": Blockly.Colours.control.tertiary,
+      "colourQuaternary": Blockly.Colours.control.quaternary
     });
   }
 };
@@ -139,7 +141,8 @@ Blockly.Blocks['control_repeat'] = {
       "category": Blockly.Categories.control,
       "colour": Blockly.Colours.control.primary,
       "colourSecondary": Blockly.Colours.control.secondary,
-      "colourTertiary": Blockly.Colours.control.tertiary
+      "colourTertiary": Blockly.Colours.control.tertiary,
+      "colourQuaternary": Blockly.Colours.control.quaternary
     });
   }
 };
@@ -167,7 +170,8 @@ Blockly.Blocks['control_stop'] = {
       "category": Blockly.Categories.control,
       "colour": Blockly.Colours.control.primary,
       "colourSecondary": Blockly.Colours.control.secondary,
-      "colourTertiary": Blockly.Colours.control.tertiary
+      "colourTertiary": Blockly.Colours.control.tertiary,
+      "colourQuaternary": Blockly.Colours.control.quaternary
     });
   }
 };
@@ -201,7 +205,8 @@ Blockly.Blocks['control_wait'] = {
       "category": Blockly.Categories.control,
       "colour": Blockly.Colours.control.primary,
       "colourSecondary": Blockly.Colours.control.secondary,
-      "colourTertiary": Blockly.Colours.control.tertiary
+      "colourTertiary": Blockly.Colours.control.tertiary,
+      "colourQuaternary": Blockly.Colours.control.quaternary
     });
   }
 };
