@@ -112,9 +112,10 @@ Blockly.FieldColourSlider.prototype.setValue = function(colour) {
   }
   this.colour_ = colour;
   if (this.sourceBlock_) {
-    // Set the primary, secondary and tertiary colour to this value.
+    // Set the colours to this value.
     // The renderer expects to be able to use the secondary colour as the fill for a shadow.
-    this.sourceBlock_.setColour(colour, colour, this.sourceBlock_.getColourTertiary());
+    this.sourceBlock_.setColour(colour, colour, this.sourceBlock_.getColourTertiary(),
+        this.sourceBlock_.getColourQuaternary());
   }
   this.updateSliderHandles_();
   this.updateDom_();

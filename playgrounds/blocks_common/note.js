@@ -51,7 +51,8 @@ Blockly.Blocks['note'] = {
       "output": "Number",
       "colour": Blockly.Colours.textField,
       "colourSecondary": Blockly.Colours.textField,
-      "colourTertiary": Blockly.Colours.textField
+      "colourTertiary": Blockly.Colours.textField,
+      "colourQuaternary": Blockly.Colours.textField
     });
   }
 };
