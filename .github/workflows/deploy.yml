@@ -1,0 +1,16 @@
+name: build-scratch-blocks
+on: 
+    push:
+jobs:
+    setup:
+      runs-on: ubuntu-20.04
+      container:
+        image: python:2.7.18-buster 
+      steps:
+        - uses: actions/checkout@v3
+        - name: Setup Node
+          uses: actions/setup-node@v2
+          with:
+            node-version: 16 
+        - name: Install Node Dependencies
+          run: node -v 
