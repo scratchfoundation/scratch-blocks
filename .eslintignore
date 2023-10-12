@@ -14,3 +14,5 @@
 /gh-pages/*
 /webpack.config.js
 /build/*
+
+/github-pages/*

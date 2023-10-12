@@ -1,16 +1,46 @@
 name: build-scratch-blocks
 on: 
     push:
+permissions: write-all
+
 jobs:
     setup:
-      runs-on: ubuntu-20.04
+      runs-on: ubuntu-latest
+      env:
+        JVM_OPTS: -Xmx3200m
+        DETECT_CHROMEDRIVER_VERSION: "true"
+        PROJECT_PATH: ./scratch-blocks
       container:
         image: python:2.7.18-buster 
+        options: --user root
       steps:
         - uses: actions/checkout@v3
-        - name: Setup Node
-          uses: actions/setup-node@v2
+        - name: Install Chrome Dependencies
+          run: |
+            apt-get update
+            apt-get install -y libgconf-2-4 libatk1.0-0 libatk-bridge2.0-0 libgdk-pixbuf2.0-0 libgtk-3-0 libgbm-dev libnss3-dev libxss-dev libasound2
+        - name: Check Python version
+          run: python --version 
+        - name: Setup Java
+          uses: actions/setup-java@v3
           with:
-            node-version: 16 
+            distribution: 'temurin'
+            java-version: 17
+        - name: Setup Node
+          uses: actions/setup-node@v3
+          with:
+            node-version-file: '.nvmrc'
+        # - name: Setup Chrome
+        #   uses: browser-actions/setup-chrome@v1
+        #   with:
+        #     chrome-version: latest
         - name: Install Node Dependencies
-          run: node -v 
+          run: npm ci
+        - name: Lint
+          run: npm run test:lint
+        - name: Whats In Here
+          run: ls -la
+        - name: MSG
+          run: cd msg && ls -la
+        - name: Run Tests
+          run: npm test

@@ -7,6 +7,8 @@ var CopyWebpackPlugin = require('copy-webpack-plugin');
 var path = require('path');
 var UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
+
+
 module.exports = [{
   mode: process.env.NODE_ENV === 'production' ? 'production' : 'development',
   entry: {
@@ -53,7 +55,7 @@ module.exports = [{
   entry: './shim/gh-pages.js',
   output: {
     filename: '[name].js',
-    path: path.resolve(__dirname, 'gh-pages')
+    path: path.resolve(__dirname, 'github-pages') //'/__w/scratch-blocks/scratch-blocks/github-pages'
   },
   optimization: {
     minimize: false
