@@ -55,7 +55,7 @@ module.exports = [{
   entry: './shim/gh-pages.js',
   output: {
     filename: '[name].js',
-    path: path.resolve(__dirname, 'github-pages') //'/__w/scratch-blocks/scratch-blocks/github-pages'
+    path: path.resolve(__dirname, 'gh-pages')
   },
   optimization: {
     minimize: false
