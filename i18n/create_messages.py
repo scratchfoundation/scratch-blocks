@@ -29,11 +29,8 @@ _NEWLINE_PATTERN = re.compile('[\n\r]')
 
 
 def string_is_ascii(s):
-  try:
-    s.decode('ascii')
-    return True
-  except UnicodeEncodeError:
-    return False
+  # This approach is better for compatibility
+  return all(ord(c) < 128 for c in s)
 
 def load_constants(filename):
   """Read in constants file, which must be output in every language."""
@@ -81,14 +78,14 @@ def main():
       print('ERROR: definition of {0} in {1} contained a newline character.'.
             format(key, args.source_lang_file))
       sys.exit(1)
-  sorted_keys = source_defs.keys()
-  sorted_keys.sort()
+  sorted_keys = sorted(source_defs.keys())
 
   # Read in synonyms file, which must be output in every language.
   synonym_defs = read_json_file(os.path.join(
       os.curdir, args.source_synonym_file))
+  # synonym_defs is also being sorted to ensure the same order is kept
   synonym_text = '\n'.join(['Blockly.Msg.{0} = Blockly.Msg.{1};'.format(
-      key, synonym_defs[key]) for key in synonym_defs])
+      key, synonym_defs[key]) for key in sorted(synonym_defs)])
 
   # Read in constants file, which must be output in every language.
   constants_text = load_constants(os.path.join(os.curdir, args.source_constants_file))
