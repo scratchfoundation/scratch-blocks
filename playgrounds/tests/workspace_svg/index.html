@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Blockly Workspace SVG testing</title>
+<script src="../../blockly_uncompressed_vertical.js"></script>
+<script src="../../blocks_vertical/vertical_extensions.js"></script>
+<script src="../../blocks_vertical/looks.js"></script>
+<script>goog.require('goog.testing.jsunit');</script>
+<script src="../../msg/messages.js"></script>
+
+<script>
+'use strict';
+</script>
+
+<style>
+html, body {
+  height: 100%;
+}
+body {
+  background-color: #fff;
+  font-family: sans-serif;
+  overflow: hidden;
+}
+h1 {
+  font-weight: normal;
+  font-size: 140%;
+}
+#blocklyDiv {
+  float: right;
+  height: 95%;
+  width: 70%;
+}
+#importExport {
+  font-family: monospace;
+}
+
+.ioLabel>.blocklyFlyoutLabelText {
+  font-style: italic;
+}
+
+</style>
+</head>
+<body>
+
+  <div id="blocklyDiv"></div>
+
+  <h1>Blockly Workspace testing</h1>
+  <script src="../jsunit/test_utilities.js"></script>
+  <script src="workspace_svg_test.js"></script>
+
+  
+  <xml id="toolbox-categories" style="display: none">
+    <category name="Looks" colour="#9966FF" secondaryColour="#774DCB">
+    <block type="looks_show" id="lABCD"></block>
+    <block type="looks_hide" id="looks_hide"></block>
+    <block type="looks_switchcostumeto" id="looks_switchcostumeto">
+      <value name="COSTUME">
+        <shadow type="looks_costume"></shadow>
+      </value>
+    </block>
+    <block type="looks_nextcostume" id="looks_nextcostume"></block>
+    <block type="looks_nextbackdrop" id="looks_nextbackdrop"></block>
+    <block type="looks_switchbackdropto" id="looks_switchbackdropto">
+      <value name="BACKDROP">
+        <shadow type="looks_backdrops"></shadow>
+      </value>
+    </block>
+
+    <sep></sep>
+    <category name="Variables" colour="330" custom="VARIABLE"></category>
+    <category name="Functions" colour="290" custom="PROCEDURE"></category>
+  </xml>
+</body>
+</html>

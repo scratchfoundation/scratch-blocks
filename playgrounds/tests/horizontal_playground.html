@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+    <title>Horizontal Playground</title>
+
+    <script src="../blockly_uncompressed_horizontal.js"></script>
+    <script src="../msg/messages.js"></script>
+    <script src="../blocks_common/math.js"></script>
+    <script src="../blocks_common/text.js"></script>
+    <script src="../blocks_horizontal/control.js"></script>
+    <script src="../blocks_horizontal/event.js"></script>
+    <script src="../blocks_horizontal/wedo.js"></script>
+    <script src="../blocks_horizontal/default_toolbox.js"></script>
+    <script>
+      'use strict';
+
+      var fakeDragStack = [];
+      var workspace = null;
+
+      function start() {
+        var soundsEnabled = null;
+        if (sessionStorage) {
+          // Restore sounds state.
+          soundsEnabled = sessionStorage.getItem('soundsEnabled');
+          if (soundsEnabled === null) {
+            soundsEnabled = true;
+          } else {
+            soundsEnabled = (soundsEnabled === 'true');
+          }
+        } else {
+          soundsEnabled = true;
+        }
+        setSoundsEnabled(soundsEnabled);
+
+        // Setup blocks
+        // Parse the URL arguments.
+        var match = location.search.match(/dir=([^&]+)/);
+        var rtl = match && match[1] == 'rtl';
+        document.forms.options.elements.dir.selectedIndex = Number(rtl);
+        var toolbox = getToolboxElement();
+        document.forms.options.elements.toolbox.selectedIndex =
+          toolbox ? 1: 0;
+
+        match = location.search.match(/side=([^&]+)/);
+
+        var side = match ? match[1] : 'start';
+
+        document.forms.options.elements.side.value = side;
+
+        workspace = Blockly.inject('blocklyDiv', {
+          comments: false,
+          disable: false,
+          collapse: false,
+          media: '../media/',
+          readOnly: false,
+          rtl: rtl,
+          scrollbars: true,
+          toolbox: toolbox,
+          trashcan: true,
+          horizontalLayout: side == 'top' || side == 'bottom',
+          toolboxPosition: side == 'top' || side == 'start' ? 'start' : 'end',
+          sounds: soundsEnabled,
+          grid: {spacing: 16,
+            length: 1,
+            colour: '#2C344A',
+            snap: false
+          },
+          zoom: {
+            controls: true,
+            wheel: true,
+            startScale: 1.0,
+            maxScale: 4,
+            minScale: 0.25,
+            scaleSpeed: 1.1
+          },
+          colours: {
+            fieldShadow: 'rgba(255, 255, 255, 0.3)',
+            dragShadowOpacity: 0.6
+          }
+        });
+        
+        if (sessionStorage) {
+          // Restore previously displayed text.
+          var text = sessionStorage.getItem('textarea');
+          if (text) {
+            document.getElementById('importExport').value = text;
+          }
+          taChange();
+
+          // Restore event logging state.
+          var state = sessionStorage.getItem('logEvents');
+          logEvents(Boolean(state));
+
+          // Restore flyout event logging state.
+          state = sessionStorage.getItem('logFlyoutEvents');
+          logFlyoutEvents(Boolean(state));
+        }
+      }
+
+      function getToolboxElement() {
+        var match = location.search.match(/toolbox=([^&]+)/);
+        return document.getElementById('toolbox-' + (match ? match[1] : 'categories'));
+      }
+
+      function toXml() {
+        var output = document.getElementById('importExport');
+        var xml = Blockly.Xml.workspaceToDom(workspace);
+        output.value = Blockly.Xml.domToPrettyText(xml);
+        output.focus();
+        output.select();
+        taChange();
+      }
+
+      function fromXml() {
+        var input = document.getElementById('importExport');
+        var xml = Blockly.Xml.textToDom(input.value);
+        Blockly.Xml.domToWorkspace(workspace, xml);
+        taChange();
+      }
+
+      // Disable the "Import from XML" button if the XML is invalid.
+      // Preserve text between page reloads.
+      function taChange() {
+        var textarea = document.getElementById('importExport');
+        if (sessionStorage) {
+          sessionStorage.setItem('textarea', textarea.value);
+        }
+        var valid = true;
+        try {
+          Blockly.Xml.textToDom(textarea.value);
+        } catch (e) {
+          valid = false;
+        }
+        document.getElementById('import').disabled = !valid;
+      }
+
+      function logEvents(state) {
+        var checkbox = document.getElementById('logCheck');
+        checkbox.checked = state;
+        if (sessionStorage) {
+          sessionStorage.setItem('logEvents', state ? 'checked' : '');
+        }
+        if (state) {
+          workspace.addChangeListener(logger);
+        } else {
+          workspace.removeChangeListener(logger);
+        }
+      }
+
+      function logFlyoutEvents(state) {
+        var checkbox = document.getElementById('logFlyoutCheck');
+        checkbox.checked = state;
+        if (sessionStorage) {
+          sessionStorage.setItem('logFlyoutEvents', state ? 'checked' : '');
+        }
+        var flyoutWorkspace = (workspace.flyout_) ? workspace.flyout_.workspace_ :
+          workspace.toolbox_.flyout_.workspace_;
+        if (state) {
+          flyoutWorkspace.addChangeListener(logger);
+        } else {
+          flyoutWorkspace.removeChangeListener(logger);
+        }
+      }
+
+      function logger(e) {
+        console.log(e);
+      }
+
+      function glowBlock() {
+        if (Blockly.selected) {
+          workspace.glowBlock(Blockly.selected.id, true);
+        }
+      }
+
+      function unglowBlock() {
+        if (Blockly.selected) {
+          workspace.glowBlock(Blockly.selected.id, false);
+        }
+      }
+
+      function glowStack() {
+        if (Blockly.selected) {
+          workspace.glowStack(Blockly.selected.id, true);
+        }
+      }
+
+      function unglowStack() {
+        if (Blockly.selected) {
+          workspace.glowStack(Blockly.selected.id, false);
+        }
+      }
+
+      function sprinkles(n) {
+        var prototypes = [];
+        var toolbox = workspace.options.languageTree;
+        if (!toolbox) {
+          console.error('Toolbox not found; add a toolbox element to the DOM.');
+          return;
+        }
+        var blocks = toolbox.getElementsByTagName('block');
+        for (var i = 0; i < n; i++) {
+          var blockXML = blocks[Math.floor(Math.random() * blocks.length)];
+          var block = Blockly.Xml.domToBlock(blockXML, workspace);
+          block.initSvg();
+          block.moveBy(
+            Math.round(Math.random() * 450 + 40),
+            Math.round(Math.random() * 600 + 40)
+          );
+        }
+      }
+
+      function spaghetti(n) {
+        var xml = spaghettiXml;
+        for(var i = 0; i < n; i++) {
+          xml = xml.replace(/(<(statement|next)( name="SUBSTACK")?>)<\//g,
+          '$1' + spaghettiXml + '</');
+        }
+        xml = '<xml xmlns="http://www.w3.org/1999/xhtml">' + xml + '</xml>';
+        var dom = Blockly.Xml.textToDom(xml);
+        console.time('Spaghetti domToWorkspace');
+        Blockly.Xml.domToWorkspace(workspace, dom);
+        console.timeEnd('Spaghetti domToWorkspace');
+      }
+
+      var spaghettiXml = [
+        '  <block type="control_repeat">',
+        '    <value name="TIMES">',
+        '      <shadow type="math_whole_number">',
+        '        <field name="NUM">10</field>',
+        '      </shadow>',
+        '    </value>',
+        '    <statement name="SUBSTACK"></statement>',
+        '    <next></next>',
+        '  </block>'
+      ].join('\n');
+
+      function setSoundsEnabled(state) {
+        var checkbox = document.getElementById('soundsEnabled');
+        checkbox.checked = (state) ? 'checked' : '';
+        if (sessionStorage) {
+          sessionStorage.setItem('soundsEnabled', state);
+        }
+      }
+      function fakeDrag(id, dx, dy, opt_workspace) {
+        var ws = opt_workspace || Blockly.getMainWorkspace();
+        var blockToDrag = ws.getBlockById(id);
+
+        if (!blockToDrag) {
+          fakeDragWrapper();
+          return;
+        }
+        var blockTop = blockToDrag.svgGroup_.getBoundingClientRect().top;
+        var blockLeft = blockToDrag.svgGroup_.getBoundingClientRect().left;
+
+        // Click somewhere on the block.
+        var mouseDownEvent = new MouseEvent('mousedown',
+            {clientX: blockLeft + 5, clientY: blockTop + 5});
+        blockToDrag.onMouseDown_(mouseDownEvent);
+
+        // Throw in a move for good measure.
+        setTimeout(
+          function() {
+            var mouseMoveEvent = new MouseEvent('mousemove',
+                {clientX: blockLeft + dx,
+                clientY: blockTop + dy});
+            blockToDrag.onMouseMove_(mouseMoveEvent);
+
+            // Drop at dx, dy.
+            setTimeout(
+              function() {
+                var mouseUpEvent = new MouseEvent('mouseup',
+                    {clientX: blockLeft + dx,
+                    clientY: blockTop + dy});
+                blockToDrag.onMouseUp_(mouseUpEvent);
+
+                setTimeout(fakeDragWrapper(), 100);
+              }, 30);
+          }, 30);
+      };
+
+      function fakeDragWrapper() {
+        var dragInfo = fakeDragStack.pop();
+        if (dragInfo) {
+          fakeDrag(dragInfo.id, dragInfo.dx, dragInfo.dy, dragInfo.workspace);
+        }
+      }
+
+      function fakeManyDrags() {
+        var blockList = workspace.getAllBlocks();
+        for (var i = 0; i < 2 * blockList.length; i++) {
+          fakeDragStack.push(
+            {
+              id: blockList[Math.round(Math.random() * (blockList.length - 1))].id,
+              // Move some blocks up and to the left, but mostly down and to the right.
+              dx: Math.round((Math.random() - 0.25) * 200),
+              dy: Math.round((Math.random() - 0.25) * 200),
+              workspace: workspace
+            });
+        }
+        fakeDragWrapper();
+      }
+    </script>
+
+    <style>
+      html, body {
+        height: 100%;
+      }
+
+      body {
+        background-color: #fff;
+        font-family: sans-serif;
+        overflow: hidden;
+      }
+
+      h1 {
+        font-weight: normal;
+        font-size: 140%;
+      }
+
+      #blocklyDiv {
+        float: right;
+        height: 95%;
+        width: 70%;
+      }
+
+      #collaborators {
+        float: right;
+        width: 30px;
+        margin-left: 10px;
+      }
+
+      #collaborators > img {
+        margin-right: 5px;
+        height: 30px;
+        padding-bottom: 5px;
+        width: 30px;
+        border-radius: 3px;
+      }
+
+      #importExport {
+        font-family: monospace;
+      }
+    </style>
+  </head>
+
+  <body onload="start()">
+    <div id="collaborators"></div>
+    <div id="blocklyDiv"></div>
+
+    <!-- Sidebar -->
+    <h1>Horizontal Blocks</h1>
+    <p>
+      <a href="javascript:void(workspace.setVisible(true))">Show</a>
+      - <a href="javascript:void(workspace.setVisible(false))">Hide</a>
+    </p>
+
+    <form id="options">
+        <select name="dir" onchange="document.forms.options.submit()">
+          <option value="ltr">LTR</option>
+          <option value="rtl">RTL</option>
+        </select>
+        <select name="toolbox" onchange="document.forms.options.submit()">
+          <option value="categories">Categories</option>
+          <option value="simple">Simple</option>
+        </select>
+        <select name="side" onchange="document.forms.options.submit()">
+          <option value="start">Start</option>
+          <option value="end">End</option>
+          <option value="top">Top</option>
+          <option value="bottom">Bottom</option>
+        </select>
+      </form>
+
+    <p>
+      <input type="button" value="Export to XML" onclick="toXml()">
+      &nbsp;
+      <input type="button" value="Import from XML" onclick="fromXml()" id="import">
+      <br>
+      <textarea id="importExport" style="width: 26%; height: 12em"
+        onchange="taChange();" onkeyup="taChange()"></textarea>
+    </p>
+
+    <p>
+      Log events: &nbsp;
+      <input type="checkbox" onclick="logEvents(this.checked)" id="logCheck">
+    </p>
+
+    <p>
+      Log flyout events: &nbsp;
+      <input type="checkbox" onclick="logFlyoutEvents(this.checked)" id="logFlyoutCheck">
+    </p>
+
+    <p>
+      Enable sounds (after refresh): &nbsp;
+      <input type="checkbox" onclick="setSoundsEnabled(this.checked)" id="soundsEnabled">
+    </p>
+
+    <p>
+      Stress test: &nbsp;
+      <input type="button" value="Sprinkles!" onclick="sprinkles(100)">
+      <input type="button" value="Spaghetti!" onclick="spaghetti(10)">
+      <input type="button" value="Fake some drags!" onclick="fakeManyDrags()">
+    </p>
+
+    <p>
+      Glows: &nbsp;
+      <input type="button" value="Glow last clicked block" onclick="glowBlock()" />
+      <input type="button" value="Unglow last clicked block" onclick="unglowBlock()" />
+      <input type="button" value="Stack glow last clicked block" onclick="glowStack()" />
+      <input type="button" value="Stack unglow last clicked block" onclick="unglowStack()" />
+    </p>
+
+    <p>
+      <input type="button" value="Undo" onclick="workspace.undo()" />
+      <input type="button" value="Redo" onclick="workspace.undo(true)" />
+    </p>
+  </body>
+</html>

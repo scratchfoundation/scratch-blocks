@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Custom Procedure Playground</title>
+    <script src="../blockly_uncompressed_vertical.js"></script>
+    <script src="../msg/messages.js"></script>
+    <script src="../blocks_vertical/vertical_extensions.js"></script>
+    <script src="../blocks_common/math.js"></script>
+    <script src="../blocks_common/text.js"></script>
+    <script src="../blocks_common/colour.js"></script>
+    <script src="../blocks_vertical/control.js"></script>
+    <script src="../blocks_vertical/event.js"></script>
+    <script src="../blocks_vertical/motion.js"></script>
+    <script src="../blocks_vertical/looks.js"></script>
+    <script src="../blocks_vertical/procedures.js"></script>
+    <script src="../blocks_vertical/operators.js"></script>
+    <script src="../blocks_vertical/pen.js"></script>
+    <script src="../blocks_vertical/sound.js"></script>
+    <script src="../blocks_vertical/sensing.js"></script>
+    <script src="../blocks_vertical/data.js"></script>
+  <style>
+    body {
+      background-color: #fff;
+      font-family: sans-serif;
+    }
+    h1 {
+      font-weight: normal;
+      font-size: 140%;
+    }
+  </style>
+</head>
+<body>
+  <table width="100%">
+    <tr>
+      <td>
+        <div id="secondaryDiv" style="height: 480px; width: 600px;"></div>
+      </td>
+      <td>
+        <div id="primaryDiv" style="height: 480px; width: 600px;"></div>
+      </td>
+    </tr>
+    <tr>
+      <td></td>
+      <td id="editor-actions">
+        <button id="text_number" onclick="addTextNumber()">Add text/number input</button>
+        <button id="boolean" onclick="addBoolean()">Add boolean input</button>
+        <button id="label" onclick="addLabel()">Add label</button>
+        <button id="cancelButton" onclick="cancel()">cancel</button>
+        <button id="okButton" onclick="applyMutation()">ok</button>
+        <button id="rndButton" onclick="removeRandomInput()">remove random input</button>
+        <button id="addRndButton" onclick="addRandomInput()">add random input</button>
+      </td>
+    </tr>
+  </table>
+
+  <xml id="mutator_blocks" style="display:none">
+    <block type="procedures_declaration" x="25" y="25" deletable="false">
+    <mutation proccode="say %s %n times if %b" argumentnames="[&quot;something&quot;,&quot;this many&quot;,&quot;this is true&quot;]" argumentdefaults="[&quot;&quot;,1,false]" warp="false" argumentids="[&quot;a42&quot;, &quot;b23&quot;, &quot;c99&quot;]"/>
+    </block>
+  </xml>
+
+  <xml id="main_ws_blocks" style="display:none">
+    <block id="]){{Y!7N9ezN+j@Vr`8p" type="procedures_definition" x="25" y="25">
+      <statement name="custom_block">
+          <shadow type="procedures_prototype" id="caller_internal">
+              <mutation proccode="say %s %n times if %b" argumentnames="[&quot;something&quot;,&quot;this many&quot;,&quot;this is true&quot;]" argumentdefaults="[&quot;&quot;,1,false]" warp="false" argumentids="[&quot;a42&quot;, &quot;b23&quot;, &quot;c99&quot;]"/>
+          </shadow>
+      </statement>
+      <next>
+          <block id="caller_external" type="procedures_call">
+              <mutation proccode="say %s %n times if %b" argumentnames="[&quot;something&quot;,&quot;this many&quot;,&quot;this is true&quot;]" argumentdefaults="[&quot;&quot;,1,false]" warp="false" argumentids="[&quot;a42&quot;, &quot;b23&quot;, &quot;c99&quot;]"/>
+              <value name="input0">
+                  <shadow id="V0~M:TxRk0Ua%osjGzh," type="text">
+                      <field name="TEXT"/></field>
+                  </shadow>
+              </value>
+              <value name="input1">
+                  <shadow id="uPx3si(KkbL1)-XpbXoQ" type="math_number">
+                      <field name="NUM">1</field>
+                  </shadow>
+              </value>
+          </block>
+      </next>
+  </block>
+  </xml>
+
+  <xml id="main_ws_blocks_simpler" style="display:none">
+    <block id="]){{Y!7N9ezN+j@Vr`8p" type="procedures_definition" x="25" y="25">
+      <statement name="custom_block">
+          <shadow type="procedures_prototype" id="caller_internal">
+              <mutation proccode="say %s %n times if %b" argumentnames="[&quot;something&quot;,&quot;this many&quot;,&quot;this is true&quot;]" argumentdefaults="[&quot;&quot;,1,false]" warp="false" argumentids="[&quot;a42&quot;, &quot;b23&quot;, &quot;c99&quot;]"/>
+          </shadow>
+      </statement>
+      <next>
+          <block id="caller_external" type="procedures_call">
+          </block>
+      </next>
+  </block>
+  </xml>
+
+  <xml id="main_ws_blocks_simplest" style="display:none">
+    <block id="]){{Y!7N9ezN+j@Vr`8p" type="procedures_definition" x="25" y="25">
+      <statement name="custom_block">
+          <shadow type="procedures_prototype" id="caller_internal">
+              <mutation proccode="my first function" argumentnames="[]" argumentdefaults="[]" warp="false" argumentids="[]"/>
+          </shadow>
+      </statement>
+      <next>
+          <block id="caller_external" type="procedures_call">
+            <mutation proccode="my first function" argumentnames="[]" argumentdefaults="[]" warp="false" argumentids="[]"/>
+          </block>
+      </next>
+  </block>
+  </xml>
+
+  <xml id="mutator_blocks_simplest" style="display:none">
+    <block type="procedures_declaration" x="25" y="25" deletable="false">
+    <mutation proccode="my first function" argumentnames="[]" argumentdefaults="[]" warp="false" argumentids="[]"/>
+    </block>
+  </xml>
+
+  <xml id="toolbox" style="display:none">
+    <category name="More" colour="#FF6680" secondaryColour="#FF4D6A" custom="PROCEDURE">
+    </category>
+    <category name="Values">
+      <block type="operator_round">
+        <value name="NUM">
+          <shadow type="math_number">
+            <field name="NUM"></field>
+          </shadow>
+        </value>
+      </block>
+    </category>
+    <category name="Statements">
+      <block type="control_forever"></block>
+      <block type="sound_stopallsounds"></block>
+      <block type="control_start_as_clone"></block>
+      <block type="control_stop">
+        <mutation hasnext="false"></mutation>
+        <field name="STOP_OPTION">all</field>
+      </block>
+    </category>
+  </xml>
+
+  <script>
+    var editorActions = document.getElementById('editor-actions');
+    editorActions.style.visibility = 'hidden';
+
+    var callback = null;
+    var mutationRoot = null;
+
+    var declarationWorkspace = Blockly.inject('primaryDiv',
+        {media: '../media/'});
+
+    declarationWorkspace.addChangeListener(function() {
+      if (mutationRoot) {
+        mutationRoot.onChangeFn();
+      }
+    });
+
+    var definitionWorkspace = Blockly.inject('secondaryDiv', {
+      media: '../media/',
+      toolbox: document.getElementById('toolbox'),
+      zoom: {
+        startScale: 0.75
+      }
+    });
+
+    Blockly.Xml.clearWorkspaceAndLoadFromXml(document.getElementById('main_ws_blocks_simplest'),
+        definitionWorkspace);
+
+    Blockly.Procedures.externalProcedureDefCallback = function (mutation, cb) {
+      editorActions.style.visibility = 'visible';
+      callback = cb;
+      declarationWorkspace.clear();
+      mutationRoot = declarationWorkspace.newBlock('procedures_declaration');
+      mutationRoot.domToMutation(mutation);
+      mutationRoot.initSvg();
+      mutationRoot.render(false);
+    }
+
+    function applyMutation() {
+      var mutation = mutationRoot.mutationToDom(/* opt_generateShadows */ true)
+      console.log(mutation);
+      callback(mutation);
+      callback = null;
+      mutationRoot = null;
+      declarationWorkspace.clear();
+      definitionWorkspace.refreshToolboxSelection_()
+      editorActions.style.visibility = 'hidden';
+    }
+
+    function addLabel() {
+      mutationRoot.addLabelExternal();
+    }
+
+    function addBoolean() {
+      mutationRoot.addBooleanExternal();
+    }
+
+    function addTextNumber() {
+      mutationRoot.addStringNumberExternal();
+    }
+
+    function removeRandomInput() {
+      var rnd = Math.floor(Math.random() * mutationRoot.inputList.length);
+      mutationRoot.removeInput(mutationRoot.inputList[rnd].name);
+      mutationRoot.onChangeFn();
+      mutationRoot.updateDisplay_();
+    }
+
+    function addRandomInput() {
+      var rnd = Math.floor(Math.random() * 3);
+      switch (rnd) {
+        case 0:
+          addTextNumber();
+          break;
+        case 1:
+          addLabel();
+          break;
+        case 2:
+          addBoolean();
+          break;
+      }
+    }
+
+    function cancel() {
+      callback = null;
+      mutationRoot = null;
+      declarationWorkspace.clear();
+      definitionWorkspace.refreshToolboxSelection_()
+      editorActions.style.visibility = 'hidden';
+    }
+</script>
+
+</body>
+</html>
