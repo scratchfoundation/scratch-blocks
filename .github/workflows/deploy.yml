@@ -1,8 +1,7 @@
 name: build-scratch-blocks
 on: 
-    push:
-permissions: write-all
-
+    push: 
+        branches: [master, develop, beta, hotfix/*]
 jobs:
     setup:
       runs-on: ubuntu-latest
@@ -10,9 +9,6 @@ jobs:
         JVM_OPTS: -Xmx3200m
         DETECT_CHROMEDRIVER_VERSION: "true"
         PROJECT_PATH: ./scratch-blocks
-    #   container:
-    #     image: python:2.7.18-buster 
-    #     options: --user root
       steps:
         - uses: actions/checkout@v3
         - name: Install Chrome Dependencies
