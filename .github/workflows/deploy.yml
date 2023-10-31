@@ -7,7 +7,7 @@ jobs:
       runs-on: ubuntu-latest
       env:
         JVM_OPTS: -Xmx3200m
-        DETECT_CHROMEDRIVER_VERSION: "true"
+        DETECT_CHROMEDRIVER_VERSION: true 
         PROJECT_PATH: ./scratch-blocks
       steps:
         - uses: actions/checkout@v3
@@ -33,8 +33,6 @@ jobs:
         - run: |
             echo Installed chromium version: ${{ steps.setup-chrome.outputs.chrome-version }}
             ${{ steps.setup-chrome.outputs.chrome-path }} --version
-        - name: Install Chrome Driver
-          run: DETECT_CHROMEDRIVER_VERSION=true npm install chromedriver
         - name: Install Node Dependencies
           run: npm ci
         - name: Lint
@@ -55,20 +53,20 @@ jobs:
         - name: Deploy to npm
           run: |
            export RELEASE_VERSION="0.2.0-prerelease.$(date +'%Y%m%d%H%M%S')"
-                  if [[ "${{contains(github.ref, 'hotfix')}} ]]; then
-                    export NPM_TAG=hotfix
-                  elif [[ "${{contains(github.ref, 'beta')}} ]]; then
-                    export NPM_TAG=beta
-                  else
-                    export NPM_TAG=latest
-                  fi
-                  echo "Deploying version $RELEASE_VERSION to $NPM_TAG"
-                  npm --no-git-tag-version version $RELEASE_VERSION
-                  npm set //registry.npmjs.org/:_authToken=${{secrets.NPM_TOKEN}}
-                  npm publish --tag $NPM_TAG
-                  if npm info | grep -q $RELEASE_VERSION; then
-                    git tag $RELEASE_VERSION
-                    git push \
-                      https://${{secrets.GITHUB_TOKEN}}@github.com/${{github.repository}}.git \
-                      $RELEASE_VERSION
-                  fi
+            if [[ "${{contains(github.ref, 'hotfix')}} ]]; then
+            export NPM_TAG=hotfix
+            elif [[ "${{contains(github.ref, 'beta')}} ]]; then
+            export NPM_TAG=beta
+            else
+            export NPM_TAG=latest
+            fi
+            echo "Deploying version $RELEASE_VERSION to $NPM_TAG"
+            npm --no-git-tag-version version $RELEASE_VERSION
+            npm set //registry.npmjs.org/:_authToken=${{secrets.NPM_TOKEN}}
+            npm publish --tag $NPM_TAG
+            if npm info | grep -q $RELEASE_VERSION; then
+            git tag $RELEASE_VERSION
+            git push \
+                https://${{secrets.GITHUB_TOKEN}}@github.com/${{github.repository}}.git \
+                $RELEASE_VERSION
+            fi
