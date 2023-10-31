@@ -51,6 +51,7 @@ jobs:
             full_commit_message: "Build for ${{ github.sha }} ${{ github.event.head_commit.message }}"
             enable_jekyll: true
         - name: Deploy to npm
+          if: (github.ref == 'refs/heads/master') || (github.ref == 'refs/heads/develop') || startsWith(github.ref, 'refs/heads/hotfix') || startsWith(github.ref, 'refs/heads/release') || startsWith(github.ref, 'refs/heads/beta')
           run: |
            export RELEASE_VERSION="0.2.0-prerelease.$(date +'%Y%m%d%H%M%S')"
             if [[ "${{contains(github.ref, 'hotfix')}} ]]; then
