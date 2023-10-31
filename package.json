@@ -17,7 +17,7 @@
     "test:unit": "node tests/jsunit/test_runner.js",
     "test:lint": "eslint .",
     "test:messages": "npm run translate && node i18n/test_scratch_msgs.js",
-    "test": "npm run test:lint && npm run test:messages && npm run test:unit",
+    "test": "npm run test:messages && npm run test:unit",
     "version": "json -f package.json -I -e \"this.repository.sha = '$(git log -n1 --pretty=format:%H)'\"",
     "translate": "node i18n/js_to_json.js && node i18n/json_to_js.js",
     "translate:sync:src": "tx-push-src scratch-editor blocks msg/json/en.json",
@@ -25,6 +25,7 @@
     "translate:update": "npm run translate:sync:src && npm run translate:sync:translations"
   },
   "dependencies": {
+    "chromedriver": "^118.0.1",
     "exports-loader": "0.7.0",
     "google-closure-library": "20190301.0.0",
     "imports-loader": "0.8.0",
@@ -32,7 +33,6 @@
   },
   "devDependencies": {
     "async": "2.6.4",
-    "chromedriver": "115.0.1",
     "copy-webpack-plugin": "4.6.0",
     "eslint": "4.19.1",
     "event-stream": "3.3.5",

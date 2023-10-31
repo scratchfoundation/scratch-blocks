@@ -1,0 +1,73 @@
+name: build-scratch-blocks
+on: 
+    push: 
+        branches: [master, develop, beta, hotfix/*]
+jobs:
+    setup:
+      runs-on: ubuntu-latest
+      env:
+        JVM_OPTS: -Xmx3200m
+        DETECT_CHROMEDRIVER_VERSION: true 
+        PROJECT_PATH: ./scratch-blocks
+      steps:
+        - uses: actions/checkout@v3
+        - name: Install Chrome Dependencies
+          run: |
+            sudo apt-get update
+            sudo apt-get install -y libgconf-2-4 libatk1.0-0 libatk-bridge2.0-0 libgdk-pixbuf2.0-0 libgtk-3-0 libgbm-dev libnss3-dev libxss-dev libasound2
+        - name: Check Python version
+          run: python --version 
+        - name: Setup Java
+          uses: actions/setup-java@v3
+          with:
+            distribution: 'temurin'
+            java-version: 17
+        - name: Setup Node
+          uses: actions/setup-node@v3
+          with:
+            node-version-file: '.nvmrc'
+        - uses: browser-actions/setup-chrome@v1
+          with:
+            chrome-version: stable
+          id: setup-chrome
+        - run: |
+            echo Installed chromium version: ${{ steps.setup-chrome.outputs.chrome-version }}
+            ${{ steps.setup-chrome.outputs.chrome-path }} --version
+        - name: Install Node Dependencies
+          run: npm ci
+        - name: Lint
+          run: npm run test:lint
+        - name: Run Tests
+          run: npm run test:messages
+        - name: Run Unit Tests
+          run: DISPLAY=:99 npm run test:unit
+        - name: Remove Closure App
+          run: rm -rf gh-pages/closure-library/scripts/ci/CloseAdobeDialog.exe
+        - name: Deploy playground to GitHub Pages
+          uses: peaceiris/actions-gh-pages@v3
+          with:
+            github_token: ${{ secrets.GITHUB_TOKEN }}
+            publish_dir: ./gh-pages
+            full_commit_message: "Build for ${{ github.sha }} ${{ github.event.head_commit.message }}"
+            enable_jekyll: true
+        - name: Deploy to npm
+          if: (github.ref == 'refs/heads/master') || (github.ref == 'refs/heads/develop') || startsWith(github.ref, 'refs/heads/hotfix') || startsWith(github.ref, 'refs/heads/release') || startsWith(github.ref, 'refs/heads/beta')
+          run: |
+           export RELEASE_VERSION="0.2.0-prerelease.$(date +'%Y%m%d%H%M%S')"
+            if [[ "${{contains(github.ref, 'hotfix')}} ]]; then
+            export NPM_TAG=hotfix
+            elif [[ "${{contains(github.ref, 'beta')}} ]]; then
+            export NPM_TAG=beta
+            else
+            export NPM_TAG=latest
+            fi
+            echo "Deploying version $RELEASE_VERSION to $NPM_TAG"
+            npm --no-git-tag-version version $RELEASE_VERSION
+            npm set //registry.npmjs.org/:_authToken=${{secrets.NPM_TOKEN}}
+            npm publish --tag $NPM_TAG
+            if npm info | grep -q $RELEASE_VERSION; then
+            git tag $RELEASE_VERSION
+            git push \
+                https://${{secrets.GITHUB_TOKEN}}@github.com/${{github.repository}}.git \
+                $RELEASE_VERSION
+            fi
