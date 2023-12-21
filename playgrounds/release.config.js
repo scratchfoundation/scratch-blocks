@@ -5,16 +5,6 @@ module.exports = {
     {
       name: 'develop'
       // default channel
-    },
-    {
-      name: 'beta/*',
-      channel: 'beta',
-      prerelease: 'beta'
-    },
-    {
-      name: 'hotfix/*',
-      channel: 'hotfix',
-      prerelease: 'hotfix'
     }
   ]
 };
