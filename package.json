@@ -32,6 +32,8 @@
     "scratch-l10n": "3.16.20231013034330"
   },
   "devDependencies": {
+    "@commitlint/cli": "18.4.3",
+    "@commitlint/config-conventional": "18.4.3",
     "async": "2.6.4",
     "copy-webpack-plugin": "4.6.0",
     "eslint": "4.19.1",
