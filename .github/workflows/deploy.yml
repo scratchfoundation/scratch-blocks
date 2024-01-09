@@ -1,13 +1,13 @@
 name: build-scratch-blocks
-on: 
-    push: 
-        branches: [master, develop, beta, hotfix/*]
+on:
+    push: # Runs whenever a commit is pushed to the repository
+    workflow_dispatch: # Allows you to run this workflow manually from the Actions tab
 jobs:
     setup:
       runs-on: ubuntu-latest
       env:
         JVM_OPTS: -Xmx3200m
-        DETECT_CHROMEDRIVER_VERSION: true 
+        DETECT_CHROMEDRIVER_VERSION: true
         PROJECT_PATH: ./scratch-blocks
       steps:
         - uses: actions/checkout@v3
@@ -16,7 +16,7 @@ jobs:
             sudo apt-get update
             sudo apt-get install -y libgconf-2-4 libatk1.0-0 libatk-bridge2.0-0 libgdk-pixbuf2.0-0 libgtk-3-0 libgbm-dev libnss3-dev libxss-dev libasound2
         - name: Check Python version
-          run: python --version 
+          run: python --version
         - name: Setup Java
           uses: actions/setup-java@v3
           with:
@@ -50,24 +50,8 @@ jobs:
             publish_dir: ./gh-pages
             full_commit_message: "Build for ${{ github.sha }} ${{ github.event.head_commit.message }}"
             enable_jekyll: true
-        - name: Deploy to npm
-          if: (github.ref == 'refs/heads/master') || (github.ref == 'refs/heads/develop') || startsWith(github.ref, 'refs/heads/hotfix') || startsWith(github.ref, 'refs/heads/release') || startsWith(github.ref, 'refs/heads/beta')
-          run: |
-           export RELEASE_VERSION="0.2.0-prerelease.$(date +'%Y%m%d%H%M%S')"
-            if [[ "${{contains(github.ref, 'hotfix')}} ]]; then
-            export NPM_TAG=hotfix
-            elif [[ "${{contains(github.ref, 'beta')}} ]]; then
-            export NPM_TAG=beta
-            else
-            export NPM_TAG=latest
-            fi
-            echo "Deploying version $RELEASE_VERSION to $NPM_TAG"
-            npm --no-git-tag-version version $RELEASE_VERSION
-            npm set //registry.npmjs.org/:_authToken=${{secrets.NPM_TOKEN}}
-            npm publish --tag $NPM_TAG
-            if npm info | grep -q $RELEASE_VERSION; then
-            git tag $RELEASE_VERSION
-            git push \
-                https://${{secrets.GITHUB_TOKEN}}@github.com/${{github.repository}}.git \
-                $RELEASE_VERSION
-            fi
+        - name: Run semantic-release
+          env:
+            NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          run: npx --no -- semantic-release

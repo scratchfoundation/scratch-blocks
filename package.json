@@ -1,24 +1,24 @@
 {
   "name": "scratch-blocks",
-  "version": "0.1.0",
+  "version": "0.0.0",
   "description": "Scratch Blocks is a library for building creative computing interfaces.",
   "author": "Massachusetts Institute of Technology",
   "license": "Apache-2.0",
-  "homepage": "https://github.com/LLK/scratch-blocks#readme",
+  "homepage": "https://github.com/scratchfoundation/scratch-blocks#readme",
   "repository": {
     "type": "git",
-    "url": "https://github.com/LLK/scratch-blocks.git"
+    "url": "https://github.com/scratchfoundation/scratch-blocks.git"
   },
   "main": "./dist/vertical.js",
   "browser": "./shim/vertical.js",
   "scripts": {
     "deploy": "rimraf gh-pages/closure-library/scripts/ci/CloseAdobeDialog.exe && gh-pages -t -d gh-pages -m \"Build for $(git log --pretty=format:%H -n1) [skip ci]\"",
+    "prepare": "husky install",
     "prepublish": "python build.py && webpack",
-    "test:unit": "node tests/jsunit/test_runner.js",
+    "test": "npm run test:messages && npm run test:unit",
     "test:lint": "eslint .",
     "test:messages": "npm run translate && node i18n/test_scratch_msgs.js",
-    "test": "npm run test:messages && npm run test:unit",
-    "version": "json -f package.json -I -e \"this.repository.sha = '$(git log -n1 --pretty=format:%H)'\"",
+    "test:unit": "node tests/jsunit/test_runner.js",
     "translate": "node i18n/js_to_json.js && node i18n/json_to_js.js",
     "translate:sync:src": "tx-push-src scratch-editor blocks msg/json/en.json",
     "translate:sync:translations": "node i18n/sync_tx_translations.js",
@@ -32,6 +32,8 @@
     "scratch-l10n": "3.16.20231013034330"
   },
   "devDependencies": {
+    "@commitlint/cli": "18.4.3",
+    "@commitlint/config-conventional": "18.4.3",
     "async": "2.6.4",
     "copy-webpack-plugin": "4.6.0",
     "eslint": "4.19.1",
@@ -40,12 +42,20 @@
     "glob": "7.2.3",
     "google-closure-compiler": "20180402.0.0",
     "graceful-fs": "4.2.11",
+    "husky": "8.0.3",
     "json": "9.0.6",
     "rimraf": "2.7.1",
+    "scratch-semantic-release-config": "1.0.8",
     "selenium-webdriver": "4.14.0",
+    "semantic-release": "19.0.5",
     "transifex": "1.6.6",
     "uglifyjs-webpack-plugin": "1.3.0",
     "webpack": "4.47.0",
     "webpack-cli": "3.3.12"
+  },
+  "config": {
+    "commitizen": {
+      "path": "cz-conventional-changelog"
+    }
   }
 }
