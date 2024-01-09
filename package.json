@@ -47,7 +47,7 @@
     "rimraf": "2.7.1",
     "scratch-semantic-release-config": "1.0.8",
     "selenium-webdriver": "4.14.0",
-    "semantic-release": "19.0.5",
+    "semantic-release": "22.0.12",
     "transifex": "1.6.6",
     "uglifyjs-webpack-plugin": "1.3.0",
     "webpack": "4.47.0",
