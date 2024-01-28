@@ -42,7 +42,7 @@
     "glob": "7.2.3",
     "google-closure-compiler": "20180402.0.0",
     "graceful-fs": "4.2.11",
-    "husky": "8.0.3",
+    "husky": "9.0.1",
     "json": "9.0.6",
     "rimraf": "2.7.1",
     "scratch-semantic-release-config": "1.0.8",
