@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.1.2](https://github.com/scratchfoundation/scratch-blocks/compare/v1.1.1...v1.1.2) (2024-01-29)
+
+
+### Bug Fixes
+
+* **deps:** update dependency scratch-l10n to v3.18.3 ([d3bc30e](https://github.com/scratchfoundation/scratch-blocks/commit/d3bc30eb580dd02cdd58285416a81186bd2997ce))
+
 ## [1.1.1](https://github.com/scratchfoundation/scratch-blocks/compare/v1.1.0...v1.1.1) (2024-01-25)
 
 
