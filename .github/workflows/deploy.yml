@@ -10,7 +10,7 @@ jobs:
         DETECT_CHROMEDRIVER_VERSION: true
         PROJECT_PATH: ./scratch-blocks
       steps:
-        - uses: actions/checkout@v3
+        - uses: actions/checkout@v4
         - name: Install Chrome Dependencies
           run: |
             sudo apt-get update
