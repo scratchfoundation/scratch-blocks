@@ -26,7 +26,7 @@
   },
   "dependencies": {
     "chromedriver": "^118.0.1",
-    "exports-loader": "0.7.0",
+    "exports-loader": "5.0.0",
     "google-closure-library": "20190301.0.0",
     "imports-loader": "0.8.0",
     "scratch-l10n": "3.18.3"
