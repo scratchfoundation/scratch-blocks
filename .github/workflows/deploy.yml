@@ -10,7 +10,7 @@ jobs:
         DETECT_CHROMEDRIVER_VERSION: true
         PROJECT_PATH: ./scratch-blocks
       steps:
-        - uses: actions/checkout@v3
+        - uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v3
         - name: Install Chrome Dependencies
           run: |
             sudo apt-get update
@@ -18,15 +18,15 @@ jobs:
         - name: Check Python version
           run: python --version
         - name: Setup Java
-          uses: actions/setup-java@v3
+          uses: actions/setup-java@0ab4596768b603586c0de567f2430c30f5b0d2b0 # v3
           with:
             distribution: 'temurin'
             java-version: 17
         - name: Setup Node
-          uses: actions/setup-node@v3
+          uses: actions/setup-node@1a4442cacd436585916779262731d5b162bc6ec7 # v3
           with:
             node-version-file: '.nvmrc'
-        - uses: browser-actions/setup-chrome@v1
+        - uses: browser-actions/setup-chrome@97349de5c98094d4fc9412f31c524d7697115ad8 # v1
           with:
             chrome-version: stable
           id: setup-chrome
@@ -44,7 +44,7 @@ jobs:
         - name: Remove Closure App
           run: rm -rf gh-pages/closure-library/scripts/ci/CloseAdobeDialog.exe
         - name: Deploy playground to GitHub Pages
-          uses: peaceiris/actions-gh-pages@v3
+          uses: peaceiris/actions-gh-pages@373f7f263a76c20808c831209c920827a82a2847 # v3
           with:
             github_token: ${{ secrets.GITHUB_TOKEN }}
             publish_dir: ./gh-pages
