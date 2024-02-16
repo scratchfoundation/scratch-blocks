@@ -7,14 +7,13 @@ jobs:
       runs-on: ubuntu-latest
       env:
         JVM_OPTS: -Xmx3200m
-        DETECT_CHROMEDRIVER_VERSION: true
         PROJECT_PATH: ./scratch-blocks
       steps:
+        - run: |
+            for F in chrome chromium chromedriver; do
+              which $F && $F --version || echo Not found: $F
+            done
         - uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v3
-        - name: Install Chrome Dependencies
-          run: |
-            sudo apt-get update
-            sudo apt-get install -y libgconf-2-4 libatk1.0-0 libatk-bridge2.0-0 libgdk-pixbuf2.0-0 libgtk-3-0 libgbm-dev libnss3-dev libxss-dev libasound2
         - name: Check Python version
           run: python --version
         - name: Setup Java
@@ -26,13 +25,6 @@ jobs:
           uses: actions/setup-node@1a4442cacd436585916779262731d5b162bc6ec7 # v3
           with:
             node-version-file: '.nvmrc'
-        - uses: browser-actions/setup-chrome@97349de5c98094d4fc9412f31c524d7697115ad8 # v1
-          with:
-            chrome-version: stable
-          id: setup-chrome
-        - run: |
-            echo Installed chromium version: ${{ steps.setup-chrome.outputs.chrome-version }}
-            ${{ steps.setup-chrome.outputs.chrome-path }} --version
         - name: Install Node Dependencies
           run: npm ci
         - name: Lint
