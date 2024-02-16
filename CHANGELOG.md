@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.1.4](https://github.com/scratchfoundation/scratch-blocks/compare/v1.1.3...v1.1.4) (2024-02-16)
+
+
+### Bug Fixes
+
+* **deps:** update dependency chromedriver to v119 [security] ([b3c991a](https://github.com/scratchfoundation/scratch-blocks/commit/b3c991a6ddc4b028569bdc372ce337e4e4af1c34))
+
 ## [1.1.3](https://github.com/scratchfoundation/scratch-blocks/compare/v1.1.2...v1.1.3) (2024-02-16)
 
 
