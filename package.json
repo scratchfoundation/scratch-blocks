@@ -39,7 +39,7 @@
     "event-stream": "3.3.5",
     "gh-pages": "0.12.0",
     "glob": "7.2.3",
-    "google-closure-compiler": "20180402.0.0",
+    "google-closure-compiler": "20231112.0.0",
     "graceful-fs": "4.2.11",
     "husky": "8.0.3",
     "json": "9.0.6",
