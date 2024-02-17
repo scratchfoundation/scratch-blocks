@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.1.6](https://github.com/scratchfoundation/scratch-blocks/compare/v1.1.5...v1.1.6) (2024-02-17)
+
+
+### Bug Fixes
+
+* **deps:** assume chromedriver is already installed ([6a47475](https://github.com/scratchfoundation/scratch-blocks/commit/6a47475cffc1f60c022914a19ff4ad7446daadf5))
+
 ## [1.1.5](https://github.com/scratchfoundation/scratch-blocks/compare/v1.1.4...v1.1.5) (2024-02-16)
 
 
