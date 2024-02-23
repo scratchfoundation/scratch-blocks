@@ -10,10 +10,10 @@ Scratch Blocks is a library for building creative computing interfaces.
 
 Scratch Blocks is a fork of Google's [Blockly](https://github.com/google/blockly) project that provides a design
 specification and codebase for building creative computing interfaces. Together with the [Scratch Virtual Machine
-(VM)](https://github.com/LLK/scratch-vm) this codebase allows for the rapid design and development of visual
+(VM)](https://github.com/scratchfoundation/scratch-vm) this codebase allows for the rapid design and development of visual
 programming interfaces. Unlike [Blockly](https://github.com/google/blockly), Scratch Blocks does not use [code
 generators](https://developers.google.com/blockly/guides/configure/web/code-generators), but rather leverages the
-[Scratch Virtual Machine](https://github.com/LLK/scratch-vm) to create highly dynamic, interactive programming
+[Scratch Virtual Machine](https://github.com/scratchfoundation/scratch-vm) to create highly dynamic, interactive programming
 environments.
 
 *This project is in active development and should be considered a "developer preview" at this time.*
@@ -32,8 +32,8 @@ suited for devices with small screens.
 ## Documentation
 
 The "getting started" guide including [FAQ](https://scratch.mit.edu/developers#faq) and [design
-documentation](https://github.com/LLK/scratch-blocks/wiki/Design) can be found in the
-[wiki](https://github.com/LLK/scratch-blocks/wiki).
+documentation](https://github.com/scratchfoundation/scratch-blocks/wiki/Design) can be found in the
+[wiki](https://github.com/scratchfoundation/scratch-blocks/wiki).
 
 ## Donate
 
