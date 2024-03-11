@@ -123,7 +123,29 @@ Blockly.Blocks['operator_divide'] = {
     });
   }
 };
-
+Blockly.Blocks['operator_exponent'] = {
+  /**
+   * Block for raising one number to the power of another. 
+  * @this Blockly.Block
+  */
+  init: function() {
+    this.jsonInit({
+      "message0": Blockly.Msg.OPERATORS_EXPONENT,
+      "args0": [
+        {
+         "type": "input_value",
+          "name": "NUM1"
+        },
+        {
+          "type": "input_value",
+          "name": "NUM2"
+        }
+      ],
+     "category": Blockly.Categories.operators,
+     "extensions": ["colours_operators", "output_number"]
+    });
+  }
+};
 Blockly.Blocks['operator_random'] = {
   /**
    * Block for picking a random number.
