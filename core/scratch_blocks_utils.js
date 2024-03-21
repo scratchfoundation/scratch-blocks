@@ -217,6 +217,14 @@ Blockly.scratchBlocksUtils.duplicateAndDragCallback = function(oldBlock, event) 
       } finally {
         Blockly.Events.enable();
       }
+
+      // Start a new event group for the block creation + drag, so that one undo
+      // step will undo both the creation of the duplicated stack and its
+      // placement. endBlockDrag will later end this event group.
+      if (isMouseEvent) {
+        Blockly.Events.setGroup(true);
+      }
+
       if (Blockly.Events.isEnabled()) {
         Blockly.Events.fire(new Blockly.Events.BlockCreate(newBlock));
       }
