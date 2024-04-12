@@ -1,97 +1,41 @@
-// patch 'fs' to fix EMFILE errors, for example on WSL
-var realFs = require('fs');
-var gracefulFs = require('graceful-fs');
-gracefulFs.gracefulify(realFs);
+const path = require('path');
 
-var CopyWebpackPlugin = require('copy-webpack-plugin');
-var path = require('path');
-var UglifyJsPlugin = require('uglifyjs-webpack-plugin');
-
-
-
-module.exports = [{
-  mode: process.env.NODE_ENV === 'production' ? 'production' : 'development',
-  entry: {
-    horizontal: './shim/horizontal.js',
-    vertical: './shim/vertical.js'
-  },
+// Base config that applies to either development or production mode.
+const config = {
+  entry: './src/index.js',
   output: {
     library: 'ScratchBlocks',
     libraryTarget: 'commonjs2',
     path: path.resolve(__dirname, 'dist'),
     filename: '[name].js'
   },
-  optimization: {
-    minimize: false
+  // Enable webpack-dev-server to get hot refresh of the app.
+  devServer: {
+    static: './build',
   },
-  performance: {
-    hints: false
+};
+
+module.exports = (env, argv) => {
+  if (argv.mode === 'development') {
+    // Set the output path to the `build` directory
+    // so we don't clobber production builds.
+    config.output.path = path.resolve(__dirname, 'build');
+
+    // Generate source maps for our code for easier debugging.
+    // Not suitable for production builds. If you want source maps in
+    // production, choose a different one from https://webpack.js.org/configuration/devtool
+    config.devtool = 'eval-cheap-module-source-map';
+
+    // Include the source maps for Blockly for easier debugging Blockly code.
+    config.module.rules.push({
+      test: /(blockly\/.*\.js)$/,
+      use: [require.resolve('source-map-loader')],
+      enforce: 'pre',
+    });
+
+    // Ignore spurious warnings from source-map-loader
+    // It can't find source maps for some Closure modules and that is expected
+    config.ignoreWarnings = [/Failed to parse source map/];
   }
-}, {
-  mode: process.env.NODE_ENV === 'production' ? 'production' : 'development',
-  entry: {
-    horizontal: './shim/horizontal.js',
-    vertical: './shim/vertical.js'
-  },
-  output: {
-    library: 'Blockly',
-    libraryTarget: 'umd',
-    path: path.resolve(__dirname, 'dist', 'web'),
-    filename: '[name].js'
-  },
-  optimization: {
-    minimizer: [
-      new UglifyJsPlugin({
-        uglifyOptions: {
-          mangle: false
-        }
-      })
-    ]
-  },
-  plugins: []
-},
-{
-  mode: process.env.NODE_ENV === 'production' ? 'production' : 'development',
-  entry: './shim/gh-pages.js',
-  output: {
-    filename: '[name].js',
-    path: path.resolve(__dirname, 'gh-pages')
-  },
-  optimization: {
-    minimize: false
-  },
-  performance: {
-    hints: false
-  },
-  plugins: [
-      new CopyWebpackPlugin([{
-        from: 'node_modules/google-closure-library',
-        to: 'closure-library'
-      }, {
-        from: 'blocks_common',
-        to: 'playgrounds/blocks_common',
-      }, {
-        from: 'blocks_horizontal',
-        to: 'playgrounds/blocks_horizontal',
-      }, {
-        from: 'blocks_vertical',
-        to: 'playgrounds/blocks_vertical',
-      }, {
-        from: 'core',
-        to: 'playgrounds/core'
-      }, {
-        from: 'media',
-        to: 'playgrounds/media'
-      }, {
-        from: 'msg',
-        to: 'playgrounds/msg'
-      }, {
-        from: 'tests',
-        to: 'playgrounds/tests'
-      }, {
-        from: '*.js',
-        ignore: 'webpack.config.js',
-        to: 'playgrounds'
-      }])
-  ]
-}];
+  return config;
+};
