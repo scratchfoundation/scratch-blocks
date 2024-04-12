@@ -6,3 +6,4 @@
 
 export * from 'blockly';
 export * from '../core/colours.js';
+export * from '../msg/scratch_msgs.js';
