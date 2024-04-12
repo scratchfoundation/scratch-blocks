@@ -5,3 +5,4 @@
  */
 
 export * from 'blockly';
+export * from '../core/colours.js';

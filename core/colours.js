@@ -18,11 +18,7 @@
  * limitations under the License.
  */
 
-'use strict';
-
-goog.provide('Blockly.Colours');
-
-Blockly.Colours = {
+const Colours = {
   // SVG colours: these must be specificed in #RRGGBB style
   // To add an opacity, this must be specified as a separate property (for SVG fill-opacity)
   "motion": {
@@ -123,38 +119,33 @@ Blockly.Colours = {
   "numPadText": "white", // Do not use hex here, it cannot be inlined with data-uri SVG
   "valueReportBackground": "#FFFFFF",
   "valueReportBorder": "#AAAAAA",
-  "menuHover": "rgba(0, 0, 0, 0.2)"
-};
-
-/**
- * Override the colours in Blockly.Colours with new values basded on the
- * given dictionary.
- * @param {!Object} colours Dictionary of colour properties and new values.
- * @package
- */
-Blockly.Colours.overrideColours = function(colours) {
-  // Colour overrides provided by the injection
-  if (colours) {
-    for (var colourProperty in colours) {
-      if (colours.hasOwnProperty(colourProperty) &&
-          Blockly.Colours.hasOwnProperty(colourProperty)) {
-        // If a property is in both colours option and Blockly.Colours,
-        // set the Blockly.Colours value to the override.
-        // Override Blockly category color object properties with those
-        // provided.
-        var colourPropertyValue = colours[colourProperty];
-        if (goog.isObject(colourPropertyValue)) {
-          for (var colourSequence in colourPropertyValue) {
-            if (colourPropertyValue.hasOwnProperty(colourSequence) &&
-              Blockly.Colours[colourProperty].hasOwnProperty(colourSequence)) {
-              Blockly.Colours[colourProperty][colourSequence] =
-                  colourPropertyValue[colourSequence];
+  "menuHover": "rgba(0, 0, 0, 0.2)",
+  overrideColours: function(colours) {
+    // Colour overrides provided by the injection
+    if (colours) {
+      for (var colourProperty in colours) {
+        if (colours.hasOwnProperty(colourProperty) &&
+            this.hasOwnProperty(colourProperty)) {
+          // If a property is in both colours option and Blockly.Colours,
+          // set the Blockly.Colours value to the override.
+          // Override Blockly category color object properties with those
+          // provided.
+          var colourPropertyValue = colours[colourProperty];
+          if (goog.isObject(colourPropertyValue)) {
+            for (var colourSequence in colourPropertyValue) {
+              if (colourPropertyValue.hasOwnProperty(colourSequence) &&
+                this[colourProperty].hasOwnProperty(colourSequence)) {
+                this[colourProperty][colourSequence] =
+                    colourPropertyValue[colourSequence];
+              }
             }
+          } else {
+            this[colourProperty] = colourPropertyValue;
           }
-        } else {
-          Blockly.Colours[colourProperty] = colourPropertyValue;
         }
       }
     }
   }
 };
+
+export {Colours};
