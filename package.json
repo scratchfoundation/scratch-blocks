@@ -14,9 +14,13 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack --mode production",
-    "start": "webpack serve --open --mode development"
+    "start": "webpack serve --open --mode development",
+    "test:lint": "eslint ."
   },
   "devDependencies": {
+    "@commitlint/cli": "^17.8.1",
+    "@commitlint/config-conventional": "^17.8.1",
+    "eslint": "^4.19.1",
     "source-map-loader": "^4.0.1",
     "webpack": "^5.76.0",
     "webpack-cli": "^4.10.0",
