@@ -8,6 +8,7 @@ import '../blocks_common/math.js';
 import '../blocks_vertical/vertical_extensions.js';
 import '../blocks_vertical/control.js';
 import '../blocks_vertical/event.js';
+import '../blocks_vertical/looks.js';
 import '../blocks_vertical/motion.js';
 import '../blocks_vertical/operators.js';
 
