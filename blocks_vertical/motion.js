@@ -18,14 +18,8 @@
  * limitations under the License.
  */
 
-'use strict';
-
-goog.provide('Blockly.Blocks.motion');
-
-goog.require('Blockly.Blocks');
-goog.require('Blockly.Colours');
-goog.require('Blockly.constants');
-goog.require('Blockly.ScratchBlocks.VerticalExtensions');
+import * as Blockly from 'blockly/core';
+import {Categories} from '../src/categories.js';
 
 
 Blockly.Blocks['motion_movesteps'] = {
@@ -42,7 +36,7 @@ Blockly.Blocks['motion_movesteps'] = {
           "name": "STEPS"
         }
       ],
-      "category": Blockly.Categories.motion,
+      "category": Categories.motion,
       "extensions": ["colours_motion", "shape_statement"]
     });
   }
@@ -59,7 +53,7 @@ Blockly.Blocks['motion_turnright'] = {
       "args0": [
         {
           "type": "field_image",
-          "src": Blockly.mainWorkspace.options.pathToMedia + "rotate-right.svg",
+          "src": Blockly.getMainWorkspace().options.pathToMedia + "rotate-right.svg",
           "width": 24,
           "height": 24
         },
@@ -68,7 +62,7 @@ Blockly.Blocks['motion_turnright'] = {
           "name": "DEGREES"
         }
       ],
-      "category": Blockly.Categories.motion,
+      "category": Categories.motion,
       "extensions": ["colours_motion", "shape_statement"]
     });
   }
@@ -85,7 +79,7 @@ Blockly.Blocks['motion_turnleft'] = {
       "args0": [
         {
           "type": "field_image",
-          "src": Blockly.mainWorkspace.options.pathToMedia + "rotate-left.svg",
+          "src": Blockly.getMainWorkspace().options.pathToMedia + "rotate-left.svg",
           "width": 24,
           "height": 24
         },
@@ -94,7 +88,7 @@ Blockly.Blocks['motion_turnleft'] = {
           "name": "DEGREES"
         }
       ],
-      "category": Blockly.Categories.motion,
+      "category": Categories.motion,
       "extensions": ["colours_motion", "shape_statement"]
     });
   }
@@ -114,7 +108,7 @@ Blockly.Blocks['motion_pointindirection'] = {
           "name": "DIRECTION"
         }
       ],
-      "category": Blockly.Categories.motion,
+      "category": Categories.motion,
       "extensions": ["colours_motion", "shape_statement"]
     });
   }
@@ -138,11 +132,7 @@ Blockly.Blocks['motion_pointtowards_menu'] = {
           ]
         }
       ],
-      "colour": Blockly.Colours.motion.secondary,
-      "colourSecondary": Blockly.Colours.motion.secondary,
-      "colourTertiary": Blockly.Colours.motion.tertiary,
-      "colourQuaternary": Blockly.Colours.motion.quaternary,
-      "extensions": ["output_string"]
+      "extensions": ["colours_motion", "output_string"]
     });
   }
 };
@@ -161,7 +151,7 @@ Blockly.Blocks['motion_pointtowards'] = {
           "name": "TOWARDS"
         }
       ],
-      "category": Blockly.Categories.motion,
+      "category": Categories.motion,
       "extensions": ["colours_motion", "shape_statement"]
     });
   }
@@ -185,11 +175,7 @@ Blockly.Blocks['motion_goto_menu'] = {
           ]
         }
       ],
-      "colour": Blockly.Colours.motion.secondary,
-      "colourSecondary": Blockly.Colours.motion.secondary,
-      "colourTertiary": Blockly.Colours.motion.tertiary,
-      "colourQuaternary": Blockly.Colours.motion.quaternary,
-      "extensions": ["output_string"]
+      "extensions": ["colours_motion", "output_string"]
     });
   }
 };
@@ -212,7 +198,7 @@ Blockly.Blocks['motion_gotoxy'] = {
           "name": "Y"
         }
       ],
-      "category": Blockly.Categories.motion,
+      "category": Categories.motion,
       "extensions": ["colours_motion", "shape_statement"]
     });
   }
@@ -232,7 +218,7 @@ Blockly.Blocks['motion_goto'] = {
           "name": "TO"
         }
       ],
-      "category": Blockly.Categories.motion,
+      "category": Categories.motion,
       "extensions": ["colours_motion", "shape_statement"]
     });
   }
@@ -260,7 +246,7 @@ Blockly.Blocks['motion_glidesecstoxy'] = {
           "name": "Y"
         }
       ],
-      "category": Blockly.Categories.motion,
+      "category": Categories.motion,
       "extensions": ["colours_motion", "shape_statement"]
     });
   }
@@ -284,11 +270,7 @@ Blockly.Blocks['motion_glideto_menu'] = {
           ]
         }
       ],
-      "colour": Blockly.Colours.motion.secondary,
-      "colourSecondary": Blockly.Colours.motion.secondary,
-      "colourTertiary": Blockly.Colours.motion.tertiary,
-      "colourQuaternary": Blockly.Colours.motion.quaternary,
-      "extensions": ["output_string"]
+      "extensions": ["colours_motion", "output_string"]
     });
   }
 };
@@ -311,7 +293,7 @@ Blockly.Blocks['motion_glideto'] = {
           "name": "TO"
         }
       ],
-      "category": Blockly.Categories.motion,
+      "category": Categories.motion,
       "extensions": ["colours_motion", "shape_statement"]
     });
   }
@@ -331,7 +313,7 @@ Blockly.Blocks['motion_changexby'] = {
           "name": "DX"
         }
       ],
-      "category": Blockly.Categories.motion,
+      "category": Categories.motion,
       "extensions": ["colours_motion", "shape_statement"]
     });
   }
@@ -351,7 +333,7 @@ Blockly.Blocks['motion_setx'] = {
           "name": "X"
         }
       ],
-      "category": Blockly.Categories.motion,
+      "category": Categories.motion,
       "extensions": ["colours_motion", "shape_statement"]
     });
   }
@@ -371,7 +353,7 @@ Blockly.Blocks['motion_changeyby'] = {
           "name": "DY"
         }
       ],
-      "category": Blockly.Categories.motion,
+      "category": Categories.motion,
       "extensions": ["colours_motion", "shape_statement"]
     });
   }
@@ -391,7 +373,7 @@ Blockly.Blocks['motion_sety'] = {
           "name": "Y"
         }
       ],
-      "category": Blockly.Categories.motion,
+      "category": Categories.motion,
       "extensions": ["colours_motion", "shape_statement"]
     });
   }
@@ -405,7 +387,7 @@ Blockly.Blocks['motion_ifonedgebounce'] = {
   init: function() {
     this.jsonInit({
       "message0": Blockly.Msg.MOTION_IFONEDGEBOUNCE,
-      "category": Blockly.Categories.motion,
+      "category": Categories.motion,
       "extensions": ["colours_motion", "shape_statement"]
     });
   }
@@ -430,7 +412,7 @@ Blockly.Blocks['motion_setrotationstyle'] = {
           ]
         }
       ],
-      "category": Blockly.Categories.motion,
+      "category": Categories.motion,
       "extensions": ["colours_motion", "shape_statement"]
     });
   }
@@ -444,7 +426,7 @@ Blockly.Blocks['motion_xposition'] = {
   init: function() {
     this.jsonInit({
       "message0": Blockly.Msg.MOTION_XPOSITION,
-      "category": Blockly.Categories.motion,
+      "category": Categories.motion,
       "checkboxInFlyout": true,
       "extensions": ["colours_motion", "output_number"]
     });
@@ -459,7 +441,7 @@ Blockly.Blocks['motion_yposition'] = {
   init: function() {
     this.jsonInit({
       "message0": Blockly.Msg.MOTION_YPOSITION,
-      "category": Blockly.Categories.motion,
+      "category": Categories.motion,
       "checkboxInFlyout": true,
       "extensions": ["colours_motion", "output_number"]
     });
@@ -474,7 +456,7 @@ Blockly.Blocks['motion_direction'] = {
   init: function() {
     this.jsonInit({
       "message0": Blockly.Msg.MOTION_DIRECTION,
-      "category": Blockly.Categories.motion,
+      "category": Categories.motion,
       "checkboxInFlyout": true,
       "extensions": ["colours_motion", "output_number"]
     });
@@ -497,7 +479,7 @@ Blockly.Blocks['motion_scroll_right'] = {
           "name": "DISTANCE"
         }
       ],
-      "category": Blockly.Categories.motion,
+      "category": Categories.motion,
       "extensions": ["colours_motion", "shape_statement"]
     });
   }
@@ -519,7 +501,7 @@ Blockly.Blocks['motion_scroll_up'] = {
           "name": "DISTANCE"
         }
       ],
-      "category": Blockly.Categories.motion,
+      "category": Categories.motion,
       "extensions": ["colours_motion", "shape_statement"]
     });
   }
@@ -548,7 +530,7 @@ Blockly.Blocks['motion_align_scene'] = {
           ]
         }
       ],
-      "category": Blockly.Categories.motion,
+      "category": Categories.motion,
       "extensions": ["colours_motion", "shape_statement"]
     });
   }
@@ -564,7 +546,7 @@ Blockly.Blocks['motion_xscroll'] = {
   init: function() {
     this.jsonInit({
       "message0": Blockly.Msg.MOTION_XSCROLL,
-      "category": Blockly.Categories.motion,
+      "category": Categories.motion,
       "extensions": ["colours_motion", "output_number"]
     });
   }
@@ -580,7 +562,7 @@ Blockly.Blocks['motion_yscroll'] = {
   init: function() {
     this.jsonInit({
       "message0": Blockly.Msg.MOTION_YSCROLL,
-      "category": Blockly.Categories.motion,
+      "category": Categories.motion,
       "extensions": ["colours_motion", "output_number"]
     });
   }
