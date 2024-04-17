@@ -18,15 +18,8 @@
  * limitations under the License.
  */
 
-'use strict';
-
-goog.provide('Blockly.Blocks.operators');
-
-goog.require('Blockly.Blocks');
-goog.require('Blockly.Colours');
-goog.require('Blockly.constants');
-goog.require('Blockly.ScratchBlocks.VerticalExtensions');
-
+import * as Blockly from 'blockly';
+import {Categories} from '../src/categories.js';
 
 Blockly.Blocks['operator_add'] = {
   /**
@@ -46,7 +39,7 @@ Blockly.Blocks['operator_add'] = {
           "name": "NUM2"
         }
       ],
-      "category": Blockly.Categories.operators,
+      "category": Categories.operators,
       "extensions": ["colours_operators", "output_number"]
     });
   }
@@ -70,7 +63,7 @@ Blockly.Blocks['operator_subtract'] = {
           "name": "NUM2"
         }
       ],
-      "category": Blockly.Categories.operators,
+      "category": Categories.operators,
       "extensions": ["colours_operators", "output_number"]
     });
   }
@@ -94,7 +87,7 @@ Blockly.Blocks['operator_multiply'] = {
           "name": "NUM2"
         }
       ],
-      "category": Blockly.Categories.operators,
+      "category": Categories.operators,
       "extensions": ["colours_operators", "output_number"]
     });
   }
@@ -118,7 +111,7 @@ Blockly.Blocks['operator_divide'] = {
           "name": "NUM2"
         }
       ],
-      "category": Blockly.Categories.operators,
+      "category": Categories.operators,
       "extensions": ["colours_operators", "output_number"]
     });
   }
@@ -142,7 +135,7 @@ Blockly.Blocks['operator_random'] = {
           "name": "TO"
         }
       ],
-      "category": Blockly.Categories.operators,
+      "category": Categories.operators,
       "extensions": ["colours_operators", "output_number"]
     });
   }
@@ -166,7 +159,7 @@ Blockly.Blocks['operator_lt'] = {
           "name": "OPERAND2"
         }
       ],
-      "category": Blockly.Categories.operators,
+      "category": Categories.operators,
       "extensions": ["colours_operators", "output_boolean"]
     });
   }
@@ -190,7 +183,7 @@ Blockly.Blocks['operator_equals'] = {
           "name": "OPERAND2"
         }
       ],
-      "category": Blockly.Categories.operators,
+      "category": Categories.operators,
       "extensions": ["colours_operators", "output_boolean"]
     });
   }
@@ -214,7 +207,7 @@ Blockly.Blocks['operator_gt'] = {
           "name": "OPERAND2"
         }
       ],
-      "category": Blockly.Categories.operators,
+      "category": Categories.operators,
       "extensions": ["colours_operators", "output_boolean"]
     });
   }
@@ -240,7 +233,7 @@ Blockly.Blocks['operator_and'] = {
           "check": "Boolean"
         }
       ],
-      "category": Blockly.Categories.operators,
+      "category": Categories.operators,
       "extensions": ["colours_operators", "output_boolean"]
     });
   }
@@ -266,7 +259,7 @@ Blockly.Blocks['operator_or'] = {
           "check": "Boolean"
         }
       ],
-      "category": Blockly.Categories.operators,
+      "category": Categories.operators,
       "extensions": ["colours_operators", "output_boolean"]
     });
   }
@@ -287,7 +280,7 @@ Blockly.Blocks['operator_not'] = {
           "check": "Boolean"
         }
       ],
-      "category": Blockly.Categories.operators,
+      "category": Categories.operators,
       "extensions": ["colours_operators", "output_boolean"]
     });
   }
@@ -311,7 +304,7 @@ Blockly.Blocks['operator_join'] = {
           "name": "STRING2"
         }
       ],
-      "category": Blockly.Categories.operators,
+      "category": Categories.operators,
       "extensions": ["colours_operators", "output_string"]
     });
   }
@@ -335,7 +328,7 @@ Blockly.Blocks['operator_letter_of'] = {
           "name": "STRING"
         }
       ],
-      "category": Blockly.Categories.operators,
+      "category": Categories.operators,
       "extensions": ["colours_operators", "output_string"]
     });
   }
@@ -355,7 +348,7 @@ Blockly.Blocks['operator_length'] = {
           "name": "STRING"
         }
       ],
-      "category": Blockly.Categories.operators,
+      "category": Categories.operators,
       "extensions": ["colours_operators", "output_string"]
     });
   }
@@ -379,7 +372,7 @@ Blockly.Blocks['operator_contains'] = {
           "name": "STRING2"
         }
       ],
-      "category": Blockly.Categories.operators,
+      "category": Categories.operators,
       "extensions": ["colours_operators", "output_boolean"]
     });
   }
@@ -403,7 +396,7 @@ Blockly.Blocks['operator_mod'] = {
           "name": "NUM2"
         }
       ],
-      "category": Blockly.Categories.operators,
+      "category": Categories.operators,
       "extensions": ["colours_operators", "output_number"]
     });
   }
@@ -423,7 +416,7 @@ Blockly.Blocks['operator_round'] = {
           "name": "NUM"
         }
       ],
-      "category": Blockly.Categories.operators,
+      "category": Categories.operators,
       "extensions": ["colours_operators", "output_number"]
     });
   }
@@ -463,7 +456,7 @@ Blockly.Blocks['operator_mathop'] = {
           "name": "NUM"
         }
       ],
-      "category": Blockly.Categories.operators,
+      "category": Categories.operators,
       "extensions": ["colours_operators", "output_number"]
     });
   }
