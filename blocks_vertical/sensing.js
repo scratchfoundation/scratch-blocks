@@ -18,15 +18,8 @@
  * limitations under the License.
  */
 
-'use strict';
-
-goog.provide('Blockly.Blocks.sensing');
-
-goog.require('Blockly.Blocks');
-goog.require('Blockly.Colours');
-goog.require('Blockly.constants');
-goog.require('Blockly.ScratchBlocks.VerticalExtensions');
-
+import * as Blockly from 'blockly/core';
+import {Categories} from '../src/categories.js';
 
 Blockly.Blocks['sensing_touchingobject'] = {
   /**
@@ -42,7 +35,7 @@ Blockly.Blocks['sensing_touchingobject'] = {
           "name": "TOUCHINGOBJECTMENU"
         }
       ],
-      "category": Blockly.Categories.sensing,
+      "category": Categories.sensing,
       "extensions": ["colours_sensing", "output_boolean"]
     });
   }
@@ -85,7 +78,7 @@ Blockly.Blocks['sensing_touchingcolor'] = {
           "name": "COLOR"
         }
       ],
-      "category": Blockly.Categories.sensing,
+      "category": Categories.sensing,
       "extensions": ["colours_sensing", "output_boolean"]
     });
   }
@@ -109,7 +102,7 @@ Blockly.Blocks['sensing_coloristouchingcolor'] = {
           "name": "COLOR2"
         }
       ],
-      "category": Blockly.Categories.sensing,
+      "category": Categories.sensing,
       "extensions": ["colours_sensing", "output_boolean"]
     });
   }
@@ -129,7 +122,7 @@ Blockly.Blocks['sensing_distanceto'] = {
           "name": "DISTANCETOMENU"
         }
       ],
-      "category": Blockly.Categories.sensing,
+      "category": Categories.sensing,
       "extensions": ["colours_sensing", "output_number"]
     });
   }
@@ -171,7 +164,7 @@ Blockly.Blocks['sensing_askandwait'] = {
           "name": "QUESTION"
         }
       ],
-      "category": Blockly.Categories.sensing,
+      "category": Categories.sensing,
       "extensions": ["colours_sensing", "shape_statement"]
     });
   }
@@ -185,7 +178,7 @@ Blockly.Blocks['sensing_answer'] = {
   init: function() {
     this.jsonInit({
       "message0": Blockly.Msg.SENSING_ANSWER,
-      "category": Blockly.Categories.sensing,
+      "category": Categories.sensing,
       "checkboxInFlyout": true,
       "extensions": ["colours_sensing", "output_number"]
     });
@@ -206,7 +199,7 @@ Blockly.Blocks['sensing_keypressed'] = {
           "name": "KEY_OPTION"
         }
       ],
-      "category": Blockly.Categories.sensing,
+      "category": Categories.sensing,
       "extensions": ["colours_sensing", "output_boolean"]
     });
   }
@@ -283,7 +276,7 @@ Blockly.Blocks['sensing_mousedown'] = {
   init: function() {
     this.jsonInit({
       "message0": Blockly.Msg.SENSING_MOUSEDOWN,
-      "category": Blockly.Categories.sensing,
+      "category": Categories.sensing,
       "extensions": ["colours_sensing", "output_boolean"]
     });
   }
@@ -297,7 +290,7 @@ Blockly.Blocks['sensing_mousex'] = {
   init: function() {
     this.jsonInit({
       "message0": Blockly.Msg.SENSING_MOUSEX,
-      "category": Blockly.Categories.sensing,
+      "category": Categories.sensing,
       "extensions": ["colours_sensing", "output_number"]
     });
   }
@@ -311,7 +304,7 @@ Blockly.Blocks['sensing_mousey'] = {
   init: function() {
     this.jsonInit({
       "message0": Blockly.Msg.SENSING_MOUSEY,
-      "category": Blockly.Categories.sensing,
+      "category": Categories.sensing,
       "extensions": ["colours_sensing", "output_number"]
     });
   }
@@ -335,7 +328,7 @@ Blockly.Blocks['sensing_setdragmode'] = {
           ]
         }
       ],
-      "category": Blockly.Categories.sensing,
+      "category": Categories.sensing,
       "extensions": ["colours_sensing", "shape_statement"]
     });
   }
@@ -349,7 +342,7 @@ Blockly.Blocks['sensing_loudness'] = {
   init: function() {
     this.jsonInit({
       "message0": Blockly.Msg.SENSING_LOUDNESS,
-      "category": Blockly.Categories.sensing,
+      "category": Categories.sensing,
       "checkboxInFlyout": true,
       "extensions": ["colours_sensing", "output_number"]
     });
@@ -366,7 +359,7 @@ Blockly.Blocks['sensing_loud'] = {
   init: function() {
     this.jsonInit({
       "message0": Blockly.Msg.SENSING_LOUD,
-      "category": Blockly.Categories.sensing,
+      "category": Categories.sensing,
       "extensions": ["colours_sensing", "output_boolean"]
     });
   }
@@ -380,7 +373,7 @@ Blockly.Blocks['sensing_timer'] = {
   init: function() {
     this.jsonInit({
       "message0": Blockly.Msg.SENSING_TIMER,
-      "category": Blockly.Categories.sensing,
+      "category": Categories.sensing,
       "checkboxInFlyout": true,
       "extensions": ["colours_sensing", "output_number"]
     });
@@ -395,7 +388,7 @@ Blockly.Blocks['sensing_resettimer'] = {
   init: function() {
     this.jsonInit({
       "message0": Blockly.Msg.SENSING_RESETTIMER,
-      "category": Blockly.Categories.sensing,
+      "category": Categories.sensing,
       "extensions": ["colours_sensing", "shape_statement"]
     });
   }
@@ -419,7 +412,7 @@ Blockly.Blocks['sensing_of_object_menu'] = {
           ]
         }
       ],
-      "category": Blockly.Categories.sensing,
+      "category": Categories.sensing,
       "extensions": ["colours_sensing", "output_string"]
     });
   }
@@ -456,7 +449,7 @@ Blockly.Blocks['sensing_of'] = {
         }
       ],
       "output": true,
-      "category": Blockly.Categories.sensing,
+      "category": Categories.sensing,
       "outputShape": Blockly.OUTPUT_SHAPE_ROUND,
       "extensions": ["colours_sensing"]
     });
@@ -486,7 +479,7 @@ Blockly.Blocks['sensing_current'] = {
           ]
         }
       ],
-      "category": Blockly.Categories.sensing,
+      "category": Categories.sensing,
       "checkboxInFlyout": true,
       "extensions": ["colours_sensing", "output_number"]
     });
@@ -501,7 +494,7 @@ Blockly.Blocks['sensing_dayssince2000'] = {
   init: function() {
     this.jsonInit({
       "message0": Blockly.Msg.SENSING_DAYSSINCE2000,
-      "category": Blockly.Categories.sensing,
+      "category": Categories.sensing,
       "extensions": ["colours_sensing", "output_number"]
     });
   }
@@ -515,7 +508,7 @@ Blockly.Blocks['sensing_username'] = {
   init: function() {
     this.jsonInit({
       "message0": Blockly.Msg.SENSING_USERNAME,
-      "category": Blockly.Categories.sensing,
+      "category": Categories.sensing,
       "checkboxInFlyout": true,
       "extensions": ["colours_sensing", "output_number"]
     });
@@ -532,7 +525,7 @@ Blockly.Blocks['sensing_userid'] = {
   init: function() {
     this.jsonInit({
       "message0": Blockly.Msg.SENSING_USERID,
-      "category": Blockly.Categories.sensing,
+      "category": Categories.sensing,
       "extensions": ["colours_sensing", "output_number"]
     });
   }

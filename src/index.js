@@ -11,6 +11,7 @@ import '../blocks_vertical/event.js';
 import '../blocks_vertical/looks.js';
 import '../blocks_vertical/motion.js';
 import '../blocks_vertical/operators.js';
+import '../blocks_vertical/sensing.js';
 import '../blocks_vertical/sound.js';
 import * as scratchBlocksUtils from '../core/scratch_blocks_utils.js';
 
