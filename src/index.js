@@ -12,8 +12,10 @@ import '../blocks_vertical/looks.js';
 import '../blocks_vertical/motion.js';
 import '../blocks_vertical/operators.js';
 import '../blocks_vertical/sound.js';
+import * as scratchBlocksUtils from '../core/scratch_blocks_utils.js';
 
 export * from 'blockly';
 export * from './categories.js';
 export * from '../core/colours.js';
 export * from '../msg/scratch_msgs.js';
+export {scratchBlocksUtils};

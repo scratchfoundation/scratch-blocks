@@ -22,14 +22,7 @@
  * @fileoverview Utility methods for Scratch Blocks but not Blockly.
  * @author fenichel@google.com (Rachel Fenichel)
  */
-'use strict';
-
-/**
- * @name Blockly.scratchBlocksUtils
- * @namespace
- **/
-goog.provide('Blockly.scratchBlocksUtils');
-
+import * as Blockly from 'blockly/core';
 
 /**
  * Measure some text using a canvas in-memory.
@@ -41,7 +34,7 @@ goog.provide('Blockly.scratchBlocksUtils');
  * @return {number} Width of the text in px.
  * @package
  */
-Blockly.scratchBlocksUtils.measureText = function(fontSize, fontFamily,
+export function measureText(fontSize, fontFamily,
     fontWeight, text) {
   var canvas = document.createElement('canvas');
   var context = canvas.getContext('2d');
@@ -57,7 +50,7 @@ Blockly.scratchBlocksUtils.measureText = function(fontSize, fontFamily,
  * @return {string} String with HTML entities encoded.
  * @package
  */
-Blockly.scratchBlocksUtils.encodeEntities = function(rawStr) {
+export function encodeEntities(rawStr) {
   // CC-BY-SA https://stackoverflow.com/questions/18749591/encode-html-entities-in-javascript
   return rawStr.replace(/[\u00A0-\u9999<>&]/gim, function(i) {
     return '&#' + i.charCodeAt(0) + ';';
@@ -70,7 +63,7 @@ Blockly.scratchBlocksUtils.encodeEntities = function(rawStr) {
  * @param {Blockly.Block} block the root block to be processed.
  * @package
  */
-Blockly.scratchBlocksUtils.changeObscuredShadowIds = function(block) {
+export function changeObscuredShadowIds(block) {
   var blocks = block.getDescendants(false);
   for (var i = blocks.length - 1; i >= 0; i--) {
     var descendant = blocks[i];
@@ -97,7 +90,7 @@ Blockly.scratchBlocksUtils.changeObscuredShadowIds = function(block) {
  * @return {boolean} True if the block should be duplicated on drag.
  * @package
  */
-Blockly.scratchBlocksUtils.isShadowArgumentReporter = function(block) {
+export function isShadowArgumentReporter(block) {
   return (block.isShadow() && (block.type == 'argument_reporter_boolean' ||
       block.type == 'argument_reporter_string_number'));
 };
@@ -108,7 +101,7 @@ Blockly.scratchBlocksUtils.isShadowArgumentReporter = function(block) {
  * @param {string} str2 Second input.
  * @return {number} -1, 0, or 1 to signify greater than, equality, or less than.
  */
-Blockly.scratchBlocksUtils.compareStrings = function(str1, str2) {
+export function compareStrings(str1, str2) {
   return str1.localeCompare(str2, [], {
     sensitivity: 'base',
     numeric: true
@@ -122,7 +115,7 @@ Blockly.scratchBlocksUtils.compareStrings = function(str1, str2) {
  * @return {boolean} True if the block can be recycled.
  * @package
  */
-Blockly.scratchBlocksUtils.blockIsRecyclable = function(block) {
+export function blockIsRecyclable(block) {
   // If the block needs to parse mutations, never recycle.
   if (block.mutationToDom && block.domToMutation) {
     return false;
@@ -148,14 +141,13 @@ Blockly.scratchBlocksUtils.blockIsRecyclable = function(block) {
     // Check children.
     if (input.connection) {
       var child = input.connection.targetBlock();
-      if (child && !Blockly.scratchBlocksUtils.blockIsRecyclable(child)) {
+      if (child && !blockIsRecyclable(child)) {
         return false;
       }
     }
   }
   return true;
 };
-
 
 /**
  * Creates a callback function for a click on the "duplicate" context menu
@@ -168,7 +160,7 @@ Blockly.scratchBlocksUtils.blockIsRecyclable = function(block) {
  *     drag.
  * @package
  */
-Blockly.scratchBlocksUtils.duplicateAndDragCallback = function(oldBlock, event) {
+export function duplicateAndDragCallback(oldBlock, event) {
   var isMouseEvent = Blockly.Touch.getTouchIdentifierFromEvent(event) === 'mouse';
   return function(e) {
     // Give the context menu a chance to close.
@@ -195,7 +187,7 @@ Blockly.scratchBlocksUtils.duplicateAndDragCallback = function(oldBlock, event) 
         var newBlock = Blockly.Xml.domToBlock(xml, ws);
 
         // Scratch-specific: Give shadow dom new IDs to prevent duplicating on paste
-        Blockly.scratchBlocksUtils.changeObscuredShadowIds(newBlock);
+        changeObscuredShadowIds(newBlock);
 
         var svgRootNew = newBlock.getSvgRoot();
         if (!svgRootNew) {
