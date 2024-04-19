@@ -49,6 +49,7 @@ VerticalExtensions.colourHelper = function(category) {
    * @this {Blockly.Block}
    */
   return function() {
+    this.setColour(colours.primary);
     // this.setColourFromRawValues_(colours.primary, colours.secondary,
     //     colours.tertiary, colours.quaternary);
   };
@@ -58,6 +59,7 @@ VerticalExtensions.colourHelper = function(category) {
  * Extension to set the colours of a text field, which are all the same.
  */
 VerticalExtensions.COLOUR_TEXTFIELD = function() {
+  this.setColour(colours.textField);
   // this.setColourFromRawValues_(Colours.textField,
   //     Colours.textField, Colours.textField,
   //     Colours.textField);

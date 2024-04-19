@@ -48,12 +48,13 @@ Blockly.Blocks['motion_turnright'] = {
    * @this Blockly.Block
    */
   init: function() {
+    const ws = this.workspace.options.parentWorkspace || this.workspace;
     this.jsonInit({
       "message0": Blockly.Msg.MOTION_TURNRIGHT,
       "args0": [
         {
           "type": "field_image",
-          "src": Blockly.getMainWorkspace().options.pathToMedia + "rotate-right.svg",
+          "src": ws.options.pathToMedia + "rotate-right.svg",
           "width": 24,
           "height": 24
         },
@@ -74,12 +75,13 @@ Blockly.Blocks['motion_turnleft'] = {
    * @this Blockly.Block
    */
   init: function() {
+    const ws = this.workspace.options.parentWorkspace || this.workspace;
     this.jsonInit({
       "message0": Blockly.Msg.MOTION_TURNLEFT,
       "args0": [
         {
           "type": "field_image",
-          "src": Blockly.getMainWorkspace().options.pathToMedia + "rotate-left.svg",
+          "src": ws.options.pathToMedia + "rotate-left.svg",
           "width": 24,
           "height": 24
         },

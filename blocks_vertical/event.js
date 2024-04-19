@@ -71,13 +71,14 @@ Blockly.Blocks['event_whenflagclicked'] = {
    * @this Blockly.Block
    */
   init: function() {
+    const ws = this.workspace.options.parentWorkspace || this.workspace;
     this.jsonInit({
       "id": "event_whenflagclicked",
       "message0": Blockly.Msg.EVENT_WHENFLAGCLICKED,
       "args0": [
         {
           "type": "field_image",
-          "src": Blockly.getMainWorkspace().options.pathToMedia + "green-flag.svg",
+          "src": ws.options.pathToMedia + "green-flag.svg",
           "width": 24,
           "height": 24,
           "alt": "flag"
