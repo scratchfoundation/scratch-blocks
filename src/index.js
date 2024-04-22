@@ -42,3 +42,5 @@ export function inject(container, options) {
 }
 
 Blockly.Scrollbar.scrollbarThickness = Blockly.Touch.TOUCH_ENABLED ? 14 : 11;
+Blockly.ContextMenuRegistry.registry.unregister('blockDisable');
+Blockly.ContextMenuRegistry.registry.unregister('blockInline');
