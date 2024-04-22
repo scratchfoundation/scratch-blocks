@@ -22,15 +22,8 @@
  * @fileoverview Text blocks for Blockly.
  * @author fraser@google.com (Neil Fraser)
  */
-'use strict';
-
-goog.provide('Blockly.Blocks.texts');
-
-goog.require('Blockly.Blocks');
-
-goog.require('Blockly.Colours');
-
-goog.require('Blockly.constants');
+import * as Blockly from 'blockly';
+import {Colours} from '../core/colours.js';
 
 Blockly.Blocks['text'] = {
   /**
@@ -47,11 +40,10 @@ Blockly.Blocks['text'] = {
         }
       ],
       "output": "String",
-      "outputShape": Blockly.OUTPUT_SHAPE_ROUND,
-      "colour": Blockly.Colours.textField,
-      "colourSecondary": Blockly.Colours.textField,
-      "colourTertiary": Blockly.Colours.textField,
-      "colourQuaternary": Blockly.Colours.textField
+      "colour": Colours.textField,
+      "colourSecondary": Colours.textField,
+      "colourTertiary": Colours.textField,
+      "colourQuaternary": Colours.textField
     });
   }
 };

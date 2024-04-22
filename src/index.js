@@ -6,6 +6,7 @@
 
 import * as Blockly from 'blockly/core';
 import '../blocks_common/math.js';
+import '../blocks_common/text.js';
 import '../blocks_vertical/vertical_extensions.js';
 import '../blocks_vertical/control.js';
 import '../blocks_vertical/data.js';
