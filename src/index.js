@@ -16,6 +16,7 @@ import '../blocks_vertical/operators.js';
 import '../blocks_vertical/sensing.js';
 import '../blocks_vertical/sound.js';
 import * as scratchBlocksUtils from '../core/scratch_blocks_utils.js';
+import '../core/css.js';
 import {
   ContinuousToolbox,
   ContinuousFlyout,
@@ -39,3 +40,5 @@ export function inject(container, options) {
   const workspace = Blockly.inject(container, options);
   return workspace;
 }
+
+Blockly.Scrollbar.scrollbarThickness = Blockly.Touch.TOUCH_ENABLED ? 14 : 11;
