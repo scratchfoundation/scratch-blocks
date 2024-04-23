@@ -103,17 +103,6 @@ const styles = `
     overflow: visible;
   }
 
-  .blocklyBlockDragSurface {
-    display: none;
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    overflow: visible !important;
-    z-index: 50; /* Display above the toolbox */
-  }
-
   .blocklyTooltipDiv {
     background-color: #ffffc7;
     border: 1px solid #ddc;
