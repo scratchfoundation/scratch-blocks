@@ -57,10 +57,16 @@ Blockly.BlockSvg.SEP_SPACE_Y = 2 * Blockly.BlockSvg.GRID_UNIT;
 Blockly.BlockSvg.MIN_BLOCK_X = 16 * Blockly.BlockSvg.GRID_UNIT;
 
 /**
- * Minimum width of a block with output (reporters).
+ * Minimum width of a block with output and round edges (text/number reporters).
  * @const
  */
-Blockly.BlockSvg.MIN_BLOCK_X_OUTPUT = 12 * Blockly.BlockSvg.GRID_UNIT;
+Blockly.BlockSvg.MIN_BLOCK_X_OUTPUT_ROUND = 12 * Blockly.BlockSvg.GRID_UNIT;
+
+/**
+ * Minimum width of a block with output and hexagonal edges (boolean reporters).
+ * @const
+ */
+Blockly.BlockSvg.MIN_BLOCK_X_OUTPUT_HEXAGONAL = 16 * Blockly.BlockSvg.GRID_UNIT;
 
 /**
  * Minimum width of a shadow block with output (single fields).
@@ -1019,9 +1025,16 @@ Blockly.BlockSvg.prototype.computeRightEdge_ = function(curEdge, hasStatement) {
         !Blockly.scratchBlocksUtils.isShadowArgumentReporter(this)) {
       // Single-fields
       edge = Math.max(edge, Blockly.BlockSvg.MIN_BLOCK_X_SHADOW_OUTPUT);
+    } else if (this.getOutputShape() === Blockly.OUTPUT_SHAPE_HEXAGONAL) {
+      // Hexagonal reporters
+      edge = Math.max(edge, Blockly.BlockSvg.MIN_BLOCK_X_OUTPUT_HEXAGONAL);
+    } else if (this.getOutputShape() === Blockly.OUTPUT_SHAPE_ROUND) {
+      // Round reporters
+      edge = Math.max(edge, Blockly.BlockSvg.MIN_BLOCK_X_OUTPUT_ROUND);
     } else {
-      // Reporters
-      edge = Math.max(edge, Blockly.BlockSvg.MIN_BLOCK_X_OUTPUT);
+      // Other reporters
+      console.warn('Treating unknown output shape ' + this.getOutputShape() + ' as round for minimum edge width');
+      edge = Math.max(edge, Blockly.BlockSvg.MIN_BLOCK_X_OUTPUT_ROUND);
     }
   }
   if (hasStatement) {
@@ -1490,7 +1503,7 @@ Blockly.BlockSvg.prototype.drawEdgeShapeRight_ = function(steps) {
       steps.push('a ' + this.edgeShapeWidth_ + ' ' + this.edgeShapeWidth_ +
           ' 0 0 1 0 ' + this.edgeShapeWidth_ * 2);
     } else if (this.edgeShape_ === Blockly.OUTPUT_SHAPE_HEXAGONAL) {
-      // Draw an half-hexagon.
+      // Draw a half-hexagon.
       steps.push('l ' + this.edgeShapeWidth_ + ' ' + this.edgeShapeWidth_ +
           ' l ' + -this.edgeShapeWidth_ + ' ' + this.edgeShapeWidth_);
     }
