@@ -975,6 +975,24 @@ Blockly.Gesture.prototype.forceStartBlockDrag = function(fakeEvent, block) {
 };
 
 /**
+ * Don't even think about using this function before talking to rachel-fenichel.
+ *
+ * Force a drag to start without clicking and dragging the bubble itself.  Used
+ * to attach duplicated bubbles to the mouse pointer.
+ * @param {!Object} fakeEvent An object with the properties needed to start a
+ *     drag, including clientX and clientY.
+ * @param {!Blockly.BlockSvg} bubble The bubble to start dragging.
+ * @package
+ */
+Blockly.Gesture.prototype.forceStartBubbleDrag = function(fakeEvent, bubble) {
+  this.handleBubbleStart(fakeEvent, bubble);
+  this.handleWsStart(fakeEvent, bubble.workspace);
+  this.isDraggingBubble_ = true;
+  this.hasExceededDragRadius_ = true;
+  this.startDraggingBubble_();
+};
+
+/**
  * Duplicate the target block and start dragging the duplicated block.
  * This should be done once we are sure that it is a block drag, and no earlier.
  * Specifically for argument reporters in custom block defintions.

@@ -159,28 +159,33 @@ Blockly.scratchBlocksUtils.blockIsRecyclable = function(block) {
 
 /**
  * Creates a callback function for a click on the "duplicate" context menu
- * option in Scratch Blocks.  The block is duplicated and attached to the mouse,
+ * option in Scratch Blocks.  The block/comment is duplicated and attached to the mouse,
  * which acts as though it were pressed and mid-drag.  Clicking the mouse
- * releases the new dragging block.
- * @param {!Blockly.BlockSvg} oldBlock The block that will be duplicated.
+ * releases the new dragging block/comment.
+ * @param {!Blockly.BlockSvg} oldItem The block/comment that will be duplicated.
  * @param {!Event} event Event that caused the context menu to open.
  * @return {Function} A callback function that duplicates the block and starts a
  *     drag.
  * @package
  */
-Blockly.scratchBlocksUtils.duplicateAndDragCallback = function(oldBlock, event) {
+Blockly.scratchBlocksUtils.duplicateAndDragCallback = function(oldItem, event) {
   var isMouseEvent = Blockly.Touch.getTouchIdentifierFromEvent(event) === 'mouse';
   return function(e) {
     // Give the context menu a chance to close.
     setTimeout(function() {
-      var ws = oldBlock.workspace;
-      var svgRootOld = oldBlock.getSvgRoot();
+      var ws = oldItem.workspace;
+      var svgRootOld = oldItem.getSvgRoot();
       if (!svgRootOld) {
-        throw new Error('oldBlock is not rendered.');
+        throw new Error('oldItem is not rendered.');
       }
 
       // Create the new block by cloning the block in the flyout (via XML).
-      var xml = Blockly.Xml.blockToDom(oldBlock);
+      var xml;
+      if (oldItem.isComment) {
+        xml = oldItem.toXmlWithXY();
+      } else {
+        xml = Blockly.Xml.blockToDom(oldItem);
+      }
       // The target workspace would normally resize during domToBlock, which
       // will lead to weird jumps.
       // Resizing will be enabled when the drag ends.
@@ -192,33 +197,39 @@ Blockly.scratchBlocksUtils.duplicateAndDragCallback = function(oldBlock, event) 
       try {
         // Using domToBlock instead of domToWorkspace means that the new block
         // will be placed at position (0, 0) in main workspace units.
-        var newBlock = Blockly.Xml.domToBlock(xml, ws);
-
-        // Scratch-specific: Give shadow dom new IDs to prevent duplicating on paste
-        Blockly.scratchBlocksUtils.changeObscuredShadowIds(newBlock);
-
-        var svgRootNew = newBlock.getSvgRoot();
-        if (!svgRootNew) {
-          throw new Error('newBlock is not rendered.');
+        var newItem;
+        if (oldItem.isComment) {
+          newItem = Blockly.WorkspaceCommentSvg.fromXml(xml, ws);
+        }
+        else {
+          newItem = Blockly.Xml.domToBlock(xml, ws);
+          // Scratch-specific: Give shadow dom new IDs to prevent duplicating on paste
+          Blockly.scratchBlocksUtils.changeObscuredShadowIds(newItem);
+          // The position of the old block in workspace coordinates.
+          var oldItemPosWs = oldItem.getRelativeToSurfaceXY();
+          // Place the new block as the same position as the old block.
+          newItem.moveBy(oldItemPosWs.x, oldItemPosWs.y);
         }
 
-        // The position of the old block in workspace coordinates.
-        var oldBlockPosWs = oldBlock.getRelativeToSurfaceXY();
-
-        // Place the new block as the same position as the old block.
-        // TODO: Offset by the difference between the mouse position and the upper
-        // left corner of the block.
-        newBlock.moveBy(oldBlockPosWs.x, oldBlockPosWs.y);
+        var svgRootNew = newItem.getSvgRoot();
+        if (!svgRootNew) {
+          throw new Error('newItem is not rendered.');
+        }
         if (!isMouseEvent) {
           var offsetX = ws.RTL ? -100 : 100;
           var offsetY = 100;
-          newBlock.moveBy(offsetX, offsetY); // Just offset the block for touch.
+          newItem.moveBy(offsetX, offsetY); // Just offset the block for touch.
         }
       } finally {
         Blockly.Events.enable();
       }
       if (Blockly.Events.isEnabled()) {
-        Blockly.Events.fire(new Blockly.Events.BlockCreate(newBlock));
+        if (newItem.isComment) {
+          Blockly.Events.fire(new Blockly.Events.CommentCreate(newItem));
+        }
+        else {
+          Blockly.Events.fire(new Blockly.Events.BlockCreate(newItem));
+        }
       }
 
       if (isMouseEvent) {
@@ -237,7 +248,7 @@ Blockly.scratchBlocksUtils.duplicateAndDragCallback = function(oldBlock, event) 
           },
           target: e.target
         };
-        ws.startDragWithFakeEvent(fakeEvent, newBlock);
+        ws.startDragWithFakeEvent(fakeEvent, newItem);
       }
     }, 0);
   };
