@@ -105,7 +105,7 @@ function addCreateButton_(workspace, xmlList) {
   var msg = Blockly.Msg.NEW_PROCEDURE;
   var callbackKey = 'CREATE_PROCEDURE';
   var callback = function() {
-    createProcedureDefCallback_(workspace);
+    createProcedureDefCallback(workspace);
   };
   button.setAttribute('text', msg);
   button.setAttribute('callbackKey', callbackKey);
@@ -243,7 +243,7 @@ function newProcedureMutation() {
  * @param {!Blockly.Workspace} workspace The workspace to create the new procedure on.
  * @private
  */
-function createProcedureDefCallback_(workspace) {
+function createProcedureDefCallback(workspace) {
   ScratchProcedures.externalProcedureDefCallback(
       newProcedureMutation(),
       createProcedureCallbackFactory_(workspace)
