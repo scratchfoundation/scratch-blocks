@@ -27,6 +27,7 @@
  */
 import * as Blockly from 'blockly/core';
 import {Colours} from '../core/colours.js';
+import {ScratchProcedures} from '../src/procedures.js';
 
 const VerticalExtensions = {};
 /**
@@ -158,7 +159,7 @@ VerticalExtensions.PROCEDURE_DEF_CONTEXTMENU = {
    */
   customContextMenu: function(menuOptions) {
     // Add the edit option at the end.
-    menuOptions.push(Blockly.Procedures.makeEditOption(this));
+    menuOptions.push(ScratchProcedures.makeEditOption(this));
 
     // Find the delete option and update its callback to be specific to
     // functions.
@@ -173,7 +174,7 @@ VerticalExtensions.PROCEDURE_DEF_CONTEXTMENU = {
         }
         var rootBlock = this;
         option.callback = function() {
-          var didDelete = Blockly.Procedures.deleteProcedureDefCallback(
+          var didDelete = ScratchProcedures.deleteProcedureDefCallback(
               procCode, rootBlock);
           if (!didDelete) {
             alert(Blockly.Msg.PROCEDURE_USED);
@@ -207,7 +208,7 @@ VerticalExtensions.PROCEDURE_CALL_CONTEXTMENU = {
    * @this Blockly.Block
    */
   customContextMenu: function(menuOptions) {
-    menuOptions.push(Blockly.Procedures.makeEditOption(this));
+    menuOptions.push(ScratchProcedures.makeEditOption(this));
   }
 };
 

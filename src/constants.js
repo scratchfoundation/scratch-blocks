@@ -16,3 +16,24 @@ export {BROADCAST_MESSAGE_VARIABLE_TYPE};
  */
 const LIST_VARIABLE_TYPE = 'list';
 export {LIST_VARIABLE_TYPE};
+
+/*
+ * The type of all procedure definition blocks.
+ * @const {string}
+ */
+const PROCEDURES_DEFINITION_BLOCK_TYPE = 'procedures_definition';
+export {PROCEDURES_DEFINITION_BLOCK_TYPE};
+
+/**
+ * The type of all procedure prototype blocks.
+ * @const {string}
+ */
+const PROCEDURES_PROTOTYPE_BLOCK_TYPE = 'procedures_prototype';
+export {PROCEDURES_PROTOTYPE_BLOCK_TYPE};
+
+/**
+ * The type of all procedure call blocks.
+ * @const {string}
+ */
+const PROCEDURES_CALL_BLOCK_TYPE = 'procedures_call';
+export {PROCEDURES_CALL_BLOCK_TYPE};

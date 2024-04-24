@@ -22,57 +22,10 @@
  * @fileoverview Utility functions for handling procedures.
  * @author fraser@google.com (Neil Fraser)
  */
-'use strict';
 
-/**
- * @name Blockly.Procedures
- * @namespace
- **/
-goog.provide('Blockly.Procedures');
-
-goog.require('Blockly.Blocks');
-goog.require('Blockly.constants');
-goog.require('Blockly.Events.BlockChange');
-goog.require('Blockly.Field');
-goog.require('Blockly.Names');
-goog.require('Blockly.Workspace');
-
-
-/**
- * Constant to separate procedure names from variables and generated functions
- * when running generators.
- * @deprecated Use Blockly.PROCEDURE_CATEGORY_NAME
- */
-Blockly.Procedures.NAME_TYPE = Blockly.PROCEDURE_CATEGORY_NAME;
-
-/**
- * Find all user-created procedure definitions in a workspace.
- * @param {!Blockly.Workspace} root Root workspace.
- * @return {!Array.<!Array.<!Array>>} Pair of arrays, the
- *     first contains procedures without return variables, the second with.
- *     Each procedure is defined by a three-element list of name, parameter
- *     list, and return value boolean.
- */
-Blockly.Procedures.allProcedures = function(root) {
-  var blocks = root.getAllBlocks();
-  var proceduresReturn = [];
-  var proceduresNoReturn = [];
-  for (var i = 0; i < blocks.length; i++) {
-    if (blocks[i].getProcedureDef) {
-      var tuple = blocks[i].getProcedureDef();
-      if (tuple) {
-        if (tuple[2]) {
-          proceduresReturn.push(tuple);
-        } else {
-          proceduresNoReturn.push(tuple);
-        }
-      }
-    }
-  }
-  proceduresNoReturn.sort(Blockly.Procedures.procTupleComparator_);
-  proceduresReturn.sort(Blockly.Procedures.procTupleComparator_);
-  return [proceduresNoReturn, proceduresReturn];
-};
+import * as Blockly from 'blockly/core';
+import * as Constants from './constants.js';
+import * as scratchBlocksUtils from '../core/scratch_blocks_utils.js';
 
 /**
  * Find all user-created procedure definition mutations in a workspace.
@@ -80,11 +33,11 @@ Blockly.Procedures.allProcedures = function(root) {
  * @return {!Array.<Element>} Array of mutation xml elements.
  * @package
  */
-Blockly.Procedures.allProcedureMutations = function(root) {
+function allProcedureMutations(root) {
   var blocks = root.getAllBlocks();
   var mutations = [];
   for (var i = 0; i < blocks.length; i++) {
-    if (blocks[i].type == Blockly.PROCEDURES_PROTOTYPE_BLOCK_TYPE) {
+    if (blocks[i].type == Constants.PROCEDURES_PROTOTYPE_BLOCK_TYPE) {
       var mutation = blocks[i].mutationToDom(/* opt_generateShadows */ true);
       if (mutation) {
         mutations.push(mutation);
@@ -92,7 +45,7 @@ Blockly.Procedures.allProcedureMutations = function(root) {
     }
   }
   return mutations;
-};
+}
 
 /**
  * Sorts an array of procedure definition mutations alphabetically.
@@ -101,144 +54,45 @@ Blockly.Procedures.allProcedureMutations = function(root) {
  * @return {!Array.<Element>} Sorted array of mutation xml elements.
  * @private
  */
-Blockly.Procedures.sortProcedureMutations_ = function(mutations) {
+function sortProcedureMutations_(mutations) {
   var newMutations = mutations.slice();
 
   newMutations.sort(function(a, b) {
     var procCodeA = a.getAttribute('proccode');
     var procCodeB = b.getAttribute('proccode');
 
-    return Blockly.scratchBlocksUtils.compareStrings(procCodeA, procCodeB);
+    return scratchBlocksUtils.compareStrings(procCodeA, procCodeB);
   });
 
   return newMutations;
-};
-
-/**
- * Comparison function for case-insensitive sorting of the first element of
- * a tuple.
- * @param {!Array} ta First tuple.
- * @param {!Array} tb Second tuple.
- * @return {number} -1, 0, or 1 to signify greater than, equality, or less than.
- * @private
- */
-Blockly.Procedures.procTupleComparator_ = function(ta, tb) {
-  return Blockly.scratchBlocksUtils.compareStrings(ta[0], tb[0]);
-};
-
-/**
- * Ensure two identically-named procedures don't exist.
- * @param {string} name Proposed procedure name.
- * @param {!Blockly.Block} block Block to disambiguate.
- * @return {string} Non-colliding name.
- */
-Blockly.Procedures.findLegalName = function(name, block) {
-  if (block.isInFlyout) {
-    // Flyouts can have multiple procedures called 'do something'.
-    return name;
-  }
-  while (!Blockly.Procedures.isLegalName_(name, block.workspace, block)) {
-    // Collision with another procedure.
-    var r = name.match(/^(.*?)(\d+)$/);
-    if (!r) {
-      name += '2';
-    } else {
-      name = r[1] + (parseInt(r[2], 10) + 1);
-    }
-  }
-  return name;
-};
-
-/**
- * Does this procedure have a legal name?  Illegal names include names of
- * procedures already defined.
- * @param {string} name The questionable name.
- * @param {!Blockly.Workspace} workspace The workspace to scan for collisions.
- * @param {Blockly.Block=} opt_exclude Optional block to exclude from
- *     comparisons (one doesn't want to collide with oneself).
- * @return {boolean} True if the name is legal.
- * @private
- */
-Blockly.Procedures.isLegalName_ = function(name, workspace, opt_exclude) {
-  return !Blockly.Procedures.isNameUsed(name, workspace, opt_exclude);
-};
-
-/**
- * Return if the given name is already a procedure name.
- * @param {string} name The questionable name.
- * @param {!Blockly.Workspace} workspace The workspace to scan for collisions.
- * @param {Blockly.Block=} opt_exclude Optional block to exclude from
- *     comparisons (one doesn't want to collide with oneself).
- * @return {boolean} True if the name is used, otherwise return false.
- */
-Blockly.Procedures.isNameUsed = function(name, workspace, opt_exclude) {
-  var blocks = workspace.getAllBlocks();
-  // Iterate through every block and check the name.
-  for (var i = 0; i < blocks.length; i++) {
-    if (blocks[i] == opt_exclude) {
-      continue;
-    }
-    if (blocks[i].getProcedureDef) {
-      var procName = blocks[i].getProcedureDef();
-      if (Blockly.Names.equals(procName[0], name)) {
-        return false;
-      }
-    }
-  }
-  return true;
-};
-
-/**
- * Rename a procedure.  Called by the editable field.
- * @param {string} name The proposed new name.
- * @return {string} The accepted name.
- * @this {Blockly.Field}
- */
-Blockly.Procedures.rename = function(name) {
-  // Strip leading and trailing whitespace.  Beyond this, all names are legal.
-  name = name.replace(/^[\s\xa0]+|[\s\xa0]+$/g, '');
-
-  // Ensure two identically-named procedures don't exist.
-  var legalName = Blockly.Procedures.findLegalName(name, this.sourceBlock_);
-  var oldName = this.text_;
-  if (oldName != name && oldName != legalName) {
-    // Rename any callers.
-    var blocks = this.sourceBlock_.workspace.getAllBlocks();
-    for (var i = 0; i < blocks.length; i++) {
-      if (blocks[i].renameProcedure) {
-        blocks[i].renameProcedure(oldName, legalName);
-      }
-    }
-  }
-  return legalName;
-};
+}
 
 /**
  * Construct the blocks required by the flyout for the procedure category.
- * @param {!Blockly.Workspace} workspace The workspace contianing procedures.
+ * @param {!Blockly.Workspace} workspace The workspace containing procedures.
  * @return {!Array.<!Element>} Array of XML block elements.
  */
-Blockly.Procedures.flyoutCategory = function(workspace) {
+function getProceduresCategory(workspace) {
   var xmlList = [];
 
-  Blockly.Procedures.addCreateButton_(workspace, xmlList);
+  addCreateButton_(workspace, xmlList);
 
   // Create call blocks for each procedure defined in the workspace
-  var mutations = Blockly.Procedures.allProcedureMutations(workspace);
-  mutations = Blockly.Procedures.sortProcedureMutations_(mutations);
+  var mutations = allProcedureMutations(workspace);
+  mutations = sortProcedureMutations_(mutations);
   for (var i = 0; i < mutations.length; i++) {
     var mutation = mutations[i];
     // <block type="procedures_call">
     //   <mutation ...></mutation>
     // </block>
-    var block = goog.dom.createDom('block');
+    var block = document.createElement('block');
     block.setAttribute('type', 'procedures_call');
     block.setAttribute('gap', 16);
     block.appendChild(mutation);
     xmlList.push(block);
   }
   return xmlList;
-};
+}
 
 /**
  * Create the "Make a Block..." button.
@@ -246,18 +100,18 @@ Blockly.Procedures.flyoutCategory = function(workspace) {
  * @param {!Array.<!Element>} xmlList Array of XML block elements to add to.
  * @private
  */
-Blockly.Procedures.addCreateButton_ = function(workspace, xmlList) {
-  var button = goog.dom.createDom('button');
+function addCreateButton_(workspace, xmlList) {
+  var button = document.createElement('button');
   var msg = Blockly.Msg.NEW_PROCEDURE;
   var callbackKey = 'CREATE_PROCEDURE';
   var callback = function() {
-    Blockly.Procedures.createProcedureDefCallback_(workspace);
+    createProcedureDefCallback_(workspace);
   };
   button.setAttribute('text', msg);
   button.setAttribute('callbackKey', callbackKey);
   workspace.registerButtonCallback(callbackKey, callback);
   xmlList.push(button);
-};
+}
 
 /**
  * Find all callers of a named procedure.
@@ -271,7 +125,7 @@ Blockly.Procedures.addCreateButton_ = function(workspace, xmlList) {
  * @return {!Array.<!Blockly.Block>} Array of caller blocks.
  * @package
  */
-Blockly.Procedures.getCallers = function(name, ws, definitionRoot,
+function getCallers(name, ws, definitionRoot,
     allowRecursive) {
   var allBlocks = [];
   var topBlocks = ws.getTopBlocks();
@@ -288,7 +142,7 @@ Blockly.Procedures.getCallers = function(name, ws, definitionRoot,
   var callers = [];
   for (var i = 0; i < allBlocks.length; i++) {
     var block = allBlocks[i];
-    if (block.type == Blockly.PROCEDURES_CALL_BLOCK_TYPE ) {
+    if (block.type == Constants.PROCEDURES_CALL_BLOCK_TYPE ) {
       var procCode = block.getProcCode();
       if (procCode && procCode == name) {
         callers.push(block);
@@ -296,7 +150,7 @@ Blockly.Procedures.getCallers = function(name, ws, definitionRoot,
     }
   }
   return callers;
-};
+}
 
 /**
  * Find and edit all callers with a procCode using a new mutation.
@@ -305,11 +159,11 @@ Blockly.Procedures.getCallers = function(name, ws, definitionRoot,
  * @param {!Element} mutation New mutation for the callers.
  * @package
  */
-Blockly.Procedures.mutateCallersAndPrototype = function(name, ws, mutation) {
-  var defineBlock = Blockly.Procedures.getDefineBlock(name, ws);
-  var prototypeBlock = Blockly.Procedures.getPrototypeBlock(name, ws);
+function mutateCallersAndPrototype(name, ws, mutation) {
+  var defineBlock = getDefineBlock(name, ws);
+  var prototypeBlock = getPrototypeBlock(name, ws);
   if (defineBlock && prototypeBlock) {
-    var callers = Blockly.Procedures.getCallers(name,
+    var callers = getCallers(name,
         defineBlock.workspace, defineBlock, true /* allowRecursive */);
     callers.push(prototypeBlock);
     Blockly.Events.setGroup(true);
@@ -328,7 +182,7 @@ Blockly.Procedures.mutateCallersAndPrototype = function(name, ws, mutation) {
   } else {
     alert('No define block on workspace'); // TODO decide what to do about this.
   }
-};
+}
 
 /**
  * Find the definition block for the named procedure.
@@ -337,11 +191,11 @@ Blockly.Procedures.mutateCallersAndPrototype = function(name, ws, mutation) {
  * @return {Blockly.Block} The procedure definition block, or null not found.
  * @package
  */
-Blockly.Procedures.getDefineBlock = function(procCode, workspace) {
+function getDefineBlock(procCode, workspace) {
   // Assume that a procedure definition is a top block.
   var blocks = workspace.getTopBlocks(false);
   for (var i = 0; i < blocks.length; i++) {
-    if (blocks[i].type == Blockly.PROCEDURES_DEFINITION_BLOCK_TYPE) {
+    if (blocks[i].type == Constants.PROCEDURES_DEFINITION_BLOCK_TYPE) {
       var prototypeBlock = blocks[i].getInput('custom_block').connection.targetBlock();
       if (prototypeBlock.getProcCode && prototypeBlock.getProcCode() == procCode) {
         return blocks[i];
@@ -349,7 +203,7 @@ Blockly.Procedures.getDefineBlock = function(procCode, workspace) {
     }
   }
   return null;
-};
+}
 
 /**
  * Find the prototype block for the named procedure.
@@ -358,20 +212,20 @@ Blockly.Procedures.getDefineBlock = function(procCode, workspace) {
  * @return {Blockly.Block} The procedure prototype block, or null not found.
  * @package
  */
-Blockly.Procedures.getPrototypeBlock = function(procCode, workspace) {
-  var defineBlock = Blockly.Procedures.getDefineBlock(procCode, workspace);
+function getPrototypeBlock(procCode, workspace) {
+  var defineBlock = getDefineBlock(procCode, workspace);
   if (defineBlock) {
     return defineBlock.getInput('custom_block').connection.targetBlock();
   }
   return null;
-};
+}
 
 /**
  * Create a mutation for a brand new custom procedure.
  * @return {Element} The mutation for a new custom procedure
  * @package
  */
-Blockly.Procedures.newProcedureMutation = function() {
+function newProcedureMutation() {
   var mutationText = '<xml>' +
       '<mutation' +
       ' proccode="' + Blockly.Msg['PROCEDURE_DEFAULT_NAME'] + '"' +
@@ -381,20 +235,20 @@ Blockly.Procedures.newProcedureMutation = function() {
       ' warp="false">' +
       '</mutation>' +
       '</xml>';
-  return Blockly.Xml.textToDom(mutationText).firstChild;
-};
+  return Blockly.utils.xml.textToDom(mutationText).firstChild;
+}
 
 /**
  * Callback to create a new procedure custom command block.
  * @param {!Blockly.Workspace} workspace The workspace to create the new procedure on.
  * @private
  */
-Blockly.Procedures.createProcedureDefCallback_ = function(workspace) {
-  Blockly.Procedures.externalProcedureDefCallback(
-      Blockly.Procedures.newProcedureMutation(),
-      Blockly.Procedures.createProcedureCallbackFactory_(workspace)
+function createProcedureDefCallback_(workspace) {
+  ScratchProcedures.externalProcedureDefCallback(
+      newProcedureMutation(),
+      createProcedureCallbackFactory_(workspace)
   );
-};
+}
 
 /**
  * Callback factory for adding a new custom procedure from a mutation.
@@ -402,7 +256,7 @@ Blockly.Procedures.createProcedureDefCallback_ = function(workspace) {
  * @return {function(?Element)} callback for creating the new custom procedure.
  * @private
  */
-Blockly.Procedures.createProcedureCallbackFactory_ = function(workspace) {
+function createProcedureCallbackFactory_(workspace) {
   return function(mutation) {
     if (mutation) {
       var blockText = '<xml>' +
@@ -414,7 +268,7 @@ Blockly.Procedures.createProcedureCallbackFactory_ = function(workspace) {
           '</statement>' +
           '</block>' +
           '</xml>';
-      var blockDom = Blockly.Xml.textToDom(blockText).firstChild;
+      var blockDom = Blockly.utils.xml.textToDom(blockText).firstChild;
       Blockly.Events.setGroup(true);
       var block = Blockly.Xml.domToBlock(blockDom, workspace);
       var scale = workspace.scale; // To convert from pixel units to workspace units
@@ -431,17 +285,17 @@ Blockly.Procedures.createProcedureCallbackFactory_ = function(workspace) {
       Blockly.Events.setGroup(false);
     }
   };
-};
+}
 
 /**
  * Callback to open the modal for editing custom procedures.
  * @param {!Blockly.Block} block The block that was right-clicked.
  * @private
  */
-Blockly.Procedures.editProcedureCallback_ = function(block) {
+function editProcedureCallback_(block) {
   // Edit can come from one of three block types (call, define, prototype)
   // Normalize by setting the block to the prototype block for the procedure.
-  if (block.type == Blockly.PROCEDURES_DEFINITION_BLOCK_TYPE) {
+  if (block.type == Constants.PROCEDURES_DEFINITION_BLOCK_TYPE) {
     var input = block.getInput('custom_block');
     if (!input) {
       alert('Bad input'); // TODO: Decide what to do about this.
@@ -454,25 +308,25 @@ Blockly.Procedures.editProcedureCallback_ = function(block) {
     }
     var innerBlock = conn.targetBlock();
     if (!innerBlock ||
-        !innerBlock.type == Blockly.PROCEDURES_PROTOTYPE_BLOCK_TYPE) {
+        !innerBlock.type == Constants.PROCEDURES_PROTOTYPE_BLOCK_TYPE) {
       alert('Bad inner block'); // TODO: Decide what to do about this.
       return;
     }
     block = innerBlock;
-  } else if (block.type == Blockly.PROCEDURES_CALL_BLOCK_TYPE) {
+  } else if (block.type == Constants.PROCEDURES_CALL_BLOCK_TYPE) {
     // This is a call block, find the prototype corresponding to the procCode.
     // Make sure to search the correct workspace, call block can be in flyout.
     var workspaceToSearch = block.workspace.isFlyout ?
         block.workspace.targetWorkspace : block.workspace;
-    block = Blockly.Procedures.getPrototypeBlock(
+    block = getPrototypeBlock(
         block.getProcCode(), workspaceToSearch);
   }
   // Block now refers to the procedure prototype block, it is safe to proceed.
-  Blockly.Procedures.externalProcedureDefCallback(
+  ScratchProcedures.externalProcedureDefCallback(
       block.mutationToDom(),
-      Blockly.Procedures.editProcedureCallbackFactory_(block)
+      editProcedureCallbackFactory_(block)
   );
-};
+}
 
 /**
  * Callback factory for editing an existing custom procedure.
@@ -480,22 +334,14 @@ Blockly.Procedures.editProcedureCallback_ = function(block) {
  * @return {function(?Element)} Callback for editing the custom procedure.
  * @private
  */
-Blockly.Procedures.editProcedureCallbackFactory_ = function(block) {
+function editProcedureCallbackFactory_(block) {
   return function(mutation) {
     if (mutation) {
-      Blockly.Procedures.mutateCallersAndPrototype(block.getProcCode(),
+      mutateCallersAndPrototype(block.getProcCode(),
           block.workspace, mutation);
     }
   };
-};
-
-/**
- * Callback to create a new procedure custom command block.
- * @public
- */
-Blockly.Procedures.externalProcedureDefCallback = function(/** mutator, callback */) {
-  alert('External procedure editor must be override Blockly.Procedures.externalProcedureDefCallback');
-};
+}
 
 /**
  * Make a context menu option for editing a custom procedure.
@@ -505,46 +351,16 @@ Blockly.Procedures.externalProcedureDefCallback = function(/** mutator, callback
  * @return {!Object} A menu option, containing text, enabled, and a callback.
  * @package
  */
-Blockly.Procedures.makeEditOption = function(block) {
+function makeEditOption(block) {
   var editOption = {
     enabled: true,
     text: Blockly.Msg.EDIT_PROCEDURE,
     callback: function() {
-      Blockly.Procedures.editProcedureCallback_(block);
+      editProcedureCallback_(block);
     }
   };
   return editOption;
-};
-
-/**
- * Callback to show the procedure definition corresponding to a custom command
- * block.
- * TODO(#1136): Implement.
- * @param {!Blockly.Block} block The block that was right-clicked.
- * @private
- */
-Blockly.Procedures.showProcedureDefCallback_ = function(block) {
-  alert('TODO(#1136): implement showing procedure definition (procCode was "' +
-      block.procCode_ + '")');
-};
-
-/**
- * Make a context menu option for showing the definition for a custom procedure,
- * based on a right-click on a custom command block.
- * @param {!Blockly.BlockSvg} block The block where the right-click originated.
- * @return {!Object} A menu option, containing text, enabled, and a callback.
- * @package
- */
-Blockly.Procedures.makeShowDefinitionOption = function(block) {
-  var option = {
-    enabled: true,
-    text: Blockly.Msg.SHOW_PROCEDURE_DEFINITION,
-    callback: function() {
-      Blockly.Procedures.showProcedureDefCallback_(block);
-    }
-  };
-  return option;
-};
+}
 
 /**
  * Callback to try to delete a custom block definitions.
@@ -554,9 +370,9 @@ Blockly.Procedures.makeShowDefinitionOption = function(block) {
  * @return {boolean} True if the custom procedure was deleted, false otherwise.
  * @package
  */
-Blockly.Procedures.deleteProcedureDefCallback = function(procCode,
+function deleteProcedureDefCallback(procCode,
     definitionRoot) {
-  var callers = Blockly.Procedures.getCallers(procCode,
+  var callers = getCallers(procCode,
       definitionRoot.workspace, definitionRoot, false /* allowRecursive */);
   if (callers.length > 0) {
     return false;
@@ -574,4 +390,13 @@ Blockly.Procedures.deleteProcedureDefCallback = function(procCode,
   workspace.refreshToolboxSelection_();
 
   return true;
+}
+
+const ScratchProcedures = {
+  externalProcedureDefCallback: null,
+  createProcedureDefCallback,
+  deleteProcedureDefCallback,
+  getProceduresCategory,
+  makeEditOption,
 };
+export {ScratchProcedures};
