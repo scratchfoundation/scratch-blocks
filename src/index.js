@@ -25,6 +25,8 @@ import {
   ContinuousMetrics,
 } from '@blockly/continuous-toolbox';
 
+import './scratch_continuous_category.js';
+
 export * from 'blockly';
 export * from './categories.js';
 export * from './procedures.js';
@@ -45,5 +47,7 @@ export function inject(container, options) {
 }
 
 Blockly.Scrollbar.scrollbarThickness = Blockly.Touch.TOUCH_ENABLED ? 14 : 11;
+Blockly.FlyoutButton.TEXT_MARGIN_X = 40;
+Blockly.FlyoutButton.TEXT_MARGIN_Y = 10;
 Blockly.ContextMenuRegistry.registry.unregister('blockDisable');
 Blockly.ContextMenuRegistry.registry.unregister('blockInline');

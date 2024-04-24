@@ -383,10 +383,6 @@ const styles = `
       stroke: #c6c6c6;
   }
 
-  .blocklyFlyoutButton .blocklyText {
-    fill: var(--colour-textFieldText);
-  }
-
   .blocklyFlyoutButtonShadow {
     fill: transparent;
   }
@@ -414,6 +410,14 @@ const styles = `
     font-size: 14pt;
     fill: #575E75;
     font-weight: bold;
+  }
+
+  .zelos-renderer.scratch-theme .blocklyText {
+    font-weight: 500;
+  }
+
+  .zelos-renderer.scratch-theme .blocklyFlyoutButton .blocklyText {
+    fill: var(--colour-textFieldText);
   }
 
   /*
@@ -749,7 +753,7 @@ const styles = `
     outline: none;
   }
 
-  .blocklyTreeRow {
+  .blocklyToolboxDiv .blocklyTreeRow {
     line-height: 22px;
     margin: 0;
     padding: 0.375rem 0px;
@@ -933,6 +937,12 @@ const styles = `
     overflow-y: auto;
     overflow-x: hidden;
     z-index: 20000;  /* Arbitrary, but some apps depend on it... */
+    box-sizing: content-box;
+    box-shadow: none;
+  }
+
+  .blocklyWidgetDiv .blocklyMenu.blocklyFocused {
+    box-shadow: none;
   }
 
   .blocklyDropDownDiv .goog-menu {
@@ -972,7 +982,6 @@ const styles = `
    * #noflip to .goog-menuitem.
    */
   .blocklyWidgetDiv .goog-menuitem {
-    color: #000;
     font: normal 13px "Helvetica Neue", Helvetica, sans-serif;
     list-style: none;
     margin: 0;
@@ -1021,7 +1030,6 @@ const styles = `
 
   .blocklyWidgetDiv .goog-menuitem-content ,
   .blocklyDropDownDiv .goog-menuitem-content {
-    color: #000;
     font: normal 13px "Helvetica Neue", Helvetica, sans-serif;
   }
 
