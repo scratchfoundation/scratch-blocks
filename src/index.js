@@ -5,6 +5,7 @@
  */
 
 import * as Blockly from 'blockly/core';
+import '../blocks_common/colour.js';
 import '../blocks_common/math.js';
 import '../blocks_common/text.js';
 import '../blocks_vertical/vertical_extensions.js';
@@ -31,6 +32,7 @@ export * from 'blockly';
 export * from './categories.js';
 export * from './procedures.js';
 export * from '../core/colours.js';
+export * from '../core/field_colour_slider.js';
 export * from '../msg/scratch_msgs.js';
 export {scratchBlocksUtils};
 

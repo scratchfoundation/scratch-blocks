@@ -881,6 +881,10 @@ const styles = `
     cursor: pointer;
   }
 
+  .scratchColourPicker {
+    width: min-content;
+  }
+
   .scratchColourPickerLabel {
     font-family: "Helvetica Neue", Helvetica, sans-serif;
     font-size: 0.65rem;
@@ -894,6 +898,36 @@ const styles = `
 
   .scratchColourPickerReadout {
     margin-left: 10px;
+  }
+
+  .scratchColourSlider {
+    appearance: none;
+    margin: 8px;
+    height: 22px;
+    width: 150px;
+    position: relative;
+    outline: none;
+    border-radius: 11px;
+    margin-bottom: 20px;
+  }
+
+  /* Combining this and the -moz equivalent below with a comma break the webkit version */
+  .scratchColourSlider::-webkit-slider-thumb {
+    appearance: none;
+    background-color: #fff;
+    height: 26px;
+    width: 26px;
+    border-radius: 100%;
+    box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.15);
+  }
+
+  .scratchColourSlider::-moz-range-thumb {
+    appearance: none;
+    background-color: #fff;
+    height: 26px;
+    width: 26px;
+    border-radius: 100%;
+    box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.15);
   }
 
   .scratchMatrixButtonDiv {

@@ -22,13 +22,8 @@
  * @fileoverview Colour blocks for Blockly.
  * @author fraser@google.com (Neil Fraser)
  */
-'use strict';
-
-goog.provide('Blockly.Blocks.colour');
-
-goog.require('Blockly.Blocks');
-
-goog.require('Blockly.constants');
+import * as Blockly from 'blockly';
+import * as Constants from '../src/constants.js';
 
 /**
  * Pick a random colour.
@@ -54,7 +49,7 @@ Blockly.Blocks['colour_picker'] = {
           "colour": randomColour()
         }
       ],
-      "outputShape": Blockly.OUTPUT_SHAPE_ROUND,
+      "outputShape": Constants.OUTPUT_SHAPE_ROUND,
       "output": "Colour"
     });
   }

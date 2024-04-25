@@ -28,6 +28,7 @@
   },
   "dependencies": {
     "@blockly/continuous-toolbox": "^5.0.15",
+    "@blockly/field-colour": "^4.0.2",
     "blockly": "^10.0.0"
   }
 }
