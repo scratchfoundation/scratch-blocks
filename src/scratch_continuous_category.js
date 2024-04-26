@@ -3,11 +3,18 @@ import {ContinuousCategory} from '@blockly/continuous-toolbox';
 
 class ScratchContinuousCategory extends ContinuousCategory {
   createIconDom_() {
-    const icon = super.createIconDom_();
-    icon.style.border = `1px solid ${this.toolboxItemDef_['secondaryColour']}`;
-    return icon;
+    if (this.toolboxItemDef_.iconURI) {
+      const icon = document.createElement('img');
+      icon.src = this.toolboxItemDef_.iconURI;
+      icon.className = 'categoryIconBubble';
+      return icon;
+    } else {
+      const icon = super.createIconDom_();
+      icon.style.border = `1px solid ${this.toolboxItemDef_['secondaryColour']}`;
+      return icon;
+    }
   }
-  
+
   setSelected(isSelected) {
     super.setSelected(isSelected);
     // Prevent hardcoding the background color to grey.
