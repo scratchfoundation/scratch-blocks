@@ -42,9 +42,9 @@ Blockly.Blocks['data_variable'] = {
         }
       ],
       "category": Categories.data,
-      "checkboxInFlyout": true,
       "extensions": ["contextMenu_getVariableBlock", "colours_data", "output_string"]
     });
+    this.checkboxInFlyout = true;
   }
 };
 
@@ -158,8 +158,8 @@ Blockly.Blocks['data_listcontents'] = {
       ],
       "category": Categories.dataLists,
       "extensions": ["contextMenu_getListBlock", "colours_data_lists", "output_string"],
-      "checkboxInFlyout": true
     });
+    this.checkboxInFlyout = true;
   }
 };
 

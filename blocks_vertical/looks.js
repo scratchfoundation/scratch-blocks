@@ -282,9 +282,9 @@ Blockly.Blocks['looks_size'] = {
     this.jsonInit({
       "message0": Blockly.Msg.LOOKS_SIZE,
       "category": Categories.looks,
-      "checkboxInFlyout": true,
       "extensions": ["colours_looks", "output_number"]
     });
+    this.checkboxInFlyout = true;
   }
 };
 
@@ -510,9 +510,9 @@ Blockly.Blocks['looks_backdropnumbername'] = {
         }
       ],
       "category": Categories.looks,
-      "checkboxInFlyout": true,
       "extensions": ["colours_looks", "output_number"]
     });
+    this.checkboxInFlyout = true;
   }
 };
 
@@ -535,9 +535,9 @@ Blockly.Blocks['looks_costumenumbername'] = {
         }
       ],
       "category": Categories.looks,
-      "checkboxInFlyout": true,
       "extensions": ["colours_looks", "output_number"]
     });
+    this.checkboxInFlyout = true;
   }
 };
 

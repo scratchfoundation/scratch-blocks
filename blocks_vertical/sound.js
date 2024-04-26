@@ -205,5 +205,6 @@ Blockly.Blocks['sound_volume'] = {
       "checkboxInFlyout": true,
       "extensions": ["colours_sounds", "output_number"]
     });
+    this.checkboxInFlyout = true;
   }
 };

@@ -179,9 +179,9 @@ Blockly.Blocks['sensing_answer'] = {
     this.jsonInit({
       "message0": Blockly.Msg.SENSING_ANSWER,
       "category": Categories.sensing,
-      "checkboxInFlyout": true,
       "extensions": ["colours_sensing", "output_number"]
     });
+    this.checkboxInFlyout = true;
   }
 };
 
@@ -343,9 +343,9 @@ Blockly.Blocks['sensing_loudness'] = {
     this.jsonInit({
       "message0": Blockly.Msg.SENSING_LOUDNESS,
       "category": Categories.sensing,
-      "checkboxInFlyout": true,
       "extensions": ["colours_sensing", "output_number"]
     });
+    this.checkboxInFlyout = true;
   }
 };
 
@@ -374,9 +374,9 @@ Blockly.Blocks['sensing_timer'] = {
     this.jsonInit({
       "message0": Blockly.Msg.SENSING_TIMER,
       "category": Categories.sensing,
-      "checkboxInFlyout": true,
       "extensions": ["colours_sensing", "output_number"]
     });
+    this.checkboxInFlyout = true;
   }
 };
 
@@ -480,9 +480,9 @@ Blockly.Blocks['sensing_current'] = {
         }
       ],
       "category": Categories.sensing,
-      "checkboxInFlyout": true,
       "extensions": ["colours_sensing", "output_number"]
     });
+    this.checkboxInFlyout = true;
   }
 };
 
@@ -509,9 +509,9 @@ Blockly.Blocks['sensing_username'] = {
     this.jsonInit({
       "message0": Blockly.Msg.SENSING_USERNAME,
       "category": Categories.sensing,
-      "checkboxInFlyout": true,
       "extensions": ["colours_sensing", "output_number"]
     });
+    this.checkboxInFlyout = true;
   }
 };
 

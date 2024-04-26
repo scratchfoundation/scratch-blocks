@@ -25,7 +25,7 @@ import {
   ContinuousFlyout,
   ContinuousMetrics,
 } from '@blockly/continuous-toolbox';
-
+import {CheckableContinuousFlyout} from './checkable_continuous_flyout.js';
 import './scratch_continuous_category.js';
 
 export * from 'blockly';
@@ -35,12 +35,13 @@ export * from '../core/colours.js';
 export * from '../core/field_colour_slider.js';
 export * from '../msg/scratch_msgs.js';
 export {scratchBlocksUtils};
+export {CheckableContinuousFlyout};
 
 export function inject(container, options) {
   Object.assign(options, {
     plugins: {
       toolbox: ContinuousToolbox,
-      flyoutsVerticalToolbox: ContinuousFlyout,
+      flyoutsVerticalToolbox: CheckableContinuousFlyout,
       metricsManager: ContinuousMetrics,
     },
   });
