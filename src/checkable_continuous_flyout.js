@@ -54,6 +54,9 @@ export class CheckableContinuousFlyout extends ContinuousFlyout {
 
   constructor(workspaceOptions) {
     super(workspaceOptions);
+    this.tabWidth_ = 0;
+    this.MARGIN = 10;
+    this.GAP_Y = 8;
     CheckableContinuousFlyout.CHECKBOX_MARGIN = this.MARGIN;
 
     /**
@@ -200,5 +203,9 @@ export class CheckableContinuousFlyout extends ContinuousFlyout {
   getCheckboxState() {
     // Patched by scratch-gui in src/lib/blocks.js.
     return false;
+  }
+
+  getFlyoutScale() {
+    return 0.675;
   }
 }
