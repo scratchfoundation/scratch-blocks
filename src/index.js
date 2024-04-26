@@ -20,6 +20,7 @@ import '../blocks_vertical/sensing.js';
 import '../blocks_vertical/sound.js';
 import * as scratchBlocksUtils from '../core/scratch_blocks_utils.js';
 import '../core/css.js';
+import '../core/field_vertical_separator.js';
 import {
   ContinuousToolbox,
   ContinuousFlyout,

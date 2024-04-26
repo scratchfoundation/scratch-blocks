@@ -22,140 +22,105 @@
  * @fileoverview Vertical separator field. Draws a vertical line.
  * @author ericr@media.mit.edu (Eric Rosenbaum)
  */
-'use strict';
-
-goog.provide('Blockly.FieldVerticalSeparator');
-
-goog.require('Blockly.Field');
-goog.require('goog.dom');
-goog.require('goog.math.Size');
-
+import * as Blockly from 'blockly/core';
 
 /**
  * Class for a vertical separator line.
  * @extends {Blockly.Field}
  * @constructor
  */
-Blockly.FieldVerticalSeparator = function() {
-  this.sourceBlock_ = null;
-  this.width_ = 1;
-  this.height_ = Blockly.BlockSvg.ICON_SEPARATOR_HEIGHT;
-  this.size_ = new goog.math.Size(this.width_, this.height_);
-};
-goog.inherits(Blockly.FieldVerticalSeparator, Blockly.Field);
+class FieldVerticalSeparator extends Blockly.Field {
+  constructor() {
+    super(Blockly.Field.SKIP_SETUP);
+    /**
+     * Editable fields are saved by the XML renderer, non-editable fields are not.
+     */
+    this.EDITABLE = false;
+  }
 
-/**
- * Construct a FieldVerticalSeparator from a JSON arg object.
- * @param {!Object} _element A JSON object with options (unused, but passed in
- *     by Field.fromJson).
- * @returns {!Blockly.FieldVerticalSeparator} The new field instance.
- * @package
- * @nocollapse
- */
-Blockly.FieldVerticalSeparator.fromJson = function(
-    /* eslint-disable no-unused-vars */ _element
-    /* eslint-enable no-unused-vars */) {
-  return new Blockly.FieldVerticalSeparator();
-};
-/**
- * Editable fields are saved by the XML renderer, non-editable fields are not.
- */
-Blockly.FieldVerticalSeparator.prototype.EDITABLE = false;
+  /**
+   * Construct a FieldVerticalSeparator from a JSON arg object.
+   * @param {!Object} _element A JSON object with options (unused, but passed in
+   *     by Field.fromJson).
+   * @returns {!Blockly.FieldVerticalSeparator} The new field instance.
+   * @package
+   * @nocollapse
+   */
+  static fromJson = function(
+      /* eslint-disable no-unused-vars */ _element
+      /* eslint-enable no-unused-vars */) {
+    return new FieldVerticalSeparator();
+  }
 
-/**
- * Install this field on a block.
- */
-Blockly.FieldVerticalSeparator.prototype.init = function() {
-  if (this.fieldGroup_) {
-    // Image has already been initialized once.
+  /**
+   * Install this field on a block.
+   */
+  initView() {
+    const height = 10 * this.getConstants().GRID_UNIT;
+    this.size_ = new Blockly.utils.Size(1, height);
+
+    /** @type {SVGElement} */
+    this.lineElement_ = Blockly.utils.dom.createSvgElement('line',
+        {
+          'stroke': this.sourceBlock_.getColourSecondary(),
+          'stroke-linecap': 'round',
+          'x1': 0,
+          'y1': 0,
+          'x2': 0,
+          'y2': height
+        }, this.fieldGroup_);
+  }
+
+  /**
+   * Set the height of the line element, without adjusting the field's height.
+   * This allows the line's height to be changed without causing it to be
+   * centered with the new height (needed for correct rendering of hat blocks).
+   * @param {number} newHeight the new height for the line.
+   * @package
+   */
+  setLineHeight(newHeight) {
+    this.lineElement_.setAttribute('y2', newHeight);
+  };
+
+  /**
+   * Get the value of this field. A no-op in this case.
+   * @return {string} null.
+   * @override
+   */
+  getValue() {
+    return null;
+  }
+
+  getText() {
+    return '';
+  }
+
+  /**
+   * Set the value of this field. A no-op in this case.
+   * @param {?string} src New value.
+   * @override
+   */
+  setValue(
+      /* eslint-disable no-unused-vars */ src
+      /* eslint-enable no-unused-vars */) {
     return;
   }
-  // Build the DOM.
-  /** @type {SVGElement} */
-  this.fieldGroup_ = Blockly.utils.createSvgElement('g', {}, null);
-  if (!this.visible_) {
-    this.fieldGroup_.style.display = 'none';
+
+  /**
+   * Separator lines are fixed width, no need to render.
+   * @private
+   */
+  render_() {
+    // NOP
   }
-  /** @type {SVGElement} */
-  this.lineElement_ = Blockly.utils.createSvgElement('line',
-      {
-        'stroke': this.sourceBlock_.getColourSecondary(),
-        'stroke-linecap': 'round',
-        'x1': 0,
-        'y1': 0,
-        'x2': 0,
-        'y2': this.height_
-      }, this.fieldGroup_);
 
-  this.sourceBlock_.getSvgRoot().appendChild(this.fieldGroup_);
-};
+  /**
+   * Separator lines are fixed width, no need to update.
+   * @private
+   */
+  updateWidth() {
+    // NOP
+  }
+}
 
-/**
- * Set the height of the line element, without adjusting the field's height.
- * This allows the line's height to be changed without causing it to be
- * centered with the new height (needed for correct rendering of hat blocks).
- * @param {number} newHeight the new height for the line.
- * @package
- */
-Blockly.FieldVerticalSeparator.prototype.setLineHeight = function(newHeight) {
-  this.lineElement_.setAttribute('y2', newHeight);
-};
-
-/**
- * Dispose of all DOM objects belonging to this text.
- */
-Blockly.FieldVerticalSeparator.prototype.dispose = function() {
-  goog.dom.removeNode(this.fieldGroup_);
-  this.fieldGroup_ = null;
-  this.lineElement_ = null;
-};
-
-/**
- * Get the value of this field. A no-op in this case.
- * @return {string} null.
- * @override
- */
-Blockly.FieldVerticalSeparator.prototype.getValue = function() {
-  return null;
-};
-
-/**
- * Set the value of this field. A no-op in this case.
- * @param {?string} src New value.
- * @override
- */
-Blockly.FieldVerticalSeparator.prototype.setValue = function(
-    /* eslint-disable no-unused-vars */ src
-    /* eslint-enable no-unused-vars */) {
-  return;
-};
-
-/**
- * Set the text of this field. A no-op in this case.
- * @param {?string} alt New text.
- * @override
- */
-Blockly.FieldVerticalSeparator.prototype.setText = function(
-    /* eslint-disable no-unused-vars */ alt
-    /* eslint-enable no-unused-vars */) {
-  return;
-};
-
-/**
- * Separator lines are fixed width, no need to render.
- * @private
- */
-Blockly.FieldVerticalSeparator.prototype.render_ = function() {
-  // NOP
-};
-
-/**
- * Separator lines are fixed width, no need to update.
- * @private
- */
-Blockly.FieldVerticalSeparator.prototype.updateWidth = function() {
-  // NOP
-};
-
-Blockly.Field.register(
-    'field_vertical_separator', Blockly.FieldVerticalSeparator);
+Blockly.fieldRegistry.register('field_vertical_separator', FieldVerticalSeparator);
