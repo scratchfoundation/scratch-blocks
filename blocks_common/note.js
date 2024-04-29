@@ -22,15 +22,9 @@
  * @fileoverview Note block.
  * @author ericr@media.mit.edu (Eric Rosenbaum)
  */
-'use strict';
-
-goog.provide('Blockly.Blocks.note');
-
-goog.require('Blockly.Blocks');
-
-goog.require('Blockly.Colours');
-
-goog.require('Blockly.constants');
+import * as Blockly from 'blockly/core';
+import {Colours} from '../core/colours.js';
+import * as Constants from '../src/constants.js';
 
 Blockly.Blocks['note'] = {
   /**
@@ -47,12 +41,12 @@ Blockly.Blocks['note'] = {
           "value": 60
         }
       ],
-      "outputShape": Blockly.OUTPUT_SHAPE_ROUND,
+      "outputShape": Constants.OUTPUT_SHAPE_ROUND,
       "output": "Number",
-      "colour": Blockly.Colours.textField,
-      "colourSecondary": Blockly.Colours.textField,
-      "colourTertiary": Blockly.Colours.textField,
-      "colourQuaternary": Blockly.Colours.textField
+      "colour": Colours.textField,
+      "colourSecondary": Colours.textField,
+      "colourTertiary": Colours.textField,
+      "colourQuaternary": Colours.textField
     });
   }
 };
