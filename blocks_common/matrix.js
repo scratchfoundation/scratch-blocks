@@ -22,15 +22,8 @@
  * @fileoverview Matrix blocks for Blockly.
  * @author khanning@gmail.com (Kreg Hanning)
  */
-'use strict';
-
-goog.provide('Blockly.Blocks.matrix');
-
-goog.require('Blockly.Blocks');
-
-goog.require('Blockly.Colours');
-
-goog.require('Blockly.constants');
+import * as Blockly from 'blockly/core';
+import * as Constants from '../src/constants.js';
 
 Blockly.Blocks['matrix'] = {
   /**
@@ -46,7 +39,7 @@ Blockly.Blocks['matrix'] = {
           "name": "MATRIX"
         }
       ],
-      "outputShape": Blockly.OUTPUT_SHAPE_ROUND,
+      "outputShape": Constants.OUTPUT_SHAPE_ROUND,
       "output": "Number",
       "extensions": ["colours_pen"]
     });
