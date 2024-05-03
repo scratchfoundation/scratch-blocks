@@ -38,6 +38,7 @@ export * from '../core/colours.js';
 export * from '../core/field_colour_slider.js';
 export * from '../core/field_matrix.js';
 export * from '../core/field_note.js';
+export * from '../core/field_number.js';
 export * from '../msg/scratch_msgs.js';
 export {scratchBlocksUtils};
 export {CheckableContinuousFlyout};
