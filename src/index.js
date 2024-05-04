@@ -32,6 +32,7 @@ import {CheckableContinuousFlyout} from './checkable_continuous_flyout.js';
 import './scratch_continuous_category.js';
 
 export * from 'blockly';
+export * from './block_reporting.js';
 export * from './categories.js';
 export * from './procedures.js';
 export * from '../core/colours.js';

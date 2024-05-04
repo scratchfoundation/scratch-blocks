@@ -74,6 +74,16 @@ export class CheckableContinuousFlyout extends ContinuousFlyout {
     super.show(flyoutDef);
   }
 
+  serializeBlock(block) {
+    const json = super.serializeBlock(block);
+    // Delete the serialized block's ID so that a new one is generated when it is
+    // placed on the workspace. Otherwise, the block on the workspace may be
+    // indistinguishable from the one in the flyout, which can cause reporter blocks
+    // to have their value dropdown shown in the wrong place.
+    delete json.id;
+    return json;
+  }
+
   clearOldCheckboxes() {
     for (const checkbox of this.checkboxes_.values()) {
       checkbox.svgRoot.remove();
