@@ -28,7 +28,8 @@
   },
   "dependencies": {
     "@blockly/continuous-toolbox": "^5.0.15",
+    "@blockly/field-angle": "^4.0.2",
     "@blockly/field-colour": "^4.0.2",
-    "blockly": "^10.0.0"
+    "blockly": "^11.0.0-beta.11"
   }
 }

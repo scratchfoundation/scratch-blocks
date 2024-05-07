@@ -5,6 +5,8 @@
  */
 
 import * as Blockly from 'blockly/core';
+import {registerFieldAngle} from '@blockly/field-angle';
+registerFieldAngle();
 import '../blocks_common/colour.js';
 import '../blocks_common/math.js';
 import '../blocks_common/matrix.js';
