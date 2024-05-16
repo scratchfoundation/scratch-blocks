@@ -31,6 +31,7 @@ import {
   ContinuousMetrics,
 } from '@blockly/continuous-toolbox';
 import {CheckableContinuousFlyout} from './checkable_continuous_flyout.js';
+import {ScratchContinuousToolbox} from './scratch_continuous_toolbox.js';
 import {buildGlowFilter, glowStack} from './glows.js';
 import './scratch_continuous_category.js';
 
@@ -51,7 +52,7 @@ export {CheckableContinuousFlyout};
 export function inject(container, options) {
   Object.assign(options, {
     plugins: {
-      toolbox: ContinuousToolbox,
+      toolbox: ScratchContinuousToolbox,
       flyoutsVerticalToolbox: CheckableContinuousFlyout,
       metricsManager: ContinuousMetrics,
     },
