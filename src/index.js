@@ -67,6 +67,12 @@ export function inject(container, options) {
 
   buildGlowFilter(workspace);
 
+  Blockly.config.dragRadius = 3;
+  Blockly.config.snapRadius = 48;
+  Blockly.config.connectingSnapRadius = 68;
+  Blockly.config.currentConnectionPreference = 20;
+  Blockly.config.bumpDelay = 0;
+
   return workspace;
 }
 
