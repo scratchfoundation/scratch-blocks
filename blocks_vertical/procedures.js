@@ -561,9 +561,9 @@ function updateDeclarationProcCode_() {
       this.procCode_ += ' ';
     }
     var input = this.inputList[i];
-    if (input.type == Blockly.DUMMY_INPUT) {
+    if (input.type == Blockly.inputs.inputTypes.DUMMY) {
       this.procCode_ += input.fieldRow[0].getValue();
-    } else if (input.type == Blockly.INPUT_VALUE) {
+    } else if (input.type == Blockly.inputs.inputTypes.VALUE) {
       // Inspect the argument editor.
       var target = input.connection.targetBlock();
       this.displayNames_.push(target.getFieldValue('TEXT'));
@@ -587,9 +587,9 @@ function updateDeclarationProcCode_() {
 function focusLastEditor_() {
   if (this.inputList.length > 0) {
     var newInput = this.inputList[this.inputList.length - 1];
-    if (newInput.type == Blockly.DUMMY_INPUT) {
+    if (newInput.type == Blockly.inputs.inputTypes.DUMMY) {
       newInput.fieldRow[0].showEditor_();
-    } else if (newInput.type == Blockly.INPUT_VALUE) {
+    } else if (newInput.type == Blockly.inputs.inputTypes.VALUE) {
       // Inspect the argument editor.
       var target = newInput.connection.targetBlock();
       target.getField('TEXT').showEditor_();
