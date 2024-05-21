@@ -284,6 +284,12 @@ const styles = `
     cursor: -webkit-grabbing;
     cursor: -moz-grabbing;
   }
+
+  /* All the blocks being dragged get the blocklyDragging class, so match only the root one */
+  :not(.blocklyDragging) > .blocklyDragging {
+    filter: url(#blocklyDragShadowFilter);
+  }
+
   /* Changes cursor on mouse down. Not effective in Firefox because of
     https://bugzilla.mozilla.org/show_bug.cgi?id=771241 */
   .blocklyDraggable:active {

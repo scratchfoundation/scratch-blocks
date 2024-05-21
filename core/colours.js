@@ -103,7 +103,7 @@
    "textFieldText": "#575E75",
    "insertionMarker": "#000000",
    "insertionMarkerOpacity": 0.2,
-   "dragShadowOpacity": 0.3,
+   "dragShadowOpacity": 0.6,
    "stackGlow": "#FFF200",
    "stackGlowSize": 4,
    "stackGlowOpacity": 1,
