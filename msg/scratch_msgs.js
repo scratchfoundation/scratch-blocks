@@ -1,17 +1,20 @@
-import * as Blockly from 'blockly';
+import * as Blockly from 'blockly/core';
 
-const ScratchMsgs = {
-  currentLocale_: 'en',
-  setLocale: function(locale) {
+export class ScratchMsgs {
+  static currentLocale_ = 'en';
+  static locales = {};
+
+  static setLocale(locale) {
     if (Object.keys(this.locales).includes(locale)) {
       this.currentLocale_ = locale;
-      Blockly.Msg = Object.assign({}, Blockly.Msg, this.locales[locale]);
+      Object.assign(Blockly.Msg, this.locales[locale]);
     } else {
       // keep current locale
       console.warn('Ignoring unrecognized locale: ' + locale);
     }
-  },
-  translate: function(msgId, defaultMsg, useLocale) {
+  }
+
+  static translate(msgId, defaultMsg, useLocale) {
     var locale = useLocale || this.currentLocale_;
 
     if (Object.keys(this.locales).includes(locale)) {
@@ -21,9 +24,8 @@ const ScratchMsgs = {
       }
     }
     return defaultMsg;
-  },
-  locales: {},
-};
+  }
+}
 
 ScratchMsgs.locales["ab"] =
 {
@@ -22985,5 +22987,3 @@ ScratchMsgs.locales["zh-tw"] =
     "DEFAULT_BROADCAST_MESSAGE_NAME": "message1"
 };
 // End of combined translations
-
-export {ScratchMsgs};
