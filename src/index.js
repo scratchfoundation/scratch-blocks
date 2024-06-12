@@ -83,3 +83,4 @@ Blockly.FlyoutButton.TEXT_MARGIN_X = 40;
 Blockly.FlyoutButton.TEXT_MARGIN_Y = 10;
 Blockly.ContextMenuRegistry.registry.unregister('blockDisable');
 Blockly.ContextMenuRegistry.registry.unregister('blockInline');
+Blockly.ContextMenuItems.registerCommentOptions();

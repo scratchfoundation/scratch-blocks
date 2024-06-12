@@ -1287,6 +1287,57 @@ const styles = `
     width: 1.25rem;
     height: 1.25rem;
   }
+
+  .blocklyCommentTopbar {
+    height: 32px;
+    --commentBorderColour: #e2db96;
+  }
+
+  .blocklyCommentTopbarBackground {
+    height: 32px;
+  }
+
+  .blocklyFoldoutIcon {
+    width: 32px;
+    height: 32px;
+    transform-origin: 16px 16px;
+  }
+
+  .blocklyComment:not(.blocklyCollapsed) .blocklyCommentHighlight,
+  .blocklySelected .blocklyCommentHighlight,
+  .blocklyCollapsed .blocklyCommentTopbarBackground,
+  .blocklyCollapsed.blocklySelected .blocklyCommentTopbarBackground {
+    stroke: #bcA903;
+    stroke-width: 1px;
+  }
+
+  .blocklyCollapsed.blocklyComment .blocklyFoldoutIcon {
+    transform: rotate(-180deg);
+  }
+
+  .zelos-renderer.scratch-theme .blocklyComment .blocklyTextarea {
+    border: none;
+    --commentFillColour: #fef49c;
+    font-size: 12pt;
+    font-weight: 400;
+    padding: 12px;
+    color: #575e75;
+  }
+
+  .zelos-renderer.scratch-theme .blocklyCommentText.blocklyText {
+    font-weight: 400;
+  }
+
+  .blocklyDeleteIcon {
+    display: block;
+    width: 32px;
+    height: 32px;
+  }
+
+  .blocklyResizeHandle {
+    height: 20px;
+    width: 20px;
+  }
 `;
 
 Blockly.Css.register(styles);
