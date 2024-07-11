@@ -1288,6 +1288,10 @@ const styles = `
     height: 1.25rem;
   }
 
+  .blocklyComment {
+    --colour-commentBorder: #bcA903;
+  }
+
   .blocklyCommentTopbar {
     height: 32px;
     --commentBorderColour: #e2db96;
@@ -1307,7 +1311,7 @@ const styles = `
   .blocklySelected .blocklyCommentHighlight,
   .blocklyCollapsed .blocklyCommentTopbarBackground,
   .blocklyCollapsed.blocklySelected .blocklyCommentTopbarBackground {
-    stroke: #bcA903;
+    stroke: var(--colour-commentBorder);
     stroke-width: 1px;
   }
 

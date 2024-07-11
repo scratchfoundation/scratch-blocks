@@ -34,6 +34,13 @@ import {CheckableContinuousFlyout} from './checkable_continuous_flyout.js';
 import {buildGlowFilter, glowStack} from './glows.js';
 import {ScratchContinuousToolbox} from './scratch_continuous_toolbox.js';
 import './scratch_continuous_category.js';
+import './scratch_comment_icon.js';
+import './events_block_comment_change.js';
+import './events_block_comment_collapse.js';
+import './events_block_comment_create.js';
+import './events_block_comment_delete.js';
+import './events_block_comment_move.js';
+import './events_block_comment_resize.js';
 import {buildShadowFilter} from './shadows.js';
 
 export * from 'blockly';
