@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.1.187](https://github.com/scratchfoundation/scratch-blocks/compare/v1.1.186...v1.1.187) (2024-07-17)
+
+
+### Bug Fixes
+
+* **deps:** lock file maintenance ([ce43bcc](https://github.com/scratchfoundation/scratch-blocks/commit/ce43bcc1aa7e570e9e427d319c995a07e18462a0))
+
 ## [1.1.186](https://github.com/scratchfoundation/scratch-blocks/compare/v1.1.185...v1.1.186) (2024-07-16)
 
 
