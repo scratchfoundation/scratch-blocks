@@ -23,6 +23,7 @@ import "../blocks_vertical/procedures.js";
 import "../blocks_vertical/sensing.js";
 import "../blocks_vertical/sound.js";
 import * as scratchBlocksUtils from "../core/scratch_blocks_utils.js";
+import * as ScratchVariables from "./variables.js";
 import "../core/css.js";
 import "../core/field_vertical_separator.js";
 import {
@@ -58,6 +59,7 @@ export * from "../msg/scratch_msgs.js";
 export { glowStack };
 export { scratchBlocksUtils };
 export { CheckableContinuousFlyout };
+export { ScratchVariables };
 
 export function inject(container, options) {
   Object.assign(options, {
