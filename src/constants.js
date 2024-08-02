@@ -48,3 +48,13 @@ export { PROCEDURES_CALL_BLOCK_TYPE };
 
 const OUTPUT_SHAPE_ROUND = 2;
 export { OUTPUT_SHAPE_ROUND };
+
+/**
+ * String for use in the dropdown created in field_variable,
+ * specifically for broadcast messages.
+ * This string indicates that this option in the dropdown is 'New message...'
+ * and if selected, should trigger the prompt to create a new message.
+ * @const {string}
+ */
+const NEW_BROADCAST_MESSAGE_ID = "NEW_BROADCAST_MESSAGE_ID";
+export { NEW_BROADCAST_MESSAGE_ID };

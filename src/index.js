@@ -45,6 +45,7 @@ import "./events_block_comment_move.js";
 import "./events_block_comment_resize.js";
 import "./events_scratch_variable_create.js";
 import "./field_variable.js";
+import "./field_variable_getter.js";
 import { buildShadowFilter } from "./shadows.js";
 
 export * from "blockly";
@@ -57,6 +58,7 @@ export * from "../core/field_matrix.js";
 export * from "../core/field_note.js";
 export * from "../core/field_number.js";
 export * from "../msg/scratch_msgs.js";
+export * from "./constants.js";
 export { glowStack };
 export { scratchBlocksUtils };
 export { CheckableContinuousFlyout };

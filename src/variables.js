@@ -345,3 +345,5 @@ export function renameVariable(workspace, variable, opt_callback) {
     varType
   );
 }
+
+export { getVariablesCategory } from "./data_category.js";
