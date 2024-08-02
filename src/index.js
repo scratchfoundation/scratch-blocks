@@ -44,6 +44,7 @@ import "./events_block_comment_delete.js";
 import "./events_block_comment_move.js";
 import "./events_block_comment_resize.js";
 import "./events_scratch_variable_create.js";
+import "./field_variable.js";
 import { buildShadowFilter } from "./shadows.js";
 
 export * from "blockly";
