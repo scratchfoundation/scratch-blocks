@@ -397,6 +397,12 @@ Blockly.Blocks.defaultToolbox = '<xml id="toolbox-categories" style="display: no
         '</shadow>' +
       '</value>' +
     '</block>' +
+'<block type="operator_exponent" id="operator_exponent">' +
+ '<value name="NUM1">' +
+    '<shadow type="math_number">' +
+  '<field name="NUM"></field>' +
+  '</shadow>' +
+'</value>' +
     '<block type="operator_random" id="operator_random">' +
       '<value name="FROM">' +
         '<shadow type="math_number">' +
