@@ -37,6 +37,12 @@ import {
  */
 const CLOUD_PREFIX = "☁ ";
 
+let prompt = null;
+
+export function setPromptHandler(handler) {
+  prompt = handler;
+}
+
 /**
  * Create a new variable on the given workspace.
  * @param {!Blockly.Workspace} workspace The workspace on which to create the
@@ -70,7 +76,7 @@ export function createVariable(workspace, opt_callback, opt_type) {
   var validate = nameValidator.bind(null, opt_type);
 
   // Prompt the user to enter a name for the variable
-  Blockly.dialog.prompt(
+  prompt(
     newMsg,
     "",
     function (text, additionalVars, variableOptions) {
@@ -309,7 +315,7 @@ export function renameVariable(workspace, variable, opt_callback) {
     promptDefaultText = promptDefaultText.substring(CLOUD_PREFIX.length);
   }
 
-  Blockly.dialog.prompt(
+  prompt(
     promptText,
     promptDefaultText,
     function (newName, additionalVars) {
