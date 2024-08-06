@@ -23,9 +23,9 @@
  * @author fraser@google.com (Neil Fraser)
  */
 
-import * as Blockly from 'blockly/core';
-import * as Constants from './constants.js';
-import * as scratchBlocksUtils from '../core/scratch_blocks_utils.js';
+import * as Blockly from "blockly/core";
+import * as Constants from "./constants.js";
+import * as scratchBlocksUtils from "../core/scratch_blocks_utils.js";
 
 /**
  * Find all user-created procedure definition mutations in a workspace.
@@ -57,9 +57,9 @@ function allProcedureMutations(root) {
 function sortProcedureMutations_(mutations) {
   var newMutations = mutations.slice();
 
-  newMutations.sort(function(a, b) {
-    var procCodeA = a.getAttribute('proccode');
-    var procCodeB = b.getAttribute('proccode');
+  newMutations.sort(function (a, b) {
+    var procCodeA = a.getAttribute("proccode");
+    var procCodeB = b.getAttribute("proccode");
 
     return scratchBlocksUtils.compareStrings(procCodeA, procCodeB);
   });
@@ -85,9 +85,9 @@ function getProceduresCategory(workspace) {
     // <block type="procedures_call">
     //   <mutation ...></mutation>
     // </block>
-    var block = document.createElement('block');
-    block.setAttribute('type', 'procedures_call');
-    block.setAttribute('gap', 16);
+    var block = document.createElement("block");
+    block.setAttribute("type", "procedures_call");
+    block.setAttribute("gap", 16);
     block.appendChild(mutation);
     xmlList.push(block);
   }
@@ -101,14 +101,14 @@ function getProceduresCategory(workspace) {
  * @private
  */
 function addCreateButton_(workspace, xmlList) {
-  var button = document.createElement('button');
+  var button = document.createElement("button");
   var msg = Blockly.Msg.NEW_PROCEDURE;
-  var callbackKey = 'CREATE_PROCEDURE';
-  var callback = function() {
+  var callbackKey = "CREATE_PROCEDURE";
+  var callback = function () {
     createProcedureDefCallback(workspace);
   };
-  button.setAttribute('text', msg);
-  button.setAttribute('callbackKey', callbackKey);
+  button.setAttribute("text", msg);
+  button.setAttribute("callbackKey", callbackKey);
   workspace.registerButtonCallback(callbackKey, callback);
   xmlList.push(button);
 }
@@ -125,8 +125,7 @@ function addCreateButton_(workspace, xmlList) {
  * @return {!Array.<!Blockly.Block>} Array of caller blocks.
  * @package
  */
-function getCallers(name, ws, definitionRoot,
-    allowRecursive) {
+function getCallers(name, ws, definitionRoot, allowRecursive) {
   var allBlocks = [];
   var topBlocks = ws.getTopBlocks();
 
@@ -142,7 +141,7 @@ function getCallers(name, ws, definitionRoot,
   var callers = [];
   for (var i = 0; i < allBlocks.length; i++) {
     var block = allBlocks[i];
-    if (block.type == Constants.PROCEDURES_CALL_BLOCK_TYPE ) {
+    if (block.type == Constants.PROCEDURES_CALL_BLOCK_TYPE) {
       var procCode = block.getProcCode();
       if (procCode && procCode == name) {
         callers.push(block);
@@ -163,24 +162,35 @@ function mutateCallersAndPrototype(name, ws, mutation) {
   var defineBlock = getDefineBlock(name, ws);
   var prototypeBlock = getPrototypeBlock(name, ws);
   if (defineBlock && prototypeBlock) {
-    var callers = getCallers(name,
-        defineBlock.workspace, defineBlock, true /* allowRecursive */);
+    var callers = getCallers(
+      name,
+      defineBlock.workspace,
+      defineBlock,
+      true /* allowRecursive */
+    );
     callers.push(prototypeBlock);
     Blockly.Events.setGroup(true);
-    for (var i = 0, caller; caller = callers[i]; i++) {
+    for (var i = 0, caller; (caller = callers[i]); i++) {
       var oldMutationDom = caller.mutationToDom();
       var oldMutation = oldMutationDom && Blockly.Xml.domToText(oldMutationDom);
       caller.domToMutation(mutation);
       var newMutationDom = caller.mutationToDom();
       var newMutation = newMutationDom && Blockly.Xml.domToText(newMutationDom);
       if (oldMutation != newMutation) {
-        Blockly.Events.fire(new Blockly.Events.BlockChange(
-            caller, 'mutation', null, oldMutation, newMutation));
+        Blockly.Events.fire(
+          new Blockly.Events.BlockChange(
+            caller,
+            "mutation",
+            null,
+            oldMutation,
+            newMutation
+          )
+        );
       }
     }
     Blockly.Events.setGroup(false);
   } else {
-    alert('No define block on workspace'); // TODO decide what to do about this.
+    alert("No define block on workspace"); // TODO decide what to do about this.
   }
 }
 
@@ -196,8 +206,13 @@ function getDefineBlock(procCode, workspace) {
   var blocks = workspace.getTopBlocks(false);
   for (var i = 0; i < blocks.length; i++) {
     if (blocks[i].type == Constants.PROCEDURES_DEFINITION_BLOCK_TYPE) {
-      var prototypeBlock = blocks[i].getInput('custom_block').connection.targetBlock();
-      if (prototypeBlock.getProcCode && prototypeBlock.getProcCode() == procCode) {
+      var prototypeBlock = blocks[i]
+        .getInput("custom_block")
+        .connection.targetBlock();
+      if (
+        prototypeBlock.getProcCode &&
+        prototypeBlock.getProcCode() == procCode
+      ) {
         return blocks[i];
       }
     }
@@ -215,7 +230,7 @@ function getDefineBlock(procCode, workspace) {
 function getPrototypeBlock(procCode, workspace) {
   var defineBlock = getDefineBlock(procCode, workspace);
   if (defineBlock) {
-    return defineBlock.getInput('custom_block').connection.targetBlock();
+    return defineBlock.getInput("custom_block").connection.targetBlock();
   }
   return null;
 }
@@ -226,15 +241,18 @@ function getPrototypeBlock(procCode, workspace) {
  * @package
  */
 function newProcedureMutation() {
-  var mutationText = '<xml>' +
-      '<mutation' +
-      ' proccode="' + Blockly.Msg['PROCEDURE_DEFAULT_NAME'] + '"' +
-      ' argumentids="[]"' +
-      ' argumentnames="[]"' +
-      ' argumentdefaults="[]"' +
-      ' warp="false">' +
-      '</mutation>' +
-      '</xml>';
+  var mutationText =
+    "<xml>" +
+    "<mutation" +
+    ' proccode="' +
+    Blockly.Msg["PROCEDURE_DEFAULT_NAME"] +
+    '"' +
+    ' argumentids="[]"' +
+    ' argumentnames="[]"' +
+    ' argumentdefaults="[]"' +
+    ' warp="false">' +
+    "</mutation>" +
+    "</xml>";
   return Blockly.utils.xml.textToDom(mutationText).firstChild;
 }
 
@@ -245,8 +263,8 @@ function newProcedureMutation() {
  */
 function createProcedureDefCallback(workspace) {
   ScratchProcedures.externalProcedureDefCallback(
-      newProcedureMutation(),
-      createProcedureCallbackFactory_(workspace)
+    newProcedureMutation(),
+    createProcedureCallbackFactory_(workspace)
   );
 }
 
@@ -257,17 +275,18 @@ function createProcedureDefCallback(workspace) {
  * @private
  */
 function createProcedureCallbackFactory_(workspace) {
-  return function(mutation) {
+  return function (mutation) {
     if (mutation) {
-      var blockText = '<xml>' +
-          '<block type="procedures_definition">' +
-          '<statement name="custom_block">' +
-          '<shadow type="procedures_prototype">' +
-          Blockly.Xml.domToText(mutation) +
-          '</shadow>' +
-          '</statement>' +
-          '</block>' +
-          '</xml>';
+      var blockText =
+        "<xml>" +
+        '<block type="procedures_definition">' +
+        '<statement name="custom_block">' +
+        '<shadow type="procedures_prototype">' +
+        Blockly.Xml.domToText(mutation) +
+        "</shadow>" +
+        "</statement>" +
+        "</block>" +
+        "</xml>";
       var blockDom = Blockly.utils.xml.textToDom(blockText).firstChild;
       Blockly.Events.setGroup(true);
       var block = Blockly.Xml.domToBlock(blockDom, workspace);
@@ -296,35 +315,37 @@ function editProcedureCallback_(block) {
   // Edit can come from one of three block types (call, define, prototype)
   // Normalize by setting the block to the prototype block for the procedure.
   if (block.type == Constants.PROCEDURES_DEFINITION_BLOCK_TYPE) {
-    var input = block.getInput('custom_block');
+    var input = block.getInput("custom_block");
     if (!input) {
-      alert('Bad input'); // TODO: Decide what to do about this.
+      alert("Bad input"); // TODO: Decide what to do about this.
       return;
     }
     var conn = input.connection;
     if (!conn) {
-      alert('Bad connection'); // TODO: Decide what to do about this.
+      alert("Bad connection"); // TODO: Decide what to do about this.
       return;
     }
     var innerBlock = conn.targetBlock();
-    if (!innerBlock ||
-        !innerBlock.type == Constants.PROCEDURES_PROTOTYPE_BLOCK_TYPE) {
-      alert('Bad inner block'); // TODO: Decide what to do about this.
+    if (
+      !innerBlock ||
+      !innerBlock.type == Constants.PROCEDURES_PROTOTYPE_BLOCK_TYPE
+    ) {
+      alert("Bad inner block"); // TODO: Decide what to do about this.
       return;
     }
     block = innerBlock;
   } else if (block.type == Constants.PROCEDURES_CALL_BLOCK_TYPE) {
     // This is a call block, find the prototype corresponding to the procCode.
     // Make sure to search the correct workspace, call block can be in flyout.
-    var workspaceToSearch = block.workspace.isFlyout ?
-        block.workspace.targetWorkspace : block.workspace;
-    block = getPrototypeBlock(
-        block.getProcCode(), workspaceToSearch);
+    var workspaceToSearch = block.workspace.isFlyout
+      ? block.workspace.targetWorkspace
+      : block.workspace;
+    block = getPrototypeBlock(block.getProcCode(), workspaceToSearch);
   }
   // Block now refers to the procedure prototype block, it is safe to proceed.
   ScratchProcedures.externalProcedureDefCallback(
-      block.mutationToDom(),
-      editProcedureCallbackFactory_(block)
+    block.mutationToDom(),
+    editProcedureCallbackFactory_(block)
   );
 }
 
@@ -335,10 +356,9 @@ function editProcedureCallback_(block) {
  * @private
  */
 function editProcedureCallbackFactory_(block) {
-  return function(mutation) {
+  return function (mutation) {
     if (mutation) {
-      mutateCallersAndPrototype(block.getProcCode(),
-          block.workspace, mutation);
+      mutateCallersAndPrototype(block.getProcCode(), block.workspace, mutation);
     }
   };
 }
@@ -355,9 +375,9 @@ function makeEditOption(block) {
   var editOption = {
     enabled: true,
     text: Blockly.Msg.EDIT_PROCEDURE,
-    callback: function() {
+    callback: function () {
       editProcedureCallback_(block);
-    }
+    },
   };
   return editOption;
 }
@@ -370,25 +390,19 @@ function makeEditOption(block) {
  * @return {boolean} True if the custom procedure was deleted, false otherwise.
  * @package
  */
-function deleteProcedureDefCallback(procCode,
-    definitionRoot) {
-  var callers = getCallers(procCode,
-      definitionRoot.workspace, definitionRoot, false /* allowRecursive */);
+function deleteProcedureDefCallback(procCode, definitionRoot) {
+  const callers = getCallers(
+    procCode,
+    definitionRoot.workspace,
+    definitionRoot,
+    false /* allowRecursive */
+  );
   if (callers.length > 0) {
     return false;
   }
 
-  var workspace = definitionRoot.workspace;
-
-  // Delete the whole stack.
-  Blockly.Events.setGroup(true);
-  definitionRoot.dispose();
-  Blockly.Events.setGroup(false);
-
-  // TODO (#1354) Update this function when '_' is removed
-  // Refresh toolbox, so caller doesn't appear there anymore
-  workspace.refreshToolboxSelection_();
-
+  const workspace = definitionRoot.workspace;
+  Blockly.BlockSvg.prototype.checkAndDelete.call(definitionRoot);
   return true;
 }
 
@@ -399,4 +413,4 @@ const ScratchProcedures = {
   getProceduresCategory,
   makeEditOption,
 };
-export {ScratchProcedures};
+export { ScratchProcedures };
