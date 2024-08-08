@@ -777,7 +777,11 @@ Blockly.Blocks["procedures_definition"] = {
           name: "custom_block",
         },
       ],
-      extensions: ["colours_more", "shape_hat", "procedure_def_contextmenu"],
+      extensions: [
+        "colours_more",
+        "shape_bowler_hat",
+        "procedure_def_contextmenu",
+      ],
     });
   },
 };

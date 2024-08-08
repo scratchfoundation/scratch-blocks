@@ -96,6 +96,19 @@ VerticalExtensions.SHAPE_STATEMENT = function () {
 VerticalExtensions.SHAPE_HAT = function () {
   this.setInputsInline(true);
   this.setNextStatement(true, null);
+  this.hat = "cap";
+};
+
+/**
+ * Extension to make a block be shaped as a bowler hat block, with rounded
+ * corners on both sides and no indentation for statement blocks.
+ * @this {Blockly.Block}
+ * @readonly
+ */
+VerticalExtensions.SHAPE_BOWLER_HAT = function () {
+  this.setInputsInline(true);
+  this.setNextStatement(true, null);
+  this.hat = "bowler";
 };
 
 /**
@@ -259,6 +272,10 @@ VerticalExtensions.registerAll = function () {
     VerticalExtensions.SHAPE_STATEMENT
   );
   Blockly.Extensions.register("shape_hat", VerticalExtensions.SHAPE_HAT);
+  Blockly.Extensions.register(
+    "shape_bowler_hat",
+    VerticalExtensions.SHAPE_BOWLER_HAT
+  );
   Blockly.Extensions.register("shape_end", VerticalExtensions.SHAPE_END);
 
   // Output shapes and types are related.
