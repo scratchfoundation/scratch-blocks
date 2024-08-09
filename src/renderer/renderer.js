@@ -7,6 +7,7 @@
 import * as Blockly from "blockly/core";
 import { Drawer } from "./drawer.js";
 import { RenderInfo } from "./render_info.js";
+import { ConstantProvider } from "./constants.js";
 
 export class ScratchRenderer extends Blockly.zelos.Renderer {
   makeDrawer_(block, info) {
@@ -15,6 +16,14 @@ export class ScratchRenderer extends Blockly.zelos.Renderer {
 
   makeRenderInfo_(block) {
     return new RenderInfo(this, block);
+  }
+
+  makeConstants_() {
+    return new ConstantProvider();
+  }
+
+  shouldHighlightConnection(connection) {
+    return false;
   }
 }
 

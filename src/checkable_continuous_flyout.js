@@ -1,5 +1,5 @@
-import * as Blockly from 'blockly';
-import {ContinuousFlyout} from '@blockly/continuous-toolbox';
+import * as Blockly from "blockly";
+import { ContinuousFlyout } from "@blockly/continuous-toolbox";
 
 export class CheckableContinuousFlyout extends ContinuousFlyout {
   /**
@@ -22,12 +22,18 @@ export class CheckableContinuousFlyout extends ContinuousFlyout {
    * @const
    */
   static CHECKMARK_PATH =
-      'M' + CheckableContinuousFlyout.CHECKBOX_SIZE / 4 +
-      ' ' + CheckableContinuousFlyout.CHECKBOX_SIZE / 2 +
-      'L' + 5 * CheckableContinuousFlyout.CHECKBOX_SIZE / 12 +
-      ' ' + 2 * CheckableContinuousFlyout.CHECKBOX_SIZE / 3 +
-      'L' + 3 * CheckableContinuousFlyout.CHECKBOX_SIZE / 4 +
-      ' ' + CheckableContinuousFlyout.CHECKBOX_SIZE / 3;
+    "M" +
+    CheckableContinuousFlyout.CHECKBOX_SIZE / 4 +
+    " " +
+    CheckableContinuousFlyout.CHECKBOX_SIZE / 2 +
+    "L" +
+    (5 * CheckableContinuousFlyout.CHECKBOX_SIZE) / 12 +
+    " " +
+    (2 * CheckableContinuousFlyout.CHECKBOX_SIZE) / 3 +
+    "L" +
+    (3 * CheckableContinuousFlyout.CHECKBOX_SIZE) / 4 +
+    " " +
+    CheckableContinuousFlyout.CHECKBOX_SIZE / 3;
 
   /**
    * Size of the checkbox corner radius
@@ -48,15 +54,14 @@ export class CheckableContinuousFlyout extends ContinuousFlyout {
    * @const
    */
   static CHECKBOX_SPACE_X =
-      CheckableContinuousFlyout.CHECKBOX_SIZE +
-      2 * CheckableContinuousFlyout.CHECKBOX_MARGIN;
-
+    CheckableContinuousFlyout.CHECKBOX_SIZE +
+    2 * CheckableContinuousFlyout.CHECKBOX_MARGIN;
 
   constructor(workspaceOptions) {
     super(workspaceOptions);
-    this.tabWidth_ = 0;
-    this.MARGIN = 10;
-    this.GAP_Y = 8;
+    this.tabWidth_ = -2;
+    this.MARGIN = 12;
+    this.GAP_Y = 12;
     CheckableContinuousFlyout.CHECKBOX_MARGIN = this.MARGIN;
 
     /**
@@ -67,6 +72,13 @@ export class CheckableContinuousFlyout extends ContinuousFlyout {
      * @private
      */
     this.checkboxes_ = new Map();
+  }
+
+  initFlyoutButton_(button, x, y) {
+    if (button.isLabel()) {
+      button.height = 40;
+    }
+    super.initFlyoutButton_(button, x, y);
   }
 
   show(flyoutDef) {
@@ -95,16 +107,30 @@ export class CheckableContinuousFlyout extends ContinuousFlyout {
     if (block.checkboxInFlyout) {
       const coordinates = block.getRelativeToSurfaceXY();
       const checkbox = this.createCheckbox_(
-          block, coordinates.x, coordinates.y, block.getHeightWidth());
+        block,
+        coordinates.x,
+        coordinates.y,
+        block.getHeightWidth()
+      );
       let moveX = coordinates.x;
       if (this.RTL) {
-        moveX -= (CheckableContinuousFlyout.CHECKBOX_SIZE + CheckableContinuousFlyout.CHECKBOX_MARGIN);
+        moveX -=
+          CheckableContinuousFlyout.CHECKBOX_SIZE +
+          CheckableContinuousFlyout.CHECKBOX_MARGIN;
       } else {
-        moveX += CheckableContinuousFlyout.CHECKBOX_SIZE + CheckableContinuousFlyout.CHECKBOX_MARGIN;
+        moveX +=
+          CheckableContinuousFlyout.CHECKBOX_SIZE +
+          CheckableContinuousFlyout.CHECKBOX_MARGIN;
       }
       block.moveBy(moveX, 0);
-      this.listeners.push(Blockly.browserEvents.bind(checkbox.svgRoot,
-          'mousedown', null, this.checkboxClicked_(checkbox)));
+      this.listeners.push(
+        Blockly.browserEvents.bind(
+          checkbox.svgRoot,
+          "mousedown",
+          null,
+          this.checkboxClicked_(checkbox)
+        )
+      );
     }
     super.addBlockListeners_(root, block, rect);
   }
@@ -118,7 +144,7 @@ export class CheckableContinuousFlyout extends ContinuousFlyout {
    * @private
    */
   checkboxClicked_(checkboxObj) {
-    return function(e) {
+    return function (e) {
       this.setCheckboxState(checkboxObj.block.id, !checkboxObj.clicked);
       // This event has been handled.  No need to bubble up to the document.
       e.stopPropagation();
@@ -138,40 +164,63 @@ export class CheckableContinuousFlyout extends ContinuousFlyout {
   createCheckbox_(block, cursorX, cursorY, blockHW) {
     var checkboxState = this.getCheckboxState(block.id);
     var svgRoot = block.getSvgRoot();
-    var extraSpace = CheckableContinuousFlyout.CHECKBOX_SIZE + CheckableContinuousFlyout.CHECKBOX_MARGIN;
-    var xOffset = this.RTL ? this.getWidth() / this.workspace_.scale - extraSpace : cursorX;
-    var yOffset = cursorY + blockHW.height / 2 - CheckableContinuousFlyout.CHECKBOX_SIZE / 2;
+    var extraSpace =
+      CheckableContinuousFlyout.CHECKBOX_SIZE +
+      CheckableContinuousFlyout.CHECKBOX_MARGIN;
+    var xOffset = this.RTL
+      ? this.getWidth() / this.workspace_.scale - extraSpace
+      : cursorX;
+    var yOffset =
+      cursorY +
+      blockHW.height / 2 -
+      CheckableContinuousFlyout.CHECKBOX_SIZE / 2;
     var touchMargin = CheckableContinuousFlyout.CHECKBOX_TOUCH_PADDING;
-    var checkboxGroup = Blockly.utils.dom.createSvgElement('g',
-        {
-          'transform': `translate(${xOffset}, ${yOffset})`,
-          'fill': 'transparent',
-        }, null);
-    Blockly.utils.dom.createSvgElement('rect',
-        {
-          'class': 'blocklyFlyoutCheckbox',
-          'height': CheckableContinuousFlyout.CHECKBOX_SIZE,
-          'width': CheckableContinuousFlyout.CHECKBOX_SIZE,
-          'rx': CheckableContinuousFlyout.CHECKBOX_CORNER_RADIUS,
-          'ry': CheckableContinuousFlyout.CHECKBOX_CORNER_RADIUS
-        }, checkboxGroup);
-    Blockly.utils.dom.createSvgElement('path',
-        {
-          'class': 'blocklyFlyoutCheckboxPath',
-          'd': CheckableContinuousFlyout.CHECKMARK_PATH
-        }, checkboxGroup);
-    Blockly.utils.dom.createSvgElement('rect',
-        {
-          'class': 'blocklyTouchTargetBackground',
-          'x': -touchMargin + 'px',
-          'y': -touchMargin + 'px',
-          'height': CheckableContinuousFlyout.CHECKBOX_SIZE + 2 * touchMargin,
-          'width': CheckableContinuousFlyout.CHECKBOX_SIZE + 2 * touchMargin,
-        }, checkboxGroup);
-    var checkboxObj = {svgRoot: checkboxGroup, clicked: checkboxState, block: block};
+    var checkboxGroup = Blockly.utils.dom.createSvgElement(
+      "g",
+      {
+        transform: `translate(${xOffset}, ${yOffset})`,
+        fill: "transparent",
+      },
+      null
+    );
+    Blockly.utils.dom.createSvgElement(
+      "rect",
+      {
+        class: "blocklyFlyoutCheckbox",
+        height: CheckableContinuousFlyout.CHECKBOX_SIZE,
+        width: CheckableContinuousFlyout.CHECKBOX_SIZE,
+        rx: CheckableContinuousFlyout.CHECKBOX_CORNER_RADIUS,
+        ry: CheckableContinuousFlyout.CHECKBOX_CORNER_RADIUS,
+      },
+      checkboxGroup
+    );
+    Blockly.utils.dom.createSvgElement(
+      "path",
+      {
+        class: "blocklyFlyoutCheckboxPath",
+        d: CheckableContinuousFlyout.CHECKMARK_PATH,
+      },
+      checkboxGroup
+    );
+    Blockly.utils.dom.createSvgElement(
+      "rect",
+      {
+        class: "blocklyTouchTargetBackground",
+        x: -touchMargin + "px",
+        y: -touchMargin + "px",
+        height: CheckableContinuousFlyout.CHECKBOX_SIZE + 2 * touchMargin,
+        width: CheckableContinuousFlyout.CHECKBOX_SIZE + 2 * touchMargin,
+      },
+      checkboxGroup
+    );
+    var checkboxObj = {
+      svgRoot: checkboxGroup,
+      clicked: checkboxState,
+      block: block,
+    };
 
     if (checkboxState) {
-      Blockly.utils.dom.addClass((checkboxObj.svgRoot), 'checked');
+      Blockly.utils.dom.addClass(checkboxObj.svgRoot, "checked");
     }
 
     this.workspace_.getCanvas().insertBefore(checkboxGroup, svgRoot);
@@ -195,13 +244,20 @@ export class CheckableContinuousFlyout extends ContinuousFlyout {
     checkboxObj.clicked = value;
 
     if (checkboxObj.clicked) {
-      Blockly.utils.dom.addClass(checkboxObj.svgRoot, 'checked');
+      Blockly.utils.dom.addClass(checkboxObj.svgRoot, "checked");
     } else {
-      Blockly.utils.dom.removeClass(checkboxObj.svgRoot, 'checked');
+      Blockly.utils.dom.removeClass(checkboxObj.svgRoot, "checked");
     }
 
-    Blockly.Events.fire(new Blockly.Events.BlockChange(
-        checkboxObj.block, 'checkbox', null, oldValue, value));
+    Blockly.Events.fire(
+      new Blockly.Events.BlockChange(
+        checkboxObj.block,
+        "checkbox",
+        null,
+        oldValue,
+        value
+      )
+    );
   }
 
   /**

@@ -17,7 +17,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import * as Blockly from 'blockly/core';
+import * as Blockly from "blockly/core";
 
 const styles = `
   .blocklySvg {
@@ -411,18 +411,19 @@ const styles = `
     cursor: pointer;
   }
 
-  .zelos-renderer.scratch-theme .blocklyFlyoutLabelText {
+  .scratch-renderer.zelos-theme .blocklyFlyoutLabelText {
     font-family: "Helvetica Neue", Helvetica, sans-serif;
     font-size: 14pt;
     fill: #575E75;
     font-weight: bold;
   }
 
-  .zelos-renderer.scratch-theme .blocklyText {
+  .scratch-renderer.zelos-theme .blocklyText,
+  .scratch-renderer.zelos-theme .blocklyHtmlInput {
     font-weight: 500;
   }
 
-  .zelos-renderer.scratch-theme .blocklyFlyoutButton .blocklyText {
+  .scratch-renderer.zelos-theme .blocklyFlyoutButton .blocklyText {
     fill: var(--colour-textFieldText);
   }
 
@@ -850,7 +851,7 @@ const styles = `
     cursor: url("<<<PATH>>>/handdelete.cur"), auto;
   }
 
-  .blocklyTreeSelected {
+  .blocklyToolboxSelected {
     background-color: var(--colour-toolboxSelected);
   }
 
@@ -1319,7 +1320,7 @@ const styles = `
     transform: rotate(-180deg);
   }
 
-  .zelos-renderer.scratch-theme .blocklyComment .blocklyTextarea {
+  .scratch-renderer.zelos-theme .blocklyComment .blocklyTextarea {
     border: none;
     --commentFillColour: #fef49c;
     font-size: 12pt;
@@ -1328,8 +1329,26 @@ const styles = `
     color: #575e75;
   }
 
-  .zelos-renderer.scratch-theme .blocklyCommentText.blocklyText {
+  .scratch-renderer.zelos-theme .blocklyCommentText.blocklyText {
     font-weight: 400;
+  }
+
+  .blocklyToolboxCategory {
+    height: auto;
+    line-height: auto;
+    margin-bottom: 0;
+    padding: 0.375rem 0px;
+    cursor: pointer;
+  }
+  .blocklyToolboxCategory:hover {
+    color: #4c97ff;
+  }
+  .blocklyDropDownDiv .blocklyMenuItem {
+    color: #fff;
+    font-weight: bold;
+  }
+  .blocklyToolboxSelected .blocklyTreeLabel {
+    color: var(--colour-toolboxText);
   }
 
   .blocklyDeleteIcon {
