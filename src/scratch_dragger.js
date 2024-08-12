@@ -10,6 +10,27 @@ class ScratchDragger extends Blockly.dragging.Dragger {
   setDraggable(draggable) {
     this.draggable = draggable;
   }
+
+  onDragEnd(event) {
+    if (
+      this.draggable instanceof Blockly.BlockSvg &&
+      this.draggable.type === "procedures_definition"
+    ) {
+      const procCode = this.draggable
+        .getInputTargetBlock("custom_block")
+        .getProcCode();
+      const hasCaller = this.workspace
+        .getBlocksByType("procedures_call")
+        .some((b) => b.getProcCode() === procCode);
+      if (hasCaller) {
+        Blockly.dialog.alert(Blockly.Msg.PROCEDURE_USED);
+        this.draggable.revertDrag();
+        this.draggable.endDrag();
+        return;
+      }
+    }
+    super.onDragEnd(event);
+  }
 }
 
 Blockly.registry.register(
