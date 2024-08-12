@@ -37,6 +37,7 @@ import { buildGlowFilter, glowStack } from "./glows.js";
 import { ScratchContinuousToolbox } from "./scratch_continuous_toolbox.js";
 import "./scratch_continuous_category.js";
 import "./scratch_comment_icon.js";
+import "./scratch_dragger.js";
 import "./scratch_variable_model.js";
 import "./scratch_connection_checker.js";
 import "./events_block_comment_change.js";

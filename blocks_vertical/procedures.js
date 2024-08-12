@@ -26,6 +26,40 @@ import * as Blockly from "blockly/core";
 import { Colours } from "../core/colours.js";
 import { FieldTextInputRemovable } from "../core/field_textinput_removable.js";
 
+class DuplicateOnDragDraggable {
+  constructor(block) {
+    this.block = block;
+  }
+
+  isMovable() {
+    return true;
+  }
+
+  startDrag(e) {
+    const data = this.block.toCopyData();
+    this.copy = Blockly.clipboard.paste(data, this.block.workspace);
+    this.baseStrat = new Blockly.dragging.BlockDragStrategy(this.copy);
+    this.copy.setDragStrategy(this.baseStrat);
+    this.baseStrat.startDrag(e);
+  }
+
+  drag(e) {
+    this.block.workspace
+      .getGesture(e)
+      .getCurrentDragger()
+      .setDraggable(this.copy);
+    this.baseStrat.drag(e);
+  }
+
+  endDrag(e) {
+    this.baseStrat?.endDrag(e);
+  }
+
+  revertDrag(e) {
+    this.copy?.dispose();
+  }
+}
+
 // Serialization and deserialization.
 
 /**
@@ -918,6 +952,7 @@ Blockly.Blocks["argument_reporter_boolean"] = {
       ],
       extensions: ["colours_more", "output_boolean"],
     });
+    this.setDragStrategy(new DuplicateOnDragDraggable(this));
   },
 };
 
@@ -934,6 +969,7 @@ Blockly.Blocks["argument_reporter_string_number"] = {
       ],
       extensions: ["colours_more", "output_number", "output_string"],
     });
+    this.setDragStrategy(new DuplicateOnDragDraggable(this));
   },
 };
 
