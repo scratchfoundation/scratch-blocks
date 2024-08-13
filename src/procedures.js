@@ -290,18 +290,20 @@ function createProcedureCallbackFactory_(workspace) {
       var blockDom = Blockly.utils.xml.textToDom(blockText).firstChild;
       Blockly.Events.setGroup(true);
       var block = Blockly.Xml.domToBlock(blockDom, workspace);
-      var scale = workspace.scale; // To convert from pixel units to workspace units
-      // Position the block so that it is at the top left of the visible workspace,
-      // padded from the edge by 30 units. Position in the top right if RTL.
-      var posX = -workspace.scrollX;
-      if (workspace.RTL) {
-        posX += workspace.getMetrics().contentWidth - 30;
-      } else {
-        posX += 30;
-      }
-      block.moveBy(posX / scale, (-workspace.scrollY + 30) / scale);
-      block.scheduleSnapAndBump();
-      Blockly.Events.setGroup(false);
+      Blockly.renderManagement.finishQueuedRenders().then(() => {
+        var scale = workspace.scale; // To convert from pixel units to workspace units
+        // Position the block so that it is at the top left of the visible workspace,
+        // padded from the edge by 30 units. Position in the top right if RTL.
+        var posX = -workspace.scrollX;
+        if (workspace.RTL) {
+          posX += workspace.getMetrics().contentWidth - 30;
+        } else {
+          posX += 30;
+        }
+        block.moveBy(posX / scale, (-workspace.scrollY + 30) / scale);
+        block.scheduleSnapAndBump();
+        Blockly.Events.setGroup(false);
+      });
     }
   };
 }
