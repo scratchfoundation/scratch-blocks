@@ -25,7 +25,7 @@
 import * as Blockly from "blockly/core";
 import * as Constants from "./constants.js";
 import { ScratchMsgs } from "../msg/scratch_msgs.js";
-import { createVariable } from "./variables.js";
+import { createVariable, renameVariable } from "./variables.js";
 
 class FieldVariable extends Blockly.FieldVariable {
   constructor(varName, validator, variableTypes, defaultType, config) {
@@ -115,21 +115,23 @@ class FieldVariable extends Blockly.FieldVariable {
    */
   onItemSelected_(menu, menuItem) {
     const sourceBlock = this.getSourceBlock();
-    if (
-      sourceBlock &&
-      !sourceBlock.isDeadOrDying() &&
-      menuItem.getValue() === Constants.NEW_BROADCAST_MESSAGE_ID
-    ) {
-      createVariable(
-        sourceBlock.workspace,
-        (varId) => {
-          if (varId) {
-            this.setValue(varId);
-          }
-        },
-        Constants.BROADCAST_MESSAGE_VARIABLE_TYPE
-      );
-      return;
+    if (sourceBlock && !sourceBlock.isDeadOrDying()) {
+      const selectedItem = menuItem.getValue();
+      if (selectedItem === Constants.NEW_BROADCAST_MESSAGE_ID) {
+        createVariable(
+          sourceBlock.workspace,
+          (varId) => {
+            if (varId) {
+              this.setValue(varId);
+            }
+          },
+          Constants.BROADCAST_MESSAGE_VARIABLE_TYPE
+        );
+        return;
+      } else if (selectedItem === Constants.RENAME_VARIABLE_ID) {
+        renameVariable(sourceBlock.workspace, this.variable);
+        return;
+      }
     }
     super.onItemSelected_(menu, menuItem);
   }
