@@ -62,6 +62,8 @@ Blockly.Blocks["data_setvariableto"] = {
         {
           type: "field_variable",
           name: "VARIABLE",
+          variableTypes: [Constants.SCALAR_VARIABLE_TYPE],
+          defaultType: Constants.SCALAR_VARIABLE_TYPE,
         },
         {
           type: "input_value",
@@ -86,6 +88,8 @@ Blockly.Blocks["data_changevariableby"] = {
         {
           type: "field_variable",
           name: "VARIABLE",
+          variableTypes: [Constants.SCALAR_VARIABLE_TYPE],
+          defaultType: Constants.SCALAR_VARIABLE_TYPE,
         },
         {
           type: "input_value",
@@ -110,6 +114,8 @@ Blockly.Blocks["data_showvariable"] = {
         {
           type: "field_variable",
           name: "VARIABLE",
+          variableTypes: [Constants.SCALAR_VARIABLE_TYPE],
+          defaultType: Constants.SCALAR_VARIABLE_TYPE,
         },
       ],
       previousStatement: null,
@@ -132,6 +138,8 @@ Blockly.Blocks["data_hidevariable"] = {
         {
           type: "field_variable",
           name: "VARIABLE",
+          variableTypes: [Constants.SCALAR_VARIABLE_TYPE],
+          defaultType: Constants.SCALAR_VARIABLE_TYPE,
         },
       ],
       previousStatement: null,
