@@ -43,7 +43,7 @@
     "graceful-fs": "4.2.11",
     "husky": "8.0.3",
     "json": "9.0.6",
-    "rimraf": "2.7.1",
+    "rimraf": "6.0.0",
     "scratch-semantic-release-config": "1.0.14",
     "selenium-webdriver": "4.16.0",
     "semantic-release": "19.0.5",
