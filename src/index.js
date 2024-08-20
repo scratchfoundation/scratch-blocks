@@ -72,6 +72,12 @@ export function inject(container, options) {
   Object.assign(options, {
     renderer: "scratch",
     theme: "zelos",
+    zoom: {
+      controls: true,
+      wheel: true,
+      pinch: true,
+      startScale: 0.675,
+    },
     plugins: {
       toolbox: ScratchContinuousToolbox,
       flyoutsVerticalToolbox: CheckableContinuousFlyout,
