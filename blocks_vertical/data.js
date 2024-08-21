@@ -596,7 +596,7 @@ const CUSTOM_CONTEXT_MENU_GET_LIST_MIXIN = {
     if (this.isCollapsed()) {
       return;
     }
-    var currentVarName = this.getField(fieldName).text_;
+    var currentVarName = this.getField(fieldName).getVariable().getName();
     if (!this.isInFlyout) {
       var variablesList = this.workspace.getVariablesOfType(
         Constants.LIST_VARIABLE_TYPE
@@ -683,8 +683,7 @@ const RENAME_OPTION_CALLBACK_FACTORY = function (block, fieldName) {
  */
 const DELETE_OPTION_CALLBACK_FACTORY = function (block, fieldName) {
   return function () {
-    var workspace = block.workspace;
-    var variable = block.getField(fieldName).getVariable();
-    workspace.deleteVariableById(variable.getId());
+    const variable = block.getField(fieldName).getVariable();
+    Blockly.Variables.deleteVariable(variable.getWorkspace(), variable, block);
   };
 };
