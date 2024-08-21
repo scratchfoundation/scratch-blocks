@@ -14,7 +14,8 @@ class ScratchDragger extends Blockly.dragging.Dragger {
   onDragEnd(event) {
     if (
       this.draggable instanceof Blockly.BlockSvg &&
-      this.draggable.type === "procedures_definition"
+      this.draggable.type === "procedures_definition" &&
+      this.wouldDeleteDraggable(event, this.draggable.getRootBlock())
     ) {
       const procCode = this.draggable
         .getInputTargetBlock("custom_block")
