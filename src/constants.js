@@ -46,6 +46,9 @@ export { PROCEDURES_PROTOTYPE_BLOCK_TYPE };
 const PROCEDURES_CALL_BLOCK_TYPE = "procedures_call";
 export { PROCEDURES_CALL_BLOCK_TYPE };
 
+const OUTPUT_SHAPE_HEXAGONAL = 1;
+export { OUTPUT_SHAPE_HEXAGONAL };
+
 const OUTPUT_SHAPE_ROUND = 2;
 export { OUTPUT_SHAPE_ROUND };
 
@@ -58,10 +61,3 @@ export { OUTPUT_SHAPE_ROUND };
  */
 const NEW_BROADCAST_MESSAGE_ID = "NEW_BROADCAST_MESSAGE_ID";
 export { NEW_BROADCAST_MESSAGE_ID };
-
-/**
- * String for use in the dropdown created in field_variable.
- * This string indicates that this option in the dropdown is 'Rename
- * variable...' and if selected, should trigger the prompt to rename a variable.
- */
-export const RENAME_VARIABLE_ID = "RENAME_VARIABLE_ID";

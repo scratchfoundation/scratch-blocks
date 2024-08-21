@@ -128,7 +128,7 @@ class FieldVariable extends Blockly.FieldVariable {
           Constants.BROADCAST_MESSAGE_VARIABLE_TYPE
         );
         return;
-      } else if (selectedItem === Constants.RENAME_VARIABLE_ID) {
+      } else if (selectedItem === Blockly.RENAME_VARIABLE_ID) {
         renameVariable(sourceBlock.workspace, this.variable);
         return;
       }

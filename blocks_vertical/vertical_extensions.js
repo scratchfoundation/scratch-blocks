@@ -28,6 +28,7 @@
 import * as Blockly from "blockly/core";
 import { Colours } from "../core/colours.js";
 import { ScratchProcedures } from "../src/procedures.js";
+import * as Constants from "../src/constants.js";
 
 const VerticalExtensions = {};
 /**
@@ -132,7 +133,7 @@ VerticalExtensions.SHAPE_END = function () {
  */
 VerticalExtensions.OUTPUT_NUMBER = function () {
   this.setInputsInline(true);
-  this.setOutputShape(Blockly.OUTPUT_SHAPE_ROUND);
+  this.setOutputShape(Constants.OUTPUT_SHAPE_ROUND);
   this.setOutput(true, "Number");
 };
 
@@ -145,7 +146,7 @@ VerticalExtensions.OUTPUT_NUMBER = function () {
  */
 VerticalExtensions.OUTPUT_STRING = function () {
   this.setInputsInline(true);
-  this.setOutputShape(Blockly.OUTPUT_SHAPE_ROUND);
+  this.setOutputShape(Constants.OUTPUT_SHAPE_ROUND);
   this.setOutput(true, "String");
 };
 
@@ -158,7 +159,7 @@ VerticalExtensions.OUTPUT_STRING = function () {
  */
 VerticalExtensions.OUTPUT_BOOLEAN = function () {
   this.setInputsInline(true);
-  this.setOutputShape(Blockly.OUTPUT_SHAPE_HEXAGONAL);
+  this.setOutputShape(Constants.OUTPUT_SHAPE_HEXAGONAL);
   this.setOutput(true, "Boolean");
 };
 

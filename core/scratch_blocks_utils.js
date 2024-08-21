@@ -22,40 +22,7 @@
  * @fileoverview Utility methods for Scratch Blocks but not Blockly.
  * @author fenichel@google.com (Rachel Fenichel)
  */
-import * as Blockly from 'blockly/core';
-
-/**
- * Measure some text using a canvas in-memory.
- * Does not exist in Blockly, but needed in scratch-blocks
- * @param {string} fontSize E.g., '10pt'
- * @param {string} fontFamily E.g., 'Arial'
- * @param {string} fontWeight E.g., '600'
- * @param {string} text The actual text to measure
- * @return {number} Width of the text in px.
- * @package
- */
-export function measureText(fontSize, fontFamily,
-    fontWeight, text) {
-  var canvas = document.createElement('canvas');
-  var context = canvas.getContext('2d');
-  context.font = fontWeight + ' ' + fontSize + ' ' + fontFamily;
-  return context.measureText(text).width;
-};
-
-/**
- * Encode a string's HTML entities.
- * E.g., <a> -> &lt;a&gt;
- * Does not exist in Blockly, but needed in scratch-blocks
- * @param {string} rawStr Unencoded raw string to encode.
- * @return {string} String with HTML entities encoded.
- * @package
- */
-export function encodeEntities(rawStr) {
-  // CC-BY-SA https://stackoverflow.com/questions/18749591/encode-html-entities-in-javascript
-  return rawStr.replace(/[\u00A0-\u9999<>&]/gim, function(i) {
-    return '&#' + i.charCodeAt(0) + ';';
-  });
-};
+import * as Blockly from "blockly/core";
 
 /**
  * Re-assign obscured shadow blocks new IDs to prevent collisions
@@ -72,28 +39,13 @@ export function changeObscuredShadowIds(block) {
       if (connection) {
         var shadowDom = connection.getShadowDom();
         if (shadowDom) {
-          shadowDom.setAttribute('id', Blockly.utils.genUid());
+          shadowDom.setAttribute("id", Blockly.utils.genUid());
           connection.setShadowDom(shadowDom);
         }
       }
     }
   }
-};
-
-/**
- * Whether a block is both a shadow block and an argument reporter.  These
- * blocks have special behaviour in scratch-blocks: they're duplicated when
- * dragged, and they are rendered slightly differently from normal shadow
- * blocks.
- * @param {!Blockly.BlockSvg} block The block that should be used to make this
- *     decision.
- * @return {boolean} True if the block should be duplicated on drag.
- * @package
- */
-export function isShadowArgumentReporter(block) {
-  return (block.isShadow() && (block.type == 'argument_reporter_boolean' ||
-      block.type == 'argument_reporter_string_number'));
-};
+}
 
 /**
  * Compare strings with natural number sorting.
@@ -103,51 +55,10 @@ export function isShadowArgumentReporter(block) {
  */
 export function compareStrings(str1, str2) {
   return str1.localeCompare(str2, [], {
-    sensitivity: 'base',
-    numeric: true
+    sensitivity: "base",
+    numeric: true,
   });
-};
-
-/**
- * Determine if this block can be recycled in the flyout.  Blocks that have no
- * variablees and are not dynamic shadows can be recycled.
- * @param {Blockly.Block} block The block to check.
- * @return {boolean} True if the block can be recycled.
- * @package
- */
-export function blockIsRecyclable(block) {
-  // If the block needs to parse mutations, never recycle.
-  if (block.mutationToDom && block.domToMutation) {
-    return false;
-  }
-
-  for (var i = 0; i < block.inputList.length; i++) {
-    var input = block.inputList[i];
-    for (var j = 0; j < input.fieldRow.length; j++) {
-      var field = input.fieldRow[j];
-      // No variables.
-      if (field instanceof Blockly.FieldVariable ||
-          field instanceof Blockly.FieldVariableGetter) {
-        return false;
-      }
-      if (field instanceof Blockly.FieldDropdown ||
-          field instanceof Blockly.FieldNumberDropdown ||
-          field instanceof Blockly.FieldTextDropdown) {
-        if (field.isOptionListDynamic()) {
-          return false;
-        }
-      }
-    }
-    // Check children.
-    if (input.connection) {
-      var child = input.connection.targetBlock();
-      if (child && !blockIsRecyclable(child)) {
-        return false;
-      }
-    }
-  }
-  return true;
-};
+}
 
 /**
  * Creates a callback function for a click on the "duplicate" context menu
@@ -161,14 +72,15 @@ export function blockIsRecyclable(block) {
  * @package
  */
 export function duplicateAndDragCallback(oldBlock, event) {
-  var isMouseEvent = Blockly.Touch.getTouchIdentifierFromEvent(event) === 'mouse';
-  return function(e) {
+  var isMouseEvent =
+    Blockly.Touch.getTouchIdentifierFromEvent(event) === "mouse";
+  return function (e) {
     // Give the context menu a chance to close.
-    setTimeout(function() {
+    setTimeout(function () {
       var ws = oldBlock.workspace;
       var svgRootOld = oldBlock.getSvgRoot();
       if (!svgRootOld) {
-        throw new Error('oldBlock is not rendered.');
+        throw new Error("oldBlock is not rendered.");
       }
 
       // Create the new block by cloning the block in the flyout (via XML).
@@ -191,7 +103,7 @@ export function duplicateAndDragCallback(oldBlock, event) {
 
         var svgRootNew = newBlock.getSvgRoot();
         if (!svgRootNew) {
-          throw new Error('newBlock is not rendered.');
+          throw new Error("newBlock is not rendered.");
         }
 
         // The position of the old block in workspace coordinates.
@@ -220,17 +132,17 @@ export function duplicateAndDragCallback(oldBlock, event) {
         var fakeEvent = {
           clientX: event.clientX,
           clientY: event.clientY,
-          type: 'mousedown',
-          preventDefault: function() {
+          type: "mousedown",
+          preventDefault: function () {
             e.preventDefault();
           },
-          stopPropagation: function() {
+          stopPropagation: function () {
             e.stopPropagation();
           },
-          target: e.target
+          target: e.target,
         };
         ws.startDragWithFakeEvent(fakeEvent, newBlock);
       }
     }, 0);
   };
-};
+}

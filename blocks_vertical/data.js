@@ -389,7 +389,7 @@ Blockly.Blocks["data_itemoflist"] = {
       output: null,
       category: Categories.dataLists,
       extensions: ["colours_data_lists"],
-      outputShape: Blockly.OUTPUT_SHAPE_ROUND,
+      outputShape: Constants.OUTPUT_SHAPE_ROUND,
     });
   },
 };
@@ -417,7 +417,7 @@ Blockly.Blocks["data_itemnumoflist"] = {
       output: null,
       category: Categories.dataLists,
       extensions: ["colours_data_lists"],
-      outputShape: Blockly.OUTPUT_SHAPE_ROUND,
+      outputShape: Constants.OUTPUT_SHAPE_ROUND,
     });
   },
 };
