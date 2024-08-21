@@ -55,6 +55,11 @@ const styles = `
     -ms-user-select: none;
   }
 
+  .blocklyBlockCanvas.blocklyCanvasTransitioning,
+  .blocklyBubbleCanvas.blocklyCanvasTransitioning {
+    transition: none;
+  }
+
   .blocklyWidgetDiv.fieldTextInput {
     overflow: hidden;
     border: 1px solid;
@@ -81,13 +86,6 @@ const styles = `
     left: 50%;
     margin-left: -12px;
     cursor: pointer;
-  }
-
-  .blocklyNonSelectable {
-    user-select: none;
-    -moz-user-select: none;
-    -webkit-user-select: none;
-    -ms-user-select: none;
   }
 
   .blocklyWsDragSurface {
