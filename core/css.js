@@ -45,7 +45,11 @@ const styles = `
     height: 100%;
     position: relative;
     overflow: hidden; /* So blocks in drag surface disappear at edges */
-    touch-action: none
+    touch-action: none;
+  }
+
+  .injectionDiv.boundless {
+    overflow: visible;
   }
 
   .blocklyNonSelectable {
