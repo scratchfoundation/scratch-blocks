@@ -27,6 +27,7 @@ import * as ScratchVariables from "./variables.js";
 import "../core/css.js";
 import "../core/field_vertical_separator.js";
 import "./renderer/renderer.js";
+import * as contextMenuItems from "./context_menu_items.js";
 import {
   ContinuousToolbox,
   ContinuousFlyout,
@@ -67,6 +68,7 @@ export { glowStack };
 export { scratchBlocksUtils };
 export { CheckableContinuousFlyout };
 export { ScratchVariables };
+export { contextMenuItems };
 
 export function inject(container, options) {
   Object.assign(options, {
@@ -105,3 +107,7 @@ Blockly.FlyoutButton.TEXT_MARGIN_Y = 10;
 Blockly.ContextMenuRegistry.registry.unregister("blockDisable");
 Blockly.ContextMenuRegistry.registry.unregister("blockInline");
 Blockly.ContextMenuItems.registerCommentOptions();
+Blockly.ContextMenuRegistry.registry.unregister("blockDelete");
+contextMenuItems.registerDeleteBlock();
+Blockly.ContextMenuRegistry.registry.unregister("workspaceDelete");
+contextMenuItems.registerDeleteAll();
