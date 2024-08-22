@@ -1,4 +1,4 @@
-import * as Blockly from "blockly";
+import * as Blockly from "blockly/core";
 import { ContinuousFlyout } from "@blockly/continuous-toolbox";
 
 export class CheckableContinuousFlyout extends ContinuousFlyout {

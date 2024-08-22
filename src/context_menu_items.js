@@ -61,7 +61,9 @@ export function registerDeleteAll() {
       if (!scope.workspace) {
         return "";
       }
-      const deletableBlocksLength = getDeletableBlocksInWorkspace(scope.workspace).length;
+      const deletableBlocksLength = getDeletableBlocksInWorkspace(
+        scope.workspace
+      ).length;
       if (deletableBlocksLength === 1) {
         return Blockly.Msg["DELETE_BLOCK"];
       }
@@ -74,7 +76,9 @@ export function registerDeleteAll() {
       if (!scope.workspace) {
         return "disabled";
       }
-      const deletableBlocksLength = getDeletableBlocksInWorkspace(scope.workspace).length;
+      const deletableBlocksLength = getDeletableBlocksInWorkspace(
+        scope.workspace
+      ).length;
       return deletableBlocksLength > 0 ? "enabled" : "disabled";
     },
     callback(scope) {

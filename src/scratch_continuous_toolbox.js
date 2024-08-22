@@ -1,5 +1,5 @@
-import * as Blockly from 'blockly/core';
-import {ContinuousToolbox} from '@blockly/continuous-toolbox';
+import * as Blockly from "blockly/core";
+import { ContinuousToolbox } from "@blockly/continuous-toolbox";
 
 export class ScratchContinuousToolbox extends ContinuousToolbox {
   refreshSelection() {

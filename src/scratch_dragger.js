@@ -5,8 +5,8 @@
  */
 
 import * as Blockly from "blockly/core";
-import { BlockDragOutside } from "./events_block_drag_outside.js";
-import { BlockDragEnd } from "./events_block_drag_end.js";
+import { BlockDragOutside } from "./events/events_block_drag_outside.js";
+import { BlockDragEnd } from "./events/events_block_drag_end.js";
 
 const BOUNDLESS_CLASS = "boundless";
 

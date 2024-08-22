@@ -25,7 +25,7 @@
 
 import * as Blockly from "blockly/core";
 import * as Constants from "./constants.js";
-import * as scratchBlocksUtils from "../core/scratch_blocks_utils.js";
+import * as scratchBlocksUtils from "../src/scratch_blocks_utils.js";
 
 /**
  * Find all user-created procedure definition mutations in a workspace.
