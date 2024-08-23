@@ -22,6 +22,7 @@ import * as Blockly from "blockly/core";
 import { Categories } from "../categories.js";
 import * as Constants from "../constants.js";
 import * as scratchBlocksUtils from "../scratch_blocks_utils.js";
+import { renameVariable } from "../variables.js";
 
 Blockly.Blocks["data_variable"] = {
   /**
@@ -670,7 +671,7 @@ const RENAME_OPTION_CALLBACK_FACTORY = function (block, fieldName) {
   return function () {
     var workspace = block.workspace;
     var variable = block.getField(fieldName).getVariable();
-    Blockly.Variables.renameVariable(workspace, variable);
+    renameVariable(workspace, variable);
   };
 };
 
