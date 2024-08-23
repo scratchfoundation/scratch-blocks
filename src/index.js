@@ -5,8 +5,6 @@
  */
 
 import * as Blockly from "blockly/core";
-import { registerFieldAngle } from "@blockly/field-angle";
-registerFieldAngle();
 import "./blocks/colour.js";
 import "./blocks/math.js";
 import "./blocks/matrix.js";
@@ -58,6 +56,7 @@ export * from "./block_reporting.js";
 export * from "./categories.js";
 export * from "./procedures.js";
 export * from "./colours.js";
+export * from "./fields/field_angle.js";
 export * from "./fields/field_colour_slider.js";
 export * from "./fields/field_matrix.js";
 export * from "./fields/field_note.js";
