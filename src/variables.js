@@ -117,9 +117,9 @@ export function createVariable(workspace, opt_callback, opt_type) {
 
         var flyout = workspace.isFlyout ? workspace : workspace.getFlyout();
         var variableBlockId = variable.getId();
-        if (flyout.setCheckboxState) {
+        workspace.getToolbox().runAfterRerender(() => {
           flyout.setCheckboxState(variableBlockId, true);
-        }
+        });
 
         if (opt_callback) {
           opt_callback(variableBlockId);
