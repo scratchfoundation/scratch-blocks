@@ -9,11 +9,13 @@ export class ScratchContinuousToolbox extends ContinuousToolbox {
   }
 
   forceRerender() {
+    const selectedCategoryName = this.selectedItem_?.getName();
     super.refreshSelection();
     let callback;
     while ((callback = this.postRenderCallbacks.shift())) {
       callback();
     }
+    this.selectCategoryByName(selectedCategoryName);
   }
 
   runAfterRerender(callback) {
