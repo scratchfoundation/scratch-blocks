@@ -1142,6 +1142,8 @@ const styles = `
   .blocklyDropDownDiv .blocklyMenuItem {
     color: #fff;
     font-weight: bold;
+    min-height: 32px;
+    padding: 4px 7em 4px 28px;
   }
   .blocklyToolboxSelected .blocklyTreeLabel {
     color: var(--colour-toolboxText);
