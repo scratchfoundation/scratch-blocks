@@ -120,7 +120,7 @@ const cssColours = {
   numPadText: "white", // Do not use hex here, it cannot be inlined with data-uri SVG
   valueReportBackground: "#FFFFFF",
   valueReportBorder: "#AAAAAA",
-  menuHover: "rgba(0, 0, 0, 0.2)",
+  menuHover: "rgba(77, 151, 255, .25)",
 };
 
 const Colours = {

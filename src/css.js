@@ -735,12 +735,6 @@ const styles = `
     background-color: var(--colour-numPadBackground);
   }
 
-  /* Override the default Closure URL. */
-  .blocklyWidgetDiv .goog-option-selected .goog-menuitem-checkbox,
-  .blocklyWidgetDiv .goog-option-selected .goog-menuitem-icon {
-    background: url(<<<PATH>>>/sprites.png) no-repeat -48px -16px !important;
-  }
-
   /* Category tree in Toolbox. */
   .blocklyToolboxDiv {
     background-color: var(--colour-toolbox);
@@ -966,7 +960,7 @@ const styles = `
    * @author attila@google.com (Attila Bodis)
    */
 
-  .blocklyWidgetDiv .goog-menu {
+  .blocklyWidgetDiv .blocklyMenu {
     background: #fff;
     border-color: #ccc #666 #666 #ccc;
     border-style: solid;
@@ -984,223 +978,23 @@ const styles = `
     box-shadow: none;
   }
 
-  .blocklyWidgetDiv .blocklyMenu.blocklyFocused {
+  .blocklyWidgetDiv .blocklyMenu:focus {
     box-shadow: none;
   }
 
-  .blocklyDropDownDiv .goog-menu {
+  .blocklyDropDownDiv .blocklyMenu {
     cursor: default;
     font: normal 13px "Helvetica Neue", Helvetica, sans-serif;
     outline: none;
     z-index: 20000;  /* Arbitrary, but some apps depend on it... */
   }
 
-  /* Copied from: goog/css/menuitem.css */
-  /*
-   * Copyright 2009 The Closure Library Authors. All Rights Reserved.
-   *
-   * Use of this source code is governed by the Apache License, Version 2.0.
-   * See the COPYING file for details.
-   */
-
-  /**
-   * Standard styling for menus created by goog.ui.MenuItemRenderer.
-   *
-   * @author attila@google.com (Attila Bodis)
-   */
-
-  /**
-   * State: resting.
-   *
-   * NOTE(mleibman,chrishenry):
-   * The RTL support in Closure is provided via two mechanisms -- "rtl" CSS
-   * classes and BiDi flipping done by the CSS compiler.  Closure supports RTL
-   * with or without the use of the CSS compiler.  In order for them not
-   * to conflict with each other, the "rtl" CSS classes need to have the #noflip
-   * annotation.  The non-rtl counterparts should ideally have them as well, but,
-   * since .goog-menuitem existed without .goog-menuitem-rtl for so long before
-   * being added, there is a risk of people having templates where they are not
-   * rendering the .goog-menuitem-rtl class when in RTL and instead rely solely
-   * on the BiDi flipping by the CSS compiler.  That's why we're not adding the
-   * #noflip to .goog-menuitem.
-   */
-  .blocklyWidgetDiv .goog-menuitem {
-    font: normal 13px "Helvetica Neue", Helvetica, sans-serif;
-    list-style: none;
-    margin: 0;
-     /* 28px on the left for icon or checkbox; 7em on the right for shortcut. */
-    padding: 4px 7em 4px 28px;
-    white-space: nowrap;
+  .blocklyWidgetDiv .blocklyMenu .blocklyMenuItem:hover {
+    background: var(--colour-menuHover);
   }
 
-  .blocklyDropDownDiv .goog-menuitem {
-    color: var(--colour-text);
-    font: normal 13px "Helvetica Neue", Helvetica, sans-serif;
-    font-weight: bold;
-    list-style: none;
-    margin: 0;
-    min-height: 24px;
-     /* 28px on the left for icon or checkbox; 7em on the right for shortcut. */
-    padding: 4px 7em 4px 28px;
-    white-space: nowrap;
-  }
-
-  /* BiDi override for the resting state. */
-  /* #noflip */
-  .blocklyWidgetDiv .goog-menuitem.goog-menuitem-rtl, ,
-  .blocklyDropDownDiv .goog-menuitem.goog-menuitem-rtl {
-     /* Flip left/right padding for BiDi. */
-    padding-left: 7em;
-    padding-right: 28px;
-  }
-
-  /* If a menu doesn't have checkable items or items with icons, remove padding. */
-  .blocklyWidgetDiv .goog-menu-nocheckbox .goog-menuitem,
-  .blocklyWidgetDiv .goog-menu-noicon .goog-menuitem, ,
-  .blocklyDropDownDiv .goog-menu-nocheckbox .goog-menuitem,
-  .blocklyDropDownDiv .goog-menu-noicon .goog-menuitem { ,
-    padding-left: 12px;
-  }
-
-  /*
-   * If a menu doesn't have items with shortcuts, leave just enough room for
-   * submenu arrows, if they are rendered.
-   */
-  .blocklyWidgetDiv .goog-menu-noaccel .goog-menuitem, ,
-  .blocklyDropDownDiv .goog-menu-noaccel .goog-menuitem {
-    padding-right: 20px;
-  }
-
-  .blocklyWidgetDiv .goog-menuitem-content ,
-  .blocklyDropDownDiv .goog-menuitem-content {
-    font: normal 13px "Helvetica Neue", Helvetica, sans-serif;
-  }
-
-  /* State: disabled. */
-  .blocklyWidgetDiv .goog-menuitem-disabled .goog-menuitem-accel,
-  .blocklyWidgetDiv .goog-menuitem-disabled .goog-menuitem-content, ,
-  .blocklyDropDownDiv .goog-menuitem-disabled .goog-menuitem-accel,
-  .blocklyDropDownDiv .goog-menuitem-disabled .goog-menuitem-content {
-    color: #ccc !important;
-  }
-
-  .blocklyWidgetDiv .goog-menuitem-disabled .goog-menuitem-icon, ,
-  .blocklyDropDownDiv .goog-menuitem-disabled .goog-menuitem-icon {
-    opacity: 0.3;
-    -moz-opacity: 0.3;
-    filter: alpha(opacity=30);
-  }
-
-  /* State: hover. */
-  .blocklyWidgetDiv .goog-menuitem-highlight,
-  .blocklyWidgetDiv .goog-menuitem-hover {
-    background-color: #d6e9f8;
-     /* Use an explicit top and bottom border so that the selection is visible
-      * in high contrast mode. */
-    border-color: #d6e9f8;
-    border-style: dotted;
-    border-width: 1px 0;
-    padding-bottom: 3px;
-    padding-top: 3px;
-  }
-
-  .blocklyDropDownDiv .goog-menuitem-highlight,
-  .blocklyDropDownDiv .goog-menuitem-hover {
-    background-color: var(--colour-menuHover);
-  }
-
-  /* State: selected/checked. */
-  .blocklyWidgetDiv .goog-menuitem-checkbox,
-  .blocklyWidgetDiv .goog-menuitem-icon, ,
-  .blocklyDropDownDiv .goog-menuitem-checkbox,
-  .blocklyDropDownDiv .goog-menuitem-icon {
-    background-repeat: no-repeat;
-    height: 16px;
-    left: 6px;
-    position: absolute;
-    right: auto;
-    vertical-align: middle;
-    width: 16px;
-  }
-
-  .blocklyWidgetDiv .goog-option-selected .goog-menuitem-checkbox,
-  .blocklyWidgetDiv .goog-option-selected .goog-menuitem-icon,
-  .blocklyDropDownDiv .goog-option-selected .goog-menuitem-checkbox,
-  .blocklyDropDownDiv .goog-option-selected .goog-menuitem-icon {
-     /* Client apps may override the URL at which they serve the sprite. */
-    background: url(<<<PATH>>>/sprites.png) no-repeat -48px -16px !important;
-    position: static; /* Scroll with the menu. */
-    float: left;
-    margin-left: -24px;
-  }
-
-  /* BiDi override for the selected/checked state. */
-  /* #noflip */
-  .blocklyWidgetDiv .goog-menuitem-rtl .goog-menuitem-checkbox,
-  .blocklyWidgetDiv .goog-menuitem-rtl .goog-menuitem-icon,
-  .blocklyDropDownDiv .goog-menuitem-rtl .goog-menuitem-checkbox,
-  .blocklyDropDownDiv .goog-menuitem-rtl .goog-menuitem-icon {
-     /* Flip left/right positioning. */
-     float: right;
-     margin-right: -24px;
-  }
-
-  /* Keyboard shortcut ("accelerator") style. */
-  .blocklyWidgetDiv .goog-menuitem-accel, ,
-  .blocklyDropDownDiv .goog-menuitem-accel {
-    color: #999;
-     /* Keyboard shortcuts are untranslated; always left-to-right. */
-     /* #noflip */
-    direction: ltr;
-    left: auto;
-    padding: 0 6px;
-    position: absolute;
-    right: 0;
-    text-align: right;
-  }
-
-  /* BiDi override for shortcut style. */
-  /* #noflip */
-  .blocklyWidgetDiv .goog-menuitem-rtl .goog-menuitem-accel, ,
-  .blocklyDropDownDiv .goog-menuitem-rtl .goog-menuitem-accel {
-     /* Flip left/right positioning and text alignment. */
-    left: 0;
-    right: auto;
-    text-align: left;
-  }
-
-  /* Mnemonic styles. */
-  .blocklyWidgetDiv .goog-menuitem-mnemonic-hint, ,
-  .blocklyDropDownDiv .goog-menuitem-mnemonic-hint {
-    text-decoration: underline;
-  }
-
-  .blocklyWidgetDiv .goog-menuitem-mnemonic-separator, ,
-  .blocklyDropDownDiv .goog-menuitem-mnemonic-separator {
-    color: #999;
-    font-size: 12px;
-    padding-left: 4px;
-  }
-
-  /* Copied from: goog/css/menuseparator.css */
-  /*
-   * Copyright 2009 The Closure Library Authors. All Rights Reserved.
-   *
-   * Use of this source code is governed by the Apache License, Version 2.0.
-   * See the COPYING file for details.
-   */
-
-  /**
-   * Standard styling for menus created by goog.ui.MenuSeparatorRenderer.
-   *
-   * @author attila@google.com (Attila Bodis)
-   */
-
-  .blocklyWidgetDiv .goog-menuseparator, ,
-  .blocklyDropDownDiv .goog-menuseparator {
-    border-top: 1px solid #ccc;
-    margin: 4px 0;
-    padding: 0;
+  .blocklyWidgetDiv .blocklyMenu .blocklyMenuItemDisabled.blocklyMenuItem:hover {
+    background: none;
   }
 
   .blocklyFlyoutCheckbox {
