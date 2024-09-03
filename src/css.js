@@ -833,10 +833,11 @@ const styles = `
     cursor: default;
     font-family: "Helvetica Neue", Helvetica, sans-serif;
     font-size: .65rem;
-    padding: 0 3px;
+    padding: 0;
     vertical-align: middle;
     width: 60px;
     text-align: center;
+    text-wrap: wrap;
   }
 
   .blocklyTreeSelected .blocklyTreeLabel {
