@@ -26,41 +26,24 @@
  * @author fenichel@google.com (Rachel Fenichel)
  */
 import * as Blockly from "blockly/core";
-import { Colours } from "../colours.js";
 import { ScratchProcedures } from "../procedures.js";
 import * as Constants from "../constants.js";
 
 const VerticalExtensions = {};
 /**
  * Helper function that generates an extension based on a category name.
- * The generated function will set primary, secondary, tertiary, and quaternary
- * colours based on the category name.
+ * The generated function will set the block's style based on the category name.
  * @param {String} category The name of the category to set colours for.
  * @return {function} An extension function that sets colours based on the given
  *     category.
  */
 VerticalExtensions.colourHelper = function (category) {
-  var colours = Colours[category];
-  if (
-    !(
-      colours &&
-      colours.primary &&
-      colours.secondary &&
-      colours.tertiary &&
-      colours.quaternary
-    )
-  ) {
-    throw new Error('Could not find colours for category "' + category + '"');
-  }
   /**
-   * Set the primary, secondary, tertiary, and quaternary colours on this block for
-   * the given category.
+   * Set the block style on this block for the given category.
    * @this {Blockly.Block}
    */
   return function () {
-    this.setColour(colours.primary);
-    // this.setColourFromRawValues_(colours.primary, colours.secondary,
-    //     colours.tertiary, colours.quaternary);
+    this.setStyle(`colours_${category}`);
   };
 };
 
@@ -68,10 +51,7 @@ VerticalExtensions.colourHelper = function (category) {
  * Extension to set the colours of a text field, which are all the same.
  */
 VerticalExtensions.COLOUR_TEXTFIELD = function () {
-  this.setColour(colours.textField);
-  // this.setColourFromRawValues_(Colours.textField,
-  //     Colours.textField, Colours.textField,
-  //     Colours.textField);
+  VerticalExtensions.colourHelper("textField").apply(this);
 };
 
 /**

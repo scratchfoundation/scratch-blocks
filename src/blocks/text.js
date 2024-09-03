@@ -23,7 +23,6 @@
  * @author fraser@google.com (Neil Fraser)
  */
 import * as Blockly from "blockly/core";
-import { Colours } from "../colours.js";
 
 Blockly.Blocks["text"] = {
   /**
@@ -40,10 +39,7 @@ Blockly.Blocks["text"] = {
         },
       ],
       output: "String",
-      colour: Colours.textField,
-      colourSecondary: Colours.textField,
-      colourTertiary: Colours.textField,
-      colourQuaternary: Colours.textField,
+      extensions: ["colours_textfield"],
     });
   },
 };

@@ -34,6 +34,7 @@ import {
 import { CheckableContinuousFlyout } from "./checkable_continuous_flyout.js";
 import { buildGlowFilter, glowStack } from "./glows.js";
 import { ScratchContinuousToolbox } from "./scratch_continuous_toolbox.js";
+import { ScratchTheme } from "./scratch_theme.js";
 import "./scratch_continuous_category.js";
 import "./scratch_comment_icon.js";
 import "./scratch_dragger.js";
@@ -47,6 +48,7 @@ import "./events/events_block_comment_delete.js";
 import "./events/events_block_comment_move.js";
 import "./events/events_block_comment_resize.js";
 import "./events/events_scratch_variable_create.js";
+import "./fields/field_dropdown.js";
 import "./fields/field_variable.js";
 import "./fields/field_variable_getter.js";
 import { buildShadowFilter } from "./shadows.js";
@@ -55,7 +57,6 @@ export * from "blockly/core";
 export * from "./block_reporting.js";
 export * from "./categories.js";
 export * from "./procedures.js";
-export * from "./colours.js";
 export * from "./fields/field_angle.js";
 export * from "./fields/field_colour_slider.js";
 export * from "./fields/field_matrix.js";
@@ -72,7 +73,7 @@ export { contextMenuItems };
 export function inject(container, options) {
   Object.assign(options, {
     renderer: "scratch",
-    theme: "zelos",
+    theme: ScratchTheme,
     plugins: {
       toolbox: ScratchContinuousToolbox,
       flyoutsVerticalToolbox: CheckableContinuousFlyout,
@@ -80,6 +81,7 @@ export function inject(container, options) {
     },
   });
   const workspace = Blockly.inject(container, options);
+
   workspace.getRenderer().getConstants().selectedGlowFilterId = "";
 
   const flyout = workspace.getFlyout();

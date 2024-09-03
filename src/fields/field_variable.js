@@ -135,6 +135,22 @@ class FieldVariable extends Blockly.FieldVariable {
     }
     super.onItemSelected_(menu, menuItem);
   }
+
+  showEditor_(event) {
+    super.showEditor_(event);
+    const sourceBlock = this.getSourceBlock();
+    if (sourceBlock.isShadow()) {
+      sourceBlock.setColour(sourceBlock.style.colourQuaternary);
+    }
+  }
+
+  dropdownDispose_() {
+    super.dropdownDispose_();
+    const sourceBlock = this.getSourceBlock();
+    if (sourceBlock.isShadow()) {
+      sourceBlock.setStyle(`colours_${sourceBlock.type.split("_")[0]}`);
+    }
+  }
 }
 
 Blockly.fieldRegistry.unregister("field_variable");

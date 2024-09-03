@@ -42,28 +42,10 @@ Blockly.Blocks["sensing_touchingobject"] = {
   },
 };
 
-Blockly.Blocks["sensing_touchingobjectmenu"] = {
-  /**
-   * "Touching [Object]" Block Menu.
-   * @this Blockly.Block
-   */
-  init: function () {
-    this.jsonInit({
-      message0: "%1",
-      args0: [
-        {
-          type: "field_dropdown",
-          name: "TOUCHINGOBJECTMENU",
-          options: [
-            [Blockly.Msg.SENSING_TOUCHINGOBJECT_POINTER, "_mouse_"],
-            [Blockly.Msg.SENSING_TOUCHINGOBJECT_EDGE, "_edge_"],
-          ],
-        },
-      ],
-      extensions: ["colours_sensing", "output_string"],
-    });
-  },
-};
+/**
+ * "Touching [Object]" Block Menu. Populated dynamically by scratch-gui.
+ */
+Blockly.Blocks["sensing_touchingobjectmenu"] = {};
 
 Blockly.Blocks["sensing_touchingcolor"] = {
   /**
@@ -129,25 +111,10 @@ Blockly.Blocks["sensing_distanceto"] = {
   },
 };
 
-Blockly.Blocks["sensing_distancetomenu"] = {
-  /**
-   * "Distance to [Object]" Block Menu.
-   * @this Blockly.Block
-   */
-  init: function () {
-    this.jsonInit({
-      message0: "%1",
-      args0: [
-        {
-          type: "field_dropdown",
-          name: "DISTANCETOMENU",
-          options: [[Blockly.Msg.SENSING_DISTANCETO_POINTER, "_mouse_"]],
-        },
-      ],
-      extensions: ["colours_sensing", "output_string"],
-    });
-  },
-};
+/**
+ * "Distance to [Object]" Block Menu. Populated dynamically by scratch-gui.
+ */
+Blockly.Blocks["sensing_distancetomenu"] = {};
 
 Blockly.Blocks["sensing_askandwait"] = {
   /**
@@ -393,66 +360,15 @@ Blockly.Blocks["sensing_resettimer"] = {
   },
 };
 
-Blockly.Blocks["sensing_of_object_menu"] = {
-  /**
-   * "* of _" object menu.
-   * @this Blockly.Block
-   */
-  init: function () {
-    this.jsonInit({
-      message0: "%1",
-      args0: [
-        {
-          type: "field_dropdown",
-          name: "OBJECT",
-          options: [
-            ["Sprite1", "Sprite1"],
-            ["Stage", "_stage_"],
-          ],
-        },
-      ],
-      category: Categories.sensing,
-      extensions: ["colours_sensing", "output_string"],
-    });
-  },
-};
+/**
+ * "* of _" object menu. Populated dynamically by scratch-gui.
+ */
+Blockly.Blocks["sensing_of_object_menu"] = {};
 
-Blockly.Blocks["sensing_of"] = {
-  /**
-   * Block to report properties of sprites.
-   * @this Blockly.Block
-   */
-  init: function () {
-    this.jsonInit({
-      message0: Blockly.Msg.SENSING_OF,
-      args0: [
-        {
-          type: "field_dropdown",
-          name: "PROPERTY",
-          options: [
-            [Blockly.Msg.SENSING_OF_XPOSITION, "x position"],
-            [Blockly.Msg.SENSING_OF_YPOSITION, "y position"],
-            [Blockly.Msg.SENSING_OF_DIRECTION, "direction"],
-            [Blockly.Msg.SENSING_OF_COSTUMENUMBER, "costume #"],
-            [Blockly.Msg.SENSING_OF_COSTUMENAME, "costume name"],
-            [Blockly.Msg.SENSING_OF_SIZE, "size"],
-            [Blockly.Msg.SENSING_OF_VOLUME, "volume"],
-            [Blockly.Msg.SENSING_OF_BACKDROPNUMBER, "backdrop #"],
-            [Blockly.Msg.SENSING_OF_BACKDROPNAME, "backdrop name"],
-          ],
-        },
-        {
-          type: "input_value",
-          name: "OBJECT",
-        },
-      ],
-      output: true,
-      category: Categories.sensing,
-      outputShape: Constants.OUTPUT_SHAPE_ROUND,
-      extensions: ["colours_sensing"],
-    });
-  },
-};
+/**
+ * Block to report properties of sprites. Populated dynamically by scratch-gui.
+ */
+Blockly.Blocks["sensing_of"] = {};
 
 Blockly.Blocks["sensing_current"] = {
   /**

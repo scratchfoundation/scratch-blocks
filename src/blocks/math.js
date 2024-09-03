@@ -23,7 +23,6 @@
  * @author q.neutron@gmail.com (Quynh Neutron)
  */
 import * as Blockly from "blockly/core";
-import { Colours } from "../colours.js";
 import * as Constants from "../constants.js";
 
 Blockly.Blocks["math_number"] = {
@@ -43,10 +42,7 @@ Blockly.Blocks["math_number"] = {
       ],
       output: "Number",
       outputShape: Constants.OUTPUT_SHAPE_ROUND,
-      colour: Colours.textField,
-      colourSecondary: Colours.textField,
-      colourTertiary: Colours.textField,
-      colourQuaternary: Colours.textField,
+      extensions: ["colours_textfield"],
     });
   },
 };
@@ -68,10 +64,7 @@ Blockly.Blocks["math_integer"] = {
       ],
       output: "Number",
       outputShape: Constants.OUTPUT_SHAPE_ROUND,
-      colour: Colours.textField,
-      colourSecondary: Colours.textField,
-      colourTertiary: Colours.textField,
-      colourQuaternary: Colours.textField,
+      extensions: ["colours_textfield"],
     });
   },
 };
@@ -94,10 +87,7 @@ Blockly.Blocks["math_whole_number"] = {
       ],
       output: "Number",
       outputShape: Constants.OUTPUT_SHAPE_ROUND,
-      colour: Colours.textField,
-      colourSecondary: Colours.textField,
-      colourTertiary: Colours.textField,
-      colourQuaternary: Colours.textField,
+      extensions: ["colours_textfield"],
     });
   },
 };
@@ -119,10 +109,7 @@ Blockly.Blocks["math_positive_number"] = {
       ],
       output: "Number",
       outputShape: Constants.OUTPUT_SHAPE_ROUND,
-      colour: Colours.textField,
-      colourSecondary: Colours.textField,
-      colourTertiary: Colours.textField,
-      colourQuaternary: Colours.textField,
+      extensions: ["colours_textfield"],
     });
   },
 };
@@ -144,10 +131,7 @@ Blockly.Blocks["math_angle"] = {
       ],
       output: "Number",
       outputShape: Constants.OUTPUT_SHAPE_ROUND,
-      colour: Colours.textField,
-      colourSecondary: Colours.textField,
-      colourTertiary: Colours.textField,
-      colourQuaternary: Colours.textField,
+      extensions: ["colours_textfield"],
     });
   },
 };

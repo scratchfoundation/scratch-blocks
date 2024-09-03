@@ -20,7 +20,6 @@
 
 import * as Blockly from "blockly/core";
 import { Categories } from "../categories.js";
-import { Colours } from "../colours.js";
 
 Blockly.Blocks["control_forever"] = {
   /**
@@ -198,12 +197,7 @@ Blockly.Blocks["control_stop"] = {
     this.appendDummyInput()
       .appendField(Blockly.Msg.CONTROL_STOP)
       .appendField(stopDropdown, "STOP_OPTION");
-    this.setColour(
-      Colours.control.primary,
-      Colours.control.secondary,
-      Colours.control.tertiary,
-      Colours.control.quaternary
-    );
+    this.setStyle("colours_control");
     this.setPreviousStatement(true);
   },
 };
@@ -381,25 +375,10 @@ Blockly.Blocks["control_start_as_clone"] = {
   },
 };
 
-Blockly.Blocks["control_create_clone_of_menu"] = {
-  /**
-   * Create-clone drop-down menu.
-   * @this Blockly.Block
-   */
-  init: function () {
-    this.jsonInit({
-      message0: "%1",
-      args0: [
-        {
-          type: "field_dropdown",
-          name: "CLONE_OPTION",
-          options: [[Blockly.Msg.CONTROL_CREATECLONEOF_MYSELF, "_myself_"]],
-        },
-      ],
-      extensions: ["colours_control", "output_string"],
-    });
-  },
-};
+/**
+ * Create-clone drop-down menu. Populated dynamically by scratch-gui.
+ */
+Blockly.Blocks["control_create_clone_of_menu"] = {};
 
 Blockly.Blocks["control_create_clone_of"] = {
   /**

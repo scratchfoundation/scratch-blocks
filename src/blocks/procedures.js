@@ -23,7 +23,6 @@
  */
 
 import * as Blockly from "blockly/core";
-import { Colours } from "../colours.js";
 import { FieldTextInputRemovable } from "../fields/field_textinput_removable.js";
 
 class DuplicateOnDragDraggable {
@@ -984,11 +983,7 @@ Blockly.Blocks["argument_editor_boolean"] = {
           text: "foo",
         },
       ],
-      colour: Colours.textField,
-      colourSecondary: Colours.textField,
-      colourTertiary: Colours.textField,
-      colourQuaternary: Colours.textField,
-      extensions: ["output_boolean"],
+      extensions: ["colours_textfield", "output_boolean"],
     });
 
     // Exist on declaration and arguments editors, with different implementations.
@@ -1007,11 +1002,7 @@ Blockly.Blocks["argument_editor_string_number"] = {
           text: "foo",
         },
       ],
-      colour: Colours.textField,
-      colourSecondary: Colours.textField,
-      colourTertiary: Colours.textField,
-      colourQuaternary: Colours.textField,
-      extensions: ["output_number", "output_string"],
+      extensions: ["colours_textfield", "output_number", "output_string"],
     });
 
     // Exist on declaration and arguments editors, with different implementations.

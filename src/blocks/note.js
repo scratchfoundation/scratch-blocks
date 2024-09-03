@@ -23,7 +23,6 @@
  * @author ericr@media.mit.edu (Eric Rosenbaum)
  */
 import * as Blockly from "blockly/core";
-import { Colours } from "../colours.js";
 import * as Constants from "../constants.js";
 
 Blockly.Blocks["note"] = {
@@ -43,10 +42,7 @@ Blockly.Blocks["note"] = {
       ],
       outputShape: Constants.OUTPUT_SHAPE_ROUND,
       output: "Number",
-      colour: Colours.textField,
-      colourSecondary: Colours.textField,
-      colourTertiary: Colours.textField,
-      colourQuaternary: Colours.textField,
+      extensions: ["colours_textfield"],
     });
   },
 };

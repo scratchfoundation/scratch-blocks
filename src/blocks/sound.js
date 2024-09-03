@@ -21,12 +21,10 @@
 import * as Blockly from "blockly/core";
 import { Categories } from "../categories.js";
 
-Blockly.Blocks["sound_sounds_menu"] = {
-  /**
-   * Sound effects drop-down menu. Populated dynamically by scratch-gui.
-   * @this Blockly.Block
-   */
-};
+/**
+ * Sound effects drop-down menu. Populated dynamically by scratch-gui.
+ */
+Blockly.Blocks["sound_sounds_menu"] = {};
 
 Blockly.Blocks["sound_play"] = {
   /**

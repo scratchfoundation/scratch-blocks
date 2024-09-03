@@ -413,19 +413,19 @@ const styles = `
     cursor: pointer;
   }
 
-  .scratch-renderer.zelos-theme .blocklyFlyoutLabelText {
+  .scratch-renderer.scratch-theme .blocklyFlyoutLabelText {
     font-family: "Helvetica Neue", Helvetica, sans-serif;
     font-size: 14pt;
     fill: #575E75;
     font-weight: bold;
   }
 
-  .scratch-renderer.zelos-theme .blocklyText,
-  .scratch-renderer.zelos-theme .blocklyHtmlInput {
+  .scratch-renderer.scratch-theme .blocklyText,
+  .scratch-renderer.scratch-theme .blocklyHtmlInput {
     font-weight: 500;
   }
 
-  .scratch-renderer.zelos-theme .blocklyFlyoutButton .blocklyText {
+  .scratch-renderer.scratch-theme .blocklyFlyoutButton .blocklyText {
     fill: var(--colour-textFieldText);
   }
 
@@ -1116,7 +1116,7 @@ const styles = `
     transform: rotate(-180deg);
   }
 
-  .scratch-renderer.zelos-theme .blocklyComment .blocklyTextarea {
+  .scratch-renderer.scratch-theme .blocklyComment .blocklyTextarea {
     border: none;
     --commentFillColour: #fef49c;
     font-size: 12pt;
@@ -1125,7 +1125,7 @@ const styles = `
     color: #575e75;
   }
 
-  .scratch-renderer.zelos-theme .blocklyCommentText.blocklyText {
+  .scratch-renderer.scratch-theme .blocklyCommentText.blocklyText {
     font-weight: 400;
   }
 
@@ -1158,6 +1158,12 @@ const styles = `
   .blocklyResizeHandle {
     height: 20px;
     width: 20px;
+  }
+
+  .scratch-renderer.scratch-theme .blocklyDraggable:not(.blocklyDisabled) .blocklyEditableField:not(.blocklyEditing):hover>rect,
+  .scratch-renderer.scratch-theme .blocklyDraggable:not(.blocklyDisabled) .blocklyEditableField:not(.blocklyEditing):hover>.blocklyPath {
+    stroke: revert-layer;
+    stroke-width: 1;
   }
 `;
 
