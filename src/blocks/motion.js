@@ -374,9 +374,8 @@ Blockly.Blocks["motion_xposition"] = {
     this.jsonInit({
       message0: Blockly.Msg.MOTION_XPOSITION,
       category: Categories.motion,
-      extensions: ["colours_motion", "output_number"],
+      extensions: ["colours_motion", "output_number", "monitor_block"],
     });
-    this.checkboxInFlyout = true;
   },
 };
 
@@ -389,9 +388,8 @@ Blockly.Blocks["motion_yposition"] = {
     this.jsonInit({
       message0: Blockly.Msg.MOTION_YPOSITION,
       category: Categories.motion,
-      extensions: ["colours_motion", "output_number"],
+      extensions: ["colours_motion", "output_number", "monitor_block"],
     });
-    this.checkboxInFlyout = true;
   },
 };
 
@@ -404,9 +402,8 @@ Blockly.Blocks["motion_direction"] = {
     this.jsonInit({
       message0: Blockly.Msg.MOTION_DIRECTION,
       category: Categories.motion,
-      extensions: ["colours_motion", "output_number"],
+      extensions: ["colours_motion", "output_number", "monitor_block"],
     });
-    this.checkboxInFlyout = true;
   },
 };
 

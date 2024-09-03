@@ -144,6 +144,15 @@ VerticalExtensions.OUTPUT_BOOLEAN = function () {
 };
 
 /**
+ * Extension to make a block a monitor block, capable of reporting its current
+ * value in a dropdown. These blocks also have an accompanying checkbox in the
+ * flyout to toggle display of their current value in a chip on the stage.
+ */
+VerticalExtensions.MONITOR_BLOCK = function () {
+  this.checkboxInFlyout = true;
+};
+
+/**
  * Mixin to add a context menu for a procedure definition block.
  * It adds the "edit" option and removes the "duplicate" option.
  * @mixin
@@ -287,6 +296,11 @@ VerticalExtensions.registerAll = function () {
   Blockly.Extensions.register(
     "scratch_extension",
     VerticalExtensions.SCRATCH_EXTENSION
+  );
+
+  Blockly.Extensions.register(
+    "monitor_block",
+    VerticalExtensions.MONITOR_BLOCK
   );
 };
 

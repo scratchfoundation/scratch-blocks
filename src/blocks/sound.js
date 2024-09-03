@@ -199,9 +199,7 @@ Blockly.Blocks["sound_volume"] = {
     this.jsonInit({
       message0: Blockly.Msg.SOUND_VOLUME,
       category: Categories.sound,
-      checkboxInFlyout: true,
-      extensions: ["colours_sounds", "output_number"],
+      extensions: ["colours_sounds", "output_number", "monitor_block"],
     });
-    this.checkboxInFlyout = true;
   },
 };

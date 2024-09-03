@@ -1004,8 +1004,8 @@ const styles = `
   }
 
   .checked > .blocklyFlyoutCheckbox {
-    fill: var(--colour-motion-primary);
-    stroke: var(--colour-motion-tertiary);
+    fill: var(--colour-toolboxHover);
+    stroke: rgba(0,0,0,0.2);
   }
 
   .blocklyFlyoutCheckboxPath {
