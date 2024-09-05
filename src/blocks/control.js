@@ -197,7 +197,7 @@ Blockly.Blocks["control_stop"] = {
     this.appendDummyInput()
       .appendField(Blockly.Msg.CONTROL_STOP)
       .appendField(stopDropdown, "STOP_OPTION");
-    this.setStyle("colours_control");
+    this.setStyle("control");
     this.setPreviousStatement(true);
   },
 };

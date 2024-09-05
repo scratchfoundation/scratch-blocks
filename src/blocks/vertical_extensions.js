@@ -43,7 +43,7 @@ VerticalExtensions.colourHelper = function (category) {
    * @this {Blockly.Block}
    */
   return function () {
-    this.setStyle(`colours_${category}`);
+    this.setStyle(category);
   };
 };
 

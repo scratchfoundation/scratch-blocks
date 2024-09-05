@@ -413,19 +413,32 @@ const styles = `
     cursor: pointer;
   }
 
-  .scratch-renderer.scratch-theme .blocklyFlyoutLabelText {
+  .scratch-renderer.default-theme .blocklyFlyoutLabelText,
+  .scratch-renderer.high-contrast-theme .blocklyFlyoutLabelText {
     font-family: "Helvetica Neue", Helvetica, sans-serif;
     font-size: 14pt;
     fill: #575E75;
     font-weight: bold;
   }
 
-  .scratch-renderer.scratch-theme .blocklyText,
-  .scratch-renderer.scratch-theme .blocklyHtmlInput {
+  .scratch-renderer.default-theme .blocklyText,
+  .scratch-renderer.default-theme .blocklyHtmlInput,
+  .scratch-renderer.high-contrast-theme .blocklyText,
+  .scratch-renderer.high-contrast-theme .blocklyHtmlInput  {
     font-weight: 500;
   }
 
-  .scratch-renderer.scratch-theme .blocklyFlyoutButton .blocklyText {
+  .scratch-renderer.high-contrast-theme .blocklyText,
+  .scratch-renderer.high-contrast-theme .blocklyEditableField .blocklyDropdownText {
+    fill: #000 !important;
+  }
+
+  .scratch-renderer.high-contrast-theme .blocklyEditableField image:last-child {
+    filter: invert(1);
+  }
+
+  .scratch-renderer.default-theme .blocklyFlyoutButton .blocklyText,
+  .scratch-renderer.high-contrast-theme .blocklyFlyoutButton .blocklyText {
     fill: var(--colour-textFieldText);
   }
 
@@ -990,8 +1003,12 @@ const styles = `
     z-index: 20000;  /* Arbitrary, but some apps depend on it... */
   }
 
-  .blocklyWidgetDiv .blocklyMenu .blocklyMenuItem:hover {
+  .blocklyDropDownDiv .blocklyMenu .blocklyMenuItem:hover {
     background: var(--colour-menuHover);
+  }
+
+  .blocklyWidgetDiv .blocklyMenu .blocklyMenuItem:hover {
+    background: var(--colour-contextualMenuHover);
   }
 
   .blocklyWidgetDiv .blocklyMenu .blocklyMenuItemDisabled.blocklyMenuItem:hover {
@@ -1117,7 +1134,8 @@ const styles = `
     transform: rotate(-180deg);
   }
 
-  .scratch-renderer.scratch-theme .blocklyComment .blocklyTextarea {
+  .scratch-renderer.default-theme .blocklyComment .blocklyTextarea,
+  .scratch-renderer.high-contrast-theme .blocklyComment .blocklyTextarea {
     border: none;
     --commentFillColour: #fef49c;
     font-size: 12pt;
@@ -1126,7 +1144,8 @@ const styles = `
     color: #575e75;
   }
 
-  .scratch-renderer.scratch-theme .blocklyCommentText.blocklyText {
+  .scratch-renderer.default-theme .blocklyCommentText.blocklyText,
+  .scratch-renderer.high-contrast-theme .blocklyCommentText.blocklyText {
     font-weight: 400;
   }
 
@@ -1146,6 +1165,9 @@ const styles = `
     min-height: 32px;
     padding: 4px 7em 4px 28px;
   }
+  .high-contrast-theme.blocklyDropDownDiv .blocklyMenuItem {
+    color: #000;
+  }
   .blocklyToolboxSelected .blocklyTreeLabel {
     color: var(--colour-toolboxText);
   }
@@ -1161,8 +1183,10 @@ const styles = `
     width: 20px;
   }
 
-  .scratch-renderer.scratch-theme .blocklyDraggable:not(.blocklyDisabled) .blocklyEditableField:not(.blocklyEditing):hover>rect,
-  .scratch-renderer.scratch-theme .blocklyDraggable:not(.blocklyDisabled) .blocklyEditableField:not(.blocklyEditing):hover>.blocklyPath {
+  .scratch-renderer.default-theme .blocklyDraggable:not(.blocklyDisabled) .blocklyEditableField:not(.blocklyEditing):hover>rect,
+  .scratch-renderer.default-theme .blocklyDraggable:not(.blocklyDisabled) .blocklyEditableField:not(.blocklyEditing):hover>.blocklyPath,
+  .scratch-renderer.high-contrast-theme .blocklyDraggable:not(.blocklyDisabled) .blocklyEditableField:not(.blocklyEditing):hover>rect,
+  .scratch-renderer.high-contrast-theme .blocklyDraggable:not(.blocklyDisabled) .blocklyEditableField:not(.blocklyEditing):hover>.blocklyPath {
     stroke: revert-layer;
     stroke-width: 1;
   }

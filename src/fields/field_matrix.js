@@ -32,6 +32,8 @@ import * as Blockly from "blockly/core";
  * @constructor
  */
 export class FieldMatrix extends Blockly.Field {
+  originalStyle;
+
   constructor(matrix) {
     super(matrix);
     /**
@@ -332,7 +334,11 @@ export class FieldMatrix extends Blockly.Field {
       this.sourceBlock_.getColour(),
       this.sourceBlock_.getColourTertiary()
     );
-    Blockly.DropDownDiv.showPositionedByBlock(this, this.sourceBlock_);
+    Blockly.DropDownDiv.showPositionedByBlock(
+      this,
+      this.sourceBlock_,
+      this.dropdownDispose_.bind(this)
+    );
 
     this.matrixTouchWrapper_ = Blockly.browserEvents.bind(
       this.matrixStage_,
@@ -353,8 +359,27 @@ export class FieldMatrix extends Blockly.Field {
       this.fillMatrix_
     );
 
+    const sourceBlock = this.getSourceBlock();
+    const style = sourceBlock.style;
+    if (sourceBlock.isShadow()) {
+      this.originalStyle = sourceBlock.getStyleName();
+      sourceBlock.setStyle(`${this.originalStyle}_selected`);
+    } else if (this.borderRect_) {
+      this.borderRect_.setAttribute(
+        "fill",
+        style.colourQuaternary ?? style.colourTertiary
+      );
+    }
+
     // Update the matrix for the current value
     this.updateMatrix_();
+  }
+
+  dropdownDispose_() {
+    const sourceBlock = this.getSourceBlock();
+    if (sourceBlock.isShadow()) {
+      sourceBlock.setStyle(this.originalStyle);
+    }
   }
 
   /**
