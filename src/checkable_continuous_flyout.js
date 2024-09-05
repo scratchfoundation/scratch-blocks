@@ -275,6 +275,10 @@ export class CheckableContinuousFlyout extends ContinuousFlyout {
     return 0.675;
   }
 
+  getWidth() {
+    return 250;
+  }
+
   blockIsRecyclable_(block) {
     const recyclable = super.blockIsRecyclable_(block);
     // Exclude blocks with output connections, because they are able to report their current
