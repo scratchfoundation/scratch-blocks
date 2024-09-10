@@ -29,7 +29,7 @@ import * as Blockly from "blockly/core";
  * Class for a variable getter field.
  * @param {string} allowedVariableType The type of variables this field can display.
  */
-export class FieldVariableGetter extends Blockly.FieldLabel {
+class FieldVariableGetter extends Blockly.FieldLabel {
   constructor(allowedVariableType = "") {
     super(Blockly.Field.SKIP_SETUP);
     this.SERIALIZABLE = true;
@@ -101,4 +101,9 @@ export class FieldVariableGetter extends Blockly.FieldLabel {
   }
 }
 
-Blockly.fieldRegistry.register("field_variable_getter", FieldVariableGetter);
+/**
+ * Register the field and any dependencies.
+ */
+export function registerFieldVariableGetter() {
+  Blockly.fieldRegistry.register("field_variable_getter", FieldVariableGetter);
+}

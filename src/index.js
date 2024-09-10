@@ -23,7 +23,6 @@ import "./blocks/sound.js";
 import * as scratchBlocksUtils from "./scratch_blocks_utils.js";
 import * as ScratchVariables from "./variables.js";
 import "./css.js";
-import "./fields/field_vertical_separator.js";
 import "./renderer/renderer.js";
 import * as contextMenuItems from "./context_menu_items.js";
 import {
@@ -47,20 +46,25 @@ import "./events/events_block_comment_delete.js";
 import "./events/events_block_comment_move.js";
 import "./events/events_block_comment_resize.js";
 import "./events/events_scratch_variable_create.js";
-import "./fields/field_dropdown.js";
-import "./fields/field_variable.js";
-import "./fields/field_variable_getter.js";
 import { buildShadowFilter } from "./shadows.js";
+import { registerFieldAngle } from "./fields/field_angle.js";
+import {
+  registerFieldColourSlider,
+  FieldColourSlider,
+} from "./fields/field_colour_slider.js";
+import { registerFieldDropdown } from "./fields/field_dropdown.js";
+import { registerFieldMatrix } from "./fields/field_matrix.js";
+import { registerFieldNote, FieldNote } from "./fields/field_note.js";
+import { registerFieldNumber } from "./fields/field_number.js";
+import { registerFieldTextInputRemovable } from "./fields/field_textinput_removable.js";
+import { registerFieldVariableGetter } from "./fields/field_variable_getter.js";
+import { registerFieldVariable } from "./fields/field_variable.js";
+import { registerFieldVerticalSeparator } from "./fields/field_vertical_separator.js";
 
 export * from "blockly/core";
 export * from "./block_reporting.js";
 export * from "./categories.js";
 export * from "./procedures.js";
-export * from "./fields/field_angle.js";
-export * from "./fields/field_colour_slider.js";
-export * from "./fields/field_matrix.js";
-export * from "./fields/field_note.js";
-export * from "./fields/field_number.js";
 export * from "../msg/scratch_msgs.js";
 export * from "./constants.js";
 export { glowStack };
@@ -68,8 +72,20 @@ export { scratchBlocksUtils };
 export { CheckableContinuousFlyout };
 export { ScratchVariables };
 export { contextMenuItems };
+export { FieldColourSlider, FieldNote };
 
 export function inject(container, options) {
+  registerFieldAngle();
+  registerFieldColourSlider();
+  registerFieldDropdown();
+  registerFieldMatrix();
+  registerFieldNote();
+  registerFieldNumber();
+  registerFieldTextInputRemovable();
+  registerFieldVariableGetter();
+  registerFieldVariable();
+  registerFieldVerticalSeparator();
+
   Object.assign(options, {
     renderer: "scratch",
     plugins: {

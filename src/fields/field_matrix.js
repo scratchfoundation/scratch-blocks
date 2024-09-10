@@ -31,7 +31,7 @@ import * as Blockly from "blockly/core";
  * @extends {Blockly.Field}
  * @constructor
  */
-export class FieldMatrix extends Blockly.Field {
+class FieldMatrix extends Blockly.Field {
   originalStyle;
 
   constructor(matrix) {
@@ -626,4 +626,9 @@ export class FieldMatrix extends Blockly.Field {
   }
 }
 
-Blockly.fieldRegistry.register("field_matrix", FieldMatrix);
+/**
+ * Register the field and any dependencies.
+ */
+export function registerFieldMatrix() {
+  Blockly.fieldRegistry.register("field_matrix", FieldMatrix);
+}
