@@ -694,9 +694,7 @@ const styles = `
   }
 
   .blocklyAngleCircle {
-    stroke: var(--colour-motion-tertiary);
     stroke-width: 1;
-    fill: var(--colour-motion-secondary);
   }
 
   .blocklyAngleCenterPoint {

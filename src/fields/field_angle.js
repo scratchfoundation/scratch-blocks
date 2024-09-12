@@ -158,6 +158,8 @@ class FieldAngle extends Blockly.FieldNumber {
         cx: this.HALF,
         cy: this.HALF,
         r: this.RADIUS,
+        fill: this.getSourceBlock().getParent().getColourSecondary(),
+        stroke: this.getSourceBlock().getParent().getColourTertiary(),
         class: "blocklyAngleCircle",
       },
       svg
@@ -248,7 +250,7 @@ class FieldAngle extends Blockly.FieldNumber {
 
     Blockly.DropDownDiv.setColour(
       this.getSourceBlock().getParent().getColour(),
-      this.getSourceBlock().getColourTertiary()
+      this.getSourceBlock().getParent().getColourTertiary()
     );
     Blockly.DropDownDiv.showPositionedByBlock(this, this.getSourceBlock());
 
