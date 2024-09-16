@@ -9,6 +9,7 @@ import { cssVarify } from "../colours.js";
 
 export class ConstantProvider extends Blockly.zelos.ConstantProvider {
   REPLACEMENT_GLOW_COLOUR = "#ffffff";
+  SELECTED_GLOW_COLOUR = "#ffffff";
 
   /**
    * Sets the visual theme used to render the workspace.
