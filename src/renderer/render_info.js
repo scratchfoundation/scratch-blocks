@@ -79,6 +79,15 @@ export class RenderInfo extends Blockly.zelos.RenderInfo {
   getElemCenterline_(row, elem) {
     if (this.isBowlerHatBlock() && Blockly.blockRendering.Types.isField(elem)) {
       return row.yPos + elem.height;
+    } else if (
+      this.block_.isScratchExtension &&
+      Blockly.blockRendering.Types.isField(elem) &&
+      elem.field instanceof Blockly.FieldImage &&
+      elem.field === this.block_.inputList[0].fieldRow[0] &&
+      this.block_.previousConnection
+    ) {
+      // Vertically center the icon on extension blocks.
+      return super.getElemCenterline_(row, elem) + this.constants_.GRID_UNIT;
     }
     return super.getElemCenterline_(row, elem);
   }
