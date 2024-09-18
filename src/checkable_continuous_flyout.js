@@ -58,6 +58,7 @@ export class CheckableContinuousFlyout extends ContinuousFlyout {
     2 * CheckableContinuousFlyout.CHECKBOX_MARGIN;
 
   constructor(workspaceOptions) {
+    workspaceOptions.modalInputs = false;
     super(workspaceOptions);
     this.tabWidth_ = -2;
     this.MARGIN = 12;
