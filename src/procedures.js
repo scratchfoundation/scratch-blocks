@@ -105,7 +105,14 @@ function addCreateButton_(workspace, xmlList) {
   var msg = Blockly.Msg.NEW_PROCEDURE;
   var callbackKey = "CREATE_PROCEDURE";
   var callback = function () {
-    createProcedureDefCallback(workspace);
+    // Run the callback after a delay to avoid it getting captured by the React
+    // modal in scratch-gui and being registered as a click on the scrim that
+    // dismisses the dialog.
+    requestAnimationFrame(() => {
+      setTimeout(() => {
+        createProcedureDefCallback(workspace);
+      });
+    });
   };
   button.setAttribute("text", msg);
   button.setAttribute("callbackKey", callbackKey);

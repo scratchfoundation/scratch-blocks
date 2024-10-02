@@ -426,7 +426,16 @@ function addCreateButton(xmlList, workspace, type) {
   }
   button.setAttribute("text", msg);
   button.setAttribute("callbackKey", callbackKey);
-  workspace.registerButtonCallback(callbackKey, callback);
+  workspace.registerButtonCallback(callbackKey, (b) => {
+    // Run the callback after a delay to avoid it getting captured by the React
+    // modal in scratch-gui and being registered as a click on the scrim that
+    // dismisses the dialog.
+    requestAnimationFrame(() => {
+      setTimeout(() => {
+        callback(b);
+      });
+    });
+  });
   xmlList.push(button);
 }
 
