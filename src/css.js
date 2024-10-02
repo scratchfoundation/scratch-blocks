@@ -235,6 +235,7 @@ const styles = `
     text-align: center;
     font-family: "Helvetica Neue", Helvetica, sans-serif;
     font-size: .8em;
+    color: var(--colour-textFieldText);
   }
 
   .blocklyResizeSE {
