@@ -39,6 +39,7 @@ import "./scratch_dragger.js";
 import "./scratch_variable_map.js";
 import "./scratch_variable_model.js";
 import "./scratch_connection_checker.js";
+import "./flyout_checkbox_icon.js";
 import "./events/events_block_comment_change.js";
 import "./events/events_block_comment_collapse.js";
 import "./events/events_block_comment_create.js";
@@ -74,6 +75,7 @@ export { CheckableContinuousFlyout };
 export { ScratchVariables };
 export { contextMenuItems };
 export { FieldColourSlider, FieldNote };
+export { CheckboxBubble } from "./checkbox_bubble.js";
 
 export function inject(container, options) {
   registerFieldAngle();
