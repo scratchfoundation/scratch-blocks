@@ -5,6 +5,7 @@
  */
 
 import * as Blockly from "blockly/core";
+import { CheckboxBubble } from "./checkbox_bubble.js";
 
 /**
  * A block inflater that caches and reuses blocks to improve performance.
@@ -21,6 +22,25 @@ export class RecyclableBlockFlyoutInflater extends Blockly.BlockFlyoutInflater {
    * @type {Map<string, !Blockly.BlockSvg>}
    */
   recycledBlocks = new Map();
+
+  /**
+   * Creates a block on the flyout workspace from the given block definition.
+   *
+   * @param {!Object} state A JSON representation of a block to load.
+   * @param {!Blockly.WorkspaceSvg} flyoutWorkspace The flyout's workspace.
+   * @returns {!Blockly.BlockSvg} The newly created block.
+   */
+  load(state, flyoutWorkspace) {
+    const block = super.load(state, flyoutWorkspace);
+    if (block.checkboxInFlyout) {
+      block.moveBy(
+        CheckboxBubble.CHECKBOX_SIZE + CheckboxBubble.CHECKBOX_MARGIN,
+        0
+      );
+    }
+
+    return block;
+  }
 
   /**
    * Toggles whether or not recycling is enabled.
