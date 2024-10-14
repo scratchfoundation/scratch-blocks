@@ -78,7 +78,7 @@ export class RenderInfo extends Blockly.zelos.RenderInfo {
 
   getElemCenterline_(row, elem) {
     if (this.isBowlerHatBlock() && Blockly.blockRendering.Types.isField(elem)) {
-      return row.yPos + elem.height;
+      return row.yPos + row.height / 2;
     } else if (
       this.block_.isScratchExtension &&
       Blockly.blockRendering.Types.isField(elem) &&
