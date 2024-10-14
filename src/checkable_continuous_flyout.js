@@ -7,6 +7,7 @@
 import * as Blockly from "blockly/core";
 import { ContinuousFlyout } from "@blockly/continuous-toolbox";
 import { RecyclableBlockFlyoutInflater } from "./recyclable_block_flyout_inflater.js";
+import { StatusIndicatorLabel } from "./status_indicator_label.js";
 
 export class CheckableContinuousFlyout extends ContinuousFlyout {
   /**
@@ -97,7 +98,7 @@ export class CheckableContinuousFlyout extends ContinuousFlyout {
     const categoryLabels = this.getContents()
       .filter(
         (item) =>
-          item.type === "label" &&
+          (item.type === "label" || item.type === "status_indicator_label") &&
           item.element.isLabel() &&
           this.getParentToolbox_().getCategoryByName(
             item.element.getButtonText()
@@ -122,5 +123,16 @@ export class CheckableContinuousFlyout extends ContinuousFlyout {
     // Bypass the continuous flyout's layout method until the plugin is
     // updated for the new flyout API.
     Blockly.VerticalFlyout.prototype.layout_.call(this, contents);
+  }
+
+  /**
+   * Updates the state of status indicators for hardware-based extensions.
+   */
+  refreshStatusButtons() {
+    for (const item of this.contents) {
+      if (item.element instanceof StatusIndicatorLabel) {
+        item.element.refreshStatus();
+      }
+    }
   }
 }
