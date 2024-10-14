@@ -45,7 +45,7 @@ import { Colours } from "../colours.js";
  * @extends {Blockly.FieldTextInput}
  * @constructor
  */
-class FieldNumberPicker extends Blockly.FieldNumber {
+class FieldNumberPicker extends Blockly.FieldTextInput {
   /**
    * Fixed width of the num-pad drop-down, in px.
    * @type {number}
