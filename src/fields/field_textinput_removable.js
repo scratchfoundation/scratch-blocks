@@ -40,26 +40,29 @@ import * as Blockly from "blockly/core";
 export class FieldTextInputRemovable extends Blockly.FieldTextInput {
   /**
    * Show the inline free-text editor on top of the text with the remove button.
-   * @private
    */
   showEditor_() {
-    super.showEditor_();
+    // Wait for our parent block to render so we can examine its metrics to
+    // calculate rounded corners on the editor as needed.
+    Blockly.renderManagement.finishQueuedRenders().then(() => {
+      super.showEditor_();
 
-    const div = Blockly.WidgetDiv.getDiv();
-    div.className += " removableTextInput";
-    const removeButton = document.createElement("img");
-    removeButton.className = "blocklyTextRemoveIcon";
-    removeButton.setAttribute(
-      "src",
-      this.sourceBlock_.workspace.options.pathToMedia + "icons/remove.svg"
-    );
-    this.removeButtonMouseWrapper_ = Blockly.browserEvents.bind(
-      removeButton,
-      "mousedown",
-      this,
-      this.removeCallback_
-    );
-    div.appendChild(removeButton);
+      const div = Blockly.WidgetDiv.getDiv();
+      div.className += " removableTextInput";
+      const removeButton = document.createElement("img");
+      removeButton.className = "blocklyTextRemoveIcon";
+      removeButton.setAttribute(
+        "src",
+        this.sourceBlock_.workspace.options.pathToMedia + "icons/remove.svg"
+      );
+      this.removeButtonMouseWrapper_ = Blockly.browserEvents.bind(
+        removeButton,
+        "mousedown",
+        this,
+        this.removeCallback_
+      );
+      div.appendChild(removeButton);
+    });
   }
 
   /**
