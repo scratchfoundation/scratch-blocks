@@ -37,9 +37,7 @@ class DuplicateOnDragDraggable {
   startDrag(e) {
     const data = this.block.toCopyData();
     this.copy = Blockly.clipboard.paste(data, this.block.workspace);
-    this.baseStrat = new Blockly.dragging.BlockDragStrategy(this.copy);
-    this.copy.setDragStrategy(this.baseStrat);
-    this.baseStrat.startDrag(e);
+    this.copy.startDrag(e);
   }
 
   drag(e) {
@@ -47,11 +45,11 @@ class DuplicateOnDragDraggable {
       .getGesture(e)
       .getCurrentDragger()
       .setDraggable(this.copy);
-    this.baseStrat.drag(e);
+    this.copy.drag(e);
   }
 
   endDrag(e) {
-    this.baseStrat?.endDrag(e);
+    this.copy?.endDrag(e);
   }
 
   revertDrag(e) {
