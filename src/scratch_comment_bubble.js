@@ -17,6 +17,7 @@ export class ScratchCommentBubble extends Blockly.comments.CommentView {
     this.sourceBlock = sourceBlock;
     this.disposing = false;
     this.id = Blockly.utils.idGenerator.genUid();
+    this.setPlaceholderText(Blockly.Msg.WORKSPACE_COMMENT_DEFAULT_TEXT);
     this.getSvgRoot().setAttribute(
       "style",
       `--colour-commentBorder: ${sourceBlock.getColourTertiary()};`

@@ -524,6 +524,9 @@ const styles = `
     stroke-width: 3px;
   }
 
+  .blocklyCommentText::placeholder {
+    font-style: italic;
+  }
 
   .blocklyCommentTextarea {
     background-color: #fef49c;
