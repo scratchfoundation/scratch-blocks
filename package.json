@@ -13,6 +13,7 @@
   "scripts": {
     "build": "webpack --mode production",
     "prepare": "husky || true",
+    "prepublish": "./temp-use-blockly-v12-rc.sh",
     "start": "webpack serve --open --mode development",
     "test": "echo \"Error: no test specified\" && exit 1",
     "test:lint": "eslint ."
