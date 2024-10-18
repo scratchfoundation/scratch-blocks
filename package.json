@@ -33,5 +33,10 @@
     "@blockly/continuous-toolbox": "^6.0.9",
     "@blockly/field-colour": "^5.0.9",
     "blockly": "^11.0.0"
+  },
+  "config": {
+    "commitizen": {
+      "path": "cz-conventional-changelog"
+    }
   }
 }
