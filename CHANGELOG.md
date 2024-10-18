@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-beta.2](https://github.com/scratchfoundation/scratch-blocks/compare/v2.0.0-beta.1...v2.0.0-beta.2) (2024-10-18)
+
+
+### Bug Fixes
+
+* don't include Blockly RC source in npm package ([e41f8d0](https://github.com/scratchfoundation/scratch-blocks/commit/e41f8d023fdb085d87519f90a92d85d32b682368))
+
 # [2.0.0-beta.1](https://github.com/scratchfoundation/scratch-blocks/compare/v1.2.0-beta.1...v2.0.0-beta.1) (2024-10-18)
 
 
