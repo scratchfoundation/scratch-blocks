@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-beta.1](https://github.com/scratchfoundation/scratch-blocks/compare/v1.2.0-beta.1...v2.0.0-beta.1) (2024-10-18)
+
+
+* fix!: bump to v2.0 to reflect Blockly un-forking ([aa87110](https://github.com/scratchfoundation/scratch-blocks/commit/aa87110dbd2edbf7eb94c5b293e8878d869f7350))
+
+
+### BREAKING CHANGES
+
+* scratch-blocks is no longer a divergent fork of
+Blockly, and instead depends on Blockly as a regular node_modules
+dependency.
+
+Thanks, @gonfunko and everyone else at Google who helped with this
+effort!
+
 # [1.2.0-beta.1](https://github.com/scratchfoundation/scratch-blocks/compare/v1.1.86...v1.2.0-beta.1) (2024-10-18)
 
 
