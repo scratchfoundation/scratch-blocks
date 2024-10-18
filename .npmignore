@@ -1,3 +1,7 @@
+# Temporary until Blockly v12 release
+/blockly-rc/
+/temp-use-blockly-v12-rc.sh
+
 # Development files
 /.circleci
 .eslintrc
