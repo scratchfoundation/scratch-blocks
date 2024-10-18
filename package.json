@@ -11,15 +11,17 @@
   },
   "main": "./dist/main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack --mode production",
+    "prepare": "husky || true",
     "start": "webpack serve --open --mode development",
+    "test": "echo \"Error: no test specified\" && exit 1",
     "test:lint": "eslint ."
   },
   "devDependencies": {
     "@commitlint/cli": "^17.8.1",
     "@commitlint/config-conventional": "^17.8.1",
     "eslint": "^4.19.1",
+    "husky": "9.1.6",
     "source-map-loader": "^4.0.1",
     "ts-loader": "^9.5.1",
     "typescript": "^5.6.3",

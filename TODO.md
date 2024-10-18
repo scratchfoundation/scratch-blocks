@@ -3,7 +3,7 @@
 Before this un-forked version of `scratch-blocks` is fully ready for release, we need to:
 
 - [ ] Hook up i18n / l10n
-- [ ] Fix or remove Husky
+- [x] Fix or remove Husky
 - [ ] Set up CI & CD
 - [ ] Wait for Blockly v12 release, then update Blockly dependencies accordingly
 
