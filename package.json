@@ -4,13 +4,12 @@
   "description": "Scratch Blocks is a library for building creative computing interfaces.",
   "author": "Massachusetts Institute of Technology",
   "license": "Apache-2.0",
-  "homepage": "https://github.com/gonfunko/scratch-blocks#readme",
+  "homepage": "https://github.com/scratchfoundation/scratch-blocks#readme",
   "repository": {
     "type": "git",
-    "url": "https://github.com/gonfunko/scratch-blocks.git"
+    "url": "https://github.com/scratchfoundation/scratch-blocks.git"
   },
   "main": "./dist/main.js",
-  "private": true,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack --mode production",
