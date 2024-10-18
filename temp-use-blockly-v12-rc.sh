@@ -12,7 +12,7 @@
 set -e -x
 
 if [ ! -d "blockly-rc" ]; then
-  git clone --branch rc/v12.0.0 git@github.com:google/blockly.git blockly-rc
+  git clone --branch rc/v12.0.0 --single-branch --depth 1 https://github.com/google/blockly.git blockly-rc
 else
   git -C blockly-rc checkout rc/v12.0.0
   git -C blockly-rc pull
