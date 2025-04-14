@@ -22,7 +22,7 @@ jobs:
             distribution: 'temurin'
             java-version: 17
         - name: Setup Node
-          uses: actions/setup-node@1a4442cacd436585916779262731d5b162bc6ec7 # v3
+          uses: actions/setup-node@dbe1369d7be17e7823f8c1ee1ae8bec5779239dd # v3
           with:
             node-version-file: '.nvmrc'
         - name: Install Node Dependencies
