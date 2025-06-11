@@ -3,6 +3,34 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.1.210](https://github.com/scratchfoundation/scratch-blocks/compare/v1.1.209...v1.1.210) (2025-04-26)
+
+
+### Bug Fixes
+
+* **deps:** lock file maintenance ([926ed34](https://github.com/scratchfoundation/scratch-blocks/commit/926ed34e927f701b9f8a0a36da46dfdff796b26c))
+
+## [1.1.209](https://github.com/scratchfoundation/scratch-blocks/compare/v1.1.208...v1.1.209) (2025-04-09)
+
+
+### Bug Fixes
+
+* **deps:** lock file maintenance ([a367a58](https://github.com/scratchfoundation/scratch-blocks/commit/a367a586ca291126f4f5986bea8190d3872a4930))
+
+## [1.1.208](https://github.com/scratchfoundation/scratch-blocks/compare/v1.1.207...v1.1.208) (2025-04-08)
+
+
+### Bug Fixes
+
+* **deps:** update dependency scratch-semantic-release-config to v1.0.16 ([170f890](https://github.com/scratchfoundation/scratch-blocks/commit/170f89007839b745aa14c31cc04d00689b089717))
+
+## [1.1.207](https://github.com/scratchfoundation/scratch-blocks/compare/v1.1.206...v1.1.207) (2025-04-08)
+
+
+### Bug Fixes
+
+* **deps:** lock file maintenance ([2e3a31e](https://github.com/scratchfoundation/scratch-blocks/commit/2e3a31e555a611f0c48d7c57074e2e54104c04ce))
+
 ## [1.1.206](https://github.com/scratchfoundation/scratch-blocks/compare/v1.1.205...v1.1.206) (2024-08-02)
 
 
