@@ -368,6 +368,7 @@ Blockly.init_ = function(mainWorkspace, container) {
   });
 
   resizeObserver.observe(container);
+  mainWorkspace.setResizeObserver(resizeObserver);
 
   Blockly.inject.bindDocumentEvents_();
 
