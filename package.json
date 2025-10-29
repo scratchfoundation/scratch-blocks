@@ -1,6 +1,6 @@
 {
   "name": "scratch-blocks",
-  "version": "1.1.210",
+  "version": "1.1.226",
   "description": "Scratch Blocks is a library for building creative computing interfaces.",
   "author": "Massachusetts Institute of Technology",
   "license": "Apache-2.0",
@@ -44,7 +44,7 @@
     "husky": "8.0.3",
     "json": "9.0.6",
     "rimraf": "2.7.1",
-    "scratch-semantic-release-config": "1.0.16",
+    "scratch-semantic-release-config": "4.0.0",
     "selenium-webdriver": "4.16.0",
     "semantic-release": "19.0.5",
     "transifex": "1.6.6",
