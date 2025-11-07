@@ -213,6 +213,7 @@
     "SENSING_CURRENT_MINUTE": "minute",
     "SENSING_CURRENT_SECOND": "second",
     "SENSING_DAYSSINCE2000": "days since 2000",
+    "SENSING_ONLINE": "is online?",
     "SENSING_USERNAME": "username",
     "SENSING_USERID": "user id",
     "SOUND_PLAY": "start sound %1",
