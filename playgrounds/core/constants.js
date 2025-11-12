@@ -385,12 +385,3 @@ Blockly.StatusButtonState = {
   "READY": "ready",
   "NOT_READY": "not ready",
 };
-
-/**
- * ENUM defining supported themes.
- * @enum {string}
- */
-Blockly.Themes = {
-  CLASSIC: "classic",
-  CAT_BLOCKS: "catblocks"
-};
