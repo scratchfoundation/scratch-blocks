@@ -113,6 +113,13 @@ Blockly.clipboardSource_ = null;
 Blockly.cache3dSupported_ = null;
 
 /**
+ * Active theme.
+ * @type {!Blockly.Themes}
+ * @private
+ */
+Blockly.theme_ = Blockly.Themes.CLASSIC;
+
+/**
  * Convert a hue (HSV model) into an RGB hex triplet.
  * @param {number} hue Hue on a colour wheel (0-360).
  * @return {string} RGB code, e.g. '#5ba65b'.
@@ -173,6 +180,33 @@ Blockly.svgResize = function(workspace) {
     svg.cachedHeight_ = height;
   }
   mainWorkspace.resize();
+};
+
+/**
+ * Apply a global theme to Blockly. This will then be used in all workspaces -
+ * both newly created and already existing.
+ */
+Object.defineProperty(Blockly, 'theme', {
+  /**
+   * Get the current theme.
+   * @return {!Blockly.Themes} The current global theme.
+   */
+  get: function() {
+    return Blockly.theme_;
+  }
+});
+
+/**
+ * Sets the global theme, which is applied to all workspaces.
+ * If the passed theme depends on initialization logic, that will only be applied to newly created workspaces.
+ * @param {!Blockly.Themes} theme the theme to set as the global theme.
+ */
+Blockly.setTheme = function(theme) {
+  if (theme === Blockly.Themes.CAT_BLOCKS) {
+    Blockly.theme_ = theme;
+  } else {
+    Blockly.theme_ = Blockly.Themes.CLASSIC;
+  }
 };
 
 /**
