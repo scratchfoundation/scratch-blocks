@@ -27,7 +27,6 @@
 goog.provide('Blockly.BlockSvg.render');
 
 goog.require('Blockly.BlockSvg');
-goog.require('Blockly.constants');
 
 
 // UI constants for rendering blocks.
@@ -312,14 +311,14 @@ Blockly.BlockSvg.prototype.updateColour = function() {
   var strokeColour = this.getColourTertiary();
 
   // Render block stroke
-  this.blockFrameElement_.setAttribute('stroke', strokeColour);
+  this.svgPath_.setAttribute('stroke', strokeColour);
 
   // Render block fill
   var fillColour = (this.isGlowingBlock_) ? this.getColourSecondary() : this.getColour();
-  this.blockFrameElement_.setAttribute('fill', fillColour);
+  this.svgPath_.setAttribute('fill', fillColour);
 
   // Render opacity
-  this.blockFrameElement_.setAttribute('fill-opacity', this.getOpacity());
+  this.svgPath_.setAttribute('fill-opacity', this.getOpacity());
 
   // Bump every dropdown to change its colour.
   for (var x = 0, input; input = this.inputList[x]; x++) {
@@ -338,11 +337,11 @@ Blockly.BlockSvg.prototype.highlightForReplacement = function(add) {
   if (add) {
     var replacementGlowFilterId = this.workspace.options.replacementGlowFilterId
       || 'blocklyReplacementGlowFilter';
-    this.blockFrameElement_.setAttribute('filter', 'url(#' + replacementGlowFilterId + ')');
+    this.svgPath_.setAttribute('filter', 'url(#' + replacementGlowFilterId + ')');
     Blockly.utils.addClass(/** @type {!Element} */ (this.svgGroup_),
         'blocklyReplaceable');
   } else {
-    this.blockFrameElement_.removeAttribute('filter');
+    this.svgPath_.removeAttribute('filter');
     Blockly.utils.removeClass(/** @type {!Element} */ (this.svgGroup_),
         'blocklyReplaceable');
   }
@@ -546,12 +545,12 @@ Blockly.BlockSvg.prototype.renderDraw_ = function(metrics) {
   this.renderDrawTop_(steps, connectionsXY, metrics);
 
   var pathString = steps.join(' ');
-  this.blockFrameElement_.setAttribute('d', pathString);
+  this.svgPath_.setAttribute('d', pathString);
 
   if (this.RTL) {
     // Mirror the block's path.
     // This is awesome.
-    this.blockFrameElement_.setAttribute('transform', 'scale(-1 1)');
+    this.svgPath_.setAttribute('transform', 'scale(-1 1)');
   }
 
   // Horizontal blocks have a single Image Field that is specially positioned
