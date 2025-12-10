@@ -643,6 +643,12 @@ Blockly.Field.prototype.setText = function(newText) {
     // No change.
     return;
   }
+  // start 修复水平方向时修改输入框页面没有渲染
+  if (this && this.textElement_) {
+    this.textElement_.innerHTML = newText;
+  }
+  // end
+  
   this.text_ = newText;
   this.forceRerender();
 };
