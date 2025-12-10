@@ -71,7 +71,7 @@ Blockly.inject = function(container, opt_options) {
 
   var workspace = Blockly.createMainWorkspace_(svg, options, blockDragSurface,
       workspaceDragSurface);
-  Blockly.init_(workspace);
+  Blockly.init_(workspace, subContainer);
   Blockly.mainWorkspace = workspace;
 
   Blockly.svgResize(workspace);
@@ -347,9 +347,10 @@ Blockly.createMainWorkspace_ = function(svg, options, blockDragSurface, workspac
 /**
  * Initialize Blockly with various handlers.
  * @param {!Blockly.Workspace} mainWorkspace Newly created main workspace.
+ * @param {!Element} container Containing element.
  * @private
  */
-Blockly.init_ = function(mainWorkspace) {
+Blockly.init_ = function(mainWorkspace, container) {
   var options = mainWorkspace.options;
   var svg = mainWorkspace.getParentSvg();
 
@@ -361,13 +362,13 @@ Blockly.init_ = function(mainWorkspace) {
         }
       });
 
-  var workspaceResizeHandler = Blockly.bindEventWithChecks_(window, 'resize',
-      null,
-      function() {
-        Blockly.hideChaffOnResize(true);
-        Blockly.svgResize(mainWorkspace);
-      });
-  mainWorkspace.setResizeHandlerWrapper(workspaceResizeHandler);
+  const resizeObserver = new ResizeObserver(() => {
+    Blockly.hideChaffOnResize(true);
+    Blockly.svgResize(mainWorkspace);
+  });
+
+  resizeObserver.observe(container);
+  mainWorkspace.setResizeObserver(resizeObserver);
 
   Blockly.inject.bindDocumentEvents_();
 

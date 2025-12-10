@@ -119,11 +119,10 @@ Blockly.WorkspaceSvg = function(options, opt_blockDragSurface, opt_wsDragSurface
 goog.inherits(Blockly.WorkspaceSvg, Blockly.Workspace);
 
 /**
- * A wrapper function called when a resize event occurs.
- * You can pass the result to `unbindEvent_`.
- * @type {Array.<!Array>}
+ * Save resize observer of the canvas in order to unobserve later in dispose
+ * @type {ResizeObserver}
  */
-Blockly.WorkspaceSvg.prototype.resizeHandlerWrapper_ = null;
+Blockly.WorkspaceSvg.prototype.resizeObserver_ = null;
 
 /**
  * The render status of an SVG workspace.
@@ -408,11 +407,11 @@ Blockly.WorkspaceSvg.prototype.getInjectionDiv = function() {
 };
 
 /**
- * Save resize handler data so we can delete it later in dispose.
- * @param {!Array.<!Array>} handler Data that can be passed to unbindEvent_.
+ * Save resize observer so we can delete it later in dispose.
+ * @param {ResizeObserver} observer Data to unobserve.
  */
-Blockly.WorkspaceSvg.prototype.setResizeHandlerWrapper = function(handler) {
-  this.resizeHandlerWrapper_ = handler;
+Blockly.WorkspaceSvg.prototype.setResizeObserver = function(observer) {
+  this.resizeObserver_ = observer;
 };
 
 /**
@@ -547,9 +546,10 @@ Blockly.WorkspaceSvg.prototype.dispose = function() {
     // SVG is injected into (i.e. injectionDiv).
     goog.dom.removeNode(this.getParentSvg().parentNode);
   }
-  if (this.resizeHandlerWrapper_) {
-    Blockly.unbindEvent_(this.resizeHandlerWrapper_);
-    this.resizeHandlerWrapper_ = null;
+
+  if (this.resizeObserver_) {
+    this.resizeObserver_.disconnect();
+    this.resizeObserver_ = null;
   }
 };
 
