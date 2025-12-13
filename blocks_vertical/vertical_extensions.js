@@ -203,13 +203,13 @@ Blockly.ScratchBlocks.VerticalExtensions.PROCEDURE_DEF_CONTEXTMENU = {
  */
 Blockly.ScratchBlocks.VerticalExtensions.PROCEDURE_CALL_CONTEXTMENU = {
   /**
-   * Add the "edit" option to the context menu.
-   * @todo Add "go to definition" option once implemented.
+   * Add the "edit" and "go to definition" options to the context menu.
    * @param {!Array.<!Object>} menuOptions List of menu options to edit.
    * @this Blockly.Block
    */
   customContextMenu: function(menuOptions) {
     menuOptions.push(Blockly.Procedures.makeEditOption(this));
+    menuOptions.push(Blockly.Procedures.makeShowDefinitionOption(this));
   }
 };
 
