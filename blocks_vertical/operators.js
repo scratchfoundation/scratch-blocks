@@ -468,3 +468,17 @@ Blockly.Blocks['operator_mathop'] = {
     });
   }
 };
+
+Blockly.Blocks['operator_tofixed'] = {
+  "message0": Blockly.Msg.OPERATORS_TOFIXED,
+  "args0": [
+    {
+      "type": "input_value",
+      "name": "NUM1",
+    },
+    {
+      "type": "input_value",
+      "name": "NUM2",
+    }
+  ]
+}
