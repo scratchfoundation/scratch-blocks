@@ -30,6 +30,8 @@
  */
 goog.provide('Blockly.ContextMenu');
 
+goog.provide('Blockly.ContextMenuItem');
+
 goog.require('Blockly.Events.BlockCreate');
 goog.require('Blockly.scratchBlocksUtils');
 goog.require('Blockly.utils');
@@ -96,17 +98,16 @@ Blockly.ContextMenu.populate_ = function(options, rtl) {
   var menu = new goog.ui.Menu();
   menu.setRightToLeft(rtl);
   for (var i = 0, option; option = options[i]; i++) {
-    var menuItem = new goog.ui.MenuItem(option.text);
+    // Use a custom class for the menu item instance. This is a subclass of
+    // goog.ui.MenuItem and has all the same behavior as usual, with minor
+    // tweaks for use in Blockly (and Scratch Blocks).
+    var menuItem = new Blockly.ContextMenuItem(option.text);
     menuItem.setRightToLeft(rtl);
     menu.addChild(menuItem, true);
     menuItem.setEnabled(option.enabled);
     if (option.enabled) {
       goog.events.listen(
           menuItem, goog.ui.Component.EventType.ACTION, option.callback);
-      menuItem.handleContextMenu = function(/* e */) {
-        // Right-clicking on menu option should count as a click.
-        goog.events.dispatchEvent(this, goog.ui.Component.EventType.ACTION);
-      };
     }
   }
   return menu;
@@ -517,3 +518,20 @@ Blockly.ContextMenu.workspaceCommentOption = function(ws, e) {
 };
 
 // End helper functions for creating context menu options.
+
+
+Blockly.ContextMenuItem = function(content) {
+  Blockly.ContextMenuItem.superClass_.constructor.call(this, content);
+};
+goog.inherits(Blockly.ContextMenuItem, goog.ui.MenuItem);
+
+Blockly.ContextMenuItem.prototype.handleMouseDown = function(e) {
+  // Menu options only respond to left clicking (browser action button).
+  // Override the event to let right clicking work too.
+  e.isMouseActionButton = function() {
+    return this.isButton(goog.events.BrowserEvent.MouseButton.LEFT) ||
+      this.isButton(goog.events.BrowserEvent.MouseButton.RIGHT);
+  };
+
+  Blockly.ContextMenuItem.superClass_.handleMouseDown.call(this, e);
+};
