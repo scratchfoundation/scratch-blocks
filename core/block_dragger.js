@@ -324,7 +324,11 @@ Blockly.BlockDragger.prototype.fireEndDragEvent_ = function(isOutside) {
  */
 Blockly.BlockDragger.prototype.fireMoveEvent_ = function() {
   var event = new Blockly.Events.BlockMove(this.draggingBlock_);
-  event.oldCoordinate = this.startXY_;
+  // The X position in the block move event should be the language agnostic
+  // position of the block. I.e. it should not be different in LTR vs. RTL.
+  var workspace = Blockly.Workspace.getById(event.workspaceId);
+  var rtlAwareX = workspace.RTL ? workspace.getWidth() - this.startXY_.x : this.startXY_.x;
+  event.oldCoordinate = new goog.math.Coordinate(rtlAwareX, this.startXY_.y);
   event.recordNew();
   Blockly.Events.fire(event);
 };
