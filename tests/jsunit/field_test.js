@@ -18,109 +18,103 @@
  * limitations under the License.
  */
 
- /**
+/**
  * @fileoverview Tests for Blockly.Field
  * @author fenichel@google.com (Rachel Fenichel)
  */
-'use strict';
+'use strict'
 
 function test_field_isEditable_simple() {
-  var field = new Blockly.Field("Dummy text");
+  var field = new Blockly.Field('Dummy text')
   // EDITABLE is true by default, but without a source block a field can't be
   // edited.
-  assertFalse('Field without a block is not editable',
-      field.isCurrentlyEditable());
+  assertFalse('Field without a block is not editable', field.isCurrentlyEditable())
 }
 
 function test_field_isEditable_false() {
   // Setting EDITABLE to false doesn't matter.
-  var field = new Blockly.Field("Dummy text");
-  field.EDITABLE = false;
-  assertFalse('Field without a block is not editable',
-      field.isCurrentlyEditable());
+  var field = new Blockly.Field('Dummy text')
+  field.EDITABLE = false
+  assertFalse('Field without a block is not editable', field.isCurrentlyEditable())
 }
 
 function test_field_isEditable_editableBlock() {
   var editableBlock = {
-    isEditable: function() {
-      return true;
-    }
-  };
+    isEditable: function () {
+      return true
+    },
+  }
 
-  var field = new Blockly.Field("Dummy text");
-  field.sourceBlock_ = editableBlock;
+  var field = new Blockly.Field('Dummy text')
+  field.sourceBlock_ = editableBlock
 
-  assertTrue('Editable field with editable block is editable',
-      field.isCurrentlyEditable());
+  assertTrue('Editable field with editable block is editable', field.isCurrentlyEditable())
 }
 
 function test_field_isEditable_editableBlock_false() {
   var editableBlock = {
-    isEditable: function() {
-      return true;
-    }
-  };
+    isEditable: function () {
+      return true
+    },
+  }
 
-  var field = new Blockly.Field("Dummy text");
-  field.sourceBlock_ = editableBlock;
-  field.EDITABLE = false;
+  var field = new Blockly.Field('Dummy text')
+  field.sourceBlock_ = editableBlock
+  field.EDITABLE = false
 
-  assertFalse('Non-editable field with editable block is not editable',
-      field.isCurrentlyEditable());
+  assertFalse('Non-editable field with editable block is not editable', field.isCurrentlyEditable())
 }
 
 function test_field_isEditable_nonEditableBlock() {
   var nonEditableBlock = {
-    isEditable: function() {
-      return false;
-    }
-  };
+    isEditable: function () {
+      return false
+    },
+  }
 
-  var field = new Blockly.Field("Dummy text");
-  field.sourceBlock_ = nonEditableBlock;
+  var field = new Blockly.Field('Dummy text')
+  field.sourceBlock_ = nonEditableBlock
 
-  assertFalse('Editable field with non-editable block is not editable',
-      field.isCurrentlyEditable());
+  assertFalse('Editable field with non-editable block is not editable', field.isCurrentlyEditable())
 }
 
 function test_field_isEditable_nonEditableBlock_false() {
   var nonEditableBlock = {
-    isEditable: function() {
-      return false;
-    }
-  };
+    isEditable: function () {
+      return false
+    },
+  }
 
-  var field = new Blockly.Field("Dummy text");
-  field.sourceBlock_ = nonEditableBlock;
-  field.EDITABLE = false;
+  var field = new Blockly.Field('Dummy text')
+  field.sourceBlock_ = nonEditableBlock
+  field.EDITABLE = false
 
-  assertFalse('Non-editable field with non-editable block is not editable',
-      field.isCurrentlyEditable());
+  assertFalse('Non-editable field with non-editable block is not editable', field.isCurrentlyEditable())
 }
 
 function test_field_register_with_custom_field() {
-  var CustomFieldType = function(value) {
-    CustomFieldType.superClass_.constructor.call(this, value);
-  };
-  goog.inherits(CustomFieldType, Blockly.Field);
+  var CustomFieldType = function (value) {
+    CustomFieldType.superClass_.constructor.call(this, value)
+  }
+  goog.inherits(CustomFieldType, Blockly.Field)
 
-  CustomFieldType.fromJson = function(options) {
-    return new CustomFieldType(options['value']);
-  };
+  CustomFieldType.fromJson = function (options) {
+    return new CustomFieldType(options['value'])
+  }
 
   var json = {
     type: 'field_custom_test',
-    value: 'ok'
-  };
+    value: 'ok',
+  }
 
   // before registering
-  var field = Blockly.Field.fromJson(json);
-  assertNull(field);
+  var field = Blockly.Field.fromJson(json)
+  assertNull(field)
 
-  Blockly.Field.register('field_custom_test', CustomFieldType);
+  Blockly.Field.register('field_custom_test', CustomFieldType)
 
   // after registering
-  field = Blockly.Field.fromJson(json);
-  assertNotNull(field);
-  assertEquals(field.getValue(), 'ok');
+  field = Blockly.Field.fromJson(json)
+  assertNotNull(field)
+  assertEquals(field.getValue(), 'ok')
 }

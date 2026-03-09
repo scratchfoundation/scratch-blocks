@@ -1,7 +1,7 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
   <head>
-    <meta charset="utf-8">
+    <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
     <title>Horizontal Playground</title>
@@ -15,40 +15,39 @@
     <script src="../blocks_horizontal/wedo.js"></script>
     <script src="../blocks_horizontal/default_toolbox.js"></script>
     <script>
-      'use strict';
+      'use strict'
 
-      var fakeDragStack = [];
-      var workspace = null;
+      let fakeDragStack = []
+      let workspace = null
 
       function start() {
-        var soundsEnabled = null;
+        let soundsEnabled = null
         if (sessionStorage) {
           // Restore sounds state.
-          soundsEnabled = sessionStorage.getItem('soundsEnabled');
+          soundsEnabled = sessionStorage.getItem('soundsEnabled')
           if (soundsEnabled === null) {
-            soundsEnabled = true;
+            soundsEnabled = true
           } else {
-            soundsEnabled = (soundsEnabled === 'true');
+            soundsEnabled = soundsEnabled === 'true'
           }
         } else {
-          soundsEnabled = true;
+          soundsEnabled = true
         }
-        setSoundsEnabled(soundsEnabled);
+        setSoundsEnabled(soundsEnabled)
 
         // Setup blocks
         // Parse the URL arguments.
-        var match = location.search.match(/dir=([^&]+)/);
-        var rtl = match && match[1] == 'rtl';
-        document.forms.options.elements.dir.selectedIndex = Number(rtl);
-        var toolbox = getToolboxElement();
-        document.forms.options.elements.toolbox.selectedIndex =
-          toolbox ? 1: 0;
+        let match = location.search.match(/dir=([^&]+)/)
+        let rtl = match && match[1] == 'rtl'
+        document.forms.options.elements.dir.selectedIndex = Number(rtl)
+        let toolbox = getToolboxElement()
+        document.forms.options.elements.toolbox.selectedIndex = toolbox ? 1 : 0
 
-        match = location.search.match(/side=([^&]+)/);
+        match = location.search.match(/side=([^&]+)/)
 
-        var side = match ? match[1] : 'start';
+        let side = match ? match[1] : 'start'
 
-        document.forms.options.elements.side.value = side;
+        document.forms.options.elements.side.value = side
 
         workspace = Blockly.inject('blocklyDiv', {
           comments: false,
@@ -63,166 +62,157 @@
           horizontalLayout: side == 'top' || side == 'bottom',
           toolboxPosition: side == 'top' || side == 'start' ? 'start' : 'end',
           sounds: soundsEnabled,
-          grid: {spacing: 16,
-            length: 1,
-            colour: '#2C344A',
-            snap: false
-          },
+          grid: { spacing: 16, length: 1, colour: '#2C344A', snap: false },
           zoom: {
             controls: true,
             wheel: true,
             startScale: 1.0,
             maxScale: 4,
             minScale: 0.25,
-            scaleSpeed: 1.1
+            scaleSpeed: 1.1,
           },
           colours: {
             fieldShadow: 'rgba(255, 255, 255, 0.3)',
-            dragShadowOpacity: 0.6
-          }
-        });
-        
+            dragShadowOpacity: 0.6,
+          },
+        })
+
         if (sessionStorage) {
           // Restore previously displayed text.
-          var text = sessionStorage.getItem('textarea');
+          let text = sessionStorage.getItem('textarea')
           if (text) {
-            document.getElementById('importExport').value = text;
+            document.getElementById('importExport').value = text
           }
-          taChange();
+          taChange()
 
           // Restore event logging state.
-          var state = sessionStorage.getItem('logEvents');
-          logEvents(Boolean(state));
+          let state = sessionStorage.getItem('logEvents')
+          logEvents(Boolean(state))
 
           // Restore flyout event logging state.
-          state = sessionStorage.getItem('logFlyoutEvents');
-          logFlyoutEvents(Boolean(state));
+          state = sessionStorage.getItem('logFlyoutEvents')
+          logFlyoutEvents(Boolean(state))
         }
       }
 
       function getToolboxElement() {
-        var match = location.search.match(/toolbox=([^&]+)/);
-        return document.getElementById('toolbox-' + (match ? match[1] : 'categories'));
+        let match = location.search.match(/toolbox=([^&]+)/)
+        return document.getElementById('toolbox-' + (match ? match[1] : 'categories'))
       }
 
       function toXml() {
-        var output = document.getElementById('importExport');
-        var xml = Blockly.Xml.workspaceToDom(workspace);
-        output.value = Blockly.Xml.domToPrettyText(xml);
-        output.focus();
-        output.select();
-        taChange();
+        let output = document.getElementById('importExport')
+        let xml = Blockly.Xml.workspaceToDom(workspace)
+        output.value = Blockly.Xml.domToPrettyText(xml)
+        output.focus()
+        output.select()
+        taChange()
       }
 
       function fromXml() {
-        var input = document.getElementById('importExport');
-        var xml = Blockly.Xml.textToDom(input.value);
-        Blockly.Xml.domToWorkspace(workspace, xml);
-        taChange();
+        let input = document.getElementById('importExport')
+        let xml = Blockly.Xml.textToDom(input.value)
+        Blockly.Xml.domToWorkspace(workspace, xml)
+        taChange()
       }
 
       // Disable the "Import from XML" button if the XML is invalid.
       // Preserve text between page reloads.
       function taChange() {
-        var textarea = document.getElementById('importExport');
+        let textarea = document.getElementById('importExport')
         if (sessionStorage) {
-          sessionStorage.setItem('textarea', textarea.value);
+          sessionStorage.setItem('textarea', textarea.value)
         }
-        var valid = true;
+        let valid = true
         try {
-          Blockly.Xml.textToDom(textarea.value);
+          Blockly.Xml.textToDom(textarea.value)
         } catch (e) {
-          valid = false;
+          valid = false
         }
-        document.getElementById('import').disabled = !valid;
+        document.getElementById('import').disabled = !valid
       }
 
       function logEvents(state) {
-        var checkbox = document.getElementById('logCheck');
-        checkbox.checked = state;
+        let checkbox = document.getElementById('logCheck')
+        checkbox.checked = state
         if (sessionStorage) {
-          sessionStorage.setItem('logEvents', state ? 'checked' : '');
+          sessionStorage.setItem('logEvents', state ? 'checked' : '')
         }
         if (state) {
-          workspace.addChangeListener(logger);
+          workspace.addChangeListener(logger)
         } else {
-          workspace.removeChangeListener(logger);
+          workspace.removeChangeListener(logger)
         }
       }
 
       function logFlyoutEvents(state) {
-        var checkbox = document.getElementById('logFlyoutCheck');
-        checkbox.checked = state;
+        let checkbox = document.getElementById('logFlyoutCheck')
+        checkbox.checked = state
         if (sessionStorage) {
-          sessionStorage.setItem('logFlyoutEvents', state ? 'checked' : '');
+          sessionStorage.setItem('logFlyoutEvents', state ? 'checked' : '')
         }
-        var flyoutWorkspace = (workspace.flyout_) ? workspace.flyout_.workspace_ :
-          workspace.toolbox_.flyout_.workspace_;
+        let flyoutWorkspace = workspace.flyout_ ? workspace.flyout_.workspace_ : workspace.toolbox_.flyout_.workspace_
         if (state) {
-          flyoutWorkspace.addChangeListener(logger);
+          flyoutWorkspace.addChangeListener(logger)
         } else {
-          flyoutWorkspace.removeChangeListener(logger);
+          flyoutWorkspace.removeChangeListener(logger)
         }
       }
 
       function logger(e) {
-        console.log(e);
+        console.log(e)
       }
 
       function glowBlock() {
         if (Blockly.selected) {
-          workspace.glowBlock(Blockly.selected.id, true);
+          workspace.glowBlock(Blockly.selected.id, true)
         }
       }
 
       function unglowBlock() {
         if (Blockly.selected) {
-          workspace.glowBlock(Blockly.selected.id, false);
+          workspace.glowBlock(Blockly.selected.id, false)
         }
       }
 
       function glowStack() {
         if (Blockly.selected) {
-          workspace.glowStack(Blockly.selected.id, true);
+          workspace.glowStack(Blockly.selected.id, true)
         }
       }
 
       function unglowStack() {
         if (Blockly.selected) {
-          workspace.glowStack(Blockly.selected.id, false);
+          workspace.glowStack(Blockly.selected.id, false)
         }
       }
 
       function sprinkles(n) {
-        var prototypes = [];
-        var toolbox = workspace.options.languageTree;
+        let prototypes = []
+        let toolbox = workspace.options.languageTree
         if (!toolbox) {
-          console.error('Toolbox not found; add a toolbox element to the DOM.');
-          return;
+          console.error('Toolbox not found; add a toolbox element to the DOM.')
+          return
         }
-        var blocks = toolbox.getElementsByTagName('block');
-        for (var i = 0; i < n; i++) {
-          var blockXML = blocks[Math.floor(Math.random() * blocks.length)];
-          var block = Blockly.Xml.domToBlock(blockXML, workspace);
-          block.initSvg();
-          block.moveBy(
-            Math.round(Math.random() * 450 + 40),
-            Math.round(Math.random() * 600 + 40)
-          );
+        let blocks = toolbox.getElementsByTagName('block')
+        for (let i = 0; i < n; i++) {
+          let blockXML = blocks[Math.floor(Math.random() * blocks.length)]
+          let block = Blockly.Xml.domToBlock(blockXML, workspace)
+          block.initSvg()
+          block.moveBy(Math.round(Math.random() * 450 + 40), Math.round(Math.random() * 600 + 40))
         }
       }
 
       function spaghetti(n) {
-        var xml = spaghettiXml;
-        for(var i = 0; i < n; i++) {
-          xml = xml.replace(/(<(statement|next)( name="SUBSTACK")?>)<\//g,
-          '$1' + spaghettiXml + '</');
+        let xml = spaghettiXml
+        for (let i = 0; i < n; i++) {
+          xml = xml.replace(/(<(statement|next)( name="SUBSTACK")?>)<\//g, '$1' + spaghettiXml + '</')
         }
-        xml = '<xml xmlns="http://www.w3.org/1999/xhtml">' + xml + '</xml>';
-        var dom = Blockly.Xml.textToDom(xml);
-        console.time('Spaghetti domToWorkspace');
-        Blockly.Xml.domToWorkspace(workspace, dom);
-        console.timeEnd('Spaghetti domToWorkspace');
+        xml = '<xml xmlns="http://www.w3.org/1999/xhtml">' + xml + '</xml>'
+        let dom = Blockly.Xml.textToDom(xml)
+        console.time('Spaghetti domToWorkspace')
+        Blockly.Xml.domToWorkspace(workspace, dom)
+        console.timeEnd('Spaghetti domToWorkspace')
       }
 
       var spaghettiXml = [
@@ -234,78 +224,71 @@
         '    </value>',
         '    <statement name="SUBSTACK"></statement>',
         '    <next></next>',
-        '  </block>'
-      ].join('\n');
+        '  </block>',
+      ].join('\n')
 
       function setSoundsEnabled(state) {
-        var checkbox = document.getElementById('soundsEnabled');
-        checkbox.checked = (state) ? 'checked' : '';
+        let checkbox = document.getElementById('soundsEnabled')
+        checkbox.checked = state ? 'checked' : ''
         if (sessionStorage) {
-          sessionStorage.setItem('soundsEnabled', state);
+          sessionStorage.setItem('soundsEnabled', state)
         }
       }
       function fakeDrag(id, dx, dy, opt_workspace) {
-        var ws = opt_workspace || Blockly.getMainWorkspace();
-        var blockToDrag = ws.getBlockById(id);
+        let ws = opt_workspace || Blockly.getMainWorkspace()
+        let blockToDrag = ws.getBlockById(id)
 
         if (!blockToDrag) {
-          fakeDragWrapper();
-          return;
+          fakeDragWrapper()
+          return
         }
-        var blockTop = blockToDrag.svgGroup_.getBoundingClientRect().top;
-        var blockLeft = blockToDrag.svgGroup_.getBoundingClientRect().left;
+        let blockTop = blockToDrag.svgGroup_.getBoundingClientRect().top
+        let blockLeft = blockToDrag.svgGroup_.getBoundingClientRect().left
 
         // Click somewhere on the block.
-        var mouseDownEvent = new MouseEvent('mousedown',
-            {clientX: blockLeft + 5, clientY: blockTop + 5});
-        blockToDrag.onMouseDown_(mouseDownEvent);
+        let mouseDownEvent = new MouseEvent('mousedown', { clientX: blockLeft + 5, clientY: blockTop + 5 })
+        blockToDrag.onMouseDown_(mouseDownEvent)
 
         // Throw in a move for good measure.
-        setTimeout(
-          function() {
-            var mouseMoveEvent = new MouseEvent('mousemove',
-                {clientX: blockLeft + dx,
-                clientY: blockTop + dy});
-            blockToDrag.onMouseMove_(mouseMoveEvent);
+        setTimeout(() => {
+          let mouseMoveEvent = new MouseEvent('mousemove', { clientX: blockLeft + dx, clientY: blockTop + dy })
+          blockToDrag.onMouseMove_(mouseMoveEvent)
 
-            // Drop at dx, dy.
-            setTimeout(
-              function() {
-                var mouseUpEvent = new MouseEvent('mouseup',
-                    {clientX: blockLeft + dx,
-                    clientY: blockTop + dy});
-                blockToDrag.onMouseUp_(mouseUpEvent);
+          // Drop at dx, dy.
+          setTimeout(() => {
+            let mouseUpEvent = new MouseEvent('mouseup', { clientX: blockLeft + dx, clientY: blockTop + dy })
+            blockToDrag.onMouseUp_(mouseUpEvent)
 
-                setTimeout(fakeDragWrapper(), 100);
-              }, 30);
-          }, 30);
-      };
+            setTimeout(fakeDragWrapper(), 100)
+          }, 30)
+        }, 30)
+      }
 
       function fakeDragWrapper() {
-        var dragInfo = fakeDragStack.pop();
+        let dragInfo = fakeDragStack.pop()
         if (dragInfo) {
-          fakeDrag(dragInfo.id, dragInfo.dx, dragInfo.dy, dragInfo.workspace);
+          fakeDrag(dragInfo.id, dragInfo.dx, dragInfo.dy, dragInfo.workspace)
         }
       }
 
       function fakeManyDrags() {
-        var blockList = workspace.getAllBlocks();
-        for (var i = 0; i < 2 * blockList.length; i++) {
-          fakeDragStack.push(
-            {
-              id: blockList[Math.round(Math.random() * (blockList.length - 1))].id,
-              // Move some blocks up and to the left, but mostly down and to the right.
-              dx: Math.round((Math.random() - 0.25) * 200),
-              dy: Math.round((Math.random() - 0.25) * 200),
-              workspace: workspace
-            });
+        let blockList = workspace.getAllBlocks()
+        for (let i = 0; i < 2 * blockList.length; i++) {
+          fakeDragStack.push({
+            id: blockList[Math.round(Math.random() * (blockList.length - 1))].id,
+            // Move some blocks up and to the left, but mostly down and to the right.
+            dx: Math.round((Math.random() - 0.25) * 200),
+            dy: Math.round((Math.random() - 0.25) * 200),
+            workspace: workspace,
+          })
         }
-        fakeDragWrapper();
+        fakeDragWrapper()
       }
     </script>
 
     <style>
-      html, body {
+      html,
+      body {
         height: 100%;
       }
 
@@ -358,51 +341,55 @@
     </p>
 
     <form id="options">
-        <select name="dir" onchange="document.forms.options.submit()">
-          <option value="ltr">LTR</option>
-          <option value="rtl">RTL</option>
-        </select>
-        <select name="toolbox" onchange="document.forms.options.submit()">
-          <option value="categories">Categories</option>
-          <option value="simple">Simple</option>
-        </select>
-        <select name="side" onchange="document.forms.options.submit()">
-          <option value="start">Start</option>
-          <option value="end">End</option>
-          <option value="top">Top</option>
-          <option value="bottom">Bottom</option>
-        </select>
-      </form>
+      <select name="dir" onchange="document.forms.options.submit()">
+        <option value="ltr">LTR</option>
+        <option value="rtl">RTL</option>
+      </select>
+      <select name="toolbox" onchange="document.forms.options.submit()">
+        <option value="categories">Categories</option>
+        <option value="simple">Simple</option>
+      </select>
+      <select name="side" onchange="document.forms.options.submit()">
+        <option value="start">Start</option>
+        <option value="end">End</option>
+        <option value="top">Top</option>
+        <option value="bottom">Bottom</option>
+      </select>
+    </form>
 
     <p>
-      <input type="button" value="Export to XML" onclick="toXml()">
+      <input type="button" value="Export to XML" onclick="toXml()" />
       &nbsp;
-      <input type="button" value="Import from XML" onclick="fromXml()" id="import">
-      <br>
-      <textarea id="importExport" style="width: 26%; height: 12em"
-        onchange="taChange();" onkeyup="taChange()"></textarea>
+      <input type="button" value="Import from XML" onclick="fromXml()" id="import" />
+      <br />
+      <textarea
+        id="importExport"
+        style="width: 26%; height: 12em"
+        onchange="taChange()"
+        onkeyup="taChange()"
+      ></textarea>
     </p>
 
     <p>
       Log events: &nbsp;
-      <input type="checkbox" onclick="logEvents(this.checked)" id="logCheck">
+      <input type="checkbox" onclick="logEvents(this.checked)" id="logCheck" />
     </p>
 
     <p>
       Log flyout events: &nbsp;
-      <input type="checkbox" onclick="logFlyoutEvents(this.checked)" id="logFlyoutCheck">
+      <input type="checkbox" onclick="logFlyoutEvents(this.checked)" id="logFlyoutCheck" />
     </p>
 
     <p>
       Enable sounds (after refresh): &nbsp;
-      <input type="checkbox" onclick="setSoundsEnabled(this.checked)" id="soundsEnabled">
+      <input type="checkbox" onclick="setSoundsEnabled(this.checked)" id="soundsEnabled" />
     </p>
 
     <p>
       Stress test: &nbsp;
-      <input type="button" value="Sprinkles!" onclick="sprinkles(100)">
-      <input type="button" value="Spaghetti!" onclick="spaghetti(10)">
-      <input type="button" value="Fake some drags!" onclick="fakeManyDrags()">
+      <input type="button" value="Sprinkles!" onclick="sprinkles(100)" />
+      <input type="button" value="Spaghetti!" onclick="spaghetti(10)" />
+      <input type="button" value="Fake some drags!" onclick="fakeManyDrags()" />
     </p>
 
     <p>

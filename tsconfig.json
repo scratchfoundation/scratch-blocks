@@ -1,0 +1,28 @@
+{
+  "compilerOptions": {
+    /* Type Checking */
+    "noImplicitAny": true,
+    "strict": true,
+
+    /* Modules */
+    "module": "esnext",
+    "moduleResolution": "bundler",
+
+    /* Emit */
+    "declaration": true,
+    "declarationDir": "./dist/types/",
+    "declarationMap": true,
+    "outDir": "./dist/",
+    "sourceMap": true,
+
+    /* JavaScript Support */
+    "allowJs": true,
+
+    /* Interop Constraints */
+    "forceConsistentCasingInFileNames": true,
+
+    /* Language and Environment */
+    "target": "es2020"
+  },
+  "include": ["./src/", "./tests/", "./types/"]
+}

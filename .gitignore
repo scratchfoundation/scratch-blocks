@@ -24,6 +24,7 @@ python_compressed.js
 .vscode
 
 /accessible/*
+/build
 /dist
 /msg/js/*
 !/msg/js/en.js

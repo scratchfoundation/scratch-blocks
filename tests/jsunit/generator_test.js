@@ -17,12 +17,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-'use strict';
+'use strict'
 
 function test_prefix() {
-  var generator = new Blockly.Generator('INTERCAL');
-  assertEquals('Prefix nothing.', '', generator.prefixLines('', ''));
-  assertEquals('Prefix a word.', '@Hello', generator.prefixLines('Hello', '@'));
-  assertEquals('Prefix one line.', '12Hello\n', generator.prefixLines('Hello\n', '12'));
-  assertEquals('Prefix two lines.', '***Hello\n***World\n', generator.prefixLines('Hello\nWorld\n', '***'));
+  var generator = new Blockly.Generator('INTERCAL')
+  assertEquals('Prefix nothing.', '', generator.prefixLines('', ''))
+  assertEquals('Prefix a word.', '@Hello', generator.prefixLines('Hello', '@'))
+  assertEquals('Prefix one line.', '12Hello\n', generator.prefixLines('Hello\n', '12'))
+  assertEquals('Prefix two lines.', '***Hello\n***World\n', generator.prefixLines('Hello\nWorld\n', '***'))
 }

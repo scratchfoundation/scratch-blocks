@@ -17,161 +17,160 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-'use strict';
+'use strict'
 
-goog.require('goog.testing');
+goog.require('goog.testing')
 
-var block;
-var workspace;
-var originalCreateIcon = Blockly.ScratchBlockComment.createIcon;
+var block
+var workspace
+var originalCreateIcon = Blockly.ScratchBlockComment.createIcon
 
 function scratchBlockCommentTest_setUp() {
-  workspace = new Blockly.Workspace();
+  workspace = new Blockly.Workspace()
   // Mock the resizeContents function on the workspace
-  workspace.resizeContents = function () {};
+  workspace.resizeContents = function () {}
 
-  var BLOCK_TYPE = 'test_json_minimal';
+  var BLOCK_TYPE = 'test_json_minimal'
 
-  Blockly.defineBlocksWithJsonArray([{
-    "type": BLOCK_TYPE
-  }]);
+  Blockly.defineBlocksWithJsonArray([
+    {
+      type: BLOCK_TYPE,
+    },
+  ])
 
-  block = new Blockly.BlockSvg(workspace, BLOCK_TYPE);
+  block = new Blockly.BlockSvg(workspace, BLOCK_TYPE)
 
   // Mock createIcon function since it is not necessary for these tests
-  Blockly.ScratchBlockComment.prototype.createIcon = function () {};
+  Blockly.ScratchBlockComment.prototype.createIcon = function () {}
 }
 
 function scratchBlockCommentTest_tearDown() {
-  workspace.dispose();
-  block.dispose();
+  workspace.dispose()
+  block.dispose()
 
   // Restore original createIcon function
-  Blockly.ScratchBlockComment.prototype.createIcon = originalCreateIcon;
+  Blockly.ScratchBlockComment.prototype.createIcon = originalCreateIcon
 }
 
 function test_blockWithNoBlockComments() {
-  scratchBlockCommentTest_setUp();
+  scratchBlockCommentTest_setUp()
   try {
-    assertEquals('Workspace has a block.', 1, workspace.getTopBlocks(false).length);
-    assertEquals('Workspace does not have a comment.', 0, workspace.getTopComments(false).length);
-    assertEquals('Block does not have a comment', null, block.comment);
-    assertEquals('Block does not have comment text', '', block.getCommentText());
+    assertEquals('Workspace has a block.', 1, workspace.getTopBlocks(false).length)
+    assertEquals('Workspace does not have a comment.', 0, workspace.getTopComments(false).length)
+    assertEquals('Block does not have a comment', null, block.comment)
+    assertEquals('Block does not have comment text', '', block.getCommentText())
   } finally {
-    scratchBlockCommentTest_tearDown();
+    scratchBlockCommentTest_tearDown()
   }
 }
 
 function test_createBlockCommentMinimalArguments() {
-  scratchBlockCommentTest_setUp();
+  scratchBlockCommentTest_setUp()
   try {
-    var comment = new Blockly.ScratchBlockComment(block, 'Some comment text');
-    assertEquals('Workspace has a block.', 1, workspace.getTopBlocks(false).length);
-    assertEquals('Workspace has a comment.', 1, workspace.getTopComments(false).length);
-    assertEquals('Comment knows about workspace.', workspace, comment.workspace);
+    var comment = new Blockly.ScratchBlockComment(block, 'Some comment text')
+    assertEquals('Workspace has a block.', 1, workspace.getTopBlocks(false).length)
+    assertEquals('Workspace has a comment.', 1, workspace.getTopComments(false).length)
+    assertEquals('Comment knows about workspace.', workspace, comment.workspace)
   } finally {
-    scratchBlockCommentTest_tearDown();
+    scratchBlockCommentTest_tearDown()
   }
 }
 
 function test_createBlockCommentAllArguments() {
-  scratchBlockCommentTest_setUp();
+  scratchBlockCommentTest_setUp()
   try {
-    var comment = new Blockly.ScratchBlockComment(block, 'Some comment text', 'aMockComment', 10, 20, true);
-    assertEquals('Workspace has a block.', 1, workspace.getTopBlocks(false).length);
-    assertEquals('Workspace has a comment.', 1, workspace.getTopComments(false).length);
-    assertEquals('Comment knows about workspace.', workspace, comment.workspace);
+    var comment = new Blockly.ScratchBlockComment(block, 'Some comment text', 'aMockComment', 10, 20, true)
+    assertEquals('Workspace has a block.', 1, workspace.getTopBlocks(false).length)
+    assertEquals('Workspace has a comment.', 1, workspace.getTopComments(false).length)
+    assertEquals('Comment knows about workspace.', workspace, comment.workspace)
   } finally {
-    scratchBlockCommentTest_tearDown();
+    scratchBlockCommentTest_tearDown()
   }
 }
 
 function test_addCommentToBlock() {
-  scratchBlockCommentTest_setUp();
+  scratchBlockCommentTest_setUp()
   try {
-    block.setCommentText('Some comment text', 'aMockComment');
-    assertEquals('Workspace has a block.', 1, workspace.getTopBlocks(false).length);
-    assertEquals('Workspace has a comment.', 1, workspace.getTopComments(false).length);
-    assertNotEquals('Block has a comment', null, block.comment);
-    assertEquals('Block has comment text', 'Some comment text', block.getCommentText());
+    block.setCommentText('Some comment text', 'aMockComment')
+    assertEquals('Workspace has a block.', 1, workspace.getTopBlocks(false).length)
+    assertEquals('Workspace has a comment.', 1, workspace.getTopComments(false).length)
+    assertNotEquals('Block has a comment', null, block.comment)
+    assertEquals('Block has comment text', 'Some comment text', block.getCommentText())
   } finally {
-    scratchBlockCommentTest_tearDown();
+    scratchBlockCommentTest_tearDown()
   }
 }
 
 function test_blockCommentXYWhenPositionProvided() {
-  scratchBlockCommentTest_setUp();
+  scratchBlockCommentTest_setUp()
   try {
-    var comment = new Blockly.ScratchBlockComment(block, 'Some comment text', 'aMockComment', 10, 20);
-    var commentXY = comment.getXY();
-    var commentX = commentXY.x;
-    var commentY = commentXY.y;
-    assertEquals('Comment x position is type number', 'number', typeof commentX);
-    assertEquals('Comment y position is type number', 'number', typeof commentY);
+    var comment = new Blockly.ScratchBlockComment(block, 'Some comment text', 'aMockComment', 10, 20)
+    var commentXY = comment.getXY()
+    var commentX = commentXY.x
+    var commentY = commentXY.y
+    assertEquals('Comment x position is type number', 'number', typeof commentX)
+    assertEquals('Comment y position is type number', 'number', typeof commentY)
 
-    assertEquals('Comment x position is what was provided', 10, commentX);
-    assertEquals('Comment y position is what was provided', 20, commentY);
+    assertEquals('Comment x position is what was provided', 10, commentX)
+    assertEquals('Comment y position is what was provided', 20, commentY)
   } finally {
-    scratchBlockCommentTest_tearDown();
+    scratchBlockCommentTest_tearDown()
   }
 }
 
 function test_blockCommentXYWhenPositionNotProvided() {
-  scratchBlockCommentTest_setUp();
+  scratchBlockCommentTest_setUp()
   try {
-    var comment = new Blockly.ScratchBlockComment(
-        block, 'Some comment text', 'aMockComment');
-    var commentXY = comment.getXY();
-    var commentX = commentXY.x;
-    var commentY = commentXY.y;
+    var comment = new Blockly.ScratchBlockComment(block, 'Some comment text', 'aMockComment')
+    var commentXY = comment.getXY()
+    var commentX = commentXY.x
+    var commentY = commentXY.y
 
-    console.log("COMMENT X: " + commentX);
-    console.log("COMMENT Y: " + commentY);
+    console.log('COMMENT X: ' + commentX)
+    console.log('COMMENT Y: ' + commentY)
 
-    assertEquals('Comment x position is type number', 'number', typeof commentX);
-    assertEquals('Comment y position is type number', 'number', typeof commentY);
+    assertEquals('Comment x position is type number', 'number', typeof commentX)
+    assertEquals('Comment y position is type number', 'number', typeof commentY)
 
-    assertFalse('Comment x position is not NaN', isNaN(commentX));
-    assertFalse('Comment y position is not NaN', isNaN(commentY));
+    assertFalse('Comment x position is not NaN', isNaN(commentX))
+    assertFalse('Comment y position is not NaN', isNaN(commentY))
   } finally {
-    scratchBlockCommentTest_tearDown();
+    scratchBlockCommentTest_tearDown()
   }
 }
 
 function test_blockCommentXYNaNPositionProvided() {
-  scratchBlockCommentTest_setUp();
+  scratchBlockCommentTest_setUp()
   try {
-    var comment = new Blockly.ScratchBlockComment(
-        block, 'Some comment text', 'aMockComment', NaN, NaN);
-    var commentXY = comment.getXY();
-    var commentX = commentXY.x;
-    var commentY = commentXY.y;
+    var comment = new Blockly.ScratchBlockComment(block, 'Some comment text', 'aMockComment', NaN, NaN)
+    var commentXY = comment.getXY()
+    var commentX = commentXY.x
+    var commentY = commentXY.y
 
-    assertEquals('Comment x position is type number', 'number', typeof commentX);
-    assertEquals('Comment y position is type number', 'number', typeof commentY);
+    assertEquals('Comment x position is type number', 'number', typeof commentX)
+    assertEquals('Comment y position is type number', 'number', typeof commentY)
 
-    assertFalse('Comment x position is not NaN', isNaN(commentX));
-    assertFalse('Comment y position is not NaN', isNaN(commentY));
+    assertFalse('Comment x position is not NaN', isNaN(commentX))
+    assertFalse('Comment y position is not NaN', isNaN(commentY))
   } finally {
-    scratchBlockCommentTest_tearDown();
+    scratchBlockCommentTest_tearDown()
   }
 }
 
 function test_blockCommentXYNullPositionProvided() {
-  scratchBlockCommentTest_setUp();
+  scratchBlockCommentTest_setUp()
   try {
-    var comment = new Blockly.ScratchBlockComment(
-        block, 'Some comment text', 'aMockComment', null, null);
-    var commentXY = comment.getXY();
-    var commentX = commentXY.x;
-    var commentY = commentXY.y;
+    var comment = new Blockly.ScratchBlockComment(block, 'Some comment text', 'aMockComment', null, null)
+    var commentXY = comment.getXY()
+    var commentX = commentXY.x
+    var commentY = commentXY.y
 
-    assertEquals('Comment x position is type number', 'number', typeof commentX);
-    assertEquals('Comment y position is type number', 'number', typeof commentY);
+    assertEquals('Comment x position is type number', 'number', typeof commentX)
+    assertEquals('Comment y position is type number', 'number', typeof commentY)
 
-    assertFalse('Comment x position is not NaN', isNaN(commentX));
-    assertFalse('Comment y position is not NaN', isNaN(commentY));
+    assertFalse('Comment x position is not NaN', isNaN(commentX))
+    assertFalse('Comment y position is not NaN', isNaN(commentY))
   } finally {
-    scratchBlockCommentTest_tearDown();
+    scratchBlockCommentTest_tearDown()
   }
 }

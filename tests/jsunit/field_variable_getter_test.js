@@ -18,46 +18,43 @@
  * limitations under the License.
  */
 
- /**
+/**
  * @fileoverview Tests for Blockly.FieldVariableGetter
  * @author fenichel@google.com (Rachel Fenichel)
  */
-'use strict';
+'use strict'
 
 function test_fieldvariablegetter_constructor() {
-  var field = new Blockly.FieldVariableGetter('text', 'name');
+  var field = new Blockly.FieldVariableGetter('text', 'name')
   // The field does not have a variable until after init() is called.
-  assertEquals(field.getText(), '');
-  assertEquals(field.getValue(), '');
+  assertEquals(field.getText(), '')
+  assertEquals(field.getValue(), '')
 }
 
 function test_fieldvariablegetter_isEditable() {
-  var field = new Blockly.FieldVariableGetter('text', 'name');
+  var field = new Blockly.FieldVariableGetter('text', 'name')
   // EDITABLE is true by default, but without a source block a field can't be
   // edited.
-  assertFalse('Field without a block is not editable',
-      field.isCurrentlyEditable());
+  assertFalse('Field without a block is not editable', field.isCurrentlyEditable())
 }
 
 function test_fieldvariablegetter_isEditableBlock() {
-  var field = new Blockly.FieldVariableGetter('text', 'name');
+  var field = new Blockly.FieldVariableGetter('text', 'name')
 
   var editableBlock = {
-    isEditable: function() {
-      return true;
-    }
-  };
+    isEditable: function () {
+      return true
+    },
+  }
 
-  field.sourceBlock_ = editableBlock;
+  field.sourceBlock_ = editableBlock
 
   // Variable getter fields aren't user editable.
-  assertFalse('Variable getter field should not be editable',
-      field.isCurrentlyEditable());
+  assertFalse('Variable getter field should not be editable', field.isCurrentlyEditable())
 }
 
 function test_fieldvariablegetter_isSerializable() {
-  var field = new Blockly.FieldVariableGetter('text', 'name');
+  var field = new Blockly.FieldVariableGetter('text', 'name')
   // Variable getter fields are serializable by default.
-  assertTrue('Variable getter field should be serializable',
-      field.SERIALIZABLE);
+  assertTrue('Variable getter field should be serializable', field.SERIALIZABLE)
 }

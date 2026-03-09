@@ -22,131 +22,115 @@
  * @fileoverview Tests for connection logic.
  * @author fenichel@google.com (Rachel Fenichel)
  */
-'use strict';
+'use strict'
 
-var input;
-var output;
-var previous;
-var next;
+var input
+var output
+var previous
+var next
 
-var dummyWorkspace;
+var dummyWorkspace
 
 function connectionTest_setUp() {
-  dummyWorkspace = {};
+  dummyWorkspace = {}
   function createDummyBlock() {
     return {
       workspace: dummyWorkspace,
-      isShadow: function() {return false;}
-    };
+      isShadow: function () {
+        return false
+      },
+    }
   }
-  input = new Blockly.Connection(createDummyBlock(),
-      Blockly.INPUT_VALUE);
-  output = new Blockly.Connection(createDummyBlock(),
-      Blockly.OUTPUT_VALUE);
-  previous = new Blockly.Connection(createDummyBlock(),
-      Blockly.PREVIOUS_STATEMENT);
-  next = new Blockly.Connection(createDummyBlock(),
-      Blockly.NEXT_STATEMENT);
+  input = new Blockly.Connection(createDummyBlock(), Blockly.INPUT_VALUE)
+  output = new Blockly.Connection(createDummyBlock(), Blockly.OUTPUT_VALUE)
+  previous = new Blockly.Connection(createDummyBlock(), Blockly.PREVIOUS_STATEMENT)
+  next = new Blockly.Connection(createDummyBlock(), Blockly.NEXT_STATEMENT)
 }
 
 function connectionTest_tearDown() {
-  input = null;
-  output = null;
-  previous = null;
-  next = null;
-  dummyWorkspace = null;
+  input = null
+  output = null
+  previous = null
+  next = null
+  dummyWorkspace = null
 }
 
-var isMovableFn = function() { return true; };
+var isMovableFn = function () {
+  return true
+}
 /**
  * These tests check that the reasons for failures to connect are consistent
  * (internal view of error states).
  */
 function testCanConnectWithReason_TargetNull() {
-  connectionTest_setUp();
+  connectionTest_setUp()
 
-  assertEquals(Blockly.Connection.REASON_TARGET_NULL,
-      input.canConnectWithReason_(null));
+  assertEquals(Blockly.Connection.REASON_TARGET_NULL, input.canConnectWithReason_(null))
 
-  connectionTest_tearDown();
+  connectionTest_tearDown()
 }
 
 function testCanConnectWithReason_Disconnect() {
-  connectionTest_setUp();
+  connectionTest_setUp()
 
-  var tempConnection = new Blockly.Connection({workspace: dummyWorkspace, isMovable: isMovableFn},
-      Blockly.OUTPUT_VALUE);
-  Blockly.Connection.connectReciprocally_(input, tempConnection);
-  assertEquals(Blockly.Connection.CAN_CONNECT,
-      input.canConnectWithReason_(output));
+  var tempConnection = new Blockly.Connection(
+    { workspace: dummyWorkspace, isMovable: isMovableFn },
+    Blockly.OUTPUT_VALUE,
+  )
+  Blockly.Connection.connectReciprocally_(input, tempConnection)
+  assertEquals(Blockly.Connection.CAN_CONNECT, input.canConnectWithReason_(output))
 
-  connectionTest_tearDown();
+  connectionTest_tearDown()
 }
 
 function testCanConnectWithReason_DifferentWorkspaces() {
-  connectionTest_setUp();
+  connectionTest_setUp()
 
-  input = new Blockly.Connection({workspace: {}}, Blockly.INPUT_VALUE);
-  output = new Blockly.Connection({workspace: dummyWorkspace},
-      Blockly.OUTPUT_VALUE);
+  input = new Blockly.Connection({ workspace: {} }, Blockly.INPUT_VALUE)
+  output = new Blockly.Connection({ workspace: dummyWorkspace }, Blockly.OUTPUT_VALUE)
 
-  assertEquals(Blockly.Connection.REASON_DIFFERENT_WORKSPACES,
-      input.canConnectWithReason_(output));
+  assertEquals(Blockly.Connection.REASON_DIFFERENT_WORKSPACES, input.canConnectWithReason_(output))
 
-  connectionTest_tearDown();
+  connectionTest_tearDown()
 }
 
-
 function testCanConnectWithReason_Self() {
-  connectionTest_setUp();
+  connectionTest_setUp()
 
-  var block = {type_: "test block"};
-  input.sourceBlock_ = block;
-  assertEquals(Blockly.Connection.REASON_SELF_CONNECTION,
-      input.canConnectWithReason_(input));
+  var block = { type_: 'test block' }
+  input.sourceBlock_ = block
+  assertEquals(Blockly.Connection.REASON_SELF_CONNECTION, input.canConnectWithReason_(input))
 
-  connectionTest_tearDown();
+  connectionTest_tearDown()
 }
 
 function testCanConnectWithReason_Type() {
-  connectionTest_setUp();
+  connectionTest_setUp()
 
-  assertEquals(Blockly.Connection.REASON_WRONG_TYPE,
-      input.canConnectWithReason_(previous));
-  assertEquals(Blockly.Connection.REASON_WRONG_TYPE,
-      input.canConnectWithReason_(next));
+  assertEquals(Blockly.Connection.REASON_WRONG_TYPE, input.canConnectWithReason_(previous))
+  assertEquals(Blockly.Connection.REASON_WRONG_TYPE, input.canConnectWithReason_(next))
 
-  assertEquals(Blockly.Connection.REASON_WRONG_TYPE,
-      output.canConnectWithReason_(previous));
-  assertEquals(Blockly.Connection.REASON_WRONG_TYPE,
-      output.canConnectWithReason_(next));
+  assertEquals(Blockly.Connection.REASON_WRONG_TYPE, output.canConnectWithReason_(previous))
+  assertEquals(Blockly.Connection.REASON_WRONG_TYPE, output.canConnectWithReason_(next))
 
-  assertEquals(Blockly.Connection.REASON_WRONG_TYPE,
-      previous.canConnectWithReason_(input));
-  assertEquals(Blockly.Connection.REASON_WRONG_TYPE,
-      previous.canConnectWithReason_(output));
+  assertEquals(Blockly.Connection.REASON_WRONG_TYPE, previous.canConnectWithReason_(input))
+  assertEquals(Blockly.Connection.REASON_WRONG_TYPE, previous.canConnectWithReason_(output))
 
-  assertEquals(Blockly.Connection.REASON_WRONG_TYPE,
-      next.canConnectWithReason_(input));
-  assertEquals(Blockly.Connection.REASON_WRONG_TYPE,
-      next.canConnectWithReason_(output));
+  assertEquals(Blockly.Connection.REASON_WRONG_TYPE, next.canConnectWithReason_(input))
+  assertEquals(Blockly.Connection.REASON_WRONG_TYPE, next.canConnectWithReason_(output))
 
-  connectionTest_tearDown();
+  connectionTest_tearDown()
 }
 
 function testCanConnectWithReason_CanConnect() {
-  connectionTest_setUp();
+  connectionTest_setUp()
 
-  assertEquals(Blockly.Connection.CAN_CONNECT,
-      previous.canConnectWithReason_(next));
-  assertEquals(Blockly.Connection.CAN_CONNECT,
-      next.canConnectWithReason_(previous));
-  assertEquals(Blockly.Connection.CAN_CONNECT,
-      input.canConnectWithReason_(output));
-  assertEquals(Blockly.Connection.CAN_CONNECT,
-      output.canConnectWithReason_(input));
+  assertEquals(Blockly.Connection.CAN_CONNECT, previous.canConnectWithReason_(next))
+  assertEquals(Blockly.Connection.CAN_CONNECT, next.canConnectWithReason_(previous))
+  assertEquals(Blockly.Connection.CAN_CONNECT, input.canConnectWithReason_(output))
+  assertEquals(Blockly.Connection.CAN_CONNECT, output.canConnectWithReason_(input))
 
-  connectionTest_tearDown();
+  connectionTest_tearDown()
 }
 
 /**
@@ -154,251 +138,243 @@ function testCanConnectWithReason_CanConnect() {
  * times (external view of errors).
  */
 function testCheckConnection_Self() {
-  connectionTest_setUp();
-  var block = {type_: "test block"};
-  input.sourceBlock_ = block;
+  connectionTest_setUp()
+  var block = { type_: 'test block' }
+  input.sourceBlock_ = block
   try {
-    input.checkConnection_(input);
-    fail();
+    input.checkConnection_(input)
+    fail()
   } catch (e) {
     // expected
   }
 
-  connectionTest_tearDown();
+  connectionTest_tearDown()
 }
 
 function testCheckConnection_TypeInputPrev() {
-  connectionTest_setUp();
+  connectionTest_setUp()
   try {
-    input.checkConnection_(previous);
-    fail();
+    input.checkConnection_(previous)
+    fail()
   } catch (e) {
     // expected
   }
 
-  connectionTest_tearDown();
+  connectionTest_tearDown()
 }
 
 function testCheckConnection_TypeInputNext() {
-  connectionTest_setUp();
+  connectionTest_setUp()
   try {
-    input.checkConnection_(next);
-    fail();
+    input.checkConnection_(next)
+    fail()
   } catch (e) {
     // expected
   }
 
-  connectionTest_tearDown();
+  connectionTest_tearDown()
 }
 
 function testCheckConnection_TypeOutputPrev() {
-  connectionTest_setUp();
+  connectionTest_setUp()
   try {
-    output.checkConnection_(previous);
-    fail();
+    output.checkConnection_(previous)
+    fail()
   } catch (e) {
     // expected
   }
 
-  connectionTest_tearDown();
+  connectionTest_tearDown()
 }
 
 function testCheckConnection_TypePrevInput() {
-  connectionTest_setUp();
+  connectionTest_setUp()
   try {
-    previous.checkConnection_(input);
-    fail();
+    previous.checkConnection_(input)
+    fail()
   } catch (e) {
     // expected
   }
 
-  connectionTest_tearDown();
+  connectionTest_tearDown()
 }
 
 function testCheckConnection_TypePrevOutput() {
-  connectionTest_setUp();
+  connectionTest_setUp()
   try {
-    previous.checkConnection_(output);
-    fail();
+    previous.checkConnection_(output)
+    fail()
   } catch (e) {
     // expected
   }
 
-  connectionTest_tearDown();
+  connectionTest_tearDown()
 }
 
 function testCheckConnection_TypeNextInput() {
-  connectionTest_setUp();
+  connectionTest_setUp()
   try {
-    next.checkConnection_(input);
-    fail();
+    next.checkConnection_(input)
+    fail()
   } catch (e) {
     // expected
   }
 
-  connectionTest_tearDown();
+  connectionTest_tearDown()
 }
 
 function testCheckConnection_TypeNextOutput() {
-  connectionTest_setUp();
+  connectionTest_setUp()
   try {
-    next.checkConnection_(output);
-    fail();
+    next.checkConnection_(output)
+    fail()
   } catch (e) {
     // expected
   }
 
-  connectionTest_tearDown();
+  connectionTest_tearDown()
 }
 
 function test_isConnectionAllowed_Distance() {
-  var sharedWorkspace = {};
+  var sharedWorkspace = {}
   // Two connections of opposite types near each other.
-  var one = helper_createConnection(5 /* x */, 10 /* y */,
-      Blockly.INPUT_VALUE, null, true);
-  one.sourceBlock_ = helper_makeSourceBlock(sharedWorkspace);
+  var one = helper_createConnection(5 /* x */, 10 /* y */, Blockly.INPUT_VALUE, null, true)
+  one.sourceBlock_ = helper_makeSourceBlock(sharedWorkspace)
 
-  var two = helper_createConnection(10 /* x */, 15 /* y */,
-      Blockly.OUTPUT_VALUE, null, true);
-  two.sourceBlock_ = helper_makeSourceBlock(sharedWorkspace);
+  var two = helper_createConnection(10 /* x */, 15 /* y */, Blockly.OUTPUT_VALUE, null, true)
+  two.sourceBlock_ = helper_makeSourceBlock(sharedWorkspace)
 
-  assertTrue(two.isConnectionAllowed(one, 20.0));
+  assertTrue(two.isConnectionAllowed(one, 20.0))
   // Move connections farther apart.
-  two.x_ = 100;
-  two.y_ = 100;
-  assertFalse(two.isConnectionAllowed(one, 20.0));
+  two.x_ = 100
+  two.y_ = 100
+  assertFalse(two.isConnectionAllowed(one, 20.0))
 }
 
 function test_isConnectionAllowed_Unrendered() {
-  var sharedWorkspace = {};
+  var sharedWorkspace = {}
 
-  var one = helper_createConnection(5 /* x */, 10 /* y */,
-      Blockly.INPUT_VALUE);
-  one.sourceBlock_ = helper_makeSourceBlock(sharedWorkspace);
+  var one = helper_createConnection(5 /* x */, 10 /* y */, Blockly.INPUT_VALUE)
+  one.sourceBlock_ = helper_makeSourceBlock(sharedWorkspace)
 
   // Don't offer to connect a left (male) value plug to
   // an available right (female) value plug.
   // Unlike in Blockly, you can't do this even if the left value plug isn't
   // already connected.
-  var two = helper_createConnection(0, 0, Blockly.OUTPUT_VALUE);
-  two.sourceBlock_ = helper_makeSourceBlock(sharedWorkspace);
+  var two = helper_createConnection(0, 0, Blockly.OUTPUT_VALUE)
+  two.sourceBlock_ = helper_makeSourceBlock(sharedWorkspace)
 
-  assertFalse(one.isConnectionAllowed(two));
-  var three = helper_createConnection(0, 0, Blockly.INPUT_VALUE);
-  three.sourceBlock_ = helper_makeSourceBlock(sharedWorkspace);
+  assertFalse(one.isConnectionAllowed(two))
+  var three = helper_createConnection(0, 0, Blockly.INPUT_VALUE)
+  three.sourceBlock_ = helper_makeSourceBlock(sharedWorkspace)
 
-  Blockly.Connection.connectReciprocally_(two, three);
-  assertFalse(one.isConnectionAllowed(two));
+  Blockly.Connection.connectReciprocally_(two, three)
+  assertFalse(one.isConnectionAllowed(two))
 
   // Don't connect two connections on the same block.
-  two.sourceBlock_ = one.sourceBlock_;
-  assertFalse(one.isConnectionAllowed(two));
+  two.sourceBlock_ = one.sourceBlock_
+  assertFalse(one.isConnectionAllowed(two))
 }
 
 function test_isConnectionAllowed_NoNext() {
-  var sharedWorkspace = {};
-  var one = helper_createConnection(0, 0, Blockly.NEXT_STATEMENT);
-  one.sourceBlock_ = helper_makeSourceBlock(sharedWorkspace);
-  one.sourceBlock_.nextConnection = one;
+  var sharedWorkspace = {}
+  var one = helper_createConnection(0, 0, Blockly.NEXT_STATEMENT)
+  one.sourceBlock_ = helper_makeSourceBlock(sharedWorkspace)
+  one.sourceBlock_.nextConnection = one
 
-  var two = helper_createConnection(0, 0, Blockly.PREVIOUS_STATEMENT);
-  two.sourceBlock_ = helper_makeSourceBlock(sharedWorkspace);
-  two.sourceBlock_.previousConnection = two;
+  var two = helper_createConnection(0, 0, Blockly.PREVIOUS_STATEMENT)
+  two.sourceBlock_ = helper_makeSourceBlock(sharedWorkspace)
+  two.sourceBlock_.previousConnection = two
 
-  assertTrue(two.isConnectionAllowed(one));
+  assertTrue(two.isConnectionAllowed(one))
 
-  var three = helper_createConnection(0, 0, Blockly.PREVIOUS_STATEMENT);
-  three.sourceBlock_ = helper_makeSourceBlock(sharedWorkspace);
-  three.sourceBlock_.previousConnection = three;
-  Blockly.Connection.connectReciprocally_(one, three);
+  var three = helper_createConnection(0, 0, Blockly.PREVIOUS_STATEMENT)
+  three.sourceBlock_ = helper_makeSourceBlock(sharedWorkspace)
+  three.sourceBlock_.previousConnection = three
+  Blockly.Connection.connectReciprocally_(one, three)
 
   // A terminal block is allowed to replace another terminal block.
-  assertTrue(two.isConnectionAllowed(one));
+  assertTrue(two.isConnectionAllowed(one))
 }
 
 function test_isConnectionAllowed_InsertionMarker() {
-  var sharedWorkspace = {};
+  var sharedWorkspace = {}
   // Two connections of opposite types near each other.
-  var one = helper_createConnection(5 /* x */, 10 /* y */,
-      Blockly.INPUT_VALUE);
-  one.sourceBlock_ = helper_makeSourceBlock(sharedWorkspace);
+  var one = helper_createConnection(5 /* x */, 10 /* y */, Blockly.INPUT_VALUE)
+  one.sourceBlock_ = helper_makeSourceBlock(sharedWorkspace)
 
   // The second one is an insertion marker.
-  var two = helper_createConnection(10 /* x */, 15 /* y */,
-      Blockly.OUTPUT_VALUE);
-  two.sourceBlock_ = helper_makeSourceBlock(sharedWorkspace);
-  two.sourceBlock_.isInsertionMarker = function() {
-      return true;
-    };
+  var two = helper_createConnection(10 /* x */, 15 /* y */, Blockly.OUTPUT_VALUE)
+  two.sourceBlock_ = helper_makeSourceBlock(sharedWorkspace)
+  two.sourceBlock_.isInsertionMarker = function () {
+    return true
+  }
 
-  assertFalse(one.isConnectionAllowed(two, 20.0));
+  assertFalse(one.isConnectionAllowed(two, 20.0))
 }
 
 function testCheckConnection_Okay() {
-  connectionTest_setUp();
-  previous.checkConnection_(next);
-  next.checkConnection_(previous);
-  input.checkConnection_(output);
-  output.checkConnection_(input);
+  connectionTest_setUp()
+  previous.checkConnection_(next)
+  next.checkConnection_(previous)
+  input.checkConnection_(output)
+  output.checkConnection_(input)
 
-  connectionTest_tearDown();
+  connectionTest_tearDown()
 }
 
 function test_canConnectWithReason_Procedures_WrongBlockType() {
-  var sharedWorkspace = {};
-  var one = helper_createConnection(0, 0, Blockly.NEXT_STATEMENT);
-  one.sourceBlock_ = helper_makeSourceBlock(sharedWorkspace);
-  one.sourceBlock_.type = Blockly.PROCEDURES_DEFINITION_BLOCK_TYPE;
+  var sharedWorkspace = {}
+  var one = helper_createConnection(0, 0, Blockly.NEXT_STATEMENT)
+  one.sourceBlock_ = helper_makeSourceBlock(sharedWorkspace)
+  one.sourceBlock_.type = Blockly.PROCEDURES_DEFINITION_BLOCK_TYPE
   // Make one be the connection on its source block's input.
-  one.sourceBlock_.getInput = function() {
+  one.sourceBlock_.getInput = function () {
     return {
-      connection: one
-    };
-  };
+      connection: one,
+    }
+  }
 
-  var two = helper_createConnection(0, 0, Blockly.PREVIOUS_STATEMENT);
-  two.sourceBlock_ = helper_makeSourceBlock(sharedWorkspace);
+  var two = helper_createConnection(0, 0, Blockly.PREVIOUS_STATEMENT)
+  two.sourceBlock_ = helper_makeSourceBlock(sharedWorkspace)
   // Fail because two's source block is the wrong type.
-  two.sourceBlock_.type = 'wrong_type';
-  assertEquals(Blockly.Connection.REASON_CUSTOM_PROCEDURE,
-      one.canConnectWithReason_(two));
+  two.sourceBlock_.type = 'wrong_type'
+  assertEquals(Blockly.Connection.REASON_CUSTOM_PROCEDURE, one.canConnectWithReason_(two))
 }
 
 function test_canConnectWithReason_Procedures_Pass() {
-  var sharedWorkspace = {};
-  var one = helper_createConnection(0, 0, Blockly.NEXT_STATEMENT);
-  one.sourceBlock_ = helper_makeSourceBlock(sharedWorkspace);
-  one.sourceBlock_.type = Blockly.PROCEDURES_DEFINITION_BLOCK_TYPE;
+  var sharedWorkspace = {}
+  var one = helper_createConnection(0, 0, Blockly.NEXT_STATEMENT)
+  one.sourceBlock_ = helper_makeSourceBlock(sharedWorkspace)
+  one.sourceBlock_.type = Blockly.PROCEDURES_DEFINITION_BLOCK_TYPE
   // Make one be the connection on its source block's input.
-  one.sourceBlock_.getInput = function() {
+  one.sourceBlock_.getInput = function () {
     return {
-      connection: one
-    };
-  };
-  var two = helper_createConnection(0, 0, Blockly.PREVIOUS_STATEMENT);
-  two.sourceBlock_ = helper_makeSourceBlock(sharedWorkspace);
-  two.sourceBlock_.type = Blockly.PROCEDURES_PROTOTYPE_BLOCK_TYPE;
-  assertEquals(Blockly.Connection.CAN_CONNECT,
-      one.canConnectWithReason_(two));
+      connection: one,
+    }
+  }
+  var two = helper_createConnection(0, 0, Blockly.PREVIOUS_STATEMENT)
+  two.sourceBlock_ = helper_makeSourceBlock(sharedWorkspace)
+  two.sourceBlock_.type = Blockly.PROCEDURES_PROTOTYPE_BLOCK_TYPE
+  assertEquals(Blockly.Connection.CAN_CONNECT, one.canConnectWithReason_(two))
 }
 
 function test_canConnectWithReason_Procedures_NextConnection() {
-  var sharedWorkspace = {};
-  var one = helper_createConnection(0, 0, Blockly.NEXT_STATEMENT);
-  one.sourceBlock_ = helper_makeSourceBlock(sharedWorkspace);
-  one.sourceBlock_.type = Blockly.PROCEDURES_DEFINITION_BLOCK_TYPE;
+  var sharedWorkspace = {}
+  var one = helper_createConnection(0, 0, Blockly.NEXT_STATEMENT)
+  one.sourceBlock_ = helper_makeSourceBlock(sharedWorkspace)
+  one.sourceBlock_.type = Blockly.PROCEDURES_DEFINITION_BLOCK_TYPE
   // One is the next connection, not an input connection
-  one.sourceBlock_.nextConnection = one;
-  one.sourceBlock_.getInput = function() {
+  one.sourceBlock_.nextConnection = one
+  one.sourceBlock_.getInput = function () {
     return {
-      connection: null
-    };
-  };
-  var two = helper_createConnection(0, 0, Blockly.PREVIOUS_STATEMENT);
-  two.sourceBlock_ = helper_makeSourceBlock(sharedWorkspace);
+      connection: null,
+    }
+  }
+  var two = helper_createConnection(0, 0, Blockly.PREVIOUS_STATEMENT)
+  two.sourceBlock_ = helper_makeSourceBlock(sharedWorkspace)
   // It should be okay, even if two's source block has the wrong type, because
   // it's not trying to connect to the input.
-  two.sourceBlock_.type = 'wrong_type';
-  assertEquals(Blockly.Connection.CAN_CONNECT,
-      one.canConnectWithReason_(two));
+  two.sourceBlock_.type = 'wrong_type'
+  assertEquals(Blockly.Connection.CAN_CONNECT, one.canConnectWithReason_(two))
 }

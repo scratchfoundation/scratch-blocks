@@ -1,15 +1,13 @@
 {
-  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  $schema: 'https://docs.renovatebot.com/renovate-schema.json',
 
-  "extends": [
-    "github>scratchfoundation/scratch-renovate-config:js-lib-bundled"
-  ],
+  extends: ['github>scratchfoundation/scratch-renovate-config:js-lib-bundled'],
 
-  "packageRules": [
+  packageRules: [
     // Closure compiler & library releases are always "major" so separating them leads to PR SPAM
     {
-      "matchPackageNames": ["google-closure-compiler", "google-closure-library"],
-      "separateMultipleMajor": false
-    }
-  ]
+      matchPackageNames: ['google-closure-compiler', 'google-closure-library'],
+      separateMultipleMajor: false,
+    },
+  ],
 }

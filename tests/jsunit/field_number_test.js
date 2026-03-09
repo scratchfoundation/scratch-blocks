@@ -18,65 +18,61 @@
  * limitations under the License.
  */
 
- /**
+/**
  * @fileoverview Tests for Blockly.FieldNumber
  * @author Anm@anm.me (Andrew n marshall)
  */
-'use strict';
+'use strict'
 
 function test_fieldnumber_constructor() {
   // No arguments
-  var field = new Blockly.FieldNumber();
-  assertEquals(field.getValue(), '0');
+  var field = new Blockly.FieldNumber()
+  assertEquals(field.getValue(), '0')
 
   // Unlike blockly, scratch-blocks doesn't store min, max, and precision.
   // TODO: Update this to check the restrictor, based on min, max, and precision.
-  assertEquals(field.min_, undefined);
-  assertEquals(field.max_, undefined);
-  assertEquals(field.precision_, undefined);
+  assertEquals(field.min_, undefined)
+  assertEquals(field.max_, undefined)
+  assertEquals(field.precision_, undefined)
 
   // Numeric values
-  field = new Blockly.FieldNumber(1);
-  assertEquals(field.getValue(), '1');
-  field = new Blockly.FieldNumber(1.5);
-  assertEquals(field.getValue(), '1.5');
+  field = new Blockly.FieldNumber(1)
+  assertEquals(field.getValue(), '1')
+  field = new Blockly.FieldNumber(1.5)
+  assertEquals(field.getValue(), '1.5')
 
   // String value
-  field = new Blockly.FieldNumber('2');
-  assertEquals(field.getValue(), '2');
-  field = new Blockly.FieldNumber('2.5');
-  assertEquals(field.getValue(), '2.5');
+  field = new Blockly.FieldNumber('2')
+  assertEquals(field.getValue(), '2')
+  field = new Blockly.FieldNumber('2.5')
+  assertEquals(field.getValue(), '2.5')
 
   // All values
-  field = new Blockly.FieldNumber(
-    /* value */ 0,
-    /* min */ -128,
-    /* max */ 127,
-    /* precision */ 1);
+  field = new Blockly.FieldNumber(/* value */ 0, /* min */ -128, /* max */ 127, /* precision */ 1)
   // Unlike blockly, scratch-blocks doesn't store min, max, and precision.
-  assertEquals(field.getValue(), '0');
-  assertEquals(field.min_, undefined);
-  assertEquals(field.max_, undefined);
-  assertEquals(field.precision_, undefined);
+  assertEquals(field.getValue(), '0')
+  assertEquals(field.min_, undefined)
+  assertEquals(field.max_, undefined)
+  assertEquals(field.precision_, undefined)
 
   // Bad value defaults to '0'
-  field = new Blockly.FieldNumber('bad');
-  assertEquals(field.getValue(), '0');
-  field = new Blockly.FieldNumber(NaN);
-  assertEquals(field.getValue(), '0');
+  field = new Blockly.FieldNumber('bad')
+  assertEquals(field.getValue(), '0')
+  field = new Blockly.FieldNumber(NaN)
+  assertEquals(field.getValue(), '0')
 }
 
 function test_fieldnumber_fromJson() {
-  assertEquals(Blockly.FieldNumber.fromJson({}).getValue(), '0');
-  assertEquals(Blockly.FieldNumber.fromJson({ value: 1 }).getValue(), '1');
+  assertEquals(Blockly.FieldNumber.fromJson({}).getValue(), '0')
+  assertEquals(Blockly.FieldNumber.fromJson({ value: 1 }).getValue(), '1')
 
   // All options, but scratch-blocks parses min/max/precision differently from
   // Blockly.  See notes in field_number.js.
   var field = Blockly.FieldNumber.fromJson({
-      value: 0,
-      min: -128,
-      max: 127,
-      precision: 1
-  });
-  assertEquals(field.getValue(), '0');
+    value: 0,
+    min: -128,
+    max: 127,
+    precision: 1,
+  })
+  assertEquals(field.getValue(), '0')
 }

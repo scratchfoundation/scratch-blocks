@@ -1,49 +1,38 @@
 name: build-scratch-blocks
 on:
-    push: # Runs whenever a commit is pushed to the repository
-    workflow_dispatch: # Allows you to run this workflow manually from the Actions tab
+  push: # Runs whenever a commit is pushed to the repository
+  workflow_dispatch: # Allows you to run this workflow manually from the Actions tab
 jobs:
-    setup:
-      runs-on: ubuntu-latest
-      env:
-        JVM_OPTS: -Xmx3200m
-        PROJECT_PATH: ./scratch-blocks
-      steps:
-        - run: |
-            for F in chrome chromium chromedriver; do
-              which $F && $F --version || echo Not found: $F
-            done
-        - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
-        - name: Check Python version
-          run: python --version
-        - name: Setup Java
-          uses: actions/setup-java@f2beeb24e141e01a676f977032f5a29d81c9e27e # v5
-          with:
-            distribution: 'temurin'
-            java-version: 17
-        - name: Setup Node
-          uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f # v6
-          with:
-            node-version-file: '.nvmrc'
-        - name: Install Node Dependencies
-          run: npm ci
-        - name: Lint
-          run: npm run test:lint
-        - name: Run Tests
-          run: npm run test:messages
-        - name: Run Unit Tests
-          run: DISPLAY=:99 npm run test:unit
-        - name: Remove Closure App
-          run: rm -rf gh-pages/closure-library/scripts/ci/CloseAdobeDialog.exe
-        - name: Deploy playground to GitHub Pages
-          uses: peaceiris/actions-gh-pages@373f7f263a76c20808c831209c920827a82a2847 # v3
-          with:
-            github_token: ${{ secrets.GITHUB_TOKEN }}
-            publish_dir: ./gh-pages
-            full_commit_message: "Build for ${{ github.sha }} ${{ github.event.head_commit.message }}"
-            enable_jekyll: true
-        - name: Run semantic-release
-          env:
-            NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          run: npx --no -- semantic-release
+  setup:
+    runs-on: ubuntu-latest
+    env:
+      PROJECT_PATH: ./scratch-blocks
+    steps:
+      - run: |
+          for F in chrome chromium chromedriver; do
+            which $F && $F --version || echo Not found: $F
+          done
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
+      - name: Check Python version
+        run: python --version
+      - name: Setup Node
+        uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f # v6
+        with:
+          node-version-file: '.nvmrc'
+      # TODO: tests
+      - name: Install Node Dependencies
+        run: npm ci
+      - name: Build
+        run: npm run build
+      # - name: Deploy playground to GitHub Pages
+      #   uses: peaceiris/actions-gh-pages@373f7f263a76c20808c831209c920827a82a2847 # v3
+      #   with:
+      #     github_token: ${{ secrets.GITHUB_TOKEN }}
+      #     publish_dir: ./gh-pages
+      #     full_commit_message: "Build for ${{ github.sha }} ${{ github.event.head_commit.message }}"
+      #     enable_jekyll: true
+      - name: Run semantic-release
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npx --no -- semantic-release

@@ -17,18 +17,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-'use strict';
+'use strict'
 
-var svgTest_workspace;
+var svgTest_workspace
 
 function svgTest_setUp() {
-  svgTest_workspace = Blockly.inject('blocklyDiv',
-      {toolbox: document.getElementById('toolbox')});
+  svgTest_workspace = Blockly.inject('blocklyDiv', { toolbox: document.getElementById('toolbox') })
 }
 
 function svgTest_tearDown() {
-  svgTest_workspace.dispose();
-  svgTest_workspace = null;
+  svgTest_workspace.dispose()
+  svgTest_workspace = null
 }
 
 /**
@@ -37,23 +36,23 @@ function svgTest_tearDown() {
  */
 function svgTest_newOneFieldBlock() {
   Blockly.Blocks['one_field_block'] = {
-    init: function() {
+    init: function () {
       this.jsonInit({
-        'message0': '%1',
-        'args0': [
+        message0: '%1',
+        args0: [
           {
-            'type': 'field_input',
-            'name': 'FIELD'
-          }
-        ]
-      });
-    }
-  };
+            type: 'field_input',
+            name: 'FIELD',
+          },
+        ],
+      })
+    },
+  }
 
-  var block = svgTest_workspace.newBlock('one_field_block');
-  block.initSvg();
-  block.render(false);
-  return block;
+  var block = svgTest_workspace.newBlock('one_field_block')
+  block.initSvg()
+  block.render(false)
+  return block
 }
 
 /**
@@ -62,21 +61,21 @@ function svgTest_newOneFieldBlock() {
  */
 function svgTest_newTwoFieldBlock() {
   Blockly.Blocks['two_field_block'] = {
-    init: function() {
+    init: function () {
       this.jsonInit({
-        'message0': 'text_field %1',
-        'args0': [
+        message0: 'text_field %1',
+        args0: [
           {
-            'type': 'field_input',
-            'name': 'FIELD'
-          }
-        ]
-      });
-    }
-  };
+            type: 'field_input',
+            name: 'FIELD',
+          },
+        ],
+      })
+    },
+  }
 
-  var block = svgTest_workspace.newBlock('two_field_block');
-  block.initSvg();
-  block.render(false);
-  return block;
+  var block = svgTest_workspace.newBlock('two_field_block')
+  block.initSvg()
+  block.render(false)
+  return block
 }
