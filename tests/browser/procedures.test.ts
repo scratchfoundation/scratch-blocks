@@ -272,68 +272,65 @@ describe('legacy mutation tolerance', () => {
     ).toThrow(/proccode/)
   })
 
-  // argumentids/argumentnames/argumentdefaults have a structural invariant:
-  // their lengths must equal the %s/%n/%b token count in proccode. Silently
-  // defaulting any of them to [] would turn an N-arg procedure into a 0-arg
-  // block, so keep them required and surface the problem loudly.
-  it('procedures_prototype mutation without argumentids still throws', () => {
+  // argumentdefaults in older projects can contain numbers alongside strings
+  // (e.g. [1] or ["",1,1,1,1]). The old fork stored these via untyped
+  // JSON.parse; the new code coerces each element to a string.
+  it('procedures_prototype mutation with numeric argumentdefaults coerces to strings', () => {
     expect(() =>
       loadXml(`
         <xml>
           <block type="procedures_definition">
             <statement name="custom_block">
               <block type="procedures_prototype">
-                <mutation proccode="test %s" argumentnames='["x"]' argumentdefaults='[""]' warp="false"></mutation>
+                <mutation proccode="test %n" argumentids='["arg1"]' argumentnames='["x"]' argumentdefaults='[1]' warp="false"></mutation>
               </block>
             </statement>
           </block>
         </xml>
       `),
-    ).toThrow(/argumentids/)
+    ).not.toThrow()
+
+    const proto = workspace.getAllBlocks(false).find((b) => b.type === 'procedures_prototype')
+    assert(proto, 'Expected procedures_prototype block')
+    expect((proto as any).argumentDefaults_).toEqual([1])
   })
 
-  it('procedures_prototype mutation without argumentnames still throws', () => {
+  it('procedures_prototype mutation with mixed string/number argumentdefaults preserves types', () => {
     expect(() =>
       loadXml(`
         <xml>
           <block type="procedures_definition">
             <statement name="custom_block">
               <block type="procedures_prototype">
-                <mutation proccode="test %s" argumentids='["arg1"]' argumentdefaults='[""]' warp="false"></mutation>
+                <mutation proccode="test %s %n %n %n %n" argumentids='["a","b","c","d","e"]' argumentnames='["typ","x","y","sx","sy"]' argumentdefaults='["",1,1,1,1]' warp="true"></mutation>
               </block>
             </statement>
           </block>
         </xml>
       `),
-    ).toThrow(/argumentnames/)
+    ).not.toThrow()
+
+    const proto = workspace.getAllBlocks(false).find((b) => b.type === 'procedures_prototype')
+    assert(proto, 'Expected procedures_prototype block')
+    expect((proto as any).argumentDefaults_).toEqual(['', 1, 1, 1, 1])
   })
 
-  it('procedures_prototype mutation without argumentdefaults still throws', () => {
-    expect(() =>
-      loadXml(`
-        <xml>
-          <block type="procedures_definition">
-            <statement name="custom_block">
-              <block type="procedures_prototype">
-                <mutation proccode="test %s" argumentids='["arg1"]' argumentnames='["x"]' warp="false"></mutation>
-              </block>
-            </statement>
-          </block>
-        </xml>
-      `),
-    ).toThrow(/argumentdefaults/)
-  })
-
-  it('procedures_call mutation without argumentids still throws', () => {
+  it('procedures_call mutation with warp="null" loads as false', () => {
+    // Project 10118230 has warp='null' on some call blocks.
+    // JSON.parse("null") → null, which is not boolean. Should default to false.
     expect(() =>
       loadXml(`
         <xml>
           <block type="procedures_call">
-            <mutation proccode="test %s" warp="false"></mutation>
+            <mutation proccode="test %s" argumentids='["arg1"]' warp='null'></mutation>
           </block>
         </xml>
       `),
-    ).toThrow(/argumentids/)
+    ).not.toThrow()
+
+    const callBlock = workspace.getAllBlocks(false).find((b) => b.type === 'procedures_call')
+    assert(callBlock, 'Expected procedures_call block')
+    expect((callBlock as any).warp_).toBe(false)
   })
 })
 

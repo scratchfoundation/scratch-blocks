@@ -37,6 +37,8 @@ type ConnectionMap = Record<
 /**
  * Possible types for procedure arguments.
  */
+type ArgumentDefault = string | number | boolean | null
+
 enum ArgumentType {
   STRING = 's',
   NUMBER = 'n',
@@ -76,38 +78,16 @@ function getRequiredMutationAttribute(xmlElement: Element, name: string): string
 }
 
 /**
- * Parse a required mutation attribute as JSON, then validate its type.
- * @param xmlElement The mutation element that should contain required attributes.
- * @param name The specific mutation attribute to retrieve and parse.
- * @param parse Validates and narrows the parsed JSON value.
- * @returns Parsed and validated mutation attribute value.
- */
-function parseRequiredMutationJson<T>(
-  xmlElement: Element,
-  name: string,
-  parse: (value: unknown, name: string) => T,
-): T {
-  const rawValue = getRequiredMutationAttribute(xmlElement, name)
-  let parsedValue: unknown
-  try {
-    parsedValue = JSON.parse(rawValue)
-  } catch {
-    throw new Error(`Invalid JSON in mutation attribute: ${name}`)
-  }
-  return parse(parsedValue, name)
-}
-
-/**
  * Parse an optional mutation attribute as JSON, returning a fallback when the
- * attribute is absent. Use this only for attributes that can be safely
- * defaulted in isolation, without invalidating structural invariants that
- * relate them to other attributes on the same mutation. A present-but-malformed
- * attribute still throws, since that indicates corruption rather than an older
- * schema.
+ * attribute is absent or malformed. Older saved projects may omit attributes
+ * that current serialization always writes, and some projects in the wild
+ * contain attributes whose values are not valid for the expected type.
+ * Returning the fallback in both cases lets the project load rather than
+ * aborting the entire workspace parse.
  * @param xmlElement The mutation element that may contain the attribute.
  * @param name The specific mutation attribute to retrieve and parse.
  * @param parse Validates and narrows the parsed JSON value.
- * @param fallback Value to return when the attribute is absent.
+ * @param fallback Value to return when the attribute is absent or malformed.
  * @returns Parsed and validated mutation attribute value, or `fallback`.
  */
 function parseOptionalMutationJson<T>(
@@ -120,13 +100,12 @@ function parseOptionalMutationJson<T>(
   if (rawValue === null) {
     return fallback
   }
-  let parsedValue: unknown
   try {
-    parsedValue = JSON.parse(rawValue)
+    return parse(JSON.parse(rawValue), name)
   } catch {
-    throw new Error(`Invalid JSON in mutation attribute: ${name}`)
+    console.warn(`Malformed mutation attribute "${name}", using default. Raw value: ${rawValue}`)
+    return fallback
   }
-  return parse(parsedValue, name)
 }
 
 /**
@@ -153,6 +132,24 @@ function parseStringArrayMutationValue(value: unknown, name: string): string[] {
     throw new Error(`Expected string[] JSON value in mutation attribute: ${name}`)
   }
   return value
+}
+
+/**
+ * Validate a parsed mutation value as an array of primitives. Argument
+ * defaults from older projects (especially Scratch 2.0 conversions) contain
+ * mixed types — strings for text arguments, numbers for numeric arguments,
+ * and booleans for boolean arguments (e.g. `["",1,1,1,1]`). The old fork
+ * stored these via untyped `JSON.parse` with no validation, and the VM
+ * passes them through as-is.
+ * @param value Parsed mutation value.
+ * @param name Attribute name used in error messages.
+ * @returns Validated array value.
+ */
+function parsePrimitiveArrayMutationValue(value: unknown, name: string): ArgumentDefault[] {
+  if (!Array.isArray(value)) {
+    throw new Error(`Expected array JSON value in mutation attribute: ${name}`)
+  }
+  return value as ArgumentDefault[]
 }
 
 /**
@@ -308,7 +305,7 @@ function callerDomToMutation(this: ProcedureCallBlock, xmlElement: Element) {
   this.procCode_ = getRequiredMutationAttribute(xmlElement, 'proccode')
   const generateshadows = xmlElement.getAttribute('generateshadows')
   this.generateShadows_ = generateshadows !== null ? JSON.parse(generateshadows) === true : false
-  this.argumentIds_ = parseRequiredMutationJson(xmlElement, 'argumentids', parseStringArrayMutationValue)
+  this.argumentIds_ = parseOptionalMutationJson(xmlElement, 'argumentids', parseStringArrayMutationValue, [])
   this.warp_ = parseOptionalMutationJson(xmlElement, 'warp', parseBooleanMutationValue, false)
   this.updateDisplay_()
 }
@@ -349,9 +346,14 @@ function definitionDomToMutation(this: ProcedurePrototypeBlock | ProcedureDeclar
   const prevArgIds = this.argumentIds_
   const prevDisplayNames = this.displayNames_
 
-  this.argumentIds_ = parseRequiredMutationJson(xmlElement, 'argumentids', parseStringArrayMutationValue)
-  this.displayNames_ = parseRequiredMutationJson(xmlElement, 'argumentnames', parseStringArrayMutationValue)
-  this.argumentDefaults_ = parseRequiredMutationJson(xmlElement, 'argumentdefaults', parseStringArrayMutationValue)
+  this.argumentIds_ = parseOptionalMutationJson(xmlElement, 'argumentids', parseStringArrayMutationValue, [])
+  this.displayNames_ = parseOptionalMutationJson(xmlElement, 'argumentnames', parseStringArrayMutationValue, [])
+  this.argumentDefaults_ = parseOptionalMutationJson(
+    xmlElement,
+    'argumentdefaults',
+    parsePrimitiveArrayMutationValue,
+    [],
+  )
 
   // During full XML deserialization (Blockly.Xml.domToWorkspace), the mutation element
   // is part of the parsed XML tree and its parent element also contains <value> children
@@ -1341,7 +1343,7 @@ interface ProcedureBlock extends Blockly.BlockSvg {
 
 export interface ProcedureDeclarationBlock extends ProcedureBlock {
   displayNames_: string[]
-  argumentDefaults_: string[]
+  argumentDefaults_: ArgumentDefault[]
   removeFieldCallback: (field: Blockly.Field) => void
   createArgumentEditor_: (argumentType: ArgumentType, displayName: string) => Blockly.BlockSvg
   focusLastEditor_: () => void
@@ -1361,7 +1363,7 @@ interface ProcedureCallBlock extends ProcedureBlock {
 
 interface ProcedurePrototypeBlock extends ProcedureBlock {
   displayNames_: string[]
-  argumentDefaults_: string[]
+  argumentDefaults_: ArgumentDefault[]
   skipArgumentReporters_: boolean
   createArgumentReporter_: (argumentType: ArgumentType, displayName: string) => Blockly.BlockSvg
   updateArgumentReporterNames_: (prevArgIds: string[], prevDisplayNames: string[]) => void
