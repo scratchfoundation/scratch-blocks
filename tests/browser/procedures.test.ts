@@ -273,9 +273,9 @@ describe('legacy mutation tolerance', () => {
   })
 
   // argumentdefaults in older projects can contain numbers alongside strings
-  // (e.g. [1] or ["",1,1,1,1]). The old fork stored these via untyped
-  // JSON.parse; the new code coerces each element to a string.
-  it('procedures_prototype mutation with numeric argumentdefaults coerces to strings', () => {
+  // (e.g. [1] or ["",1,1,1,1]). This regression case verifies those
+  // mixed primitive values are preserved when loading legacy mutations.
+  it('procedures_prototype mutation with numeric argumentdefaults preserves types', () => {
     expect(() =>
       loadXml(`
         <xml>

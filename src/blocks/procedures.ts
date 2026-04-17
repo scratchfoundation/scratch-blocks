@@ -103,7 +103,7 @@ function parseOptionalMutationJson<T>(
   try {
     return parse(JSON.parse(rawValue), name)
   } catch {
-    console.warn(`Malformed mutation attribute "${name}", using default. Raw value: ${rawValue}`)
+    console.warn(`Invalid or unexpected mutation attribute "${name}", using default. Raw value: ${rawValue}`)
     return fallback
   }
 }
@@ -146,10 +146,12 @@ function parseStringArrayMutationValue(value: unknown, name: string): string[] {
  * @returns Validated array value.
  */
 function parsePrimitiveArrayMutationValue(value: unknown, name: string): ArgumentDefault[] {
-  if (!Array.isArray(value)) {
-    throw new Error(`Expected array JSON value in mutation attribute: ${name}`)
+  const isArgumentDefault = (entry: unknown): entry is ArgumentDefault =>
+    entry === null || typeof entry === 'string' || typeof entry === 'number' || typeof entry === 'boolean'
+  if (!Array.isArray(value) || !value.every(isArgumentDefault)) {
+    throw new Error(`Expected ArgumentDefault[] JSON value in mutation attribute: ${name}`)
   }
-  return value as ArgumentDefault[]
+  return value
 }
 
 /**
