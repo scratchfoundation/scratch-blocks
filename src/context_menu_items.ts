@@ -34,15 +34,35 @@ export function registerDeleteBlock() {
       if (!scope.block) {
         return
       }
-      Blockly.Events.setGroup(true)
-      scope.block.dispose(true, true)
-      Blockly.Events.setGroup(false)
+      deleteBlock(scope.block)
     },
     scopeType: Blockly.ContextMenuRegistry.ScopeType.BLOCK,
     id: 'blockDelete',
     weight: 6,
   }
   Blockly.ContextMenuRegistry.registry.register(deleteOption)
+}
+
+export function deleteBlock(block: Blockly.Block) {
+  if (block.workspace.isFlyout) return
+
+  const priorGroup = Blockly.Events.getGroup()
+  Blockly.Events.setGroup(true)
+  try {
+    if (!block.outputConnection && !block.previousConnection?.isConnected()) {
+      block.nextConnection?.disconnect()
+    }
+    if (block.workspace instanceof Blockly.WorkspaceSvg) {
+      block.workspace.hideChaff()
+    }
+    if (block instanceof Blockly.BlockSvg) {
+      block.dispose(!block.outputConnection, true)
+    } else {
+      block.dispose(!block.outputConnection)
+    }
+  } finally {
+    Blockly.Events.setGroup(priorGroup)
+  }
 }
 
 function getDeletableBlocksInStack(block: Blockly.Block): Blockly.Block[] {
