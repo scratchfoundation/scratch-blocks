@@ -190,6 +190,16 @@ describe('registerDeleteBlock', () => {
     expect(second.getParent()).toBeNull()
   })
 
+  it('callback deletes a lone stack block', () => {
+    const block = workspace.newBlock('test_stack_block')
+
+    const item = Blockly.ContextMenuRegistry.registry.getItem('blockDelete')
+    assert(item, 'Expected blockDelete item to be registered')
+    ;(item.callback as (scope: Blockly.ContextMenuRegistry.Scope) => void)({ block: asBlockSvg(block) })
+
+    expect(workspace.getAllBlocks(false)).toEqual([])
+  })
+
   it('checkAndDelete override routes through deleteBlock and preserves next block', () => {
     const first = workspace.newBlock('test_stack_block')
     const second = workspace.newBlock('test_stack_block')
@@ -202,7 +212,7 @@ describe('registerDeleteBlock', () => {
     // Mirror the wiring in src/index.ts so we cover the keyboard-delete path.
     // Tests use plain Workspace (not WorkspaceSvg), so blocks aren't BlockSvg
     // instances — invoke the override via prototype to simulate the call site.
-    const originalCheckAndDelete = Blockly.BlockSvg.prototype.checkAndDelete
+    const originalCheckAndDelete = Reflect.get(Blockly.BlockSvg.prototype, 'checkAndDelete')
     Blockly.BlockSvg.prototype.checkAndDelete = function () {
       deleteBlock(this)
     }

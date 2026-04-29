@@ -49,8 +49,8 @@ export function deleteBlock(block: Blockly.Block) {
   const priorGroup = Blockly.Events.getGroup()
   Blockly.Events.setGroup(true)
   try {
-    if (!block.outputConnection && !block.previousConnection?.isConnected()) {
-      block.nextConnection?.disconnect()
+    if (!block.outputConnection && !block.previousConnection?.isConnected() && block.nextConnection?.isConnected()) {
+      block.nextConnection.disconnect()
     }
     if (block.workspace instanceof Blockly.WorkspaceSvg) {
       block.workspace.hideChaff()
