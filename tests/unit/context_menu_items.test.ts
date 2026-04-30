@@ -200,6 +200,24 @@ describe('registerDeleteBlock', () => {
     expect(workspace.getAllBlocks(false)).toEqual([])
   })
 
+  it('deleteBlock ignores non-deletable blocks', () => {
+    const block = workspace.newBlock('test_stack_block')
+    block.setDeletable(false)
+
+    deleteBlock(block)
+
+    expect(workspace.getAllBlocks(false)).toEqual([block])
+  })
+
+  it('deleteBlock ignores shadow blocks', () => {
+    const block = workspace.newBlock('test_stack_block')
+    block.setShadow(true)
+
+    deleteBlock(block)
+
+    expect(workspace.getAllBlocks(false)).toEqual([block])
+  })
+
   it('callback reuses an active event group', () => {
     const block = workspace.newBlock('test_stack_block')
     const originalSetGroup = Reflect.get(Blockly.Events, 'setGroup')

@@ -45,6 +45,7 @@ export function registerDeleteBlock() {
 
 export function deleteBlock(block: Blockly.Block) {
   if (block.workspace.isFlyout) return
+  if (!block.isDeletable() || block.isShadow()) return
 
   const priorGroup = Blockly.Events.getGroup()
   const shouldStartGroup = !priorGroup
