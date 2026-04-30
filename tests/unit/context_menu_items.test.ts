@@ -200,6 +200,29 @@ describe('registerDeleteBlock', () => {
     expect(workspace.getAllBlocks(false)).toEqual([])
   })
 
+  it('callback reuses an active event group', () => {
+    const block = workspace.newBlock('test_stack_block')
+    const originalSetGroup = Reflect.get(Blockly.Events, 'setGroup')
+    const setGroupCalls: (boolean | string)[] = []
+
+    Blockly.Events.setGroup('outerGroup')
+    Blockly.Events.setGroup = (state: boolean | string) => {
+      setGroupCalls.push(state)
+      originalSetGroup(state)
+    }
+    try {
+      const item = Blockly.ContextMenuRegistry.registry.getItem('blockDelete')
+      assert(item, 'Expected blockDelete item to be registered')
+      ;(item.callback as (scope: Blockly.ContextMenuRegistry.Scope) => void)({ block: asBlockSvg(block) })
+
+      expect(setGroupCalls).not.toContain(true)
+      expect(Blockly.Events.getGroup()).toBe('outerGroup')
+    } finally {
+      Blockly.Events.setGroup = originalSetGroup
+      Blockly.Events.setGroup(false)
+    }
+  })
+
   it('checkAndDelete override routes through deleteBlock and preserves next block', () => {
     const first = workspace.newBlock('test_stack_block')
     const second = workspace.newBlock('test_stack_block')

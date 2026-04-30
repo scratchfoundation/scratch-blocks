@@ -47,7 +47,10 @@ export function deleteBlock(block: Blockly.Block) {
   if (block.workspace.isFlyout) return
 
   const priorGroup = Blockly.Events.getGroup()
-  Blockly.Events.setGroup(true)
+  const shouldStartGroup = !priorGroup
+  if (shouldStartGroup) {
+    Blockly.Events.setGroup(true)
+  }
   try {
     if (!block.outputConnection && !block.previousConnection?.isConnected() && block.nextConnection?.isConnected()) {
       block.nextConnection.disconnect()
@@ -61,7 +64,9 @@ export function deleteBlock(block: Blockly.Block) {
       block.dispose(!block.outputConnection)
     }
   } finally {
-    Blockly.Events.setGroup(priorGroup)
+    if (shouldStartGroup) {
+      Blockly.Events.setGroup(false)
+    }
   }
 }
 
