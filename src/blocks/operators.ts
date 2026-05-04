@@ -150,6 +150,28 @@ Blockly.Blocks.operator_lt = {
   },
 }
 
+Blockly.Blocks.operator_ltoet = {
+  /**
+  * Block for less than or equal to comparator.
+  */
+  init: function (this: Blockly.Block) {
+    this.jsonInit({
+      message0: Blockly.Msg.OPERATORS_LTOET,
+      args0: [
+        {
+          type: 'input_value',
+          name: 'OPERAND1',
+        },
+        {
+          type: 'input_value',
+          name: 'OPERAND2',
+        },
+      ],
+      extensions: ['colours_operators', 'output_boolean'],
+    })
+  },
+}
+
 Blockly.Blocks.operator_equals = {
   /**
    * Block for equals comparator.
@@ -192,6 +214,28 @@ Blockly.Blocks.operator_gt = {
       extensions: ['colours_operators', 'output_boolean'],
     })
   },
+}
+
+Blockly.Blocks.operator_gtoet = {
+/**
+* Block for greater than or equal to comparator.
+*/
+init: function (this: Blockly.Block) {
+  this.jsonInit({
+    message0: Blockly.Msg.OPERATORS_GTOET,
+    args0: [
+      {
+        type: 'input_value',
+        name: 'OPERAND1',
+      }, 
+      {
+        type: 'input_value',
+        name: 'OPERAND1',
+      },
+    ],
+    extensions: ['colours_operators', 'output_boolean'],
+   })
+ },
 }
 
 Blockly.Blocks.operator_and = {
