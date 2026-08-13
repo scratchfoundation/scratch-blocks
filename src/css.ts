@@ -22,41 +22,10 @@ import { Colours } from './colours'
 const styles = `
   .blocklySvg {
     background-color: var(--colour-workspace);
-    outline: none;
-    overflow: hidden;  /* IE overflows by default. */
-    position: absolute;
-    display: block;
-  }
-
-  /* Necessary to position the drag surface */
-  .blocklyRelativeWrapper {
-    position: relative;
-    width: 100%;
-    height: 100%;
-  }
-
-  .blocklyWidgetDiv {
-    display: none;
-    position: absolute;
-    z-index: 99999; /* big value for bootstrap3 compatibility */
-  }
-
-  .injectionDiv {
-    height: 100%;
-    position: relative;
-    overflow: hidden; /* So blocks in drag surface disappear at edges */
-    touch-action: none;
   }
 
   .injectionDiv.boundless {
     overflow: visible;
-  }
-
-  .blocklyNonSelectable {
-    user-select: none;
-    -moz-user-select: none;
-    -webkit-user-select: none;
-    -ms-user-select: none;
   }
 
   .blocklyBlockCanvas.blocklyCanvasTransitioning,
@@ -78,10 +47,6 @@ const styles = `
     overflow: visible;
   }
 
-  .blocklyTextDropDownArrow {
-    position: absolute;
-  }
-
   .blocklyTextRemoveIcon {
     position: absolute;
     width: 24px;
@@ -92,94 +57,19 @@ const styles = `
     cursor: pointer;
   }
 
-  .blocklyWsDragSurface {
-    display: none;
-    position: absolute;
-    top: 0;
-    left: 0;
-  }
-  /* Added as a separate rule with multiple classes to make it more specific
-     than a bootstrap rule that selects svg:root. See issue #1275 for context.
-  */
-  .blocklyWsDragSurface.blocklyOverflowVisible {
-    overflow: visible;
-  }
-
   .blocklyTooltipDiv {
-    background-color: #ffffc7;
-    border: 1px solid #ddc;
-    box-shadow: 4px 4px 20px 1px rgba(0,0,0,.15);
-    color: #000;
-    display: none;
     font-family: "Helvetica Neue", Helvetica, sans-serif;
-    font-size: 9pt;
-    opacity: 0.9;
-    padding: 2px;
-    position: absolute;
-    z-index: 100000; /* big value for bootstrap3 compatibility */
   }
 
   .blocklyDropDownDiv {
-    position: fixed;
-    left: 0;
-    top: 0;
-    z-index: 1000;
-    display: none;
-    border: 1px solid;
     border-radius: 4px;
     box-shadow: 0px 0px 8px 1px var(--colour-dropDownShadow);
-    padding: 4px;
     -webkit-user-select: none;
     min-height: 15px
   }
 
   .blocklyDropDownContent {
-    max-height: 300px; // @todo: spec for maximum height.
     overflow: auto;
-  }
-
-  .blocklyDropDownArrow {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 16px;
-    height: 16px;
-    z-index: -1;
-    background-color: inherit;
-    border-color: inherit;
-  }
-
-  .blocklyDropDownButton {
-    display: inline-block;
-    float: left;
-    padding: 0;
-    margin: 4px;
-    border-radius: 4px;
-    outline: none;
-    border: 1px solid;
-    transition: box-shadow .1s;
-    cursor: pointer;
-  }
-
-  .blocklyDropDownButtonHover {
-    box-shadow: 0px 0px 0px 4px var(--colour-fieldShadow);
-  }
-
-  .blocklyDropDownButton:active {
-    box-shadow: 0px 0px 0px 6px var(--colour-fieldShadow);
-  }
-
-  .blocklyDropDownButton > img {
-    width: 80%;
-    height: 80%;
-    margin-top: 5%
-  }
-
-  .blocklyDropDownPlaceholder {
-    display: inline-block;
-    float: left;
-    padding: 0;
-    margin: 4px;
   }
 
   .blocklyNumPadButton {
@@ -212,20 +102,6 @@ const styles = `
     -webkit-tap-highlight-color: rgba(0,0,0,0);
   }
 
-  .arrowTop {
-    border-top: 1px solid;
-    border-left: 1px solid;
-    border-top-left-radius: 4px;
-    border-color: inherit;
-  }
-
-  .arrowBottom {
-    border-bottom: 1px solid;
-    border-right: 1px solid;
-    border-bottom-right-radius: 4px;
-    border-color: inherit;
-  }
-
   .valueReportBox {
     min-width: 50px;
     max-width: 300px;
@@ -238,38 +114,14 @@ const styles = `
     color: var(--colour-textFieldText);
   }
 
-  .blocklyResizeSE {
-    cursor: se-resize;
-    fill: #aaa;
-  }
-
-  .blocklyResizeSW {
-    cursor: sw-resize;
-    fill: #aaa;
-  }
 
   .blocklyResizeLine {
     stroke: #888;
     stroke-width: 1;
   }
 
-  .blocklyHighlightedConnectionPath {
-    fill: none;
-    stroke: #fc3;
-    stroke-width: 4px;
-  }
-
   .blocklyPath {
     stroke-width: 1px;
-  }
-
-  .blocklySelected>.blocklyPath {
-    // stroke: #fc3;
-    // stroke-width: 3px;
-  }
-
-  .blocklySelected>.blocklyPathLight {
-    display: none;
   }
 
   .blocklyDraggable {
@@ -316,13 +168,6 @@ const styles = `
     cursor: -moz-grabbing;
   }
 
-  .blocklyDragging.blocklyDraggingDelete {
-    cursor: url("<<<PATH>>>/handdelete.cur"), auto;
-  }
-
-  .blocklyDragging.blocklyDraggingMouseThrough {
-    pointer-events: none;
-  }
 
   .blocklyToolboxDelete {
     cursor: url("<<<PATH>>>/handdelete.cur"), auto;
@@ -340,16 +185,9 @@ const styles = `
     stroke-opacity: 1.0;
   }
 
-  .blocklyDragging>.blocklyPath {
-  }
-
   .blocklyDisabled>.blocklyPath {
     fill-opacity: .5;
     stroke-opacity: .5;
-  }
-
-  .blocklyInsertionMarker>.blocklyPath {
-    stroke: none;
   }
 
   .blocklyText {
@@ -359,33 +197,10 @@ const styles = `
     font-weight: 500;
   }
 
-  .blocklyTextTruncated {
-    font-size: 11pt;
-  }
-
-  .blocklyNonEditableText>text {
-    pointer-events: none;
-  }
-  .blocklyNonEditableText>text,
-  .blocklyEditableText>text {
-    fill: var(--colour-textFieldText);
-  }
-
-  .blocklyEditableText>.blocklyEditableLabel {
-    fill: #fff;
-  }
-
-  .blocklyDropdownText {
-    fill: $colour_text !important;
-  }
-
   .blocklyBubbleText {
     fill: var(--colour-textFieldText);
   }
-  .blocklyFlyout {
-    position: absolute;
-    z-index: 20;
-  }
+
   .blocklyFlyoutButton {
     fill: none;
     pointer-events: all;
@@ -457,219 +272,24 @@ const styles = `
     cursor: inherit;
   }
 
-  .blocklyHidden {
-    display: none;
-  }
-
-  .blocklyFieldDropdown:not(.blocklyHidden) {
-    display: block;
-  }
-
-  .blocklyIconGroup {
-    cursor: default;
-  }
-
-  .blocklyIconGroup:not(:hover),
-  .blocklyIconGroupReadonly {
-    opacity: .6;
-  }
-
-  .blocklyIconShape {
-    fill: #00f;
-    stroke: #fff;
-    stroke-width: 1px;
-  }
-
-  .blocklyIconSymbol {
-    fill: #fff;
-  }
-
-  .blocklyMinimalBody {
-    margin: 0;
-    padding: 0;
-  }
-
   .blocklyCommentForeignObject {
     position: relative;
     z-index: 0;
-  }
-
-  .blocklyCommentRect {
-    fill: #E7DE8E;
-    stroke: #bcA903;
-    stroke-width: 1px
-  }
-
-  .blocklyCommentTarget {
-    fill: transparent;
-    stroke: #bcA903;
-  }
-
-  .blocklyCommentTargetFocused {
-    fill: none;
-  }
-
-  .blocklyCommentHandleTarget {
-    fill: none;
-  }
-
-  .blocklyCommentHandleTargetFocused {
-    fill: transparent;
-  }
-
-  .blocklyFocused>.blocklyCommentRect {
-    fill: #B9B272;
-    stroke: #B9B272;
-  }
-
-  .blocklySelected>.blocklyCommentTarget {
-    stroke: #fc3;
-    stroke-width: 3px;
   }
 
   .blocklyCommentText::placeholder {
     font-style: italic;
   }
 
-  .blocklyCommentTextarea {
-    background-color: #fef49c;
-    border: 0;
-    outline: 0;
-    margin: 0;
-    padding: 3px;
-    resize: none;
-    display: block;
-    overflow: hidden;
-  }
-
-  .blocklyCommentDeleteIcon {
-    cursor: pointer;
-    fill: #000;
-    display: none
-  }
-
-  .blocklySelected > .blocklyCommentDeleteIcon {
-    display: block
-  }
-
-  .blocklyDeleteIconShape {
-    fill: #000;
-    stroke: #000;
-    stroke-width: 1px;
-  }
-
-  .blocklyDeleteIconShape.blocklyDeleteIconHighlighted {
-    stroke: #fc3;
-  }
-
-  // Scratch Comments
-
-  .scratchCommentForeignObject {
-    position: relative;
-  }
-
-  .scratchCommentBody {
-    background-color: #fef49c;
-    border-radius: 4px;
-  }
-
-  .scratchCommentRect {
-    fill: #fef49c;
-  }
-
-  .scratchCommentTarget {
-    fill: transparent;
-  }
-
-  .scratchWorkspaceCommentBorder {
-    stroke: #bcA903;
-    stroke-width: 1px;
-  }
-
-  .scratchCommentTargetFocused {
-    fill: none;
-  }
-
-  .scratchCommentTopBar {
-    fill: #000000;
-    fill-opacity: 0.1
-  }
-
-  .scratchCommentText {
-    font-family: "Helvetica Neue", Helvetica, sans-serif;
-    font-size: 12pt;
-    font-weight: 400;
-  }
-
-  .scratchCommentTextarea {
-    background-color: #fef49c;
-    border: 0;
-    outline: 0;
-    padding: 0;
-    resize: none;
-    overflow: hidden;
-  }
-
-  .scratchCommentTextarea::placeholder {
-    color: rgba(0,0,0,0.5);
-    font-style: italic;
-  }
-
-  .scratchCommentResizeSE {
-    cursor: se-resize;
-    fill: transparent;
-  }
-
-  .scratchCommentResizeSW {
-    cursor: sw-resize;
-    fill: transparent;
-  }
-
   .blocklyHtmlInput {
-    border: none;
     font-family: "Helvetica Neue", Helvetica, sans-serif;
     font-size: 12pt;
-    height: 100%;
-    margin: 0;
-    outline: none;
-    box-sizing: border-box;
-    width: 100%;
-    text-align: center;
     color: var(--colour-textFieldText);
     font-weight: 500;
   }
 
-  .blocklyMainBackground {
-    stroke-width: 1;
-    stroke: #c6c6c6;  /* Equates to #ddd due to border being off-pixel. */
-  }
-
-  .blocklyMutatorBackground {
-    fill: #fff;
-    stroke: #ddd;
-    stroke-width: 1;
-  }
-
   .blocklyFlyoutBackground {
     fill: var(--colour-flyout);
-    fill-opacity: .8;
-  }
-
-  .blocklyMainWorkspaceScrollbar {
-    z-index: 20;
-  }
-
-  .blocklyFlyoutScrollbar {
-    z-index: 30;
-  }
-
-  .blocklyScrollbarHorizontal, .blocklyScrollbarVertical {
-    position: absolute;
-    outline: none;
-  }
-
-  .blocklyScrollbarBackground {
-    opacity: 0;
   }
 
   .blocklyScrollbarHandle {
@@ -691,21 +311,6 @@ const styles = `
 
   .blocklyZoom>image:active {
     opacity: 0.6;
-  }
-
-  /* Darken flyout scrollbars due to being on a grey background. */
-  /* By contrast, workspace scrollbars are on a white background. */
-  .blocklyFlyout .blocklyScrollbarHandle {
-    fill: #bbb;
-  }
-
-  .blocklyFlyout .blocklyScrollbarBackground:hover+.blocklyScrollbarHandle,
-  .blocklyFlyout .blocklyScrollbarHandle:hover {
-    fill: #aaa;
-  }
-
-  .blocklyInvalidInput {
-    background: #faa;
   }
 
   .blocklyAngleCircle {
@@ -748,19 +353,6 @@ const styles = `
     pointer-events: none;
   }
 
-  .blocklyContextMenu {
-    border-radius: 4px;
-    max-height: 100%;
-  }
-
-  .blocklyDropdownMenu {
-    padding: 0 !important;
-  }
-
-  .blocklyDropDownNumPad {
-    background-color: var(--colour-numPadBackground);
-  }
-
   /* Category tree in Toolbox. */
   .blocklyToolbox {
     background-color: var(--colour-toolbox);
@@ -780,30 +372,12 @@ const styles = `
     border-left: 1px solid #ddd;
   }
 
-  .blocklyTreeRoot {
-    padding: 4px 0;
-  }
-
-  .blocklyTreeRoot:focus {
-    outline: none;
-  }
-
   .blocklyToolbox .blocklyToolboxCategory {
     line-height: 22px;
     margin: 0;
     padding: 0.375rem 0px;
     white-space: nowrap;
     cursor: pointer;
-  }
-
-  .blocklyHorizontalTree {
-    float: left;
-    margin: 1px 5px 8px 0;
-  }
-
-  .blocklyHorizontalTreeRtl {
-    float: right;
-    margin: 1px 0 8px 5px;
   }
 
   .blocklyToolbox[dir="RTL"] .blocklyToolboxCategory {
@@ -816,49 +390,6 @@ const styles = `
 
   .blocklyTreeSeparator {
     display: none;
-  }
-
-  .blocklyTreeSeparatorHorizontal {
-    border-right: solid #e5e5e5 1px;
-    width: 0;
-    padding: 5px 0;
-    margin: 0 5px;
-  }
-
-  .blocklyTreeIcon {
-    background-image: url(<<<PATH>>>/sprites.png);
-    height: 16px;
-    vertical-align: middle;
-    width: 16px;
-  }
-
-  .blocklyTreeIconClosedLtr {
-    background-position: -32px -1px;
-  }
-
-  .blocklyTreeIconClosedRtl {
-    background-position: 0px -1px;
-  }
-
-  .blocklyTreeIconOpen {
-    background-position: -16px -1px;
-  }
-
-  .blocklyTreeSelected>.blocklyTreeIconClosedLtr {
-    background-position: -32px -17px;
-  }
-
-  .blocklyTreeSelected>.blocklyTreeIconClosedRtl {
-    background-position: 0px -17px;
-  }
-
-  .blocklyTreeSelected>.blocklyTreeIconOpen {
-    background-position: -16px -17px;
-  }
-
-  .blocklyTreeIconNone,
-  .blocklyTreeSelected>.blocklyTreeIconNone {
-    background-position: -48px -1px;
   }
 
   .blocklyToolboxCategoryLabel {
@@ -876,34 +407,8 @@ const styles = `
     color: inherit;
   }
 
-  .blocklyToolboxDelete .blocklyTreeLabel {
-    cursor: url("<<<PATH>>>/handdelete.cur"), auto;
-  }
-
   .blocklyToolboxSelected {
     background-color: var(--colour-toolboxSelected);
-  }
-
-  .blocklyDropDownDiv .goog-slider-horizontal {
-    margin: 8px;
-    height: 22px;
-    width: 150px;
-    position: relative;
-    outline: none;
-    border-radius: 11px;
-    margin-bottom: 20px;
-  }
-
-  .blocklyDropDownDiv .goog-slider-horizontal .goog-slider-thumb {
-    width: 26px;
-    height: 26px;
-    top: -1px;
-    position: absolute;
-    background-color: white;
-    border-radius: 100%;
-    -webkit-box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.15);
-    -moz-box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.15);
-    box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.15);
   }
 
   .scratchEyedropper {
@@ -979,34 +484,10 @@ const styles = `
     pointer-events: none;
   }
 
-  /* Copied from: goog/css/menu.css */
-  /*
-   * Copyright 2009 The Closure Library Authors. All Rights Reserved.
-   *
-   * Use of this source code is governed by the Apache License, Version 2.0.
-   * See the COPYING file for details.
-   */
-
-  /**
-   * Standard styling for menus created by goog.ui.MenuRenderer.
-   *
-   * @author attila@google.com (Attila Bodis)
-   */
-
   .blocklyWidgetDiv .blocklyMenu {
-    background: #fff;
     border-color: #ccc #666 #666 #ccc;
-    border-style: solid;
-    border-width: 1px;
     cursor: default;
     font: normal 13px "Helvetica Neue", Helvetica, sans-serif;
-    margin: 0;
-    outline: none;
-    padding: 4px 0;
-    position: absolute;
-    overflow-y: auto;
-    overflow-x: hidden;
-    z-index: 20000;  /* Arbitrary, but some apps depend on it... */
     box-sizing: content-box;
     box-shadow: none;
   }
@@ -1018,8 +499,6 @@ const styles = `
   .blocklyDropDownDiv .blocklyMenu {
     cursor: default;
     font: normal 13px "Helvetica Neue", Helvetica, sans-serif;
-    outline: none;
-    z-index: 20000;  /* Arbitrary, but some apps depend on it... */
   }
 
   .blocklyDropDownDiv .blocklyMenu .blocklyMenuItem.blocklyMenuItemHighlight {
@@ -1050,70 +529,6 @@ const styles = `
     stroke-width: 3;
     stroke-linecap: round;
     stroke-linejoin: round;
-  }
-
-  .scratchCategoryMenu {
-    width: 60px;
-    background: var(--colour-toolbox);
-    color: var(--colour-toolboxText);
-    font-size: .7rem;
-    user-select: none;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-  }
-
-  .scratchCategoryMenuHorizontal {
-    width: 100%;
-    height: 50px;
-    background: var(--colour-toolbox);
-    color: var(--colour-toolboxText);
-    font-size: .7em;
-    user-select: none;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-  }
-
-  .scratchCategoryMenuHorizontal .scratchCategoryMenuRow {
-    float: left;
-    margin: 3px;
-  }
-
-  .scratchCategoryMenuRow {
-  }
-
-  .scratchCategoryMenuItem {
-    padding: 0.375rem 0px;
-    cursor: pointer;
-    text-align: center;
-  }
-
-  .scratchCategoryMenuHorizontal .scratchCategoryMenuItem {
-    padding: 6px 5px;
-  }
-
-  .scratchCategoryMenuItem.categorySelected {
-    background: var(--colour-toolboxSelected);
-  }
-
-  .scratchCategoryItemBubble {
-    width: 1.25rem;
-    height: 1.25rem;
-    border: 1px solid;
-    border-radius: 100%;
-    margin: 0 auto 0.125rem;
-  }
-
-  .scratchCategoryItemIcon {
-    width: 1.25rem;
-    height: 1.25rem;
-    margin: 0 auto 0.125rem;
-    background-size: 100%;
-  }
-
-  .scratchCategoryMenuItem:hover {
-    color: $colour_toolboxHover !important;
   }
 
   .categoryIconBubble {
@@ -1185,9 +600,6 @@ const styles = `
   }
   .scratch-renderer.blocklyDropDownDiv .blocklyMenuItem .blocklyMenuItemContent {
     color: var(--colour-text);
-  }
-  .blocklyToolboxSelected .blocklyTreeLabel {
-    color: var(--colour-toolboxText);
   }
 
   .blocklyDeleteIcon {
