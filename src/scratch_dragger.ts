@@ -27,31 +27,15 @@ export class ScratchDragger extends Blockly.dragging.Dragger {
   originatedFromFlyout = false
 
   /**
-   * Sets the current item being dragged.
-   * @param draggable The item being dragged.
-   */
-  setDraggable(draggable: Blockly.IDraggable) {
-    this.draggable = draggable
-  }
-
-  /**
    * Handles the start of a drag operation.
    * @param event The event that triggered the drag.
    */
-  onDragStart(event: PointerEvent) {
-    super.onDragStart(event)
+  override onDragStart(event?: PointerEvent | KeyboardEvent | undefined) {
     if (this.draggable instanceof Blockly.BlockSvg) {
-      this.workspace.addClass(BOUNDLESS_CLASS)
-      const absoluteMetrics = this.workspace.getMetricsManager().getAbsoluteMetrics()
-      const viewMetrics = this.workspace.getMetricsManager().getViewMetrics()
-      if (
-        this.workspace.RTL
-          ? event.clientX > this.workspace.getParentSvg().getBoundingClientRect().left + viewMetrics.width
-          : event.clientX < absoluteMetrics.left
-      ) {
-        this.originatedFromFlyout = true
-      }
+      this.originatedFromFlyout = this.draggable.workspace.isFlyout
+      this.draggable.workspace.addClass(BOUNDLESS_CLASS)
     }
+    return super.onDragStart(event)
   }
 
   /**
@@ -63,7 +47,7 @@ export class ScratchDragger extends Blockly.dragging.Dragger {
     // Update out-of-bounds state BEFORE the base onDrag so that
     // wouldDeleteDraggable (called by super.onDrag to set the delete
     // cursor) sees the current draggedOutOfBounds value.
-    this.updateOutOfBoundsState(event)
+    this.updateOutOfBoundsState(this.getCoordinate(event))
     super.onDrag(event, totalDelta)
   }
 
@@ -71,11 +55,11 @@ export class ScratchDragger extends Blockly.dragging.Dragger {
    * Records whether or not the current drag is out of the workspace's bounds.
    * @param event The event that triggered this call.
    */
-  updateOutOfBoundsState(event: PointerEvent) {
+  updateOutOfBoundsState(coordinate: Blockly.utils.Coordinate) {
     if (this.draggable instanceof Blockly.BlockSvg) {
-      const outOfBounds = !this.isInsideWorkspace(event)
+      const outOfBounds = !this.isInsideWorkspace(coordinate)
       if (outOfBounds !== this.draggedOutOfBounds) {
-        const event = new BlockDragOutside(this.getDragRoot(this.draggable) as Blockly.BlockSvg, outOfBounds)
+        const event = new BlockDragOutside(this.draggable, outOfBounds)
         Blockly.Events.fire(event)
         this.draggedOutOfBounds = outOfBounds
       }
@@ -86,38 +70,35 @@ export class ScratchDragger extends Blockly.dragging.Dragger {
    * Handles the end of a drag.
    * @param event The event that ended the drag.
    */
-  onDragEnd(event: PointerEvent) {
+  override onDragEnd(e?: PointerEvent | KeyboardEvent) {
+    const coordinate = this.getCoordinate(e)
     // Update out-of-bounds state BEFORE any wouldDeleteDraggable checks
     // so the override sees the position from the pointerup event, not
     // the last pointermove (which could be stale if the user moved fast).
-    this.updateOutOfBoundsState(event)
+    this.updateOutOfBoundsState(coordinate)
 
-    // When the prototype block is dragged (via its DelegateToParentDraggable
-    // strategy), this.draggable is the prototype, but getDragRoot returns the
-    // definition. Handle both cases for the "procedure is in use" check.
-    const dragRoot = this.getDragRoot(this.draggable)
     if (
-      dragRoot instanceof Blockly.BlockSvg &&
-      dragRoot.type === 'procedures_definition' &&
-      this.wouldDeleteDraggable(event, dragRoot.getRootBlock())
+      this.draggable instanceof Blockly.BlockSvg &&
+      this.draggable.type === 'procedures_definition' &&
+      this.wouldDeleteDraggable(coordinate, this.draggable)
     ) {
-      const prototype = dragRoot.getInput('custom_block')?.connection?.targetBlock()
+      const prototype = this.draggable.getInput('custom_block')?.connection?.targetBlock()
       const hasCaller =
         prototype instanceof Blockly.BlockSvg &&
         isProcedureBlock(prototype) &&
-        getCallers(prototype.getProcCode(), dragRoot.workspace, dragRoot.getRootBlock(), false).length > 0
+        getCallers(prototype.getProcCode(), this.draggable.workspace, this.draggable, false).length > 0
 
       if (hasCaller) {
         Blockly.dialog.alert(Blockly.Msg.PROCEDURE_USED)
         this.draggable.revertDrag()
-        this.draggable.endDrag()
+        this.draggable.endDrag(e, Blockly.DragDisposition.REVERT)
         return
       }
     }
 
-    super.onDragEnd(event)
+    super.onDragEnd(e)
     if (this.draggable instanceof Blockly.BlockSvg) {
-      const event = new BlockDragEnd(this.getDragRoot(this.draggable) as Blockly.BlockSvg, this.draggedOutOfBounds)
+      const event = new BlockDragEnd(this.draggable, this.draggedOutOfBounds)
       Blockly.Events.fire(event)
       // If this block was dragged out of the flyout and dropped outside of
       // the workspace (e.g. on a different sprite), the block that was created
@@ -125,14 +106,13 @@ export class ScratchDragger extends Blockly.dragging.Dragger {
       // deleted.
       if (this.originatedFromFlyout && this.draggedOutOfBounds) {
         void Blockly.renderManagement.finishQueuedRenders().then(() => {
-          const rootBlock = this.getDragRoot(this.draggable)
-          if (rootBlock instanceof Blockly.BlockSvg) {
-            rootBlock.dispose()
+          if (this.draggable instanceof Blockly.BlockSvg) {
+            this.draggable.dispose()
           }
         })
       }
     }
-    this.workspace.removeClass(BOUNDLESS_CLASS)
+    this.draggable.workspace.removeClass(BOUNDLESS_CLASS)
   }
 
   /**
@@ -145,9 +125,12 @@ export class ScratchDragger extends Blockly.dragging.Dragger {
    * @param rootDraggable The topmost item being dragged.
    * @returns True if the draggable would be deleted.
    */
-  override wouldDeleteDraggable(event: PointerEvent, rootDraggable: Blockly.IDraggable & Blockly.IDeletable) {
+  override wouldDeleteDraggable(
+    coordinate: Blockly.utils.Coordinate,
+    rootDraggable: Blockly.IDraggable & Blockly.IDeletable,
+  ) {
     if (this.draggedOutOfBounds) return false
-    return super.wouldDeleteDraggable(event, rootDraggable)
+    return super.wouldDeleteDraggable(coordinate, rootDraggable)
   }
 
   /**
@@ -157,31 +140,11 @@ export class ScratchDragger extends Blockly.dragging.Dragger {
    * @param rootDraggable The topmost item being dragged.
    * @returns True if the draggable should return to its starting position.
    */
-  shouldReturnToStart(event: PointerEvent, rootDraggable: Blockly.IDraggable) {
+  override shouldReturnToStart(coordinate: Blockly.utils.Coordinate, rootDraggable: Blockly.IDraggable) {
     // If a block is dragged out of the workspace to be e.g. dropped on another
     // sprite, it should remain in the same place on the workspace where it was,
     // rather than being moved to an invisible part of the workspace.
-    return this.draggedOutOfBounds || super.shouldReturnToStart(event, rootDraggable)
-  }
-
-  /**
-   * Returns the root element being dragged. For shadow blocks and the
-   * procedures_prototype block, this is the parent block.
-   * @param draggable The element being dragged directly.
-   * @returns The element being dragged, or its parent.
-   */
-  getDragRoot(draggable: Blockly.IDraggable) {
-    // We can't just use getRootBlock() here because, when blocks are detached
-    // from a stack via dragging, getRootBlock() still returns the root of that
-    // stack.
-    if (
-      draggable instanceof Blockly.BlockSvg &&
-      (draggable.isShadow() || draggable.type === 'procedures_prototype')
-    ) {
-      return draggable.getParent()
-    }
-
-    return draggable
+    return this.draggedOutOfBounds || super.shouldReturnToStart(coordinate, rootDraggable)
   }
 
   /**
@@ -190,10 +153,27 @@ export class ScratchDragger extends Blockly.dragging.Dragger {
    * @param event The event to check.
    * @returns True if the event occurred inside the workspace.
    */
-  isInsideWorkspace(event: PointerEvent) {
-    const bounds = this.workspace.getParentSvg().getBoundingClientRect()
+  isInsideWorkspace(coordinate: Blockly.utils.Coordinate) {
+    const bounds = this.draggable.workspace.getParentSvg().getBoundingClientRect()
     const workspaceRect = new Blockly.utils.Rect(bounds.top, bounds.bottom, bounds.left, bounds.right)
-    return workspaceRect.contains(event.clientX, event.clientY)
+    return workspaceRect.contains(coordinate.x, coordinate.y)
+  }
+
+  protected getCoordinate(e?: PointerEvent | KeyboardEvent) {
+    let coordinate: Blockly.utils.Coordinate
+    if (e instanceof PointerEvent) {
+      coordinate = new Blockly.utils.Coordinate(e.clientX, e.clientY)
+    } else {
+      const screenCoordinate = Blockly.utils.svgMath.wsToScreenCoordinates(
+        this.draggable.workspace,
+        this.draggable.getRelativeToSurfaceXY(),
+      )
+      const scroll = new Blockly.utils.Coordinate(window.scrollX, window.scrollY)
+
+      coordinate = Blockly.utils.Coordinate.difference(screenCoordinate, scroll)
+    }
+
+    return coordinate
   }
 }
 
