@@ -589,7 +589,7 @@ function attachShadow_(this: ProcedureCallBlock, input: Blockly.Input, argumentT
     if (Blockly.Events.isEnabled()) {
       Blockly.Events.fire(new (Blockly.Events.get(Blockly.Events.BLOCK_CREATE))(newBlock))
     }
-    newBlock.outputConnection.connect(input.connection)
+    newBlock.outputConnection?.connect(input.connection)
   }
 }
 
@@ -663,7 +663,7 @@ function populateArgumentOnCaller_(
   if (oldBlock) {
     // Reattach the old block and shadow DOM.
     connectionMap[input.name] = null
-    oldBlock.outputConnection.connect(conn)
+    oldBlock.outputConnection?.connect(conn)
     if (type !== ArgumentType.BOOLEAN && this.generateShadows_) {
       const shadowDom = oldShadow ?? this.buildShadowDom_(type)
       conn.setShadowDom(shadowDom)
@@ -724,7 +724,9 @@ function populateArgumentOnPrototype_(
   }
 
   // Attach the block.
-  conn.connect(argumentReporter.outputConnection)
+  if (argumentReporter.outputConnection) {
+    conn.connect(argumentReporter.outputConnection)
+  }
 }
 
 /**
@@ -769,7 +771,9 @@ function populateArgumentOnDeclaration_(
   }
 
   // Attach the block.
-  conn.connect(argumentEditor.outputConnection)
+  if (argumentEditor.outputConnection) {
+    conn.connect(argumentEditor.outputConnection)
+  }
 }
 
 /**

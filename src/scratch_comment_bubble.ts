@@ -74,11 +74,12 @@ export class ScratchCommentBubble
     }
   }
 
-  startDrag(_event: PointerEvent) {
+  startDrag(_event?: PointerEvent | KeyboardEvent | undefined) {
     this.dragStartLocation = this.getRelativeToSurfaceXY()
     this.workspace.setResizesEnabled(false)
     this.workspace.getLayerManager()?.moveToDragLayer(this)
     Blockly.utils.dom.addClass(this.getSvgRoot(), 'blocklyDragging')
+    return this
   }
 
   drag(newLocation: Blockly.utils.Coordinate, _event?: PointerEvent) {
@@ -180,5 +181,16 @@ export class ScratchCommentBubble
 
   canBeFocused() {
     return true
+  }
+
+  getBoundingRectangle() {
+    const origin = this.getRelativeToSurfaceXY()
+    const size = this.getSize()
+    return new Blockly.utils.Rect(origin.y, origin.y + size.height, origin.x, origin.x + size.width)
+  }
+
+  moveBy(deltaX: number, deltaY: number) {
+    const origin = this.getRelativeToSurfaceXY()
+    this.moveTo(origin.x + deltaX, origin.y + deltaY)
   }
 }

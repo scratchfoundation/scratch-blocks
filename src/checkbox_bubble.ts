@@ -71,11 +71,16 @@ export class CheckboxBubble implements Blockly.IBubble, Blockly.IRenderedElement
    */
   location = new Blockly.utils.Coordinate(0, 0)
 
+  id = Blockly.utils.idGenerator.getNextUniqueId()
+
+  workspace: Blockly.WorkspaceSvg
+
   /**
    * Creates a new flyout checkbox bubble.
    * @param sourceBlock The block this bubble should be associated with.
    */
   constructor(private sourceBlock: Blockly.BlockSvg) {
+    this.workspace = sourceBlock.workspace
     this.svgRoot = Blockly.utils.dom.createSvgElement(
       Blockly.utils.Svg.G,
       {},
@@ -254,7 +259,9 @@ export class CheckboxBubble implements Blockly.IBubble, Blockly.IRenderedElement
 
   setDragging(_dragging: boolean) {}
 
-  startDrag(_event: PointerEvent) {}
+  startDrag(_event?: PointerEvent | KeyboardEvent | undefined) {
+    return this
+  }
 
   drag(_newLocation: Blockly.utils.Coordinate, _event: PointerEvent) {}
 
@@ -265,4 +272,20 @@ export class CheckboxBubble implements Blockly.IBubble, Blockly.IRenderedElement
   revertDrag() {}
 
   setDeleteStyle(_enable: boolean) {}
+
+  getBoundingRectangle() {
+    return new Blockly.utils.Rect(
+      this.location.y,
+      this.location.y + CheckboxBubble.CHECKBOX_SIZE,
+      this.location.x,
+      this.location.x + CheckboxBubble.CHECKBOX_SIZE,
+    )
+  }
+
+  moveBy(deltaX: number, deltaY: number) {
+    this.moveTo(this.location.x + deltaX, this.location.y + deltaY)
+  }
+
+  select() {}
+  unselect() {}
 }
