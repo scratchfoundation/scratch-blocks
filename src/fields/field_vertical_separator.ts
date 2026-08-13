@@ -88,6 +88,10 @@ class FieldVerticalSeparator extends Blockly.Field {
     return null
   }
 
+  override computeAriaLabel(): string {
+    return ''
+  }
+
   getText() {
     return ''
   }
