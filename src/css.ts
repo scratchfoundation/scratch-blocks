@@ -24,6 +24,10 @@ const styles = `
     background-color: var(--colour-workspace);
   }
 
+  .injectionDiv {
+    --blockly-active-node-color: #fc3;
+  }
+
   .injectionDiv.boundless {
     overflow: visible;
   }
@@ -259,6 +263,12 @@ const styles = `
   .scratch-renderer.default-theme .blocklyFlyoutButton .blocklyText,
   .scratch-renderer.high-contrast-theme .blocklyFlyoutButton .blocklyText {
     fill: var(--colour-textFieldText);
+  }
+
+  .scratch-renderer.default-theme .blocklySelected>.blocklyPath.blocklyPathSelected {
+    filter: none;
+    stroke: var(--blockly-active-node-color);
+    stroke-width: var(--blockly-selection-width);
   }
 
   /*
