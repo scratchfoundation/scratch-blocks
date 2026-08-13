@@ -117,23 +117,18 @@ export function inject(container: Element, options: ScratchBlocksOptions) {
       flyoutsVerticalToolbox: CheckableContinuousFlyout,
       metricsManager: ContinuousMetrics,
     },
+    zoom: {
+      controls: false,
+    },
   })
   const workspace = Blockly.inject(container, options)
 
   buildGlowFilter(workspace)
 
-  // Replace Blockly's sprite-sheet zoom controls with SVG-file-based ones so
-  // each button is a separate file and the correct set is picked up via
-  // pathToMedia (which varies by Scratch color mode).
-  const originalZoomControls = workspace.zoomControls_
-  if (originalZoomControls) {
-    originalZoomControls.dispose()
-
-    const scratchZoomControls = new ScratchZoomControls(workspace)
-    const zoomControlsSvg = scratchZoomControls.createDom()
-    workspace.svgGroup_.appendChild(zoomControlsSvg)
-    scratchZoomControls.init()
-  }
+  const scratchZoomControls = new ScratchZoomControls(workspace)
+  const zoomControlsSvg = scratchZoomControls.createDom()
+  workspace.svgGroup_.appendChild(zoomControlsSvg)
+  scratchZoomControls.init()
 
   Blockly.config.dragRadius = 3
   Blockly.config.snapRadius = 48
