@@ -28,6 +28,10 @@ const styles = `
     --blockly-active-node-color: #fc3;
   }
 
+  .scratch-renderer.high-contrast-theme.injectionDiv {
+    --blockly-active-node-color: #000;
+  }
+
   .injectionDiv.boundless {
     overflow: visible;
   }
@@ -265,7 +269,8 @@ const styles = `
     fill: var(--colour-textFieldText);
   }
 
-  .scratch-renderer.default-theme .blocklySelected>.blocklyPath.blocklyPathSelected {
+  .scratch-renderer.default-theme .blocklySelected>.blocklyPath.blocklyPathSelected,
+  .scratch-renderer.high-contrast-theme .blocklySelected>.blocklyPath.blocklyPathSelected {
     filter: none;
     stroke: var(--blockly-active-node-color);
     stroke-width: var(--blockly-selection-width);
