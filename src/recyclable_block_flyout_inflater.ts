@@ -5,6 +5,7 @@
 import { RecyclableBlockFlyoutInflater as BlocklyRecyclableBlockFlyoutInflater } from '@blockly/continuous-toolbox'
 import * as Blockly from 'blockly/core'
 import { CheckboxBubble } from './checkbox_bubble'
+import { UniqueIdBlockDragStrategy } from './unique_id_block_drag_strategy'
 
 /**
  * A block inflater that caches and reuses blocks to improve performance.
@@ -28,6 +29,15 @@ export class RecyclableBlockFlyoutInflater extends BlocklyRecyclableBlockFlyoutI
     }
 
     return flyoutItem
+  }
+
+  override createBlock(
+    blockDefinition: Blockly.utils.toolbox.BlockInfo,
+    workspace: Blockly.WorkspaceSvg,
+  ): Blockly.BlockSvg {
+    const block = super.createBlock(blockDefinition, workspace)
+    block.setDragStrategy(new UniqueIdBlockDragStrategy(block))
+    return block
   }
 }
 
