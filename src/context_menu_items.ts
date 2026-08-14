@@ -41,6 +41,7 @@ export function registerDeleteBlock() {
     scopeType: Blockly.ContextMenuRegistry.ScopeType.BLOCK,
     id: 'blockDelete',
     weight: 6,
+    associatedKeyboardShortcut: 'delete',
   }
   Blockly.ContextMenuRegistry.registry.register(deleteOption)
 }
@@ -174,6 +175,7 @@ export function registerDuplicateBlock() {
     scopeType: original.scopeType,
     id: original.id,
     weight: original.weight,
+    associatedKeyboardShortcut: original.associatedKeyboardShortcut,
   }
   Blockly.ContextMenuRegistry.registry.unregister(duplicateOption.id)
   Blockly.ContextMenuRegistry.registry.register(duplicateOption)
