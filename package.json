@@ -38,8 +38,8 @@
   "devDependencies": {
     "@commitlint/cli": "20.5.3",
     "@commitlint/config-conventional": "20.5.3",
-    "@vitest/browser": "4.1.10",
-    "@vitest/browser-playwright": "4.1.10",
+    "@vitest/browser": "4.1.11",
+    "@vitest/browser-playwright": "4.1.11",
     "eslint": "9.39.5",
     "eslint-config-scratch": "14.1.61",
     "husky": "9.1.7",
@@ -50,7 +50,7 @@
     "source-map-loader": "5.0.0",
     "ts-loader": "9.6.2",
     "typescript": "5.9.3",
-    "vitest": "4.1.10",
+    "vitest": "4.1.11",
     "webpack": "5.109.2",
     "webpack-cli": "6.0.1",
     "webpack-dev-server": "5.2.6"
