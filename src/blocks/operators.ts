@@ -106,6 +106,28 @@ Blockly.Blocks.operator_divide = {
   },
 }
 
+Blockly.Blocks.operator_power = {
+  /**
+   * Block for rasing a number to a power.
+   */
+  init: function (this: Blockly.Block) {
+    this.jsonInit({
+      message0: Blockly.Msg.OPERATORS_POWER,
+      args0: [
+        {
+          type: 'input_value',
+          name: 'NUM1',
+        },
+        {
+          type: 'input_value',
+          name: 'NUM2',
+        },
+      ],
+      extensions: ['colours_operators', 'output_number'],
+    })
+  },
+}
+
 Blockly.Blocks.operator_random = {
   /**
    * Block for picking a random number.
