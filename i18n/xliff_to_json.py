@@ -20,9 +20,8 @@
 import argparse
 import os
 import re
-import subprocess
 import sys
-from xml.dom import minidom
+import defusedxml.minidom as minidom
 from common import InputError
 from common import write_files
 
