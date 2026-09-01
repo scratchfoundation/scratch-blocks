@@ -422,3 +422,29 @@ Blockly.Blocks.operator_mathop = {
     })
   },
 }
+
+Blockly.Blocks.operator_convert = {
+  /**
+   * Block for converting a number to a decimal or percentage.
+   */
+  init: function (this: Blockly.Block) {
+    this.jsonInit({
+      message0: Blockly.Msg.OPERATORS_CONVERT,
+      args0: [
+        {
+          type: 'input_value',
+          name: 'NUM',
+        },
+        {
+          type: 'field_dropdown',
+          name: 'CONVERT_TYPE',
+          options: [
+            [Blockly.Msg.OPERATORS_CONVERT_DECIMAL, 'DECIMAL'],
+            [Blockly.Msg.OPERATORS_CONVERT_PERCENT, 'PERCENT'],
+          ],
+        },
+      ],
+      extensions: ['colours_operators', 'output_number'],
+    })
+  },
+}
