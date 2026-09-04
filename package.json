@@ -41,7 +41,7 @@
     "@vitest/browser": "4.1.11",
     "@vitest/browser-playwright": "4.1.11",
     "eslint": "9.39.5",
-    "eslint-config-scratch": "14.1.62",
+    "eslint-config-scratch": "14.1.64",
     "husky": "9.1.7",
     "playwright": "1.62.1",
     "prettier": "3.8.5",
