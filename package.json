@@ -32,7 +32,7 @@
   },
   "dependencies": {
     "@blockly/continuous-toolbox": "^7.0.8",
-    "@blockly/field-colour": "^6.0.11",
+    "@blockly/field-colour": "^13.0.0",
     "blockly": "^12.4.1"
   },
   "devDependencies": {
