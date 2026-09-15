@@ -43,6 +43,7 @@ import { registerScratchFieldNumber } from './fields/scratch_field_number'
 import { registerScratchFieldVariable } from './fields/scratch_field_variable'
 import './flyout_checkbox_icon'
 import { buildGlowFilter, glowStack } from './glows'
+import { ScratchNavigator } from './keyboard_navigation/scratch_navigator'
 import { registerRecyclableBlockFlyoutInflater } from './recyclable_block_flyout_inflater'
 import './renderer/cat/renderer'
 import './renderer/renderer'
@@ -122,6 +123,7 @@ export function inject(container: Element, options: ScratchBlocksOptions) {
     },
   })
   const workspace = Blockly.inject(container, options)
+  workspace.setNavigator(new ScratchNavigator())
 
   buildGlowFilter(workspace)
 

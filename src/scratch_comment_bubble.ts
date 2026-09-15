@@ -27,10 +27,24 @@ export class ScratchCommentBubble
     this.getSvgRoot().setAttribute('style', `--colour-commentBorder: ${sourceBlock.getColourTertiary()};`)
     this.getSvgRoot().setAttribute('id', this.id)
 
+    this.getEditorFocusableNode().setParent(sourceBlock)
+
     Blockly.browserEvents.conditionalBind(this.getSvgRoot(), 'pointerdown', this, this.startGesture.bind(this))
     // Don't zoom with mousewheel; let it scroll instead.
     Blockly.browserEvents.conditionalBind(this.getSvgRoot(), 'wheel', this, (e: WheelEvent) => {
       e.stopPropagation()
+    })
+
+    for (const button of this.getCommentBarButtons()) {
+      this.sourceBlock.workspace
+        .getComponentManager()
+        .addComponent({ component: button, capabilities: [Blockly.ComponentManager.Capability.FOCUSABLE], weight: 0 })
+    }
+
+    this.sourceBlock.workspace.getComponentManager().addComponent({
+      component: this.getEditorFocusableNode(),
+      capabilities: [Blockly.ComponentManager.Capability.FOCUSABLE],
+      weight: 0,
     })
   }
 
@@ -155,6 +169,10 @@ export class ScratchCommentBubble
 
   dispose() {
     this.disposing = true
+    for (const button of this.getCommentBarButtons()) {
+      this.sourceBlock?.workspace.getComponentManager().removeComponent(button.id)
+    }
+    this.sourceBlock?.workspace.getComponentManager().removeComponent(this.getEditorFocusableNode().id)
     Blockly.utils.dom.removeNode(this.anchorChain ?? null)
     if (this.sourceBlock) {
       Blockly.Events.fire(new (Blockly.Events.get('block_comment_delete'))(this, this.sourceBlock))
@@ -192,5 +210,23 @@ export class ScratchCommentBubble
   moveBy(deltaX: number, deltaY: number) {
     const origin = this.getRelativeToSurfaceXY()
     this.moveTo(origin.x + deltaX, origin.y + deltaY)
+  }
+
+  /**
+   * Comment bubbles already live on the floating bubble layer, so no need to
+   * bring them to the front. Doing so can cause a loss of focus when toggling
+   * collapsed state via the keyboard.
+   */
+  override bringToFront() {
+    // Intentional no-op.
+  }
+
+  /**
+   * Handles the user acting on this comment via keyboard navigation.
+   * Expands the comment and focuses its editor.
+   */
+  performAction() {
+    this.setCollapsed(false)
+    Blockly.getFocusManager().focusNode(this.getEditorFocusableNode())
   }
 }
