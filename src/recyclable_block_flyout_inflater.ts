@@ -39,6 +39,27 @@ export class RecyclableBlockFlyoutInflater extends BlocklyRecyclableBlockFlyoutI
     block.setDragStrategy(new UniqueIdBlockDragStrategy(block))
     return block
   }
+
+  /**
+   * Add listeners to a block that has been added to the flyout.
+   *
+   * @param block The block to add listeners for.
+   */
+  protected override addBlockListeners(block: Blockly.BlockSvg) {
+    const blockListeners = []
+
+    blockListeners.push(
+      Blockly.browserEvents.conditionalBind(block.getSvgRoot(), 'pointerdown', block, (e: PointerEvent) => {
+        const gesture = this.flyout?.targetWorkspace?.getGesture(e)
+        if (gesture && this.flyout) {
+          gesture.setStartBlock(block)
+          gesture.handleFlyoutStart(e, this.flyout)
+        }
+      }),
+    )
+
+    this.listeners.set(block.id, blockListeners)
+  }
 }
 
 /**
