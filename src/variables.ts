@@ -119,6 +119,10 @@ export function createVariable(
         if (toolbox instanceof ScratchContinuousToolbox && flyout instanceof CheckableContinuousFlyout) {
           toolbox.runAfterRerender(() => {
             flyout.setCheckboxState(variableBlockId, true)
+            const variableBlock = flyout.getWorkspace().getBlockById(variableBlockId)
+            if (variableBlock) {
+              Blockly.getFocusManager().focusNode(variableBlock)
+            }
           })
         }
 
