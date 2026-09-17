@@ -193,7 +193,9 @@ export class ScratchCommentBubble
     return this.workspace
   }
 
-  onNodeFocus() {}
+  onNodeFocus() {
+    this.bringToFront()
+  }
 
   onNodeBlur() {}
 
@@ -210,15 +212,6 @@ export class ScratchCommentBubble
   moveBy(deltaX: number, deltaY: number) {
     const origin = this.getRelativeToSurfaceXY()
     this.moveTo(origin.x + deltaX, origin.y + deltaY)
-  }
-
-  /**
-   * Comment bubbles already live on the floating bubble layer, so no need to
-   * bring them to the front. Doing so can cause a loss of focus when toggling
-   * collapsed state via the keyboard.
-   */
-  override bringToFront() {
-    // Intentional no-op.
   }
 
   /**
