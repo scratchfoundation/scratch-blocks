@@ -325,6 +325,14 @@ class ScratchFieldNumber extends Blockly.FieldTextInput {
     Blockly.DropDownDiv.getContentDiv().removeAttribute('role')
     Blockly.DropDownDiv.getContentDiv().removeAttribute('aria-haspopup')
   }
+
+  /**
+   * Returns a description of the type of this field for use in screenreader
+   * labels.
+   */
+  override getAriaTypeName() {
+    return this.ariaTypeName || Blockly.Msg['ARIA_TYPE_FIELD_NUMBER']
+  }
 }
 
 ScratchFieldNumber.prototype.DEFAULT_VALUE = ''
