@@ -91,6 +91,17 @@ function getBlockNavigationCandidates(block: Blockly.BlockSvg): Blockly.IFocusab
     // Connections on inputs are navigable.
     const connection = input.connection
     if (!connection) continue
+
+    // If there's a comment and a statement input, the comment comes before the
+    // statement input.
+    if (input.type === Blockly.inputs.inputTypes.STATEMENT && commentBubble) {
+      candidates.push(commentBubble)
+      candidates.push(...commentBubble.getCommentBarButtons())
+      // Clear the comment so we don't also add it at the end of the list of
+      // navigation candidates below.
+      commentBubble = null
+    }
+
     candidates.push(connection as Blockly.RenderedConnection)
 
     // Child blocks attached to inputs are navigable.
