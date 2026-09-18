@@ -259,7 +259,7 @@ export class CheckboxBubble implements Blockly.IBubble, Blockly.IRenderedElement
 
   setDragging(_dragging: boolean) {}
 
-  startDrag(_event?: PointerEvent | KeyboardEvent | undefined) {
+  startDrag(_event?: PointerEvent | KeyboardEvent) {
     return this
   }
 

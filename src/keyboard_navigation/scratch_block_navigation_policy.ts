@@ -1,5 +1,4 @@
 /**
- * @license
  * Copyright 2026 Raspberry Pi Foundation
  * SPDX-License-Identifier: Apache-2.0
  */
@@ -13,7 +12,6 @@ import { ScratchCommentIcon } from '../scratch_comment_icon'
 export class ScratchBlockNavigationPolicy extends Blockly.BlockNavigationPolicy {
   /**
    * Returns the first child element of the given block.
-   *
    * @param current The block to retrieve the first child of.
    * @returns The first child element of the given block.
    */
@@ -23,7 +21,6 @@ export class ScratchBlockNavigationPolicy extends Blockly.BlockNavigationPolicy 
 
   /**
    * Returns the next peer node of the given block.
-   *
    * @param current The block to find the following element of.
    * @returns The next item after the given block.
    */
@@ -40,7 +37,6 @@ export class ScratchBlockNavigationPolicy extends Blockly.BlockNavigationPolicy 
 
   /**
    * Returns the previous peer node of the given block.
-   *
    * @param current The block to find the preceding element of.
    * @returns The previous item before the given block.
    */
@@ -56,7 +52,6 @@ export class ScratchBlockNavigationPolicy extends Blockly.BlockNavigationPolicy 
 
 /**
  * Returns a list of the navigable children of the given block.
- *
  * @param block The block to retrieve the navigable children of.
  * @returns A list of navigable/focusable children of the given block.
  */
@@ -132,7 +127,6 @@ function getBlockNavigationCandidates(block: Blockly.BlockSvg): Blockly.IFocusab
 
 /**
  * Returns the next navigable item relative to the provided block child.
- *
  * @param block The block whose children should be navigated.
  * @param current The navigable block child item to navigate relative to.
  * @param delta The difference in index to navigate; positive values navigate

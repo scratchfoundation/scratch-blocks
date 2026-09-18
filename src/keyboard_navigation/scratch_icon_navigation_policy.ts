@@ -1,5 +1,4 @@
 /**
- * @license
  * Copyright 2026 Raspberry Pi Foundation
  * SPDX-License-Identifier: Apache-2.0
  */
@@ -12,7 +11,6 @@ import { navigateBlock } from './scratch_block_navigation_policy'
 export class ScratchIconNavigationPolicy extends Blockly.IconNavigationPolicy {
   /**
    * Returns the next peer node of the given icon.
-   *
    * @param current The icon to find the following element of.
    * @returns The next item on the icon's parent block.
    */
@@ -22,7 +20,6 @@ export class ScratchIconNavigationPolicy extends Blockly.IconNavigationPolicy {
 
   /**
    * Returns the previous peer node of the given icon.
-   *
    * @param current The icon to find the preceding element of.
    * @returns The previous item on the icon's parent block.
    */

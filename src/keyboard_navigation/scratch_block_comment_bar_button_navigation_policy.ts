@@ -1,5 +1,4 @@
 /**
- * @license
  * Copyright 2026 Raspberry Pi Foundation
  * SPDX-License-Identifier: Apache-2.0
  */
@@ -13,7 +12,6 @@ import { navigateBlock } from './scratch_block_navigation_policy'
 export class ScratchBlockCommentBarButtonNavigationPolicy extends Blockly.CommentBarButtonNavigationPolicy {
   /**
    * Returns the parent of the given CommentBarButton.
-   *
    * @param current The CommentBarButton to return the parent of.
    * @returns The parent comment of the given CommentBarButton.
    */
@@ -23,7 +21,6 @@ export class ScratchBlockCommentBarButtonNavigationPolicy extends Blockly.Commen
 
   /**
    * Returns the next peer node of the given CommentBarButton.
-   *
    * @param current The CommentBarButton to find the following element of.
    * @returns The next element, if any.
    */
@@ -33,7 +30,6 @@ export class ScratchBlockCommentBarButtonNavigationPolicy extends Blockly.Commen
 
   /**
    * Returns the previous peer node of the given CommentBarButton.
-   *
    * @param current The CommentBarButton to find the preceding element of.
    * @returns The CommentBarButton's previous element, if any.
    */
@@ -43,7 +39,6 @@ export class ScratchBlockCommentBarButtonNavigationPolicy extends Blockly.Commen
 
   /**
    * Returns the row ID of the given CommentBarButton.
-   *
    * @param current The CommentBarButton to retrieve the row ID of.
    * @returns The row ID of the given CommentBarButton.
    */
@@ -53,11 +48,10 @@ export class ScratchBlockCommentBarButtonNavigationPolicy extends Blockly.Commen
 
   /**
    * Returns whether the given object can be navigated from by this policy.
-   *
    * @param current The object to check if this policy applies to.
    * @returns True if the object is an CommentBarButton.
    */
-  isApplicable(current: any): current is Blockly.comments.CommentBarButton {
+  isApplicable(current: unknown): current is Blockly.comments.CommentBarButton {
     return (
       current instanceof Blockly.comments.CommentBarButton && current.getCommentView() instanceof ScratchCommentBubble
     )
@@ -65,8 +59,7 @@ export class ScratchBlockCommentBarButtonNavigationPolicy extends Blockly.Commen
 
   /**
    * Returns the source block of the given comment bar button.
-   *
-   * @param The CommentBarButton to source the parent block of.
+   * @param current The CommentBarButton to source the parent block of.
    * @returns The source block of the given CommentBarButton.
    */
   private getSourceBlock(current: Blockly.comments.CommentBarButton) {

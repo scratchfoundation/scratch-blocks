@@ -5,7 +5,6 @@
 import { ContinuousFlyout, type LabelFlyoutItem } from '@blockly/continuous-toolbox'
 import * as Blockly from 'blockly/core'
 import { CheckboxBubble } from './checkbox_bubble'
-import { stripIds } from './scratch_blocks_utils'
 import { StatusIndicatorLabel } from './status_indicator_label'
 import { STATUS_INDICATOR_LABEL_TYPE } from './status_indicator_label_flyout_inflater'
 

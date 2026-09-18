@@ -42,7 +42,6 @@ export class RecyclableBlockFlyoutInflater extends BlocklyRecyclableBlockFlyoutI
 
   /**
    * Add listeners to a block that has been added to the flyout.
-   *
    * @param block The block to add listeners for.
    */
   protected override addBlockListeners(block: Blockly.BlockSvg) {
