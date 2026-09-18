@@ -1,5 +1,4 @@
 /**
- * @license
  * Copyright 2026 Raspberry Pi Foundation
  * SPDX-License-Identifier: Apache-2.0
  */
@@ -12,7 +11,6 @@ import { navigateBlock } from './scratch_block_navigation_policy'
 export class ScratchBubbleNavigationPolicy extends Blockly.BubbleNavigationPolicy {
   /**
    * Returns the next peer node of the given bubble.
-   *
    * @param current The bubble to find the following element of.
    * @returns The next item on the bubble's parent block.
    */
@@ -22,7 +20,6 @@ export class ScratchBubbleNavigationPolicy extends Blockly.BubbleNavigationPolic
 
   /**
    * Returns the previous peer node of the given bubble.
-   *
    * @param current The bubble to find the preceding element of.
    * @returns The previous navigable item on the bubble's icon's parent block.
    */
@@ -32,8 +29,7 @@ export class ScratchBubbleNavigationPolicy extends Blockly.BubbleNavigationPolic
 
   /**
    * Returns the source block of the given bubble.
-   *
-   * @param The bubble to source the parent block of.
+   * @param current The bubble to source the parent block of.
    * @returns The source block of the given bubble.
    */
   private getSourceBlock(current: Blockly.bubbles.Bubble) {

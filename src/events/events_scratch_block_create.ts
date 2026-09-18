@@ -1,5 +1,4 @@
 /**
- * @license
  * Copyright 2026 Raspberry Pi Foundation
  * SPDX-License-Identifier: Apache-2.0
  */
@@ -30,13 +29,13 @@ export class ScratchBlockCreate extends Blockly.Events.BlockCreate {
     }
 
     const json = super.toJson() as ScratchBlockCreateJson
-    json['xml'] = Blockly.Xml.domToText(this.xml)
+    json.xml = Blockly.Xml.domToText(this.xml)
     return json
   }
 
-  static fromJson(json: ScratchBlockCreateJson, workspace: Blockly.Workspace, event?: any): ScratchBlockCreate {
+  static fromJson(json: ScratchBlockCreateJson, workspace: Blockly.Workspace, event?: unknown): ScratchBlockCreate {
     const newEvent = super.fromJson(json, workspace, event) as ScratchBlockCreate
-    newEvent.xml = Blockly.utils.xml.textToDom(json['xml'])
+    newEvent.xml = Blockly.utils.xml.textToDom(json.xml)
     return newEvent
   }
 }

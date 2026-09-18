@@ -88,7 +88,7 @@ export class ScratchCommentBubble
     }
   }
 
-  startDrag(_event?: PointerEvent | KeyboardEvent | undefined) {
+  startDrag(_event?: PointerEvent | KeyboardEvent) {
     this.dragStartLocation = this.getRelativeToSurfaceXY()
     this.workspace.setResizesEnabled(false)
     this.workspace.getLayerManager()?.moveToDragLayer(this)

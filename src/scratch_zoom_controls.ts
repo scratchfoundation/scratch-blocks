@@ -54,7 +54,7 @@ export class ScratchZoomControls implements Blockly.IPositionable {
       // Only add zoom reset if the workspace is movable — if it isn't,
       // zooming to center could push blocks off the visible edges.
       this.zoomResetGroup = this.createButtonGroup('blocklyZoomReset', `${media}zoom-reset.svg`)
-      Blockly.utils.aria.setState(this.zoomResetGroup, Blockly.utils.aria.State.LABEL, Blockly.Msg['RESET_ZOOM'])
+      Blockly.utils.aria.setState(this.zoomResetGroup, Blockly.utils.aria.State.LABEL, Blockly.Msg.RESET_ZOOM)
       Blockly.utils.aria.setRole(this.zoomResetGroup, Blockly.utils.aria.Role.BUTTON)
       this.svgGroup.appendChild(this.zoomResetGroup)
       this.boundEvents.push(
@@ -70,7 +70,7 @@ export class ScratchZoomControls implements Blockly.IPositionable {
     }
 
     this.zoomOutGroup = this.createButtonGroup('blocklyZoomOut', `${media}zoom-out.svg`)
-    Blockly.utils.aria.setState(this.zoomOutGroup, Blockly.utils.aria.State.LABEL, Blockly.Msg['ZOOM_OUT'])
+    Blockly.utils.aria.setState(this.zoomOutGroup, Blockly.utils.aria.State.LABEL, Blockly.Msg.ZOOM_OUT)
     Blockly.utils.aria.setRole(this.zoomOutGroup, Blockly.utils.aria.Role.BUTTON)
     this.svgGroup.appendChild(this.zoomOutGroup)
     this.boundEvents.push(
@@ -85,7 +85,7 @@ export class ScratchZoomControls implements Blockly.IPositionable {
     )
 
     this.zoomInGroup = this.createButtonGroup('blocklyZoomIn', `${media}zoom-in.svg`)
-    Blockly.utils.aria.setState(this.zoomInGroup, Blockly.utils.aria.State.LABEL, Blockly.Msg['ZOOM_IN'])
+    Blockly.utils.aria.setState(this.zoomInGroup, Blockly.utils.aria.State.LABEL, Blockly.Msg.ZOOM_IN)
     Blockly.utils.aria.setRole(this.zoomInGroup, Blockly.utils.aria.Role.BUTTON)
     this.svgGroup.appendChild(this.zoomInGroup)
     this.boundEvents.push(

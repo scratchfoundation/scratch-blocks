@@ -438,11 +438,11 @@ class ScratchFieldAngle extends Blockly.FieldNumber {
   }
 
   override getAriaTypeName() {
-    return Blockly.Msg['ARIA_TYPE_FIELD_ANGLE']
+    return Blockly.Msg.ARIA_TYPE_FIELD_ANGLE
   }
 
   override getAriaValue() {
-    return Blockly.Msg['ARIA_LABEL_FIELD_ANGLE'].replace('%1', super.getAriaValue() ?? '')
+    return Blockly.Msg.ARIA_LABEL_FIELD_ANGLE.replace('%1', super.getAriaValue() ?? '')
   }
 
   toDegrees(radians: number) {

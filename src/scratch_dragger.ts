@@ -29,8 +29,9 @@ export class ScratchDragger extends Blockly.dragging.Dragger {
   /**
    * Handles the start of a drag operation.
    * @param event The event that triggered the drag.
+   * @returns The object being dragged.
    */
-  override onDragStart(event?: PointerEvent | KeyboardEvent | undefined) {
+  override onDragStart(event?: PointerEvent | KeyboardEvent) {
     if (this.draggable instanceof Blockly.BlockSvg) {
       this.originatedFromFlyout = this.draggable.workspace.isFlyout
       this.draggable.workspace.addClass(BOUNDLESS_CLASS)
@@ -53,7 +54,7 @@ export class ScratchDragger extends Blockly.dragging.Dragger {
 
   /**
    * Records whether or not the current drag is out of the workspace's bounds.
-   * @param event The event that triggered this call.
+   * @param coordinate The current location of the dragged item.
    */
   updateOutOfBoundsState(coordinate: Blockly.utils.Coordinate) {
     if (this.draggable instanceof Blockly.BlockSvg) {
@@ -68,7 +69,7 @@ export class ScratchDragger extends Blockly.dragging.Dragger {
 
   /**
    * Handles the end of a drag.
-   * @param event The event that ended the drag.
+   * @param e The event that ended the drag.
    */
   override onDragEnd(e?: PointerEvent | KeyboardEvent) {
     const coordinate = this.getCoordinate(e)
@@ -121,7 +122,7 @@ export class ScratchDragger extends Blockly.dragging.Dragger {
    * bounds (e.g. onto the backpack or a different sprite), the GUI handles
    * the drop — the flyout should not delete the block even if the pointer
    * happens to overlap the flyout's bounding rect.
-   * @param event The drag event that triggered this check.
+   * @param coordinate The currnet location of the dragged item.
    * @param rootDraggable The topmost item being dragged.
    * @returns True if the draggable would be deleted.
    */
@@ -136,7 +137,7 @@ export class ScratchDragger extends Blockly.dragging.Dragger {
   /**
    * Returns whether or not the dragged item should return to its starting
    * position.
-   * @param event The drag event that triggered this check.
+   * @param coordinate The current location of the dragged item.
    * @param rootDraggable The topmost item being dragged.
    * @returns True if the draggable should return to its starting position.
    */
@@ -150,7 +151,7 @@ export class ScratchDragger extends Blockly.dragging.Dragger {
   /**
    * Returns whether or not the given event occurred within the bounds of the
    * workspace.
-   * @param event The event to check.
+   * @param coordinate The current location of the dragged item.
    * @returns True if the event occurred inside the workspace.
    */
   isInsideWorkspace(coordinate: Blockly.utils.Coordinate) {

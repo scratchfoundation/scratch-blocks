@@ -87,7 +87,7 @@ class ScratchFieldNumber extends Blockly.FieldTextInput {
   }
 
   /**
-   * Return an appropriate restrictor, depending on whether this FieldNumber
+   * Returns an appropriate restrictor, depending on whether this FieldNumber
    * allows decimal or negative numbers.
    * @returns Regular expression for this FieldNumber's restrictor.
    */
@@ -329,9 +329,10 @@ class ScratchFieldNumber extends Blockly.FieldTextInput {
   /**
    * Returns a description of the type of this field for use in screenreader
    * labels.
+   * @returns A description of the type of this field.
    */
   override getAriaTypeName() {
-    return this.ariaTypeName || Blockly.Msg['ARIA_TYPE_FIELD_NUMBER']
+    return this.ariaTypeName ?? Blockly.Msg.ARIA_TYPE_FIELD_NUMBER
   }
 }
 
