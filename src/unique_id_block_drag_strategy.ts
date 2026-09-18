@@ -3,6 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 import * as Blockly from 'blockly/core'
+import { stripIds } from './scratch_blocks_utils'
 
 export class UniqueIdBlockDragStrategy extends Blockly.dragging.BlockDragStrategy {
   protected override getTargetBlock() {
@@ -16,9 +17,13 @@ export class UniqueIdBlockDragStrategy extends Blockly.dragging.BlockDragStrateg
       // avoid duplicates.
       const json = Blockly.serialization.blocks.save(rootBlock, { saveIds: false })
       if (json) {
-        const newBlock = Blockly.serialization.blocks.appendInternal(json, this.block.workspace.targetWorkspace, {
-          recordUndo: true,
-        }) as Blockly.BlockSvg
+        const newBlock = Blockly.serialization.blocks.appendInternal(
+          stripIds(json),
+          this.block.workspace.targetWorkspace,
+          {
+            recordUndo: true,
+          },
+        ) as Blockly.BlockSvg
         Blockly.Events.setRecordUndo(false)
         newBlock.render()
         this.positionNewBlock(this.block, newBlock)
