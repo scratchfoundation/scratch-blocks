@@ -32,7 +32,7 @@
   },
   "dependencies": {
     "@blockly/continuous-toolbox": "^13.2.0",
-    "@blockly/field-colour": "^13.2.0",
+    "@blockly/field-colour-hsv-sliders": "^13.3.0",
     "blockly": "^13.3.0"
   },
   "devDependencies": {
