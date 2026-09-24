@@ -40,4 +40,11 @@ export class ScratchConnectionNavigationPolicy extends Blockly.ConnectionNavigat
 
     return super.getPreviousSibling(current)
   }
+
+  override isNavigable(current: Blockly.RenderedConnection): boolean {
+    // The next connection following the prototype block in a procedure
+    // definition block is not usable and shouldn't be available to keyboard
+    // navigation.
+    return super.isNavigable(current) && current.getSourceBlock().type !== 'procedures_prototype'
+  }
 }
