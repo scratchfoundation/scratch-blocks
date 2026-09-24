@@ -31,7 +31,7 @@
     "watch": "webpack --mode development --watch"
   },
   "dependencies": {
-    "@blockly/continuous-toolbox": "^13.2.0",
+    "@blockly/continuous-toolbox": "^13.3.0",
     "@blockly/field-bitmap": "^13.3.0",
     "@blockly/field-colour-hsv-sliders": "^13.3.0",
     "blockly": "^13.3.0"
