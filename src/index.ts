@@ -192,6 +192,7 @@ contextMenuItems.registerCopyShortcut()
 contextMenuItems.registerCutShortcut()
 Blockly.ContextMenuRegistry.registry.unregister('workspaceDelete')
 contextMenuItems.registerDeleteAll()
+Blockly.ShortcutItems.registerNavigationShortcuts()
 Blockly.comments.CommentView.defaultCommentSize = new Blockly.utils.Size(200, 200)
 
 // When the focused block is deleted and has no parent or nearby neighbor,
