@@ -193,7 +193,6 @@ class DuplicateOnDragDragStrategy extends Blockly.dragging.BlockDragStrategy {
         const newBlock = Blockly.serialization.blocks.appendInternal(json, this.draggingBlock.workspace, {
           recordUndo: true,
         }) as Blockly.BlockSvg
-        newBlock.setDeletable(true)
         return newBlock
       }
     }
@@ -535,7 +534,6 @@ function createArgumentReporter_(
   let newBlock
   try {
     newBlock = this.workspace.newBlock(blockType)
-    newBlock.setDeletable(false)
     newBlock.setFieldValue(displayName, 'VALUE')
     if (!this.isInsertionMarker()) {
       newBlock.initSvg()
@@ -1026,6 +1024,8 @@ Blockly.Blocks.procedures_definition = {
       ],
       extensions: ['colours_more', 'shape_bowler_hat', 'procedure_def_contextmenu'],
     })
+    this.mixin(NON_DUPLICATABLE_MIXIN, true)
+    this.setMovable(false)
   },
 }
 
@@ -1058,6 +1058,22 @@ Blockly.Blocks.procedures_call = {
     // Only exists on the external caller.
     this.attachShadow_ = attachShadow_.bind(this)
     this.buildShadowDom_ = buildShadowDom_.bind(this)
+  },
+}
+
+/**
+ * Used to prevent procedure definition, prototype, and argument blocks that
+ * are in the custom block editor from being duplicated. This prevents
+ * redefining the same procedure or extracting unusable child blocks from a
+ * procedure definition block assembly.
+ */
+const NON_DUPLICATABLE_MIXIN = {
+  isDuplicatable: function () {
+    return false
+  },
+
+  isCopyable: function () {
+    return false
   },
 }
 
@@ -1114,6 +1130,17 @@ Blockly.Blocks.procedures_prototype = {
     // Only exists on procedures_prototype.
     this.createArgumentReporter_ = createArgumentReporter_.bind(this)
     this.updateArgumentReporterNames_ = updateArgumentReporterNames_.bind(this)
+
+    this.mixin(NON_DUPLICATABLE_MIXIN, true)
+  },
+
+  /**
+   * Allow keyboard navigating to a prototype block from a definition block via
+   * the right arrow key.
+   * @returns The row ID of the parent procedure definition block.
+   */
+  getRowId: function (this: ProcedurePrototypeBlock) {
+    return this.getParent()?.getRowId() ?? this.id
   },
 }
 
@@ -1172,6 +1199,25 @@ Blockly.Blocks.procedures_declaration = {
   },
 }
 
+/**
+ * Prevents deleting procedure argument blocks only when they are nested in a
+ * procedure prototype block. Clones should be deletable, but as the blocks in
+ * the prototype act as a fount of new copies, they cannot be deleted.
+ */
+const PROCEDURE_ARGUMENT_MIXIN = {
+  isDeletable: function (this: Blockly.Block) {
+    const parentType = this.getParent()?.type
+    return (
+      parentType !== 'procedures_prototype' &&
+      this.isOwnDeletable() &&
+      !this.isInFlyout &&
+      !this.isShadow() &&
+      !this.isDeadOrDying() &&
+      !this.workspace.isReadOnly()
+    )
+  },
+}
+
 Blockly.Blocks.argument_reporter_boolean = {
   init: function (this: Blockly.BlockSvg) {
     this.jsonInit({
@@ -1187,6 +1233,7 @@ Blockly.Blocks.argument_reporter_boolean = {
     })
     this.setDragStrategy(new DuplicateOnDragDragStrategy(this))
     delegateContextMenuToPrototypeParent(this)
+    this.mixin(PROCEDURE_ARGUMENT_MIXIN, true)
   },
 }
 
@@ -1205,6 +1252,7 @@ Blockly.Blocks.argument_reporter_string_number = {
     })
     this.setDragStrategy(new DuplicateOnDragDragStrategy(this))
     delegateContextMenuToPrototypeParent(this)
+    this.mixin(PROCEDURE_ARGUMENT_MIXIN, true)
   },
 }
 
@@ -1221,6 +1269,7 @@ Blockly.Blocks.argument_editor_boolean = {
       ],
       extensions: ['colours_textfield', 'output_boolean'],
     })
+    this.mixin(NON_DUPLICATABLE_MIXIN, true)
 
     // Exist on declaration and arguments editors, with different implementations.
     this.removeFieldCallback = removeArgumentCallback_.bind(this)
@@ -1240,6 +1289,7 @@ Blockly.Blocks.argument_editor_string_number = {
       ],
       extensions: ['colours_textfield', 'output_number', 'output_string'],
     })
+    this.mixin(NON_DUPLICATABLE_MIXIN, true)
 
     // Exist on declaration and arguments editors, with different implementations.
     this.removeFieldCallback = removeArgumentCallback_.bind(this)
