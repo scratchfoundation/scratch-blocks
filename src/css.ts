@@ -561,6 +561,10 @@ const styles = `
     --commentBorderColour: #e2db96;
   }
 
+  .blocklyCommentTopbar image {
+    outline-offset: -3px;
+  }
+
   .blocklyCommentTopbarBackground {
     height: 32px;
   }
@@ -571,21 +575,12 @@ const styles = `
     transform-origin: 16px 16px;
   }
 
-  .blocklyComment:not(.blocklyCollapsed) .blocklyCommentHighlight,
-  .blocklySelected .blocklyCommentHighlight,
-  .blocklyCollapsed .blocklyCommentTopbarBackground,
-  .blocklyCollapsed.blocklySelected .blocklyCommentTopbarBackground {
-    stroke: var(--colour-commentBorder);
-    stroke-width: 1px;
-  }
-
   .blocklyCollapsed.blocklyComment .blocklyFoldoutIcon {
     transform: rotate(-180deg);
   }
 
   .scratch-renderer.default-theme .blocklyComment .blocklyTextarea,
   .scratch-renderer.high-contrast-theme .blocklyComment .blocklyTextarea {
-    border: none;
     --commentFillColour: #fef49c;
     font-size: 12pt;
     font-weight: 400;
