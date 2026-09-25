@@ -9,7 +9,7 @@ import * as Blockly from 'blockly/core'
  */
 export class ScratchCommentBubble
   extends Blockly.comments.CommentView
-  implements Blockly.IBubble, Blockly.ISelectable
+  implements Blockly.IBubble, Blockly.ISelectable, Blockly.IDeletable
 {
   id: string
   private sourceBlock: Blockly.BlockSvg | null
@@ -221,5 +221,13 @@ export class ScratchCommentBubble
   performAction() {
     this.setCollapsed(false)
     Blockly.getFocusManager().focusNode(this.getEditorFocusableNode())
+  }
+
+  /**
+   * Indicates that this comment is deletable.
+   * @returns True.
+   */
+  isDeletable() {
+    return true
   }
 }
