@@ -168,6 +168,8 @@ export class ScratchCommentBubble
   }
 
   dispose() {
+    const parentBlock = this.sourceBlock
+
     this.disposing = true
     for (const button of this.getCommentBarButtons()) {
       this.sourceBlock?.workspace.getComponentManager().removeComponent(button.id)
@@ -183,6 +185,12 @@ export class ScratchCommentBubble
       }
     }
     super.dispose()
+
+    if (parentBlock) {
+      requestAnimationFrame(() => {
+        Blockly.getFocusManager().focusNode(parentBlock)
+      })
+    }
   }
 
   getFocusableElement() {
