@@ -44,6 +44,7 @@ import { registerScratchFieldVariable } from './fields/scratch_field_variable'
 import './flyout_checkbox_icon'
 import { buildGlowFilter, glowStack } from './glows'
 import { ScratchNavigator } from './keyboard_navigation/scratch_navigator'
+import * as keyboardShortcuts from './keyboard_shortcuts'
 import { registerRecyclableBlockFlyoutInflater } from './recyclable_block_flyout_inflater'
 import './renderer/cat/renderer'
 import './renderer/renderer'
@@ -188,11 +189,15 @@ if (!blockCommentMenuItem) {
 Blockly.ContextMenuRegistry.registry.unregister('blockDelete')
 contextMenuItems.registerDeleteBlock()
 contextMenuItems.registerDuplicateBlock()
-contextMenuItems.registerCopyShortcut()
-contextMenuItems.registerCutShortcut()
 Blockly.ContextMenuRegistry.registry.unregister('workspaceDelete')
+
 contextMenuItems.registerDeleteAll()
+keyboardShortcuts.registerDisconnectBlock()
+keyboardShortcuts.registerDuplicate()
+keyboardShortcuts.registerCopy()
+keyboardShortcuts.registerCut()
 Blockly.ShortcutItems.registerNavigationShortcuts()
+
 Blockly.comments.CommentView.defaultCommentSize = new Blockly.utils.Size(200, 200)
 
 // When the focused block is deleted and has no parent or nearby neighbor,

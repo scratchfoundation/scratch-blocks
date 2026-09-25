@@ -1025,7 +1025,6 @@ Blockly.Blocks.procedures_definition = {
       extensions: ['colours_more', 'shape_bowler_hat', 'procedure_def_contextmenu'],
     })
     this.mixin(NON_DUPLICATABLE_MIXIN, true)
-    this.setMovable(false)
   },
 }
 
