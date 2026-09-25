@@ -4,6 +4,7 @@
  */
 import * as Blockly from 'blockly/core'
 import { afterAll, afterEach, assert, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
+import { ScratchMsgs } from '../../msg/scratch_msgs'
 import '../../src/css'
 // The scratch field registrations fire inside the scratch-specific inject();
 // this test drives Blockly directly, so register the scratch dropdown
@@ -25,6 +26,7 @@ import { registerScratchFieldDropdown } from '../../src/fields/scratch_field_dro
 let originalFieldDropdown: (new (...args: unknown[]) => Blockly.Field) | null = null
 
 beforeAll(() => {
+  ScratchMsgs.setLocale('en')
   originalFieldDropdown = Blockly.registry.getClass(Blockly.registry.Type.FIELD, 'field_dropdown')
   registerScratchFieldDropdown()
   Blockly.Blocks.test_target_menu = {

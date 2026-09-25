@@ -5,6 +5,7 @@
 import { RecyclableBlockFlyoutInflater as BlocklyRecyclableBlockFlyoutInflater } from '@blockly/continuous-toolbox'
 import * as Blockly from 'blockly/core'
 import { CheckboxBubble } from './checkbox_bubble'
+import { UniqueIdBlockDragStrategy } from './unique_id_block_drag_strategy'
 
 /**
  * A block inflater that caches and reuses blocks to improve performance.
@@ -28,6 +29,35 @@ export class RecyclableBlockFlyoutInflater extends BlocklyRecyclableBlockFlyoutI
     }
 
     return flyoutItem
+  }
+
+  override createBlock(
+    blockDefinition: Blockly.utils.toolbox.BlockInfo,
+    workspace: Blockly.WorkspaceSvg,
+  ): Blockly.BlockSvg {
+    const block = super.createBlock(blockDefinition, workspace)
+    block.setDragStrategy(new UniqueIdBlockDragStrategy(block))
+    return block
+  }
+
+  /**
+   * Add listeners to a block that has been added to the flyout.
+   * @param block The block to add listeners for.
+   */
+  protected override addBlockListeners(block: Blockly.BlockSvg) {
+    const blockListeners = []
+
+    blockListeners.push(
+      Blockly.browserEvents.conditionalBind(block.getSvgRoot(), 'pointerdown', block, (e: PointerEvent) => {
+        const gesture = this.flyout?.targetWorkspace?.getGesture(e)
+        if (gesture && this.flyout) {
+          gesture.setStartBlock(block)
+          gesture.handleFlyoutStart(e, this.flyout)
+        }
+      }),
+    )
+
+    this.listeners.set(block.id, blockListeners)
   }
 }
 

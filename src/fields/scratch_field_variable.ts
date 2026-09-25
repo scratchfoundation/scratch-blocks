@@ -78,7 +78,7 @@ export class ScratchFieldVariable extends Blockly.FieldVariable {
    * order.
    */
   initFlyoutBroadcast(workspace: Blockly.WorkspaceSvg): Blockly.IVariableModel<Blockly.IVariableState> | undefined {
-    const broadcastVars = workspace.getVariablesOfType(Constants.BROADCAST_MESSAGE_VARIABLE_TYPE)
+    const broadcastVars = workspace.getVariableMap().getVariablesOfType(Constants.BROADCAST_MESSAGE_VARIABLE_TYPE)
     if (
       workspace.isFlyout &&
       this.getDefaultType() == Constants.BROADCAST_MESSAGE_VARIABLE_TYPE &&

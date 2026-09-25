@@ -283,7 +283,6 @@ export class FieldNote extends Blockly.FieldTextInput {
    * @param quietInput If true, suppress the sound preview while the editor opens.
    */
   showEditor_(event: PointerEvent, quietInput = false) {
-    super.showEditor_(event, quietInput, false)
     const parentBlock = this.getSourceBlock()?.getParent() as Blockly.BlockSvg | undefined
     if (!parentBlock) {
       throw new Error('[field_note] Missing parent block for note field editor')
@@ -402,7 +401,38 @@ export class FieldNote extends Blockly.FieldTextInput {
     Blockly.DropDownDiv.setColour(parentColour, parentTertiary)
     Blockly.DropDownDiv.showPositionedByBlock(dropdownAnchor, sourceBlock)
 
+    super.showEditor_(event, quietInput, false)
     this.updateSelection_()
+  }
+
+  /**
+   * Handles a keydown event in the field editor.
+   * @param e The event that triggered this callback.
+   */
+  protected override onHtmlInputKeyDown_(e: KeyboardEvent) {
+    if (e.key === 'ArrowUp') {
+      this.adjustNoteBy(1)
+    } else if (e.key === 'ArrowDown') {
+      this.adjustNoteBy(-1)
+    }
+
+    super.onHtmlInputKeyDown_(e)
+  }
+
+  /**
+   * Adjusts the current note by the given delta.
+   * @param delta How much to adjust the current note by (positive or negative).
+   */
+  private adjustNoteBy(delta: number) {
+    const value = this.getValue()
+    if (value && this.htmlInput_) {
+      const newValue = parseInt(value) + delta
+      if (newValue >= 0 && newValue <= FieldNote.MAX_NOTE) {
+        this.htmlInput_.value = `${newValue}`
+        this.setValue(newValue)
+        this.playNoteInternal_()
+      }
+    }
   }
 
   /**
