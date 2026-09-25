@@ -189,6 +189,9 @@ if (!blockCommentMenuItem) {
 }
 Blockly.ContextMenuRegistry.registry.unregister('blockDelete')
 contextMenuItems.registerDeleteBlock()
+Blockly.BlockSvg.prototype.checkAndDelete = function () {
+  contextMenuItems.deleteBlock(this)
+}
 contextMenuItems.registerDuplicateBlock()
 contextMenuItems.registerCopyShortcut()
 contextMenuItems.registerCutShortcut()
