@@ -491,6 +491,7 @@ const CUSTOM_CONTEXT_MENU_GET_VARIABLE_MIXIN = {
     const currentVarName = currentVariable.getName()
     if (!this.isInFlyout) {
       this.workspace
+        .getVariableMap()
         .getVariablesOfType(Constants.SCALAR_VARIABLE_TYPE)
         .sort(
           (a: Blockly.IVariableModel<Blockly.IVariableState>, b: Blockly.IVariableModel<Blockly.IVariableState>) =>
@@ -550,6 +551,7 @@ const CUSTOM_CONTEXT_MENU_GET_LIST_MIXIN = {
     const currentVarName = currentVariable.getName()
     if (!this.isInFlyout) {
       this.workspace
+        .getVariableMap()
         .getVariablesOfType(Constants.LIST_VARIABLE_TYPE)
         .sort(
           (a: Blockly.IVariableModel<Blockly.IVariableState>, b: Blockly.IVariableModel<Blockly.IVariableState>) =>

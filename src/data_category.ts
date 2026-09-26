@@ -30,7 +30,7 @@ import { createVariable } from './variables'
  * @returns Array of XML block elements.
  */
 export function getVariablesCategory(workspace: Blockly.WorkspaceSvg): Element[] {
-  const scalarVariables = workspace.getVariablesOfType(SCALAR_VARIABLE_TYPE)
+  const scalarVariables = workspace.getVariableMap().getVariablesOfType(SCALAR_VARIABLE_TYPE)
   scalarVariables.sort(Blockly.Variables.compareByName)
   const xmlList: Element[] = []
 
@@ -50,7 +50,7 @@ export function getVariablesCategory(workspace: Blockly.WorkspaceSvg): Element[]
 
   // Now add list variables to the flyout
   addCreateButton(xmlList, workspace, 'LIST')
-  const listVariables = workspace.getVariablesOfType(LIST_VARIABLE_TYPE)
+  const listVariables = workspace.getVariableMap().getVariablesOfType(LIST_VARIABLE_TYPE)
   listVariables.sort(Blockly.Variables.compareByName)
   listVariables.forEach((variable) => addDataList(xmlList, variable))
 

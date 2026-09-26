@@ -4,6 +4,7 @@
  */
 import * as Blockly from 'blockly/core'
 import { afterAll, afterEach, assert, beforeAll, beforeEach, describe, expect, it } from 'vitest'
+import { ScratchMsgs } from '../../msg/scratch_msgs'
 import { CheckableContinuousFlyout } from '../../src/checkable_continuous_flyout'
 import { registerRecyclableBlockFlyoutInflater } from '../../src/recyclable_block_flyout_inflater'
 import { registerScratchBlockPaster } from '../../src/scratch_block_paster'
@@ -24,7 +25,7 @@ beforeEach(() => {
   container.style.width = '800px'
   container.style.height = '600px'
   document.body.appendChild(container)
-
+  ScratchMsgs.setLocale('en')
   Blockly.defineBlocksWithJsonArray([
     {
       type: 'test_value_block',
@@ -142,6 +143,18 @@ describe('duplicate block shadow IDs (forum topic 878291)', () => {
     expect(respawned.type).toBe('test_text_shadow')
   })
 
+  function pressEnter(workspace: Blockly.WorkspaceSvg, times: number) {
+    for (let i = 0; i < times; i++) {
+      workspace.getInjectionDiv().dispatchEvent(
+        new KeyboardEvent('keydown', {
+          key: 'Enter',
+          keyCode: 13,
+          bubbles: true,
+        }),
+      )
+    }
+  }
+
   it('two flyout copies get unique shadow IDs when first copy shadow is obscured', () => {
     assert(container, 'Expected container from beforeEach')
     // Inject with CheckableContinuousFlyout (which has the stripIds fix)
@@ -178,7 +191,10 @@ describe('duplicate block shadow IDs (forum topic 878291)', () => {
     assert(template, 'Expected template block in flyout')
 
     // First copy from flyout
-    const copy1 = flyout.createBlock(template)
+    Blockly.getFocusManager().focusNode(template)
+    // Press enter twice, once to start an insert/move and then to commit it
+    pressEnter(workspace, 2)
+    const copy1 = workspace.getTopBlocks()[0]
     const conn1 = copy1.getInput('VALUE')?.connection
     assert(conn1, 'Expected VALUE connection on first copy')
     const shadow1 = conn1.targetBlock()
@@ -199,7 +215,9 @@ describe('duplicate block shadow IDs (forum topic 878291)', () => {
     conn1.connect(reporterOutput)
 
     // Second copy from flyout — its shadow must get a different ID
-    const copy2 = flyout.createBlock(template)
+    Blockly.getFocusManager().focusNode(template)
+    pressEnter(workspace, 2)
+    const copy2 = workspace.getTopBlocks().find((b) => b !== copy1 && b !== reporter)
     const conn2 = copy2.getInput('VALUE')?.connection
     assert(conn2, 'Expected VALUE connection on second copy')
     const shadow2 = conn2.targetBlock()

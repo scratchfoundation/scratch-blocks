@@ -21,7 +21,6 @@
  */
 import * as Blockly from 'blockly/core'
 import { FieldTextInputRemovable } from '../fields/field_textinput_removable'
-import type { ScratchDragger } from '../scratch_dragger'
 
 /**
  * An object mapping argument IDs to blocks and shadow DOMs.
@@ -161,125 +160,44 @@ function parsePrimitiveArrayMutationValue(value: unknown, name: string): Argumen
  * also be non-shadow and therefore clickable/draggable) while still causing
  * the entire definition to move when the prototype area is dragged.
  */
-class DelegateToParentDraggable implements Blockly.IDraggable {
-  constructor(private block: Blockly.BlockSvg) {}
-
-  isMovable(): boolean {
-    return this.block.getParent()?.isMovable() ?? false
+class DelegateToParentDragStrategy extends Blockly.dragging.BlockDragStrategy {
+  constructor(private draggingBlock: Blockly.BlockSvg) {
+    super(draggingBlock)
   }
 
-  startDrag(e: PointerEvent) {
-    this.block.getParent()?.startDrag(e)
-  }
-
-  drag(newLoc: Blockly.utils.Coordinate, e?: PointerEvent) {
-    this.block.getParent()?.drag(newLoc, e)
-  }
-
-  endDrag(e: PointerEvent) {
-    this.block.getParent()?.endDrag(e)
-  }
-
-  revertDrag() {
-    this.block.getParent()?.revertDrag()
-  }
-
-  getRelativeToSurfaceXY() {
-    return (this.block.getParent() ?? this.block).getRelativeToSurfaceXY()
+  protected override getTargetBlock() {
+    const parent = this.draggingBlock.getParent()
+    if (!parent) {
+      throw new Error('DelegateToParentDragStrategy cannot be used for blocks without parents')
+    }
+    return parent
   }
 }
 
 /**
- * Class representing a draggable block that copies itself on drag, but only
+ * Drag strategy for a block that copies itself on drag, but only
  * when the block is directly connected to a procedures_prototype block.
  * When dragged from any other position, it behaves like a normal block.
  */
-class DuplicateOnDragDraggable implements Blockly.IDraggable {
-  /**
-   * The block being dragged: a newly-created duplicate when dragging from a
-   * prototype, or the original block when dragging from elsewhere.
-   */
-  private copy?: Blockly.BlockSvg
-  /**
-   * Whether this drag is duplicating the block (true) or moving it (false).
-   */
-  private isDuplicating_ = false
-  constructor(private block: Blockly.BlockSvg) {}
-
-  /**
-   * Returns whether or not this draggable is movable.
-   * @returns Always true.
-   */
-  isMovable(): boolean {
-    return true
+class DuplicateOnDragDragStrategy extends Blockly.dragging.BlockDragStrategy {
+  constructor(private draggingBlock: Blockly.BlockSvg) {
+    super(draggingBlock)
   }
 
-  /**
-   * Handles the start of a drag. If the block is directly connected to a
-   * procedures_prototype, creates a duplicate and drags that. Otherwise,
-   * switches to a normal drag strategy and drags the original block.
-   * @param e The event that triggered the drag.
-   */
-  startDrag(e: PointerEvent) {
-    const parent = this.block.getParent()
-    this.isDuplicating_ = parent?.type === 'procedures_prototype'
-
-    if (this.isDuplicating_) {
-      const data = this.block.toCopyData()
-      if (!data) {
-        console.warn(
-          'DuplicateOnDragDraggable.startDrag: failed to serialize block for copy',
-          this.block.type,
-          this.block.id,
-        )
-        return
+  protected override getTargetBlock() {
+    const parent = this.draggingBlock.getParent()
+    const duplicating = parent?.type === 'procedures_prototype'
+    if (duplicating) {
+      const json = Blockly.serialization.blocks.save(this.draggingBlock, { addCoordinates: true })
+      if (json) {
+        const newBlock = Blockly.serialization.blocks.appendInternal(json, this.draggingBlock.workspace, {
+          recordUndo: true,
+        }) as Blockly.BlockSvg
+        return newBlock
       }
-      this.copy = Blockly.clipboard.paste(data, this.block.workspace) as Blockly.BlockSvg
-      this.copy.setDeletable(true)
-      this.copy.setDragStrategy(new Blockly.dragging.BlockDragStrategy(this.copy))
-      this.copy.startDrag(e)
-    } else {
-      // Not in a prototype: drag the original block normally and replace this
-      // drag strategy so future drags also behave normally.
-      // Also ensure the block is deletable — reporters created by createArgumentReporter_
-      // are non-deletable by default, but one that has escaped a prototype should be
-      // cleanable by the user.
-      this.block.setDeletable(true)
-      const normalStrategy = new Blockly.dragging.BlockDragStrategy(this.block)
-      this.block.setDragStrategy(normalStrategy)
-      this.copy = this.block
-      normalStrategy.startDrag(e)
     }
-  }
 
-  drag(newLoc: Blockly.utils.Coordinate, e?: PointerEvent) {
-    const gesture = this.block.workspace.getGesture(e)
-    if (!gesture || !this.copy) {
-      console.warn('DuplicateOnDragDraggable.drag: missing gesture or copied block', {
-        hasGesture: Boolean(gesture),
-        hasCopy: Boolean(this.copy),
-        blockId: this.block.id,
-      })
-      return
-    }
-    ;(gesture.getCurrentDragger() as ScratchDragger).setDraggable(this.copy)
-    this.copy.drag(newLoc, e)
-  }
-
-  endDrag(e: PointerEvent) {
-    this.copy?.endDrag(e)
-  }
-
-  revertDrag() {
-    if (this.isDuplicating_) {
-      this.copy?.dispose()
-    } else {
-      this.copy?.revertDrag()
-    }
-  }
-
-  getRelativeToSurfaceXY() {
-    return this.copy ? this.copy.getRelativeToSurfaceXY() : this.block.getRelativeToSurfaceXY()
+    return super.getTargetBlock()
   }
 }
 
@@ -589,7 +507,7 @@ function attachShadow_(this: ProcedureCallBlock, input: Blockly.Input, argumentT
     if (Blockly.Events.isEnabled()) {
       Blockly.Events.fire(new (Blockly.Events.get(Blockly.Events.BLOCK_CREATE))(newBlock))
     }
-    newBlock.outputConnection.connect(input.connection)
+    newBlock.outputConnection?.connect(input.connection)
   }
 }
 
@@ -616,7 +534,6 @@ function createArgumentReporter_(
   let newBlock
   try {
     newBlock = this.workspace.newBlock(blockType)
-    newBlock.setDeletable(false)
     newBlock.setFieldValue(displayName, 'VALUE')
     if (!this.isInsertionMarker()) {
       newBlock.initSvg()
@@ -663,7 +580,7 @@ function populateArgumentOnCaller_(
   if (oldBlock) {
     // Reattach the old block and shadow DOM.
     connectionMap[input.name] = null
-    oldBlock.outputConnection.connect(conn)
+    oldBlock.outputConnection?.connect(conn)
     if (type !== ArgumentType.BOOLEAN && this.generateShadows_) {
       const shadowDom = oldShadow ?? this.buildShadowDom_(type)
       conn.setShadowDom(shadowDom)
@@ -724,7 +641,9 @@ function populateArgumentOnPrototype_(
   }
 
   // Attach the block.
-  conn.connect(argumentReporter.outputConnection)
+  if (argumentReporter.outputConnection) {
+    conn.connect(argumentReporter.outputConnection)
+  }
 }
 
 /**
@@ -769,7 +688,9 @@ function populateArgumentOnDeclaration_(
   }
 
   // Attach the block.
-  conn.connect(argumentEditor.outputConnection)
+  if (argumentEditor.outputConnection) {
+    conn.connect(argumentEditor.outputConnection)
+  }
 }
 
 /**
@@ -1103,6 +1024,7 @@ Blockly.Blocks.procedures_definition = {
       ],
       extensions: ['colours_more', 'shape_bowler_hat', 'procedure_def_contextmenu'],
     })
+    this.mixin(NON_DUPLICATABLE_MIXIN, true)
   },
 }
 
@@ -1138,6 +1060,22 @@ Blockly.Blocks.procedures_call = {
   },
 }
 
+/**
+ * Used to prevent procedure definition, prototype, and argument blocks that
+ * are in the custom block editor from being duplicated. This prevents
+ * redefining the same procedure or extracting unusable child blocks from a
+ * procedure definition block assembly.
+ */
+const NON_DUPLICATABLE_MIXIN = {
+  isDuplicatable: function () {
+    return false
+  },
+
+  isCopyable: function () {
+    return false
+  },
+}
+
 Blockly.Blocks.procedures_prototype = {
   /**
    * Block for calling a procedure with no return value, for rendering inside
@@ -1153,7 +1091,7 @@ Blockly.Blocks.procedures_prototype = {
     // replicate those properties and add a drag strategy that delegates all
     // drag operations to the parent (procedures_definition) block.
     this.setDeletable(false)
-    this.setDragStrategy(new DelegateToParentDraggable(this))
+    this.setDragStrategy(new DelegateToParentDragStrategy(this))
 
     // Delegate right-clicks to the parent define block so that "Add Comment",
     // "Edit", etc. act on the definition rather than the prototype itself.
@@ -1191,6 +1129,17 @@ Blockly.Blocks.procedures_prototype = {
     // Only exists on procedures_prototype.
     this.createArgumentReporter_ = createArgumentReporter_.bind(this)
     this.updateArgumentReporterNames_ = updateArgumentReporterNames_.bind(this)
+
+    this.mixin(NON_DUPLICATABLE_MIXIN, true)
+  },
+
+  /**
+   * Allow keyboard navigating to a prototype block from a definition block via
+   * the right arrow key.
+   * @returns The row ID of the parent procedure definition block.
+   */
+  getRowId: function (this: ProcedurePrototypeBlock) {
+    return this.getParent()?.getRowId() ?? this.id
   },
 }
 
@@ -1249,6 +1198,25 @@ Blockly.Blocks.procedures_declaration = {
   },
 }
 
+/**
+ * Prevents deleting procedure argument blocks only when they are nested in a
+ * procedure prototype block. Clones should be deletable, but as the blocks in
+ * the prototype act as a fount of new copies, they cannot be deleted.
+ */
+const PROCEDURE_ARGUMENT_MIXIN = {
+  isDeletable: function (this: Blockly.Block) {
+    const parentType = this.getParent()?.type
+    return (
+      parentType !== 'procedures_prototype' &&
+      this.isOwnDeletable() &&
+      !this.isInFlyout &&
+      !this.isShadow() &&
+      !this.isDeadOrDying() &&
+      !this.workspace.isReadOnly()
+    )
+  },
+}
+
 Blockly.Blocks.argument_reporter_boolean = {
   init: function (this: Blockly.BlockSvg) {
     this.jsonInit({
@@ -1262,8 +1230,9 @@ Blockly.Blocks.argument_reporter_boolean = {
       ],
       extensions: ['colours_more', 'output_boolean'],
     })
-    this.setDragStrategy(new DuplicateOnDragDraggable(this))
+    this.setDragStrategy(new DuplicateOnDragDragStrategy(this))
     delegateContextMenuToPrototypeParent(this)
+    this.mixin(PROCEDURE_ARGUMENT_MIXIN, true)
   },
 }
 
@@ -1280,8 +1249,9 @@ Blockly.Blocks.argument_reporter_string_number = {
       ],
       extensions: ['colours_more', 'output_number', 'output_string'],
     })
-    this.setDragStrategy(new DuplicateOnDragDraggable(this))
+    this.setDragStrategy(new DuplicateOnDragDragStrategy(this))
     delegateContextMenuToPrototypeParent(this)
+    this.mixin(PROCEDURE_ARGUMENT_MIXIN, true)
   },
 }
 
@@ -1298,6 +1268,7 @@ Blockly.Blocks.argument_editor_boolean = {
       ],
       extensions: ['colours_textfield', 'output_boolean'],
     })
+    this.mixin(NON_DUPLICATABLE_MIXIN, true)
 
     // Exist on declaration and arguments editors, with different implementations.
     this.removeFieldCallback = removeArgumentCallback_.bind(this)
@@ -1317,6 +1288,7 @@ Blockly.Blocks.argument_editor_string_number = {
       ],
       extensions: ['colours_textfield', 'output_number', 'output_string'],
     })
+    this.mixin(NON_DUPLICATABLE_MIXIN, true)
 
     // Exist on declaration and arguments editors, with different implementations.
     this.removeFieldCallback = removeArgumentCallback_.bind(this)

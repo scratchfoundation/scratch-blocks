@@ -1,4 +1,7 @@
 import * as Blockly from 'blockly/core'
+import * as En from 'blockly/msg/en'
+
+Blockly.setLocale(En)
 
 export class ScratchMsgs {
   static currentLocale_ = 'en'

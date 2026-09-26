@@ -29,6 +29,7 @@ import './events/events_block_comment_create'
 import './events/events_block_comment_delete'
 import './events/events_block_comment_move'
 import './events/events_block_comment_resize'
+import './events/events_scratch_block_create'
 import './events/events_scratch_variable_create'
 import { registerFieldColourSlider, FieldColourSlider } from './fields/field_colour_slider'
 import { registerFieldMatrix } from './fields/field_matrix'
@@ -42,6 +43,8 @@ import { registerScratchFieldNumber } from './fields/scratch_field_number'
 import { registerScratchFieldVariable } from './fields/scratch_field_variable'
 import './flyout_checkbox_icon'
 import { buildGlowFilter, glowStack } from './glows'
+import { ScratchNavigator } from './keyboard_navigation/scratch_navigator'
+import * as keyboardShortcuts from './keyboard_shortcuts'
 import { registerRecyclableBlockFlyoutInflater } from './recyclable_block_flyout_inflater'
 import './renderer/cat/renderer'
 import './renderer/renderer'
@@ -116,23 +119,19 @@ export function inject(container: Element, options: ScratchBlocksOptions) {
       flyoutsVerticalToolbox: CheckableContinuousFlyout,
       metricsManager: ContinuousMetrics,
     },
+    zoom: {
+      controls: false,
+    },
   })
   const workspace = Blockly.inject(container, options)
+  workspace.setNavigator(new ScratchNavigator())
 
   buildGlowFilter(workspace)
 
-  // Replace Blockly's sprite-sheet zoom controls with SVG-file-based ones so
-  // each button is a separate file and the correct set is picked up via
-  // pathToMedia (which varies by Scratch color mode).
-  const originalZoomControls = workspace.zoomControls_
-  if (originalZoomControls) {
-    originalZoomControls.dispose()
-
-    const scratchZoomControls = new ScratchZoomControls(workspace)
-    const zoomControlsSvg = scratchZoomControls.createDom()
-    workspace.svgGroup_.appendChild(zoomControlsSvg)
-    scratchZoomControls.init()
-  }
+  const scratchZoomControls = new ScratchZoomControls(workspace)
+  const zoomControlsSvg = scratchZoomControls.createDom()
+  workspace.svgGroup_.appendChild(zoomControlsSvg)
+  scratchZoomControls.init()
 
   Blockly.config.dragRadius = 3
   Blockly.config.snapRadius = 48
@@ -190,10 +189,15 @@ if (!blockCommentMenuItem) {
 Blockly.ContextMenuRegistry.registry.unregister('blockDelete')
 contextMenuItems.registerDeleteBlock()
 contextMenuItems.registerDuplicateBlock()
-contextMenuItems.registerCopyShortcut()
-contextMenuItems.registerCutShortcut()
 Blockly.ContextMenuRegistry.registry.unregister('workspaceDelete')
+
 contextMenuItems.registerDeleteAll()
+keyboardShortcuts.registerDisconnectBlock()
+keyboardShortcuts.registerDuplicate()
+keyboardShortcuts.registerCopy()
+keyboardShortcuts.registerCut()
+Blockly.ShortcutItems.registerNavigationShortcuts()
+
 Blockly.comments.CommentView.defaultCommentSize = new Blockly.utils.Size(200, 200)
 
 // When the focused block is deleted and has no parent or nearby neighbor,

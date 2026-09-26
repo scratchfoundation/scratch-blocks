@@ -161,7 +161,6 @@ class ScratchFieldAngle extends Blockly.FieldNumber {
     // Also, don't let the parent take ephemeral focus since the drop-down div
     // below will handle it, instead.
     const noFocus = Blockly.utils.userAgent.MOBILE || Blockly.utils.userAgent.ANDROID || Blockly.utils.userAgent.IPAD
-    super.showEditor_(event, noFocus, false)
 
     // If there is an existing drop-down someone else owns, hide it immediately and clear it.
     Blockly.DropDownDiv.hideWithoutAnimation()
@@ -282,6 +281,8 @@ class ScratchFieldAngle extends Blockly.FieldNumber {
     Blockly.DropDownDiv.setColour(parentBlock.getColour(), parentBlock.getColourTertiary())
     Blockly.DropDownDiv.showPositionedByBlock(this as Blockly.Field<string | number | null>, sourceBlock)
 
+    super.showEditor_(event, noFocus, false)
+
     this.mouseDownWrapper_ = Blockly.browserEvents.bind(this.handle, 'mousedown', this, this.onMouseDown.bind(this))
 
     this.updateGraph()
@@ -342,6 +343,7 @@ class ScratchFieldAngle extends Blockly.FieldNumber {
     }
     this.setValue(angle)
     this.setEditorValue_(this.getValue())
+    Blockly.utils.aria.announceDynamicAriaState(this.getAriaValue())
     this.resizeEditor_()
   }
 
@@ -433,6 +435,14 @@ class ScratchFieldAngle extends Blockly.FieldNumber {
   doValueUpdate_(newValue: number) {
     super.doValueUpdate_(newValue)
     this.updateGraph()
+  }
+
+  override getAriaTypeName() {
+    return Blockly.Msg.ARIA_TYPE_FIELD_ANGLE
+  }
+
+  override getAriaValue() {
+    return Blockly.Msg.ARIA_LABEL_FIELD_ANGLE.replace('%1', super.getAriaValue() ?? '')
   }
 
   toDegrees(radians: number) {
