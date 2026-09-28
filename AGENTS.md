@@ -50,6 +50,8 @@ npm run test:lint    # Check for lint and formatting issues (does not run other 
 npm run test         # Run unit and browser tests (but not lint)
 npm run test:unit    # Run unit tests only
 npm run test:browser # Run browser tests only
+npm run i18n:src     # Validate msg/json/en.json, the English source strings
+npm run i18n:push    # Upload msg/json/en.json to Transifex (needs TX_TOKEN; normally run by CI)
 ```
 
 Run `npm run test:lint` first when iterating — it is fast. Run `npm run test` before declaring work done.
@@ -63,10 +65,27 @@ src/
 ├── fields/        Custom Blockly field subclasses
 ├── renderer/      Custom renderer (ScratchRenderer) + cat blocks variant
 └── index.ts       Entry point; registers everything with Blockly
+msg/json/en.json   English source strings (the only file of strings to edit by hand)
 ```
 
 Key top-level files: `procedures.ts`, `variables.ts`, `data_category.ts`,
 `scratch_continuous_toolbox.ts`, `checkable_continuous_flyout.ts`, `scratch_comment_bubble.ts`.
+
+## Localized strings
+
+- **English** lives in `msg/json/en.json`. Add or change English strings only there, and refer to them as
+  `Blockly.Msg.KEY`.
+- **Other locales** come from the `scratch-l10n` devDependency, which pulls reviewed translations from the
+  `scratch-editor/blocks` resource on Transifex. Webpack bundles them into `dist/main.mjs` (see
+  `src/scratch_msgs.ts`). Never edit translations in this repository; fix them in Transifex.
+- **How strings flow:**
+  - `npm run i18n:push` uploads `en.json` to Transifex.
+  - scratch-l10n pulls translations daily and publishes a release.
+  - Renovate bumps `scratch-l10n` here as a `fix(deps)` commit, which publishes a new scratch-blocks release.
+- **Keep keys stable.** Renaming a key discards its translations. If Blockly core reads a different key for the same
+  text, add it to `BLOCKLY_ALIASES` in `src/scratch_msgs.ts` instead of renaming.
+- **Blockly core strings.** scratch-blocks doesn't load `blockly/msg/*`. Any Blockly core message the Scratch UI can
+  reach must be in `en.json`. A missing one is `undefined`, which can stop Blockly from building a context menu.
 
 ## Blockly is a read-only dependency
 
