@@ -21,8 +21,8 @@
  * @author fraser@google.com (Neil Fraser)
  */
 import * as Blockly from 'blockly/core'
-import { ScratchMsgs } from '../../msg/scratch_msgs.js'
 import * as Constants from '../constants'
+import { ScratchMsgs } from '../scratch_msgs'
 import type { ScratchVariableModel } from '../scratch_variable_model'
 import { createVariable, renameVariable } from '../variables'
 

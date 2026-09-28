@@ -13,13 +13,13 @@
 // threw "Cannot read properties of null (reading 'type')".
 import * as Blockly from 'blockly/core'
 import { afterAll, afterEach, assert, beforeAll, describe, expect, it } from 'vitest'
-import { ScratchMsgs } from '../../msg/scratch_msgs'
 import '../../src/blocks/procedures'
 import '../../src/blocks/vertical_extensions'
 // Registering the scratch renderer is the key difference from the other
 // browser/procedures.test.ts — that test uses the default renderer and never
 // exercises our RenderInfo override.
 import '../../src/renderer/renderer'
+import { ScratchMsgs } from '../../src/scratch_msgs'
 
 let container: HTMLElement
 let workspace: Blockly.WorkspaceSvg
