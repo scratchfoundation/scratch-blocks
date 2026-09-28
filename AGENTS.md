@@ -85,7 +85,8 @@ Key top-level files: `procedures.ts`, `variables.ts`, `data_category.ts`,
 - **Keep keys stable.** Renaming a key discards its translations. If Blockly core reads a different key for the same
   text, add it to `BLOCKLY_ALIASES` in `src/scratch_msgs.ts` instead of renaming.
 - **Blockly core strings.** scratch-blocks doesn't load `blockly/msg/*`. Any Blockly core message the Scratch UI can
-  reach must be in `en.json`. A missing one is `undefined`, which can stop Blockly from building a context menu.
+  reach must be in `en.json` or `BLOCKLY_ALIASES`. A missing one is `undefined`, which can stop Blockly from building
+  a context menu.
 
 ## Blockly is a read-only dependency
 

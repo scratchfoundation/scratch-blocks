@@ -241,7 +241,6 @@
   "DELETE": "Delete",
   "ADD_COMMENT": "Add Comment",
   "REMOVE_COMMENT": "Remove Comment",
-  "DUPLICATE_COMMENT": "Duplicate",
   "DELETE_BLOCK": "Delete Block",
   "DELETE_X_BLOCKS": "Delete %1 Blocks",
   "DELETE_ALL_BLOCKS": "Delete all %1 blocks?",

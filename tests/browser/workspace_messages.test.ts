@@ -48,6 +48,14 @@ describe('workspace UI messages', () => {
     expect(menuItemTexts()).toEqual(['Duplicate', 'Remove Comment'])
   })
 
+  it('translates the workspace comment context menu', () => {
+    ScratchBlocks.ScratchMsgs.setLocale('de')
+    const comment = new Blockly.comments.RenderedWorkspaceComment(workspace)
+    comment.showContextMenu(new PointerEvent('pointerdown'))
+    const { de } = ScratchBlocks.ScratchMsgs.locales
+    expect(menuItemTexts()).toEqual([de.DUPLICATE, de.REMOVE_COMMENT])
+  })
+
   it('translates the block context menu', () => {
     ScratchBlocks.ScratchMsgs.setLocale('de')
     const block = workspace.newBlock('motion_movesteps')

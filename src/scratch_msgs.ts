@@ -16,8 +16,9 @@ export type ScratchMessageKey = keyof typeof en
  * holds the translation under the Scratch key.
  */
 const BLOCKLY_ALIASES: Record<string, ScratchMessageKey> = {
-  // The block context menu's Duplicate item.
+  // The Duplicate items in the block and workspace comment context menus.
   DUPLICATE_BLOCK: 'DUPLICATE',
+  DUPLICATE_COMMENT: 'DUPLICATE',
 }
 
 /**

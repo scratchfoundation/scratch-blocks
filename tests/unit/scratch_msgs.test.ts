@@ -50,9 +50,9 @@ describe('ScratchMsgs.setLocale', () => {
     expect(Blockly.Msg.CONTROL_FOREVER).toBe(ScratchMsgs.locales.de.CONTROL_FOREVER)
   })
 
-  it("gives Blockly's Duplicate menu item the translation of DUPLICATE", () => {
+  it.each(['DUPLICATE_BLOCK', 'DUPLICATE_COMMENT'])("gives Blockly's %s the translation of DUPLICATE", (key) => {
     ScratchMsgs.setLocale('de')
-    expect(Blockly.Msg.DUPLICATE_BLOCK).toBe(ScratchMsgs.locales.de.DUPLICATE)
+    expect(Blockly.Msg[key]).toBe(ScratchMsgs.locales.de.DUPLICATE)
   })
 
   it.each(['en', 'de'])('defines the Blockly core messages Scratch shows (%s)', (locale) => {
