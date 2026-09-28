@@ -21,6 +21,8 @@
   "scripts": {
     "build": "webpack --mode production",
     "format": "prettier --write . && eslint --fix",
+    "i18n:push": "tx-push-src scratch-editor blocks msg/json/en.json",
+    "i18n:src": "node scripts/validate-en-json.mjs",
     "prepare": "husky || true",
     "start": "webpack serve --open --mode development",
     "test": "vitest run",
@@ -45,6 +47,7 @@
     "husky": "9.1.7",
     "playwright": "1.63.0",
     "prettier": "3.8.5",
+    "scratch-l10n": "6.1.119",
     "scratch-semantic-release-config": "4.0.1",
     "semantic-release": "25.0.9",
     "source-map-loader": "5.0.0",

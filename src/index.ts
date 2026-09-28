@@ -63,7 +63,7 @@ import * as ScratchVariables from './variables'
 export * from 'blockly/core'
 export * from './block_reporting'
 export * from './procedures'
-export * from '../msg/scratch_msgs.js'
+export * from './scratch_msgs'
 export * from './constants'
 export { glowStack }
 export { scratchBlocksUtils }

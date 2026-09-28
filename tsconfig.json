@@ -7,6 +7,7 @@
     /* Modules */
     "module": "esnext",
     "moduleResolution": "bundler",
+    "resolveJsonModule": true,
 
     /* Emit */
     "declaration": true,
