@@ -9,3 +9,5 @@ jobs:
     permissions:
       pull-requests: write
     uses: scratchfoundation/.github/.github/workflows/copilot-review.yml@ad754c2983ff07e71230c5925f71681da8733e70 # main
+    secrets:
+      COPILOT_REVIEW_TOKEN: ${{ secrets.COPILOT_REVIEW_TOKEN }}
