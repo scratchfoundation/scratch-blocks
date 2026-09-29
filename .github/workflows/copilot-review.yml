@@ -8,4 +8,4 @@ jobs:
     if: github.event.label.name == 'copilot-review'
     permissions:
       pull-requests: write
-    uses: scratchfoundation/.github/.github/workflows/copilot-review.yml@main
+    uses: scratchfoundation/.github/.github/workflows/copilot-review.yml@8173373016c34387612de5826a7b5edf841374c4 # main
