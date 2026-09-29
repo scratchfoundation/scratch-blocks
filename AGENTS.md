@@ -79,7 +79,8 @@ Key top-level files: `procedures.ts`, `variables.ts`, `data_category.ts`,
   `scratch-editor/blocks` resource on Transifex. Webpack bundles them into `dist/main.mjs` (see
   `src/scratch_msgs.ts`). Never edit translations in this repository; fix them in Transifex.
 - **How strings flow:**
-  - `npm run i18n:push` uploads `en.json` to Transifex.
+  - When `en.json` changes on `develop`, the `update-i18n.yml` workflow runs `npm run i18n:push`, which uploads it to
+    Transifex.
   - scratch-l10n pulls translations daily and publishes a release.
   - Renovate bumps `scratch-l10n` here as a `fix(deps)` commit, which publishes a new scratch-blocks release.
 - **Keep keys stable.** Renaming a key discards its translations. If Blockly core reads a different key for the same

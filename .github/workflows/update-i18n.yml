@@ -1,0 +1,45 @@
+# Pushes English source strings to Transifex whenever they change on develop. scratch-l10n pulls the translations
+# back daily. Only develop pushes: other branches pushing to the same Transifex resource would overwrite each other.
+# When scratch-blocks moves into the scratch-editor monorepo, replace this workflow with a scratch-blocks step in
+# scratch-editor's update-i18n.yml.
+name: Update i18n
+
+on:
+  push:
+    branches: [develop]
+    paths: [msg/json/en.json]
+  workflow_dispatch: # Allows you to run this workflow manually from the Actions tab
+
+concurrency:
+  # Per ref, so a manual run on another branch can't cancel a develop push.
+  group: '${{ github.workflow }} @ ${{ github.ref }}'
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  update-i18n:
+    runs-on: ubuntu-latest
+    steps:
+      # workflow_dispatch can target any branch; uploading another branch's en.json would replace develop's strings.
+      - name: Require develop
+        if: github.ref != 'refs/heads/develop'
+        env:
+          GH_REF: ${{ github.ref }}
+        run: |
+          echo "::error::Transifex pushes run only from develop, not ${GH_REF}. Re-run this workflow on develop."
+          exit 1
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          cache: 'npm'
+          node-version-file: '.nvmrc'
+      - name: Install dependencies
+        run: npm ci
+      - name: Validate English strings
+        run: npm run i18n:src
+      - name: Push English strings to Transifex
+        env:
+          TX_TOKEN: ${{ secrets.TX_TOKEN }}
+        run: npm run i18n:push
