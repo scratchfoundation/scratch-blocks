@@ -128,3 +128,32 @@ Blockly.Blocks.math_angle = {
     })
   },
 }
+
+Blockly.Blocks.math_number_convert = {
+  /**
+   * Block for converting a number to a decimal or percentage.
+   */
+  init: function (this: Blockly.Block) {
+    this.jsonInit({
+      message0: 'convert %1 to %2',
+      args0: [
+        {
+          type: 'input_value',
+          name: 'NUM',
+          check: 'Number',
+        },
+        {
+          type: 'field_dropdown',
+          name: 'CONVERT_TYPE',
+          options: [
+            ['decimal', 'DECIMAL'],
+            ['percent', 'PERCENT'],
+          ],
+        },
+      ],
+      output: 'Number',
+      outputShape: Constants.OUTPUT_SHAPE_ROUND,
+      extensions: ['colours_textfield'],
+    })
+  },
+}
