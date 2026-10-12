@@ -188,7 +188,7 @@ class DuplicateOnDragDragStrategy extends Blockly.dragging.BlockDragStrategy {
     const parent = this.draggingBlock.getParent()
     const duplicating = parent?.type === 'procedures_prototype'
     if (duplicating) {
-      const json = Blockly.serialization.blocks.save(this.draggingBlock, { addCoordinates: true })
+      const json = Blockly.serialization.blocks.save(this.draggingBlock, { addCoordinates: true, saveIds: false })
       if (json) {
         const newBlock = Blockly.serialization.blocks.appendInternal(json, this.draggingBlock.workspace, {
           recordUndo: true,
