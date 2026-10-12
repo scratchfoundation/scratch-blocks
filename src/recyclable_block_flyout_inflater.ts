@@ -45,9 +45,7 @@ export class RecyclableBlockFlyoutInflater extends BlocklyRecyclableBlockFlyoutI
    * @param block The block to add listeners for.
    */
   protected override addBlockListeners(block: Blockly.BlockSvg) {
-    const blockListeners = []
-
-    blockListeners.push(
+    this.listeners.set(block.id, [
       Blockly.browserEvents.conditionalBind(block.getSvgRoot(), 'pointerdown', block, (e: PointerEvent) => {
         const gesture = this.flyout?.targetWorkspace?.getGesture(e)
         if (gesture && this.flyout) {
@@ -55,9 +53,7 @@ export class RecyclableBlockFlyoutInflater extends BlocklyRecyclableBlockFlyoutI
           gesture.handleFlyoutStart(e, this.flyout)
         }
       }),
-    )
-
-    this.listeners.set(block.id, blockListeners)
+    ])
   }
 }
 

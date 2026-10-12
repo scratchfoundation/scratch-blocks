@@ -69,10 +69,10 @@ export class ScratchDragger extends Blockly.dragging.Dragger {
 
   /**
    * Handles the end of a drag.
-   * @param e The event that ended the drag.
+   * @param event The event that ended the drag.
    */
-  override onDragEnd(e?: PointerEvent | KeyboardEvent) {
-    const coordinate = this.getCoordinate(e)
+  override onDragEnd(event?: PointerEvent | KeyboardEvent) {
+    const coordinate = this.getCoordinate(event)
     // Update out-of-bounds state BEFORE any wouldDeleteDraggable checks
     // so the override sees the position from the pointerup event, not
     // the last pointermove (which could be stale if the user moved fast).
@@ -92,15 +92,15 @@ export class ScratchDragger extends Blockly.dragging.Dragger {
       if (hasCaller) {
         Blockly.dialog.alert(Blockly.Msg.PROCEDURE_USED)
         this.draggable.revertDrag()
-        this.draggable.endDrag(e, Blockly.DragDisposition.REVERT)
+        this.draggable.endDrag(event, Blockly.DragDisposition.REVERT)
         return
       }
     }
 
-    super.onDragEnd(e)
+    super.onDragEnd(event)
     if (this.draggable instanceof Blockly.BlockSvg) {
-      const event = new BlockDragEnd(this.draggable, this.draggedOutOfBounds)
-      Blockly.Events.fire(event)
+      const dragEndEvent = new BlockDragEnd(this.draggable, this.draggedOutOfBounds)
+      Blockly.Events.fire(dragEndEvent)
       // If this block was dragged out of the flyout and dropped outside of
       // the workspace (e.g. on a different sprite), the block that was created
       // on the workspace in order to depict the block mid-drag needs to be
@@ -122,7 +122,7 @@ export class ScratchDragger extends Blockly.dragging.Dragger {
    * bounds (e.g. onto the backpack or a different sprite), the GUI handles
    * the drop — the flyout should not delete the block even if the pointer
    * happens to overlap the flyout's bounding rect.
-   * @param coordinate The currnet location of the dragged item.
+   * @param coordinate The current location of the dragged item.
    * @param rootDraggable The topmost item being dragged.
    * @returns True if the draggable would be deleted.
    */
@@ -163,7 +163,7 @@ export class ScratchDragger extends Blockly.dragging.Dragger {
   protected getCoordinate(e?: PointerEvent | KeyboardEvent) {
     let coordinate: Blockly.utils.Coordinate
     if (e instanceof PointerEvent) {
-      coordinate = new Blockly.utils.Coordinate(e.clientX, e.clientY)
+      return new Blockly.utils.Coordinate(e.clientX, e.clientY)
     } else {
       const screenCoordinate = Blockly.utils.svgMath.wsToScreenCoordinates(
         this.draggable.workspace,
@@ -171,10 +171,8 @@ export class ScratchDragger extends Blockly.dragging.Dragger {
       )
       const scroll = new Blockly.utils.Coordinate(window.scrollX, window.scrollY)
 
-      coordinate = Blockly.utils.Coordinate.difference(screenCoordinate, scroll)
+      return Blockly.utils.Coordinate.difference(screenCoordinate, scroll)
     }
-
-    return coordinate
   }
 }
 
