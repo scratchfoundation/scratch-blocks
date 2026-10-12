@@ -100,7 +100,9 @@
   "LOOKS_RANDOMBACKDROP": "random backdrop",
   "MOTION_MOVESTEPS": "move %1 steps",
   "MOTION_TURNLEFT": "turn %1 %2 degrees",
+  "MOTION_LEFT": "left",
   "MOTION_TURNRIGHT": "turn %1 %2 degrees",
+  "MOTION_RIGHT": "right",
   "MOTION_POINTINDIRECTION": "point in direction %1",
   "MOTION_POINTTOWARDS": "point towards %1",
   "MOTION_POINTTOWARDS_POINTER": "mouse-pointer",
@@ -413,6 +415,7 @@
   "ARIA_TYPE_FIELD_DROPDOWN": "dropdown",
   "ARIA_TYPE_FIELD_IMAGE": "image",
   "ARIA_TYPE_FIELD_CHECKBOX": "checkbox",
+  "ARIA_TYPE_FIELD_NOTE": "musical note",
   "FIELD_LABEL_EDIT_PREFIX": "Edit %1",
   "OPEN_TRASH": "Open trash",
   "ZOOM_IN": "Zoom in",
@@ -446,5 +449,8 @@
   "FIELD_BITMAP_PIXEL_LABEL": "%1, row %2, column %3",
   "FIELD_BITMAP_ARIA_VALUE": "%1 by %2, %3 pixels on",
   "ZOOM_TO_FIT_ARIA_LABEL": "Zoom to fit",
-  "ARIA_LABEL_TRASH_EMPTY": "Trash, currently empty"
+  "ARIA_LABEL_TRASH_EMPTY": "Trash, currently empty",
+  "ARIA_LABEL_TURN_ON_ALL": "Turn on all",
+  "ARIA_LABEL_CHOOSE_COLOR_FROM_STAGE": "Choose color from stage",
+  "ARIA_LABEL_MIDI_NOTE": "MIDI note"
 }

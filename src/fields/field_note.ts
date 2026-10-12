@@ -115,6 +115,11 @@ export class FieldNote extends Blockly.FieldTextInput {
   private octaveUpMouseDownWrapper_: Blockly.browserEvents.Data | null = null
 
   /**
+   * A description of this field's type used in accessibility labels.
+   */
+  override ariaTypeName = Blockly.Msg.ARIA_TYPE_FIELD_NOTE
+
+  /**
    * Inset in pixels of content displayed in the field, caused by parent properties.
    * The inset is actually determined by the CSS property blocklyDropDownDiv- it is
    * the sum of the padding and border thickness.
@@ -831,6 +836,24 @@ export class FieldNote extends Blockly.FieldTextInput {
       n = FieldNote.MAX_NOTE
     }
     return String(n)
+  }
+
+  /**
+   * Returns a description of this field's value for use in ARIA labels.
+   * @returns A description of the current note.
+   */
+  override getAriaValue() {
+    const noteNum = Number(this.getText())
+    if (
+      this.displayedOctave_ == null ||
+      noteNum > this.displayedOctave_ * 12 + 12 ||
+      noteNum < this.displayedOctave_ * 12
+    ) {
+      this.displayedOctave_ = Math.floor(noteNum / 12)
+    }
+    const index = this.noteNumToKeyIndex_(noteNum)
+    const noteName = FieldNote.KEY_INFO[index].name
+    return `${noteName}, ${Blockly.Msg.ARIA_LABEL_MIDI_NOTE} ${noteNum}`
   }
 }
 

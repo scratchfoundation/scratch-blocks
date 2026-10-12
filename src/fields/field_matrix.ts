@@ -293,6 +293,7 @@ class FieldMatrix extends FieldBitmap {
 
     // Button to fill matrix
     const fillButton = this.createButton_('var(--colour-text)')
+    Blockly.utils.aria.setState(fillButton, Blockly.utils.aria.State.LABEL, Blockly.Msg.ARIA_LABEL_TURN_ON_ALL)
     fillButton.addEventListener('click', () => {
       this.setValue(FieldMatrix.ONES)
     })

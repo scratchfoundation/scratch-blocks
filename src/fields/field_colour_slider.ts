@@ -57,6 +57,11 @@ export class FieldColourSlider extends FieldColourHsvSliders {
     if (FieldColourSlider.activateEyedropper_) {
       const button = document.createElement('button')
       button.setAttribute('class', 'scratchEyedropper')
+      Blockly.utils.aria.setState(
+        button,
+        Blockly.utils.aria.State.LABEL,
+        Blockly.Msg.ARIA_LABEL_CHOOSE_COLOR_FROM_STAGE,
+      )
       const image = document.createElement('img')
       image.src = Blockly.getMainWorkspace().options.pathToMedia + this.EYEDROPPER_PATH
       button.appendChild(image)
