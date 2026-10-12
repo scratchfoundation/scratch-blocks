@@ -161,7 +161,6 @@ export class ScratchDragger extends Blockly.dragging.Dragger {
   }
 
   protected getCoordinate(e?: PointerEvent | KeyboardEvent) {
-    let coordinate: Blockly.utils.Coordinate
     if (e instanceof PointerEvent) {
       return new Blockly.utils.Coordinate(e.clientX, e.clientY)
     } else {
