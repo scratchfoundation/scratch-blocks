@@ -4,12 +4,12 @@
  */
 import * as Blockly from 'blockly/core'
 import { afterAll, afterEach, assert, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
-import { ScratchMsgs } from '../../msg/scratch_msgs'
 import '../../src/css'
 // The scratch field registrations fire inside the scratch-specific inject();
 // this test drives Blockly directly, so register the scratch dropdown
 // explicitly so its overrides are the ones under test.
 import { registerScratchFieldDropdown } from '../../src/fields/scratch_field_dropdown'
+import { ScratchMsgs } from '../../src/scratch_msgs'
 
 // Scratch lists for "target sprite" dropdowns (e.g. motion_goto_menu,
 // motion_pointtowards_menu, sensing_touchingobject_menu) are populated by

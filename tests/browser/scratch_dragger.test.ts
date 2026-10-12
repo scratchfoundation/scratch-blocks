@@ -4,9 +4,9 @@
  */
 import * as Blockly from 'blockly/core'
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
-import { ScratchMsgs } from '../../msg/scratch_msgs'
 import '../../src/css'
 import { ScratchDragger } from '../../src/scratch_dragger'
+import { ScratchMsgs } from '../../src/scratch_msgs'
 
 beforeAll(() => {
   ScratchMsgs.setLocale('en')

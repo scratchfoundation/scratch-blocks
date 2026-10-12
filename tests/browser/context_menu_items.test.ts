@@ -4,8 +4,8 @@
  */
 import * as Blockly from 'blockly/core'
 import { afterAll, afterEach, assert, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
-import { ScratchMsgs } from '../../msg/scratch_msgs'
 import { registerDuplicateBlock } from '../../src/context_menu_items'
+import { ScratchMsgs } from '../../src/scratch_msgs'
 
 // Browser test for registerDuplicateBlock — verifies that the scratch-specific
 // duplicate behavior includes blocks connected via the "next" connection.

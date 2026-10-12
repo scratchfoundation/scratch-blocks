@@ -4,10 +4,10 @@
  */
 import * as Blockly from 'blockly/core'
 import { afterAll, afterEach, assert, beforeAll, beforeEach, describe, expect, it } from 'vitest'
-import { ScratchMsgs } from '../../msg/scratch_msgs'
 import { CheckableContinuousFlyout } from '../../src/checkable_continuous_flyout'
 import { registerRecyclableBlockFlyoutInflater } from '../../src/recyclable_block_flyout_inflater'
 import { registerScratchBlockPaster } from '../../src/scratch_block_paster'
+import { ScratchMsgs } from '../../src/scratch_msgs'
 
 // Browser tests for the shared-shadow-ID bug (forum topic 878291).
 // Both the duplicate/paste path and the flyout copy path must produce
