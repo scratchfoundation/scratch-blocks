@@ -4,12 +4,12 @@
  */
 import * as Blockly from 'blockly/core'
 import { afterEach, assert, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
-// Load scratch-specific messages (required before block registration).
-import { ScratchMsgs } from '../../msg/scratch_msgs'
 import '../../src/blocks/procedures'
 // Import scratch-specific block registrations.
 import '../../src/blocks/vertical_extensions'
 import '../../src/scratch_connection_checker'
+// Load scratch-specific messages (required before block registration).
+import { ScratchMsgs } from '../../src/scratch_msgs'
 
 beforeAll(() => {
   ScratchMsgs.setLocale('en')

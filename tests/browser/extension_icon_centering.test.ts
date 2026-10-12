@@ -13,9 +13,9 @@
 // to be restored.
 import * as Blockly from 'blockly/core'
 import { afterAll, afterEach, assert, beforeAll, describe, expect, it } from 'vitest'
-import { ScratchMsgs } from '../../msg/scratch_msgs'
 import '../../src/blocks/vertical_extensions'
 import '../../src/renderer/renderer'
+import { ScratchMsgs } from '../../src/scratch_msgs'
 
 const ICON_URL =
   'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=='

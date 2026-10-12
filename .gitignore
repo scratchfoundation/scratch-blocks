@@ -11,12 +11,6 @@ npm-*
 # Build output
 /dist
 
-# Locale message files (all locales except English are generated)
-/msg/js/*
-!/msg/js/en.js
-/msg/json/*
-!/msg/json/en.json
-
 # GitHub Pages (Jekyll)
 /gh-pages/Gemfile.lock
 /gh-pages/_site

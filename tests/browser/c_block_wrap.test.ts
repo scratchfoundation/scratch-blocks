@@ -13,10 +13,10 @@
 // just the patched getConnectionForOrphanedConnection in isolation.
 import * as Blockly from 'blockly/core'
 import { afterAll, afterEach, assert, beforeAll, describe, expect, it } from 'vitest'
-import { ScratchMsgs } from '../../msg/scratch_msgs'
 import '../../src/blocks/vertical_extensions'
 import '../../src/scratch_c_block_wrap'
 import '../../src/scratch_connection_checker'
+import { ScratchMsgs } from '../../src/scratch_msgs'
 
 const BLOCK_TYPES = ['test_c_block', 'test_stack_a', 'test_stack_b', 'test_stack_c']
 

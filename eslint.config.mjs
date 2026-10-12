@@ -30,7 +30,6 @@ export default eslintConfigScratch.defineConfig(
     '*_uncompressed*.js',
     'msg/**',
     'core/css.js',
-    'i18n/**',
     'tests/jsunit/**',
     'tests/workspace_svg/**',
     'tests/blocks/**',

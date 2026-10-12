@@ -4,8 +4,8 @@
  */
 import * as Blockly from 'blockly/core'
 import { afterEach, beforeAll, beforeEach, describe, expect, it } from 'vitest'
-import { ScratchMsgs } from '../../msg/scratch_msgs'
 import '../../src/events/events_scratch_variable_create'
+import { ScratchMsgs } from '../../src/scratch_msgs'
 import '../../src/scratch_variable_map'
 import { ScratchVariableModel } from '../../src/scratch_variable_model'
 import { clearWorkspaceAndLoadFromXml } from '../../src/xml'
