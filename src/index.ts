@@ -111,7 +111,7 @@ export function inject(container: Element, options: ScratchBlocksOptions) {
   registerScratchContinuousCategory()
 
   const scratchTheme = sanitizeTheme(options.scratchTheme)
-
+  const showZoomControls = options.zoom?.controls ?? false
   Object.assign(options, {
     renderer: `scratch_${scratchTheme}`,
     plugins: {
@@ -120,6 +120,7 @@ export function inject(container: Element, options: ScratchBlocksOptions) {
       metricsManager: ContinuousMetrics,
     },
     zoom: {
+      ...options.zoom,
       controls: false,
     },
   })
@@ -128,10 +129,12 @@ export function inject(container: Element, options: ScratchBlocksOptions) {
 
   buildGlowFilter(workspace)
 
-  const scratchZoomControls = new ScratchZoomControls(workspace)
-  const zoomControlsSvg = scratchZoomControls.createDom()
-  workspace.svgGroup_.appendChild(zoomControlsSvg)
-  scratchZoomControls.init()
+  if (showZoomControls) {
+    const scratchZoomControls = new ScratchZoomControls(workspace)
+    const zoomControlsSvg = scratchZoomControls.createDom()
+    workspace.svgGroup_.appendChild(zoomControlsSvg)
+    scratchZoomControls.init()
+  }
 
   Blockly.config.dragRadius = 3
   Blockly.config.snapRadius = 48
