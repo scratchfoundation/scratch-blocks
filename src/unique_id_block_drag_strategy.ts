@@ -24,10 +24,14 @@ export class UniqueIdBlockDragStrategy extends Blockly.dragging.BlockDragStrateg
             recordUndo: true,
           },
         ) as Blockly.BlockSvg
+        const undoEnabled = Blockly.Events.getRecordUndo()
         Blockly.Events.setRecordUndo(false)
-        newBlock.render()
-        this.positionNewBlock(this.block, newBlock)
-        Blockly.Events.setRecordUndo(true)
+        try {
+          newBlock.render()
+          this.positionNewBlock(this.block, newBlock)
+        } finally {
+          Blockly.Events.setRecordUndo(undoEnabled)
+        }
 
         return newBlock
       }
