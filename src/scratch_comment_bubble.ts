@@ -168,8 +168,6 @@ export class ScratchCommentBubble
   }
 
   dispose() {
-    const parentBlock = this.sourceBlock
-
     this.disposing = true
     for (const button of this.getCommentBarButtons()) {
       this.sourceBlock?.workspace.getComponentManager().removeComponent(button.id)
@@ -178,19 +176,16 @@ export class ScratchCommentBubble
     Blockly.utils.dom.removeNode(this.anchorChain ?? null)
     if (this.sourceBlock) {
       Blockly.Events.fire(new (Blockly.Events.get('block_comment_delete'))(this, this.sourceBlock))
-      const block = this.sourceBlock
+      const parentBlock = this.sourceBlock
       this.sourceBlock = null
-      if (!block.isDeadOrDying()) {
-        block.setCommentText(null)
-      }
-    }
-    super.dispose()
-
-    if (parentBlock) {
       requestAnimationFrame(() => {
-        Blockly.getFocusManager().focusNode(parentBlock)
+        if (!parentBlock.isDeadOrDying()) {
+          parentBlock.setCommentText(null)
+          Blockly.getFocusManager().focusNode(parentBlock)
+        }
       })
     }
+    super.dispose()
   }
 
   getFocusableElement() {
