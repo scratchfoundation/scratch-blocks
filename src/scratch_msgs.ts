@@ -3,6 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 import * as Blockly from 'blockly/core'
+import * as En from 'blockly/msg/en'
 import blocksMsgs from 'scratch-l10n/locales/blocks-msgs.js'
 import en from '../msg/json/en.json'
 
@@ -44,6 +45,7 @@ export class ScratchMsgs {
     this.currentLocale_ = locale
     // Apply English first so any key this locale lacks falls back to English instead of keeping the previous
     // locale's text.
+    Blockly.setLocale(En)
     Object.assign(Blockly.Msg, this.locales.en, messages)
     for (const [blocklyKey, scratchKey] of Object.entries(BLOCKLY_ALIASES)) {
       Blockly.Msg[blocklyKey] = Blockly.Msg[scratchKey]
