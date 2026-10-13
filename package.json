@@ -33,10 +33,10 @@
     "watch": "webpack --mode development --watch"
   },
   "dependencies": {
-    "@blockly/continuous-toolbox": "^13.3.0",
-    "@blockly/field-bitmap": "^13.3.0",
-    "@blockly/field-colour-hsv-sliders": "^13.3.0",
-    "blockly": "^13.3.0"
+    "@blockly/continuous-toolbox": "^13.4.0",
+    "@blockly/field-bitmap": "^13.4.0",
+    "@blockly/field-colour-hsv-sliders": "^13.4.0",
+    "blockly": "^13.4.0"
   },
   "devDependencies": {
     "@commitlint/cli": "20.5.3",
