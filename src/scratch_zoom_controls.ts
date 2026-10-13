@@ -50,27 +50,54 @@ export class ScratchZoomControls implements Blockly.IPositionable {
 
     const media = this.workspace.options.pathToMedia
 
-    this.zoomOutGroup = this.createButtonGroup('blocklyZoomOut', `${media}zoom-out.svg`)
-    this.svgGroup.appendChild(this.zoomOutGroup)
-    this.boundEvents.push(
-      Blockly.browserEvents.conditionalBind(this.zoomOutGroup, 'pointerdown', null, this.zoom.bind(this, -1)),
-    )
-
-    this.zoomInGroup = this.createButtonGroup('blocklyZoomIn', `${media}zoom-in.svg`)
-    this.svgGroup.appendChild(this.zoomInGroup)
-    this.boundEvents.push(
-      Blockly.browserEvents.conditionalBind(this.zoomInGroup, 'pointerdown', null, this.zoom.bind(this, 1)),
-    )
-
     if (this.workspace.isMovable()) {
       // Only add zoom reset if the workspace is movable — if it isn't,
       // zooming to center could push blocks off the visible edges.
       this.zoomResetGroup = this.createButtonGroup('blocklyZoomReset', `${media}zoom-reset.svg`)
+      Blockly.utils.aria.setState(this.zoomResetGroup, Blockly.utils.aria.State.LABEL, Blockly.Msg.RESET_ZOOM)
+      Blockly.utils.aria.setRole(this.zoomResetGroup, Blockly.utils.aria.Role.BUTTON)
       this.svgGroup.appendChild(this.zoomResetGroup)
       this.boundEvents.push(
         Blockly.browserEvents.conditionalBind(this.zoomResetGroup, 'pointerdown', null, this.resetZoom.bind(this)),
       )
+      this.boundEvents.push(
+        Blockly.browserEvents.conditionalBind(this.zoomResetGroup, 'keydown', null, (e: KeyboardEvent) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            this.resetZoom(e)
+          }
+        }),
+      )
     }
+
+    this.zoomOutGroup = this.createButtonGroup('blocklyZoomOut', `${media}zoom-out.svg`)
+    Blockly.utils.aria.setState(this.zoomOutGroup, Blockly.utils.aria.State.LABEL, Blockly.Msg.ZOOM_OUT)
+    Blockly.utils.aria.setRole(this.zoomOutGroup, Blockly.utils.aria.Role.BUTTON)
+    this.svgGroup.appendChild(this.zoomOutGroup)
+    this.boundEvents.push(
+      Blockly.browserEvents.conditionalBind(this.zoomOutGroup, 'pointerdown', null, this.zoom.bind(this, -1)),
+    )
+    this.boundEvents.push(
+      Blockly.browserEvents.conditionalBind(this.zoomOutGroup, 'keydown', null, (e: KeyboardEvent) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          this.zoom(-1, e)
+        }
+      }),
+    )
+
+    this.zoomInGroup = this.createButtonGroup('blocklyZoomIn', `${media}zoom-in.svg`)
+    Blockly.utils.aria.setState(this.zoomInGroup, Blockly.utils.aria.State.LABEL, Blockly.Msg.ZOOM_IN)
+    Blockly.utils.aria.setRole(this.zoomInGroup, Blockly.utils.aria.Role.BUTTON)
+    this.svgGroup.appendChild(this.zoomInGroup)
+    this.boundEvents.push(
+      Blockly.browserEvents.conditionalBind(this.zoomInGroup, 'pointerdown', null, this.zoom.bind(this, 1)),
+    )
+    this.boundEvents.push(
+      Blockly.browserEvents.conditionalBind(this.zoomInGroup, 'keydown', null, (e: KeyboardEvent) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          this.zoom(1, e)
+        }
+      }),
+    )
 
     return this.svgGroup
   }
@@ -84,7 +111,23 @@ export class ScratchZoomControls implements Blockly.IPositionable {
   private createButtonGroup(extraClass: string, imageHref: string): SVGGElement {
     const group = Blockly.utils.dom.createSvgElement(Blockly.utils.Svg.G, {
       class: `blocklyZoom ${extraClass}`,
+      tabindex: '0',
     })
+
+    Blockly.utils.dom.createSvgElement(
+      Blockly.utils.Svg.RECT,
+      {
+        width: 40,
+        height: 40,
+        x: -2,
+        y: -2,
+        rx: 2,
+        ry: 2,
+        fill: 'none',
+        class: 'blocklyFocusRing',
+      },
+      group,
+    )
 
     const image = Blockly.utils.dom.createSvgElement(
       Blockly.utils.Svg.IMAGE,
@@ -209,7 +252,7 @@ export class ScratchZoomControls implements Blockly.IPositionable {
    * @param amount Positive to zoom in, negative to zoom out.
    * @param e The pointer event.
    */
-  private zoom(amount: number, e: PointerEvent) {
+  private zoom(amount: number, e: Event) {
     this.workspace.markFocused()
     this.workspace.zoomCenter(amount)
     this.fireZoomEvent()
@@ -223,7 +266,7 @@ export class ScratchZoomControls implements Blockly.IPositionable {
    * re-centers the workspace.
    * @param e The pointer event.
    */
-  private resetZoom(e: PointerEvent) {
+  private resetZoom(e: Event) {
     this.workspace.markFocused()
 
     // Compute the zoom amount needed to get from currentScale back to

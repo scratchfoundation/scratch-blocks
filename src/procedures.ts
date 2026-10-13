@@ -383,6 +383,7 @@ function editProcedureCallbackFactory(block: Blockly.BlockSvg): (mutation?: Elem
  */
 function makeEditOption(block: Blockly.BlockSvg): Blockly.ContextMenuRegistry.ContextMenuOption {
   return {
+    id: 'edit_procedure',
     enabled: true,
     text: Blockly.Msg.EDIT_PROCEDURE,
     callback: () => {

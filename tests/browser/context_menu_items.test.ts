@@ -5,6 +5,7 @@
 import * as Blockly from 'blockly/core'
 import { afterAll, afterEach, assert, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
 import { registerDuplicateBlock } from '../../src/context_menu_items'
+import { ScratchMsgs } from '../../src/scratch_msgs'
 
 // Browser test for registerDuplicateBlock — verifies that the scratch-specific
 // duplicate behavior includes blocks connected via the "next" connection.
@@ -15,6 +16,7 @@ let workspace: Blockly.WorkspaceSvg
 let originalDuplicateItem: Blockly.ContextMenuRegistry.RegistryItem | null = null
 
 beforeAll(() => {
+  ScratchMsgs.setLocale('en')
   // Blockly.inject registers the default 'blockDuplicate' item; capture it
   // first so we can restore it after the suite.
   // We use a temporary container to force item registration.

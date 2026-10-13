@@ -50,6 +50,7 @@ Blockly.Blocks.motion_turnright = {
           src: ws.options.pathToMedia + 'rotate-right.svg',
           width: 24,
           height: 24,
+          alt: Blockly.Msg.MOTION_RIGHT,
         },
         {
           type: 'input_value',
@@ -75,6 +76,7 @@ Blockly.Blocks.motion_turnleft = {
           src: ws.options.pathToMedia + 'rotate-left.svg',
           width: 24,
           height: 24,
+          alt: Blockly.Msg.MOTION_LEFT,
         },
         {
           type: 'input_value',

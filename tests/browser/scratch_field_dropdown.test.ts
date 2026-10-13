@@ -9,6 +9,7 @@ import '../../src/css'
 // this test drives Blockly directly, so register the scratch dropdown
 // explicitly so its overrides are the ones under test.
 import { registerScratchFieldDropdown } from '../../src/fields/scratch_field_dropdown'
+import { ScratchMsgs } from '../../src/scratch_msgs'
 
 // Scratch lists for "target sprite" dropdowns (e.g. motion_goto_menu,
 // motion_pointtowards_menu, sensing_touchingobject_menu) are populated by
@@ -25,6 +26,7 @@ import { registerScratchFieldDropdown } from '../../src/fields/scratch_field_dro
 let originalFieldDropdown: (new (...args: unknown[]) => Blockly.Field) | null = null
 
 beforeAll(() => {
+  ScratchMsgs.setLocale('en')
   originalFieldDropdown = Blockly.registry.getClass(Blockly.registry.Type.FIELD, 'field_dropdown')
   registerScratchFieldDropdown()
   Blockly.Blocks.test_target_menu = {

@@ -119,6 +119,10 @@ export function createVariable(
         if (toolbox instanceof ScratchContinuousToolbox && flyout instanceof CheckableContinuousFlyout) {
           toolbox.runAfterRerender(() => {
             flyout.setCheckboxState(variableBlockId, true)
+            const variableBlock = flyout.getWorkspace().getBlockById(variableBlockId)
+            if (variableBlock) {
+              Blockly.getFocusManager().focusNode(variableBlock)
+            }
           })
         }
 
@@ -210,7 +214,7 @@ function validateBroadcastMessageName(
     // no name was provided or the user cancelled the prompt
     return null
   }
-  const variable = workspace.getVariable(name, BROADCAST_MESSAGE_VARIABLE_TYPE)
+  const variable = workspace.getVariableMap().getVariable(name, BROADCAST_MESSAGE_VARIABLE_TYPE)
   if (variable) {
     // If the user provided a name for a broadcast message that already exists,
     // use the provided callback function to update the selected option in
@@ -259,7 +263,7 @@ function validateScalarVarOrListName(
   if (isCloud) {
     name = CLOUD_PREFIX + name
   }
-  if (workspace.getVariable(name, type) || additionalVars.includes(name)) {
+  if (workspace.getVariableMap().getVariable(name, type) || additionalVars.includes(name)) {
     // error
     Blockly.dialog.alert(errorMsg.replace('%1', name))
     return null
@@ -324,7 +328,7 @@ export function renameVariable(
       const additionalVarNames = variable.isLocal ? [] : additionalVars
       const validatedText = validate(newName, workspace, additionalVarNames, variable.isCloud)
       if (validatedText) {
-        workspace.renameVariableById(variable.getId(), validatedText)
+        workspace.getVariableMap().renameVariable(variable, validatedText)
         if (opt_callback) {
           opt_callback(newName)
         }
