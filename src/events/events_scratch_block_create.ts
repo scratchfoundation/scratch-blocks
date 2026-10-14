@@ -20,7 +20,14 @@ export class ScratchBlockCreate extends Blockly.Events.BlockCreate {
       return // Blank event to be populated by fromJson.
     }
 
+    // FieldMatrix represents its value internally as a 2D array of numbers.
+    // Blockly's XML system serializes that as a comma-separated flat list, but
+    // the VM does not expect the commas. Strip them out of the values of any
+    // matrix fields in this block so the VM receives the expected format.
     this.xml = Blockly.Xml.blockToDomWithXY(opt_block)
+    this.xml.querySelectorAll('field[name=MATRIX]').forEach((matrix) => {
+      matrix.textContent = matrix.textContent.split(',').join('')
+    })
   }
 
   override toJson(): ScratchBlockCreateJson {

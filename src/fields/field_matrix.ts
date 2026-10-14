@@ -44,6 +44,18 @@ class FieldMatrix extends FieldBitmap {
   private arrow_: SVGElement | null = null
 
   /**
+   * The name of the block style applied to the parent block before this field's
+   * dropdown was shown.
+   */
+  private originalStyle = ''
+
+  /**
+   * The value of this field when the field editor was opened, before any
+   * changes were made.
+   */
+  private oldValue: number[][] | null = null
+
+  /**
    * Construct a FieldMatrix from a JSON arg object.
    * @param options A JSON object with options (matrix).
    * @returns The new field instance.
@@ -108,22 +120,21 @@ class FieldMatrix extends FieldBitmap {
   }
 
   /**
-   * Converts from a flattened string representation (optionally with commas) to
-   * a 2D array representation of the state of this field.
+   * Converts from a flattened string representation to a 2D array
+   * representation of the state of this field.
    *
    * Historically, this field stored its value as a string of 1s and 0s,
    * representing the state of each row of the grid one after another. Blockly's
    * `FieldBitmap`, which this now inherits from, represents its value as a 2D
-   * array of numbers. When the 2D array stored in the VM is serialized into
-   * Blockly XML in preparation for loading into scratch-blocks, the 2D array
-   * gets converted into the flat string structure with interleaving commas.
+   * array of numbers. This method converts the string representation from
+   * serialized project state to the array representation that this field now
+   * expects.
    * @param value The value for this field represented as a string of 25 1s and
    *     0s, optionally comma-separated.
    * @returns A 2D array representation of the same value.
    */
   private static arrayify(value: string | null): number[][] | null {
     if (!value) return null
-    value = value.split(',').join('')
     const result = []
     let row = []
     for (let i = 0; i < 25; i++) {
@@ -243,9 +254,10 @@ class FieldMatrix extends FieldBitmap {
     Blockly.DropDownDiv.setColour(sourceBlock.getColour(), sourceBlock.getColourTertiary())
 
     const style = sourceBlock.style
-    const originalStyle = sourceBlock.getStyleName()
+    this.originalStyle = sourceBlock.getStyleName()
+    this.oldValue = this.getValue()
     if (sourceBlock.isShadow()) {
-      sourceBlock.setStyle(`${originalStyle}_selected`)
+      sourceBlock.setStyle(`${this.originalStyle}_selected`)
     } else if (this.borderRect_) {
       this.borderRect_.setAttribute(
         'fill',
@@ -256,25 +268,6 @@ class FieldMatrix extends FieldBitmap {
     super.showEditor_()
 
     const div = Blockly.DropDownDiv.getContentDiv()
-
-    // The superclass shows the dropdown and provides a private callback to be
-    // invoked on hide. Listen for the removal of a class on the DropDownDiv so
-    // that we can also detect when it's closed and undo highlighting the field.
-    const observer = new MutationObserver((mutations) => {
-      for (const mutation of mutations) {
-        if (
-          mutation.type === 'attributes' &&
-          mutation.attributeName === 'class' &&
-          !div.classList.contains('contains-bitmap-editor')
-        ) {
-          observer.disconnect()
-          if (sourceBlock.isShadow()) {
-            sourceBlock.setStyle(originalStyle)
-          }
-        }
-      }
-    })
-    observer.observe(div, { attributes: true, attributeFilter: ['class'] })
 
     // Div for lower button menu
     const buttonDiv = document.createElement('div')
@@ -301,6 +294,35 @@ class FieldMatrix extends FieldBitmap {
     buttonDiv.appendChild(clearButton)
     buttonDiv.appendChild(fillButton)
     div.appendChild(buttonDiv)
+  }
+
+  protected override dropdownDispose() {
+    const sourceBlock = this.getSourceBlock()
+
+    if (sourceBlock && this.oldValue !== null && this.oldValue !== this.getValue()) {
+      // Fire a change event with a flattened string representation of this
+      // field's value as the VM expects rather than the internal 2D array
+      // representation.
+      Blockly.Events.fire(
+        new (Blockly.Events.get(Blockly.Events.BLOCK_CHANGE))(
+          sourceBlock,
+          'field',
+          this.name ?? null,
+          this.oldValue.flat().join(''),
+          this.getValue()?.flat().join(''),
+        ),
+      )
+    }
+
+    if (sourceBlock?.isShadow()) {
+      sourceBlock.setStyle(this.originalStyle)
+    }
+
+    // Prevent super's implementation from firing a change event as well with
+    // the 2D array representation.
+    Blockly.Events.disable()
+    super.dropdownDispose()
+    Blockly.Events.enable()
   }
 
   /**
@@ -382,6 +404,27 @@ class FieldMatrix extends FieldBitmap {
 
   getClickTarget_() {
     return (this.getSourceBlock() as Blockly.BlockSvg).getSvgRoot()
+  }
+
+  /**
+   * Fires an intermediate change event reflecting a cell being toggled before
+   * the final state change has been committed. This explicitly does not call
+   * super, because we need to emit an event with a flattened string
+   * representation of this field's value as expected by the VM, rather than the
+   * internal 2D array representation.
+   * @param newValue The new value of this field.
+   */
+  protected override fireIntermediateChangeEvent(newValue: number[][]) {
+    if (this.getSourceBlock()) {
+      Blockly.Events.fire(
+        new (Blockly.Events.get(Blockly.Events.BLOCK_FIELD_INTERMEDIATE_CHANGE))(
+          this.getSourceBlock(),
+          this.name ?? null,
+          this.getValue()?.flat().join(''),
+          newValue.flat().join(''),
+        ),
+      )
+    }
   }
 }
 
