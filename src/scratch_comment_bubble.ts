@@ -218,6 +218,15 @@ export class ScratchCommentBubble
   }
 
   /**
+   * Returns the origin of this comment in workspace coordinates.
+   * @returns The location of this comment.
+   */
+  override getRelativeToSurfaceXY() {
+    // Clone to avoid callers accidentally mutating internal state.
+    return super.getRelativeToSurfaceXY().clone()
+  }
+
+  /**
    * Handles the user acting on this comment via keyboard navigation.
    * Expands the comment and focuses its editor.
    */
