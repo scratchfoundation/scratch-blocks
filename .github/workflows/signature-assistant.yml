@@ -20,7 +20,7 @@ jobs:
       )
     runs-on: ubuntu-latest
     steps:
-      - uses: scratchfoundation/scratch-agreements/.github/actions/cla-allowlist@f8bdd6506182a12bc236b734ffa919ca65041b99 # main
+      - uses: scratchfoundation/scratch-agreements/.github/actions/cla-allowlist@0562f143b4e83f2ce9fb003cd517357f39b82dc4 # main
         id: cla-allowlist
       - name: 'CLA Assistant'
         uses: contributor-assistant/github-action@ca4a40a7d1004f18d9960b404b97e5f30a505a08 # v2.6.1
