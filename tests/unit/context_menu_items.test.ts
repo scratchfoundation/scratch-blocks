@@ -4,7 +4,7 @@
  */
 import * as Blockly from 'blockly/core'
 import { afterAll, afterEach, assert, beforeAll, beforeEach, describe, expect, it } from 'vitest'
-import { registerDeleteBlock } from '../../src/context_menu_items'
+import { deleteBlock, registerDeleteBlock } from '../../src/context_menu_items'
 
 // Tests for the scratch-specific delete context menu override (registerDeleteBlock).
 // The copy/cut/paste override (registerDuplicateBlock, issue #3470) is tested
@@ -170,5 +170,100 @@ describe('registerDeleteBlock', () => {
       delete Blockly.Blocks.test_value_block
       delete Blockly.Blocks.test_output_block
     }
+  })
+
+  it('callback deletes only a top stack block and preserves its next block', () => {
+    const first = workspace.newBlock('test_stack_block')
+    const second = workspace.newBlock('test_stack_block')
+    const nextConn = first.nextConnection
+    const prevConn = second.previousConnection
+    assert(nextConn, 'Expected next connection')
+    assert(prevConn, 'Expected previous connection')
+    nextConn.connect(prevConn)
+
+    const item = Blockly.ContextMenuRegistry.registry.getItem('blockDelete')
+    assert(item, 'Expected blockDelete item to be registered')
+    const callback = item.callback as (scope: Blockly.ContextMenuRegistry.Scope) => void
+    callback({ block: asBlockSvg(first) })
+
+    expect(workspace.getAllBlocks(false)).toEqual([second])
+    expect(second.getParent()).toBeNull()
+  })
+
+  it('callback deletes a lone stack block', () => {
+    const block = workspace.newBlock('test_stack_block')
+
+    const item = Blockly.ContextMenuRegistry.registry.getItem('blockDelete')
+    assert(item, 'Expected blockDelete item to be registered')
+    ;(item.callback as (scope: Blockly.ContextMenuRegistry.Scope) => void)({ block: asBlockSvg(block) })
+
+    expect(workspace.getAllBlocks(false)).toEqual([])
+  })
+
+  it('deleteBlock ignores non-deletable blocks', () => {
+    const block = workspace.newBlock('test_stack_block')
+    block.setDeletable(false)
+
+    deleteBlock(block)
+
+    expect(workspace.getAllBlocks(false)).toEqual([block])
+  })
+
+  it('deleteBlock ignores shadow blocks', () => {
+    const block = workspace.newBlock('test_stack_block')
+    block.setShadow(true)
+
+    deleteBlock(block)
+
+    expect(workspace.getAllBlocks(false)).toEqual([block])
+  })
+
+  it('callback reuses an active event group', () => {
+    const block = workspace.newBlock('test_stack_block')
+    const originalSetGroup = Reflect.get(Blockly.Events, 'setGroup')
+    const setGroupCalls: (boolean | string)[] = []
+
+    Blockly.Events.setGroup('outerGroup')
+    Blockly.Events.setGroup = (state: boolean | string) => {
+      setGroupCalls.push(state)
+      originalSetGroup(state)
+    }
+    try {
+      const item = Blockly.ContextMenuRegistry.registry.getItem('blockDelete')
+      assert(item, 'Expected blockDelete item to be registered')
+      ;(item.callback as (scope: Blockly.ContextMenuRegistry.Scope) => void)({ block: asBlockSvg(block) })
+
+      expect(setGroupCalls).not.toContain(true)
+      expect(Blockly.Events.getGroup()).toBe('outerGroup')
+    } finally {
+      Blockly.Events.setGroup = originalSetGroup
+      Blockly.Events.setGroup(false)
+    }
+  })
+
+  it('checkAndDelete override routes through deleteBlock and preserves next block', () => {
+    const first = workspace.newBlock('test_stack_block')
+    const second = workspace.newBlock('test_stack_block')
+    const nextConn = first.nextConnection
+    const prevConn = second.previousConnection
+    assert(nextConn, 'Expected next connection')
+    assert(prevConn, 'Expected previous connection')
+    nextConn.connect(prevConn)
+
+    // Mirror the wiring in src/index.ts so we cover the keyboard-delete path.
+    // Tests use plain Workspace (not WorkspaceSvg), so blocks aren't BlockSvg
+    // instances — invoke the override via prototype to simulate the call site.
+    const originalCheckAndDelete = Reflect.get(Blockly.BlockSvg.prototype, 'checkAndDelete')
+    Blockly.BlockSvg.prototype.checkAndDelete = function () {
+      deleteBlock(this)
+    }
+    try {
+      Blockly.BlockSvg.prototype.checkAndDelete.call(first)
+    } finally {
+      Blockly.BlockSvg.prototype.checkAndDelete = originalCheckAndDelete
+    }
+
+    expect(workspace.getAllBlocks(false)).toEqual([second])
+    expect(second.getParent()).toBeNull()
   })
 })
