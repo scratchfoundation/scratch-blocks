@@ -48,7 +48,7 @@
     "playwright": "1.64.1",
     "prettier": "3.8.5",
     "scratch-l10n": "6.1.137",
-    "scratch-semantic-release-config": "4.0.1",
+    "scratch-semantic-release-config": "4.0.2",
     "semantic-release": "25.0.9",
     "source-map-loader": "5.0.0",
     "ts-loader": "9.6.2",
