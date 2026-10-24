@@ -46,7 +46,7 @@
     "eslint-config-scratch": "14.1.93",
     "husky": "9.1.7",
     "playwright": "1.64.1",
-    "prettier": "3.8.5",
+    "prettier": "3.9.10",
     "scratch-l10n": "6.1.139",
     "scratch-semantic-release-config": "4.0.2",
     "semantic-release": "25.0.9",
