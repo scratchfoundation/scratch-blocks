@@ -1,0 +1,13 @@
+name: Request Copilot review
+on:
+  pull_request_target:
+    types: [labeled]
+
+jobs:
+  request-copilot-review:
+    if: github.event.label.name == 'request-copilot-review'
+    permissions:
+      pull-requests: write
+    uses: scratchfoundation/.github/.github/workflows/request-copilot-review.yml@88eed99c0ca7905b36b4dd0a0cce19ab525d9ebb # main
+    secrets:
+      COPILOT_REVIEW_TOKEN: ${{ secrets.COPILOT_REVIEW_TOKEN }}
