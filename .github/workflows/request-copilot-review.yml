@@ -8,6 +8,6 @@ jobs:
     if: github.event.label.name == 'request-copilot-review'
     permissions:
       pull-requests: write
-    uses: scratchfoundation/.github/.github/workflows/request-copilot-review.yml@88eed99c0ca7905b36b4dd0a0cce19ab525d9ebb # main
+    uses: scratchfoundation/.github/.github/workflows/request-copilot-review.yml@d081d35ff1da8b5f9b08f88287aa7a76cd2cbcad # main
     secrets:
       COPILOT_REVIEW_TOKEN: ${{ secrets.COPILOT_REVIEW_TOKEN }}
