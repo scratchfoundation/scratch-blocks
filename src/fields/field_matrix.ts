@@ -135,6 +135,7 @@ class FieldMatrix extends FieldBitmap {
    */
   private static arrayify(value: string | null): number[][] | null {
     if (!value) return null
+    value = value.split(',').join('')
     const result = []
     let row = []
     for (let i = 0; i < 25; i++) {
