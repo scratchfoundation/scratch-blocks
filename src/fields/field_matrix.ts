@@ -322,8 +322,11 @@ class FieldMatrix extends FieldBitmap {
     // Prevent super's implementation from firing a change event as well with
     // the 2D array representation.
     Blockly.Events.disable()
-    super.dropdownDispose()
-    Blockly.Events.enable()
+    try {
+      super.dropdownDispose()
+    } finally {
+      Blockly.Events.enable()
+    }
   }
 
   /**
