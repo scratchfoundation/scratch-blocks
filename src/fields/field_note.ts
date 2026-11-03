@@ -844,6 +844,11 @@ export class FieldNote extends Blockly.FieldTextInput {
    */
   override getAriaValue() {
     const noteNum = Number(this.getText())
+    // If the note isn't valid, return the current value as-is.
+    if (Number.isNaN(noteNum)) {
+      return this.getText()
+    }
+
     if (
       this.displayedOctave_ == null ||
       noteNum > this.displayedOctave_ * 12 + 12 ||
