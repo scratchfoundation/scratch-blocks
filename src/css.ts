@@ -296,6 +296,12 @@ const styles = `
     font-style: italic;
   }
 
+  .blocklyComment:not(.blocklyCollapsed, .blocklyActiveFocus) .blocklyCommentHighlight,
+  .blocklyCollapsed .blocklyCommentTopbarBackground {
+    stroke: var(--colour-commentBorder);
+    stroke-width: 1px;
+  }
+
   .blocklyHtmlInput {
     font-family: "Helvetica Neue", Helvetica, sans-serif;
     font-size: 12pt;
