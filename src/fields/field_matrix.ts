@@ -50,10 +50,10 @@ class FieldMatrix extends FieldBitmap {
   private originalStyle = ''
 
   /**
-   * The value of this field when the field editor was opened, before any
-   * changes were made.
+   * The flattened value of this field when the field editor was opened, before
+   * any changes were made.
    */
-  private oldValue: number[][] | null = null
+  private oldValue: string | null = null
 
   /**
    * Construct a FieldMatrix from a JSON arg object.
@@ -89,18 +89,6 @@ class FieldMatrix extends FieldBitmap {
    */
   static readonly MATRIX_NODE_SIZE = 18
 
-  /**
-   * String with 25 '0' chars.
-   * Used for clearing a matrix or filling an LED node array.
-   */
-  static readonly ZEROS = '0000000000000000000000000'
-
-  /**
-   * String with 25 '1' chars.
-   * Used for filling a matrix.
-   */
-  static readonly ONES = '1111111111111111111111111'
-
   constructor(
     value: string | number[][] | typeof Blockly.Field.SKIP_SETUP,
     validator?: Blockly.FieldValidator<number[][]>,
@@ -123,37 +111,33 @@ class FieldMatrix extends FieldBitmap {
    * Converts from a flattened string representation to a 2D array
    * representation of the state of this field.
    *
-   * Historically, this field stored its value as a string of 1s and 0s,
-   * representing the state of each row of the grid one after another. Blockly's
-   * `FieldBitmap`, which this now inherits from, represents its value as a 2D
-   * array of numbers. This method converts the string representation from
-   * serialized project state to the array representation that this field now
-   * expects.
-   * @param value The value for this field represented as a string of 25 1s and
-   *     0s, optionally comma-separated.
-   * @returns A 2D array representation of the same value.
+   * Projects store this field's value as a string with one character per LED,
+   * row by row. Blockly's `FieldBitmap`, which this inherits from, represents
+   * its value as a 2D array of numbers. As in the micro:bit extension, any
+   * character other than '0' is a lit LED. Commas and whitespace are ignored,
+   * and a short string is padded with unlit LEDs.
+   * @param value The value for this field represented as a string of 1s and 0s.
+   * @returns A 2D array representation of the same value, or null if the value
+   *     is not a string.
    */
-  private static arrayify(value: string | null): number[][] | null {
-    if (!value) return null
-    value = value.split(',').join('')
+  private static arrayify(value: unknown): number[][] | null {
+    if (typeof value !== 'string') return null
+    const leds = value.replace(/[\s,]/g, '').padEnd(25, LEDState.OFF)
     const result = []
-    let row = []
-    for (let i = 0; i < 25; i++) {
-      if (i % 5 === 0) {
-        if (row.length) {
-          result.push(row)
-        }
-        row = []
-      }
-
-      row.push(parseInt(value.charAt(i)))
+    for (let row = 0; row < 5; row++) {
+      result.push([...leds.slice(row * 5, row * 5 + 5)].map((led) => ((led as LEDState) === LEDState.OFF ? 0 : 1)))
     }
-
-    if (row.length) {
-      result.push(row)
-    }
-
     return result
+  }
+
+  /**
+   * Converts from the 2D array representation of this field's state to the
+   * flattened string representation that projects and scratch-vm use.
+   * @param value A 2D array representation of this field's state.
+   * @returns The same value as a string of 25 1s and 0s, or null.
+   */
+  private static flatten(value: number[][] | null): string | null {
+    return value?.flat().join('') ?? null
   }
 
   /**
@@ -169,6 +153,53 @@ class FieldMatrix extends FieldBitmap {
     } else {
       return super.doClassValidation_(FieldMatrix.arrayify(newValue) ?? []) ?? null
     }
+  }
+
+  /**
+   * Sets this field's value. This fires its own change event rather than
+   * letting the superclass fire one, because scratch-vm stores the event's
+   * value verbatim and needs the flattened string representation rather than
+   * the internal 2D array.
+   * @param newValue The new value, as a 2D array or a string of 1s and 0s.
+   * @param fireChangeEvent Whether to fire a change event if the value changes.
+   */
+  override setValue(newValue: unknown, fireChangeEvent = true) {
+    const oldValue = FieldMatrix.flatten(this.getValue())
+    super.setValue(newValue, false)
+    const value = FieldMatrix.flatten(this.getValue())
+
+    const sourceBlock = this.getSourceBlock()
+    if (fireChangeEvent && sourceBlock && Blockly.Events.isEnabled() && value !== oldValue) {
+      Blockly.Events.fire(
+        new (Blockly.Events.get(Blockly.Events.BLOCK_CHANGE))(
+          sourceBlock,
+          'field',
+          this.name ?? null,
+          oldValue,
+          value,
+        ),
+      )
+    }
+  }
+
+  /**
+   * Serializes this field's value to XML as the flattened string
+   * representation that projects and scratch-vm use.
+   * @param fieldElement The element to populate with this field's value.
+   * @returns The populated element.
+   */
+  override toXml(fieldElement: Element): Element {
+    fieldElement.textContent = FieldMatrix.flatten(this.getValue())
+    return fieldElement
+  }
+
+  /**
+   * Serializes this field's value to JSON as the flattened string
+   * representation that projects and scratch-vm use.
+   * @returns This field's value as a string of 25 1s and 0s.
+   */
+  override saveState(): string | null {
+    return FieldMatrix.flatten(this.getValue())
   }
 
   /**
@@ -256,7 +287,7 @@ class FieldMatrix extends FieldBitmap {
 
     const style = sourceBlock.style
     this.originalStyle = sourceBlock.getStyleName()
-    this.oldValue = this.getValue()
+    this.oldValue = FieldMatrix.flatten(this.getValue())
     if (sourceBlock.isShadow()) {
       sourceBlock.setStyle(`${this.originalStyle}_selected`)
     } else if (this.borderRect_) {
@@ -282,14 +313,14 @@ class FieldMatrix extends FieldBitmap {
       Blockly.Msg.FIELD_BITMAP_BUTTON_LABEL_CLEAR,
     )
     clearButton.addEventListener('click', () => {
-      this.setValue(FieldMatrix.ZEROS)
+      this.setAllLeds(0)
     })
 
     // Button to fill matrix
     const fillButton = this.createButton_('var(--colour-text)')
     Blockly.utils.aria.setState(fillButton, Blockly.utils.aria.State.LABEL, Blockly.Msg.ARIA_LABEL_TURN_ON_ALL)
     fillButton.addEventListener('click', () => {
-      this.setValue(FieldMatrix.ONES)
+      this.setAllLeds(1)
     })
 
     buttonDiv.appendChild(clearButton)
@@ -297,10 +328,23 @@ class FieldMatrix extends FieldBitmap {
     div.appendChild(buttonDiv)
   }
 
+  /**
+   * Turns every LED on or off from the editor. Like individual LED edits, this
+   * fires an intermediate change event, and the change is committed as a single
+   * change event when the editor closes.
+   * @param state 1 to turn every LED on, or 0 to turn every LED off.
+   */
+  private setAllLeds(state: 0 | 1) {
+    const matrix = Array.from({ length: 5 }, () => new Array<number>(5).fill(state))
+    this.fireIntermediateChangeEvent(matrix)
+    this.setValue(matrix, false)
+  }
+
   protected override dropdownDispose() {
     const sourceBlock = this.getSourceBlock()
+    const value = FieldMatrix.flatten(this.getValue())
 
-    if (sourceBlock && this.oldValue !== null && this.oldValue !== this.getValue()) {
+    if (sourceBlock && this.oldValue !== null && this.oldValue !== value) {
       // Fire a change event with a flattened string representation of this
       // field's value as the VM expects rather than the internal 2D array
       // representation.
@@ -309,8 +353,8 @@ class FieldMatrix extends FieldBitmap {
           sourceBlock,
           'field',
           this.name ?? null,
-          this.oldValue.flat().join(''),
-          this.getValue()?.flat().join(''),
+          this.oldValue,
+          value,
         ),
       )
     }
@@ -424,8 +468,8 @@ class FieldMatrix extends FieldBitmap {
         new (Blockly.Events.get(Blockly.Events.BLOCK_FIELD_INTERMEDIATE_CHANGE))(
           this.getSourceBlock(),
           this.name ?? null,
-          this.getValue()?.flat().join(''),
-          newValue.flat().join(''),
+          FieldMatrix.flatten(this.getValue()),
+          FieldMatrix.flatten(newValue),
         ),
       )
     }
