@@ -93,8 +93,8 @@ export class ConstantProvider extends Blockly.zelos.ConstantProvider {
     return super.shapeFor(connection)
   }
 
-  override createDom(svg: SVGElement, tagName: string, selector: string) {
-    super.createDom(svg, tagName, selector)
+  override createDom(svg: SVGElement, selector: string, injectionDivIfIsParent?: HTMLElement) {
+    super.createDom(svg, selector, injectionDivIfIsParent)
     this.selectedGlowFilterId = ''
   }
 

@@ -5,7 +5,6 @@
 import { ContinuousFlyout, type LabelFlyoutItem } from '@blockly/continuous-toolbox'
 import * as Blockly from 'blockly/core'
 import { CheckboxBubble } from './checkbox_bubble'
-import { stripIds } from './scratch_blocks_utils'
 import { StatusIndicatorLabel } from './status_indicator_label'
 import { STATUS_INDICATOR_LABEL_TYPE } from './status_indicator_label_flyout_inflater'
 
@@ -36,21 +35,6 @@ export class CheckableContinuousFlyout extends ContinuousFlyout {
     this.tabWidth_ = 0
     this.MARGIN = 12
     this.GAP_Y = 12
-  }
-
-  /**
-   * Serializes a block to JSON in order to copy it to the main workspace.
-   * @param block The block to serialize.
-   * @returns A JSON representation of the block.
-   */
-  protected serializeBlock(block: Blockly.BlockSvg) {
-    const json = super.serializeBlock(block)
-    // Strip all IDs so every block in the tree (including shadows) gets a
-    // fresh ID when placed on the workspace. Without this, disposed shadows
-    // from a previous copy can reuse the flyout's IDs, causing two workspace
-    // blocks to share the same shadow in the VM. Deleting one then destroys
-    // the other's shadow (bug 878291).
-    return stripIds(json)
   }
 
   /**
