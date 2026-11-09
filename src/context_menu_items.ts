@@ -41,6 +41,7 @@ export function registerDeleteBlock() {
     scopeType: Blockly.ContextMenuRegistry.ScopeType.BLOCK,
     id: 'blockDelete',
     weight: 6,
+    associatedKeyboardShortcut: 'delete',
   }
   Blockly.ContextMenuRegistry.registry.register(deleteOption)
 }
@@ -174,66 +175,8 @@ export function registerDuplicateBlock() {
     scopeType: original.scopeType,
     id: original.id,
     weight: original.weight,
+    associatedKeyboardShortcut: original.associatedKeyboardShortcut,
   }
   Blockly.ContextMenuRegistry.registry.unregister(duplicateOption.id)
   Blockly.ContextMenuRegistry.registry.register(duplicateOption)
-}
-
-/**
- * Overrides the copy keyboard shortcut so that it includes subsequent blocks
- * in the stack (via the next connection) when copying a block.
- */
-export function registerCopyShortcut() {
-  const original = Blockly.ShortcutRegistry.registry.getRegistry()[Blockly.ShortcutItems.names.COPY]
-  Blockly.ShortcutRegistry.registry.register(
-    {
-      ...original,
-      allowCollision: true, // we're intentionally overriding the default handler
-      callback(workspace, e, shortcut, scope) {
-        const focused = scope.focusedNode
-        if (focused instanceof Blockly.BlockSvg && !focused.isInFlyout) {
-          e.preventDefault()
-          const copyData = focused.toCopyData(true)
-          if (copyData) {
-            Blockly.clipboard.setLastCopiedData(copyData)
-            Blockly.clipboard.setLastCopiedWorkspace(focused.workspace)
-            Blockly.clipboard.setLastCopiedLocation(focused.getRelativeToSurfaceXY())
-            return true
-          }
-        }
-        return original.callback?.(workspace, e, shortcut, scope) ?? false
-      },
-    },
-    true, // allowOverrides: we're intentionally overriding the default handler
-  )
-}
-
-/**
- * Overrides the cut keyboard shortcut so that it includes subsequent blocks
- * in the stack (via the next connection) when cutting a block.
- */
-export function registerCutShortcut() {
-  const original = Blockly.ShortcutRegistry.registry.getRegistry()[Blockly.ShortcutItems.names.CUT]
-  Blockly.ShortcutRegistry.registry.register(
-    {
-      ...original,
-      allowCollision: true, // we're intentionally overriding the default handler
-      callback(workspace, e, shortcut, scope) {
-        const focused = scope.focusedNode
-        if (focused instanceof Blockly.BlockSvg && !focused.isInFlyout) {
-          e.preventDefault()
-          const copyData = focused.toCopyData(true)
-          if (copyData && focused.isDeletable()) {
-            Blockly.clipboard.setLastCopiedData(copyData)
-            Blockly.clipboard.setLastCopiedWorkspace(focused.workspace)
-            Blockly.clipboard.setLastCopiedLocation(focused.getRelativeToSurfaceXY())
-            focused.checkAndDelete()
-            return true
-          }
-        }
-        return original.callback?.(workspace, e, shortcut, scope) ?? false
-      },
-    },
-    true, // allowOverrides: we're intentionally overriding the default handler
-  )
 }

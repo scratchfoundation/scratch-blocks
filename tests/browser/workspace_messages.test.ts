@@ -45,7 +45,7 @@ describe('workspace UI messages', () => {
   it('shows a context menu for a workspace comment', () => {
     const comment = new Blockly.comments.RenderedWorkspaceComment(workspace)
     comment.showContextMenu(new PointerEvent('pointerdown'))
-    expect(menuItemTexts()).toEqual(['Duplicate', 'Remove Comment'])
+    expect(menuItemTexts()).toEqual(['Duplicate D', 'Remove Comment Delete'])
   })
 
   it('translates the workspace comment context menu', () => {
@@ -53,7 +53,7 @@ describe('workspace UI messages', () => {
     const comment = new Blockly.comments.RenderedWorkspaceComment(workspace)
     comment.showContextMenu(new PointerEvent('pointerdown'))
     const { de } = ScratchBlocks.ScratchMsgs.locales
-    expect(menuItemTexts()).toEqual([de.DUPLICATE, de.REMOVE_COMMENT])
+    expect(menuItemTexts()).toEqual([`${de.DUPLICATE} D`, `${de.REMOVE_COMMENT} Delete`])
   })
 
   it('translates the block context menu', () => {
@@ -62,6 +62,6 @@ describe('workspace UI messages', () => {
     block.initSvg()
     block.render()
     block.showContextMenu(new PointerEvent('pointerdown'))
-    expect(menuItemTexts()).toContain(ScratchBlocks.ScratchMsgs.locales.de.DUPLICATE)
+    expect(menuItemTexts()).toContain(`${ScratchBlocks.ScratchMsgs.locales.de.DUPLICATE} D`)
   })
 })

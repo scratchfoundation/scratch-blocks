@@ -21,12 +21,8 @@
  * Displays an editable 5x5 matrix for controlling LED arrays.
  * @author khanning@gmail.com (Kreg Hanning)
  */
+import { FieldBitmap, FieldBitmapFromJsonConfig } from '@blockly/field-bitmap'
 import * as Blockly from 'blockly/core'
-
-enum PaintStyle {
-  FILL = 'fill',
-  CLEAR = 'clear',
-}
 
 enum LEDState {
   ON = '1',
@@ -36,22 +32,11 @@ enum LEDState {
 /**
  * Class for a matrix field.
  */
-class FieldMatrix extends Blockly.Field<string> {
-  private originalStyle = ''
-
+class FieldMatrix extends FieldBitmap {
   /**
    * Array of SVGElement<rect> for matrix thumbnail image on block field.
    */
   private ledThumbNodes_: SVGElement[] = []
-  /**
-   * Array of SVGElement<rect> for matrix editor in dropdown menu.
-   */
-  private ledButtons_: SVGElement[] = []
-
-  /**
-   * SVGElement for LED matrix in editor.
-   */
-  private matrixStage_: SVGElement | null = null
 
   /**
    * SVG image for dropdown arrow.
@@ -59,48 +44,16 @@ class FieldMatrix extends Blockly.Field<string> {
   private arrow_: SVGElement | null = null
 
   /**
-   * String indicating matrix paint style.
-   * value can be [null, 'fill', 'clear'].
+   * The name of the block style applied to the parent block before this field's
+   * dropdown was shown.
    */
-  private paintStyle_: PaintStyle | null = null
+  private originalStyle = ''
 
   /**
-   * Touch event wrapper.
-   * Runs when the field is selected.
+   * The flattened value of this field when the field editor was opened, before
+   * any changes were made.
    */
-  private mouseDownWrapper_: Blockly.browserEvents.Data | null = null
-
-  /**
-   * Touch event wrapper.
-   * Runs when the clear button editor button is selected.
-   */
-  private clearButtonWrapper_: Blockly.browserEvents.Data | null = null
-
-  /**
-   * Touch event wrapper.
-   * Runs when the fill button editor button is selected.
-   */
-  private fillButtonWrapper_: Blockly.browserEvents.Data | null = null
-
-  /**
-   * Touch event wrapper.
-   * Runs when the matrix editor is touched.
-   */
-  private matrixTouchWrapper_: Blockly.browserEvents.Data | null = null
-
-  /**
-   * Touch event wrapper.
-   * Runs when the matrix editor touch event moves.
-   */
-  private matrixMoveWrapper_: Blockly.browserEvents.Data | null = null
-
-  /**
-   * Touch event wrapper.
-   * Runs when the matrix editor is released.
-   */
-  private matrixReleaseWrapper_: Blockly.browserEvents.Data | null = null
-
-  SERIALIZABLE = true
+  private oldValue: string | null = null
 
   /**
    * Construct a FieldMatrix from a JSON arg object.
@@ -136,27 +89,126 @@ class FieldMatrix extends Blockly.Field<string> {
    */
   static readonly MATRIX_NODE_SIZE = 18
 
-  /**
-   * Fixed corner radius for 5x5 matrix buttons, in px.
-   */
-  static readonly MATRIX_NODE_RADIUS = 4
+  constructor(
+    value: string | number[][] | typeof Blockly.Field.SKIP_SETUP,
+    validator?: Blockly.FieldValidator<number[][]>,
+    config?: FieldMatrixConfig,
+  ) {
+    const initialValue =
+      Array.isArray(value) || value === Blockly.Field.SKIP_SETUP
+        ? value
+        : (FieldMatrix.arrayify(value) ?? Blockly.Field.SKIP_SETUP)
+
+    super(initialValue, validator, {
+      width: 5,
+      height: 5,
+      buttons: { randomize: false, clear: false },
+      ...config,
+    })
+  }
 
   /**
-   * Fixed padding for 5x5 matrix buttons, in px.
+   * Converts from a flattened string representation to a 2D array
+   * representation of the state of this field.
+   *
+   * Projects store this field's value as a string with one character per LED,
+   * row by row. Blockly's `FieldBitmap`, which this inherits from, represents
+   * its value as a 2D array of numbers. As in the micro:bit extension, any
+   * character other than '0' is a lit LED. Commas and whitespace are ignored,
+   * and a short string is padded with unlit LEDs.
+   * @param value The value for this field represented as a string of 1s and 0s.
+   * @returns A 2D array representation of the same value, or null if the value
+   *     is not a string.
    */
-  static readonly MATRIX_NODE_PAD = 5
+  private static arrayify(value: unknown): number[][] | null {
+    if (typeof value !== 'string') return null
+    const leds = value.replace(/[\s,]/g, '').padEnd(25, LEDState.OFF)
+    const result = []
+    for (let row = 0; row < 5; row++) {
+      result.push([...leds.slice(row * 5, row * 5 + 5)].map((led) => ((led as LEDState) === LEDState.OFF ? 0 : 1)))
+    }
+    return result
+  }
 
   /**
-   * String with 25 '0' chars.
-   * Used for clearing a matrix or filling an LED node array.
+   * Converts from the 2D array representation of this field's state to the
+   * flattened string representation that projects and scratch-vm use.
+   * @param value A 2D array representation of this field's state.
+   * @returns The same value as a string of 25 1s and 0s, or null.
    */
-  static readonly ZEROS = '0000000000000000000000000'
+  private static flatten(value: number[][] | null): string | null {
+    return value?.flat().join('') ?? null
+  }
 
   /**
-   * String with 25 '1' chars.
-   * Used for filling a matrix.
+   * Normalizes the provided value to a 2D array of numbers.
+   * @param newValue The new value for this field, as a 2D array or 0/1 string.
+   * @returns The provided value as a 2D array, or null.
    */
-  static readonly ONES = '1111111111111111111111111'
+  protected override doClassValidation_(newValue?: number[][] | string) {
+    if (newValue === undefined) return null
+
+    if (Array.isArray(newValue)) {
+      return super.doClassValidation_(newValue) ?? null
+    } else {
+      return super.doClassValidation_(FieldMatrix.arrayify(newValue) ?? []) ?? null
+    }
+  }
+
+  /**
+   * Sets this field's value. This fires its own change event rather than
+   * letting the superclass fire one, because scratch-vm stores the event's
+   * value verbatim and needs the flattened string representation rather than
+   * the internal 2D array.
+   * @param newValue The new value, as a 2D array or a string of 1s and 0s.
+   * @param fireChangeEvent Whether to fire a change event if the value changes.
+   */
+  override setValue(newValue: unknown, fireChangeEvent = true) {
+    const oldValue = FieldMatrix.flatten(this.getValue())
+    super.setValue(newValue, false)
+    const value = FieldMatrix.flatten(this.getValue())
+
+    const sourceBlock = this.getSourceBlock()
+    if (fireChangeEvent && sourceBlock && Blockly.Events.isEnabled() && value !== oldValue) {
+      Blockly.Events.fire(
+        new (Blockly.Events.get(Blockly.Events.BLOCK_CHANGE))(
+          sourceBlock,
+          'field',
+          this.name ?? null,
+          oldValue,
+          value,
+        ),
+      )
+    }
+  }
+
+  /**
+   * Serializes this field's value to XML as the flattened string
+   * representation that projects and scratch-vm use.
+   * @param fieldElement The element to populate with this field's value.
+   * @returns The populated element.
+   */
+  override toXml(fieldElement: Element): Element {
+    fieldElement.textContent = FieldMatrix.flatten(this.getValue())
+    return fieldElement
+  }
+
+  /**
+   * Serializes this field's value to JSON as the flattened string
+   * representation that projects and scratch-vm use.
+   * @returns This field's value as a string of 25 1s and 0s.
+   */
+  override saveState(): string | null {
+    return FieldMatrix.flatten(this.getValue())
+  }
+
+  /**
+   * Indicates that this is always a full-block field.
+   * @returns True.
+   */
+  override isFullBlockField() {
+    return true
+  }
 
   /**
    * Called when the field is placed on a block.
@@ -216,15 +268,13 @@ class FieldMatrix extends Blockly.Field<string> {
     }
   }
 
-  doClassValidation_(matrix: string) {
-    return matrix ? matrix + FieldMatrix.ZEROS.substr(0, 25 - matrix.length) : matrix
-  }
-
-  doValueUpdate_(newValue: string) {
+  /**
+   * Updates the field's thumbnail when the value changes.
+   * @param newValue The new value for this field.
+   */
+  doValueUpdate_(newValue: number[][]) {
     super.doValueUpdate_(newValue)
-    if (newValue) {
-      this.updateMatrix_()
-    }
+    this.updateMatrix_()
   }
 
   /**
@@ -232,11 +282,13 @@ class FieldMatrix extends Blockly.Field<string> {
    */
   showEditor_() {
     const sourceBlock = this.getSourceBlock() as Blockly.BlockSvg
+    this.pixelColours = { empty: sourceBlock.getColourSecondary(), filled: 'var(--colour-text)' }
     Blockly.DropDownDiv.setColour(sourceBlock.getColour(), sourceBlock.getColourTertiary())
 
     const style = sourceBlock.style
+    this.originalStyle = sourceBlock.getStyleName()
+    this.oldValue = FieldMatrix.flatten(this.getValue())
     if (sourceBlock.isShadow()) {
-      this.originalStyle = sourceBlock.getStyleName()
       sourceBlock.setStyle(`${this.originalStyle}_selected`)
     } else if (this.borderRect_) {
       this.borderRect_.setAttribute(
@@ -245,88 +297,95 @@ class FieldMatrix extends Blockly.Field<string> {
       )
     }
 
+    super.showEditor_()
+
     const div = Blockly.DropDownDiv.getContentDiv()
-    // Build the SVG DOM.
-    const matrixSize = FieldMatrix.MATRIX_NODE_SIZE * 5 + FieldMatrix.MATRIX_NODE_PAD * 6
-    this.matrixStage_ = Blockly.utils.dom.createSvgElement(
-      'svg',
-      {
-        xmlns: 'http://www.w3.org/2000/svg',
-        'xmlns:html': 'http://www.w3.org/1999/xhtml',
-        'xmlns:xlink': 'http://www.w3.org/1999/xlink',
-        version: '1.1',
-        height: matrixSize + 'px',
-        width: matrixSize + 'px',
-      },
-      div,
-    )
-    // Create the 5x5 matrix
-    this.ledButtons_ = []
-    for (let i = 0; i < 5; i++) {
-      for (let n = 0; n < 5; n++) {
-        const x = FieldMatrix.MATRIX_NODE_SIZE * n + FieldMatrix.MATRIX_NODE_PAD * (n + 1)
-        const y = FieldMatrix.MATRIX_NODE_SIZE * i + FieldMatrix.MATRIX_NODE_PAD * (i + 1)
-        const attr = {
-          x: x + 'px',
-          y: y + 'px',
-          width: FieldMatrix.MATRIX_NODE_SIZE,
-          height: FieldMatrix.MATRIX_NODE_SIZE,
-          rx: FieldMatrix.MATRIX_NODE_RADIUS,
-          ry: FieldMatrix.MATRIX_NODE_RADIUS,
-        }
-        const led = Blockly.utils.dom.createSvgElement('rect', attr, this.matrixStage_)
-        this.matrixStage_.appendChild(led)
-        this.ledButtons_.push(led)
-      }
-    }
+
     // Div for lower button menu
     const buttonDiv = document.createElement('div')
+    buttonDiv.className = 'scratchMatrixButtonContainer'
+
     // Button to clear matrix
-    const clearButtonDiv = document.createElement('div')
-    clearButtonDiv.className = 'scratchMatrixButtonDiv'
-
     const clearButton = this.createButton_(sourceBlock.getColourSecondary())
-    clearButtonDiv.appendChild(clearButton)
-    // Button to fill matrix
-    const fillButtonDiv = document.createElement('div')
-    fillButtonDiv.className = 'scratchMatrixButtonDiv'
-    const fillButton = this.createButton_('var(--colour-text)')
-    fillButtonDiv.appendChild(fillButton)
+    Blockly.utils.aria.setState(
+      clearButton,
+      Blockly.utils.aria.State.LABEL,
+      Blockly.Msg.FIELD_BITMAP_BUTTON_LABEL_CLEAR,
+    )
+    clearButton.addEventListener('click', () => {
+      this.setAllLeds(0)
+    })
 
-    buttonDiv.appendChild(clearButtonDiv)
-    buttonDiv.appendChild(fillButtonDiv)
+    // Button to fill matrix
+    const fillButton = this.createButton_('var(--colour-text)')
+    Blockly.utils.aria.setState(fillButton, Blockly.utils.aria.State.LABEL, Blockly.Msg.ARIA_LABEL_TURN_ON_ALL)
+    fillButton.addEventListener('click', () => {
+      this.setAllLeds(1)
+    })
+
+    buttonDiv.appendChild(clearButton)
+    buttonDiv.appendChild(fillButton)
     div.appendChild(buttonDiv)
 
-    Blockly.DropDownDiv.showPositionedByBlock(this, sourceBlock, this.dropdownDispose_.bind(this))
-
-    this.matrixTouchWrapper_ = Blockly.browserEvents.bind(
-      this.matrixStage_,
-      'mousedown',
-      this,
-      this.onMouseDown.bind(this),
-    )
-    this.clearButtonWrapper_ = Blockly.browserEvents.bind(clearButton, 'click', this, this.clearMatrix_.bind(this))
-    this.fillButtonWrapper_ = Blockly.browserEvents.bind(fillButton, 'click', this, this.fillMatrix_.bind(this))
-
-    // Update the matrix for the current value
-    this.updateMatrix_()
-  }
-
-  dropdownDispose_() {
-    const sourceBlock = this.getSourceBlock()
-    if (sourceBlock?.isShadow()) {
-      sourceBlock.setStyle(this.originalStyle)
-    }
     this.updateMatrix_()
   }
 
   /**
-   * Make an svg object that resembles a 3x3 matrix to be used as a button.
-   * @param fill The color to fill the matrix nodes.
-   * @returns The button svg element.
+   * Turns every LED on or off from the editor. Like individual LED edits, this
+   * fires an intermediate change event, and the change is committed as a single
+   * change event when the editor closes.
+   * @param state 1 to turn every LED on, or 0 to turn every LED off.
    */
-  createButton_(fill: string): SVGElement {
-    const button = Blockly.utils.dom.createSvgElement('svg', {
+  private setAllLeds(state: 0 | 1) {
+    const matrix = Array.from({ length: 5 }, () => new Array<number>(5).fill(state))
+    this.fireIntermediateChangeEvent(matrix)
+    this.setValue(matrix, false)
+  }
+
+  protected override dropdownDispose() {
+    const sourceBlock = this.getSourceBlock()
+    const value = FieldMatrix.flatten(this.getValue())
+
+    if (sourceBlock && this.oldValue !== null && this.oldValue !== value) {
+      // Fire a change event with a flattened string representation of this
+      // field's value as the VM expects rather than the internal 2D array
+      // representation.
+      Blockly.Events.fire(
+        new (Blockly.Events.get(Blockly.Events.BLOCK_CHANGE))(
+          sourceBlock,
+          'field',
+          this.name ?? null,
+          this.oldValue,
+          value,
+        ),
+      )
+    }
+
+    if (sourceBlock?.isShadow()) {
+      sourceBlock.setStyle(this.originalStyle)
+    }
+
+    // Prevent super's implementation from firing a change event as well with
+    // the 2D array representation.
+    Blockly.Events.disable()
+    try {
+      super.dropdownDispose()
+    } finally {
+      Blockly.Events.enable()
+    }
+
+    this.updateMatrix_()
+  }
+
+  /**
+   * Make a button containing an svg object that resembles a 3x3 matrix.
+   * @param fill The color to fill the matrix nodes.
+   * @returns The button element.
+   */
+  createButton_(fill: string): HTMLButtonElement {
+    const button = document.createElement('button')
+    button.className = 'scratchMatrixButton'
+    const icon = Blockly.utils.dom.createSvgElement('svg', {
       xmlns: 'http://www.w3.org/2000/svg',
       'xmlns:html': 'http://www.w3.org/1999/xhtml',
       'xmlns:xlink': 'http://www.w3.org/1999/xlink',
@@ -349,10 +408,11 @@ class FieldMatrix extends Blockly.Field<string> {
             ry: nodePad,
             fill: fill,
           },
-          button,
+          icon,
         )
       }
     }
+    button.appendChild(icon)
     return button
   }
 
@@ -360,37 +420,22 @@ class FieldMatrix extends Blockly.Field<string> {
    * Redraw the matrix with the current value.
    */
   private updateMatrix_() {
-    const matrix = this.getValue()
+    const matrix = this.getValue()?.flat().join('')
     if (!matrix) return
     const sourceBlock = this.getSourceBlock() as Blockly.BlockSvg | null
     if (!sourceBlock) return
+    const selected = sourceBlock.getStyleName().endsWith('_selected')
+    const style = selected
+      ? sourceBlock.workspace.getRenderer().getConstants().getBlockStyle(this.originalStyle)
+      : sourceBlock.getStyle()
+
     for (let i = 0; i < matrix.length; i++) {
       if ((matrix[i] as LEDState) === LEDState.OFF) {
-        this.fillMatrixNode_(this.ledButtons_, i, sourceBlock.getColourTertiary())
-        this.fillMatrixNode_(this.ledThumbNodes_, i, sourceBlock.getColourSecondary())
+        this.fillMatrixNode_(this.ledThumbNodes_, i, style.colourPrimary)
       } else {
-        this.fillMatrixNode_(this.ledButtons_, i, 'var(--colour-text)')
         this.fillMatrixNode_(this.ledThumbNodes_, i, 'var(--colour-text)')
       }
     }
-  }
-
-  /**
-   * Resets all LED values to zero.
-   * @param e Checked to allow only left-button clicks (button 0).
-   */
-  clearMatrix_(e: PointerEvent) {
-    if (e.button != 0) return
-    this.setValue(FieldMatrix.ZEROS)
-  }
-
-  /**
-   * Sets all LED values to one.
-   * @param e Checked to allow only left-button clicks (button 0).
-   */
-  fillMatrix_(e: PointerEvent) {
-    if (e.button != 0) return
-    this.setValue(FieldMatrix.ONES)
   }
 
   /**
@@ -402,142 +447,6 @@ class FieldMatrix extends Blockly.Field<string> {
   fillMatrixNode_(node: SVGElement[], index: number, fill: string) {
     if (!node[index] || !fill) return
     node[index].setAttribute('fill', fill)
-  }
-
-  setLEDNode_(led: number, state: LEDState) {
-    if (led < 0 || led > 24) return
-    const oldMatrix = this.getValue()
-    if (!oldMatrix) return
-    const newMatrix = oldMatrix.substr(0, led) + state + oldMatrix.substr(led + 1)
-    this.setValue(newMatrix)
-  }
-
-  fillLEDNode_(led: number) {
-    if (led < 0 || led > 24) return
-    this.setLEDNode_(led, LEDState.ON)
-  }
-
-  clearLEDNode_(led: number) {
-    if (led < 0 || led > 24) return
-    this.setLEDNode_(led, LEDState.OFF)
-  }
-
-  toggleLEDNode_(led: number) {
-    if (led < 0 || led > 24) return
-    const value = this.getValue()
-    if (!value) return
-    if ((value.charAt(led) as LEDState) === LEDState.OFF) {
-      this.setLEDNode_(led, LEDState.ON)
-    } else {
-      this.setLEDNode_(led, LEDState.OFF)
-    }
-  }
-
-  /**
-   * Toggle matrix nodes on and off.
-   * @param e Mouse event.
-   */
-  onMouseDown(e: PointerEvent) {
-    this.matrixMoveWrapper_ = Blockly.browserEvents.bind(
-      document.body,
-      'mousemove',
-      this,
-      this.onMouseMove.bind(this),
-    )
-    this.matrixReleaseWrapper_ = Blockly.browserEvents.bind(document.body, 'mouseup', this, this.onMouseUp.bind(this))
-    const ledHit = this.checkForLED_(e)
-    if (ledHit > -1) {
-      const value = this.getValue()
-      if (value && (value.charAt(ledHit) as LEDState) === LEDState.OFF) {
-        this.paintStyle_ = PaintStyle.FILL
-      } else {
-        this.paintStyle_ = PaintStyle.CLEAR
-      }
-      this.toggleLEDNode_(ledHit)
-      this.updateMatrix_()
-    } else {
-      this.paintStyle_ = null
-    }
-  }
-
-  /**
-   * Unbind mouse move event and clear the paint style.
-   */
-  onMouseUp() {
-    if (this.matrixMoveWrapper_) {
-      Blockly.browserEvents.unbind(this.matrixMoveWrapper_)
-      this.matrixMoveWrapper_ = null
-    }
-    if (this.matrixReleaseWrapper_) {
-      Blockly.browserEvents.unbind(this.matrixReleaseWrapper_)
-      this.matrixReleaseWrapper_ = null
-    }
-    this.paintStyle_ = null
-  }
-
-  /**
-   * Toggle matrix nodes on and off by dragging mouse.
-   * @param e Mouse move event.
-   */
-  onMouseMove(e: PointerEvent) {
-    e.preventDefault()
-    if (this.paintStyle_) {
-      const led = this.checkForLED_(e)
-      if (led < 0) return
-      if (this.paintStyle_ === PaintStyle.CLEAR) {
-        this.clearLEDNode_(led)
-      } else {
-        this.fillLEDNode_(led)
-      }
-    }
-  }
-
-  /**
-   * Check if mouse coordinates collide with a matrix node.
-   * @param e Mouse move event.
-   * @returns The matching matrix node or -1 for none.
-   */
-  checkForLED_(e: PointerEvent): number {
-    if (!this.matrixStage_) return -1
-    const bBox = this.matrixStage_.getBoundingClientRect()
-    const nodeSize = FieldMatrix.MATRIX_NODE_SIZE
-    const nodePad = FieldMatrix.MATRIX_NODE_PAD
-    const dx = e.clientX - bBox.left
-    const dy = e.clientY - bBox.top
-    const min = nodePad / 2
-    const max = bBox.width - nodePad / 2
-    if (dx < min || dx > max || dy < min || dy > max) {
-      return -1
-    }
-    const xDiv = Math.trunc((dx - nodePad / 2) / (nodeSize + nodePad))
-    const yDiv = Math.trunc((dy - nodePad / 2) / (nodeSize + nodePad))
-    return xDiv + yDiv * nodePad
-  }
-
-  /**
-   * Clean up this FieldMatrix, as well as the inherited Field.
-   */
-  dispose() {
-    super.dispose()
-    this.matrixStage_ = null
-    if (this.mouseDownWrapper_) {
-      Blockly.browserEvents.unbind(this.mouseDownWrapper_)
-    }
-    if (this.matrixTouchWrapper_) {
-      Blockly.browserEvents.unbind(this.matrixTouchWrapper_)
-    }
-    if (this.matrixReleaseWrapper_) {
-      Blockly.browserEvents.unbind(this.matrixReleaseWrapper_)
-    }
-    if (this.matrixMoveWrapper_) {
-      Blockly.browserEvents.unbind(this.matrixMoveWrapper_)
-    }
-    if (this.clearButtonWrapper_) {
-      Blockly.browserEvents.unbind(this.clearButtonWrapper_)
-    }
-    if (this.fillButtonWrapper_) {
-      Blockly.browserEvents.unbind(this.fillButtonWrapper_)
-    }
   }
 
   updateSize_() {
@@ -553,9 +462,30 @@ class FieldMatrix extends Blockly.Field<string> {
   getClickTarget_() {
     return (this.getSourceBlock() as Blockly.BlockSvg).getSvgRoot()
   }
+
+  /**
+   * Fires an intermediate change event reflecting a cell being toggled before
+   * the final state change has been committed. This explicitly does not call
+   * super, because we need to emit an event with a flattened string
+   * representation of this field's value as expected by the VM, rather than the
+   * internal 2D array representation.
+   * @param newValue The new value of this field.
+   */
+  protected override fireIntermediateChangeEvent(newValue: number[][]) {
+    if (this.getSourceBlock()) {
+      Blockly.Events.fire(
+        new (Blockly.Events.get(Blockly.Events.BLOCK_FIELD_INTERMEDIATE_CHANGE))(
+          this.getSourceBlock(),
+          this.name ?? null,
+          FieldMatrix.flatten(this.getValue()),
+          FieldMatrix.flatten(newValue),
+        ),
+      )
+    }
+  }
 }
 
-interface FieldMatrixConfig extends Blockly.FieldConfig {
+interface FieldMatrixConfig extends FieldBitmapFromJsonConfig {
   matrix: string
 }
 
@@ -563,5 +493,33 @@ interface FieldMatrixConfig extends Blockly.FieldConfig {
  * Register the field and any dependencies.
  */
 export function registerFieldMatrix() {
+  Blockly.Css.register(`
+    .bitmapPixelGrid {
+      gap: 5px;
+      margin: 5px;
+      margin-bottom: 10px;
+    }
+    .pixelButton {
+      border: none;
+      border-radius: 4px;
+      width: 18px;
+      height: 18px;
+    }
+    .scratchMatrixButtonContainer {
+      display: flex;
+      justify-content: space-evenly;
+    }
+    .scratchMatrixButton {
+      border: none;
+      background: none;
+      padding: 3px;
+      padding-bottom: 1px;
+    }
+    .scratchMatrixButton:focus {
+      outline-width: var(--blockly-selection-width);
+      outline-color: var(--blockly-active-node-color);
+      outline-style: solid;
+      border-radius: 4px;
+    }`)
   Blockly.fieldRegistry.register('field_matrix', FieldMatrix)
 }
