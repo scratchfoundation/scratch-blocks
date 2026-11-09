@@ -326,6 +326,8 @@ class FieldMatrix extends FieldBitmap {
     buttonDiv.appendChild(clearButton)
     buttonDiv.appendChild(fillButton)
     div.appendChild(buttonDiv)
+
+    this.updateMatrix_()
   }
 
   /**
@@ -371,6 +373,8 @@ class FieldMatrix extends FieldBitmap {
     } finally {
       Blockly.Events.enable()
     }
+
+    this.updateMatrix_()
   }
 
   /**
@@ -420,9 +424,14 @@ class FieldMatrix extends FieldBitmap {
     if (!matrix) return
     const sourceBlock = this.getSourceBlock() as Blockly.BlockSvg | null
     if (!sourceBlock) return
+    const selected = sourceBlock.getStyleName().endsWith('_selected')
+    const style = selected
+      ? sourceBlock.workspace.getRenderer().getConstants().getBlockStyle(this.originalStyle)
+      : sourceBlock.getStyle()
+
     for (let i = 0; i < matrix.length; i++) {
       if ((matrix[i] as LEDState) === LEDState.OFF) {
-        this.fillMatrixNode_(this.ledThumbNodes_, i, sourceBlock.getColourSecondary())
+        this.fillMatrixNode_(this.ledThumbNodes_, i, style.colourPrimary)
       } else {
         this.fillMatrixNode_(this.ledThumbNodes_, i, 'var(--colour-text)')
       }
