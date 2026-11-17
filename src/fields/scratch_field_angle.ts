@@ -152,6 +152,13 @@ class ScratchFieldAngle extends Blockly.FieldNumber {
     }
   }
 
+  widgetCreate_() {
+    const htmlInput = super.widgetCreate_()
+    // Numbers read left to right in every language
+    htmlInput.dir = 'ltr'
+    return htmlInput
+  }
+
   /**
    * Show the inline free-text editor on top of the text.
    * @param event The triggering pointer event.
