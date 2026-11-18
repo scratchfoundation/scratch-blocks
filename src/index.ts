@@ -94,6 +94,56 @@ function sanitizeTheme(theme?: ScratchBlocksTheme) {
   return ScratchBlocksTheme.CLASSIC
 }
 
+/**
+ * Disables Blockly's built-in accessibility shortcuts. This is a stopgap that
+ * should be removed once a decision is made on how to handle collisions between
+ * shortcuts and the "when <key> pressed" block.
+ */
+function disableA11yShortcuts() {
+  const a11yShortcuts = [
+    Blockly.ShortcutItems.names.FOCUS_WORKSPACE,
+    Blockly.ShortcutItems.names.FOCUS_TOOLBOX,
+    Blockly.ShortcutItems.names.START_MOVE,
+    Blockly.ShortcutItems.names.START_MOVE_STACK,
+    Blockly.ShortcutItems.names.FINISH_MOVE,
+    Blockly.ShortcutItems.names.ABORT_MOVE,
+    Blockly.ShortcutItems.names.MOVE_UP,
+    Blockly.ShortcutItems.names.MOVE_DOWN,
+    Blockly.ShortcutItems.names.MOVE_LEFT,
+    Blockly.ShortcutItems.names.MOVE_RIGHT,
+    Blockly.ShortcutItems.names.NAVIGATE_RIGHT,
+    Blockly.ShortcutItems.names.NAVIGATE_LEFT,
+    Blockly.ShortcutItems.names.NAVIGATE_UP,
+    Blockly.ShortcutItems.names.NAVIGATE_DOWN,
+    Blockly.ShortcutItems.names.DISCONNECT,
+    Blockly.ShortcutItems.names.NEXT_STACK,
+    Blockly.ShortcutItems.names.PREVIOUS_STACK,
+    Blockly.ShortcutItems.names.INFORMATION,
+    Blockly.ShortcutItems.names.EXTENDED_INFORMATION,
+    Blockly.ShortcutItems.names.PERFORM_ACTION,
+    Blockly.ShortcutItems.names.DUPLICATE,
+    Blockly.ShortcutItems.names.CLEANUP,
+    Blockly.ShortcutItems.names.SHOW_TOOLTIP,
+    Blockly.ShortcutItems.names.NEXT_HEADING,
+    Blockly.ShortcutItems.names.PREVIOUS_HEADING,
+    Blockly.ShortcutItems.names.TOGGLE_SCREENREADER,
+    Blockly.ShortcutItems.names.JUMP_TOP_STACK,
+    Blockly.ShortcutItems.names.JUMP_BOTTOM_STACK,
+    Blockly.ShortcutItems.names.JUMP_BLOCK_START,
+    Blockly.ShortcutItems.names.JUMP_BLOCK_END,
+    Blockly.ShortcutItems.names.JUMP_FIRST_BLOCK,
+    Blockly.ShortcutItems.names.JUMP_LAST_BLOCK,
+    Blockly.ShortcutItems.names.JUMP_PREVIOUS_PAGE,
+    Blockly.ShortcutItems.names.JUMP_NEXT_PAGE,
+    Blockly.ShortcutItems.names.SCROLL_LEFT,
+    Blockly.ShortcutItems.names.SCROLL_RIGHT,
+    Blockly.ShortcutItems.names.SCROLL_UP,
+    Blockly.ShortcutItems.names.SCROLL_DOWN,
+  ]
+
+  a11yShortcuts.forEach((shortcut) => Blockly.ShortcutRegistry.registry.unregister(shortcut))
+}
+
 export function inject(container: Element, options: ScratchBlocksOptions) {
   registerScratchFieldAngle()
   registerFieldColourSlider()
@@ -199,7 +249,7 @@ keyboardShortcuts.registerDisconnectBlock()
 keyboardShortcuts.registerDuplicate()
 keyboardShortcuts.registerCopy()
 keyboardShortcuts.registerCut()
-Blockly.ShortcutItems.registerNavigationShortcuts()
+disableA11yShortcuts()
 
 Blockly.comments.CommentView.defaultCommentSize = new Blockly.utils.Size(200, 200)
 
