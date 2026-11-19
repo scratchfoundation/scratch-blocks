@@ -49,7 +49,7 @@
     "prettier": "3.8.5",
     "scratch-l10n": "6.2.10",
     "scratch-semantic-release-config": "4.0.2",
-    "semantic-release": "25.0.9",
+    "semantic-release": "26.0.1",
     "source-map-loader": "5.0.0",
     "ts-loader": "9.6.2",
     "typescript": "5.9.3",
