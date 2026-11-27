@@ -122,6 +122,13 @@ class ScratchFieldNumber extends Blockly.FieldTextInput {
     }
   }
 
+  widgetCreate_() {
+    const htmlInput = super.widgetCreate_()
+    // Numbers read left to right in every language
+    htmlInput.dir = 'ltr'
+    return htmlInput
+  }
+
   onHtmlInputKeyDown_(e: KeyboardEvent) {
     super.onHtmlInputKeyDown_(e)
     // key can be things like "Backspace", so only validate when it represents a single
