@@ -55,7 +55,7 @@
     "typescript": "5.9.3",
     "vitest": "4.1.12",
     "webpack": "5.113.0",
-    "webpack-cli": "6.0.1",
+    "webpack-cli": "7.3.1",
     "webpack-dev-server": "5.2.7"
   },
   "config": {
