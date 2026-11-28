@@ -38,8 +38,8 @@
     "blockly": "^12.4.1"
   },
   "devDependencies": {
-    "@commitlint/cli": "20.5.3",
-    "@commitlint/config-conventional": "20.5.3",
+    "@commitlint/cli": "21.2.4",
+    "@commitlint/config-conventional": "21.2.4",
     "@vitest/browser": "4.1.12",
     "@vitest/browser-playwright": "4.1.12",
     "eslint": "9.39.5",
